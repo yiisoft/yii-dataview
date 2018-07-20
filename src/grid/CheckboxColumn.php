@@ -8,7 +8,7 @@
 namespace yii\grid;
 
 use Closure;
-use yii\base\InvalidConfigException;
+use yii\exceptions\InvalidConfigException;
 use yii\helpers\Html;
 use yii\helpers\Json;
 
@@ -78,7 +78,7 @@ class CheckboxColumn extends Column
 
     /**
      * {@inheritdoc}
-     * @throws \yii\base\InvalidConfigException if [[name]] is not set.
+     * @throws \yii\exceptions\InvalidConfigException if [[name]] is not set.
      */
     public function init()
     {
