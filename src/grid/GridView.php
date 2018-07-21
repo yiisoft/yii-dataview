@@ -8,7 +8,7 @@
 namespace yii\grid;
 
 use Closure;
-use Yii;
+use yii\helpers\Yii;
 use yii\exceptions\InvalidConfigException;
 use yii\base\Model;
 use yii\helpers\Html;
