@@ -265,7 +265,7 @@ class GridView extends BaseListView
         if ($this->formatter === null) {
             $this->formatter = Yii::$app->getFormatter();
         } elseif (is_array($this->formatter)) {
-            $this->formatter = Yii::createObject($this->formatter);
+            $this->formatter = $this->app->createObject($this->formatter);
         }
         if (!$this->formatter instanceof Formatter) {
             throw new InvalidConfigException('The "formatter" property must be either a Format object or a configuration array.');
@@ -503,7 +503,7 @@ class GridView extends BaseListView
             if (is_string($column)) {
                 $column = $this->createDataColumn($column);
             } else {
-                $column = Yii::createObject(array_merge([
+                $column = $this->app->createObject(array_merge([
                     '__class' => $this->dataColumnClass ?: DataColumn::class,
                     'grid' => $this,
                 ], $column));
@@ -528,7 +528,7 @@ class GridView extends BaseListView
             throw new InvalidConfigException('The column must be specified in the format of "attribute", "attribute:format" or "attribute:format:label"');
         }
 
-        return Yii::createObject([
+        return $this->app->createObject([
             '__class' => $this->dataColumnClass ?: DataColumn::class,
             'grid' => $this,
             'attribute' => $matches[1],
