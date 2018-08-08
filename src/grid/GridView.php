@@ -5,7 +5,7 @@
  * @license http://www.yiiframework.com/license/
  */
 
-namespace yii\grid;
+namespace yii\view\grid;
 
 use Closure;
 use yii\helpers\Yii;
