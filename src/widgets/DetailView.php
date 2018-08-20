@@ -132,7 +132,7 @@ class DetailView extends Widget
             throw new InvalidConfigException('Please specify the "model" property.');
         }
         if ($this->formatter === null) {
-            $this->formatter = Yii::$app->getFormatter();
+            $this->formatter = Yii::getApp()->getFormatter();
         } elseif (is_array($this->formatter)) {
             $this->formatter = $this->app->createObject($this->formatter);
         }

@@ -29,7 +29,7 @@ class CheckboxColumnTest extends TestCase
         Yii::setAlias('@webroot', '@yii/tests/runtime');
         Yii::setAlias('@web', 'http://localhost/');
         FileHelper::createDirectory(Yii::getAlias('@webroot/assets'));
-        Yii::$app->assetManager->bundles['yii\web\JqueryAsset'] = false;
+        Yii::getApp()->assetManager->bundles['yii\web\JqueryAsset'] = false;
     }
 
     public function testInputName()

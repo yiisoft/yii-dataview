@@ -82,8 +82,8 @@ class RadiobuttonColumnTest extends TestCase
         $this->mockApplication();
         Yii::setAlias('@webroot', '@yii/tests/runtime');
         Yii::setAlias('@web', 'http://localhost/');
-        Yii::$app->assetManager->bundles['yii\web\JqueryAsset'] = false;
-        Yii::$app->set('request', new Request(['url' => '/abc']));
+        Yii::getApp()->assetManager->bundles['yii\web\JqueryAsset'] = false;
+        Yii::getApp()->set('request', new Request(['url' => '/abc']));
 
         $models = [
             ['label' => 'label1', 'value' => 1],

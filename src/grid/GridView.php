@@ -263,7 +263,7 @@ class GridView extends BaseListView
     {
         parent::init();
         if ($this->formatter === null) {
-            $this->formatter = Yii::$app->getFormatter();
+            $this->formatter = Yii::getApp()->getFormatter();
         } elseif (is_array($this->formatter)) {
             $this->formatter = $this->app->createObject($this->formatter);
         }
