@@ -1,0 +1,64 @@
+{
+    "name": "yiisoft/yii-dataview",
+    "type": "library",
+    "description": "Yii Framework Data Widgets Package",
+    "keywords": [
+        "yii",
+        "view",
+        "data",
+        "widget",
+        "list",
+        "grid"
+    ],
+    "homepage": "http://www.yiiframework.com/",
+    "license": "BSD-3-Clause",
+    "support": {
+        "source": "https://github.com/yiisoft/yii-dataview",
+        "issues": "https://github.com/yiisoft/yii-dataview/issues",
+        "forum": "http://www.yiiframework.com/forum/",
+        "wiki": "http://www.yiiframework.com/wiki/",
+        "irc": "irc://irc.freenode.net/yii"
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "require": {
+        "php": "^7.4",
+        "ext-json": "*",
+        "yiisoft/aliases": "^3.0@dev",
+        "yiisoft/arrays": "^3.0@dev",
+        "yiisoft/data": "^3.0@dev",
+        "yiisoft/factory": "^3.0@dev",
+        "yiisoft/router": "^3.0@dev",
+        "yiisoft/strings": "^3.0@dev",
+        "yiisoft/view": "^3.0@dev",
+        "yiisoft/widget": "^3.0@dev"
+    },
+    "require-dev": {
+        "yiisoft/di": "^3.0@dev",
+        "yiisoft/log": "^3.0@dev",
+        "yiisoft/event-dispatcher": "^3.0@dev",
+        "phpunit/phpunit": "^8.4",
+        "hiqdev/composer-config-plugin": "^1.0@dev"
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "3.0.x-dev"
+        },
+        "config-plugin": {
+            "tests": "config/tests.php"
+        }
+    },
+    "autoload": {
+        "psr-4": {
+            "Yiisoft\\Yii\\DataView\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Yiisoft\\Yii\\DataView\\Tests\\": "tests"
+        }
+    },
+    "config": {
+        "sort-packages": true
+    }
+}
