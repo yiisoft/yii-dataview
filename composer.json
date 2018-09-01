@@ -1,7 +1,7 @@
 {
-    "name": "yiisoft/view",
+    "name": "yiisoft/yii-dataview",
     "type": "library",
-    "description": "Yii View Rendering Library",
+    "description": "Yii Framework Data Displaying Extension",
     "keywords": [
         "yii",
         "view"
@@ -56,20 +56,23 @@
         }
     ],
     "support": {
-        "source": "https://github.com/yiisoft/view",
-        "issues": "https://github.com/yiisoft/view/issues",
+        "source": "https://github.com/yiisoft/yii-dataview",
+        "issues": "https://github.com/yiisoft/yii-dataview/issues",
         "forum": "http://www.yiiframework.com/forum/",
         "wiki": "http://www.yiiframework.com/wiki/",
         "irc": "irc://irc.freenode.net/yii"
     },
     "require-dev": {
-        "hiqdev/composer-config-plugin": "^1.0@dev",
+        "yiisoft/core": "^3.0@dev"
+    },
+    "require-dev": {
         "yiisoft/core": "^3.0@dev",
         "yiisoft/di": "^3.0@dev",
         "yiisoft/log": "^3.0@dev",
         "yiisoft/cache": "^3.0@dev",
         "phpunit/phpunit": "^7.3",
-        "friendsofphp/php-cs-fixer": "^2.2"
+        "friendsofphp/php-cs-fixer": "^2.2",
+        "hiqdev/composer-config-plugin": "^1.0@dev"
     },
     "suggest": {
         "yiisoft/core": "^3.0"
@@ -81,13 +84,12 @@
     },
     "autoload": {
         "psr-4": {
-            "yii\\view\\": "src/view",
-            "yii\\widgets\\": "src/widgets"
+            "yii\\dataview\\": "src"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "yii\\view\\tests\\": "tests"
+            "yii\\dataview\\tests\\": "tests"
         }
     }
 }
