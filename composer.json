@@ -62,7 +62,7 @@
         "wiki": "http://www.yiiframework.com/wiki/",
         "irc": "irc://irc.freenode.net/yii"
     },
-    "require-dev": {
+    "require": {
         "yiisoft/core": "^3.0@dev"
     },
     "require-dev": {
