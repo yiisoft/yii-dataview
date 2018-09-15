@@ -5,12 +5,14 @@
  * @license http://www.yiiframework.com/license/
  */
 
-namespace yii\widgets;
+namespace yii\dataview;
 
-use yii\helpers\Yii;
+use yii\di\Initiable;
 use yii\exceptions\InvalidConfigException;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
+use yii\helpers\Yii;
+use yii\widgets\Widget;
 
 /**
  * BaseListView is a base class for widgets displaying data from data provider
@@ -23,7 +25,7 @@ use yii\helpers\Html;
  * @author Qiang Xue <qiang.xue@gmail.com>
  * @since 2.0
  */
-abstract class BaseListView extends Widget
+abstract class BaseListView extends Widget implements Initiable
 {
     /**
      * @var array the HTML attributes for the container tag of the list view.
@@ -110,9 +112,8 @@ abstract class BaseListView extends Widget
     /**
      * Initializes the view.
      */
-    public function init()
+    public function init(): void
     {
-        parent::init();
         if ($this->dataProvider === null) {
             throw new InvalidConfigException('The "dataProvider" property must be set.');
         }

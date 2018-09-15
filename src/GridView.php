@@ -5,7 +5,7 @@
  * @license http://www.yiiframework.com/license/
  */
 
-namespace yii\view\grid;
+namespace yii\dataview;
 
 use Closure;
 use yii\helpers\Yii;
@@ -13,7 +13,7 @@ use yii\exceptions\InvalidConfigException;
 use yii\base\Model;
 use yii\helpers\Html;
 use yii\i18n\Formatter;
-use yii\widgets\BaseListView;
+use yii\dataview\columns\DataColumn;
 
 /**
  * The GridView widget is used to display data in a grid.
@@ -259,7 +259,7 @@ class GridView extends BaseListView
      * Initializes the grid view.
      * This method will initialize required property values and instantiate [[columns]] objects.
      */
-    public function init()
+    public function init(): void
     {
         parent::init();
         if ($this->formatter === null) {

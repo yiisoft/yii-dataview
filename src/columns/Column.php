@@ -5,7 +5,7 @@
  * @license http://www.yiiframework.com/license/
  */
 
-namespace yii\view\view\grid;
+namespace yii\dataview\columns;
 
 use Closure;
 use yii\base\BaseObject;
