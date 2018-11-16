@@ -5,12 +5,12 @@
  * @license http://www.yiiframework.com/license/
  */
 
-namespace yii\tests\framework\grid;
+namespace yii\dataview\tests\unit;
 
 use yii\helpers\Yii;
 use yii\data\ArrayDataProvider;
-use yii\grid\GridView;
-use yii\grid\RadioButtonColumn;
+use yii\dataview\GridView;
+use yii\dataview\columns\RadioButtonColumn;
 use yii\helpers\Html;
 use yii\web\Request;
 use yii\tests\TestCase;
@@ -28,14 +28,16 @@ class RadiobuttonColumnTest extends TestCase
      */
     public function testException()
     {
-        new RadioButtonColumn([
+        Yii::createObject([
+            '__class' => RadioButtonColumn::class,
             'name' => null,
         ]);
     }
 
     public function testOptionsByArray()
     {
-        $column = new RadioButtonColumn([
+        $column = Yii::createObject([
+            '__class' => RadioButtonColumn::class,
             'radioOptions' => [
                 'value' => 42,
             ],
@@ -49,7 +51,8 @@ class RadiobuttonColumnTest extends TestCase
             'label' => 'label',
             'value' => 123,
         ];
-        $column = new RadioButtonColumn([
+        $column = Yii::createObject([
+            '__class' => RadioButtonColumn::class,
             'radioOptions' => function ($model) {
                 return [
                     'value' => $model['value'],
@@ -62,14 +65,16 @@ class RadiobuttonColumnTest extends TestCase
 
     public function testContent()
     {
-        $column = new RadioButtonColumn([
+        $column = Yii::createObject([
+            '__class' => RadioButtonColumn::class,
             'content' => function ($model, $key, $index, $column) {
                 return null;
             }
         ]);
         $this->assertContains('<td></td>', $column->renderDataCell([], 1, 0));
 
-        $column = new RadioButtonColumn([
+        $column = Yii::createObject([
+            '__class' => RadioButtonColumn::class,
             'content' => function ($model, $key, $index, $column) {
                 return Html::radio('radioButtonInput', false);
             }
@@ -83,14 +88,21 @@ class RadiobuttonColumnTest extends TestCase
         Yii::setAlias('@webroot', '@yii/tests/runtime');
         Yii::setAlias('@web', 'http://localhost/');
         Yii::getApp()->assetManager->bundles['yii\web\JqueryAsset'] = false;
-        Yii::getApp()->set('request', new Request(['url' => '/abc']));
+        Yii::getApp()->set('request', Yii::createObject([
+            '__class' => Request::class,
+            'url' => '/abc',
+        ]));
 
         $models = [
             ['label' => 'label1', 'value' => 1],
             ['label' => 'label2', 'value' => 2, 'checked' => true],
         ];
-        $grid = new GridView([
-            'dataProvider' => new ArrayDataProvider(['allModels' => $models]),
+        $grid = Yii::createObject([
+            '__class' => GridView::class,
+            'dataProvider' => Yii::createObject([
+                '__class' => ArrayDataProvider::class,
+                'allModels' => $models,
+            ]),
             'options' => ['id' => 'radio-gridview'],
             'columns' => [
                 [

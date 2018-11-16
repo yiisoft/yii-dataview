@@ -5,11 +5,12 @@
  * @license http://www.yiiframework.com/license/
  */
 
-namespace yii\tests\framework\widgets;
+namespace yii\dataview\tests\unit;
 
 use yii\data\ArrayDataProvider;
 use yii\data\DataProviderInterface;
-use yii\widgets\ListView;
+use yii\dataview\ListView;
+use yii\helpers\Yii;
 use yii\tests\TestCase;
 
 /**
@@ -26,17 +27,22 @@ class ListViewTest extends TestCase
     public function testEmptyListShown()
     {
         $out = $this->getListView([
-            'dataProvider' => new ArrayDataProvider(['allModels' => []]),
+            'dataProvider' => Yii::createObject([
+                '__class' => ArrayDataProvider::class,
+                'allModels' => []
+            ]),
             'emptyText' => 'Nothing at all',
         ])->run();
-
         $this->assertEqualsWithoutLE('<div id="w0" class="list-view"><div class="empty">Nothing at all</div></div>', $out);
     }
 
     public function testEmpty()
     {
         $out = $this->getListView([
-            'dataProvider' => new ArrayDataProvider(['allModels' => []]),
+            'dataProvider' => Yii::createObject([
+                '__class' => ArrayDataProvider::class,
+                'allModels' => []
+            ]),
             'emptyText' => false,
         ])->run();
 
@@ -46,7 +52,10 @@ class ListViewTest extends TestCase
     public function testEmptyListNotShown()
     {
         $out = $this->getListView([
-            'dataProvider' => new ArrayDataProvider(['allModels' => []]),
+            'dataProvider' => Yii::createObject([
+                '__class' => ArrayDataProvider::class,
+                'allModels' => []
+            ]),
             'showOnEmpty' => true,
         ])->run();
 
@@ -64,7 +73,8 @@ HTML
      */
     private function getListView($options = [])
     {
-        return new ListView(array_merge([
+        return Yii::createObject(array_merge([
+            '__class' => ListView::class,
             'id' => 'w0',
             'dataProvider' => $this->getDataProvider(),
         ], $options));
@@ -75,7 +85,8 @@ HTML
      */
     private function getDataProvider()
     {
-        return new ArrayDataProvider([
+        return Yii::createObject([
+            '__class' => ArrayDataProvider::class,
             'allModels' => [
                 ['id' => 1, 'login' => 'silverfire'],
                 ['id' => 2, 'login' => 'samdark'],
@@ -126,17 +137,17 @@ HTML
                     return "Item #{$index}: {$model['login']} - Widget: " . get_class($widget);
                 },
                 '<div id="w0" class="list-view"><div class="summary">Showing <b>1-3</b> of <b>3</b> items.</div>
-<div data-key="0">Item #0: silverfire - Widget: yii\widgets\ListView</div>
-<div data-key="1">Item #1: samdark - Widget: yii\widgets\ListView</div>
-<div data-key="2">Item #2: cebe - Widget: yii\widgets\ListView</div>
+<div data-key="0">Item #0: silverfire - Widget: yii\dataview\ListView</div>
+<div data-key="1">Item #1: samdark - Widget: yii\dataview\ListView</div>
+<div data-key="2">Item #2: cebe - Widget: yii\dataview\ListView</div>
 </div>',
             ],
             [
                 '@yii/tests/data/views/widgets/ListView/item',
                 '<div id="w0" class="list-view"><div class="summary">Showing <b>1-3</b> of <b>3</b> items.</div>
-<div data-key="0">Item #0: silverfire - Widget: yii\widgets\ListView</div>
-<div data-key="1">Item #1: samdark - Widget: yii\widgets\ListView</div>
-<div data-key="2">Item #2: cebe - Widget: yii\widgets\ListView</div>
+<div data-key="0">Item #0: silverfire - Widget: yii\dataview\ListView</div>
+<div data-key="1">Item #1: samdark - Widget: yii\dataview\ListView</div>
+<div data-key="2">Item #2: cebe - Widget: yii\dataview\ListView</div>
 </div>',
             ],
         ];
@@ -150,7 +161,6 @@ HTML
     public function testItemViewOptions($itemView, $expected)
     {
         $out = $this->getListView(['itemView' => $itemView])->run();
-
         $this->assertEqualsWithoutLE($expected, $out);
     }
 
@@ -219,14 +229,14 @@ HTML
 
         $this->assertEqualsWithoutLE(<<<HTML
 <div id="w0" class="list-view"><div class="summary">Showing <b>1-3</b> of <b>3</b> items.</div>
-<!-- before: 1, key: 0, index: 0, widget: yii\widgets\ListView -->
+<!-- before: 1, key: 0, index: 0, widget: yii\dataview\ListView -->
 <div data-key="0">0</div>
-<!-- before: 2, key: 1, index: 1, widget: yii\widgets\ListView -->
+<!-- before: 2, key: 1, index: 1, widget: yii\dataview\ListView -->
 <div data-key="1">1</div>
-<!-- after: 2, key: 1, index: 1, widget: yii\widgets\ListView -->
-<!-- before: 3, key: 2, index: 2, widget: yii\widgets\ListView -->
+<!-- after: 2, key: 1, index: 1, widget: yii\dataview\ListView -->
+<!-- before: 3, key: 2, index: 2, widget: yii\dataview\ListView -->
 <div data-key="2">2</div>
-<!-- after: 3, key: 2, index: 2, widget: yii\widgets\ListView -->
+<!-- after: 3, key: 2, index: 2, widget: yii\dataview\ListView -->
 </div>
 HTML
     , $out
@@ -243,7 +253,10 @@ HTML
             'on init' => function () use (&$initTriggered) {
                 $initTriggered = true;
             },
-            'dataProvider' => new ArrayDataProvider(['allModels' => []]),
+            'dataProvider' => Yii::createObject([
+                '__class' => ArrayDataProvider::class,
+                'allModels' => [],
+            ]),
         ]);
         $this->assertTrue($initTriggered);
     }

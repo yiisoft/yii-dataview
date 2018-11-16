@@ -5,12 +5,12 @@
  * @license http://www.yiiframework.com/license/
  */
 
-namespace yii\tests\framework\grid;
+namespace yii\dataview\tests\unit;
 
 use yii\helpers\Yii;
 use yii\data\ArrayDataProvider;
-use yii\grid\CheckboxColumn;
-use yii\grid\GridView;
+use yii\dataview\columns\CheckboxColumn;
+use yii\dataview\GridView;
 use yii\helpers\FileHelper;
 use yii\helpers\Html;
 use yii\tests\framework\i18n\IntlTestHelper;
@@ -34,37 +34,69 @@ class CheckboxColumnTest extends TestCase
 
     public function testInputName()
     {
-        $column = new CheckboxColumn(['name' => 'selection', 'grid' => $this->getGrid()]);
+        $column = Yii::createObject([
+            '__class' => CheckboxColumn::class,
+            'name' => 'selection',
+            'grid' => $this->getGrid(),
+        ]);
         $this->assertContains('name="selection_all"', $column->renderHeaderCell());
 
-        $column = new CheckboxColumn(['name' => 'selections[]', 'grid' => $this->getGrid()]);
+        $column = Yii::createObject([
+            '__class' => CheckboxColumn::class,
+            'name' => 'selections[]',
+            'grid' => $this->getGrid(),
+        ]);
         $this->assertContains('name="selections_all"', $column->renderHeaderCell());
 
-        $column = new CheckboxColumn(['name' => 'MyForm[grid1]', 'grid' => $this->getGrid()]);
+        $column = Yii::createObject([
+            '__class' => CheckboxColumn::class,
+            'name' => 'MyForm[grid1]',
+            'grid' => $this->getGrid(),
+        ]);
         $this->assertContains('name="MyForm[grid1_all]"', $column->renderHeaderCell());
 
-        $column = new CheckboxColumn(['name' => 'MyForm[grid1][]', 'grid' => $this->getGrid()]);
+        $column = Yii::createObject([
+            '__class' => CheckboxColumn::class,
+            'name' => 'MyForm[grid1][]',
+            'grid' => $this->getGrid(),
+        ]);
         $this->assertContains('name="MyForm[grid1_all]"', $column->renderHeaderCell());
 
-        $column = new CheckboxColumn(['name' => 'MyForm[grid1][key]', 'grid' => $this->getGrid()]);
+        $column = Yii::createObject([
+            '__class' => CheckboxColumn::class,
+            'name' => 'MyForm[grid1][key]',
+            'grid' => $this->getGrid(),
+        ]);
         $this->assertContains('name="MyForm[grid1][key_all]"', $column->renderHeaderCell());
 
-        $column = new CheckboxColumn(['name' => 'MyForm[grid1][key][]', 'grid' => $this->getGrid()]);
+        $column = Yii::createObject([
+            '__class' => CheckboxColumn::class,
+            'name' => 'MyForm[grid1][key][]',
+            'grid' => $this->getGrid(),
+        ]);
         $this->assertContains('name="MyForm[grid1][key_all]"', $column->renderHeaderCell());
     }
 
     public function testInputValue()
     {
-        $column = new CheckboxColumn(['grid' => $this->getGrid()]);
+        $column = Yii::createObject([
+            '__class' => CheckboxColumn::class,
+            'grid' => $this->getGrid(),
+        ]);
         $this->assertContains('value="1"', $column->renderDataCell([], 1, 0));
         $this->assertContains('value="42"', $column->renderDataCell([], 42, 0));
         $this->assertContains('value="[1,42]"', $column->renderDataCell([], [1, 42], 0));
 
-        $column = new CheckboxColumn(['checkboxOptions' => ['value' => 42], 'grid' => $this->getGrid()]);
+        $column = Yii::createObject([
+            '__class' => CheckboxColumn::class,
+            'checkboxOptions' => ['value' => 42],
+            'grid' => $this->getGrid(),
+        ]);
         $this->assertNotContains('value="1"', $column->renderDataCell([], 1, 0));
         $this->assertContains('value="42"', $column->renderDataCell([], 1, 0));
 
-        $column = new CheckboxColumn([
+        $column = Yii::createObject([
+            '__class' => CheckboxColumn::class,
             'checkboxOptions' => function ($model, $key, $index, $column) {
                 return [];
             },
@@ -74,7 +106,8 @@ class CheckboxColumnTest extends TestCase
         $this->assertContains('value="42"', $column->renderDataCell([], 42, 0));
         $this->assertContains('value="[1,42]"', $column->renderDataCell([], [1, 42], 0));
 
-        $column = new CheckboxColumn([
+        $column = Yii::createObject([
+            '__class' => CheckboxColumn::class,
             'checkboxOptions' => function ($model, $key, $index, $column) {
                 return ['value' => 42];
             },
@@ -86,7 +119,8 @@ class CheckboxColumnTest extends TestCase
 
     public function testContent()
     {
-        $column = new CheckboxColumn([
+        $column = Yii::createObject([
+            '__class' => CheckboxColumn::class,
             'content' => function ($model, $key, $index, $column) {
                 return null;
             },
@@ -94,7 +128,8 @@ class CheckboxColumnTest extends TestCase
         ]);
         $this->assertContains('<td></td>', $column->renderDataCell([], 1, 0));
 
-        $column = new CheckboxColumn([
+        $column = Yii::createObject([
+            '__class' => CheckboxColumn::class,
             'content' => function ($model, $key, $index, $column) {
                 return Html::checkBox('checkBoxInput', false);
             },
@@ -108,8 +143,13 @@ class CheckboxColumnTest extends TestCase
      */
     protected function getGrid()
     {
-        return new GridView([
-            'dataProvider' => new ArrayDataProvider(['allModels' => [], 'totalCount' => 0]),
+        return Yii::createObject([
+            '__class' => GridView::class,
+            'dataProvider' => Yii::createObject([
+                '__class' => ArrayDataProvider::class,
+                'allModels' => [],
+                'totalCount' => 0,
+            ]),
         ]);
     }
 }

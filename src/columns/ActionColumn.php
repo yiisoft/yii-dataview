@@ -131,9 +131,8 @@ class ActionColumn extends Column
     /**
      * {@inheritdoc}
      */
-    public function init()
+    public function __construct()
     {
-        parent::init();
         $this->initDefaultButtons();
     }
 

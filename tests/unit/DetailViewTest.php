@@ -5,12 +5,13 @@
  * @license http://www.yiiframework.com/license/
  */
 
-namespace yii\tests\framework\widgets;
+namespace yii\dataviews\tests\unit;
 
 use yii\base\Arrayable;
 use yii\base\ArrayableTrait;
 use yii\base\Model;
-use yii\widgets\DetailView;
+use yii\dataview\DetailView;
+use yii\helpers\Yii;
 
 /**
  * @group widgets
@@ -32,7 +33,8 @@ class DetailViewTest extends \yii\tests\TestCase
         $model = new ModelMock();
         $model->id = 'id';
 
-        $this->detailView = new PublicDetailView([
+        $this->detailView = Yii::createObject([
+            '__class' => PublicDetailView::class,
             'model' => $model,
             'template' => '{label}:{value}',
             'attributes' => [
@@ -75,7 +77,8 @@ class DetailViewTest extends \yii\tests\TestCase
         $model->ИдентификаторТовара = 'A00001';
         $model->το_αναγνωριστικό_του = 'A00002';
 
-        $this->detailView = new PublicDetailView([
+        $this->detailView = Yii::createObject([
+            '__class' => PublicDetailView::class,
             'model' => $model,
             'template' => '{label}:{value}',
             'attributes' => [
@@ -99,7 +102,8 @@ class DetailViewTest extends \yii\tests\TestCase
         $model = new ModelMock();
         $model->id = 'id';
 
-        $this->detailView = new PublicDetailView([
+        $this->detailView = Yii::createObject([
+            '__class' => PublicDetailView::class,
             'model' => $model,
             'template' => '{label}:{value}',
             'attributes' => [
@@ -178,7 +182,8 @@ class DetailViewTest extends \yii\tests\TestCase
         $model->related = new ModelMock();
         $model->related->id = 'related';
 
-        $this->detailView = new PublicDetailView([
+        $this->detailView = Yii::createObject([
+            '__class' => PublicDetailView::class,
             'model' => $model,
             'template' => '{label}:{value}',
             'attributes' => [
@@ -193,7 +198,8 @@ class DetailViewTest extends \yii\tests\TestCase
         // test null relation
         $model->related = null;
 
-        $this->detailView = new PublicDetailView([
+        $this->detailView = Yii::createObject([
+            '__class' => PublicDetailView::class,
             'model' => $model,
             'template' => '{label}:{value}',
             'attributes' => [
@@ -227,7 +233,8 @@ class DetailViewTest extends \yii\tests\TestCase
         $model->id = 1;
         $model->text = 'I`m arrayable';
 
-        $this->detailView = new DetailView([
+        $this->detailView = Yii::createObject([
+            '__class' => PublicDetailView::class,
             'model' => $model,
         ]);
 
@@ -255,7 +262,8 @@ class DetailViewTest extends \yii\tests\TestCase
         $model->id = 1;
         $model->text = 'I`m an object';
 
-        $this->detailView = new DetailView([
+        $this->detailView = Yii::createObject([
+            '__class' => PublicDetailView::class,
             'model' => $model,
         ]);
 
@@ -284,7 +292,8 @@ class DetailViewTest extends \yii\tests\TestCase
             'text' => 'I`m an array',
         ];
 
-        $this->detailView = new DetailView([
+        $this->detailView = Yii::createObject([
+            '__class' => PublicDetailView::class,
             'model' => $model,
         ]);
 
@@ -295,7 +304,8 @@ class DetailViewTest extends \yii\tests\TestCase
     {
         $expectedValue = '<tr><th tooltip="Tooltip">Text</th><td class="bg-red">I`m an array</td></tr>';
 
-        $this->detailView = new PublicDetailView([
+        $this->detailView = Yii::createObject([
+            '__class' => PublicDetailView::class,
             'model' => [
                 'text' => 'I`m an array',
             ],
@@ -325,7 +335,8 @@ class DetailViewTest extends \yii\tests\TestCase
         $model->id = 1;
         $model->text = 'I`m an object';
 
-        $this->detailView = new DetailView([
+        $this->detailView = Yii::createObject([
+            '__class' => PublicDetailView::class,
             'model' => $model,
             'on init' => function () use (&$initTriggered) {
                 $initTriggered = true;

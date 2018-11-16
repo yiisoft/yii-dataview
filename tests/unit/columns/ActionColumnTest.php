@@ -5,9 +5,10 @@
  * @license http://www.yiiframework.com/license/
  */
 
-namespace yii\tests\framework\grid;
+namespace yii\dataview\tests\unit;
 
-use yii\grid\ActionColumn;
+use yii\dataview\columns\ActionColumn;
+use yii\helpers\Yii;
 
 /**
  * @author Vitaly S. <fornit1917@gmail.com>
@@ -21,16 +22,28 @@ class ActionColumnTest extends \yii\tests\TestCase
         $column = new ActionColumn();
         $this->assertEquals(['view', 'update', 'delete'], array_keys($column->buttons));
 
-        $column = new ActionColumn(['template' => '{show} {edit} {delete}']);
+        $column = Yii::createObject([
+            '__class' => ActionColumn::class,
+            'template' => '{show} {edit} {delete}',
+        ]);
         $this->assertEquals(['delete'], array_keys($column->buttons));
 
-        $column = new ActionColumn(['template' => '{show} {edit} {remove}']);
+        $column = Yii::createObject([
+            '__class' => ActionColumn::class,
+            'template' => '{show} {edit} {remove}',
+        ]);
         $this->assertEmpty($column->buttons);
 
-        $column = new ActionColumn(['template' => '{view-items} {update-items} {delete-items}']);
+        $column = Yii::createObject([
+            '__class' => ActionColumn::class,
+            'template' => '{view-items} {update-items} {delete-items}',
+        ]);
         $this->assertEmpty($column->buttons);
 
-        $column = new ActionColumn(['template' => '{view} {view-items}']);
+        $column = Yii::createObject([
+            '__class' => ActionColumn::class,
+            'template' => '{view} {view-items}',
+        ]);
         $this->assertEquals(['view'], array_keys($column->buttons));
     }
 
