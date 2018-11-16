@@ -5,7 +5,7 @@
  * @license http://www.yiiframework.com/license/
  */
 
-namespace yii\view\grid;
+namespace yii\dataview\columns;
 
 use yii\helpers\Yii;
 use yii\helpers\Html;
