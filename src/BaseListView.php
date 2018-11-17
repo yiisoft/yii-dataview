@@ -12,6 +12,7 @@ use yii\exceptions\InvalidConfigException;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 use yii\helpers\Yii;
+use yii\widgets\LinkPager;
 use yii\widgets\Widget;
 
 /**

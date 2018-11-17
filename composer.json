@@ -63,12 +63,14 @@
         "irc": "irc://irc.freenode.net/yii"
     },
     "require": {
+        "yiisoft/view": "^3.0@dev",
         "yiisoft/yii-core": "^3.0@dev"
     },
     "require-dev": {
         "yiisoft/di": "^3.0@dev",
         "yiisoft/log": "^3.0@dev",
         "yiisoft/cache": "^3.0@dev",
+        "yiisoft/yii-web": "^3.0@dev",
         "phpunit/phpunit": "^7.3",
         "friendsofphp/php-cs-fixer": "^2.2",
         "hiqdev/composer-config-plugin": "^1.0@dev"

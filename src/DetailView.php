@@ -5,7 +5,7 @@
  * @license http://www.yiiframework.com/license/
  */
 
-namespace yii\widgets;
+namespace yii\dataview;
 
 use yii\helpers\Yii;
 use yii\base\Arrayable;
@@ -15,6 +15,7 @@ use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 use yii\helpers\Inflector;
 use yii\i18n\Formatter;
+use yii\widgets\Widget;
 
 /**
  * DetailView displays the detail of a single data [[model]].
@@ -124,7 +125,7 @@ class DetailView extends Widget
      * Initializes the detail view.
      * This method will initialize required property values.
      */
-    public function init()
+    public function init(): void
     {
         parent::init();
 

@@ -5,11 +5,12 @@
  * @license http://www.yiiframework.com/license/
  */
 
-namespace yii\tests\framework\grid;
+namespace yii\dataview\tests\unit;
 
 use yii\data\ArrayDataProvider;
-use yii\grid\DataColumn;
-use yii\grid\GridView;
+use yii\dataview\columns\DataColumn;
+use yii\dataview\GridView;
+use yii\helpers\Yii;
 use yii\web\View;
 
 /**
@@ -21,16 +22,7 @@ class GridViewTest extends \yii\tests\TestCase
     protected function setUp()
     {
         parent::setUp();
-        $this->mockApplication([
-            'components' => [
-                'assetManager' => [
-                    'bundles' => [
-                        'yii\grid\GridViewAsset' => false,
-                        'yii\web\JqueryAsset' => false,
-                    ],
-                ],
-            ],
-        ]);
+        $this->mockApplication();
     }
 
     /**
@@ -56,12 +48,17 @@ class GridViewTest extends \yii\tests\TestCase
     {
         $html = GridView::widget([
             'id' => 'grid',
-            'dataProvider' => new ArrayDataProvider(['allModels' => []]),
+            'dataProvider' => Yii::createObject([
+                '__class' => ArrayDataProvider::class,
+                'allModels' => [],
+            ]),
             'showHeader' => false,
             'emptyText' => $emptyText,
             'options' => [],
             'tableOptions' => [],
-            'view' => new View(),
+            'view' => Yii::createObject([
+                '__class' => View::class
+            ]),
             'filterUrl' => '/',
         ]);
         $html = preg_replace("/\r|\n/", '', $html);
@@ -80,14 +77,14 @@ class GridViewTest extends \yii\tests\TestCase
     {
         $row = ['id' => 1, 'name' => 'Name1', 'value' => 'Value1', 'description' => 'Description1'];
 
-        $grid = new GridView([
-            'dataProvider' => new ArrayDataProvider(
-                [
-                    'allModels' => [
-                        $row,
-                    ],
-                ]
-            ),
+        $grid = Yii::createObject([
+            '__class' => GridView::class,
+            'dataProvider' => Yii::createObject([
+                '__class' => ArrayDataProvider::class,
+                'allModels' => [
+                    $row,
+                ],
+            ]),
         ]);
 
         $columns = $grid->columns;
@@ -101,14 +98,14 @@ class GridViewTest extends \yii\tests\TestCase
         $row = array_merge($row, ['relation' => ['id' => 1, 'name' => 'RelationName']]);
         $row = array_merge($row, ['otherRelation' => (object) $row['relation']]);
 
-        $grid = new GridView([
-            'dataProvider' => new ArrayDataProvider(
-                [
-                    'allModels' => [
-                        $row,
-                    ],
-                ]
-            ),
+        $grid = Yii::createObject([
+            '__class' => GridView::class,
+            'dataProvider' => Yii::createObject([
+                '__class' => ArrayDataProvider::class,
+                'allModels' => [
+                    $row,
+                ],
+            ]),
         ]);
 
         $columns = $grid->columns;
@@ -128,12 +125,17 @@ class GridViewTest extends \yii\tests\TestCase
 	public function testFooter() {
 		$config = [
 			'id'           => 'grid',
-			'dataProvider' => new ArrayDataProvider(['allModels' => []]),
+			'dataProvider' => Yii::createObject([
+                '__class' => ArrayDataProvider::class,
+                'allModels' => [],
+            ]),
 			'showHeader'   => false,
 			'showFooter'   => true,
 			'options'      => [],
 			'tableOptions' => [],
-			'view'         => new View(),
+            'view' => Yii::createObject([
+                '__class' => View::class
+            ]),
 			'filterUrl'    => '/',
 		];
 

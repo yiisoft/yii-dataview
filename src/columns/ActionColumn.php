@@ -5,7 +5,7 @@
  * @license http://www.yiiframework.com/license/
  */
 
-namespace yii\view\grid;
+namespace yii\dataview\columns;
 
 use yii\helpers\Yii;
 use yii\helpers\Html;
@@ -131,9 +131,8 @@ class ActionColumn extends Column
     /**
      * {@inheritdoc}
      */
-    public function init()
+    public function __construct()
     {
-        parent::init();
         $this->initDefaultButtons();
     }
 
