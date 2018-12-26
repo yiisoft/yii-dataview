@@ -20,7 +20,7 @@ Documentation is at [docs/guide/README.md](docs/guide/README.md).
 
 [![Latest Stable Version](https://poser.pugx.org/yiisoft/yii-dataview/v/stable.png)](https://packagist.org/packages/yiisoft/yii-dataview)
 [![Total Downloads](https://poser.pugx.org/yiisoft/yii-dataview/downloads.png)](https://packagist.org/packages/yiisoft/yii-dataview)
-[![Build Status](https://travis-ci.org/yiisoft/yii-dataview.svg?branch=master)](https://travis-ci.org/yiisoft/yii-dataview)
+[![Build Status](https://travis-ci.com/yiisoft/yii-dataview.svg?branch=master)](https://travis-ci.com/yiisoft/yii-dataview)
 
 
 Installation
