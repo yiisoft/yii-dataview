@@ -5,7 +5,7 @@
  * @license http://www.yiiframework.com/license/
  */
 
-namespace yii\dataview\tests\unit;
+namespace yii\dataview\tests\unit\columns;
 
 use yii\helpers\Yii;
 use yii\data\ArrayDataProvider;

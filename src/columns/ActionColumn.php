@@ -131,8 +131,11 @@ class ActionColumn extends Column
     /**
      * {@inheritdoc}
      */
-    public function __construct()
+    public function __construct(string $template = null)
     {
+        if ($template !== null) {
+            $this->template = $template;
+        }
         $this->initDefaultButtons();
     }
 

@@ -5,7 +5,7 @@
  * @license http://www.yiiframework.com/license/
  */
 
-namespace yii\dataview\tests\unit;
+namespace yii\dataview\tests\unit\columns;
 
 use yii\helpers\Yii;
 use yii\data\ArrayDataProvider;
@@ -88,7 +88,7 @@ class RadiobuttonColumnTest extends TestCase
         Yii::setAlias('@webroot', '@yii/tests/runtime');
         Yii::setAlias('@web', 'http://localhost/');
         Yii::getApp()->assetManager->bundles['yii\web\JqueryAsset'] = false;
-        Yii::getApp()->set('request', Yii::createObject([
+        $this->container->set('request', Yii::createObject([
             '__class' => Request::class,
             'url' => '/abc',
         ]));

@@ -10,7 +10,6 @@ namespace yii\dataview\tests\unit;
 use yii\data\ArrayDataProvider;
 use yii\data\DataProviderInterface;
 use yii\dataview\ListView;
-use yii\helpers\Yii;
 use yii\tests\TestCase;
 
 /**
@@ -27,7 +26,7 @@ class ListViewTest extends TestCase
     public function testEmptyListShown()
     {
         $out = $this->getListView([
-            'dataProvider' => Yii::createObject([
+            'dataProvider' => $this->app->createObject([
                 '__class' => ArrayDataProvider::class,
                 'allModels' => []
             ]),
@@ -39,7 +38,7 @@ class ListViewTest extends TestCase
     public function testEmpty()
     {
         $out = $this->getListView([
-            'dataProvider' => Yii::createObject([
+            'dataProvider' => $this->app->createObject([
                 '__class' => ArrayDataProvider::class,
                 'allModels' => []
             ]),
@@ -52,7 +51,7 @@ class ListViewTest extends TestCase
     public function testEmptyListNotShown()
     {
         $out = $this->getListView([
-            'dataProvider' => Yii::createObject([
+            'dataProvider' => $this->app->createObject([
                 '__class' => ArrayDataProvider::class,
                 'allModels' => []
             ]),
@@ -73,7 +72,7 @@ HTML
      */
     private function getListView($options = [])
     {
-        return Yii::createObject(array_merge([
+        return $this->app->createObject(array_merge([
             '__class' => ListView::class,
             'id' => 'w0',
             'dataProvider' => $this->getDataProvider(),
@@ -85,7 +84,7 @@ HTML
      */
     private function getDataProvider()
     {
-        return Yii::createObject([
+        return $this->app->createObject([
             '__class' => ArrayDataProvider::class,
             'allModels' => [
                 ['id' => 1, 'login' => 'silverfire'],
@@ -250,10 +249,10 @@ HTML
     {
         $initTriggered = false;
         $this->getListView([
-            'on init' => function () use (&$initTriggered) {
+            'on widget.init' => function () use (&$initTriggered) {
                 $initTriggered = true;
             },
-            'dataProvider' => Yii::createObject([
+            'dataProvider' => $this->app->createObject([
                 '__class' => ArrayDataProvider::class,
                 'allModels' => [],
             ]),

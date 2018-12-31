@@ -5,7 +5,7 @@
  * @license http://www.yiiframework.com/license/
  */
 
-namespace yii\dataview\tests\unit;
+namespace yii\dataview\tests\unit\columns;
 
 use yii\dataview\columns\ActionColumn;
 use yii\helpers\Yii;
@@ -24,25 +24,33 @@ class ActionColumnTest extends \yii\tests\TestCase
 
         $column = Yii::createObject([
             '__class' => ActionColumn::class,
-            'template' => '{show} {edit} {delete}',
+            '__construct()' => [
+                'template' => '{show} {edit} {delete}',
+            ],
         ]);
         $this->assertEquals(['delete'], array_keys($column->buttons));
 
         $column = Yii::createObject([
             '__class' => ActionColumn::class,
-            'template' => '{show} {edit} {remove}',
+            '__construct()' => [
+                'template' => '{show} {edit} {remove}',
+            ],
         ]);
         $this->assertEmpty($column->buttons);
 
         $column = Yii::createObject([
             '__class' => ActionColumn::class,
-            'template' => '{view-items} {update-items} {delete-items}',
+            '__construct()' => [
+                'template' => '{view-items} {update-items} {delete-items}',
+            ],
         ]);
         $this->assertEmpty($column->buttons);
 
         $column = Yii::createObject([
             '__class' => ActionColumn::class,
-            'template' => '{view} {view-items}',
+            '__construct()' => [
+                'template' => '{view} {view-items}',
+            ],
         ]);
         $this->assertEquals(['view'], array_keys($column->buttons));
     }

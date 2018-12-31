@@ -11,7 +11,6 @@ use yii\base\Arrayable;
 use yii\base\ArrayableTrait;
 use yii\base\Model;
 use yii\dataview\DetailView;
-use yii\helpers\Yii;
 
 /**
  * @group widgets
@@ -33,7 +32,7 @@ class DetailViewTest extends \yii\tests\TestCase
         $model = new ModelMock();
         $model->id = 'id';
 
-        $this->detailView = Yii::createObject([
+        $this->detailView = $this->app->createObject([
             '__class' => PublicDetailView::class,
             'model' => $model,
             'template' => '{label}:{value}',
@@ -77,7 +76,7 @@ class DetailViewTest extends \yii\tests\TestCase
         $model->ИдентификаторТовара = 'A00001';
         $model->το_αναγνωριστικό_του = 'A00002';
 
-        $this->detailView = Yii::createObject([
+        $this->detailView = $this->app->createObject([
             '__class' => PublicDetailView::class,
             'model' => $model,
             'template' => '{label}:{value}',
@@ -102,7 +101,7 @@ class DetailViewTest extends \yii\tests\TestCase
         $model = new ModelMock();
         $model->id = 'id';
 
-        $this->detailView = Yii::createObject([
+        $this->detailView = $this->app->createObject([
             '__class' => PublicDetailView::class,
             'model' => $model,
             'template' => '{label}:{value}',
@@ -182,7 +181,7 @@ class DetailViewTest extends \yii\tests\TestCase
         $model->related = new ModelMock();
         $model->related->id = 'related';
 
-        $this->detailView = Yii::createObject([
+        $this->detailView = $this->app->createObject([
             '__class' => PublicDetailView::class,
             'model' => $model,
             'template' => '{label}:{value}',
@@ -198,7 +197,7 @@ class DetailViewTest extends \yii\tests\TestCase
         // test null relation
         $model->related = null;
 
-        $this->detailView = Yii::createObject([
+        $this->detailView = $this->app->createObject([
             '__class' => PublicDetailView::class,
             'model' => $model,
             'template' => '{label}:{value}',
@@ -233,7 +232,7 @@ class DetailViewTest extends \yii\tests\TestCase
         $model->id = 1;
         $model->text = 'I`m arrayable';
 
-        $this->detailView = Yii::createObject([
+        $this->detailView = $this->app->createObject([
             '__class' => PublicDetailView::class,
             'model' => $model,
         ]);
@@ -262,7 +261,7 @@ class DetailViewTest extends \yii\tests\TestCase
         $model->id = 1;
         $model->text = 'I`m an object';
 
-        $this->detailView = Yii::createObject([
+        $this->detailView = $this->app->createObject([
             '__class' => PublicDetailView::class,
             'model' => $model,
         ]);
@@ -292,7 +291,7 @@ class DetailViewTest extends \yii\tests\TestCase
             'text' => 'I`m an array',
         ];
 
-        $this->detailView = Yii::createObject([
+        $this->detailView = $this->app->createObject([
             '__class' => PublicDetailView::class,
             'model' => $model,
         ]);
@@ -304,7 +303,7 @@ class DetailViewTest extends \yii\tests\TestCase
     {
         $expectedValue = '<tr><th tooltip="Tooltip">Text</th><td class="bg-red">I`m an array</td></tr>';
 
-        $this->detailView = Yii::createObject([
+        $this->detailView = $this->app->createObject([
             '__class' => PublicDetailView::class,
             'model' => [
                 'text' => 'I`m an array',
@@ -335,10 +334,10 @@ class DetailViewTest extends \yii\tests\TestCase
         $model->id = 1;
         $model->text = 'I`m an object';
 
-        $this->detailView = Yii::createObject([
+        $this->detailView = $this->app->createObject([
             '__class' => PublicDetailView::class,
             'model' => $model,
-            'on init' => function () use (&$initTriggered) {
+            'on widget.init' => function () use (&$initTriggered) {
                 $initTriggered = true;
             }
         ]);

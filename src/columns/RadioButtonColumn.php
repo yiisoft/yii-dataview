@@ -10,6 +10,7 @@ namespace yii\dataview\columns;
 use Closure;
 use yii\exceptions\InvalidConfigException;
 use yii\helpers\Html;
+use yii\di\Initiable;
 
 /**
  * RadioButtonColumn displays a column of radio buttons in a grid view.
@@ -34,7 +35,7 @@ use yii\helpers\Html;
  * @author Kirk Hansen <hanski07@luther.edu>
  * @since 2.0.11
  */
-class RadioButtonColumn extends Column
+class RadioButtonColumn extends Column implements Initiable
 {
     /**
      * @var string the name of the input radio button input fields.
@@ -67,9 +68,8 @@ class RadioButtonColumn extends Column
      * {@inheritdoc}
      * @throws \yii\exceptions\InvalidConfigException if [[name]] is not set.
      */
-    public function init()
+    public function init(): void
     {
-        parent::init();
         if (empty($this->name)) {
             throw new InvalidConfigException('The "name" property must be set.');
         }

@@ -16,6 +16,7 @@ use yii\helpers\Html;
 use yii\helpers\Inflector;
 use yii\i18n\Formatter;
 use yii\widgets\Widget;
+use yii\di\Initiable;
 
 /**
  * DetailView displays the detail of a single data [[model]].
@@ -49,7 +50,7 @@ use yii\widgets\Widget;
  * @author Qiang Xue <qiang.xue@gmail.com>
  * @since 2.0
  */
-class DetailView extends Widget
+class DetailView extends Widget implements Initiable
 {
     /**
      * @var array|object the data model whose details are to be displayed. This can be a [[Model]] instance,
