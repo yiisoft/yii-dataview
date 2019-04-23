@@ -1,6 +1,7 @@
 <?php
 /**
  * @link http://www.yiiframework.com/
+ *
  * @copyright Copyright (c) 2008 Yii Software LLC
  * @license http://www.yiiframework.com/license/
  */
@@ -23,7 +24,7 @@ class ActionColumnTest extends \yii\tests\TestCase
         $this->assertEquals(['view', 'update', 'delete'], array_keys($column->buttons));
 
         $column = Yii::createObject([
-            '__class' => ActionColumn::class,
+            '__class'       => ActionColumn::class,
             '__construct()' => [
                 'template' => '{show} {edit} {delete}',
             ],
@@ -31,7 +32,7 @@ class ActionColumnTest extends \yii\tests\TestCase
         $this->assertEquals(['delete'], array_keys($column->buttons));
 
         $column = Yii::createObject([
-            '__class' => ActionColumn::class,
+            '__class'       => ActionColumn::class,
             '__construct()' => [
                 'template' => '{show} {edit} {remove}',
             ],
@@ -39,7 +40,7 @@ class ActionColumnTest extends \yii\tests\TestCase
         $this->assertEmpty($column->buttons);
 
         $column = Yii::createObject([
-            '__class' => ActionColumn::class,
+            '__class'       => ActionColumn::class,
             '__construct()' => [
                 'template' => '{view-items} {update-items} {delete-items}',
             ],
@@ -47,7 +48,7 @@ class ActionColumnTest extends \yii\tests\TestCase
         $this->assertEmpty($column->buttons);
 
         $column = Yii::createObject([
-            '__class' => ActionColumn::class,
+            '__class'       => ActionColumn::class,
             '__construct()' => [
                 'template' => '{view} {view-items}',
             ],
@@ -92,7 +93,9 @@ class ActionColumnTest extends \yii\tests\TestCase
 
         //test visible button (condition is callback)
         $column->visibleButtons = [
-            'update' => function ($model, $key, $index) {return $model['id'] == 1;},
+            'update' => function ($model, $key, $index) {
+                return $model['id'] == 1;
+            },
         ];
         $columnContents = $column->renderDataCell(['id' => 1], 1, 0);
         $this->assertContains('update_button', $columnContents);
@@ -106,7 +109,9 @@ class ActionColumnTest extends \yii\tests\TestCase
 
         //test invisible button (condition is callback)
         $column->visibleButtons = [
-            'update' => function ($model, $key, $index) {return $model['id'] != 1;},
+            'update' => function ($model, $key, $index) {
+                return $model['id'] != 1;
+            },
         ];
         $columnContents = $column->renderDataCell(['id' => 1], 1, 0);
         $this->assertNotContains('update_button', $columnContents);

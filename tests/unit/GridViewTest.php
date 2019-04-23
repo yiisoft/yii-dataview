@@ -1,6 +1,7 @@
 <?php
 /**
  * @link http://www.yiiframework.com/
+ *
  * @copyright Copyright (c) 2008 Yii Software LLC
  * @license http://www.yiiframework.com/license/
  */
@@ -40,24 +41,26 @@ class GridViewTest extends \yii\tests\TestCase
 
     /**
      * @dataProvider emptyDataProvider
-     * @param mixed $emptyText
+     *
+     * @param mixed  $emptyText
      * @param string $expectedText
+     *
      * @throws \Exception
      */
     public function testEmpty($emptyText, $expectedText)
     {
         $html = GridView::widget([
-            'id' => 'grid',
+            'id'           => 'grid',
             'dataProvider' => Yii::createObject([
-                '__class' => ArrayDataProvider::class,
+                '__class'   => ArrayDataProvider::class,
                 'allModels' => [],
             ]),
-            'showHeader' => false,
-            'emptyText' => $emptyText,
-            'options' => [],
+            'showHeader'   => false,
+            'emptyText'    => $emptyText,
+            'options'      => [],
             'tableOptions' => [],
-            'view' => Yii::createObject([
-                '__class' => View::class
+            'view'         => Yii::createObject([
+                '__class' => View::class,
             ]),
             'filterUrl' => '/',
         ]);
@@ -78,9 +81,9 @@ class GridViewTest extends \yii\tests\TestCase
         $row = ['id' => 1, 'name' => 'Name1', 'value' => 'Value1', 'description' => 'Description1'];
 
         $grid = Yii::createObject([
-            '__class' => GridView::class,
+            '__class'      => GridView::class,
             'dataProvider' => Yii::createObject([
-                '__class' => ArrayDataProvider::class,
+                '__class'   => ArrayDataProvider::class,
                 'allModels' => [
                     $row,
                 ],
@@ -99,9 +102,9 @@ class GridViewTest extends \yii\tests\TestCase
         $row = array_merge($row, ['otherRelation' => (object) $row['relation']]);
 
         $grid = Yii::createObject([
-            '__class' => GridView::class,
+            '__class'      => GridView::class,
             'dataProvider' => Yii::createObject([
-                '__class' => ArrayDataProvider::class,
+                '__class'   => ArrayDataProvider::class,
                 'allModels' => [
                     $row,
                 ],
@@ -119,37 +122,38 @@ class GridViewTest extends \yii\tests\TestCase
         }
     }
 
-	/**
-	 * @throws \Exception
-	 */
-	public function testFooter() {
-		$config = [
-			'id'           => 'grid',
-			'dataProvider' => Yii::createObject([
-                '__class' => ArrayDataProvider::class,
+    /**
+     * @throws \Exception
+     */
+    public function testFooter()
+    {
+        $config = [
+            'id'           => 'grid',
+            'dataProvider' => Yii::createObject([
+                '__class'   => ArrayDataProvider::class,
                 'allModels' => [],
             ]),
-			'showHeader'   => false,
-			'showFooter'   => true,
-			'options'      => [],
-			'tableOptions' => [],
-            'view' => Yii::createObject([
-                '__class' => View::class
+            'showHeader'   => false,
+            'showFooter'   => true,
+            'options'      => [],
+            'tableOptions' => [],
+            'view'         => Yii::createObject([
+                '__class' => View::class,
             ]),
-			'filterUrl'    => '/',
-		];
+            'filterUrl'    => '/',
+        ];
 
-		$html = GridView::widget($config);
-		$html = preg_replace("/\r|\n/", '', $html);
+        $html = GridView::widget($config);
+        $html = preg_replace("/\r|\n/", '', $html);
 
-		$this->assertTrue(preg_match("/<\/tfoot><tbody>/", $html) === 1);
+        $this->assertTrue(preg_match("/<\/tfoot><tbody>/", $html) === 1);
 
-		// Place footer after body
-		$config['placeFooterAfterBody'] = true;
+        // Place footer after body
+        $config['placeFooterAfterBody'] = true;
 
-		$html = GridView::widget($config);
-		$html = preg_replace("/\r|\n/", '', $html);
+        $html = GridView::widget($config);
+        $html = preg_replace("/\r|\n/", '', $html);
 
-		$this->assertTrue(preg_match("/<\/tbody><tfoot>/", $html) === 1);
-	}
+        $this->assertTrue(preg_match("/<\/tbody><tfoot>/", $html) === 1);
+    }
 }

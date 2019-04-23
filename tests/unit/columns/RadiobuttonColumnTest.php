@@ -1,23 +1,26 @@
 <?php
 /**
  * @link http://www.yiiframework.com/
+ *
  * @copyright Copyright (c) 2008 Yii Software LLC
  * @license http://www.yiiframework.com/license/
  */
 
 namespace yii\dataview\tests\unit\columns;
 
-use yii\helpers\Yii;
 use yii\data\ArrayDataProvider;
-use yii\dataview\GridView;
 use yii\dataview\columns\RadioButtonColumn;
+use yii\dataview\GridView;
 use yii\helpers\Html;
-use yii\web\Request;
+use yii\helpers\Yii;
 use yii\tests\TestCase;
+use yii\web\Request;
 
 /**
  * Class RadiobuttonColumnTest.
+ *
  * @group grid
+ *
  * @since 2.0.11
  */
 class RadiobuttonColumnTest extends TestCase
@@ -30,14 +33,14 @@ class RadiobuttonColumnTest extends TestCase
     {
         Yii::createObject([
             '__class' => RadioButtonColumn::class,
-            'name' => null,
+            'name'    => null,
         ]);
     }
 
     public function testOptionsByArray()
     {
         $column = Yii::createObject([
-            '__class' => RadioButtonColumn::class,
+            '__class'      => RadioButtonColumn::class,
             'radioOptions' => [
                 'value' => 42,
             ],
@@ -52,7 +55,7 @@ class RadiobuttonColumnTest extends TestCase
             'value' => 123,
         ];
         $column = Yii::createObject([
-            '__class' => RadioButtonColumn::class,
+            '__class'      => RadioButtonColumn::class,
             'radioOptions' => function ($model) {
                 return [
                     'value' => $model['value'],
@@ -60,7 +63,7 @@ class RadiobuttonColumnTest extends TestCase
             },
         ]);
         $actual = $column->renderDataCell($model, 1, 0);
-        $this->assertEquals('<td><input type="radio" name="radioButtonSelection" value="' . $model['value'] . '"></td>', $actual);
+        $this->assertEquals('<td><input type="radio" name="radioButtonSelection" value="'.$model['value'].'"></td>', $actual);
     }
 
     public function testContent()
@@ -68,8 +71,7 @@ class RadiobuttonColumnTest extends TestCase
         $column = Yii::createObject([
             '__class' => RadioButtonColumn::class,
             'content' => function ($model, $key, $index, $column) {
-                return null;
-            }
+            },
         ]);
         $this->assertContains('<td></td>', $column->renderDataCell([], 1, 0));
 
@@ -77,7 +79,7 @@ class RadiobuttonColumnTest extends TestCase
             '__class' => RadioButtonColumn::class,
             'content' => function ($model, $key, $index, $column) {
                 return Html::radio('radioButtonInput', false);
-            }
+            },
         ]);
         $this->assertContains(Html::radio('radioButtonInput', false), $column->renderDataCell([], 1, 0));
     }
@@ -90,7 +92,7 @@ class RadiobuttonColumnTest extends TestCase
         Yii::getApp()->assetManager->bundles['yii\web\JqueryAsset'] = false;
         $this->container->set('request', Yii::createObject([
             '__class' => Request::class,
-            'url' => '/abc',
+            'url'     => '/abc',
         ]));
 
         $models = [
@@ -98,18 +100,18 @@ class RadiobuttonColumnTest extends TestCase
             ['label' => 'label2', 'value' => 2, 'checked' => true],
         ];
         $grid = Yii::createObject([
-            '__class' => GridView::class,
+            '__class'      => GridView::class,
             'dataProvider' => Yii::createObject([
-                '__class' => ArrayDataProvider::class,
+                '__class'   => ArrayDataProvider::class,
                 'allModels' => $models,
             ]),
             'options' => ['id' => 'radio-gridview'],
             'columns' => [
                 [
-                    '__class' => RadioButtonColumn::class,
+                    '__class'      => RadioButtonColumn::class,
                     'radioOptions' => function ($model) {
                         return [
-                            'value' => $model['value'],
+                            'value'   => $model['value'],
                             'checked' => $model['value'] == 2,
                         ];
                     },

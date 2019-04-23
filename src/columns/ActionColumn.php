@@ -1,6 +1,7 @@
 <?php
 /**
  * @link http://www.yiiframework.com/
+ *
  * @copyright Copyright (c) 2008 Yii Software LLC
  * @license http://www.yiiframework.com/license/
  */
@@ -29,6 +30,7 @@ use yii\helpers\Yii;
  * For more details and usage information on ActionColumn, see the [guide article on data widgets](guide:output-data-widgets).
  *
  * @author Qiang Xue <qiang.xue@gmail.com>
+ *
  * @since 2.0
  */
 class ActionColumn extends Column
@@ -39,17 +41,17 @@ class ActionColumn extends Column
     public $headerOptions = ['class' => 'action-column'];
     /**
      * @var string the ID of the controller that should handle the actions specified here.
-     * If not set, it will use the currently active controller. This property is mainly used by
-     * [[urlCreator]] to create URLs for different actions. The value of this property will be prefixed
-     * to each action name to form the route of the action.
+     *             If not set, it will use the currently active controller. This property is mainly used by
+     *             [[urlCreator]] to create URLs for different actions. The value of this property will be prefixed
+     *             to each action name to form the route of the action.
      */
     public $controller;
     /**
      * @var string the template used for composing each cell in the action column.
-     * Tokens enclosed within curly brackets are treated as controller action IDs (also called *button names*
-     * in the context of action column). They will be replaced by the corresponding button rendering callbacks
-     * specified in [[buttons]]. For example, the token `{view}` will be replaced by the result of
-     * the callback `buttons['view']`. If a callback cannot be found, the token will be replaced with an empty string.
+     *             Tokens enclosed within curly brackets are treated as controller action IDs (also called *button names*
+     *             in the context of action column). They will be replaced by the corresponding button rendering callbacks
+     *             specified in [[buttons]]. For example, the token `{view}` will be replaced by the result of
+     *             the callback `buttons['view']`. If a callback cannot be found, the token will be replaced with an empty string.
      *
      * As an example, to only have the view, and update button you can add the ActionColumn to your GridView columns as follows:
      *
@@ -62,8 +64,8 @@ class ActionColumn extends Column
     public $template = '{view} {update} {delete}';
     /**
      * @var array button rendering callbacks. The array keys are the button names (without curly brackets),
-     * and the values are the corresponding button rendering callbacks. The callbacks should use the following
-     * signature:
+     *            and the values are the corresponding button rendering callbacks. The callbacks should use the following
+     *            signature:
      *
      * ```php
      * function ($url, $model, $key) {
@@ -104,13 +106,14 @@ class ActionColumn extends Column
      *     'update' => \Yii::getApp()->user->can('update'),
      * ],
      * ```
+     *
      * @since 2.0.7
      */
     public $visibleButtons = [];
     /**
      * @var callable a callback that creates a button URL using the specified model information.
-     * The signature of the callback should be the same as that of [[createUrl()]]
-     * Since 2.0.10 it can accept additional parameter, which refers to the column instance itself:
+     *               The signature of the callback should be the same as that of [[createUrl()]]
+     *               Since 2.0.10 it can accept additional parameter, which refers to the column instance itself:
      *
      * ```php
      * function (string $action, mixed $model, mixed $key, integer $index, ActionColumn $this) {
@@ -123,10 +126,10 @@ class ActionColumn extends Column
     public $urlCreator;
     /**
      * @var array html options to be applied to the [[initDefaultButton()|default button]].
+     *
      * @since 2.0.4
      */
     public $buttonOptions = [];
-
 
     /**
      * {@inheritdoc}
@@ -148,20 +151,22 @@ class ActionColumn extends Column
         $this->initDefaultButton('update', 'pencil');
         $this->initDefaultButton('delete', 'trash', [
             'data-confirm' => Yii::t('yii', 'Are you sure you want to delete this item?'),
-            'data-method' => 'post',
+            'data-method'  => 'post',
         ]);
     }
 
     /**
      * Initializes the default button rendering callback for single button.
-     * @param string $name Button name as it's written in template
-     * @param string $iconName The part of Bootstrap glyphicon class that makes it unique
-     * @param array $additionalOptions Array of additional options
+     *
+     * @param string $name              Button name as it's written in template
+     * @param string $iconName          The part of Bootstrap glyphicon class that makes it unique
+     * @param array  $additionalOptions Array of additional options
+     *
      * @since 2.0.11
      */
     protected function initDefaultButton($name, $iconName, $additionalOptions = [])
     {
-        if (!isset($this->buttons[$name]) && strpos($this->template, '{' . $name . '}') !== false) {
+        if (!isset($this->buttons[$name]) && strpos($this->template, '{'.$name.'}') !== false) {
             $this->buttons[$name] = function ($url, $model, $key) use ($name, $iconName, $additionalOptions) {
                 switch ($name) {
                     case 'view':
@@ -177,10 +182,11 @@ class ActionColumn extends Column
                         $title = ucfirst($name);
                 }
                 $options = array_merge([
-                    'title' => $title,
+                    'title'      => $title,
                     'aria-label' => $title,
                 ], $additionalOptions, $this->buttonOptions);
                 $icon = Html::tag('span', '', ['class' => "glyphicon glyphicon-$iconName"]);
+
                 return Html::a($icon, $url, $options);
             };
         }
@@ -189,10 +195,12 @@ class ActionColumn extends Column
     /**
      * Creates a URL for the given action and model.
      * This method is called for each button and each row.
-     * @param string $action the button name (or action ID)
-     * @param \yii\db\ActiveRecordInterface $model the data model
-     * @param mixed $key the key associated with the data model
-     * @param int $index the current row index
+     *
+     * @param string                        $action the button name (or action ID)
+     * @param \yii\db\ActiveRecordInterface $model  the data model
+     * @param mixed                         $key    the key associated with the data model
+     * @param int                           $index  the current row index
+     *
      * @return string the created URL
      */
     public function createUrl($action, $model, $key, $index)
@@ -202,7 +210,7 @@ class ActionColumn extends Column
         }
 
         $params = is_array($key) ? $key : ['id' => (string) $key];
-        $params[0] = $this->controller ? $this->controller . '/' . $action : $action;
+        $params[0] = $this->controller ? $this->controller.'/'.$action : $action;
 
         return Url::toRoute($params);
     }
@@ -225,6 +233,7 @@ class ActionColumn extends Column
 
             if ($isVisible && isset($this->buttons[$name])) {
                 $url = $this->createUrl($name, $model, $key, $index);
+
                 return call_user_func($this->buttons[$name], $url, $model, $key);
             }
 

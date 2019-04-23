@@ -1,6 +1,7 @@
 <?php
 /**
  * @link http://www.yiiframework.com/
+ *
  * @copyright Copyright (c) 2008 Yii Software LLC
  * @license http://www.yiiframework.com/license/
  */
@@ -8,12 +9,12 @@
 namespace yii\dataview;
 
 use Closure;
-use yii\helpers\Yii;
-use yii\exceptions\InvalidConfigException;
 use yii\base\Model;
-use yii\helpers\Html;
-use yii\i18n\Formatter;
 use yii\dataview\columns\DataColumn;
+use yii\exceptions\InvalidConfigException;
+use yii\helpers\Html;
+use yii\helpers\Yii;
+use yii\i18n\Formatter;
 
 /**
  * The GridView widget is used to display data in a grid.
@@ -42,6 +43,7 @@ use yii\dataview\columns\DataColumn;
  * For more details and usage information on GridView, see the [guide article on data widgets](guide:output-data-widgets).
  *
  * @author Qiang Xue <qiang.xue@gmail.com>
+ *
  * @since 2.0
  */
 class GridView extends BaseListView
@@ -52,46 +54,52 @@ class GridView extends BaseListView
 
     /**
      * @var string the default data column class if the class name is not explicitly specified when configuring a data column.
-     * Defaults to 'yii\grid\DataColumn'.
+     *             Defaults to 'yii\grid\DataColumn'.
      */
     public $dataColumnClass = DataColumn::class;
     /**
      * @var string the caption of the grid table
+     *
      * @see captionOptions
      */
     public $caption;
     /**
      * @var array the HTML attributes for the caption element.
+     *
      * @see \yii\helpers\Html::renderTagAttributes() for details on how attributes are being rendered.
      * @see caption
      */
     public $captionOptions = [];
     /**
      * @var array the HTML attributes for the grid table element.
+     *
      * @see \yii\helpers\Html::renderTagAttributes() for details on how attributes are being rendered.
      */
     public $tableOptions = ['class' => 'table table-striped table-bordered'];
     /**
      * @var array the HTML attributes for the container tag of the grid view.
-     * The "tag" element specifies the tag name of the container element and defaults to "div".
+     *            The "tag" element specifies the tag name of the container element and defaults to "div".
+     *
      * @see \yii\helpers\Html::renderTagAttributes() for details on how attributes are being rendered.
      */
     public $options = ['class' => 'grid-view'];
     /**
      * @var array the HTML attributes for the table header row.
+     *
      * @see \yii\helpers\Html::renderTagAttributes() for details on how attributes are being rendered.
      */
     public $headerRowOptions = [];
     /**
      * @var array the HTML attributes for the table footer row.
+     *
      * @see \yii\helpers\Html::renderTagAttributes() for details on how attributes are being rendered.
      */
     public $footerRowOptions = [];
     /**
      * @var array|Closure the HTML attributes for the table body rows. This can be either an array
-     * specifying the common HTML attributes for all body rows, or an anonymous function that
-     * returns an array of the HTML attributes. The anonymous function will be called once for every
-     * data model returned by [[dataProvider]]. It should have the following signature:
+     *                    specifying the common HTML attributes for all body rows, or an anonymous function that
+     *                    returns an array of the HTML attributes. The anonymous function will be called once for every
+     *                    data model returned by [[dataProvider]]. It should have the following signature:
      *
      * ```php
      * function ($model, $key, $index, $grid)
@@ -107,14 +115,14 @@ class GridView extends BaseListView
     public $rowOptions = [];
     /**
      * @var Closure an anonymous function that is called once BEFORE rendering each data model.
-     * It should have the similar signature as [[rowOptions]]. The return result of the function
-     * will be rendered directly.
+     *              It should have the similar signature as [[rowOptions]]. The return result of the function
+     *              will be rendered directly.
      */
     public $beforeRow;
     /**
      * @var Closure an anonymous function that is called once AFTER rendering each data model.
-     * It should have the similar signature as [[rowOptions]]. The return result of the function
-     * will be rendered directly.
+     *              It should have the similar signature as [[rowOptions]]. The return result of the function
+     *              will be rendered directly.
      */
     public $afterRow;
     /**
@@ -126,7 +134,8 @@ class GridView extends BaseListView
      */
     public $showFooter = false;
     /**
-     * @var bool whether to place footer after body in DOM if $showFooter is true
+     * @var bool whether to place footer after body in DOM if is true
+     *
      * @since 2.0.14
      */
     public $placeFooterAfterBody = false;
@@ -136,13 +145,13 @@ class GridView extends BaseListView
     public $showOnEmpty = true;
     /**
      * @var array|Formatter the formatter used to format model attribute values into displayable texts.
-     * This can be either an instance of [[Formatter]] or an configuration array for creating the [[Formatter]]
-     * instance. If this property is not set, the "formatter" application component will be used.
+     *                      This can be either an instance of [[Formatter]] or an configuration array for creating the [[Formatter]]
+     *                      instance. If this property is not set, the "formatter" application component will be used.
      */
     public $formatter;
     /**
      * @var array grid column configuration. Each array element represents the configuration
-     * for one particular grid column. For example,
+     *            for one particular grid column. For example,
      *
      * ```php
      * [
@@ -191,8 +200,8 @@ class GridView extends BaseListView
     public $columns = [];
     /**
      * @var string the HTML display when the content of a cell is empty.
-     * This property is used to render cells that have no defined content,
-     * e.g. empty footer or filter cells.
+     *             This property is used to render cells that have no defined content,
+     *             e.g. empty footer or filter cells.
      *
      * Note that this is not used by the [[DataColumn]] if a data item is `null`. In that case
      * the [[\yii\i18n\Formatter::nullDisplay|nullDisplay]] property of the [[formatter]] will
@@ -201,8 +210,8 @@ class GridView extends BaseListView
     public $emptyCell = '&nbsp;';
     /**
      * @var \yii\base\Model the model that keeps the user-entered filter data. When this property is set,
-     * the grid view will enable column-based filtering. Each data column by default will display a text field
-     * at the top that users can fill in to filter the data.
+     *                      the grid view will enable column-based filtering. Each data column by default will display a text field
+     *                      at the top that users can fill in to filter the data.
      *
      * Note that in order to show an input field for filtering, a column must have its [[DataColumn::attribute]]
      * property set and the attribute should be active in the current scenario of $filterModel or have
@@ -213,9 +222,9 @@ class GridView extends BaseListView
     public $filterModel;
     /**
      * @var string|array the URL for returning the filtering result. [[Url::to()]] will be called to
-     * normalize the URL. If not set, the current controller action will be used.
-     * When the user makes change to any filter input, the current filtering inputs will be appended
-     * as GET parameters to this URL.
+     *                   normalize the URL. If not set, the current controller action will be used.
+     *                   When the user makes change to any filter input, the current filtering inputs will be appended
+     *                   as GET parameters to this URL.
      */
     public $filterUrl;
     /**
@@ -228,23 +237,25 @@ class GridView extends BaseListView
     public $filterPosition = self::FILTER_POS_BODY;
     /**
      * @var array the HTML attributes for the filter row element.
+     *
      * @see \yii\helpers\Html::renderTagAttributes() for details on how attributes are being rendered.
      */
     public $filterRowOptions = ['class' => 'filters'];
     /**
      * @var array the options for rendering the filter error summary.
-     * Please refer to [[Html::errorSummary()]] for more details about how to specify the options.
+     *            Please refer to [[Html::errorSummary()]] for more details about how to specify the options.
+     *
      * @see renderErrors()
      */
     public $filterErrorSummaryOptions = ['class' => 'error-summary'];
     /**
      * @var array the options for rendering every filter error message.
-     * This is mainly used by [[Html::error()]] when rendering an error message next to every filter input field.
+     *            This is mainly used by [[Html::error()]] when rendering an error message next to every filter input field.
      */
     public $filterErrorOptions = ['class' => 'help-block'];
     /**
      * @var string the layout that determines how different sections of the grid view should be organized.
-     * The following tokens will be replaced with the corresponding section contents:
+     *             The following tokens will be replaced with the corresponding section contents:
      *
      * - `{summary}`: the summary section. See [[renderSummary()]].
      * - `{errors}`: the filter model error summary. See [[renderErrors()]].
@@ -253,7 +264,6 @@ class GridView extends BaseListView
      * - `{pager}`: the pager. See [[renderPager()]].
      */
     public $layout = "{summary}\n{items}\n{pager}";
-
 
     /**
      * Initializes the grid view.
@@ -271,7 +281,7 @@ class GridView extends BaseListView
             throw new InvalidConfigException('The "formatter" property must be either a Format object or a configuration array.');
         }
         if (!isset($this->filterRowOptions['id'])) {
-            $this->filterRowOptions['id'] = $this->options['id'] . '-filters';
+            $this->filterRowOptions['id'] = $this->options['id'].'-filters';
         }
 
         $this->initColumns();
@@ -279,6 +289,7 @@ class GridView extends BaseListView
 
     /**
      * Renders validator errors of filter model.
+     *
      * @return string the rendering result.
      */
     public function renderErrors()
@@ -305,6 +316,7 @@ class GridView extends BaseListView
 
     /**
      * Renders the data models for the grid view.
+     *
      * @return string the HTML code of table
      */
     public function renderItems()
@@ -316,13 +328,13 @@ class GridView extends BaseListView
 
         $tableFooter = false;
         $tableFooterAfterBody = false;
-        
+
         if ($this->showFooter) {
             if ($this->placeFooterAfterBody) {
                 $tableFooterAfterBody = $this->renderTableFooter();
             } else {
                 $tableFooter = $this->renderTableFooter();
-            }	        
+            }
         }
 
         $content = array_filter([
@@ -339,6 +351,7 @@ class GridView extends BaseListView
 
     /**
      * Renders the caption element.
+     *
      * @return bool|string the rendered caption element or `false` if no caption element should be rendered.
      */
     public function renderCaption()
@@ -352,6 +365,7 @@ class GridView extends BaseListView
 
     /**
      * Renders the column group HTML.
+     *
      * @return bool|string the column group HTML or `false` if no column group should be rendered.
      */
     public function renderColumnGroup()
@@ -373,6 +387,7 @@ class GridView extends BaseListView
 
     /**
      * Renders the table header.
+     *
      * @return string the rendering result.
      */
     public function renderTableHeader()
@@ -384,16 +399,17 @@ class GridView extends BaseListView
         }
         $content = Html::tag('tr', implode('', $cells), $this->headerRowOptions);
         if ($this->filterPosition === self::FILTER_POS_HEADER) {
-            $content = $this->renderFilters() . $content;
+            $content = $this->renderFilters().$content;
         } elseif ($this->filterPosition === self::FILTER_POS_BODY) {
             $content .= $this->renderFilters();
         }
 
-        return "<thead>\n" . $content . "\n</thead>";
+        return "<thead>\n".$content."\n</thead>";
     }
 
     /**
      * Renders the table footer.
+     *
      * @return string the rendering result.
      */
     public function renderTableFooter()
@@ -408,11 +424,12 @@ class GridView extends BaseListView
             $content .= $this->renderFilters();
         }
 
-        return "<tfoot>\n" . $content . "\n</tfoot>";
+        return "<tfoot>\n".$content."\n</tfoot>";
     }
 
     /**
      * Renders the filter.
+     *
      * @return string the rendering result.
      */
     public function renderFilters()
@@ -432,6 +449,7 @@ class GridView extends BaseListView
 
     /**
      * Renders the table body.
+     *
      * @return string the rendering result.
      */
     public function renderTableBody()
@@ -461,17 +479,19 @@ class GridView extends BaseListView
         if (empty($rows) && $this->emptyText !== false) {
             $colspan = count($this->columns);
 
-            return "<tbody>\n<tr><td colspan=\"$colspan\">" . $this->renderEmpty() . "</td></tr>\n</tbody>";
+            return "<tbody>\n<tr><td colspan=\"$colspan\">".$this->renderEmpty()."</td></tr>\n</tbody>";
         }
 
-        return "<tbody>\n" . implode("\n", $rows) . "\n</tbody>";
+        return "<tbody>\n".implode("\n", $rows)."\n</tbody>";
     }
 
     /**
      * Renders a table row with the given data model and key.
+     *
      * @param mixed $model the data model to be rendered
-     * @param mixed $key the key associated with the data model
-     * @param int $index the zero-based index of the data model among the model array returned by [[dataProvider]].
+     * @param mixed $key   the key associated with the data model
+     * @param int   $index the zero-based index of the data model among the model array returned by [[dataProvider]].
+     *
      * @return string the rendering result
      */
     public function renderTableRow($model, $key, $index)
@@ -505,7 +525,7 @@ class GridView extends BaseListView
             } else {
                 $column = $this->app->createObject(array_merge([
                     '__class' => $this->dataColumnClass ?: DataColumn::class,
-                    'grid' => $this,
+                    'grid'    => $this,
                 ], $column));
             }
             if (!$column->visible) {
@@ -518,9 +538,12 @@ class GridView extends BaseListView
 
     /**
      * Creates a [[DataColumn]] object based on a string in the format of "attribute:format:label".
+     *
      * @param string $text the column specification string
-     * @return DataColumn the column instance
+     *
      * @throws InvalidConfigException if the column specification is invalid
+     *
+     * @return DataColumn the column instance
      */
     protected function createDataColumn($text)
     {
@@ -529,11 +552,11 @@ class GridView extends BaseListView
         }
 
         return $this->app->createObject([
-            '__class' => $this->dataColumnClass ?: DataColumn::class,
-            'grid' => $this,
+            '__class'   => $this->dataColumnClass ?: DataColumn::class,
+            'grid'      => $this,
             'attribute' => $matches[1],
-            'format' => $matches[3] ?? 'text',
-            'label' => $matches[5] ?? null,
+            'format'    => $matches[3] ?? 'text',
+            'label'     => $matches[5] ?? null,
         ]);
     }
 

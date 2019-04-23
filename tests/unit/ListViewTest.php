@@ -1,6 +1,7 @@
 <?php
 /**
  * @link http://www.yiiframework.com/
+ *
  * @copyright Copyright (c) 2008 Yii Software LLC
  * @license http://www.yiiframework.com/license/
  */
@@ -27,8 +28,8 @@ class ListViewTest extends TestCase
     {
         $out = $this->getListView([
             'dataProvider' => $this->app->createObject([
-                '__class' => ArrayDataProvider::class,
-                'allModels' => []
+                '__class'   => ArrayDataProvider::class,
+                'allModels' => [],
             ]),
             'emptyText' => 'Nothing at all',
         ])->run();
@@ -39,8 +40,8 @@ class ListViewTest extends TestCase
     {
         $out = $this->getListView([
             'dataProvider' => $this->app->createObject([
-                '__class' => ArrayDataProvider::class,
-                'allModels' => []
+                '__class'   => ArrayDataProvider::class,
+                'allModels' => [],
             ]),
             'emptyText' => false,
         ])->run();
@@ -52,8 +53,8 @@ class ListViewTest extends TestCase
     {
         $out = $this->getListView([
             'dataProvider' => $this->app->createObject([
-                '__class' => ArrayDataProvider::class,
-                'allModels' => []
+                '__class'   => ArrayDataProvider::class,
+                'allModels' => [],
             ]),
             'showOnEmpty' => true,
         ])->run();
@@ -68,13 +69,14 @@ HTML
 
     /**
      * @param array $options
+     *
      * @return ListView
      */
     private function getListView($options = [])
     {
         return $this->app->createObject(array_merge([
-            '__class' => ListView::class,
-            'id' => 'w0',
+            '__class'      => ListView::class,
+            'id'           => 'w0',
             'dataProvider' => $this->getDataProvider(),
         ], $options));
     }
@@ -85,7 +87,7 @@ HTML
     private function getDataProvider()
     {
         return $this->app->createObject([
-            '__class' => ArrayDataProvider::class,
+            '__class'   => ArrayDataProvider::class,
             'allModels' => [
                 ['id' => 1, 'login' => 'silverfire'],
                 ['id' => 2, 'login' => 'samdark'],
@@ -133,7 +135,7 @@ HTML
             ],
             [
                 function ($model, $key, $index, $widget) {
-                    return "Item #{$index}: {$model['login']} - Widget: " . get_class($widget);
+                    return "Item #{$index}: {$model['login']} - Widget: ".get_class($widget);
                 },
                 '<div id="w0" class="list-view"><div class="summary">Showing <b>1-3</b> of <b>3</b> items.</div>
 <div data-key="0">Item #0: silverfire - Widget: yii\dataview\ListView</div>
@@ -154,7 +156,8 @@ HTML
 
     /**
      * @dataProvider itemViewOptions
-     * @param mixed $itemView
+     *
+     * @param mixed  $itemView
      * @param string $expected
      */
     public function testItemViewOptions($itemView, $expected)
@@ -177,12 +180,12 @@ HTML
             [
                 function ($model, $key, $index, $widget) {
                     return [
-                        'tag' => 'span',
+                        'tag'  => 'span',
                         'data' => [
-                            'test' => 'passed',
-                            'key' => $key,
+                            'test'  => 'passed',
+                            'key'   => $key,
                             'index' => $index,
-                            'id' => $model['id'],
+                            'id'    => $model['id'],
                         ],
                     ];
                 },
@@ -197,7 +200,8 @@ HTML
 
     /**
      * @dataProvider itemOptions
-     * @param mixed $itemOptions
+     *
+     * @param mixed  $itemOptions
      * @param string $expected
      */
     public function testItemOptions($itemOptions, $expected)
@@ -211,19 +215,21 @@ HTML
     {
         $before = function ($model, $key, $index, $widget) {
             $widget = get_class($widget);
+
             return "<!-- before: {$model['id']}, key: $key, index: $index, widget: $widget -->";
         };
         $after = function ($model, $key, $index, $widget) {
             if ($model['id'] === 1) {
-                return null;
+                return;
             }
             $widget = get_class($widget);
+
             return "<!-- after: {$model['id']}, key: $key, index: $index, widget: $widget -->";
         };
 
         $out = $this->getListView([
             'beforeItem' => $before,
-            'afterItem' => $after,
+            'afterItem'  => $after,
         ])->run();
 
         $this->assertEqualsWithoutLE(<<<HTML
@@ -253,7 +259,7 @@ HTML
                 $initTriggered = true;
             },
             'dataProvider' => $this->app->createObject([
-                '__class' => ArrayDataProvider::class,
+                '__class'   => ArrayDataProvider::class,
                 'allModels' => [],
             ]),
         ]);

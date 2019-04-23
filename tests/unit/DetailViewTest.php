@@ -1,16 +1,17 @@
 <?php
 /**
  * @link http://www.yiiframework.com/
+ *
  * @copyright Copyright (c) 2008 Yii Software LLC
  * @license http://www.yiiframework.com/license/
  */
 
 namespace yii\dataviews\tests\unit;
 
-use Yiisoft\Arrays\Arrayable;
-use Yiisoft\Arrays\ArrayableTrait;
 use yii\base\Model;
 use yii\dataview\DetailView;
+use Yiisoft\Arrays\Arrayable;
+use Yiisoft\Arrays\ArrayableTrait;
 
 /**
  * @group widgets
@@ -33,26 +34,26 @@ class DetailViewTest extends \yii\tests\TestCase
         $model->id = 'id';
 
         $this->detailView = $this->app->createObject([
-            '__class' => PublicDetailView::class,
-            'model' => $model,
-            'template' => '{label}:{value}',
+            '__class'    => PublicDetailView::class,
+            'model'      => $model,
+            'template'   => '{label}:{value}',
             'attributes' => [
                 'id',
                 [
                     'attribute' => 'id',
-                    'value' => 1,
+                    'value'     => 1,
                 ],
                 [
                     'attribute' => 'id',
-                    'value' => '1',
+                    'value'     => '1',
                 ],
                 [
                     'attribute' => 'id',
-                    'value' => $model->getDisplayedId(),
+                    'value'     => $model->getDisplayedId(),
                 ],
                 [
                     'attribute' => 'id',
-                    'value' => function ($model) {
+                    'value'     => function ($model) {
                         return $model->getDisplayedId();
                     },
                 ],
@@ -77,9 +78,9 @@ class DetailViewTest extends \yii\tests\TestCase
         $model->το_αναγνωριστικό_του = 'A00002';
 
         $this->detailView = $this->app->createObject([
-            '__class' => PublicDetailView::class,
-            'model' => $model,
-            'template' => '{label}:{value}',
+            '__class'    => PublicDetailView::class,
+            'model'      => $model,
+            'template'   => '{label}:{value}',
             'attributes' => [
                 'ИдентификаторТовара',
                 'το_αναγνωριστικό_του',
@@ -102,40 +103,40 @@ class DetailViewTest extends \yii\tests\TestCase
         $model->id = 'id';
 
         $this->detailView = $this->app->createObject([
-            '__class' => PublicDetailView::class,
-            'model' => $model,
-            'template' => '{label}:{value}',
+            '__class'    => PublicDetailView::class,
+            'model'      => $model,
+            'template'   => '{label}:{value}',
             'attributes' => [
                 [
                     'attribute' => 'id',
-                    'value' => $model->getDisplayedId(),
+                    'value'     => $model->getDisplayedId(),
                 ],
                 [
                     'attribute' => 'id',
-                    'value' => $model->getDisplayedId(),
-                    'visible' => false,
+                    'value'     => $model->getDisplayedId(),
+                    'visible'   => false,
                 ],
                 [
                     'attribute' => 'id',
-                    'value' => $model->getDisplayedId(),
-                    'visible' => true,
+                    'value'     => $model->getDisplayedId(),
+                    'visible'   => true,
                 ],
                 [
                     'attribute' => 'id',
-                    'value' => function ($model) {
+                    'value'     => function ($model) {
                         return $model->getDisplayedId();
                     },
                 ],
                 [
                     'attribute' => 'id',
-                    'value' => function ($model) {
+                    'value'     => function ($model) {
                         return $model->getDisplayedId();
                     },
                     'visible' => false,
                 ],
                 [
                     'attribute' => 'id',
-                    'value' => function ($model) {
+                    'value'     => function ($model) {
                         return $model->getDisplayedId();
                     },
                     'visible' => true,
@@ -146,29 +147,29 @@ class DetailViewTest extends \yii\tests\TestCase
         $this->assertEquals([
             0 => [
                 'attribute' => 'id',
-                'format' => 'text',
-                'label' => 'Id',
-                'value' => 'Displayed id',
+                'format'    => 'text',
+                'label'     => 'Id',
+                'value'     => 'Displayed id',
             ],
             2 => [
                 'attribute' => 'id',
-                'format' => 'text',
-                'label' => 'Id',
-                'value' => 'Displayed id',
-                'visible' => true,
+                'format'    => 'text',
+                'label'     => 'Id',
+                'value'     => 'Displayed id',
+                'visible'   => true,
             ],
             3 => [
                 'attribute' => 'id',
-                'format' => 'text',
-                'label' => 'Id',
-                'value' => 'Displayed id',
+                'format'    => 'text',
+                'label'     => 'Id',
+                'value'     => 'Displayed id',
             ],
             5 => [
                 'attribute' => 'id',
-                'format' => 'text',
-                'label' => 'Id',
-                'value' => 'Displayed id',
-                'visible' => true,
+                'format'    => 'text',
+                'label'     => 'Id',
+                'value'     => 'Displayed id',
+                'visible'   => true,
             ],
         ], $this->detailView->attributes);
         $this->assertEquals(5, $model->getDisplayedIdCallCount());
@@ -182,9 +183,9 @@ class DetailViewTest extends \yii\tests\TestCase
         $model->related->id = 'related';
 
         $this->detailView = $this->app->createObject([
-            '__class' => PublicDetailView::class,
-            'model' => $model,
-            'template' => '{label}:{value}',
+            '__class'    => PublicDetailView::class,
+            'model'      => $model,
+            'template'   => '{label}:{value}',
             'attributes' => [
                 'id',
                 'related.id',
@@ -198,9 +199,9 @@ class DetailViewTest extends \yii\tests\TestCase
         $model->related = null;
 
         $this->detailView = $this->app->createObject([
-            '__class' => PublicDetailView::class,
-            'model' => $model,
-            'template' => '{label}:{value}',
+            '__class'    => PublicDetailView::class,
+            'model'      => $model,
+            'template'   => '{label}:{value}',
             'attributes' => [
                 'id',
                 'related.id',
@@ -216,15 +217,15 @@ class DetailViewTest extends \yii\tests\TestCase
         $expectedValue = [
             [
                 'attribute' => 'id',
-                'format' => 'text',
-                'label' => 'Id',
-                'value' => 1,
+                'format'    => 'text',
+                'label'     => 'Id',
+                'value'     => 1,
             ],
             [
                 'attribute' => 'text',
-                'format' => 'text',
-                'label' => 'Text',
-                'value' => 'I`m arrayable',
+                'format'    => 'text',
+                'label'     => 'Text',
+                'value'     => 'I`m arrayable',
             ],
         ];
 
@@ -234,7 +235,7 @@ class DetailViewTest extends \yii\tests\TestCase
 
         $this->detailView = $this->app->createObject([
             '__class' => PublicDetailView::class,
-            'model' => $model,
+            'model'   => $model,
         ]);
 
         $this->assertEquals($expectedValue, $this->detailView->attributes);
@@ -245,15 +246,15 @@ class DetailViewTest extends \yii\tests\TestCase
         $expectedValue = [
             [
                 'attribute' => 'id',
-                'format' => 'text',
-                'label' => 'Id',
-                'value' => 1,
+                'format'    => 'text',
+                'label'     => 'Id',
+                'value'     => 1,
             ],
             [
                 'attribute' => 'text',
-                'format' => 'text',
-                'label' => 'Text',
-                'value' => 'I`m an object',
+                'format'    => 'text',
+                'label'     => 'Text',
+                'value'     => 'I`m an object',
             ],
         ];
 
@@ -263,7 +264,7 @@ class DetailViewTest extends \yii\tests\TestCase
 
         $this->detailView = $this->app->createObject([
             '__class' => PublicDetailView::class,
-            'model' => $model,
+            'model'   => $model,
         ]);
 
         $this->assertEquals($expectedValue, $this->detailView->attributes);
@@ -274,26 +275,26 @@ class DetailViewTest extends \yii\tests\TestCase
         $expectedValue = [
             [
                 'attribute' => 'id',
-                'format' => 'text',
-                'label' => 'Id',
-                'value' => 1,
+                'format'    => 'text',
+                'label'     => 'Id',
+                'value'     => 1,
             ],
             [
                 'attribute' => 'text',
-                'format' => 'text',
-                'label' => 'Text',
-                'value' => 'I`m an array',
+                'format'    => 'text',
+                'label'     => 'Text',
+                'value'     => 'I`m an array',
             ],
         ];
 
         $model = [
-            'id' => 1,
+            'id'   => 1,
             'text' => 'I`m an array',
         ];
 
         $this->detailView = $this->app->createObject([
             '__class' => PublicDetailView::class,
-            'model' => $model,
+            'model'   => $model,
         ]);
 
         $this->assertEquals($expectedValue, $this->detailView->attributes);
@@ -305,13 +306,13 @@ class DetailViewTest extends \yii\tests\TestCase
 
         $this->detailView = $this->app->createObject([
             '__class' => PublicDetailView::class,
-            'model' => [
+            'model'   => [
                 'text' => 'I`m an array',
             ],
             'attributes' => [
                 [
-                    'attribute' => 'text',
-                    'label' => 'Text',
+                    'attribute'      => 'text',
+                    'label'          => 'Text',
                     'contentOptions' => ['class' => 'bg-red'],
                     'captionOptions' => ['tooltip' => 'Tooltip'],
                 ],
@@ -335,11 +336,11 @@ class DetailViewTest extends \yii\tests\TestCase
         $model->text = 'I`m an object';
 
         $this->detailView = $this->app->createObject([
-            '__class' => PublicDetailView::class,
-            'model' => $model,
+            '__class'        => PublicDetailView::class,
+            'model'          => $model,
             'on widget.init' => function () use (&$initTriggered) {
                 $initTriggered = true;
-            }
+            },
         ]);
 
         $this->assertTrue($initTriggered);
@@ -399,11 +400,13 @@ class UnicodeAttributesModelMock extends Model
 {
     /**
      * Product's ID (Russian).
+     *
      * @var mixed
      */
     public $ИдентификаторТовара;
     /**
      * ID (Greek).
+     *
      * @var mixed
      */
     public $το_αναγνωριστικό_του;

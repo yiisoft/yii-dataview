@@ -1,6 +1,7 @@
 <?php
 /**
  * @link http://www.yiiframework.com/
+ *
  * @copyright Copyright (c) 2008 Yii Software LLC
  * @license http://www.yiiframework.com/license/
  */
@@ -8,9 +9,9 @@
 namespace yii\dataview\columns;
 
 use Closure;
+use yii\di\Initiable;
 use yii\exceptions\InvalidConfigException;
 use yii\helpers\Html;
-use yii\di\Initiable;
 
 /**
  * RadioButtonColumn displays a column of radio buttons in a grid view.
@@ -33,6 +34,7 @@ use yii\di\Initiable;
  * ```
  *
  * @author Kirk Hansen <hanski07@luther.edu>
+ *
  * @since 2.0.11
  */
 class RadioButtonColumn extends Column implements Initiable
@@ -43,7 +45,7 @@ class RadioButtonColumn extends Column implements Initiable
     public $name = 'radioButtonSelection';
     /**
      * @var array|\Closure the HTML attributes for the radio buttons. This can either be an array of
-     * attributes or an anonymous function ([[Closure]]) returning such an array.
+     *                     attributes or an anonymous function ([[Closure]]) returning such an array.
      *
      * The signature of the function should be as follows: `function ($model, $key, $index, $column)`
      * where `$model`, `$key`, and `$index` refer to the model, key and index of the row currently being rendered
@@ -63,9 +65,9 @@ class RadioButtonColumn extends Column implements Initiable
      */
     public $radioOptions = [];
 
-
     /**
      * {@inheritdoc}
+     *
      * @throws \yii\exceptions\InvalidConfigException if [[name]] is not set.
      */
     public function init(): void
@@ -93,6 +95,7 @@ class RadioButtonColumn extends Column implements Initiable
             }
         }
         $checked = $options['checked'] ?? false;
+
         return Html::radio($this->name, $checked, $options);
     }
 }
