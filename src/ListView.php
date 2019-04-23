@@ -8,7 +8,7 @@
 namespace yii\dataview;
 
 use Closure;
-use yii\helpers\ArrayHelper;
+use Yiisoft\Arrays\ArrayHelper;
 use yii\helpers\Html;
 
 /**

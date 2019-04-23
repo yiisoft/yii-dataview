@@ -9,11 +9,11 @@ namespace yii\dataview;
 
 use yii\di\Initiable;
 use yii\exceptions\InvalidConfigException;
-use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 use yii\helpers\Yii;
 use yii\widgets\LinkPager;
 use yii\widgets\Widget;
+use Yiisoft\Arrays\ArrayHelper;
 
 /**
  * BaseListView is a base class for widgets displaying data from data provider

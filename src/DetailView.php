@@ -7,16 +7,16 @@
 
 namespace yii\dataview;
 
-use yii\helpers\Yii;
-use yii\base\Arrayable;
-use yii\exceptions\InvalidConfigException;
 use yii\base\Model;
-use yii\helpers\ArrayHelper;
+use yii\di\Initiable;
+use yii\exceptions\InvalidConfigException;
 use yii\helpers\Html;
-use yii\helpers\Inflector;
+use yii\helpers\Yii;
 use yii\i18n\Formatter;
 use yii\widgets\Widget;
-use yii\di\Initiable;
+use Yiisoft\Arrays\Arrayable;
+use Yiisoft\Arrays\ArrayHelper;
+use Yiisoft\Helpers\InflectorHelper;
 
 /**
  * DetailView displays the detail of a single data [[model]].
@@ -234,7 +234,7 @@ class DetailView extends Widget implements Initiable
             if (isset($attribute['attribute'])) {
                 $attributeName = $attribute['attribute'];
                 if (!isset($attribute['label'])) {
-                    $attribute['label'] = $this->model instanceof Model ? $this->model->getAttributeLabel($attributeName) : Inflector::camel2words($attributeName, true);
+                    $attribute['label'] = $this->model instanceof Model ? $this->model->getAttributeLabel($attributeName) : InflectorHelper::camel2words($attributeName, true);
                 }
                 if (!array_key_exists('value', $attribute)) {
                     $attribute['value'] = ArrayHelper::getValue($this->model, $attributeName);

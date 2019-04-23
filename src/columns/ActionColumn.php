@@ -7,9 +7,9 @@
 
 namespace yii\dataview\columns;
 
-use yii\helpers\Yii;
 use yii\helpers\Html;
 use yii\helpers\Url;
+use yii\helpers\Yii;
 
 /**
  * ActionColumn is a column for the [[GridView]] widget that displays buttons for viewing and manipulating the items.

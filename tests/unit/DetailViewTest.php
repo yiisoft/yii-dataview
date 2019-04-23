@@ -7,8 +7,8 @@
 
 namespace yii\dataviews\tests\unit;
 
-use yii\base\Arrayable;
-use yii\base\ArrayableTrait;
+use Yiisoft\Arrays\Arrayable;
+use Yiisoft\Arrays\ArrayableTrait;
 use yii\base\Model;
 use yii\dataview\DetailView;
 
