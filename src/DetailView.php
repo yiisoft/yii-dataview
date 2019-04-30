@@ -17,7 +17,7 @@ use yii\i18n\Formatter;
 use yii\widgets\Widget;
 use Yiisoft\Arrays\Arrayable;
 use Yiisoft\Arrays\ArrayHelper;
-use Yiisoft\Helpers\InflectorHelper;
+use Yiisoft\Inflector\InflectorHelper;
 
 /**
  * DetailView displays the detail of a single data [[model]].
