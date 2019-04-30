@@ -89,12 +89,12 @@
     },
     "autoload": {
         "psr-4": {
-            "yii\\dataview\\": "src"
+            "Yiisoft\\Yii\\DataView\\": "src"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "yii\\dataview\\tests\\": "tests"
+            "Yiisoft\\Yii\\DataView\\Tests\\": "tests"
         }
     }
 }

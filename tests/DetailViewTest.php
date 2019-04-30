@@ -6,10 +6,10 @@
  * @license http://www.yiiframework.com/license/
  */
 
-namespace yii\dataviews\tests\unit;
+namespace Yiisoft\Yii\DataView\Tests;
 
 use yii\base\Model;
-use yii\dataview\DetailView;
+use Yiisoft\Yii\DataView\DetailView;
 use Yiisoft\Arrays\Arrayable;
 use Yiisoft\Arrays\ArrayableTrait;
 

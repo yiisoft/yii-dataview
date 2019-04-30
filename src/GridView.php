@@ -6,11 +6,11 @@
  * @license http://www.yiiframework.com/license/
  */
 
-namespace yii\dataview;
+namespace Yiisoft\Yii\DataView;
 
 use Closure;
 use yii\base\Model;
-use yii\dataview\columns\DataColumn;
+use Yiisoft\Yii\DataView\Columns\DataColumn;
 use yii\exceptions\InvalidConfigException;
 use yii\helpers\Html;
 use yii\helpers\Yii;
