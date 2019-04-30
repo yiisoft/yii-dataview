@@ -6,7 +6,7 @@
  * @license http://www.yiiframework.com/license/
  */
 
-namespace yii\dataview;
+namespace Yiisoft\Yii\DataView;
 
 use yii\base\Model;
 use yii\di\Initiable;

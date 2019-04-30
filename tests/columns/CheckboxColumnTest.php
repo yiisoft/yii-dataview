@@ -6,11 +6,11 @@
  * @license http://www.yiiframework.com/license/
  */
 
-namespace yii\dataview\tests\unit\columns;
+namespace Yiisoft\Yii\DataView\Tests\Coolumns;
 
 use yii\data\ArrayDataProvider;
-use yii\dataview\columns\CheckboxColumn;
-use yii\dataview\GridView;
+use Yiisoft\Yii\DataView\Columns\CheckboxColumn;
+use Yiisoft\Yii\DataView\GridView;
 use yii\helpers\FileHelper;
 use yii\helpers\Html;
 use yii\helpers\Yii;

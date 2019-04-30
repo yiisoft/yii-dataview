@@ -6,9 +6,9 @@
  * @license http://www.yiiframework.com/license/
  */
 
-namespace yii\dataview\tests\unit\columns;
+namespace Yiisoft\Yii\DataView\Tests\Coolumns;
 
-use yii\dataview\columns\ActionColumn;
+use Yiisoft\Yii\DataView\Columns\ActionColumn;
 use yii\helpers\Yii;
 
 /**

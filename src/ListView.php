@@ -6,7 +6,7 @@
  * @license http://www.yiiframework.com/license/
  */
 
-namespace yii\dataview;
+namespace Yiisoft\Yii\DataView;
 
 use Closure;
 use yii\helpers\Html;

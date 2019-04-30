@@ -6,7 +6,7 @@
  * @license http://www.yiiframework.com/license/
  */
 
-namespace yii\dataview\columns;
+namespace Yiisoft\Yii\DataView\Columns;
 
 use Closure;
 use yii\base\Model;

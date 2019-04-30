@@ -6,11 +6,11 @@
  * @license http://www.yiiframework.com/license/
  */
 
-namespace yii\dataview\tests\unit\columns;
+namespace Yiisoft\Yii\DataView\Tests\Coolumns;
 
 use yii\data\ArrayDataProvider;
-use yii\dataview\columns\RadioButtonColumn;
-use yii\dataview\GridView;
+use Yiisoft\Yii\DataView\Columns\RadioButtonColumn;
+use Yiisoft\Yii\DataView\GridView;
 use yii\helpers\Html;
 use yii\helpers\Yii;
 use yii\tests\TestCase;

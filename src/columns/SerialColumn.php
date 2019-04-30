@@ -6,7 +6,7 @@
  * @license http://www.yiiframework.com/license/
  */
 
-namespace yii\dataview\columns;
+namespace Yiisoft\Yii\DataView\Columns;
 
 /**
  * SerialColumn displays a column of row numbers (1-based).

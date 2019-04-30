@@ -6,11 +6,11 @@
  * @license http://www.yiiframework.com/license/
  */
 
-namespace yii\dataview\tests\unit;
+namespace Yiisoft\Yii\DataView\Tests;
 
 use yii\data\ArrayDataProvider;
-use yii\dataview\columns\DataColumn;
-use yii\dataview\GridView;
+use Yiisoft\Yii\DataView\Columns\DataColumn;
+use Yiisoft\Yii\DataView\GridView;
 use yii\helpers\Yii;
 use yii\web\View;
 
