@@ -197,7 +197,7 @@ class ActionColumn extends Column
      * This method is called for each button and each row.
      *
      * @param string                        $action the button name (or action ID)
-     * @param \yii\db\ActiveRecordInterface $model  the data model
+     * @param \Yiisoft\Db\ActiveRecordInterface $model  the data model
      * @param mixed                         $key    the key associated with the data model
      * @param int                           $index  the current row index
      *
