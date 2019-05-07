@@ -15,7 +15,7 @@ use yii\data\ArrayDataProvider;
 use Yiisoft\Db\ActiveQueryInterface;
 use yii\helpers\Html;
 use Yiisoft\Arrays\ArrayHelper;
-use Yiisoft\Inflector\InflectorHelper;
+use Yiisoft\Strings\Inflector;
 
 /**
  * DataColumn is the default column type for the [[GridView]] widget.
@@ -52,7 +52,7 @@ class DataColumn extends Column
      *             link label when sorting is enabled for this column.
      *             If it is not set and the models provided by the GridViews data provider are instances
      *             of [[\Yiisoft\Db\ActiveRecord]], the label will be determined using [[\Yiisoft\Db\ActiveRecord::getAttributeLabel()]].
-     *             Otherwise [[\Yiisoft\Inflector\InflectorHelper::camel2words()]] will be used to get a label.
+     *             Otherwise [[\Yiisoft\Strings\Inflector::camel2words()]] will be used to get a label.
      */
     public $label;
     /**
@@ -175,7 +175,7 @@ class DataColumn extends Column
                     /* @var $model Model */
                     $label = $model->getAttributeLabel($this->attribute);
                 } else {
-                    $label = InflectorHelper::camel2words($this->attribute);
+                    $label = Inflector::camel2words($this->attribute);
                 }
             }
         } else {

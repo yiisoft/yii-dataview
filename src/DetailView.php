@@ -17,7 +17,7 @@ use yii\i18n\Formatter;
 use yii\widgets\Widget;
 use Yiisoft\Arrays\Arrayable;
 use Yiisoft\Arrays\ArrayHelper;
-use Yiisoft\Inflector\InflectorHelper;
+use Yiisoft\Strings\Inflector;
 
 /**
  * DetailView displays the detail of a single data [[model]].
@@ -242,7 +242,7 @@ class DetailView extends Widget implements Initiable
             if (isset($attribute['attribute'])) {
                 $attributeName = $attribute['attribute'];
                 if (!isset($attribute['label'])) {
-                    $attribute['label'] = $this->model instanceof Model ? $this->model->getAttributeLabel($attributeName) : InflectorHelper::camel2words($attributeName, true);
+                    $attribute['label'] = $this->model instanceof Model ? $this->model->getAttributeLabel($attributeName) : Inflector::camel2words($attributeName, true);
                 }
                 if (!array_key_exists('value', $attribute)) {
                     $attribute['value'] = ArrayHelper::getValue($this->model, $attributeName);
