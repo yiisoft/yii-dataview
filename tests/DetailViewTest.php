@@ -10,7 +10,7 @@ namespace Yiisoft\Yii\DataView\Tests;
 
 use yii\base\Model;
 use Yiisoft\Yii\DataView\DetailView;
-use Yiisoft\Arrays\Arrayable;
+use Yiisoft\Arrays\ArrayableInterface;
 use Yiisoft\Arrays\ArrayableTrait;
 
 /**
@@ -229,7 +229,7 @@ class DetailViewTest extends \yii\tests\TestCase
             ],
         ];
 
-        $model = new ArrayableMock();
+        $model = new ArrayableInterfaceMock();
         $model->id = 1;
         $model->text = 'I`m arrayable';
 
@@ -350,7 +350,7 @@ class DetailViewTest extends \yii\tests\TestCase
 /**
  * Helper Class.
  */
-class ArrayableMock implements Arrayable
+class ArrayableInterfaceMock implements ArrayableInterface
 {
     use ArrayableTrait;
 

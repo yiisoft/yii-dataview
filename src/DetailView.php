@@ -15,7 +15,7 @@ use yii\helpers\Html;
 use yii\helpers\Yii;
 use yii\i18n\Formatter;
 use yii\widgets\Widget;
-use Yiisoft\Arrays\Arrayable;
+use Yiisoft\Arrays\ArrayableInterface;
 use Yiisoft\Arrays\ArrayHelper;
 use Yiisoft\Strings\Inflector;
 
@@ -206,7 +206,7 @@ class DetailView extends Widget implements Initiable
             if ($this->model instanceof Model) {
                 $this->attributes = $this->model->attributes();
             } elseif (is_object($this->model)) {
-                $this->attributes = $this->model instanceof Arrayable ? array_keys($this->model->toArray()) : array_keys(get_object_vars($this->model));
+                $this->attributes = $this->model instanceof ArrayableInterface ? array_keys($this->model->toArray()) : array_keys(get_object_vars($this->model));
             } elseif (is_array($this->model)) {
                 $this->attributes = array_keys($this->model);
             } else {
