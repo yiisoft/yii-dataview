@@ -184,6 +184,7 @@ class ActionColumn extends Column
                 $options = array_merge([
                     'title'      => $title,
                     'aria-label' => $title,
+                    'data-name'  => $name,
                 ], $additionalOptions, $this->buttonOptions);
                 $icon = Html::tag('span', '', ['class' => "glyphicon glyphicon-$iconName"]);
 
