@@ -77,6 +77,12 @@ class GridView extends BaseListView
      */
     public $tableOptions = ['class' => 'table table-striped table-bordered'];
     /**
+     * @var array the HTML attributes for the grid thead element.
+     *
+     * @see \yii\helpers\Html::renderTagAttributes() for details on how attributes are being rendered.
+     */
+    public $headOptions = [];
+    /**
      * @var array the HTML attributes for the container tag of the grid view.
      *            The "tag" element specifies the tag name of the container element and defaults to "div".
      *
@@ -404,7 +410,7 @@ class GridView extends BaseListView
             $content .= $this->renderFilters();
         }
 
-        return "<thead>\n".$content."\n</thead>";
+        return Html::tag('thead', "\n$content\n", $this->headOptions);
     }
 
     /**
