@@ -68,8 +68,7 @@
         "yiisoft/arrays": "^3.0@dev",
         "yiisoft/strings": "^3.0@dev",
         "yiisoft/view": "^3.0@dev",
-        "yiisoft/data": "^3.0@dev",
-        "yiisoft/yii-core": "^3.0@dev"
+        "yiisoft/data": "^3.0@dev"
     },
     "require-dev": {
         "yiisoft/di": "^3.0@dev",
@@ -79,9 +78,6 @@
         "phpunit/phpunit": "^7.3",
         "friendsofphp/php-cs-fixer": "^2.2",
         "hiqdev/composer-config-plugin": "^1.0@dev"
-    },
-    "suggest": {
-        "yiisoft/yii-core": "^3.0"
     },
     "extra": {
         "branch-alias": {
