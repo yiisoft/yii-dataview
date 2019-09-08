@@ -12,7 +12,6 @@ This [Yii Framework] provides data displaying widgets:
 - GridView
 - DetailView
 
-[Yii Framework]: https://github.com/yiisoft/yii-core
 
 For license information check the [LICENSE](LICENSE.md)-file.
 
