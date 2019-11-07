@@ -9,8 +9,8 @@
 namespace Yiisoft\Yii\DataView\Columns;
 
 use Closure;
-use yii\base\BaseObject;
 use Yiisoft\Html\Html;
+use Yiisoft\Yii\DataView\GridView;
 
 /**
  * Column is the base class of all [[GridView]] column classes.
@@ -21,7 +21,7 @@ use Yiisoft\Html\Html;
  *
  * @since 2.0
  */
-class Column extends BaseObject
+class Column
 {
     /**
      * @var GridView the grid view object that owns this column.
