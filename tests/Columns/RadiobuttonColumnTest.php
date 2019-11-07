@@ -26,7 +26,7 @@ use yii\web\Request;
 class RadiobuttonColumnTest extends TestCase
 {
     /**
-     * @expectedException \yii\exceptions\InvalidConfigException
+     * @expectedException \Yiisoft\Factory\Exceptions\InvalidConfigException
      * @expectedExceptionMessage The "name" property must be set.
      */
     public function testException()

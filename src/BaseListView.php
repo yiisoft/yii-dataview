@@ -9,7 +9,7 @@
 namespace Yiisoft\Yii\DataView;
 
 use yii\di\Initiable;
-use yii\exceptions\InvalidConfigException;
+use Yiisoft\Factory\Exceptions\InvalidConfigException;
 use yii\helpers\Html;
 use yii\helpers\Yii;
 use yii\widgets\LinkPager;

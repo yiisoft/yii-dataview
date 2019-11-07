@@ -10,7 +10,7 @@ namespace Yiisoft\Yii\DataView\Columns;
 
 use Closure;
 use yii\di\Initiable;
-use yii\exceptions\InvalidConfigException;
+use Yiisoft\Factory\Exceptions\InvalidConfigException;
 use yii\helpers\Html;
 
 /**
@@ -68,7 +68,7 @@ class RadioButtonColumn extends Column implements Initiable
     /**
      * {@inheritdoc}
      *
-     * @throws \yii\exceptions\InvalidConfigException if [[name]] is not set.
+     * @throws \Yiisoft\Factory\Exceptions\InvalidConfigException if [[name]] is not set.
      */
     public function init(): void
     {

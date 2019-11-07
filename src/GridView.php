@@ -11,7 +11,7 @@ namespace Yiisoft\Yii\DataView;
 use Closure;
 use yii\base\Model;
 use Yiisoft\Yii\DataView\Columns\DataColumn;
-use yii\exceptions\InvalidConfigException;
+use Yiisoft\Factory\Exceptions\InvalidConfigException;
 use yii\helpers\Html;
 use yii\helpers\Yii;
 use yii\i18n\Formatter;

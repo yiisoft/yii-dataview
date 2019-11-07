@@ -9,7 +9,7 @@
 namespace Yiisoft\Yii\DataView\Columns;
 
 use Closure;
-use yii\exceptions\InvalidConfigException;
+use Yiisoft\Factory\Exceptions\InvalidConfigException;
 use yii\helpers\Html;
 use yii\helpers\Json;
 
@@ -81,7 +81,7 @@ class CheckboxColumn extends Column
     /**
      * {@inheritdoc}
      *
-     * @throws \yii\exceptions\InvalidConfigException if [[name]] is not set.
+     * @throws \Yiisoft\Factory\Exceptions\InvalidConfigException if [[name]] is not set.
      */
     public function init()
     {
