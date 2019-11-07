@@ -13,10 +13,10 @@ use yii\di\Initiable;
 use Yiisoft\Factory\Exceptions\InvalidConfigException;
 use Yiisoft\Html\Html;
 use yii\helpers\Yii;
-use yii\i18n\Formatter;
 use yii\widgets\Widget;
 use Yiisoft\Arrays\ArrayableInterface;
 use Yiisoft\Arrays\ArrayHelper;
+use Yiisoft\I18n\MessageFormatterInterface;
 use Yiisoft\Strings\Inflector;
 
 /**
@@ -118,11 +118,14 @@ class DetailView extends Widget implements Initiable
      */
     public $options = ['class' => 'table table-striped table-bordered detail-view'];
     /**
-     * @var array|Formatter the formatter used to format model attribute values into displayable texts.
-     *                      This can be either an instance of [[Formatter]] or an configuration array for creating the [[Formatter]]
-     *                      instance. If this property is not set, the `formatter` application component will be used.
+     * @var \Yiisoft\I18n\MessageFormatterInterface the formatter used to format model attribute values into displayable texts.
      */
     public $formatter;
+
+    public function __construct(MessageFormatterInterface $formatter)
+    {
+        $this->formatter = $formatter;
+    }
 
     /**
      * Initializes the detail view.
@@ -134,14 +137,6 @@ class DetailView extends Widget implements Initiable
 
         if ($this->model === null) {
             throw new InvalidConfigException('Please specify the "model" property.');
-        }
-        if ($this->formatter === null) {
-            $this->formatter = Yii::getApp()->getFormatter();
-        } elseif (is_array($this->formatter)) {
-            $this->formatter = $this->app->createObject($this->formatter);
-        }
-        if (!$this->formatter instanceof Formatter) {
-            throw new InvalidConfigException('The "formatter" property must be either a Format object or a configuration array.');
         }
         $this->normalizeAttributes();
 
