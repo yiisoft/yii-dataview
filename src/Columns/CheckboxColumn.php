@@ -11,7 +11,7 @@ namespace Yiisoft\Yii\DataView\Columns;
 use Closure;
 use Yiisoft\Factory\Exceptions\InvalidConfigException;
 use Yiisoft\Html\Html;
-use yii\helpers\Json;
+use Yiisoft\Json\Json;
 
 /**
  * CheckboxColumn displays a column of checkboxes in a grid view.
