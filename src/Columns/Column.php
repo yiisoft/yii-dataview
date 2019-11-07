@@ -10,7 +10,7 @@ namespace Yiisoft\Yii\DataView\Columns;
 
 use Closure;
 use yii\base\BaseObject;
-use yii\helpers\Html;
+use Yiisoft\Html\Html;
 
 /**
  * Column is the base class of all [[GridView]] column classes.
@@ -49,13 +49,13 @@ class Column extends BaseObject
     /**
      * @var array the HTML attributes for the column group tag.
      *
-     * @see \yii\helpers\Html::renderTagAttributes() for details on how attributes are being rendered.
+     * @see \Yiisoft\Html\Html::renderTagAttributes() for details on how attributes are being rendered.
      */
     public $options = [];
     /**
      * @var array the HTML attributes for the header cell tag.
      *
-     * @see \yii\helpers\Html::renderTagAttributes() for details on how attributes are being rendered.
+     * @see \Yiisoft\Html\Html::renderTagAttributes() for details on how attributes are being rendered.
      */
     public $headerOptions = [];
     /**
@@ -66,19 +66,19 @@ class Column extends BaseObject
      *                     and `$column` is a reference to the [[Column]] object.
      *                     A function may be used to assign different attributes to different rows based on the data in that row.
      *
-     * @see \yii\helpers\Html::renderTagAttributes() for details on how attributes are being rendered.
+     * @see \Yiisoft\Html\Html::renderTagAttributes() for details on how attributes are being rendered.
      */
     public $contentOptions = [];
     /**
      * @var array the HTML attributes for the footer cell tag.
      *
-     * @see \yii\helpers\Html::renderTagAttributes() for details on how attributes are being rendered.
+     * @see \Yiisoft\Html\Html::renderTagAttributes() for details on how attributes are being rendered.
      */
     public $footerOptions = [];
     /**
      * @var array the HTML attributes for the filter cell tag.
      *
-     * @see \yii\helpers\Html::renderTagAttributes() for details on how attributes are being rendered.
+     * @see \Yiisoft\Html\Html::renderTagAttributes() for details on how attributes are being rendered.
      */
     public $filterOptions = [];
 

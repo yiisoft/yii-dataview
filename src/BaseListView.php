@@ -10,7 +10,7 @@ namespace Yiisoft\Yii\DataView;
 
 use yii\di\Initiable;
 use Yiisoft\Factory\Exceptions\InvalidConfigException;
-use yii\helpers\Html;
+use Yiisoft\Html\Html;
 use yii\helpers\Yii;
 use yii\widgets\LinkPager;
 use yii\widgets\Widget;
@@ -34,7 +34,7 @@ abstract class BaseListView extends Widget implements Initiable
      * @var array the HTML attributes for the container tag of the list view.
      *            The "tag" element specifies the tag name of the container element and defaults to "div".
      *
-     * @see \yii\helpers\Html::renderTagAttributes() for details on how attributes are being rendered.
+     * @see \Yiisoft\Html\Html::renderTagAttributes() for details on how attributes are being rendered.
      */
     public $options = [];
     /**
@@ -73,7 +73,7 @@ abstract class BaseListView extends Widget implements Initiable
      * @var array the HTML attributes for the summary of the list view.
      *            The "tag" element specifies the tag name of the summary element and defaults to "div".
      *
-     * @see \yii\helpers\Html::renderTagAttributes() for details on how attributes are being rendered.
+     * @see \Yiisoft\Html\Html::renderTagAttributes() for details on how attributes are being rendered.
      */
     public $summaryOptions = ['class' => 'summary'];
     /**
@@ -95,7 +95,7 @@ abstract class BaseListView extends Widget implements Initiable
      * @var array the HTML attributes for the emptyText of the list view.
      *            The "tag" element specifies the tag name of the emptyText element and defaults to "div".
      *
-     * @see \yii\helpers\Html::renderTagAttributes() for details on how attributes are being rendered.
+     * @see \Yiisoft\Html\Html::renderTagAttributes() for details on how attributes are being rendered.
      */
     public $emptyTextOptions = ['class' => 'empty'];
     /**

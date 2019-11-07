@@ -10,7 +10,7 @@ namespace Yiisoft\Yii\DataView\Columns;
 
 use Closure;
 use Yiisoft\Factory\Exceptions\InvalidConfigException;
-use yii\helpers\Html;
+use Yiisoft\Html\Html;
 use yii\helpers\Json;
 
 /**
@@ -64,7 +64,7 @@ class CheckboxColumn extends Column
      * }
      * ```
      *
-     * @see \yii\helpers\Html::renderTagAttributes() for details on how attributes are being rendered.
+     * @see \Yiisoft\Html\Html::renderTagAttributes() for details on how attributes are being rendered.
      */
     public $checkboxOptions = [];
     /**

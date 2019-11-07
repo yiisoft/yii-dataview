@@ -12,7 +12,7 @@ use yii\data\ArrayDataProvider;
 use Yiisoft\Yii\DataView\Columns\CheckboxColumn;
 use Yiisoft\Yii\DataView\GridView;
 use yii\helpers\FileHelper;
-use yii\helpers\Html;
+use Yiisoft\Html\Html;
 use yii\helpers\Yii;
 use yii\tests\framework\i18n\IntlTestHelper;
 use yii\tests\TestCase;

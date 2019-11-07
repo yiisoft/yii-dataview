@@ -11,7 +11,7 @@ namespace Yiisoft\Yii\DataView\Tests\Coolumns;
 use yii\data\ArrayDataProvider;
 use Yiisoft\Yii\DataView\Columns\RadioButtonColumn;
 use Yiisoft\Yii\DataView\GridView;
-use yii\helpers\Html;
+use Yiisoft\Html\Html;
 use yii\helpers\Yii;
 use yii\tests\TestCase;
 use yii\web\Request;

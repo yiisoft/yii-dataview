@@ -11,7 +11,7 @@ namespace Yiisoft\Yii\DataView;
 use yii\base\Model;
 use yii\di\Initiable;
 use Yiisoft\Factory\Exceptions\InvalidConfigException;
-use yii\helpers\Html;
+use Yiisoft\Html\Html;
 use yii\helpers\Yii;
 use yii\i18n\Formatter;
 use yii\widgets\Widget;
@@ -114,7 +114,7 @@ class DetailView extends Widget implements Initiable
      * @var array the HTML attributes for the container tag of this widget. The `tag` option specifies
      *            what container tag should be used. It defaults to `table` if not set.
      *
-     * @see \yii\helpers\Html::renderTagAttributes() for details on how attributes are being rendered.
+     * @see \Yiisoft\Html\Html::renderTagAttributes() for details on how attributes are being rendered.
      */
     public $options = ['class' => 'table table-striped table-bordered detail-view'];
     /**

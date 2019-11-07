@@ -11,7 +11,7 @@ namespace Yiisoft\Yii\DataView\Columns;
 use Closure;
 use yii\di\Initiable;
 use Yiisoft\Factory\Exceptions\InvalidConfigException;
-use yii\helpers\Html;
+use Yiisoft\Html\Html;
 
 /**
  * RadioButtonColumn displays a column of radio buttons in a grid view.
@@ -61,7 +61,7 @@ class RadioButtonColumn extends Column implements Initiable
      * }
      * ```
      *
-     * @see \yii\helpers\Html::renderTagAttributes() for details on how attributes are being rendered.
+     * @see \Yiisoft\Html\Html::renderTagAttributes() for details on how attributes are being rendered.
      */
     public $radioOptions = [];
 
