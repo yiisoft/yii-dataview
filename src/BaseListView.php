@@ -8,7 +8,6 @@
 
 namespace Yiisoft\Yii\DataView;
 
-use yii\di\Initiable;
 use Yiisoft\Factory\Exceptions\InvalidConfigException;
 use Yiisoft\Html\Html;
 use yii\helpers\Yii;
@@ -29,7 +28,7 @@ use Yiisoft\I18n\MessageFormatterInterface;
  *
  * @since 2.0
  */
-abstract class BaseListView extends Widget implements Initiable
+abstract class BaseListView extends Widget
 {
     /**
      * @var array the HTML attributes for the container tag of the list view.

@@ -9,7 +9,6 @@
 namespace Yiisoft\Yii\DataView;
 
 use yii\base\Model;
-use yii\di\Initiable;
 use Yiisoft\Factory\Exceptions\InvalidConfigException;
 use Yiisoft\Html\Html;
 use yii\helpers\Yii;
@@ -52,7 +51,7 @@ use Yiisoft\Strings\Inflector;
  *
  * @since 2.0
  */
-class DetailView extends Widget implements Initiable
+class DetailView extends Widget
 {
     /**
      * @var array|object the data model whose details are to be displayed. This can be a [[Model]] instance,
