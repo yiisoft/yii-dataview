@@ -15,6 +15,7 @@ use yii\helpers\Yii;
 use yii\widgets\LinkPager;
 use yii\widgets\Widget;
 use Yiisoft\Arrays\ArrayHelper;
+use Yiisoft\I18n\MessageFormatterInterface;
 
 /**
  * BaseListView is a base class for widgets displaying data from data provider
@@ -108,6 +109,10 @@ abstract class BaseListView extends Widget implements Initiable
      * - `{pager}`: the pager. See [[renderPager()]].
      */
     public $layout = "{summary}\n{items}\n{pager}";
+    /**
+     * @var \Yiisoft\I18n\MessageFormatterInterface
+     */
+    private $formatter;
 
     /**
      * Renders the data models.
@@ -115,6 +120,11 @@ abstract class BaseListView extends Widget implements Initiable
      * @return string the rendering result.
      */
     abstract public function renderItems();
+
+    public function __construct(MessageFormatterInterface $formatter)
+    {
+        $this->formatter = $formatter;
+    }
 
     /**
      * Initializes the view.
@@ -241,7 +251,7 @@ abstract class BaseListView extends Widget implements Initiable
             }
         }
 
-        return Yii::getApp()->getI18n()->format($summaryContent, [
+        return $this->formatter->format($summaryContent, [
             'begin'      => $begin,
             'end'        => $end,
             'count'      => $count,
