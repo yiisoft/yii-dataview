@@ -9,9 +9,9 @@
 namespace Yiisoft\Yii\DataView\Columns;
 
 use Closure;
-use yii\exceptions\InvalidConfigException;
-use yii\helpers\Html;
-use yii\helpers\Json;
+use Yiisoft\Factory\Exceptions\InvalidConfigException;
+use Yiisoft\Html\Html;
+use Yiisoft\Json\Json;
 
 /**
  * CheckboxColumn displays a column of checkboxes in a grid view.
@@ -64,7 +64,7 @@ class CheckboxColumn extends Column
      * }
      * ```
      *
-     * @see \yii\helpers\Html::renderTagAttributes() for details on how attributes are being rendered.
+     * @see \Yiisoft\Html\Html::renderTagAttributes() for details on how attributes are being rendered.
      */
     public $checkboxOptions = [];
     /**
@@ -81,7 +81,7 @@ class CheckboxColumn extends Column
     /**
      * {@inheritdoc}
      *
-     * @throws \yii\exceptions\InvalidConfigException if [[name]] is not set.
+     * @throws \Yiisoft\Factory\Exceptions\InvalidConfigException if [[name]] is not set.
      */
     public function init()
     {

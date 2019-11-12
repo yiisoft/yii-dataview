@@ -10,11 +10,11 @@ namespace Yiisoft\Yii\DataView;
 
 use Closure;
 use yii\base\Model;
+use Yiisoft\Html\Html;
+use Yiisoft\I18n\MessageFormatterInterface;
 use Yiisoft\Yii\DataView\Columns\DataColumn;
-use yii\exceptions\InvalidConfigException;
-use yii\helpers\Html;
+use Yiisoft\Factory\Exceptions\InvalidConfigException;
 use yii\helpers\Yii;
-use yii\i18n\Formatter;
 
 /**
  * The GridView widget is used to display data in a grid.
@@ -66,39 +66,39 @@ class GridView extends BaseListView
     /**
      * @var array the HTML attributes for the caption element.
      *
-     * @see \yii\helpers\Html::renderTagAttributes() for details on how attributes are being rendered.
+     * @see \Yiisoft\Html\Html::renderTagAttributes() for details on how attributes are being rendered.
      * @see caption
      */
     public $captionOptions = [];
     /**
      * @var array the HTML attributes for the grid table element.
      *
-     * @see \yii\helpers\Html::renderTagAttributes() for details on how attributes are being rendered.
+     * @see \Yiisoft\Html\Html::renderTagAttributes() for details on how attributes are being rendered.
      */
     public $tableOptions = ['class' => 'table table-striped table-bordered'];
     /**
      * @var array the HTML attributes for the grid thead element.
      *
-     * @see \yii\helpers\Html::renderTagAttributes() for details on how attributes are being rendered.
+     * @see \Yiisoft\Html\Html::renderTagAttributes() for details on how attributes are being rendered.
      */
     public $headOptions = [];
     /**
      * @var array the HTML attributes for the container tag of the grid view.
      *            The "tag" element specifies the tag name of the container element and defaults to "div".
      *
-     * @see \yii\helpers\Html::renderTagAttributes() for details on how attributes are being rendered.
+     * @see \Yiisoft\Html\Html::renderTagAttributes() for details on how attributes are being rendered.
      */
     public $options = ['class' => 'grid-view'];
     /**
      * @var array the HTML attributes for the table header row.
      *
-     * @see \yii\helpers\Html::renderTagAttributes() for details on how attributes are being rendered.
+     * @see \Yiisoft\Html\Html::renderTagAttributes() for details on how attributes are being rendered.
      */
     public $headerRowOptions = [];
     /**
      * @var array the HTML attributes for the table footer row.
      *
-     * @see \yii\helpers\Html::renderTagAttributes() for details on how attributes are being rendered.
+     * @see \Yiisoft\Html\Html::renderTagAttributes() for details on how attributes are being rendered.
      */
     public $footerRowOptions = [];
     /**
@@ -116,7 +116,7 @@ class GridView extends BaseListView
      * - `$index`: the zero-based index of the data model in the model array returned by [[dataProvider]]
      * - `$grid`: the GridView object
      *
-     * @see \yii\helpers\Html::renderTagAttributes() for details on how attributes are being rendered.
+     * @see \Yiisoft\Html\Html::renderTagAttributes() for details on how attributes are being rendered.
      */
     public $rowOptions = [];
     /**
@@ -150,9 +150,7 @@ class GridView extends BaseListView
      */
     public $showOnEmpty = true;
     /**
-     * @var array|Formatter the formatter used to format model attribute values into displayable texts.
-     *                      This can be either an instance of [[Formatter]] or an configuration array for creating the [[Formatter]]
-     *                      instance. If this property is not set, the "formatter" application component will be used.
+     * @var \Yiisoft\I18n\MessageFormatterInterface the formatter used to format model attribute values into displayable texts.
      */
     public $formatter;
     /**
@@ -209,9 +207,7 @@ class GridView extends BaseListView
      *             This property is used to render cells that have no defined content,
      *             e.g. empty footer or filter cells.
      *
-     * Note that this is not used by the [[DataColumn]] if a data item is `null`. In that case
-     * the [[\yii\i18n\Formatter::nullDisplay|nullDisplay]] property of the [[formatter]] will
-     * be used to indicate an empty data value.
+     * Note that this is not used by the [[DataColumn]] if a data item is `null`.
      */
     public $emptyCell = '&nbsp;';
     /**
@@ -244,7 +240,7 @@ class GridView extends BaseListView
     /**
      * @var array the HTML attributes for the filter row element.
      *
-     * @see \yii\helpers\Html::renderTagAttributes() for details on how attributes are being rendered.
+     * @see \Yiisoft\Html\Html::renderTagAttributes() for details on how attributes are being rendered.
      */
     public $filterRowOptions = ['class' => 'filters'];
     /**
@@ -271,6 +267,11 @@ class GridView extends BaseListView
      */
     public $layout = "{summary}\n{items}\n{pager}";
 
+    public function __construct(MessageFormatterInterface $formatter)
+    {
+        $this->formatter = $formatter;
+    }
+
     /**
      * Initializes the grid view.
      * This method will initialize required property values and instantiate [[columns]] objects.
@@ -278,14 +279,6 @@ class GridView extends BaseListView
     public function init(): void
     {
         parent::init();
-        if ($this->formatter === null) {
-            $this->formatter = Yii::getApp()->getFormatter();
-        } elseif (is_array($this->formatter)) {
-            $this->formatter = $this->app->createObject($this->formatter);
-        }
-        if (!$this->formatter instanceof Formatter) {
-            throw new InvalidConfigException('The "formatter" property must be either a Format object or a configuration array.');
-        }
         if (!isset($this->filterRowOptions['id'])) {
             $this->filterRowOptions['id'] = $this->options['id'].'-filters';
         }

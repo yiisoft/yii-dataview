@@ -8,13 +8,13 @@
 
 namespace Yiisoft\Yii\DataView;
 
-use yii\di\Initiable;
-use yii\exceptions\InvalidConfigException;
-use yii\helpers\Html;
+use Yiisoft\Factory\Exceptions\InvalidConfigException;
+use Yiisoft\Html\Html;
 use yii\helpers\Yii;
 use yii\widgets\LinkPager;
 use yii\widgets\Widget;
 use Yiisoft\Arrays\ArrayHelper;
+use Yiisoft\I18n\MessageFormatterInterface;
 
 /**
  * BaseListView is a base class for widgets displaying data from data provider
@@ -28,13 +28,13 @@ use Yiisoft\Arrays\ArrayHelper;
  *
  * @since 2.0
  */
-abstract class BaseListView extends Widget implements Initiable
+abstract class BaseListView extends Widget
 {
     /**
      * @var array the HTML attributes for the container tag of the list view.
      *            The "tag" element specifies the tag name of the container element and defaults to "div".
      *
-     * @see \yii\helpers\Html::renderTagAttributes() for details on how attributes are being rendered.
+     * @see \Yiisoft\Html\Html::renderTagAttributes() for details on how attributes are being rendered.
      */
     public $options = [];
     /**
@@ -73,7 +73,7 @@ abstract class BaseListView extends Widget implements Initiable
      * @var array the HTML attributes for the summary of the list view.
      *            The "tag" element specifies the tag name of the summary element and defaults to "div".
      *
-     * @see \yii\helpers\Html::renderTagAttributes() for details on how attributes are being rendered.
+     * @see \Yiisoft\Html\Html::renderTagAttributes() for details on how attributes are being rendered.
      */
     public $summaryOptions = ['class' => 'summary'];
     /**
@@ -95,7 +95,7 @@ abstract class BaseListView extends Widget implements Initiable
      * @var array the HTML attributes for the emptyText of the list view.
      *            The "tag" element specifies the tag name of the emptyText element and defaults to "div".
      *
-     * @see \yii\helpers\Html::renderTagAttributes() for details on how attributes are being rendered.
+     * @see \Yiisoft\Html\Html::renderTagAttributes() for details on how attributes are being rendered.
      */
     public $emptyTextOptions = ['class' => 'empty'];
     /**
@@ -108,6 +108,10 @@ abstract class BaseListView extends Widget implements Initiable
      * - `{pager}`: the pager. See [[renderPager()]].
      */
     public $layout = "{summary}\n{items}\n{pager}";
+    /**
+     * @var \Yiisoft\I18n\MessageFormatterInterface
+     */
+    private $formatter;
 
     /**
      * Renders the data models.
@@ -115,6 +119,11 @@ abstract class BaseListView extends Widget implements Initiable
      * @return string the rendering result.
      */
     abstract public function renderItems();
+
+    public function __construct(MessageFormatterInterface $formatter)
+    {
+        $this->formatter = $formatter;
+    }
 
     /**
      * Initializes the view.
@@ -241,7 +250,7 @@ abstract class BaseListView extends Widget implements Initiable
             }
         }
 
-        return Yii::getApp()->getI18n()->format($summaryContent, [
+        return $this->formatter->format($summaryContent, [
             'begin'      => $begin,
             'end'        => $end,
             'count'      => $count,

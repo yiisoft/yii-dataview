@@ -11,7 +11,7 @@ namespace Yiisoft\Yii\DataView\Tests\Coolumns;
 use yii\data\ArrayDataProvider;
 use Yiisoft\Yii\DataView\Columns\RadioButtonColumn;
 use Yiisoft\Yii\DataView\GridView;
-use yii\helpers\Html;
+use Yiisoft\Html\Html;
 use yii\helpers\Yii;
 use yii\tests\TestCase;
 use yii\web\Request;
@@ -26,7 +26,7 @@ use yii\web\Request;
 class RadiobuttonColumnTest extends TestCase
 {
     /**
-     * @expectedException \yii\exceptions\InvalidConfigException
+     * @expectedException \Yiisoft\Factory\Exceptions\InvalidConfigException
      * @expectedExceptionMessage The "name" property must be set.
      */
     public function testException()

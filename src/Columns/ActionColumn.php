@@ -8,7 +8,7 @@
 
 namespace Yiisoft\Yii\DataView\Columns;
 
-use yii\helpers\Html;
+use Yiisoft\Html\Html;
 use yii\helpers\Url;
 use yii\helpers\Yii;
 

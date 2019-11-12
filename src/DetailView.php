@@ -9,14 +9,13 @@
 namespace Yiisoft\Yii\DataView;
 
 use yii\base\Model;
-use yii\di\Initiable;
-use yii\exceptions\InvalidConfigException;
-use yii\helpers\Html;
+use Yiisoft\Factory\Exceptions\InvalidConfigException;
+use Yiisoft\Html\Html;
 use yii\helpers\Yii;
-use yii\i18n\Formatter;
 use yii\widgets\Widget;
 use Yiisoft\Arrays\ArrayableInterface;
 use Yiisoft\Arrays\ArrayHelper;
+use Yiisoft\I18n\MessageFormatterInterface;
 use Yiisoft\Strings\Inflector;
 
 /**
@@ -52,7 +51,7 @@ use Yiisoft\Strings\Inflector;
  *
  * @since 2.0
  */
-class DetailView extends Widget implements Initiable
+class DetailView extends Widget
 {
     /**
      * @var array|object the data model whose details are to be displayed. This can be a [[Model]] instance,
@@ -114,15 +113,18 @@ class DetailView extends Widget implements Initiable
      * @var array the HTML attributes for the container tag of this widget. The `tag` option specifies
      *            what container tag should be used. It defaults to `table` if not set.
      *
-     * @see \yii\helpers\Html::renderTagAttributes() for details on how attributes are being rendered.
+     * @see \Yiisoft\Html\Html::renderTagAttributes() for details on how attributes are being rendered.
      */
     public $options = ['class' => 'table table-striped table-bordered detail-view'];
     /**
-     * @var array|Formatter the formatter used to format model attribute values into displayable texts.
-     *                      This can be either an instance of [[Formatter]] or an configuration array for creating the [[Formatter]]
-     *                      instance. If this property is not set, the `formatter` application component will be used.
+     * @var \Yiisoft\I18n\MessageFormatterInterface the formatter used to format model attribute values into displayable texts.
      */
     public $formatter;
+
+    public function __construct(MessageFormatterInterface $formatter)
+    {
+        $this->formatter = $formatter;
+    }
 
     /**
      * Initializes the detail view.
@@ -134,14 +136,6 @@ class DetailView extends Widget implements Initiable
 
         if ($this->model === null) {
             throw new InvalidConfigException('Please specify the "model" property.');
-        }
-        if ($this->formatter === null) {
-            $this->formatter = Yii::getApp()->getFormatter();
-        } elseif (is_array($this->formatter)) {
-            $this->formatter = $this->app->createObject($this->formatter);
-        }
-        if (!$this->formatter instanceof Formatter) {
-            throw new InvalidConfigException('The "formatter" property must be either a Format object or a configuration array.');
         }
         $this->normalizeAttributes();
 
