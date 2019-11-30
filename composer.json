@@ -93,5 +93,8 @@
         "psr-4": {
             "Yiisoft\\Yii\\DataView\\Tests\\": "tests"
         }
+    },
+    "config": {
+        "sort-packages": true
     }
 }
