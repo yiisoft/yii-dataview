@@ -2,6 +2,7 @@
 
 namespace Yiisoft\Yii\DataView\Widget;
 
+use Yiisoft\Data\Reader\Sort;
 use Yiisoft\Factory\Exceptions\InvalidConfigException;
 use Yiisoft\Html\Html;
 use Yiisoft\Widget\Widget;
@@ -15,7 +16,7 @@ use Yiisoft\Widget\Widget;
 class LinkSorter extends Widget
 {
     /**
-     * @var array the sort definition
+     * @var \Yiisoft\Data\Reader\Sort the sort definition
      */
     public $sort;
     /**
@@ -49,7 +50,7 @@ class LinkSorter extends Widget
         }
     }
 
-    public function sort(array $sort): self
+    public function sort(Sort $sort): self
     {
         $this->sort = $sort;
 
@@ -81,7 +82,7 @@ class LinkSorter extends Widget
      */
     protected function renderSortLinks(): string
     {
-        $attributes = empty($this->attributes) ? $this->sort : $this->attributes;
+        $attributes = empty($this->attributes) ? array_keys($this->sort->getOrder()) : $this->attributes;
         $links = [];
         foreach ($attributes as $name) {
             $links[] = Html::a($name, sprintf('?sort=%s', $name), $this->linkOptions);
