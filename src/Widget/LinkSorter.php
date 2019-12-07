@@ -85,6 +85,7 @@ class LinkSorter extends Widget
         $attributes = empty($this->attributes) ? array_keys($this->sort->getOrder()) : $this->attributes;
         $links = [];
         foreach ($attributes as $name) {
+            // TODO There is need to figure out how to generate links and fix this stub
             $links[] = Html::a($name, sprintf('?sort=%s', $name), $this->linkOptions);
         }
 
