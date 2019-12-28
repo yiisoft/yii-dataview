@@ -4,8 +4,8 @@ declare(strict_types=1);
 namespace Yiisoft\Yii\DataView\Tests\Widget;
 
 use Yiisoft\Data\Reader\Sort;
-use Yiisoft\Tests\TestCase;
-use Yiisoft\Widget\LinkSorter;
+use Yiisoft\Yii\DataView\Tests\TestCase;
+use Yiisoft\Yii\DataView\Widget\LinkSorter;
 
 /**
  * SpacelessTest.
@@ -15,7 +15,7 @@ class LinkSorterTest extends TestCase
     public function testEmptyWidget(): void
     {
         $widget = LinkSorter::widget()
-            ->sort(new Sort([]));
+            ->withSort(new Sort([]));
 
         $this->assertEquals('<ul class="sorter"></ul>', $widget->run());
     }
@@ -23,8 +23,8 @@ class LinkSorterTest extends TestCase
     public function testWidget(): void
     {
         $widget = LinkSorter::widget()
-            ->attributes(['id', 'name'])
-            ->sort(new Sort([]));
+            ->withAttributes(['id', 'name'])
+            ->withSort(new Sort([]));
 
         $output = <<<OUTPUT
 <ul class="sorter">
