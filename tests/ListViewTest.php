@@ -26,8 +26,7 @@ class ListViewTest extends TestCase
         $out = $listView->run();
 
         $this->assertEquals(
-            '<div id="w0" class="list-view"><div class="empty">No results found.</div></div>'
-            ,
+            '<div id="w0" class="list-view"><div class="empty">No results found.</div></div>',
             $out
         );
     }
