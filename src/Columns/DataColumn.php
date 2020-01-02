@@ -40,7 +40,6 @@ class DataColumn extends Column
     /**
      * @var bool whether the header label should be HTML-encoded.
      * @see withLabel
-     * @since 2.0.1
      */
     public bool $encodeLabel = true;
     /**
@@ -125,7 +124,7 @@ class DataColumn extends Column
 
     protected function renderHeaderCellContent(): string
     {
-        if ($this->header !== null || $this->label === null && $this->attribute === null) {
+        if ($this->header !== null || ($this->label === null && $this->attribute === null)) {
             return parent::renderHeaderCellContent();
         }
 
@@ -135,7 +134,7 @@ class DataColumn extends Column
         }
 
         if ($this->attribute !== null && $this->enableSorting &&
-            ($sort = $this->grid->dataReader->getSort()) !== false && $sort->hasAttribute($this->attribute)) {
+            ($sort = $this->grid->getDataReader()->getSort()) !== false && $sort->hasAttribute($this->attribute)) {
             return $sort->link($this->attribute, array_merge($this->sortLinkOptions, ['label' => $label]));
         }
 
@@ -144,7 +143,7 @@ class DataColumn extends Column
 
     protected function getHeaderCellLabel(): string
     {
-        $provider = $this->grid->dataReader;
+        $provider = $this->grid->getDataReader();
 
         if ($this->label === null) {
             if ($provider instanceof ActiveDataProvider && $provider->query instanceof ActiveQueryInterface) {
@@ -157,8 +156,8 @@ class DataColumn extends Column
                 $modelClass = $provider->modelClass;
                 $model = $modelClass::instance();
                 $label = $model->getAttributeLabel($this->attribute);
-            } elseif ($this->grid->filterModel !== null && $this->grid->filterModel instanceof Model) {
-                $label = $this->grid->filterModel->getAttributeLabel($this->attribute);
+            } elseif ($this->grid->getFilterModel() !== null && $this->grid->getFilterModel() instanceof Model) {
+                $label = $this->grid->getFilterModel()->getAttributeLabel($this->attribute);
             } else {
                 $models = $provider->read();
                 if (($model = reset($models)) instanceof Model) {
@@ -182,14 +181,14 @@ class DataColumn extends Column
             return $this->filter;
         }
 
-        $model = $this->grid->filterModel;
+        $model = $this->grid->getFilterModel();
 
         if ($this->filter !== false && $model instanceof Model && $this->attribute !== null && $model->isAttributeActive(
                 $this->attribute
             )) {
             if ($model->hasErrors($this->attribute)) {
                 Html::addCssClass($this->filterOptions, 'has-error');
-                $error = ' ' . Html::error($model, $this->attribute, $this->grid->filterErrorOptions);
+                $error = ' ' . Html::error($model, $this->attribute, $this->grid->getFilterErrorOptions());
             } else {
                 $error = '';
             }
@@ -246,9 +245,13 @@ class DataColumn extends Column
     protected function renderDataCellContent($model, $key, $index): string
     {
         if ($this->content === null) {
+            // TODO fix
+            $language = 'language';
+
             return $this->grid->getMessageFormatter()->format(
                 $this->getDataCellValue($model, $key, $index),
-                $this->format
+                $this->format,
+                $language
             );
         }
 

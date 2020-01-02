@@ -22,14 +22,14 @@ use Yiisoft\Html\Html;
  */
 class ActionColumn extends Column
 {
-    public array $headerOptions = ['class' => 'action-column'];
+    protected array $headerOptions = ['class' => 'action-column'];
     /**
      * @var string the ID of the controller that should handle the actions specified here.
      *             If not set, it will use the currently active controller. This property is mainly used by
      *             [[urlCreator]] to create URLs for different actions. The value of this property will be prefixed
      *             to each action name to form the route of the action.
      */
-    public $controller;
+    private string $controller = 'index';
     /**
      * @var string the template used for composing each cell in the action column.
      *             Tokens enclosed within curly brackets are treated as controller action IDs (also called *button
@@ -43,7 +43,7 @@ class ActionColumn extends Column
      * ```
      * @see buttons
      */
-    public $template = '{view} {update} {delete}';
+    private string $template = '{view} {update} {delete}';
     /**
      * @var array button rendering callbacks. The array keys are the button names (without curly brackets),
      *            and the values are the corresponding button rendering callbacks. The callbacks should use the
@@ -65,7 +65,7 @@ class ActionColumn extends Column
      * ],
      * ```
      */
-    public $buttons = [];
+    private array $buttons = [];
     /** @var array visibility conditions for each button. The array keys are the button names (without curly brackets),
      * and the values are the boolean true/false or the anonymous function. When the button name is not specified in
      * this array it will be shown by default.
@@ -81,10 +81,8 @@ class ActionColumn extends Column
      *     'update' => \Yii::getApp()->user->can('update'),
      * ],
      * ```
-     *
-     * @since 2.0.7
      */
-    public $visibleButtons = [];
+    private array $visibleButtons = [];
     /**
      * @var callable a callback that creates a button URL using the specified model information.
      *               The signature of the callback should be the same as that of [[createUrl()]]
@@ -96,12 +94,11 @@ class ActionColumn extends Column
      * ```
      * If this property is not set, button URLs will be created using [[createUrl()]].
      */
-    public $urlCreator;
+    private $urlCreator;
     /**
      * @var array html options to be applied to the [[initDefaultButton()|default button]].
-     * @since 2.0.4
      */
-    public $buttonOptions = [];
+    private array $buttonOptions = [];
 
     /**
      * Initializes the default button rendering callbacks.
@@ -170,9 +167,35 @@ class ActionColumn extends Column
         }
     }
 
-    public function template(string $template)
+    public function withTemplate(string $template): self
     {
         $this->template = $template;
+
+        return $this;
+    }
+
+    public function getButtons(): array
+    {
+        return $this->buttons;
+    }
+
+    public function withButtons(array $buttons): self
+    {
+        $this->buttons = $buttons;
+
+        return $this;
+    }
+
+    public function withVisibleButtons(array $visibleButtons): self
+    {
+        $this->visibleButtons = $visibleButtons;
+
+        return $this;
+    }
+
+    public function withUrlCreator(callable $urlCreator): self
+    {
+        $this->urlCreator = $urlCreator;
 
         return $this;
     }
@@ -187,7 +210,7 @@ class ActionColumn extends Column
      * @param int $index the current row index
      * @return string the created URL
      */
-    public function createUrl($action, $model, $key, $index)
+    public function createUrl($action, $model, $key, $index): string
     {
         if (is_callable($this->urlCreator)) {
             return call_user_func($this->urlCreator, $action, $model, $key, $index, $this);

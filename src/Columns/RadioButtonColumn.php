@@ -31,7 +31,7 @@ class RadioButtonColumn extends Column
     /**
      * @var string the name of the input radio button input fields.
      */
-    public string $name = 'radioButtonSelection';
+    private string $name = 'radioButtonSelection';
     /**
      * @var array|\Closure the HTML attributes for the radio buttons. This can either be an array of
      *                     attributes or an anonymous function ([[Closure]]) returning such an array.
@@ -48,7 +48,7 @@ class RadioButtonColumn extends Column
      * ```
      * @see \Yiisoft\Html\Html::renderTagAttributes() for details on how attributes are being rendered.
      */
-    public $radioOptions = [];
+    private $radioOptions = [];
 
     /**
      * {@inheritdoc}

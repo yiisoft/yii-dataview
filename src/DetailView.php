@@ -42,7 +42,7 @@ class DetailView
      *                   an associative array, an object that implements [[Arrayable]] interface or simply an object
      *     with defined public accessible non-static properties.
      */
-    public $model;
+    private $model;
     /**
      * @var array a list of attributes to be displayed in the detail view. Each array element
      *            represents the specification for displaying one particular attribute.

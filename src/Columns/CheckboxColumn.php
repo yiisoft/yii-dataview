@@ -59,7 +59,6 @@ class CheckboxColumn extends Column
     public $multiple = true;
     /**
      * @var string the css class that will be used to find the checkboxes.
-     * @since 2.0.9
      */
     public $cssClass;
 
@@ -155,7 +154,6 @@ class CheckboxColumn extends Column
      * Returns header checkbox name.
      *
      * @return string header checkbox name
-     * @since 2.0.8
      */
     protected function getHeaderCheckBoxName()
     {
@@ -174,18 +172,16 @@ class CheckboxColumn extends Column
 
     /**
      * Registers the needed JavaScript.
-     *
-     * @since 2.0.8
      */
-    public function registerClientScript(): string
+    public function registerClientScript(): void
     {
-        $id = $this->grid->options['id'];
+        $id = $this->grid->getOptions()['id'];
         $options = Json::encode(
             [
                 'name' => $this->name,
                 'class' => $this->cssClass,
                 'multiple' => $this->multiple,
-                'checkAll' => $this->grid->showHeader ? $this->getHeaderCheckBoxName() : null,
+                'checkAll' => $this->grid->isShowHeader() ? $this->getHeaderCheckBoxName() : null,
             ]
         );
         $this->grid->getView()->registerJs("jQuery('#$id').yiiGridView('setSelectionColumn', $options);");

@@ -63,10 +63,10 @@ HTML
     public function testWidgetOptions(): void
     {
         $dataReader = $this->createDataReader([0, 1, 2]);
-        $listView = $this->getListView($dataReader, null);
-        $listView->separator = '';
-        $listView->withOptions(['class' => 'test-passed']);
-        $out = $listView->run();
+        $out = $this->getListView($dataReader, null)
+            ->withSeparator('')
+            ->withOptions(['class' => 'test-passed'])
+            ->run();
 
         $this->assertEquals(
             <<<'HTML'
@@ -125,9 +125,9 @@ HTML
                 ['login' => 'cebe'],
             ]
         );
-        $listView = $this->getListView($dataReader, null);
-        $listView->itemView = $itemView;
-        $out = $listView->run();
+        $out = $this->getListView($dataReader, null)
+            ->withItemView($itemView)
+            ->run();
         $this->assertEquals($expected, $out);
     }
 
@@ -208,11 +208,10 @@ HTML
                 ['id' => 3],
             ]
         );
-        $listView = $this->getListView($dataReader, null);
-        $listView->beforeItem = $before;
-        $listView->afterItem = $after;
-
-        $out = $listView->run();
+        $out = $this->getListView($dataReader, null)
+            ->withBeforeItem($before)
+            ->withAfterItem($after)
+            ->run();
 
         $this->assertEquals(
             <<<HTML

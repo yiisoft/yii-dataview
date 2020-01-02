@@ -19,11 +19,11 @@ namespace Yiisoft\Yii\DataView\Columns;
  */
 class SerialColumn extends Column
 {
-    public string $header = '#';
+    protected ?string $header = '#';
 
     protected function renderDataCellContent($model, $key, $index): string
     {
-        $dataReader = $this->grid->dataReader;
+        $dataReader = $this->grid->getDataReader();
         if ($dataReader !== null) {
             return $dataReader->count() + $index + 1;
         }

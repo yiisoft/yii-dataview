@@ -16,36 +16,36 @@ abstract class Column
     /**
      * @var GridView the grid view object that owns this column.
      */
-    public GridView $grid;
+    protected GridView $grid;
     /**
      * @var string the header cell content. Note that it will not be HTML-encoded.
      */
-    public ?string $header = null;
+    protected ?string $header = null;
     /**
      * @var string the footer cell content. Note that it will not be HTML-encoded.
      */
-    public string $footer = '';
+    private string $footer = '';
     /**
      * @var callable This is a callable that will be used to generate the content of each cell.
      *               The signature of the function should be the following: `function ($model, $key, $index, $column)`.
      *               Where `$model`, `$key`, and `$index` refer to the model, key and index of the row currently being
      *     rendered and `$column` is a reference to the [[Column]] object.
      */
-    public $content;
+    protected $content;
     /**
      * @var bool whether this column is visible. Defaults to true.
      */
-    public bool $visible = true;
+    protected bool $visible = true;
     /**
      * @var array the HTML attributes for the column group tag.
      * @see \Yiisoft\Html\Html::renderTagAttributes() for details on how attributes are being rendered.
      */
-    public array $options = [];
+    protected array $options = [];
     /**
      * @var array the HTML attributes for the header cell tag.
      * @see \Yiisoft\Html\Html::renderTagAttributes() for details on how attributes are being rendered.
      */
-    public array $headerOptions = [];
+    protected array $headerOptions = [];
     /**
      * @var array|\Closure the HTML attributes for the data cell tag. This can either be an array of
      *                     attributes or an anonymous function ([[Closure]]) that returns such an array.
@@ -55,17 +55,17 @@ abstract class Column
      *     attributes to different rows based on the data in that row.
      * @see \Yiisoft\Html\Html::renderTagAttributes() for details on how attributes are being rendered.
      */
-    public $contentOptions = [];
+    protected $contentOptions = [];
     /**
      * @var array the HTML attributes for the footer cell tag.
      * @see \Yiisoft\Html\Html::renderTagAttributes() for details on how attributes are being rendered.
      */
-    public array $footerOptions = [];
+    protected array $footerOptions = [];
     /**
      * @var array the HTML attributes for the filter cell tag.
      * @see \Yiisoft\Html\Html::renderTagAttributes() for details on how attributes are being rendered.
      */
-    public array $filterOptions = [];
+    protected array $filterOptions = [];
 
     protected static MessageFormatterInterface $messageFormatter;
 
@@ -81,13 +81,6 @@ abstract class Column
 
     public function init(): self
     {
-        return $this;
-    }
-
-    public function withGrid(GridView $view): self
-    {
-        $this->grid = $view;
-
         return $this;
     }
 
@@ -152,11 +145,10 @@ abstract class Column
      * This method may be overridden to customize the label of the header cell.
      *
      * @return string label
-     * @since 2.0.8
      */
     protected function getHeaderCellLabel(): string
     {
-        return $this->grid->emptyCell;
+        return $this->grid->getEmptyCell();
     }
 
     /**
@@ -168,7 +160,7 @@ abstract class Column
      */
     protected function renderFooterCellContent(): string
     {
-        return trim($this->footer) !== '' ? $this->footer : $this->grid->emptyCell;
+        return trim($this->footer) !== '' ? $this->footer : $this->grid->getEmptyCell();
     }
 
     /**
@@ -186,7 +178,7 @@ abstract class Column
             return call_user_func($this->content, $model, $key, $index, $this);
         }
 
-        return $this->grid->emptyCell;
+        return $this->grid->getEmptyCell();
     }
 
     /**
@@ -198,6 +190,23 @@ abstract class Column
      */
     protected function renderFilterCellContent(): string
     {
-        return $this->grid->emptyCell;
+        return $this->grid->getEmptyCell();
+    }
+
+    public function withGrid(GridView $view): self
+    {
+        $this->grid = $view;
+
+        return $this;
+    }
+
+    public function isVisible(): bool
+    {
+        return $this->visible;
+    }
+
+    public function getOptions(): array
+    {
+        return $this->options;
     }
 }

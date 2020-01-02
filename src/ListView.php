@@ -28,9 +28,9 @@ class ListView extends BaseListView implements ViewContextInterface
      * ```
      * @see \Yiisoft\Html\Html::renderTagAttributes() for details on how attributes are being rendered.
      */
-    public $itemOptions = [];
+    private $itemOptions = [];
     /**
-     * @var string|callable the name of the view for rendering each data item, or a callback (e.g. an anonymous
+     * @var string|callable|null the name of the view for rendering each data item, or a callback (e.g. an anonymous
      *     function) for rendering each data item. If it specifies a view name, the following variables will be
      *     available in the view:
      * - `$model`: mixed, the data model
@@ -43,24 +43,25 @@ class ListView extends BaseListView implements ViewContextInterface
      * function ($model, $key, $index, $widget)
      * ```
      */
-    public $itemView;
+    private $itemView;
+
     /**
      * @var array additional parameters to be passed to [[itemView]] when it is being rendered.
      *            This property is used only when [[itemView]] is a string representing a view name.
      */
-    public array $viewParams = [];
+    private array $viewParams = [];
     /**
      * @var string the HTML code to be displayed between any two consecutive items.
      */
-    public string $separator = "\n";
+    private string $separator = "\n";
     /**
      * @var array the HTML attributes for the container tag of the list view.
      *            The "tag" element specifies the tag name of the container element and defaults to "div".
      * @see \Yiisoft\Html\Html::renderTagAttributes() for details on how attributes are being rendered.
      */
-    public array $options = ['class' => 'list-view'];
+    protected array $options = ['class' => 'list-view'];
     /**
-     * @var \Closure|null ?Closure an anonymous function that is called once BEFORE rendering each data model.
+     * @var callable|null ?Closure an anonymous function that is called once BEFORE rendering each data model.
      *              It should have the following signature:
      * ```php
      * function ($model, $key, $index, $widget)
@@ -73,15 +74,15 @@ class ListView extends BaseListView implements ViewContextInterface
      * Note: If the function returns `null`, nothing will be rendered before the item.
      * @see renderBeforeItem
      */
-    public ?Closure $beforeItem = null;
+    private $beforeItem;
     /**
-     * @var \Closure|null ?Closure an anonymous function that is called once AFTER rendering each data model.
+     * @var callable|null ?Closure an anonymous function that is called once AFTER rendering each data model.
      * It should have the same signature as [[beforeItem]].
      * The return result of the function will be rendered directly.
      * Note: If the function returns `null`, nothing will be rendered after the item.
      * @see renderAfterItem
      */
-    public ?Closure $afterItem = null;
+    private $afterItem;
 
     /**
      * Renders all data models.
@@ -91,7 +92,7 @@ class ListView extends BaseListView implements ViewContextInterface
      */
     public function renderItems(): string
     {
-        $models = $this->dataReader->read();
+        $models = $this->getDataReader()->read();
         $keys = array_keys($models);
         $rows = [];
         foreach (array_values($models) as $index => $model) {
@@ -228,5 +229,41 @@ class ListView extends BaseListView implements ViewContextInterface
     public function getViewPath(): string
     {
         return '';
+    }
+
+    /**
+     * @param callable|string|null $itemView
+     * @return ListView
+     */
+    public function withItemView($itemView): self
+    {
+        if ($itemView !== null && !is_string($itemView) && !is_callable($itemView)) {
+            throw new \InvalidArgumentException();
+        }
+
+        $this->itemView = $itemView;
+
+        return $this;
+    }
+
+    public function withSeparator(string $separator): self
+    {
+        $this->separator = $separator;
+
+        return $this;
+    }
+
+    public function withBeforeItem(?callable $beforeItem): self
+    {
+        $this->beforeItem = $beforeItem;
+
+        return $this;
+    }
+
+    public function withAfterItem(?callable $afterItem): self
+    {
+        $this->afterItem = $afterItem;
+
+        return $this;
     }
 }

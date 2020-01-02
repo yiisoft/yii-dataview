@@ -14,36 +14,38 @@ class ActionColumnTest extends TestCase
     {
         $column = ActionColumn::widget()
             ->init();
-        $this->assertEquals(['view', 'update', 'delete'], array_keys($column->buttons));
+        $this->assertEquals(['view', 'update', 'delete'], array_keys($column->getButtons()));
 
         $column = ActionColumn::widget()
-            ->template('{show} {edit} {delete}')
+            ->withTemplate('{show} {edit} {delete}')
             ->init();
-        $this->assertEquals(['delete'], array_keys($column->buttons));
+        $this->assertEquals(['delete'], array_keys($column->getButtons()));
 
         $column = ActionColumn::widget()
-            ->template('{show} {edit} {remove}')
+            ->withTemplate('{show} {edit} {remove}')
             ->init();
-        $this->assertEmpty($column->buttons);
+        $this->assertEmpty($column->getButtons());
 
         $column = ActionColumn::widget()
-            ->template('{view-items} {update-items} {delete-items}')
+            ->withTemplate('{view-items} {update-items} {delete-items}')
             ->init();
-        $this->assertEmpty($column->buttons);
+        $this->assertEmpty($column->getButtons());
 
         $column = ActionColumn::widget()
-            ->template('{view} {view-items}')
+            ->withTemplate('{view} {view-items}')
             ->init();
-        $this->assertEquals(['view'], array_keys($column->buttons));
+        $this->assertEquals(['view'], array_keys($column->getButtons()));
     }
 
     public function testRenderDataCell(): void
     {
         $column = ActionColumn::widget()
-            ->init();
-        $column->urlCreator = function ($model, $key, $index) {
-            return 'http://test.com';
-        };
+            ->init()
+            ->withUrlCreator(
+                static function ($model, $key, $index) {
+                    return 'http://test.com';
+                }
+            );
         $columnContents = $column->renderDataCell(['id' => 1], 1, 0);
         $viewButton = '<a href="http://test.com" title="View" aria-label="View" data-name="view"><span class="glyphicon glyphicon-eye-open"></span></a>';
         $updateButton = '<a href="http://test.com" title="Update" aria-label="Update" data-name="update"><span class="glyphicon glyphicon-pencil"></span></a>';
@@ -52,50 +54,62 @@ class ActionColumnTest extends TestCase
         $this->assertEquals($expectedHtml, $columnContents);
 
         $column = ActionColumn::widget()
-            ->init();
-        $column->urlCreator = static function ($model, $key, $index) {
-            return 'http://test.com';
-        };
-        $column->template = '{update}';
-        $column->buttons = [
-            'update' => static function ($url, $model, $key) {
-                return 'update_button';
-            },
-        ];
+            ->init()
+            ->withUrlCreator(
+                static function ($model, $key, $index) {
+                    return 'http://test.com';
+                }
+            )
+            ->withTemplate('{update}')
+            ->withButtons(
+                [
+                    'update' => static function ($url, $model, $key) {
+                        return 'update_button';
+                    },
+                ]
+            );
 
         //test default visible button
         $columnContents = $column->renderDataCell(['id' => 1], 1, 0);
         $this->assertStringContainsString('update_button', $columnContents);
 
         //test visible button
-        $column->visibleButtons = [
-            'update' => true,
-        ];
+        $column->withVisibleButtons(
+            [
+                'update' => true,
+            ]
+        );
         $columnContents = $column->renderDataCell(['id' => 1], 1, 0);
         $this->assertStringContainsString('update_button', $columnContents);
 
         //test visible button (condition is callback)
-        $column->visibleButtons = [
-            'update' => static function ($model, $key, $index) {
-                return $model['id'] === 1;
-            },
-        ];
+        $column->withVisibleButtons(
+            [
+                'update' => static function ($model, $key, $index) {
+                    return $model['id'] === 1;
+                },
+            ]
+        );
         $columnContents = $column->renderDataCell(['id' => 1], 1, 0);
         $this->assertStringContainsString('update_button', $columnContents);
 
         //test invisible button
-        $column->visibleButtons = [
-            'update' => false,
-        ];
+        $column->withVisibleButtons(
+            [
+                'update' => false,
+            ]
+        );
         $columnContents = $column->renderDataCell(['id' => 1], 1, 0);
         $this->assertStringNotContainsString('update_button', $columnContents);
 
         //test invisible button (condition is callback)
-        $column->visibleButtons = [
-            'update' => static function ($model, $key, $index) {
-                return $model['id'] !== 1;
-            },
-        ];
+        $column->withVisibleButtons(
+            [
+                'update' => static function ($model, $key, $index) {
+                    return $model['id'] !== 1;
+                },
+            ]
+        );
         $columnContents = $column->renderDataCell(['id' => 1], 1, 0);
         $this->assertStringNotContainsString('update_button', $columnContents);
     }

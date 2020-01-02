@@ -124,7 +124,7 @@ class GridViewTest extends TestCase
         $this->assertRegExp("/<\/tbody><tfoot>/", $html);
     }
 
-    private function createDataReader(array $models)
+    private function createDataReader(array $models): IterableDataReader
     {
         return new IterableDataReader($models);
     }
