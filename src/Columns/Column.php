@@ -182,7 +182,7 @@ abstract class Column
      */
     protected function renderDataCellContent($model, $key, $index): string
     {
-        if (is_callable($this->content)) {
+        if ($this->content !== null) {
             return call_user_func($this->content, $model, $key, $index, $this);
         }
 

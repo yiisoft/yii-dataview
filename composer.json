@@ -92,7 +92,6 @@
     },
     "autoload": {
         "psr-4": {
-            "Yiisoft\\Tests\\": "vendor/yiisoft/view/tests",
             "Yiisoft\\Yii\\DataView\\": "src"
         }
     },

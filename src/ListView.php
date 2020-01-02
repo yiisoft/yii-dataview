@@ -72,7 +72,6 @@ class ListView extends BaseListView implements ViewContextInterface
      * The return result of the function will be rendered directly.
      * Note: If the function returns `null`, nothing will be rendered before the item.
      * @see renderBeforeItem
-     * @since 2.0.11
      */
     public ?Closure $beforeItem = null;
     /**
@@ -81,7 +80,6 @@ class ListView extends BaseListView implements ViewContextInterface
      * The return result of the function will be rendered directly.
      * Note: If the function returns `null`, nothing will be rendered after the item.
      * @see renderAfterItem
-     * @since 2.0.11
      */
     public ?Closure $afterItem = null;
 
@@ -140,7 +138,6 @@ class ListView extends BaseListView implements ViewContextInterface
      * @param int $index the zero-based index of the data model in the model array returned by [[dataProvider]].
      * @return string|null [[afterItem]] call result or `null` when [[afterItem]] is not a closure
      * @see afterItem
-     * @since 2.0.11
      */
     protected function renderAfterItem($model, $key, $index): ?string
     {
