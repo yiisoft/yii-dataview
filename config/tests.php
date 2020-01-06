@@ -50,12 +50,7 @@ return [
         '@root' => dirname(__DIR__, 1),
         '@public' => '@root/tests/public',
         '@basePath' => '@public',
-        '@baseUrl' => '/baseUrl',
-        '@converter' => '@public/assetconverter',
-        '@npm' => '@root/node_modules',
         '@view' => '@public/view',
-        '@web' => '@baseUrl',
-        '@testSourcePath' => '@public/assetsources',
     ],
     View::class => static function (ContainerInterface $container) {
         $aliases = $container->get(Aliases::class);
