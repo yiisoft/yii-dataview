@@ -71,15 +71,13 @@
         "yiisoft/view": "^3.0@dev",
         "yiisoft/factory": "^3.0@dev",
         "yiisoft/data": "^3.0@dev",
+        "yiisoft/aliases": "^3.0@dev",
         "ext-json": "*"
     },
     "require-dev": {
         "yiisoft/di": "^3.0@dev",
-        "yiisoft/event-dispatcher": "^3.0@dev",
         "yiisoft/log": "^3.0@dev",
-        "yiisoft/cache": "^3.0@dev",
         "phpunit/phpunit": "^8.4",
-        "friendsofphp/php-cs-fixer": "^2.2",
         "hiqdev/composer-config-plugin": "^1.0@dev"
     },
     "extra": {
