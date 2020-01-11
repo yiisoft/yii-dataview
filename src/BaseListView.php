@@ -4,7 +4,7 @@ namespace Yiisoft\Yii\DataView;
 
 use Yiisoft\Aliases\Aliases;
 use Yiisoft\Arrays\ArrayHelper;
-use Yiisoft\Data\Paginator\PaginatorInterface;
+use Yiisoft\Data\Paginator\OffsetPaginator;
 use Yiisoft\Data\Reader\CountableDataInterface;
 use Yiisoft\Data\Reader\DataReaderInterface;
 use Yiisoft\Data\Reader\FilterableDataInterface;
@@ -39,9 +39,9 @@ abstract class BaseListView
      */
     protected $dataReader;
     /**
-     * @var \Yiisoft\Data\Paginator\PaginatorInterface|null
+     * @var \Yiisoft\Data\Paginator\OffsetPaginator|null
      */
-    protected ?PaginatorInterface $paginator = null;
+    protected ?OffsetPaginator $paginator = null;
     /**
      * @var array the configuration for the pager widget. By default, [[LinkPager]] will be
      *            used to render the pager. You can use a different widget class by configuring the "class" element.
@@ -266,12 +266,12 @@ abstract class BaseListView
         $tag = ArrayHelper::remove($summaryOptions, 'tag', 'div');
         if (($pagination = $this->paginator) !== null) {
             $totalCount = $this->dataReader->count();
-            $begin = 0; //$pagination->getCurrentPageSize() * $pagination->pageSize + 1;
+            $begin = $pagination->getCurrentPageSize() * $pagination->getCurrentPageSize() + 1;
             $end = $begin + $count - 1;
             if ($begin > $end) {
                 $begin = $end;
             }
-            $page = 0; //$pagination->getPage() + 1;
+            $page = $pagination->getCurrentPage() + 1;
             $pageCount = $pagination->getCurrentPageSize();
             if (($summaryContent = $this->summary) === null) {
                 return Html::tag(
@@ -374,12 +374,7 @@ abstract class BaseListView
         return $sorter::widget();
     }
 
-//    abstract public function getId();
-
-    public function getId(): int
-    {
-        return rand(1, 10);
-    }
+    abstract public function getId();
 
     public function getView(): View
     {
@@ -426,7 +421,7 @@ abstract class BaseListView
      * @param $paginator
      * @return static
      */
-    public function withPaginator(?PaginatorInterface $paginator): self
+    public function withPaginator(?OffsetPaginator $paginator): self
     {
         $this->paginator = $paginator;
 

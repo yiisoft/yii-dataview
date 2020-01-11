@@ -602,4 +602,9 @@ class GridView extends BaseListView
     {
         return $this->filterErrorOptions;
     }
+
+    public function getId()
+    {
+        return rand(1, 10);
+    }
 }

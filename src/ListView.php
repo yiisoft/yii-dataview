@@ -266,4 +266,9 @@ class ListView extends BaseListView implements ViewContextInterface
 
         return $this;
     }
+
+    public function getId()
+    {
+        return rand(1, 10);
+    }
 }
