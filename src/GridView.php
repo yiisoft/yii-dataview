@@ -253,7 +253,7 @@ class GridView extends BaseListView
         return '';
     }
 
-    public function renderSection($name): string
+    public function renderSection(string $name): string
     {
         switch ($name) {
             case '{errors}':

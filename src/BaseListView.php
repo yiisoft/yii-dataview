@@ -217,7 +217,7 @@ abstract class BaseListView
      * @param string $name the section name, e.g., `{summary}`, `{items}`.
      * @return string|bool the rendering result of the section, or false if the named section is not supported.
      */
-    public function renderSection($name): string
+    public function renderSection(string $name): string
     {
         switch ($name) {
             case '{summary}':
@@ -349,7 +349,7 @@ abstract class BaseListView
 
         /* @var $pager LinkPager */
         $pager = $class::widget();
-        $pager->paginator = $pagination;
+        $pager->setPaginator($pagination);
 
         return $pager->run();
     }
@@ -365,13 +365,15 @@ abstract class BaseListView
         if ($sort === null || empty($sort->getCriteria()) || $this->dataReader->count() <= 0) {
             return '';
         }
-        /* @var $class LinkSorter */
-        $sorter = $this->sorter;
-        ArrayHelper::remove($sorter, '__class', LinkSorter::class);
-        $sorter['sort'] = $sort;
-        $sorter['view'] = $this->getView();
 
-        return $sorter::widget();
+        $config = $this->sorter;
+        $class = ArrayHelper::remove($config, '__class', LinkSorter::class);
+
+        /* @var $pager LinkSorter */
+        $pager = $class::widget();
+        $pager->setSort($sort);
+
+        return $pager->run();
     }
 
     abstract public function getId();
