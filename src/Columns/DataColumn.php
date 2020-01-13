@@ -240,18 +240,16 @@ class DataColumn extends Column
         if ($this->attribute !== null) {
             return ArrayHelper::getValue($model, $this->attribute);
         }
+        
+        return null;
     }
 
     protected function renderDataCellContent($model, $key, $index): string
     {
         if ($this->content === null) {
-            // TODO fix
-            $language = 'language';
-
-            return $this->grid->getMessageFormatter()->format(
+            return $this->formatMessage(
                 $this->getDataCellValue($model, $key, $index),
-                $this->format,
-                $language
+                $this->format
             );
         }
 

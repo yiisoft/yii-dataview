@@ -107,16 +107,13 @@ class ActionColumn extends Column
     {
         $this->initDefaultButton('view', 'eye-open');
         $this->initDefaultButton('update', 'pencil');
-        // TODO fix
-        $language = 'language';
         $this->initDefaultButton(
             'delete',
             'trash',
             [
-                'data-confirm' => self::$messageFormatter->format(
+                'data-confirm' => $this->formatMessage(
                     'Are you sure you want to delete this item?',
-                    [],
-                    $language
+                    []
                 ),
                 'data-method' => 'post',
             ]
@@ -136,17 +133,15 @@ class ActionColumn extends Column
     {
         if (!isset($this->buttons[$name]) && strpos($this->template, '{' . $name . '}') !== false) {
             $this->buttons[$name] = function ($url, $model, $key) use ($name, $iconName, $additionalOptions) {
-                // TODO fix
-                $language = 'language';
                 switch ($name) {
                     case 'view':
-                        $title = self::$messageFormatter->format('View', [], $language);
+                        $title = $this->formatMessage('View', []);
                         break;
                     case 'update':
-                        $title = self::$messageFormatter->format('Update', [], $language);
+                        $title = $this->formatMessage('Update', []);
                         break;
                     case 'delete':
-                        $title = self::$messageFormatter->format('Delete', [], $language);
+                        $title = $this->formatMessage('Delete', []);
                         break;
                     default:
                         $title = ucfirst($name);

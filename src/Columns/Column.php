@@ -4,8 +4,8 @@ namespace Yiisoft\Yii\DataView\Columns;
 
 use Closure;
 use Yiisoft\Html\Html;
-use Yiisoft\I18n\MessageFormatterInterface;
 use Yiisoft\Yii\DataView\GridView;
+use Yiisoft\Yii\DataView\MessageFormatter;
 
 /**
  * Column is the base class of all [[GridView]] column classes.
@@ -67,16 +67,14 @@ abstract class Column
      */
     protected array $filterOptions = [];
 
-    protected static MessageFormatterInterface $messageFormatter;
-
-    public function __construct(MessageFormatterInterface $messageFormatter)
-    {
-        self::$messageFormatter = $messageFormatter;
-    }
-
     public static function widget(): self
     {
-        return new static(self::$messageFormatter);
+        return new static();
+    }
+
+    protected function formatMessage(string $message, array $arguments = []): string
+    {
+        return MessageFormatter::formatMessage($message, $arguments);
     }
 
     public function init(): self

@@ -7,7 +7,6 @@ use Yiisoft\Arrays\ArrayableInterface;
 use Yiisoft\Arrays\ArrayHelper;
 use Yiisoft\Factory\Exceptions\InvalidConfigException;
 use Yiisoft\Html\Html;
-use Yiisoft\I18n\MessageFormatterInterface;
 use Yiisoft\Strings\Inflector;
 
 /**
@@ -91,20 +90,10 @@ class DetailView
      * @see \Yiisoft\Html\Html::renderTagAttributes() for details on how attributes are being rendered.
      */
     protected array $options = ['class' => 'table table-striped table-bordered detail-view'];
-    /**
-     * @var \Yiisoft\I18n\MessageFormatterInterface the formatter used to format model attribute values into
-     *     displayable texts.
-     */
-    protected static MessageFormatterInterface $messageFormatter;
-
-    public function __construct(MessageFormatterInterface $formatter)
-    {
-        self::$messageFormatter = $formatter;
-    }
 
     public static function widget(): self
     {
-        return new static(self::$messageFormatter);
+        return new static();
     }
 
     /**
@@ -156,17 +145,13 @@ class DetailView
             $captionOptions = Html::renderTagAttributes(ArrayHelper::getValue($attribute, 'captionOptions', []));
             $contentOptions = Html::renderTagAttributes(ArrayHelper::getValue($attribute, 'contentOptions', []));
 
-            // TODO fix
-            $language = 'language';
-
             return strtr(
                 $this->template,
                 [
                     '{label}' => $attribute['label'],
-                    '{value}' => self::$messageFormatter->format(
+                    '{value}' => $this->formatMessage(
                         $attribute['value'],
-                        [$attribute['format']],
-                        $language
+                        [$attribute['format']]
                     ),
                     '{captionOptions}' => $captionOptions,
                     '{contentOptions}' => $contentOptions,
@@ -175,6 +160,11 @@ class DetailView
         }
 
         return call_user_func($this->template, $attribute, $index, $this);
+    }
+
+    protected function formatMessage(string $message, array $arguments = []): string
+    {
+        return MessageFormatter::formatMessage($message, $arguments);
     }
 
     /**

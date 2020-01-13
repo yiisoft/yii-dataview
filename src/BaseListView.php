@@ -259,8 +259,6 @@ abstract class BaseListView
         if ($count <= 0) {
             return '';
         }
-        // TODO fix that
-        $language = 'language';
 
         $summaryOptions = $this->summaryOptions;
         $tag = ArrayHelper::remove($summaryOptions, 'tag', 'div');
@@ -276,7 +274,7 @@ abstract class BaseListView
             if (($summaryContent = $this->summary) === null) {
                 return Html::tag(
                     $tag,
-                    self::$messageFormatter->format(
+                    $this->formatMessage(
                         'Showing <b>{begin, number}-{end, number}</b> of <b>{totalCount, number}</b> {totalCount, plural, one{item} other{items}}.',
                         [
                             'begin' => $begin,
@@ -285,8 +283,7 @@ abstract class BaseListView
                             'totalCount' => $totalCount,
                             'page' => $page,
                             'pageCount' => $pageCount,
-                        ],
-                        $language
+                        ]
                     ),
                     $summaryOptions
                 );
@@ -297,7 +294,7 @@ abstract class BaseListView
             if (($summaryContent = $this->summary) === null) {
                 return Html::tag(
                     $tag,
-                    self::$messageFormatter->format(
+                    $this->formatMessage(
                         'Total <b>{count, number}</b> {count, plural, one{item} other{items}}.',
                         [
                             'begin' => $begin,
@@ -306,8 +303,7 @@ abstract class BaseListView
                             'totalCount' => $totalCount,
                             'page' => $page,
                             'pageCount' => $pageCount,
-                        ],
-                        $language
+                        ]
                     ),
                     $summaryOptions
                 );
@@ -316,7 +312,7 @@ abstract class BaseListView
 
         return Html::tag(
             $tag,
-            self::$messageFormatter->format(
+            $this->formatMessage(
                 'Total <b>{count, number}</b> {count, plural, one{item} other{items}}.',
                 [
                     'begin' => $begin,
@@ -325,11 +321,15 @@ abstract class BaseListView
                     'totalCount' => $totalCount,
                     'page' => $page,
                     'pageCount' => $pageCount,
-                ],
-                $language
+                ]
             ),
             $summaryOptions
         );
+    }
+
+    protected function formatMessage(string $message, array $arguments = []): string
+    {
+        return MessageFormatter::formatMessage($message, $arguments);
     }
 
     /**
