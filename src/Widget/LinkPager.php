@@ -432,5 +432,4 @@ class LinkPager extends Widget
 
         return $this;
     }
-
 }
