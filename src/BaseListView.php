@@ -28,38 +28,38 @@ abstract class BaseListView
 {
     /**
      * @var array the HTML attributes for the container tag of the list view.
-     *            The "tag" element specifies the tag name of the container element and defaults to "div".
-     * @see \Yiisoft\Html\Html::renderTagAttributes() for details on how attributes are being rendered.
+     * The "tag" element specifies the tag name of the container element and defaults to "div".
+     * @see Html::renderTagAttributes() for details on how attributes are being rendered.
      */
     protected array $options = [];
 
     /**
      * @var DataReaderInterface|SortableDataInterface|FilterableDataInterface|OffsetableDataInterface|CountableDataInterface
-     *     the data provider for the view. This property is required.
+     * the data provider for the view. This property is required.
      */
     protected $dataReader;
     /**
-     * @var \Yiisoft\Data\Paginator\OffsetPaginator|null
+     * @var OffsetPaginator|null
      */
     protected ?OffsetPaginator $paginator = null;
     /**
-     * @var array the configuration for the pager widget. By default, [[LinkPager]] will be
-     *            used to render the pager. You can use a different widget class by configuring the "class" element.
-     *            Note that the widget must support the `pagination` property which will be populated with the
-     *            [[\yii\data\BaseDataProvider::pagination|pagination]] value of the [[dataReader]] and will overwrite
-     *     this value.
+     * @var array the configuration for the pager widget. By default, {@see LinkPager} will be
+     * used to render the pager. You can use a different widget class by configuring the "class" element.
+     * Note that the widget must support the `pagination` property which will be populated with the
+     * {@see \yii\data\BaseDataProvider::pagination} value of the {@see $dataReader} and will overwrite
+     * this value.
      */
     protected array $pager = [];
     /**
-     * @var array the configuration for the sorter widget. By default, [[LinkSorter]] will be
-     *            used to render the sorter. You can use a different widget class by configuring the "class" element.
-     *            Note that the widget must support the `sort` property which will be populated with the
-     *            [[\yii\data\BaseDataProvider::sort|sort]] value of the [[dataReader]] and will overwrite this value.
+     * @var array the configuration for the sorter widget. By default, {@see LinkSorter} will be
+     * used to render the sorter. You can use a different widget class by configuring the "class" element.
+     * Note that the widget must support the `sort` property which will be populated with the
+     * [[\yii\data\BaseDataProvider::sort|sort]] value of the {@see $dataReader} and will overwrite this value.
      */
     protected array $sorter = [];
     /**
      * @var string the HTML content to be displayed as the summary of the list view.
-     *             If you do not want to show the summary, you may set it with an empty string.
+     * If you do not want to show the summary, you may set it with an empty string.
      * The following tokens will be replaced with the corresponding values:
      * - `{begin}`: the starting row number (1-based) currently being displayed
      * - `{end}`: the ending row number (1-based) currently being displayed
@@ -71,21 +71,21 @@ abstract class BaseListView
     protected string $summary = 'Showing <b>{begin, number}-{end, number}</b> of <b>{totalCount, number}</b> {totalCount, plural, one{item} other{items}}.';
     /**
      * @var array the HTML attributes for the summary of the list view.
-     *            The "tag" element specifies the tag name of the summary element and defaults to "div".
-     * @see \Yiisoft\Html\Html::renderTagAttributes() for details on how attributes are being rendered.
+     * The "tag" element specifies the tag name of the summary element and defaults to "div".
+     * @see Html::renderTagAttributes() for details on how attributes are being rendered.
      */
     protected array $summaryOptions = ['class' => 'summary'];
     /**
-     * @var bool whether to show an empty list view if [[dataReader]] returns no data.
-     *           The default value is false which displays an element according to the [[emptyText]]
-     *           and [[emptyTextOptions]] properties.
+     * @var bool whether to show an empty list view if {@see $dataReader} returns no data.
+     * The default value is false which displays an element according to the {@see $emptyText}
+     * and {@see $emptyTextOptions} properties.
      */
     protected bool $showOnEmpty = false;
     /**
-     * @var string|false the HTML content to be displayed when [[dataReader]] does not have any data.
-     *                   When this is set to `false` no extra HTML content will be generated.
-     *                   The default value is the text "No results found." which will be translated to the current
-     *     application language.
+     * @var string|false the HTML content to be displayed when {@see $dataReader} does not have any data.
+     * When this is set to `false` no extra HTML content will be generated.
+     * The default value is the text "No results found." which will be translated to the current
+     * application language.
      * @see showOnEmpty
      * @see emptyTextOptions
      */
@@ -93,29 +93,29 @@ abstract class BaseListView
     protected bool $showEmptyText = true;
     /**
      * @var array the HTML attributes for the emptyText of the list view.
-     *            The "tag" element specifies the tag name of the emptyText element and defaults to "div".
-     * @see \Yiisoft\Html\Html::renderTagAttributes() for details on how attributes are being rendered.
+     * The "tag" element specifies the tag name of the emptyText element and defaults to "div".
+     * @see Html::renderTagAttributes() for details on how attributes are being rendered.
      */
     protected array $emptyTextOptions = ['class' => 'empty'];
     /**
      * @var string the layout that determines how different sections of the list view should be organized.
-     *             The following tokens will be replaced with the corresponding section contents:
-     * - `{summary}`: the summary section. See [[renderSummary()]].
-     * - `{items}`: the list items. See [[renderItems()]].
-     * - `{sorter}`: the sorter. See [[renderSorter()]].
-     * - `{pager}`: the pager. See [[renderPager()]].
+     * The following tokens will be replaced with the corresponding section contents:
+     * - `{summary}`: the summary section. See {@see renderSummary()}.
+     * - `{items}`: the list items. See {@see renderItems()}.
+     * - `{sorter}`: the sorter. See {@see renderSorter()}.
+     * - `{pager}`: the pager. See {@see renderPager()}.
      */
     protected string $layout = "{summary}\n{items}\n{pager}";
     /**
-     * @var \Yiisoft\I18n\MessageFormatterInterface
+     * @var MessageFormatterInterface
      */
     private static MessageFormatterInterface $messageFormatter;
     /**
-     * @var \Yiisoft\View\View
+     * @var View
      */
     private static View $view;
     /**
-     * @var \Yiisoft\Aliases\Aliases
+     * @var Aliases
      */
     private static Aliases $aliases;
 
@@ -134,25 +134,18 @@ abstract class BaseListView
     abstract public function renderItems(): string;
 
     /**
-     * @return \Yiisoft\Data\Reader\CountableDataInterface|\Yiisoft\Data\Reader\DataReaderInterface|\Yiisoft\Data\Reader\FilterableDataInterface|\Yiisoft\Data\Reader\OffsetableDataInterface|\Yiisoft\Data\Reader\SortableDataInterface
+     * @return CountableDataInterface|DataReaderInterface|FilterableDataInterface|OffsetableDataInterface|SortableDataInterface
      */
     public function getDataReader()
     {
         return $this->dataReader;
     }
 
-    /**
-     * @return \Yiisoft\Aliases\Aliases
-     */
     protected function getAliases(): Aliases
     {
         return self::$aliases;
     }
 
-    /**
-     * @param bool $value
-     * @return \Yiisoft\Yii\DataView\BaseListView
-     */
     public function showEmptyText(bool $value): self
     {
         $this->showEmptyText = $value;
@@ -163,7 +156,7 @@ abstract class BaseListView
     /**
      * Initializes the view.
      *
-     * @throws \Yiisoft\Factory\Exceptions\InvalidConfigException
+     * @throws InvalidConfigException
      */
     public function init(): self
     {
@@ -177,9 +170,6 @@ abstract class BaseListView
         return $this;
     }
 
-    /**
-     * @return static
-     */
     public static function widget(): self
     {
         return new static(self::$messageFormatter, self::$view, self::$aliases);
@@ -398,7 +388,7 @@ abstract class BaseListView
     }
 
     /**
-     * @param \Yiisoft\Data\Reader\CountableDataInterface|\Yiisoft\Data\Reader\DataReaderInterface|\Yiisoft\Data\Reader\FilterableDataInterface|\Yiisoft\Data\Reader\OffsetableDataInterface|\Yiisoft\Data\Reader\SortableDataInterface $dataReader
+     * @param CountableDataInterface|DataReaderInterface|FilterableDataInterface|OffsetableDataInterface|SortableDataInterface $dataReader
      * @return static
      */
     public function withDataReader($dataReader): self
@@ -408,10 +398,6 @@ abstract class BaseListView
         return $this;
     }
 
-    /**
-     * @param array $options
-     * @return static
-     */
     public function withOptions(array $options): self
     {
         $this->options = ArrayHelper::merge($this->options, $options);
@@ -419,10 +405,6 @@ abstract class BaseListView
         return $this;
     }
 
-    /**
-     * @param $paginator
-     * @return static
-     */
     public function withPaginator(?OffsetPaginator $paginator): self
     {
         $this->paginator = $paginator;

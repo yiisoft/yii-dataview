@@ -10,7 +10,7 @@
          convertWarningsToExceptions="true"
          stopOnFailure="false">
     <testsuites>
-        <testsuite name="Yii View tests">
+        <testsuite name="Yii DataView tests">
             <directory>./tests</directory>
         </testsuite>
     </testsuites>

@@ -25,38 +25,43 @@ class ActionColumn extends Column
     protected array $headerOptions = ['class' => 'action-column'];
     /**
      * @var string the ID of the controller that should handle the actions specified here.
-     *             If not set, it will use the currently active controller. This property is mainly used by
-     *             [[urlCreator]] to create URLs for different actions. The value of this property will be prefixed
-     *             to each action name to form the route of the action.
+     * If not set, it will use the currently active controller. This property is mainly used by
+     * {@see $urlCreator} to create URLs for different actions. The value of this property will be prefixed
+     * to each action name to form the route of the action.
      */
     private string $controller = 'index';
     /**
      * @var string the template used for composing each cell in the action column.
-     *             Tokens enclosed within curly brackets are treated as controller action IDs (also called *button
-     *     names* in the context of action column). They will be replaced by the corresponding button rendering
-     *     callbacks specified in [[buttons]]. For example, the token `{view}` will be replaced by the result of the
-     *     callback `buttons['view']`. If a callback cannot be found, the token will be replaced with an empty string.
-     *     As an example, to only have the view, and update button you can add the ActionColumn to your GridView
-     *     columns as follows:
+     * Tokens enclosed within curly brackets are treated as controller action IDs (also called *button
+     * names* in the context of action column). They will be replaced by the corresponding button rendering
+     * callbacks specified in [[buttons]]. For example, the token `{view}` will be replaced by the result of the
+     * callback `buttons['view']`. If a callback cannot be found, the token will be replaced with an empty string.
+     * As an example, to only have the view, and update button you can add the ActionColumn to your GridView
+     * columns as follows:
+     *
      * ```php
      * ['__class' => \yii\grid\ActionColumn::class, 'template' => '{view} {update}'],
      * ```
+     *
      * @see buttons
      */
     private string $template = '{view} {update} {delete}';
     /**
      * @var array button rendering callbacks. The array keys are the button names (without curly brackets),
-     *            and the values are the corresponding button rendering callbacks. The callbacks should use the
-     *     following signature:
+     * and the values are the corresponding button rendering callbacks. The callbacks should use the
+     * following signature:
+     *
      * ```php
      * function ($url, $model, $key) {
      *     // return the button HTML code
      * }
      * ```
+     *
      * where `$url` is the URL that the column creates for the button, `$model` is the model object
      * being rendered for the current row, and `$key` is the key of the model in the data provider array.
      * You can add further conditions to the button, for example only display it, when the model is
      * editable (here assuming you have a status field that indicates that):
+     *
      * ```php
      * [
      *     'update' => function ($url, $model, $key) {
@@ -66,16 +71,21 @@ class ActionColumn extends Column
      * ```
      */
     private array $buttons = [];
+
     /** @var array visibility conditions for each button. The array keys are the button names (without curly brackets),
      * and the values are the boolean true/false or the anonymous function. When the button name is not specified in
      * this array it will be shown by default.
+     *
      * The callbacks must use the following signature:
+     *
      * ```php
      * function ($model, $key, $index) {
      *     return $model->status === 'editable';
      * }
      * ```
+     *
      * Or you can pass a boolean value:
+     *
      * ```php
      * [
      *     'update' => \Yii::getApp()->user->can('update'),
@@ -83,20 +93,24 @@ class ActionColumn extends Column
      * ```
      */
     private array $visibleButtons = [];
+
     /**
      * @var callable a callback that creates a button URL using the specified model information.
-     *               The signature of the callback should be the same as that of [[createUrl()]]
-     *               Since 2.0.10 it can accept additional parameter, which refers to the column instance itself:
+     * The signature of the callback should be the same as that of {@see createUrl()}
+     * It can accept additional parameter, which refers to the column instance itself:
+     *
      * ```php
      * function (string $action, mixed $model, mixed $key, integer $index, ActionColumn $this) {
      *     //return string;
      * }
      * ```
+     *
      * If this property is not set, button URLs will be created using [[createUrl()]].
      */
     private $urlCreator;
+
     /**
-     * @var array html options to be applied to the [[initDefaultButton()|default button]].
+     * @var array HTML options to be applied to the default button, see {@see initDefaultButton()}.
      */
     private array $buttonOptions = [];
 
