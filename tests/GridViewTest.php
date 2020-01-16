@@ -65,8 +65,9 @@ class GridViewTest extends TestCase
         $this->assertCount(count($row), $columns);
 
         foreach ($columns as $index => $column) {
+            /* @var $column DataColumn */
             $this->assertInstanceOf(DataColumn::class, $column);
-            $this->assertArrayHasKey($column->attribute, $row);
+            $this->assertArrayHasKey($column->getAttribute(), $row);
         }
 
         $row = array_merge($row, ['relation' => ['id' => 1, 'name' => 'RelationName']]);
@@ -82,9 +83,9 @@ class GridViewTest extends TestCase
 
         foreach ($columns as $index => $column) {
             $this->assertInstanceOf(DataColumn::class, $column);
-            $this->assertArrayHasKey($column->attribute, $row);
-            $this->assertNotEquals('relation', $column->attribute);
-            $this->assertNotEquals('otherRelation', $column->attribute);
+            $this->assertArrayHasKey($column->getAttribute(), $row);
+            $this->assertNotEquals('relation', $column->getAttribute());
+            $this->assertNotEquals('otherRelation', $column->getAttribute());
         }
     }
 
