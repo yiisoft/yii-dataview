@@ -102,13 +102,12 @@ class ActionColumn extends Column
     public function __construct(UrlGeneratorInterface $urlGenerator)
     {
         $this->urlGenerator = $urlGenerator;
-        $this->initializeButtons();
     }
 
     /**
      * Initializes the default button rendering callbacks.
      */
-    public function initializeButtons(): void
+    public function init(): self
     {
         $this->initDefaultButton('view', 'eye-open');
         $this->initDefaultButton('update', 'pencil');
@@ -123,6 +122,8 @@ class ActionColumn extends Column
                 'data-method' => 'post',
             ]
         );
+
+        return $this;
     }
 
     /**

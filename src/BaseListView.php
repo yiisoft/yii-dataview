@@ -12,8 +12,8 @@ use Yiisoft\Data\Reader\OffsetableDataInterface;
 use Yiisoft\Data\Reader\SortableDataInterface;
 use Yiisoft\Factory\Exceptions\InvalidConfigException;
 use Yiisoft\Html\Html;
-use Yiisoft\I18n\MessageFormatterInterface;
 use Yiisoft\View\View;
+use Yiisoft\Widget\Widget;
 use Yiisoft\Yii\DataView\Widget\LinkPager;
 use Yiisoft\Yii\DataView\Widget\LinkSorter;
 
@@ -24,7 +24,7 @@ use Yiisoft\Yii\DataView\Widget\LinkSorter;
  * For more details and usage information on BaseListView, see the [guide article on data
  * widgets](guide:output-data-widgets).
  */
-abstract class BaseListView
+abstract class BaseListView extends Widget
 {
     /**
      * @var array the HTML attributes for the container tag of the list view.
@@ -107,23 +107,18 @@ abstract class BaseListView
      */
     protected string $layout = "{summary}\n{items}\n{pager}";
     /**
-     * @var MessageFormatterInterface
-     */
-    private static MessageFormatterInterface $messageFormatter;
-    /**
      * @var View
      */
-    private static View $view;
+    private View $view;
     /**
      * @var Aliases
      */
-    private static Aliases $aliases;
+    private Aliases $aliases;
 
-    public function __construct(MessageFormatterInterface $messageFormatter, View $view, Aliases $aliases)
+    public function __construct(View $view, Aliases $aliases)
     {
-        self::$messageFormatter = $messageFormatter;
-        self::$view = $view;
-        self::$aliases = $aliases;
+        $this->view = $view;
+        $this->aliases = $aliases;
     }
 
     /**
@@ -143,7 +138,7 @@ abstract class BaseListView
 
     protected function getAliases(): Aliases
     {
-        return self::$aliases;
+        return $this->aliases;
     }
 
     public function showEmptyText(bool $value): self
@@ -168,11 +163,6 @@ abstract class BaseListView
         }
 
         return $this;
-    }
-
-    public static function widget(): self
-    {
-        return new static(self::$messageFormatter, self::$view, self::$aliases);
     }
 
     /**
@@ -370,7 +360,7 @@ abstract class BaseListView
 
     public function getView(): View
     {
-        return self::$view;
+        return $this->view;
     }
 
     public function getOptions(): array

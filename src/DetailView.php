@@ -8,6 +8,7 @@ use Yiisoft\Arrays\ArrayHelper;
 use Yiisoft\Factory\Exceptions\InvalidConfigException;
 use Yiisoft\Html\Html;
 use Yiisoft\Strings\Inflector;
+use Yiisoft\Widget\Widget;
 
 /**
  * DetailView displays the detail of a single data [[model]].
@@ -34,7 +35,7 @@ use Yiisoft\Strings\Inflector;
  * For more details and usage information on DetailView, see the [guide article on data
  * widgets](guide:output-data-widgets).
  */
-class DetailView
+class DetailView extends Widget
 {
     /**
      * @var array|object the data model whose details are to be displayed. This can be a [[Model]] instance,
@@ -90,11 +91,6 @@ class DetailView
      * @see \Yiisoft\Html\Html::renderTagAttributes() for details on how attributes are being rendered.
      */
     protected array $options = ['class' => 'table table-striped table-bordered detail-view'];
-
-    public static function widget(): self
-    {
-        return new static();
-    }
 
     /**
      * Initializes the detail view.

@@ -4,6 +4,7 @@ namespace Yiisoft\Yii\DataView\Columns;
 
 use Closure;
 use Yiisoft\Html\Html;
+use Yiisoft\Widget\Widget;
 use Yiisoft\Yii\DataView\GridView;
 use Yiisoft\Yii\DataView\MessageFormatter;
 
@@ -11,7 +12,7 @@ use Yiisoft\Yii\DataView\MessageFormatter;
  * Column is the base class of all [[GridView]] column classes.
  * For more details and usage information on Column, see the [guide article on data widgets](guide:output-data-widgets).
  */
-abstract class Column
+abstract class Column extends Widget
 {
     /**
      * @var GridView the grid view object that owns this column.
@@ -66,11 +67,6 @@ abstract class Column
      * @see \Yiisoft\Html\Html::renderTagAttributes() for details on how attributes are being rendered.
      */
     protected array $filterOptions = [];
-
-    public static function widget(): self
-    {
-        return new static();
-    }
 
     protected function formatMessage(string $message, array $arguments = []): string
     {
