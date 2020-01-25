@@ -26,7 +26,8 @@
         "yiisoft/factory": "^3.0@dev",
         "yiisoft/router": "^3.0@dev",
         "yiisoft/strings": "^3.0@dev",
-        "yiisoft/view": "^3.0@dev"
+        "yiisoft/view": "^3.0@dev",
+        "yiisoft/widget": "^3.0@dev"
     },
     "require-dev": {
         "yiisoft/di": "^3.0@dev",
