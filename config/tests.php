@@ -6,12 +6,14 @@ use Psr\Log\LoggerInterface;
 use Yiisoft\Aliases\Aliases;
 use Yiisoft\Factory\Definitions\Reference;
 use Yiisoft\I18n\MessageFormatterInterface;
+use Yiisoft\Router\UrlGeneratorInterface;
 use Yiisoft\View\Theme;
 use Yiisoft\View\View;
 use Yiisoft\View\ViewContextInterface;
 use Yiisoft\Yii\DataView\BaseListView;
 use Yiisoft\Yii\DataView\Columns\Column;
 use Yiisoft\Yii\DataView\DetailView;
+use Yiisoft\Yii\DataView\Tests\Stubs\UrlGenerator;
 
 return [
     MessageFormatterInterface::class => static function () {
@@ -60,4 +62,7 @@ return [
 
         return new View($aliases->get('@view'), $theme, $eventDispatcher, $logger);
     },
+    UrlGeneratorInterface::class => [
+        '__class' => UrlGenerator::class,
+    ],
 ];
