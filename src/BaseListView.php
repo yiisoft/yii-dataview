@@ -2,6 +2,7 @@
 
 namespace Yiisoft\Yii\DataView;
 
+use InvalidArgumentException;
 use Yiisoft\Aliases\Aliases;
 use Yiisoft\Arrays\ArrayHelper;
 use Yiisoft\Data\Paginator\KeysetPaginator;
@@ -44,17 +45,13 @@ abstract class BaseListView extends Widget
      */
     protected $paginator;
     /**
-     * @var array the configuration for the pager widget. By default, {@see LinkPager} will be
-     * used to render the pager. You can use a different widget class by configuring the "class" element.
+     * @var LinkPager|null You can use a different widget class by configuring the "class" element.
      */
-    protected array $pager = [];
+    protected ?LinkPager $pager = null;
     /**
-     * @var array the configuration for the sorter widget. By default, {@see LinkSorter} will be
-     * used to render the sorter. You can use a different widget class by configuring the "class" element.
-     * Note that the widget must support the `sort` property which will be populated with the
-     * [[\yii\data\BaseDataProvider::sort|sort]] value of the {@see $dataReader} and will overwrite this value.
+     * @var LinkSorter|null You can use a different widget class by configuring the "class" element.
      */
-    protected array $sorter = [];
+    protected ?LinkSorter $sorter = null;
     /**
      * @var string the HTML content to be displayed as the summary of the list view.
      * If you do not want to show the summary, you may set it with an empty string.
@@ -132,6 +129,28 @@ abstract class BaseListView extends Widget
     public function getDataReader()
     {
         return $this->dataReader;
+    }
+
+    /**
+     * @param \Yiisoft\Yii\DataView\Widget\LinkPager|null $pager
+     * @return self
+     */
+    public function setPager(?LinkPager $pager): self
+    {
+        $this->pager = $pager;
+
+        return $this;
+    }
+
+    /**
+     * @param \Yiisoft\Yii\DataView\Widget\LinkSorter|null $sorter
+     * @return self
+     */
+    public function setSorter(?LinkSorter $sorter): self
+    {
+        $this->sorter = $sorter;
+
+        return $this;
     }
 
     protected function getAliases(): Aliases
@@ -317,19 +336,13 @@ abstract class BaseListView extends Widget
      */
     public function renderPager(): string
     {
-        $pagination = $this->paginator;
-        if ($pagination === null || $this->dataReader->count() <= 0) {
+        if (null === $this->pager || $this->paginator === null || $this->dataReader->count() < 1) {
             return '';
         }
 
-        $config = $this->pager;
-        $class = ArrayHelper::remove($config, '__class', LinkPager::class);
+        $this->pager->setPaginator($this->paginator);
 
-        /* @var $pager LinkPager */
-        $pager = $class::widget();
-        $pager->setPaginator($pagination);
-
-        return $pager->run();
+        return $this->pager->run();
     }
 
     /**
@@ -340,18 +353,13 @@ abstract class BaseListView extends Widget
     public function renderSorter(): string
     {
         $sort = $this->dataReader->getSort();
-        if ($sort === null || empty($sort->getCriteria()) || $this->dataReader->count() <= 0) {
+        if (null === $this->sorter || $sort === null || empty($sort->getCriteria()) || $this->dataReader->count() < 1) {
             return '';
         }
 
-        $config = $this->sorter;
-        $class = ArrayHelper::remove($config, '__class', LinkSorter::class);
+        $this->sorter->setSort($sort);
 
-        /* @var $pager LinkSorter */
-        $pager = $class::widget();
-        $pager->setSort($sort);
-
-        return $pager->run();
+        return $this->sorter->run();
     }
 
     abstract public function getId();
@@ -396,7 +404,7 @@ abstract class BaseListView extends Widget
     public function withPaginator($paginator): self
     {
         if ($paginator !== null && !$paginator instanceof KeysetPaginator && !$paginator instanceof OffsetPaginator) {
-            throw new \InvalidArgumentException(
+            throw new InvalidArgumentException(
                 sprintf(
                     'Argument "$paginator" must be instance of %s or %s, got %s',
                     OffsetPaginator::class,
