@@ -4,6 +4,7 @@ namespace Yiisoft\Yii\DataView;
 
 use Yiisoft\Aliases\Aliases;
 use Yiisoft\Arrays\ArrayHelper;
+use Yiisoft\Data\Paginator\KeysetPaginator;
 use Yiisoft\Data\Paginator\OffsetPaginator;
 use Yiisoft\Data\Reader\CountableDataInterface;
 use Yiisoft\Data\Reader\DataReaderInterface;
@@ -35,13 +36,13 @@ abstract class BaseListView extends Widget
 
     /**
      * @var DataReaderInterface|SortableDataInterface|FilterableDataInterface|OffsetableDataInterface|CountableDataInterface
-     * the data provider for the view. This property is required.
+     *     the data provider for the view. This property is required.
      */
     protected $dataReader;
     /**
-     * @var OffsetPaginator|null
+     * @var \Yiisoft\Data\Paginator\OffsetPaginator|\Yiisoft\Data\Paginator\KeysetPaginator|null
      */
-    protected ?OffsetPaginator $paginator = null;
+    protected $paginator;
     /**
      * @var array the configuration for the pager widget. By default, {@see LinkPager} will be
      * used to render the pager. You can use a different widget class by configuring the "class" element.
@@ -392,8 +393,18 @@ abstract class BaseListView extends Widget
         return $this;
     }
 
-    public function withPaginator(?OffsetPaginator $paginator): self
+    public function withPaginator($paginator): self
     {
+        if ($paginator !== null && !$paginator instanceof KeysetPaginator && !$paginator instanceof OffsetPaginator) {
+            throw new \InvalidArgumentException(
+                sprintf(
+                    'Argument "$paginator" must be instance of %s or %s, got %s',
+                    OffsetPaginator::class,
+                    KeysetPaginator::class,
+                    is_object($paginator) ? get_class($paginator) : gettype($paginator)
+                )
+            );
+        }
         $this->paginator = $paginator;
 
         return $this;

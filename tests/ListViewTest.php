@@ -260,6 +260,7 @@ HTML
      * @param $dataReader
      * @param $paginator
      * @return ListView
+     * @throws \Yiisoft\Factory\Exceptions\InvalidConfigException
      */
     private function getListView($dataReader, $paginator): ListView
     {
