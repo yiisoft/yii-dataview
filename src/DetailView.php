@@ -91,6 +91,7 @@ class DetailView extends Widget
      * @see \Yiisoft\Html\Html::renderTagAttributes() for details on how attributes are being rendered.
      */
     protected array $options = ['class' => 'table table-striped table-bordered detail-view'];
+    protected string $emptyHtml = '<span class="not-set">(not set)</span>';
 
     /**
      * Initializes the detail view.
@@ -158,8 +159,12 @@ class DetailView extends Widget
         return call_user_func($this->template, $attribute, $index, $this);
     }
 
-    protected function formatMessage(string $message, array $arguments = []): string
+    protected function formatMessage(?string $message, array $arguments = []): string
     {
+        if ($message === null) {
+            return $this->emptyHtml;
+        }
+
         return MessageFormatter::formatMessage($message, $arguments);
     }
 
@@ -266,5 +271,12 @@ class DetailView extends Widget
     public function getAttributes(): array
     {
         return $this->attributes;
+    }
+
+    public function withEmptyHtml(string $emptyHtml): self
+    {
+        $this->emptyHtml = $emptyHtml;
+
+        return $this;
     }
 }

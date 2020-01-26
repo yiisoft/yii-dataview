@@ -198,9 +198,14 @@ class DetailViewTest extends TestCase
             );
 
         $this->assertEquals('Id:123', $widget->renderAttr($widget->getAttributes()[0], 0));
-        $this->markTestIncomplete('Needs to implement null-value');
         $this->assertEquals(
             'Related Id:<span class="not-set">(not set)</span>',
+            $widget->renderAttr($widget->getAttributes()[1], 1)
+        );
+
+        $widget = (clone $widget)->withEmptyHtml('empty html');
+        $this->assertEquals(
+            'Related Id:empty html',
             $widget->renderAttr($widget->getAttributes()[1], 1)
         );
     }
