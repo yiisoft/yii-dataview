@@ -45,9 +45,6 @@ abstract class BaseListView extends Widget
     /**
      * @var array the configuration for the pager widget. By default, {@see LinkPager} will be
      * used to render the pager. You can use a different widget class by configuring the "class" element.
-     * Note that the widget must support the `pagination` property which will be populated with the
-     * {@see \yii\data\BaseDataProvider::pagination} value of the {@see $dataReader} and will overwrite
-     * this value.
      */
     protected array $pager = [];
     /**

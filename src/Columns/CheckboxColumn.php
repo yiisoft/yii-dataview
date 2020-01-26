@@ -35,9 +35,9 @@ class CheckboxColumn extends Column
      * @var string the name of the input checkbox input fields. This will be appended with `[]` to ensure it is an
      *     array.
      */
-    public $name = 'selection';
+    protected string $name = 'selection';
     /**
-     * @var array|\Closure the HTML attributes for checkboxes. This can either be an array of
+     * @var array|callable the HTML attributes for checkboxes. This can either be an array of
      *                     attributes or an anonymous function ([[Closure]]) that returns such an array.
      *                     The signature of the function should be the following: `function ($model, $key, $index,
      *     $column)`. Where `$model`, `$key`, and `$index` refer to the model, key and index of the row currently being
@@ -52,15 +52,15 @@ class CheckboxColumn extends Column
      * ```
      * @see \Yiisoft\Html\Html::renderTagAttributes() for details on how attributes are being rendered.
      */
-    public $checkboxOptions = [];
+    protected $checkboxOptions = [];
     /**
      * @var bool whether it is possible to select multiple rows. Defaults to `true`.
      */
-    public $multiple = true;
+    protected bool $multiple = true;
     /**
      * @var string the css class that will be used to find the checkboxes.
      */
-    public $cssClass;
+    protected ?string $cssClass = null;
 
     /**
      * {@inheritdoc}
@@ -68,8 +68,7 @@ class CheckboxColumn extends Column
      */
     public function init(): self
     {
-        parent::init();
-        if (empty($this->name)) {
+        if ('' === $this->name) {
             throw new InvalidConfigException('The "name" property must be set.');
         }
         if (substr_compare($this->name, '[]', -2, 2)) {
@@ -125,7 +124,6 @@ class CheckboxColumn extends Column
 
         return Html::checkbox($this->getHeaderCheckBoxName(), false, ['class' => 'select-on-check-all']);
     }
-
 
     protected function renderDataCellContent($model, $key, $index): string
     {

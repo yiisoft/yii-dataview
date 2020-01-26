@@ -73,11 +73,6 @@ abstract class Column extends Widget
         return MessageFormatter::formatMessage($message, $arguments);
     }
 
-    public function init(): self
-    {
-        return $this;
-    }
-
     /**
      * Renders the header cell.
      */
