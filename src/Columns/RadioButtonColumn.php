@@ -51,16 +51,13 @@ class RadioButtonColumn extends Column
     private $radioOptions = [];
 
     /**
-     * {@inheritdoc}
      * @throws \Yiisoft\Factory\Exceptions\InvalidConfigException if [[name]] is not set.
      */
-    public function init(): self
+    protected function init(): void
     {
         if (empty($this->name)) {
             throw new InvalidConfigException('The "name" property must be set.');
         }
-
-        return $this;
     }
 
     public function withName(string $name): self
@@ -94,6 +91,8 @@ class RadioButtonColumn extends Column
 
     protected function renderDataCellContent($model, $key, $index): string
     {
+        $this->init();
+
         if ($this->content !== null) {
             return parent::renderDataCellContent($model, $key, $index);
         }
