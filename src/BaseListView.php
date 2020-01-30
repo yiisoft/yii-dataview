@@ -15,6 +15,7 @@ use Yiisoft\Data\Reader\SortableDataInterface;
 use Yiisoft\Factory\Exceptions\InvalidConfigException;
 use Yiisoft\Html\Html;
 use Yiisoft\View\View;
+use Yiisoft\View\WebView;
 use Yiisoft\Widget\Widget;
 use Yiisoft\Yii\DataView\Widget\LinkPager;
 use Yiisoft\Yii\DataView\Widget\LinkSorter;
@@ -102,15 +103,15 @@ abstract class BaseListView extends Widget
      */
     protected string $layout = "{summary}\n{items}\n{pager}";
     /**
-     * @var View
+     * @var WebView
      */
-    private View $view;
+    private WebView $view;
     /**
      * @var Aliases
      */
     private Aliases $aliases;
 
-    public function __construct(View $view, Aliases $aliases)
+    public function __construct(WebView $view, Aliases $aliases)
     {
         $this->view = $view;
         $this->aliases = $aliases;

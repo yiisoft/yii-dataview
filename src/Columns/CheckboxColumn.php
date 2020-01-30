@@ -66,7 +66,7 @@ class CheckboxColumn extends Column
      * {@inheritdoc}
      * @throws \Yiisoft\Factory\Exceptions\InvalidConfigException if [[name]] is not set.
      */
-    public function init(): self
+    protected function init(): void
     {
         if ('' === $this->name) {
             throw new InvalidConfigException('The "name" property must be set.');
@@ -76,8 +76,6 @@ class CheckboxColumn extends Column
         }
 
         $this->registerClientScript();
-
-        return $this;
     }
 
     public function withName(string $string): self
@@ -118,6 +116,8 @@ class CheckboxColumn extends Column
      */
     protected function renderHeaderCellContent(): string
     {
+        $this->init();
+
         if ($this->header !== null || !$this->multiple) {
             return parent::renderHeaderCellContent();
         }
@@ -127,6 +127,8 @@ class CheckboxColumn extends Column
 
     protected function renderDataCellContent($model, $key, $index): string
     {
+        $this->init();
+
         if ($this->content !== null) {
             return parent::renderDataCellContent($model, $key, $index);
         }
@@ -173,7 +175,7 @@ class CheckboxColumn extends Column
      */
     public function registerClientScript(): void
     {
-        $id = $this->grid->getOptions()['id'];
+        $id = $this->grid->getId();
         $options = Json::encode(
             [
                 'name' => $this->name,

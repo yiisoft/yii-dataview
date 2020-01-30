@@ -120,10 +120,8 @@ class LinkPager extends Widget
     /**
      * Initializes the pager.
      */
-    public function init(): void
+    protected function init(): void
     {
-        parent::init();
-
         if ($this->paginator === null) {
             throw new InvalidConfigException('The "pagination" property must be set.');
         }
@@ -137,6 +135,8 @@ class LinkPager extends Widget
      */
     public function run(): string
     {
+        $this->init();
+
         if ($this->registerLinkTags) {
             $this->registerLinkTags();
         }
