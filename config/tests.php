@@ -18,9 +18,6 @@ use Yiisoft\Yii\DataView\Tests\Stubs\UrlGenerator;
 return [
     MessageFormatterInterface::class => static function () {
         return new class implements MessageFormatterInterface {
-            /**
-             * @inheritDoc
-             */
             public function format(string $message, array $parameters, string $language): string
             {
                 return $message;

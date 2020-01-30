@@ -188,15 +188,6 @@ class GridView extends BaseListView
      */
     private ?object $filterModel = null;
     /**
-     * TODO not used
-     *
-     * @var string|array the URL for returning the filtering result. [[Url::to()]] will be called to
-     *                   normalize the URL. If not set, the current controller action will be used.
-     *                   When the user makes change to any filter input, the current filtering inputs will be appended
-     *                   as GET parameters to this URL.
-     */
-    private $filterUrl;
-    /**
      * @var string whether the filters should be displayed in the grid view. Valid values include:
      * - [[FILTER_POS_HEADER]]: the filters will be displayed on top of each column's header cell.
      * - [[FILTER_POS_BODY]]: the filters will be displayed right below each column's header cell.

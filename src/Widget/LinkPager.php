@@ -168,13 +168,13 @@ class LinkPager extends Widget
     protected function renderPageButtons(): string
     {
         $paginator = $this->paginator;
-        $pageCount = 10;//$paginator->getCurrentPageSize();
+        $pageCount = $paginator->getCurrentPageSize();
         if ($pageCount < 2 && $this->hideOnSinglePage) {
             return '';
         }
 
         $buttons = [];
-        $currentPage = 1;// $paginator->getCurrentPage();
+        $currentPage = $paginator->getCurrentPage();
 
         // first page
         $firstPageLabel = $this->firstPageLabel === true ? '1' : $this->firstPageLabel;
@@ -207,9 +207,9 @@ class LinkPager extends Widget
 
         // next page
         if ($this->nextPageLabel !== false) {
-//            if (($page = $currentPage + 1) >= $pageCount - 1) {
-//                $page = $pageCount - 1;
-//            }
+            if (($page = $currentPage + 1) >= $pageCount - 1) {
+                $page = $pageCount - 1;
+            }
             $disabled = $paginator->isOnLastPage() || $paginator->withNextPageToken(null)->isOnLastPage();
             $buttons[] = $this->renderPageButton(
                 $this->nextPageLabel,

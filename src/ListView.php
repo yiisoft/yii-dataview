@@ -223,9 +223,6 @@ class ListView extends BaseListView implements ViewContextInterface
         return $this->itemView;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function getViewPath(): string
     {
         return '';
