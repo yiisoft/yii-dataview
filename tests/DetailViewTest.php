@@ -219,8 +219,9 @@ class DetailViewTest extends TestCase
     public function testArrayModel(array $expectedValue, $model): void
     {
         $widget = PublicDetailView::widget()
-            ->withModel(is_callable($model) ? $model() : $model)
-            ->init();
+            ->withModel(is_callable($model) ? $model() : $model);
+
+        $widget->run();
 
         $this->assertEquals($expectedValue, $widget->getAttributes());
     }

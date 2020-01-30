@@ -171,7 +171,7 @@ abstract class BaseListView extends Widget
      *
      * @throws InvalidConfigException
      */
-    public function init(): self
+    protected function init(): void
     {
         if ($this->dataReader === null) {
             throw new InvalidConfigException('The "dataReader" property must be set.');
@@ -179,8 +179,6 @@ abstract class BaseListView extends Widget
         if (!isset($this->options['id'])) {
             $this->options['id'] = $this->getId();
         }
-
-        return $this;
     }
 
     /**
@@ -188,6 +186,8 @@ abstract class BaseListView extends Widget
      */
     public function run(): string
     {
+        $this->init();
+
         if ($this->showOnEmpty || $this->dataReader->count() > 0) {
             $content = preg_replace_callback(
                 '/{\\w+}/',

@@ -227,7 +227,7 @@ class GridView extends BaseListView
      *
      * @throws \Yiisoft\Factory\Exceptions\InvalidConfigException
      */
-    public function init(): self
+    protected function init(): void
     {
         parent::init();
         if (!isset($this->filterRowOptions['id'])) {
@@ -235,8 +235,6 @@ class GridView extends BaseListView
         }
 
         $this->initColumns();
-
-        return $this;
     }
 
     /**

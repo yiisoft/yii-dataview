@@ -99,14 +99,12 @@ class DetailView extends Widget
      *
      * @throws \Yiisoft\Factory\Exceptions\InvalidConfigException
      */
-    public function init(): self
+    protected function init(): void
     {
         if ($this->model === null) {
             throw new InvalidConfigException('Please specify the "model" property.');
         }
         $this->normalizeAttributes();
-
-        return $this;
     }
 
     /**
@@ -117,6 +115,8 @@ class DetailView extends Widget
      */
     public function run(): string
     {
+        $this->init();
+
         $rows = [];
         $i = 0;
         foreach ($this->attributes as $attribute) {

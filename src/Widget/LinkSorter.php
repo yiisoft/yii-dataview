@@ -40,7 +40,7 @@ class LinkSorter extends Widget
      *
      * @throws \Yiisoft\Factory\Exceptions\InvalidConfigException
      */
-    public function init(): void
+    protected function init(): void
     {
         if ($this->sort === null) {
             throw new InvalidConfigException('The "sort" property must be set.');

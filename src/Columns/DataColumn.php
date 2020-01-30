@@ -138,8 +138,11 @@ class DataColumn extends Column
             $label = Html::encode($label);
         }
 
-        if ($this->attribute !== null && $this->enableSorting &&
-            ($sort = $this->grid->getDataReader()->getSort()) !== false && $sort->hasAttribute($this->attribute)) {
+        if ($this->attribute !== null &&
+            $this->enableSorting &&
+            ($sort = $this->grid->getDataReader()->getSort()) !== null &&
+            array_key_exists($this->attribute, $sort->getCriteria())
+        ) {
             return $sort->link($this->attribute, array_merge($this->sortLinkOptions, ['label' => $label]));
         }
 
@@ -254,7 +257,7 @@ class DataColumn extends Column
         if ($this->content === null) {
             return $this->formatMessage(
                 $this->getDataCellValue($model, $key, $index),
-                $this->format
+                ['format' => $this->format]
             );
         }
 
