@@ -6,6 +6,7 @@ use Closure;
 use Yiisoft\Arrays\ArrayHelper;
 use Yiisoft\Html\Html;
 use Yiisoft\View\ViewContextInterface;
+use Yiisoft\Yii\DataView\Exception\InvalidConfigException;
 
 /**
  * The ListView widget is used to display data from data
@@ -179,8 +180,7 @@ class ListView extends BaseListView implements ViewContextInterface
         } elseif (is_callable($this->itemView)) {
             $content = call_user_func($this->itemView, $model, $key, $index, $this);
         } else {
-            // TODO make InvalidConfigException
-            throw new \RuntimeException('Unknown type of $itemView');
+            throw new InvalidConfigException('Unknown type of $itemView');
         }
         if ($this->itemOptions instanceof Closure) {
             $options = call_user_func($this->itemOptions, $model, $key, $index, $this);
