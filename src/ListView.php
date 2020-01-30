@@ -266,6 +266,6 @@ class ListView extends BaseListView implements ViewContextInterface
 
     public function getId()
     {
-        return rand(1, 10);
+        return 'listview-widget-1';
     }
 }

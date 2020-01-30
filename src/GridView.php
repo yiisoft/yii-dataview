@@ -594,6 +594,6 @@ class GridView extends BaseListView
 
     public function getId()
     {
-        return rand(1, 10);
+        return 'gridview-widget-1';
     }
 }
