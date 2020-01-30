@@ -188,7 +188,12 @@ abstract class BaseListView extends Widget
     {
         $this->init();
 
-        if ($this->showOnEmpty || $this->dataReader->count() > 0) {
+        if ($this->showOnEmpty ||
+            (
+                $this->dataReader instanceof CountableDataInterface &&
+                $this->dataReader->count() > 0
+            )
+        ) {
             $content = preg_replace_callback(
                 '/{\\w+}/',
                 function ($matches) {
@@ -253,15 +258,21 @@ abstract class BaseListView extends Widget
      */
     public function renderSummary(): string
     {
+        if (!$this->dataReader instanceof CountableDataInterface) {
+            return '';
+        }
+
         $count = $this->dataReader->count();
-        if ($count <= 0) {
+        if ($count < 1) {
             return '';
         }
 
         $summaryOptions = $this->summaryOptions;
         $tag = ArrayHelper::remove($summaryOptions, 'tag', 'div');
-        if (($pagination = $this->paginator) !== null) {
-            $totalCount = $this->dataReader->count();
+        $pagination = $this->paginator;
+
+        if ($pagination instanceof OffsetPaginator) {
+            $totalCount = $count;
             $begin = $pagination->getCurrentPageSize() * $pagination->getCurrentPageSize() + 1;
             $end = $begin + $count - 1;
             if ($begin > $end) {
@@ -337,7 +348,14 @@ abstract class BaseListView extends Widget
      */
     public function renderPager(): string
     {
-        if (null === $this->pager || $this->paginator === null || $this->dataReader->count() < 1) {
+        if (
+            null === $this->pager ||
+            null === $this->paginator ||
+            (
+                $this->dataReader instanceof CountableDataInterface &&
+                $this->dataReader->count() < 1
+            )
+        ) {
             return '';
         }
 
@@ -354,7 +372,15 @@ abstract class BaseListView extends Widget
     public function renderSorter(): string
     {
         $sort = $this->dataReader->getSort();
-        if (null === $this->sorter || $sort === null || empty($sort->getCriteria()) || $this->dataReader->count() < 1) {
+        if (
+            null === $this->sorter ||
+            null === $sort ||
+            empty($sort->getCriteria()) ||
+            (
+                $this->dataReader instanceof CountableDataInterface &&
+                $this->dataReader->count() < 1
+            )
+        ) {
             return '';
         }
 
