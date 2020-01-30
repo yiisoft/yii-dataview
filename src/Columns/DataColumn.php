@@ -257,7 +257,7 @@ class DataColumn extends Column
         if ($this->content === null) {
             return $this->formatMessage(
                 $this->getDataCellValue($model, $key, $index),
-                ['format' => $this->format]
+                [$this->format]
             );
         }
 
