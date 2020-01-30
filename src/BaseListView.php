@@ -38,7 +38,7 @@ abstract class BaseListView extends Widget
 
     /**
      * @var DataReaderInterface|SortableDataInterface|FilterableDataInterface|OffsetableDataInterface|CountableDataInterface
-     *     the data provider for the view. This property is required.
+     * the data provider for the view. This property is required.
      */
     protected $dataReader;
     /**

@@ -1,10 +1,14 @@
 {
     "name": "yiisoft/yii-dataview",
     "type": "library",
-    "description": "Yii Framework Data Displaying Extension",
+    "description": "Yii Framework Data Widgets Package",
     "keywords": [
         "yii",
-        "view"
+        "view",
+        "data",
+        "widget",
+        "list",
+        "grid"
     ],
     "homepage": "http://www.yiiframework.com/",
     "license": "BSD-3-Clause",
