@@ -402,6 +402,10 @@ abstract class BaseListView extends Widget
         return $this;
     }
 
+    /**
+     * @param KeysetPaginator|OffsetPaginator $paginator
+     * @return $this
+     */
     public function withPaginator($paginator): self
     {
         if ($paginator !== null && !$paginator instanceof KeysetPaginator && !$paginator instanceof OffsetPaginator) {
