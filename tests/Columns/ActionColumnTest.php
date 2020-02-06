@@ -10,37 +10,33 @@ use Yiisoft\Yii\DataView\Tests\TestCase;
  */
 class ActionColumnTest extends TestCase
 {
-    public function testInit(): void
+    public function testDefaultButtons(): void
     {
-        $column = ActionColumn::widget()
-            ->init();
+        $column = ActionColumn::widget();
         $this->assertEquals(['view', 'update', 'delete'], array_keys($column->getButtons()));
+    }
 
-        $column = ActionColumn::widget()
-            ->withTemplate('{show} {edit} {delete}')
-            ->init();
+    public function testOneButtonMatched(): void
+    {
+        $column = ActionColumn::widget()->withTemplate('{show} {edit} {delete}');
         $this->assertEquals(['delete'], array_keys($column->getButtons()));
+    }
 
-        $column = ActionColumn::widget()
-            ->withTemplate('{show} {edit} {remove}')
-            ->init();
+    public function testNoMatchedResults(): void
+    {
+        $column = ActionColumn::widget()->withTemplate('{show} {edit} {remove}');
         $this->assertEmpty($column->getButtons());
+    }
 
-        $column = ActionColumn::widget()
-            ->withTemplate('{view-items} {update-items} {delete-items}')
-            ->init();
+    public function testDashInButtonPlaceholder(): void
+    {
+        $column = ActionColumn::widget()->withTemplate('{show-items}');
         $this->assertEmpty($column->getButtons());
-
-        $column = ActionColumn::widget()
-            ->withTemplate('{view} {view-items}')
-            ->init();
-        $this->assertEquals(['view'], array_keys($column->getButtons()));
     }
 
     public function testRenderDataCell(): void
     {
         $column = ActionColumn::widget()
-            ->init()
             ->withUrlCreator(
                 static function ($model, $key, $index) {
                     return 'http://test.com';
@@ -54,7 +50,6 @@ class ActionColumnTest extends TestCase
         $this->assertEquals($expectedHtml, $columnContents);
 
         $column = ActionColumn::widget()
-            ->init()
             ->withUrlCreator(
                 static function ($model, $key, $index) {
                     return 'http://test.com';
