@@ -102,12 +102,10 @@ class ActionColumn extends Column
     public function __construct(UrlGeneratorInterface $urlGenerator)
     {
         $this->urlGenerator = $urlGenerator;
+        $this->initDefaultButtons();
     }
 
-    /**
-     * Initializes the default button rendering callbacks.
-     */
-    public function init(): self
+    private function initDefaultButtons(): self
     {
         $this->initDefaultButton('view', 'eye-open');
         $this->initDefaultButton('update', 'pencil');
@@ -168,6 +166,10 @@ class ActionColumn extends Column
 
     public function withTemplate(string $template): self
     {
+        $result = preg_match_all('/{([\w\-\/]+)}/', $template, $matches);
+        if ($result > 0 && is_array($matches) && !empty($matches[1])) {
+            $this->buttons = array_intersect_key($this->buttons, array_flip($matches[1]));
+        }
         $this->template = $template;
 
         return $this;
