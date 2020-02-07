@@ -19,14 +19,14 @@ class RadiobuttonColumnTest extends TestCase
         $this->expectException(InvalidConfigException::class);
         $this->expectErrorMessage('The "name" property must be set.');
         RadioButtonColumn::widget()
-            ->withName('')
+            ->name('')
             ->renderDataCell(null, null, null);
     }
 
     public function testOptionsByArray(): void
     {
         $column = RadioButtonColumn::widget()
-            ->withRadioOptions(
+            ->radioOptions(
                 [
                     'value' => 42,
                 ]
@@ -44,7 +44,7 @@ class RadiobuttonColumnTest extends TestCase
             'value' => 123,
         ];
         $column = RadioButtonColumn::widget()
-            ->withRadioOptions(
+            ->radioOptions(
                 static function ($model) {
                     return [
                         'value' => $model['value'],
@@ -61,7 +61,7 @@ class RadiobuttonColumnTest extends TestCase
     public function testContent(): void
     {
         $column = RadioButtonColumn::widget()
-            ->withContent(
+            ->content(
                 static function ($model, $key, $index, $column) {
                     return '';
                 },
@@ -69,7 +69,7 @@ class RadiobuttonColumnTest extends TestCase
         $this->assertStringContainsString('<td></td>', $column->renderDataCell([], 1, 0));
 
         $column = RadioButtonColumn::widget()
-            ->withContent(
+            ->content(
                 function ($model, $key, $index, $column) {
                     return Html::radio('radioButtonInput', false);
                 }
@@ -87,12 +87,12 @@ class RadiobuttonColumnTest extends TestCase
         $dataReader = new IterableDataReader($models);
 
         $widget = GridView::widget()
-            ->withDataReader($dataReader)
-            ->withOptions(['id' => 'radio-gridview'])
-            ->withColumns(
+            ->dataReader($dataReader)
+            ->options(['id' => 'radio-gridview'])
+            ->columns(
                 [
                     RadioButtonColumn::widget()
-                        ->withRadioOptions(
+                        ->radioOptions(
                             static function ($model) {
                                 return [
                                     'value' => $model['value'],

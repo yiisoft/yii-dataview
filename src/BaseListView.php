@@ -136,7 +136,7 @@ abstract class BaseListView extends Widget
      * @param \Yiisoft\Yii\DataView\Widget\LinkPager|null $pager
      * @return self
      */
-    public function setPager(?LinkPager $pager): self
+    public function pager(?LinkPager $pager): self
     {
         $this->pager = $pager;
 
@@ -147,7 +147,7 @@ abstract class BaseListView extends Widget
      * @param \Yiisoft\Yii\DataView\Widget\LinkSorter|null $sorter
      * @return self
      */
-    public function setSorter(?LinkSorter $sorter): self
+    public function sorter(?LinkSorter $sorter): self
     {
         $this->sorter = $sorter;
 
@@ -240,7 +240,7 @@ abstract class BaseListView extends Widget
      * Renders the HTML content indicating that the list view has no data.
      *
      * @return string the rendering result
-     * @see withEmptyText
+     * @see emptyText
      */
     public function renderEmpty(): string
     {
@@ -359,7 +359,7 @@ abstract class BaseListView extends Widget
             return '';
         }
 
-        $this->pager->setPaginator($this->paginator);
+        $this->pager->paginator($this->paginator);
 
         return $this->pager->run();
     }
@@ -384,7 +384,7 @@ abstract class BaseListView extends Widget
             return '';
         }
 
-        $this->sorter->setSort($sort);
+        $this->sorter->sort($sort);
 
         return $this->sorter->run();
     }
@@ -401,7 +401,7 @@ abstract class BaseListView extends Widget
         return $this->options;
     }
 
-    public function withEmptyText(?string $emptyText): self
+    public function emptyText(?string $emptyText): self
     {
         if ($emptyText !== null) {
             $this->emptyText = $emptyText;
@@ -414,14 +414,14 @@ abstract class BaseListView extends Widget
      * @param CountableDataInterface|DataReaderInterface|FilterableDataInterface|OffsetableDataInterface|SortableDataInterface $dataReader
      * @return static
      */
-    public function withDataReader($dataReader): self
+    public function dataReader($dataReader): self
     {
         $this->dataReader = $dataReader;
 
         return $this;
     }
 
-    public function withOptions(array $options): self
+    public function options(array $options): self
     {
         $this->options = ArrayHelper::merge($this->options, $options);
 
@@ -432,7 +432,7 @@ abstract class BaseListView extends Widget
      * @param KeysetPaginator|OffsetPaginator $paginator
      * @return $this
      */
-    public function withPaginator($paginator): self
+    public function paginator($paginator): self
     {
         if ($paginator !== null && !$paginator instanceof KeysetPaginator && !$paginator instanceof OffsetPaginator) {
             throw new InvalidArgumentException(

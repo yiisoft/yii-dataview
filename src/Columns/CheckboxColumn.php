@@ -78,7 +78,7 @@ class CheckboxColumn extends Column
         $this->registerClientScript();
     }
 
-    public function withName(string $string): self
+    public function name(string $string): self
     {
         $this->name = $string;
 
@@ -89,7 +89,7 @@ class CheckboxColumn extends Column
      * @param array|callable $array
      * @return $this
      */
-    public function withCheckboxOptions($array): self
+    public function checkboxOptions($array): self
     {
         $this->checkboxOptions = ArrayHelper::merge($this->checkboxOptions, $array);
 
@@ -100,7 +100,7 @@ class CheckboxColumn extends Column
      * @param Closure|string $param
      * @return $this
      */
-    public function withContent($param): self
+    public function content($param): self
     {
         $this->content = $param;
 
@@ -122,7 +122,7 @@ class CheckboxColumn extends Column
             return parent::renderHeaderCellContent();
         }
 
-        return Html::checkbox($this->getHeaderCheckBoxName(), false, ['class' => 'select-on-check-all']);
+        return Html::checkbox($this->getHeaderCheckboxName($this->name), false, ['class' => 'select-on-check-all']);
     }
 
     protected function renderDataCellContent($model, $key, $index): string
@@ -153,11 +153,11 @@ class CheckboxColumn extends Column
     /**
      * Returns header checkbox name.
      *
+     * @param string $name
      * @return string header checkbox name
      */
-    protected function getHeaderCheckBoxName()
+    protected function getHeaderCheckboxName(string $name): string
     {
-        $name = $this->name;
         if (substr_compare($name, '[]', -2, 2) === 0) {
             $name = substr($name, 0, -2);
         }
@@ -181,7 +181,7 @@ class CheckboxColumn extends Column
                 'name' => $this->name,
                 'class' => $this->cssClass,
                 'multiple' => $this->multiple,
-                'checkAll' => $this->grid->isShowHeader() ? $this->getHeaderCheckBoxName() : null,
+                'checkAll' => $this->grid->isShowHeader() ? $this->getHeaderCheckboxName($this->name) : null,
             ]
         );
         $this->grid->getView()->registerJs("jQuery('#$id').yiiGridView('setSelectionColumn', $options);");

@@ -162,7 +162,7 @@ class ActionColumn extends Column
         }
     }
 
-    public function withTemplate(string $template): self
+    public function template(string $template): self
     {
         $result = preg_match_all('/{([\w\-\/]+)}/', $template, $matches);
         if ($result > 0 && is_array($matches) && !empty($matches[1])) {
@@ -178,21 +178,21 @@ class ActionColumn extends Column
         return $this->buttons;
     }
 
-    public function withButtons(array $buttons): self
+    public function buttons(array $buttons): self
     {
         $this->buttons = $buttons;
 
         return $this;
     }
 
-    public function withVisibleButtons(array $visibleButtons): self
+    public function visibleButtons(array $visibleButtons): self
     {
         $this->visibleButtons = $visibleButtons;
 
         return $this;
     }
 
-    public function withUrlCreator(callable $urlCreator): self
+    public function urlCreator(callable $urlCreator): self
     {
         $this->urlCreator = $urlCreator;
 

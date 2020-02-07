@@ -197,7 +197,7 @@ class ListView extends BaseListView implements ViewContextInterface
         return Html::tag($tag, $content, $options);
     }
 
-    public function withItemOptions($itemOptions): self
+    public function itemOptions($itemOptions): self
     {
         if (is_array($itemOptions)) {
             $this->itemOptions = ArrayHelper::merge($this->itemOptions, $itemOptions);
@@ -232,7 +232,7 @@ class ListView extends BaseListView implements ViewContextInterface
      * @param callable|string|null $itemView
      * @return ListView
      */
-    public function withItemView($itemView): self
+    public function itemView($itemView): self
     {
         if ($itemView !== null && !is_string($itemView) && !is_callable($itemView)) {
             throw new \InvalidArgumentException();
@@ -243,21 +243,21 @@ class ListView extends BaseListView implements ViewContextInterface
         return $this;
     }
 
-    public function withSeparator(string $separator): self
+    public function separator(string $separator): self
     {
         $this->separator = $separator;
 
         return $this;
     }
 
-    public function withBeforeItem(?callable $beforeItem): self
+    public function beforeItem(?callable $beforeItem): self
     {
         $this->beforeItem = $beforeItem;
 
         return $this;
     }
 
-    public function withAfterItem(?callable $afterItem): self
+    public function afterItem(?callable $afterItem): self
     {
         $this->afterItem = $afterItem;
 

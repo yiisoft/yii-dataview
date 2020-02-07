@@ -496,10 +496,10 @@ class GridView extends BaseListView
         /* @var DataColumn $widget */
         $widget = ($this->dataColumnClass)::widget();
 
-        return $widget->withGrid($this)
-            ->withAttribute($matches[1])
-            ->withFormat($matches[3] ?? 'text')
-            ->withLabel($matches[5] ?? null);
+        return $widget->grid($this)
+            ->attribute($matches[1])
+            ->format($matches[3] ?? 'text')
+            ->label($matches[5] ?? null);
     }
 
     /**
@@ -523,7 +523,7 @@ class GridView extends BaseListView
      * @param bool $showHeader
      * @return self
      */
-    public function withShowHeader(bool $showHeader): self
+    public function showHeader(bool $showHeader): self
     {
         $this->showHeader = $showHeader;
 
@@ -534,28 +534,28 @@ class GridView extends BaseListView
      * @param array $tableOptions
      * @return GridView
      */
-    public function withTableOptions(array $tableOptions): self
+    public function tableOptions(array $tableOptions): self
     {
         $this->tableOptions = ArrayHelper::merge($this->tableOptions, $tableOptions);
 
         return $this;
     }
 
-    public function withShowFooter(bool $value): self
+    public function showFooter(bool $value): self
     {
         $this->showFooter = $value;
 
         return $this;
     }
 
-    public function withPlaceFooterAfterBody(bool $value): self
+    public function placeFooterAfterBody(bool $value): self
     {
         $this->placeFooterAfterBody = $value;
 
         return $this;
     }
 
-    public function withColumns(array $columns): self
+    public function columns(array $columns): self
     {
         $this->columns = $columns;
 

@@ -20,15 +20,15 @@ class GridViewTest extends TestCase
     public function testEmpty($emptyText, $expectedText): void
     {
         $html = GridView::widget()
-            ->withDataReader($this->createDataReader([]))
-            ->withEmptyText($emptyText)
-            ->withShowHeader(false)
-            ->withTableOptions(
+            ->dataReader($this->createDataReader([]))
+            ->emptyText($emptyText)
+            ->showHeader(false)
+            ->tableOptions(
                 [
                     'class' => false,
                 ]
             )
-            ->withOptions(
+            ->options(
                 [
                     'id' => 'grid',
                     'class' => false,
@@ -58,7 +58,7 @@ class GridViewTest extends TestCase
 
         $dataReader = $this->createDataReader([$row]);
         $grid = GridView::widget()
-            ->withDataReader($dataReader);
+            ->dataReader($dataReader);
         $grid->run();
 
         $columns = $grid->getColumns();
@@ -75,7 +75,7 @@ class GridViewTest extends TestCase
 
         $dataReader = $this->createDataReader([$row]);
         $grid = GridView::widget()
-            ->withDataReader($dataReader);
+            ->dataReader($dataReader);
         $grid->run();
 
         $columns = $grid->getColumns();
@@ -92,9 +92,9 @@ class GridViewTest extends TestCase
     public function testFooterBeforeBody(): void
     {
         $html = GridView::widget()
-            ->withDataReader($this->createDataReader([]))
-            ->withShowFooter(true)
-            ->withOptions(
+            ->dataReader($this->createDataReader([]))
+            ->showFooter(true)
+            ->options(
                 [
                     'id' => false,
                     'class' => false,
@@ -109,15 +109,15 @@ class GridViewTest extends TestCase
     public function testFooterAfterBody(): void
     {
         $html = GridView::widget()
-            ->withDataReader($this->createDataReader([]))
-            ->withShowFooter(true)
-            ->withOptions(
+            ->dataReader($this->createDataReader([]))
+            ->showFooter(true)
+            ->options(
                 [
                     'id' => false,
                     'class' => false,
                 ]
             )
-            ->withPlaceFooterAfterBody(true)
+            ->placeFooterAfterBody(true)
             ->run();
 
         $html = preg_replace("/\r|\n/", '', $html);

@@ -182,7 +182,7 @@ abstract class Column extends Widget
         return $this->grid->getEmptyCell();
     }
 
-    public function withGrid(GridView $view): self
+    public function grid(GridView $view): self
     {
         $this->grid = $view;
 

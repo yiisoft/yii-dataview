@@ -77,28 +77,28 @@ class LinkSorter extends Widget
         return Html::ul($links, array_merge($this->options, ['encode' => false]));
     }
 
-    public function setAttributes(array $attributes): self
+    public function attributes(array $attributes): self
     {
         $this->attributes = $attributes;
 
         return $this;
     }
 
-    public function setOptions(array $options): self
+    public function options(array $options): self
     {
         $this->options = $options;
 
         return $this;
     }
 
-    public function setSort(Sort $sort): self
+    public function sort(Sort $sort): self
     {
         $this->sort = $sort;
 
         return $this;
     }
 
-    public function setLinkOptions(array $linkOptions): self
+    public function linkOptions(array $linkOptions): self
     {
         $this->linkOptions = $linkOptions;
 

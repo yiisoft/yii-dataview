@@ -246,21 +246,21 @@ class DetailView extends Widget
      * @param array|object $model
      * @return static
      */
-    public function withModel($model): self
+    public function model($model): self
     {
         $this->model = $model;
 
         return $this;
     }
 
-    public function withTemplate(string $string): self
+    public function template(string $string): self
     {
         $this->template = $string;
 
         return $this;
     }
 
-    public function withAttributes(array $array): self
+    public function attributes(array $array): self
     {
         $this->attributes = $array;
         $this->normalizeAttributes();
@@ -273,7 +273,7 @@ class DetailView extends Widget
         return $this->attributes;
     }
 
-    public function withEmptyHtml(string $emptyHtml): self
+    public function emptyHtml(string $emptyHtml): self
     {
         $this->emptyHtml = $emptyHtml;
 

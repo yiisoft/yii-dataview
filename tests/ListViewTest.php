@@ -15,7 +15,7 @@ class ListViewTest extends TestCase
     {
         $dataReader = $this->createDataReader([]);
         $listView = $this->getListView($dataReader, new OffsetPaginator($dataReader));
-        $listView->withEmptyText('Nothing at all');
+        $listView->emptyText('Nothing at all');
         $out = $listView->run();
         $this->assertEquals('<div id="w0" class="list-view"><div class="empty">Nothing at all</div></div>', $out);
     }
@@ -64,8 +64,8 @@ HTML
     {
         $dataReader = $this->createDataReader([0, 1, 2]);
         $out = $this->getListView($dataReader, null)
-            ->withSeparator('')
-            ->withOptions(['class' => 'test-passed'])
+            ->separator('')
+            ->options(['class' => 'test-passed'])
             ->run();
 
         $this->assertEquals(
@@ -126,7 +126,7 @@ HTML
             ]
         );
         $out = $this->getListView($dataReader, null)
-            ->withItemView($itemView)
+            ->itemView($itemView)
             ->run();
         $this->assertEquals($expected, $out);
     }
@@ -179,7 +179,7 @@ HTML
             ]
         );
         $out = $this->getListView($dataReader, null)
-            ->withItemOptions($itemOptions)
+            ->itemOptions($itemOptions)
             ->run();
 
         $this->assertEquals($expected, $out);
@@ -209,8 +209,8 @@ HTML
             ]
         );
         $out = $this->getListView($dataReader, null)
-            ->withBeforeItem($before)
-            ->withAfterItem($after)
+            ->beforeItem($before)
+            ->afterItem($after)
             ->run();
 
         $this->assertEquals(
@@ -265,8 +265,8 @@ HTML
     private function getListView($dataReader, $paginator): ListView
     {
         return ListView::widget()
-            ->withOptions(['id' => 'w0', 'class' => 'list-view'])
-            ->withDataReader($dataReader)
-            ->withPaginator($paginator);
+            ->options(['id' => 'w0', 'class' => 'list-view'])
+            ->dataReader($dataReader)
+            ->paginator($paginator);
     }
 }

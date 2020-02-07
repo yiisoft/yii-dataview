@@ -18,26 +18,26 @@ class ActionColumnTest extends TestCase
 
     public function testOneButtonMatched(): void
     {
-        $column = ActionColumn::widget()->withTemplate('{show} {edit} {delete}');
+        $column = ActionColumn::widget()->template('{show} {edit} {delete}');
         $this->assertEquals(['delete'], array_keys($column->getButtons()));
     }
 
     public function testNoMatchedResults(): void
     {
-        $column = ActionColumn::widget()->withTemplate('{show} {edit} {remove}');
+        $column = ActionColumn::widget()->template('{show} {edit} {remove}');
         $this->assertEmpty($column->getButtons());
     }
 
     public function testDashInButtonPlaceholder(): void
     {
-        $column = ActionColumn::widget()->withTemplate('{show-items}');
+        $column = ActionColumn::widget()->template('{show-items}');
         $this->assertEmpty($column->getButtons());
     }
 
     public function testRenderDataCell(): void
     {
         $column = ActionColumn::widget()
-            ->withUrlCreator(
+            ->urlCreator(
                 static function ($model, $key, $index) {
                     return 'http://test.com';
                 }
@@ -50,13 +50,13 @@ class ActionColumnTest extends TestCase
         $this->assertEquals($expectedHtml, $columnContents);
 
         $column = ActionColumn::widget()
-            ->withUrlCreator(
+            ->urlCreator(
                 static function ($model, $key, $index) {
                     return 'http://test.com';
                 }
             )
-            ->withTemplate('{update}')
-            ->withButtons(
+            ->template('{update}')
+            ->buttons(
                 [
                     'update' => static function ($url, $model, $key) {
                         return 'update_button';
@@ -69,7 +69,7 @@ class ActionColumnTest extends TestCase
         $this->assertStringContainsString('update_button', $columnContents);
 
         //test visible button
-        $column->withVisibleButtons(
+        $column->visibleButtons(
             [
                 'update' => true,
             ]
@@ -78,7 +78,7 @@ class ActionColumnTest extends TestCase
         $this->assertStringContainsString('update_button', $columnContents);
 
         //test visible button (condition is callback)
-        $column->withVisibleButtons(
+        $column->visibleButtons(
             [
                 'update' => static function ($model, $key, $index) {
                     return $model['id'] === 1;
@@ -89,7 +89,7 @@ class ActionColumnTest extends TestCase
         $this->assertStringContainsString('update_button', $columnContents);
 
         //test invisible button
-        $column->withVisibleButtons(
+        $column->visibleButtons(
             [
                 'update' => false,
             ]
@@ -98,7 +98,7 @@ class ActionColumnTest extends TestCase
         $this->assertStringNotContainsString('update_button', $columnContents);
 
         //test invisible button (condition is callback)
-        $column->withVisibleButtons(
+        $column->visibleButtons(
             [
                 'update' => static function ($model, $key, $index) {
                     return $model['id'] !== 1;

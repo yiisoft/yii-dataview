@@ -39,7 +39,7 @@ class DataColumn extends Column
     private ?string $label;
     /**
      * @var bool whether the header label should be HTML-encoded.
-     * @see withLabel
+     * @see label
      */
     private bool $encodeLabel = true;
     /**
@@ -101,21 +101,21 @@ class DataColumn extends Column
      */
     private array $filterInputOptions = [];
 
-    public function withAttribute(string $attribute): self
+    public function attribute(string $attribute): self
     {
         $this->attribute = $attribute;
 
         return $this;
     }
 
-    public function withFormat($format): self
+    public function format($format): self
     {
         $this->format = $format;
 
         return $this;
     }
 
-    public function withLabel($label): self
+    public function label($label): self
     {
         $this->label = $label;
 

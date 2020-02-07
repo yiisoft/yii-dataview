@@ -17,9 +17,9 @@ class DetailViewTest extends TestCase
         $model->id = 123;
 
         $widget = PublicDetailView::widget()
-            ->withModel($model)
-            ->withTemplate('{label}:{value}')
-            ->withAttributes(
+            ->model($model)
+            ->template('{label}:{value}')
+            ->attributes(
                 [
                     'id',
                     [
@@ -61,9 +61,9 @@ class DetailViewTest extends TestCase
         $model->το_αναγνωριστικό_του = 'A00002';
 
         $widget = PublicDetailView::widget()
-            ->withModel($model)
-            ->withTemplate('{label}:{value}')
-            ->withAttributes(
+            ->model($model)
+            ->template('{label}:{value}')
+            ->attributes(
                 [
                     'ИдентификаторТовара',
                     'το_αναγνωριστικό_του',
@@ -86,9 +86,9 @@ class DetailViewTest extends TestCase
         $model->id = 123;
 
         $widget = PublicDetailView::widget()
-            ->withModel($model)
-            ->withTemplate('{label}:{value}')
-            ->withAttributes(
+            ->model($model)
+            ->template('{label}:{value}')
+            ->attributes(
                 [
                     [
                         'attribute' => 'id',
@@ -169,9 +169,9 @@ class DetailViewTest extends TestCase
         $model->getRelated()->id = 456;
 
         $widget = PublicDetailView::widget()
-            ->withModel($model)
-            ->withTemplate('{label}:{value}')
-            ->withAttributes(
+            ->model($model)
+            ->template('{label}:{value}')
+            ->attributes(
                 [
                     'id',
                     '_related.id',
@@ -188,9 +188,9 @@ class DetailViewTest extends TestCase
         $model->setRelated(null);
 
         $widget = PublicDetailView::widget()
-            ->withModel($model)
-            ->withTemplate('{label}:{value}')
-            ->withAttributes(
+            ->model($model)
+            ->template('{label}:{value}')
+            ->attributes(
                 [
                     'id',
                     '_related.id',
@@ -203,7 +203,7 @@ class DetailViewTest extends TestCase
             $widget->renderAttr($widget->getAttributes()[1], 1)
         );
 
-        $widget = (clone $widget)->withEmptyHtml('empty html');
+        $widget = (clone $widget)->emptyHtml('empty html');
         $this->assertEquals(
             'Related Id:empty html',
             $widget->renderAttr($widget->getAttributes()[1], 1)
@@ -219,7 +219,7 @@ class DetailViewTest extends TestCase
     public function testArrayModel(array $expectedValue, $model): void
     {
         $widget = PublicDetailView::widget()
-            ->withModel(is_callable($model) ? $model() : $model);
+            ->model(is_callable($model) ? $model() : $model);
 
         $widget->run();
 
@@ -303,12 +303,12 @@ class DetailViewTest extends TestCase
         $expectedValue = '<tr><th tooltip="Tooltip">Text</th><td class="bg-red">I`m an array</td></tr>';
 
         $widget = PublicDetailView::widget()
-            ->withModel(
+            ->model(
                 [
                     'text' => 'I`m an array',
                 ]
             )
-            ->withAttributes(
+            ->attributes(
                 [
                     [
                         'attribute' => 'text',
@@ -337,7 +337,7 @@ class DetailViewTest extends TestCase
 
         $this->markTestIncomplete('Need to implement EventDispatcherListener');
         $widget = PublicDetailView::widget()
-            ->withModel($model)
+            ->model($model)
             ->on(
                 'on widget.init',
                 function () use (&$initTriggered) {

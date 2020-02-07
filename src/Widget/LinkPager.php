@@ -105,7 +105,7 @@ class LinkPager extends Widget
      * @var bool whether to register link tags in the HTML header for prev, next, first and last page.
      *           Defaults to `false` to avoid conflicts when multiple pagers are used on one page.
      * @see http://www.w3.org/TR/html401/struct/links.html#h-12.1.2
-     * @see registerLinkTags()
+     * @see registerLinkTagsInternal()
      */
     private bool $registerLinkTags = false;
     /**
@@ -138,7 +138,7 @@ class LinkPager extends Widget
         $this->init();
 
         if ($this->registerLinkTags) {
-            $this->registerLinkTags();
+            $this->registerLinkTagsInternal();
         }
 
         return $this->renderPageButtons();
@@ -150,7 +150,7 @@ class LinkPager extends Widget
      *
      * @see http://www.w3.org/TR/html401/struct/links.html#h-12.1.2
      */
-    protected function registerLinkTags(): void
+    protected function registerLinkTagsInternal(): void
     {
         // TODO fix that
         return;
@@ -293,140 +293,140 @@ class LinkPager extends Widget
         return [$beginPage, $endPage];
     }
 
-    public function setPaginator(?PaginatorInterface $paginator): self
+    public function paginator(?PaginatorInterface $paginator): self
     {
         $this->paginator = $paginator;
 
         return $this;
     }
 
-    public function setOptions(array $options): self
+    public function options(array $options): self
     {
         $this->options = $options;
 
         return $this;
     }
 
-    public function setLinkContainerOptions(array $linkContainerOptions): self
+    public function linkContainerOptions(array $linkContainerOptions): self
     {
         $this->linkContainerOptions = $linkContainerOptions;
 
         return $this;
     }
 
-    public function setLinkOptions(array $linkOptions): self
+    public function linkOptions(array $linkOptions): self
     {
         $this->linkOptions = $linkOptions;
 
         return $this;
     }
 
-    public function setPageCssClass(string $pageCssClass): self
+    public function pageCssClass(string $pageCssClass): self
     {
         $this->pageCssClass = $pageCssClass;
 
         return $this;
     }
 
-    public function setFirstPageCssClass(string $firstPageCssClass): self
+    public function firstPageCssClass(string $firstPageCssClass): self
     {
         $this->firstPageCssClass = $firstPageCssClass;
 
         return $this;
     }
 
-    public function setLastPageCssClass(string $lastPageCssClass): self
+    public function lastPageCssClass(string $lastPageCssClass): self
     {
         $this->lastPageCssClass = $lastPageCssClass;
 
         return $this;
     }
 
-    public function setPrevPageCssClass(string $prevPageCssClass): self
+    public function prevPageCssClass(string $prevPageCssClass): self
     {
         $this->prevPageCssClass = $prevPageCssClass;
 
         return $this;
     }
 
-    public function setNextPageCssClass(string $nextPageCssClass): self
+    public function nextPageCssClass(string $nextPageCssClass): self
     {
         $this->nextPageCssClass = $nextPageCssClass;
 
         return $this;
     }
 
-    public function setActivePageCssClass(string $activePageCssClass): self
+    public function activePageCssClass(string $activePageCssClass): self
     {
         $this->activePageCssClass = $activePageCssClass;
 
         return $this;
     }
 
-    public function setDisabledPageCssClass(string $disabledPageCssClass): self
+    public function disabledPageCssClass(string $disabledPageCssClass): self
     {
         $this->disabledPageCssClass = $disabledPageCssClass;
 
         return $this;
     }
 
-    public function setDisabledListItemSubTagOptions(array $disabledListItemSubTagOptions): self
+    public function disabledListItemSubTagOptions(array $disabledListItemSubTagOptions): self
     {
         $this->disabledListItemSubTagOptions = $disabledListItemSubTagOptions;
 
         return $this;
     }
 
-    public function setMaxButtonCount(int $maxButtonCount): self
+    public function maxButtonCount(int $maxButtonCount): self
     {
         $this->maxButtonCount = $maxButtonCount;
 
         return $this;
     }
 
-    public function setNextPageLabel($nextPageLabel): self
+    public function nextPageLabel($nextPageLabel): self
     {
         $this->nextPageLabel = $nextPageLabel;
 
         return $this;
     }
 
-    public function setPrevPageLabel($prevPageLabel): self
+    public function prevPageLabel($prevPageLabel): self
     {
         $this->prevPageLabel = $prevPageLabel;
 
         return $this;
     }
 
-    public function setFirstPageLabel($firstPageLabel): self
+    public function firstPageLabel($firstPageLabel): self
     {
         $this->firstPageLabel = $firstPageLabel;
 
         return $this;
     }
 
-    public function setLastPageLabel($lastPageLabel): self
+    public function lastPageLabel($lastPageLabel): self
     {
         $this->lastPageLabel = $lastPageLabel;
 
         return $this;
     }
 
-    public function setRegisterLinkTags(bool $registerLinkTags): self
+    public function registerLinkTags(bool $registerLinkTags): self
     {
         $this->registerLinkTags = $registerLinkTags;
 
         return $this;
     }
 
-    public function setHideOnSinglePage(bool $hideOnSinglePage): self
+    public function hideOnSinglePage(bool $hideOnSinglePage): self
     {
         $this->hideOnSinglePage = $hideOnSinglePage;
 
         return $this;
     }
 
-    public function setDisableCurrentPageButton(bool $disableCurrentPageButton): self
+    public function disableCurrentPageButton(bool $disableCurrentPageButton): self
     {
         $this->disableCurrentPageButton = $disableCurrentPageButton;
 
