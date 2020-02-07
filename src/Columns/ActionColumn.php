@@ -105,7 +105,7 @@ class ActionColumn extends Column
         $this->initDefaultButtons();
     }
 
-    private function initDefaultButtons(): self
+    private function initDefaultButtons(): void
     {
         $this->initDefaultButton('view', 'eye-open');
         $this->initDefaultButton('update', 'pencil');
@@ -120,8 +120,6 @@ class ActionColumn extends Column
                 'data-method' => 'post',
             ]
         );
-
-        return $this;
     }
 
     /**
