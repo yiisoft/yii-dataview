@@ -32,6 +32,6 @@ class LinkSorterTest extends TestCase
 <li><a href="?sort=name">name</a></li>
 </ul>
 OUTPUT;
-        $this->assertEquals($output, $widget->run());
+        $this->assertEqualsWithoutLE($output, $widget->run());
     }
 }

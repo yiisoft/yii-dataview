@@ -128,7 +128,7 @@ HTML
         $out = $this->getListView($dataReader, null)
             ->itemView($itemView)
             ->run();
-        $this->assertEquals($expected, $out);
+        $this->assertEqualsWithoutLE($expected, $out);
     }
 
     public function itemOptions(): array
