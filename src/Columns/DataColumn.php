@@ -108,6 +108,10 @@ class DataColumn extends Column
         return $this;
     }
 
+    /**
+     * @param array|closure|string $format
+     * @return $this
+     */
     public function format($format): self
     {
         $this->format = $format;
@@ -115,7 +119,7 @@ class DataColumn extends Column
         return $this;
     }
 
-    public function label($label): self
+    public function label(?string $label): self
     {
         $this->label = $label;
 
@@ -236,7 +240,7 @@ class DataColumn extends Column
      *     [[GridView::dataProvider]].
      * @return string the data cell value
      */
-    public function getDataCellValue($model, $key, $index)
+    public function getDataCellValue(array $model, $key, int $index): string
     {
         if ($this->value !== null) {
             if (is_string($this->value)) {
@@ -252,7 +256,7 @@ class DataColumn extends Column
         return null;
     }
 
-    protected function renderDataCellContent($model, $key, $index): string
+    protected function renderDataCellContent(array $model, $key, int $index): string
     {
         if ($this->content === null) {
             return $this->formatMessage(

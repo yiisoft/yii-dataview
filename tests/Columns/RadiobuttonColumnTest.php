@@ -20,7 +20,7 @@ class RadiobuttonColumnTest extends TestCase
         $this->expectErrorMessage('The "name" property must be set.');
         RadioButtonColumn::widget()
             ->name('')
-            ->renderDataCell(null, null, null);
+            ->renderDataCell([], null, 0);
     }
 
     public function testOptionsByArray(): void

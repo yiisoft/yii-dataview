@@ -21,7 +21,7 @@ class SerialColumn extends Column
 {
     protected ?string $header = '#';
 
-    protected function renderDataCellContent($model, $key, $index): string
+    protected function renderDataCellContent(array $model, $key, int $index): string
     {
         $dataReader = $this->grid->getDataReader();
         if ($dataReader !== null) {

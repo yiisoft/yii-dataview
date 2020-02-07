@@ -592,7 +592,7 @@ class GridView extends BaseListView
         return $this->filterErrorOptions;
     }
 
-    public function getId()
+    public function getId(): string
     {
         return 'gridview-widget-1';
     }

@@ -63,8 +63,7 @@ class CheckboxColumn extends Column
     protected ?string $cssClass = null;
 
     /**
-     * {@inheritdoc}
-     * @throws \Yiisoft\Factory\Exceptions\InvalidConfigException if [[name]] is not set.
+     * @throws InvalidConfigException if [[name]] is not set.
      */
     protected function init(): void
     {
@@ -125,7 +124,7 @@ class CheckboxColumn extends Column
         return Html::checkbox($this->getHeaderCheckboxName($this->name), false, ['class' => 'select-on-check-all']);
     }
 
-    protected function renderDataCellContent($model, $key, $index): string
+    protected function renderDataCellContent(array $model, $key, int $index): string
     {
         $this->init();
 
@@ -173,7 +172,7 @@ class CheckboxColumn extends Column
     /**
      * Registers the needed JavaScript.
      */
-    public function registerClientScript(): void
+    protected function registerClientScript(): void
     {
         $id = $this->grid->getId();
         $options = Json::encode(
