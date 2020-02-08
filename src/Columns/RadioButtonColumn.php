@@ -98,11 +98,11 @@ class RadioButtonColumn extends Column
         }
 
         if ($this->radioOptions instanceof Closure) {
-            $options = call_user_func($this->radioOptions, $model, $key, $index, $this);
+            $options = \call_user_func($this->radioOptions, $model, $key, $index, $this);
         } else {
             $options = $this->radioOptions;
             if (!isset($options['value'])) {
-                $options['value'] = is_array($key) ? Json::encode($key) : $key;
+                $options['value'] = \is_array($key) ? Json::encode($key) : $key;
             }
         }
         $checked = $options['checked'] ?? false;

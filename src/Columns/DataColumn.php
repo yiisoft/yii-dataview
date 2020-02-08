@@ -24,13 +24,13 @@ use Yiisoft\Yii\DataView\Widget\LinkSorter;
 class DataColumn extends Column
 {
     /**
-     * @var string the attribute name associated with this column. When neither [[content]] nor [[value]]
+     * @var string|null the attribute name associated with this column. When neither [[content]] nor [[value]]
      *             is specified, the value of the specified attribute will be retrieved from each data model and
      *     displayed. Also, if [[label]] is not specified, the label associated with the attribute will be displayed.
      */
     private ?string $attribute;
     /**
-     * @var string label to be displayed in the [[header|header cell]] and also to be used as the sorting
+     * @var string|null label to be displayed in the [[header|header cell]] and also to be used as the sorting
      *             link label when sorting is enabled for this column.
      *             If it is not set and the models provided by the GridViews data provider are instances
      *             of [[\Yiisoft\Db\ActiveRecord]], the label will be determined using
@@ -44,7 +44,7 @@ class DataColumn extends Column
      */
     private bool $encodeLabel = true;
     /**
-     * @var string|Closure an anonymous function or a string that is used to determine the value to display in the
+     * @var string|Closure|null an anonymous function or a string that is used to determine the value to display in the
      *     current column. If this is an anonymous function, it will be called for each row and the return value will
      *     be used as the value to display for every data model. The signature of this function should be: `function
      *     ($model, $key, $index, $column)`. Where `$model`, `$key`, and `$index` refer to the model, key and index of
@@ -146,7 +146,7 @@ class DataColumn extends Column
         if ($this->attribute !== null &&
             $this->enableSorting &&
             ($sort = $this->grid->getDataReader()->getSort()) !== null &&
-            array_key_exists($this->attribute, $sort->getCriteria())
+            \array_key_exists($this->attribute, $sort->getCriteria())
         ) {
             return LinkSorter::widget()
                 ->attributes(array_keys($sort->getCriteria()))
@@ -160,19 +160,12 @@ class DataColumn extends Column
 
     protected function getHeaderCellLabel(): string
     {
-        if ($this->label === null) {
-            $inflector = new Inflector();
-            $label = $inflector->camel2words($this->attribute);
-        } else {
-            $label = $this->label;
-        }
-
-        return $label;
+        return $this->label ?? (new Inflector())->camel2words($this->attribute);
     }
 
     protected function renderFilterCellContent(): string
     {
-        if (is_string($this->filter)) {
+        if (\is_string($this->filter)) {
             return $this->filter;
         }
 
@@ -180,7 +173,7 @@ class DataColumn extends Column
             $error = '';
 
             $filterOptions = array_merge(['class' => 'form-control', 'id' => null], $this->filterInputOptions);
-            if (is_array($this->filter)) {
+            if (\is_array($this->filter)) {
                 $options = array_merge(['prompt' => ''], $filterOptions);
 
                 return Html::dropDownList($this->attribute, $this->filter, $options) . $error;
@@ -188,11 +181,13 @@ class DataColumn extends Column
             if ($this->format === 'boolean') {
                 $options = array_merge(['prompt' => ''], $filterOptions);
 
+                $messageFormatter = $this->grid->getMessageFormatter();
+
                 return Html::dropDownList(
                         $this->attribute,
                         [
-                            1 => $this->grid->getMessageFormatter()->format('Yes', [], null),
-                            0 => $this->grid->getMessageFormatter()->format('No', [], null),
+                            1 => $messageFormatter->format('Yes', [], null),
+                            0 => $messageFormatter->format('No', [], null),
                         ],
                         $options
                     ) . $error;
@@ -216,11 +211,11 @@ class DataColumn extends Column
     public function getDataCellValue(array $model, $key, int $index): string
     {
         if ($this->value !== null) {
-            if (is_string($this->value)) {
+            if (\is_string($this->value)) {
                 return ArrayHelper::getValue($model, $this->value);
             }
 
-            return call_user_func($this->value, $model, $key, $index, $this);
+            return \call_user_func($this->value, $model, $key, $index, $this);
         }
         if ($this->attribute !== null) {
             return ArrayHelper::getValue($model, $this->attribute);

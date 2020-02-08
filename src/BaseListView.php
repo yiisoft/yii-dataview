@@ -14,7 +14,6 @@ use Yiisoft\Data\Reader\OffsetableDataInterface;
 use Yiisoft\Data\Reader\SortableDataInterface;
 use Yiisoft\Factory\Exceptions\InvalidConfigException;
 use Yiisoft\Html\Html;
-use Yiisoft\View\View;
 use Yiisoft\View\WebView;
 use Yiisoft\Widget\Widget;
 use Yiisoft\Yii\DataView\Widget\LinkPager;
@@ -432,7 +431,7 @@ abstract class BaseListView extends Widget
                     'Argument "$paginator" must be instance of %s or %s, got %s',
                     OffsetPaginator::class,
                     KeysetPaginator::class,
-                    is_object($paginator) ? get_class($paginator) : gettype($paginator)
+                    \is_object($paginator) ? \get_class($paginator) : gettype($paginator)
                 )
             );
         }

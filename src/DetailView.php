@@ -138,7 +138,7 @@ class DetailView extends Widget
      */
     protected function renderAttribute($attribute, $index): string
     {
-        if (is_string($this->template)) {
+        if (\is_string($this->template)) {
             $captionOptions = Html::renderTagAttributes(ArrayHelper::getValue($attribute, 'captionOptions', []));
             $contentOptions = Html::renderTagAttributes(ArrayHelper::getValue($attribute, 'contentOptions', []));
 
@@ -156,7 +156,7 @@ class DetailView extends Widget
             );
         }
 
-        return call_user_func($this->template, $attribute, $index, $this);
+        return \call_user_func($this->template, $attribute, $index, $this);
     }
 
     protected function formatMessage(?string $message, array $arguments = []): string
@@ -176,11 +176,11 @@ class DetailView extends Widget
     protected function normalizeAttributes(): void
     {
         if ($this->attributes === []) {
-            if (is_object($this->model)) {
+            if (\is_object($this->model)) {
                 $this->attributes = $this->model instanceof ArrayableInterface
                     ? array_keys($this->model->toArray())
                     : array_keys(get_object_vars($this->model));
-            } elseif (is_array($this->model)) {
+            } elseif (\is_array($this->model)) {
                 $this->attributes = array_keys($this->model);
             } else {
                 throw new InvalidConfigException('The "model" property must be either an array or an object.');
@@ -189,7 +189,7 @@ class DetailView extends Widget
         }
 
         foreach ($this->attributes as $i => $attribute) {
-            if (is_string($attribute)) {
+            if (\is_string($attribute)) {
                 if (!preg_match('/^([^:]+)(:(\w*))?(:(.*))?$/', $attribute, $matches)) {
                     throw new InvalidConfigException(
                         'The attribute must be specified in the format of "attribute", "attribute:format" or "attribute:format:label"'
@@ -203,7 +203,7 @@ class DetailView extends Widget
                 ];
             }
 
-            if (!is_array($attribute)) {
+            if (!\is_array($attribute)) {
                 throw new InvalidConfigException('The attribute configuration must be an array.');
             }
 
@@ -218,21 +218,19 @@ class DetailView extends Widget
             if (isset($attribute['attribute'])) {
                 $attributeName = $attribute['attribute'];
                 if (!isset($attribute['label'])) {
-                    $inflector = new Inflector();
-
-                    $attribute['label'] = $inflector->camel2words($attributeName, true);
+                    $attribute['label'] = (new Inflector())->camel2words($attributeName, true);
                 }
-                if (!array_key_exists('value', $attribute)) {
+                if (!\array_key_exists('value', $attribute)) {
                     $attribute['value'] = ArrayHelper::getValue($this->model, $attributeName);
                 }
-            } elseif (!isset($attribute['label']) || !array_key_exists('value', $attribute)) {
+            } elseif (!isset($attribute['label']) || !\array_key_exists('value', $attribute)) {
                 throw new InvalidConfigException(
                     'The attribute configuration requires the "attribute" element to determine the value and display label.'
                 );
             }
 
             if ($attribute['value'] instanceof Closure) {
-                $attribute['value'] = call_user_func($attribute['value'], $this->model, $this);
+                $attribute['value'] = \call_user_func($attribute['value'], $this->model, $this);
             }
 
             $this->attributes[$i] = $attribute;
