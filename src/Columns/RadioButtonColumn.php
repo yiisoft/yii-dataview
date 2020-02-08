@@ -89,7 +89,7 @@ class RadioButtonColumn extends Column
         return $this;
     }
 
-    protected function renderDataCellContent($model, $key, $index): string
+    protected function renderDataCellContent(array $model, $key, int $index): string
     {
         $this->init();
 

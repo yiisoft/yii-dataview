@@ -129,7 +129,7 @@ class ActionColumn extends Column
      * @param string $iconName The part of Bootstrap glyphicon class that makes it unique
      * @param array $additionalOptions Array of additional options
      */
-    protected function initDefaultButton($name, $iconName, $additionalOptions = []): void
+    protected function initDefaultButton(string $name, string $iconName, array $additionalOptions = []): void
     {
         if (!isset($this->buttons[$name]) && strpos($this->template, '{' . $name . '}') !== false) {
             $this->buttons[$name] = function ($url, $model, $key) use ($name, $iconName, $additionalOptions) {
@@ -209,7 +209,7 @@ class ActionColumn extends Column
      * @param int $index the current row index
      * @return string the created URL
      */
-    public function createUrl(string $action, $model, $key, $index): string
+    public function createUrl(string $action, array $model, $key, int $index): string
     {
         if (is_callable($this->urlCreator)) {
             return call_user_func($this->urlCreator, $action, $model, $key, $index, $this);
@@ -220,7 +220,7 @@ class ActionColumn extends Column
         return $this->urlGenerator->generate($action, $params);
     }
 
-    protected function renderDataCellContent($model, $key, $index): string
+    protected function renderDataCellContent(array $model, $key, int $index): string
     {
         return preg_replace_callback(
             '/{([\w\-\/]+)}/',

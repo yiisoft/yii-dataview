@@ -92,13 +92,13 @@ abstract class Column extends Widget
     /**
      * Renders a data cell.
      *
-     * @param mixed $model the data model being rendered
+     * @param array $model the data model being rendered
      * @param mixed $key the key associated with the data model
      * @param int $index the zero-based index of the data item among the item array returned by
      *     [[GridView::dataProvider]].
      * @return string the rendering result
      */
-    public function renderDataCell($model, $key, $index): string
+    public function renderDataCell(array $model, $key, int $index): string
     {
         if ($this->contentOptions instanceof Closure) {
             $options = call_user_func($this->contentOptions, $model, $key, $index, $this);
@@ -155,13 +155,13 @@ abstract class Column extends Widget
     /**
      * Renders the data cell content.
      *
-     * @param mixed $model the data model
+     * @param array $model the data model
      * @param mixed $key the key associated with the data model
      * @param int $index the zero-based index of the data model among the models array returned by
      *     [[GridView::dataProvider]].
      * @return string the rendering result
      */
-    protected function renderDataCellContent($model, $key, $index): string
+    protected function renderDataCellContent(array $model, $key, int $index): string
     {
         if ($this->content !== null) {
             return call_user_func($this->content, $model, $key, $index, $this);

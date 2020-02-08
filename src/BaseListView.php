@@ -132,10 +132,6 @@ abstract class BaseListView extends Widget
         return $this->dataReader;
     }
 
-    /**
-     * @param \Yiisoft\Yii\DataView\Widget\LinkPager|null $pager
-     * @return self
-     */
     public function pager(?LinkPager $pager): self
     {
         $this->pager = $pager;
@@ -143,10 +139,6 @@ abstract class BaseListView extends Widget
         return $this;
     }
 
-    /**
-     * @param \Yiisoft\Yii\DataView\Widget\LinkSorter|null $sorter
-     * @return self
-     */
     public function sorter(?LinkSorter $sorter): self
     {
         $this->sorter = $sorter;
@@ -389,9 +381,9 @@ abstract class BaseListView extends Widget
         return $this->sorter->run();
     }
 
-    abstract public function getId();
+    abstract public function getId(): string;
 
-    public function getView(): View
+    public function getView(): WebView
     {
         return $this->view;
     }
