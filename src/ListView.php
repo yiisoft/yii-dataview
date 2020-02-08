@@ -125,7 +125,7 @@ class ListView extends BaseListView implements ViewContextInterface
     protected function renderBeforeItem($model, $key, $index): ?string
     {
         if ($this->beforeItem instanceof Closure) {
-            return call_user_func($this->beforeItem, $model, $key, $index, $this);
+            return \call_user_func($this->beforeItem, $model, $key, $index, $this);
         }
 
         return null;
@@ -144,7 +144,7 @@ class ListView extends BaseListView implements ViewContextInterface
     protected function renderAfterItem($model, $key, $index): ?string
     {
         if ($this->afterItem instanceof Closure) {
-            return call_user_func($this->afterItem, $model, $key, $index, $this);
+            return \call_user_func($this->afterItem, $model, $key, $index, $this);
         }
 
         return null;
@@ -163,7 +163,7 @@ class ListView extends BaseListView implements ViewContextInterface
     {
         if ($this->itemView === null) {
             $content = $key;
-        } elseif (is_string($this->itemView)) {
+        } elseif (\is_string($this->itemView)) {
             $content = $this->getView()->render(
                 $this->getAliases()->get($this->getItemViewPath()),
                 array_merge(
@@ -177,19 +177,19 @@ class ListView extends BaseListView implements ViewContextInterface
                 ),
                 $this
             );
-        } elseif (is_callable($this->itemView)) {
-            $content = call_user_func($this->itemView, $model, $key, $index, $this);
+        } elseif (\is_callable($this->itemView)) {
+            $content = \call_user_func($this->itemView, $model, $key, $index, $this);
         } else {
             throw new InvalidConfigException('Unknown type of $itemView');
         }
         if ($this->itemOptions instanceof Closure) {
-            $options = call_user_func($this->itemOptions, $model, $key, $index, $this);
+            $options = \call_user_func($this->itemOptions, $model, $key, $index, $this);
         } else {
             $options = $this->itemOptions;
         }
 
         $tag = ArrayHelper::remove($options, 'tag', 'div');
-        $options['data-key'] = is_array($key) ? json_encode(
+        $options['data-key'] = \is_array($key) ? json_encode(
             $key,
             JSON_THROW_ON_ERROR | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE
         ) : (string)$key;
@@ -199,24 +199,24 @@ class ListView extends BaseListView implements ViewContextInterface
 
     public function itemOptions($itemOptions): self
     {
-        if (is_array($itemOptions)) {
+        if (\is_array($itemOptions)) {
             $this->itemOptions = ArrayHelper::merge($this->itemOptions, $itemOptions);
 
             return $this;
         }
 
-        if (is_callable($itemOptions)) {
+        if (\is_callable($itemOptions)) {
             $this->itemOptions = $itemOptions;
 
             return $this;
         }
 
-        throw new \InvalidArgumentException();
+        throw new \InvalidArgumentException('itemOptions must be either array or callable');
     }
 
     public function getItemViewPath(): ?string
     {
-        if (is_callable($this->itemView)) {
+        if (\is_callable($this->itemView)) {
             return ($this->itemView)();
         }
 
@@ -234,8 +234,8 @@ class ListView extends BaseListView implements ViewContextInterface
      */
     public function itemView($itemView): self
     {
-        if ($itemView !== null && !is_string($itemView) && !is_callable($itemView)) {
-            throw new \InvalidArgumentException();
+        if ($itemView !== null && !\is_string($itemView) && !\is_callable($itemView)) {
+            throw new \InvalidArgumentException('itemView should be either null, string or callable');
         }
 
         $this->itemView = $itemView;

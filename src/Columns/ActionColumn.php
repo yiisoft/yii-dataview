@@ -132,7 +132,7 @@ class ActionColumn extends Column
     protected function initDefaultButton(string $name, string $iconName, array $additionalOptions = []): void
     {
         if (!isset($this->buttons[$name]) && strpos($this->template, '{' . $name . '}') !== false) {
-            $this->buttons[$name] = function ($url, $model, $key) use ($name, $iconName, $additionalOptions) {
+            $this->buttons[$name] = function ($url) use ($name, $iconName, $additionalOptions) {
                 switch ($name) {
                     case 'view':
                         $title = $this->formatMessage('View', []);
@@ -165,7 +165,7 @@ class ActionColumn extends Column
     public function template(string $template): self
     {
         $result = preg_match_all('/{([\w\-\/]+)}/', $template, $matches);
-        if ($result > 0 && is_array($matches) && !empty($matches[1])) {
+        if ($result > 0 && \is_array($matches) && !empty($matches[1])) {
             $this->buttons = array_intersect_key($this->buttons, array_flip($matches[1]));
         }
         $this->template = $template;
@@ -211,11 +211,11 @@ class ActionColumn extends Column
      */
     public function createUrl(string $action, array $model, $key, int $index): string
     {
-        if (is_callable($this->urlCreator)) {
-            return call_user_func($this->urlCreator, $action, $model, $key, $index, $this);
+        if (\is_callable($this->urlCreator)) {
+            return \call_user_func($this->urlCreator, $action, $model, $key, $index, $this);
         }
 
-        $params = is_array($key) ? $key : ['id' => (string)$key];
+        $params = \is_array($key) ? $key : ['id' => (string)$key];
 
         return $this->urlGenerator->generate($action, $params);
     }
@@ -229,7 +229,7 @@ class ActionColumn extends Column
 
                 if (isset($this->visibleButtons[$name])) {
                     $isVisible = $this->visibleButtons[$name] instanceof Closure
-                        ? call_user_func($this->visibleButtons[$name], $model, $key, $index)
+                        ? \call_user_func($this->visibleButtons[$name], $model, $key, $index)
                         : $this->visibleButtons[$name];
                 } else {
                     $isVisible = true;
@@ -238,7 +238,7 @@ class ActionColumn extends Column
                 if ($isVisible && isset($this->buttons[$name])) {
                     $url = $this->createUrl($name, $model, $key, $index);
 
-                    return call_user_func($this->buttons[$name], $url, $model, $key);
+                    return \call_user_func($this->buttons[$name], $url, $model, $key);
                 }
 
                 return '';

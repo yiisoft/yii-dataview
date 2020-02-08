@@ -366,7 +366,7 @@ class GridView extends BaseListView
         foreach ($models as $index => $model) {
             $key = $keys[$index];
             if ($this->beforeRow !== null) {
-                $row = call_user_func($this->beforeRow, $model, $key, $index, $this);
+                $row = \call_user_func($this->beforeRow, $model, $key, $index, $this);
                 if (!empty($row)) {
                     $rows[] = $row;
                 }
@@ -375,7 +375,7 @@ class GridView extends BaseListView
             $rows[] = $this->renderTableRow($model, $key, $index);
 
             if ($this->afterRow !== null) {
-                $row = call_user_func($this->afterRow, $model, $key, $index, $this);
+                $row = \call_user_func($this->afterRow, $model, $key, $index, $this);
                 if (!empty($row)) {
                     $rows[] = $row;
                 }
@@ -408,11 +408,11 @@ class GridView extends BaseListView
             $cells[] = $column->renderDataCell($model, $key, $index);
         }
         if ($this->rowOptions instanceof Closure) {
-            $options = call_user_func($this->rowOptions, $model, $key, $index, $this);
+            $options = \call_user_func($this->rowOptions, $model, $key, $index, $this);
         } else {
             $options = $this->rowOptions;
         }
-        $options['data-key'] = is_array($key) ? Json::encode($key) : (string)$key;
+        $options['data-key'] = \is_array($key) ? Json::encode($key) : (string)$key;
 
         return Html::tag('tr', implode('', $cells), $options);
     }
@@ -428,7 +428,7 @@ class GridView extends BaseListView
             $this->guessColumns();
         }
         foreach ($this->columns as $i => $column) {
-            if (is_string($column)) {
+            if (\is_string($column)) {
                 $column = $this->createDataColumn($column);
             } else {
                 $column = $this->dataColumnClass::widget()
@@ -474,9 +474,9 @@ class GridView extends BaseListView
     {
         $models = $this->getDataReader()->read();
         $model = reset($models);
-        if (is_array($model) || is_object($model)) {
+        if (\is_array($model) || \is_object($model)) {
             foreach ($model as $name => $value) {
-                if ($value === null || is_scalar($value) || is_callable([$value, '__toString'])) {
+                if ($value === null || is_scalar($value) || \is_callable([$value, '__toString'])) {
                     $this->columns[] = (string)$name;
                 }
             }

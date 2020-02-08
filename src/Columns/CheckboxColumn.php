@@ -132,14 +132,14 @@ class CheckboxColumn extends Column
             return parent::renderDataCellContent($model, $key, $index);
         }
 
-        if (is_callable($this->checkboxOptions)) {
-            $options = call_user_func($this->checkboxOptions, $model, $key, $index, $this);
+        if (\is_callable($this->checkboxOptions)) {
+            $options = \call_user_func($this->checkboxOptions, $model, $key, $index, $this);
         } else {
             $options = $this->checkboxOptions;
         }
 
         if (!isset($options['value'])) {
-            $options['value'] = is_array($key) ? Json::encode($key) : $key;
+            $options['value'] = \is_array($key) ? Json::encode($key) : $key;
         }
 
         if ($this->cssClass !== null) {

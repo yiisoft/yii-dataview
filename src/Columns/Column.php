@@ -101,7 +101,7 @@ abstract class Column extends Widget
     public function renderDataCell(array $model, $key, int $index): string
     {
         if ($this->contentOptions instanceof Closure) {
-            $options = call_user_func($this->contentOptions, $model, $key, $index, $this);
+            $options = \call_user_func($this->contentOptions, $model, $key, $index, $this);
         } else {
             $options = $this->contentOptions;
         }
@@ -164,7 +164,7 @@ abstract class Column extends Widget
     protected function renderDataCellContent(array $model, $key, int $index): string
     {
         if ($this->content !== null) {
-            return call_user_func($this->content, $model, $key, $index, $this);
+            return \call_user_func($this->content, $model, $key, $index, $this);
         }
 
         return $this->grid->getEmptyCell();
