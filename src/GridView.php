@@ -178,7 +178,7 @@ class GridView extends BaseListView
      */
     private string $emptyCell = '&nbsp;';
     /**
-     * @var \yii\base\Model the model that keeps the user-entered filter data. When this property is set,
+     * @var object|null the model that keeps the user-entered filter data. When this property is set,
      *                      the grid view will enable column-based filtering. Each data column by default will display
      *     a text field at the top that users can fill in to filter the data. Note that in order to show an input field
      *     for filtering, a column must have its [[DataColumn::attribute]] property set and the attribute should be
@@ -199,18 +199,6 @@ class GridView extends BaseListView
      * @see \Yiisoft\Html\Html::renderTagAttributes() for details on how attributes are being rendered.
      */
     private array $filterRowOptions = ['class' => 'filters'];
-    /**
-     * @var array the options for rendering the filter error summary.
-     *            Please refer to [[Html::errorSummary()]] for more details about how to specify the options.
-     * @see renderErrors()
-     */
-    private array $filterErrorSummaryOptions = ['class' => 'error-summary'];
-    /**
-     * @var array the options for rendering every filter error message.
-     *            This is mainly used by [[Html::error()]] when rendering an error message next to every filter input
-     *     field.
-     */
-    protected array $filterErrorOptions = ['class' => 'help-block'];
 
     /**
      * Initializes the grid view.
@@ -226,30 +214,6 @@ class GridView extends BaseListView
         }
 
         $this->initColumns();
-    }
-
-    /**
-     * Renders validator errors of filter model.
-     *
-     * @return string the rendering result.
-     */
-    public function renderErrors(): string
-    {
-        if ($this->getFilterModel() instanceof Model && $this->getFilterModel()->hasErrors()) {
-            return Html::errorSummary($this->getFilterModel(), $this->filterErrorSummaryOptions);
-        }
-
-        return '';
-    }
-
-    public function renderSection(string $name): string
-    {
-        switch ($name) {
-            case '{errors}':
-                return $this->renderErrors();
-            default:
-                return parent::renderSection($name);
-        }
     }
 
     /**
@@ -585,11 +549,6 @@ class GridView extends BaseListView
     public function getFilterModel(): ?object
     {
         return $this->filterModel;
-    }
-
-    public function getFilterErrorOptions(): array
-    {
-        return $this->filterErrorOptions;
     }
 
     public function getId()

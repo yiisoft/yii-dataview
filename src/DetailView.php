@@ -13,7 +13,7 @@ use Yiisoft\Widget\Widget;
 /**
  * DetailView displays the detail of a single data [[model]].
  * DetailView is best used for displaying a model in a regular format (e.g. each model attribute
- * is displayed as a row in a table.) The model can be either an instance of [[Model]]
+ * is displayed as a row in a table.) The model can be either an instance of object
  * or an associative array.
  * DetailView uses the [[attributes]] property to determines which model attributes
  * should be displayed and how they should be formatted.
@@ -38,9 +38,9 @@ use Yiisoft\Widget\Widget;
 class DetailView extends Widget
 {
     /**
-     * @var array|object the data model whose details are to be displayed. This can be a [[Model]] instance,
-     *                   an associative array, an object that implements [[Arrayable]] interface or simply an object
-     *     with defined public accessible non-static properties.
+     * @var array|object the data model whose details are to be displayed. This can be a {@see object} instance,
+     * an associative array, an object that implements {{@see \Yiisoft\Arrays\ArrayableInterface}} interface or
+     * simply an object with defined public accessible non-static properties.
      */
     private $model;
     /**
@@ -176,10 +176,9 @@ class DetailView extends Widget
     protected function normalizeAttributes(): void
     {
         if ($this->attributes === []) {
-            if ($this->model instanceof Model) {
-                $this->attributes = $this->model->attributes();
-            } elseif (is_object($this->model)) {
-                $this->attributes = $this->model instanceof ArrayableInterface ? array_keys($this->model->toArray())
+            if (is_object($this->model)) {
+                $this->attributes = $this->model instanceof ArrayableInterface
+                    ? array_keys($this->model->toArray())
                     : array_keys(get_object_vars($this->model));
             } elseif (is_array($this->model)) {
                 $this->attributes = array_keys($this->model);
@@ -221,9 +220,7 @@ class DetailView extends Widget
                 if (!isset($attribute['label'])) {
                     $inflector = new Inflector();
 
-                    $attribute['label'] = $this->model instanceof Model
-                        ? $this->model->getAttributeLabel($attributeName)
-                        : $inflector->camel2words($attributeName, true);
+                    $attribute['label'] = $inflector->camel2words($attributeName, true);
                 }
                 if (!array_key_exists('value', $attribute)) {
                     $attribute['value'] = ArrayHelper::getValue($this->model, $attributeName);

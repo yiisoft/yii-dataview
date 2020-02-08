@@ -6,6 +6,7 @@ use Closure;
 use Yiisoft\Arrays\ArrayHelper;
 use Yiisoft\Html\Html;
 use Yiisoft\Strings\Inflector;
+use Yiisoft\Yii\DataView\Widget\LinkSorter;
 
 /**
  * DataColumn is the default column type for the [[GridView]] widget.
@@ -143,7 +144,11 @@ class DataColumn extends Column
             ($sort = $this->grid->getDataReader()->getSort()) !== null &&
             array_key_exists($this->attribute, $sort->getCriteria())
         ) {
-            return $sort->link($this->attribute, array_merge($this->sortLinkOptions, ['label' => $label]));
+            return LinkSorter::widget()
+                ->attributes(array_keys($sort->getCriteria()))
+                ->linkOptions(array_merge($this->sortLinkOptions, ['label' => $label]))
+                ->sort($sort)
+                ->run();
         }
 
         return $label;
@@ -151,31 +156,9 @@ class DataColumn extends Column
 
     protected function getHeaderCellLabel(): string
     {
-        $provider = $this->grid->getDataReader();
-
         if ($this->label === null) {
-            if ($provider instanceof ActiveDataProvider && $provider->query instanceof ActiveQueryInterface) {
-                /* @var $modelClass Model */
-                $modelClass = $provider->query->modelClass;
-                $model = $modelClass::instance();
-                $label = $model->getAttributeLabel($this->attribute);
-            } elseif ($provider instanceof ArrayDataProvider && $provider->modelClass !== null) {
-                /* @var $modelClass Model */
-                $modelClass = $provider->modelClass;
-                $model = $modelClass::instance();
-                $label = $model->getAttributeLabel($this->attribute);
-            } elseif ($this->grid->getFilterModel() !== null && $this->grid->getFilterModel() instanceof Model) {
-                $label = $this->grid->getFilterModel()->getAttributeLabel($this->attribute);
-            } else {
-                $models = $provider->read();
-                if (($model = reset($models)) instanceof Model) {
-                    /* @var $model Model */
-                    $label = $model->getAttributeLabel($this->attribute);
-                } else {
-                    $inflector = new Inflector();
-                    $label = $inflector->camel2words($this->attribute);
-                }
-            }
+            $inflector = new Inflector();
+            $label = $inflector->camel2words($this->attribute);
         } else {
             $label = $this->label;
         }
@@ -189,39 +172,29 @@ class DataColumn extends Column
             return $this->filter;
         }
 
-        $model = $this->grid->getFilterModel();
-
-        if ($this->filter !== false && $model instanceof Model && $this->attribute !== null && $model->isAttributeActive(
-                $this->attribute
-            )) {
-            if ($model->hasErrors($this->attribute)) {
-                Html::addCssClass($this->filterOptions, 'has-error');
-                $error = ' ' . Html::error($model, $this->attribute, $this->grid->getFilterErrorOptions());
-            } else {
-                $error = '';
-            }
+        if ($this->filter !== false) {
+            $error = '';
 
             $filterOptions = array_merge(['class' => 'form-control', 'id' => null], $this->filterInputOptions);
             if (is_array($this->filter)) {
                 $options = array_merge(['prompt' => ''], $filterOptions);
 
-                return Html::activeDropDownList($model, $this->attribute, $this->filter, $options) . $error;
+                return Html::dropDownList($this->attribute, $this->filter, $options) . $error;
             }
             if ($this->format === 'boolean') {
                 $options = array_merge(['prompt' => ''], $filterOptions);
 
-                return Html::activeDropDownList(
-                        $model,
+                return Html::dropDownList(
                         $this->attribute,
                         [
-                            1 => $this->grid->getMessageFormatter()->booleanFormat[1],
-                            0 => $this->grid->getMessageFormatter()->booleanFormat[0],
+                            1 => $this->grid->getMessageFormatter()->format('Yes', [], null),
+                            0 => $this->grid->getMessageFormatter()->format('No', [], null),
                         ],
                         $options
                     ) . $error;
             }
 
-            return Html::activeTextInput($model, $this->attribute, $filterOptions) . $error;
+            return Html::dropDownList($this->attribute, $filterOptions) . $error;
         }
 
         return parent::renderFilterCellContent();
