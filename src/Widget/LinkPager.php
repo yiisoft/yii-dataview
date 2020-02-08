@@ -3,133 +3,125 @@
 namespace Yiisoft\Yii\DataView\Widget;
 
 use Yiisoft\Arrays\ArrayHelper;
+use Yiisoft\Data\Paginator\PaginatorInterface;
 use Yiisoft\Factory\Exceptions\InvalidConfigException;
 use Yiisoft\Html\Html;
 use Yiisoft\Widget\Widget;
 
 /**
  * LinkPager displays a list of hyperlinks that lead to different pages of target.
- *
  * LinkPager works with a [[Pagination]] object which specifies the total number
  * of pages and the current page number.
- *
  * Note that LinkPager only generates the necessary HTML markups. In order for it
  * to look like a real pager, you should provide some CSS styles for it.
  * With the default configuration, LinkPager should look good using Twitter Bootstrap CSS framework.
- *
  * For more details and usage information on LinkPager, see the [guide article on pagination](guide:output-pagination).
  * TODO write tests
  */
 class LinkPager extends Widget
 {
     /**
-     * @var \Yiisoft\Data\Paginator\OffsetPaginator the pagination object that this pager is associated with.
+     * @var \Yiisoft\Data\Paginator\PaginatorInterface|null the pagination object that this pager is associated with.
      *                 You must set this property in order to make LinkPager work.
      */
-    public $paginator;
+    private ?PaginatorInterface $paginator = null;
     /**
      * @var array HTML attributes for the pager container tag.
-     *
      * @see Html::renderTagAttributes() for details on how attributes are being rendered.
      */
-    public $options = ['class' => 'pagination'];
+    private array $options = ['class' => 'pagination'];
     /**
      * @var array HTML attributes which will be applied to all link containers
      */
-    public $linkContainerOptions = [];
+    private array $linkContainerOptions = [];
     /**
      * @var array HTML attributes for the link in a pager container tag.
-     *
      * @see Html::renderTagAttributes() for details on how attributes are being rendered.
      */
-    public $linkOptions = [];
+    private array $linkOptions = [];
     /**
-     * @var string the CSS class for the each page button.
+     * @var string|null the CSS class for the each page button.
      */
-    public $pageCssClass;
+    private ?string $pageCssClass;
     /**
      * @var string the CSS class for the "first" page button.
      */
-    public $firstPageCssClass = 'first';
+    private string $firstPageCssClass = 'first';
     /**
      * @var string the CSS class for the "last" page button.
      */
-    public $lastPageCssClass = 'last';
+    private string $lastPageCssClass = 'last';
     /**
      * @var string the CSS class for the "previous" page button.
      */
-    public $prevPageCssClass = 'prev';
+    private string $prevPageCssClass = 'prev';
     /**
      * @var string the CSS class for the "next" page button.
      */
-    public $nextPageCssClass = 'next';
+    private string $nextPageCssClass = 'next';
     /**
      * @var string the CSS class for the active (currently selected) page button.
      */
-    public $activePageCssClass = 'active';
+    private string $activePageCssClass = 'active';
     /**
      * @var string the CSS class for the disabled page buttons.
      */
-    public $disabledPageCssClass = 'disabled';
+    private string $disabledPageCssClass = 'disabled';
     /**
      * @var array the options for the disabled tag to be generated inside the disabled list element.
      *            In order to customize the html tag, please use the tag key.
-     *
      * ```php
      * $disabledListItemSubTagOptions = ['tag' => 'div', 'class' => 'disabled-div'];
      * ```
      */
-    public $disabledListItemSubTagOptions = [];
+    private array $disabledListItemSubTagOptions = [];
     /**
      * @var int maximum number of page buttons that can be displayed. Defaults to 10.
      */
-    public $maxButtonCount = 10;
+    private int $maxButtonCount = 10;
     /**
      * @var string|bool the label for the "next" page button. Note that this will NOT be HTML-encoded.
      *                  If this property is false, the "next" page button will not be displayed.
      */
-    public $nextPageLabel = '&raquo;';
+    private $nextPageLabel = '&raquo;';
     /**
      * @var string|bool the text label for the previous page button. Note that this will NOT be HTML-encoded.
      *                  If this property is false, the "previous" page button will not be displayed.
      */
-    public $prevPageLabel = '&laquo;';
+    private $prevPageLabel = '&laquo;';
     /**
      * @var string|bool the text label for the "first" page button. Note that this will NOT be HTML-encoded.
      *                  If it's specified as true, page number will be used as label.
      *                  Default is false that means the "first" page button will not be displayed.
      */
-    public $firstPageLabel = false;
+    private $firstPageLabel = false;
     /**
      * @var string|bool the text label for the "last" page button. Note that this will NOT be HTML-encoded.
      *                  If it's specified as true, page number will be used as label.
      *                  Default is false that means the "last" page button will not be displayed.
      */
-    public $lastPageLabel = false;
+    private $lastPageLabel = false;
     /**
      * @var bool whether to register link tags in the HTML header for prev, next, first and last page.
      *           Defaults to `false` to avoid conflicts when multiple pagers are used on one page.
-     *
      * @see http://www.w3.org/TR/html401/struct/links.html#h-12.1.2
-     * @see registerLinkTags()
+     * @see registerLinkTagsInternal()
      */
-    public $registerLinkTags = false;
+    private bool $registerLinkTags = false;
     /**
      * @var bool Hide widget when only one page exist.
      */
-    public $hideOnSinglePage = true;
+    private bool $hideOnSinglePage = true;
     /**
      * @var bool whether to render current page button as disabled.
      */
-    public $disableCurrentPageButton = false;
+    private bool $disableCurrentPageButton = false;
 
     /**
      * Initializes the pager.
      */
-    public function init(): void
+    protected function init(): void
     {
-        parent::init();
-
         if ($this->paginator === null) {
             throw new InvalidConfigException('The "pagination" property must be set.');
         }
@@ -143,8 +135,10 @@ class LinkPager extends Widget
      */
     public function run(): string
     {
+        $this->init();
+
         if ($this->registerLinkTags) {
-            $this->registerLinkTags();
+            $this->registerLinkTagsInternal();
         }
 
         return $this->renderPageButtons();
@@ -156,7 +150,7 @@ class LinkPager extends Widget
      *
      * @see http://www.w3.org/TR/html401/struct/links.html#h-12.1.2
      */
-    protected function registerLinkTags()
+    protected function registerLinkTagsInternal(): void
     {
         // TODO fix that
         return;
@@ -171,20 +165,22 @@ class LinkPager extends Widget
      *
      * @return string the rendering result
      */
-    protected function renderPageButtons()
+    protected function renderPageButtons(): string
     {
-        $pageCount = $this->paginator->getTotalPages();
+        $paginator = $this->paginator;
+        $pageCount = $paginator->getCurrentPageSize();
         if ($pageCount < 2 && $this->hideOnSinglePage) {
             return '';
         }
 
         $buttons = [];
-        $currentPage = $this->paginator->getCurrentPage();
+        $currentPage = $paginator->getCurrentPage();
 
         // first page
         $firstPageLabel = $this->firstPageLabel === true ? '1' : $this->firstPageLabel;
         if ($firstPageLabel !== false) {
-            $buttons[] = $this->renderPageButton($firstPageLabel, 0, $this->firstPageCssClass, $currentPage <= 0, false);
+            $disabled = $paginator->isOnFirstPage() || $paginator->withPreviousPageToken(null)->isOnFirstPage();
+            $buttons[] = $this->renderPageButton($firstPageLabel, 0, $this->firstPageCssClass, $disabled, false);
         }
 
         // prev page
@@ -192,13 +188,21 @@ class LinkPager extends Widget
             if (($page = $currentPage - 1) < 0) {
                 $page = 0;
             }
-            $buttons[] = $this->renderPageButton($this->prevPageLabel, $page, $this->prevPageCssClass, $currentPage <= 0, false);
+            $disabled = $paginator->isOnFirstPage() || $paginator->withPreviousPageToken(null)->isOnFirstPage();
+            $buttons[] = $this->renderPageButton(
+                $this->prevPageLabel,
+                $page,
+                $this->prevPageCssClass,
+                $disabled,
+                false
+            );
         }
 
         // internal pages
         [$beginPage, $endPage] = $this->getPageRange();
         for ($i = $beginPage; $i <= $endPage; $i++) {
-            $buttons[] = $this->renderPageButton($i + 1, $i, null, $this->disableCurrentPageButton && $i == $currentPage, $i == $currentPage);
+            $disabled = $paginator->isOnLastPage() || $paginator->withNextPageToken(null)->isOnLastPage();
+            $buttons[] = $this->renderPageButton($i + 1, $i, null, $disabled, $i == $currentPage);
         }
 
         // next page
@@ -206,13 +210,27 @@ class LinkPager extends Widget
             if (($page = $currentPage + 1) >= $pageCount - 1) {
                 $page = $pageCount - 1;
             }
-            $buttons[] = $this->renderPageButton($this->nextPageLabel, $page, $this->nextPageCssClass, $currentPage >= $pageCount - 1, false);
+            $disabled = $paginator->isOnLastPage() || $paginator->withNextPageToken(null)->isOnLastPage();
+            $buttons[] = $this->renderPageButton(
+                $this->nextPageLabel,
+                $page,
+                $this->nextPageCssClass,
+                $disabled,
+                false
+            );
         }
 
         // last page
         $lastPageLabel = $this->lastPageLabel === true ? $pageCount : $this->lastPageLabel;
         if ($lastPageLabel !== false) {
-            $buttons[] = $this->renderPageButton($lastPageLabel, $pageCount - 1, $this->lastPageCssClass, $currentPage >= $pageCount - 1, false);
+            $disabled = $paginator->isOnLastPage() || $paginator->withNextPageToken(null)->isOnLastPage();
+            $buttons[] = $this->renderPageButton(
+                $lastPageLabel,
+                $pageCount - 1,
+                $this->lastPageCssClass,
+                $disabled,
+                false
+            );
         }
 
         $options = $this->options;
@@ -225,15 +243,14 @@ class LinkPager extends Widget
      * Renders a page button.
      * You may override this method to customize the generation of page buttons.
      *
-     * @param string $label    the text label for the button
-     * @param int    $page     the page number
-     * @param string $class    the CSS class for the page button.
-     * @param bool   $disabled whether this page button is disabled
-     * @param bool   $active   whether this page button is active
-     *
+     * @param string $label the text label for the button
+     * @param int $page the page number
+     * @param string $class the CSS class for the page button.
+     * @param bool $disabled whether this page button is disabled
+     * @param bool $active whether this page button is active
      * @return string the rendering result
      */
-    protected function renderPageButton($label, $page, $class, $disabled, $active)
+    protected function renderPageButton($label, $page, $class, $disabled, $active): string
     {
         $options = $this->linkContainerOptions;
         $linkWrapTag = ArrayHelper::remove($options, 'tag', 'li');
@@ -252,23 +269,167 @@ class LinkPager extends Widget
         $linkOptions = $this->linkOptions;
         $linkOptions['data-page'] = $page;
 
-        return Html::tag($linkWrapTag, Html::a($label, $this->paginator->withNextPageToken($page), $linkOptions), $options);
+        return Html::tag(
+            $linkWrapTag,
+            Html::a($label, $this->paginator->withNextPageToken($page), $linkOptions),
+            $options
+        );
     }
 
     /**
      * @return array the begin and end pages that need to be displayed.
      */
-    protected function getPageRange()
+    protected function getPageRange(): array
     {
         $currentPage = $this->paginator->getCurrentPage();
         $pageCount = $this->paginator->getTotalPages();
 
-        $beginPage = max(0, $currentPage - (int) ($this->maxButtonCount / 2));
+        $beginPage = max(0, $currentPage - (int)($this->maxButtonCount / 2));
         if (($endPage = $beginPage + $this->maxButtonCount - 1) >= $pageCount) {
             $endPage = $pageCount - 1;
             $beginPage = max(0, $endPage - $this->maxButtonCount + 1);
         }
 
         return [$beginPage, $endPage];
+    }
+
+    public function paginator(?PaginatorInterface $paginator): self
+    {
+        $this->paginator = $paginator;
+
+        return $this;
+    }
+
+    public function options(array $options): self
+    {
+        $this->options = $options;
+
+        return $this;
+    }
+
+    public function linkContainerOptions(array $linkContainerOptions): self
+    {
+        $this->linkContainerOptions = $linkContainerOptions;
+
+        return $this;
+    }
+
+    public function linkOptions(array $linkOptions): self
+    {
+        $this->linkOptions = $linkOptions;
+
+        return $this;
+    }
+
+    public function pageCssClass(string $pageCssClass): self
+    {
+        $this->pageCssClass = $pageCssClass;
+
+        return $this;
+    }
+
+    public function firstPageCssClass(string $firstPageCssClass): self
+    {
+        $this->firstPageCssClass = $firstPageCssClass;
+
+        return $this;
+    }
+
+    public function lastPageCssClass(string $lastPageCssClass): self
+    {
+        $this->lastPageCssClass = $lastPageCssClass;
+
+        return $this;
+    }
+
+    public function prevPageCssClass(string $prevPageCssClass): self
+    {
+        $this->prevPageCssClass = $prevPageCssClass;
+
+        return $this;
+    }
+
+    public function nextPageCssClass(string $nextPageCssClass): self
+    {
+        $this->nextPageCssClass = $nextPageCssClass;
+
+        return $this;
+    }
+
+    public function activePageCssClass(string $activePageCssClass): self
+    {
+        $this->activePageCssClass = $activePageCssClass;
+
+        return $this;
+    }
+
+    public function disabledPageCssClass(string $disabledPageCssClass): self
+    {
+        $this->disabledPageCssClass = $disabledPageCssClass;
+
+        return $this;
+    }
+
+    public function disabledListItemSubTagOptions(array $disabledListItemSubTagOptions): self
+    {
+        $this->disabledListItemSubTagOptions = $disabledListItemSubTagOptions;
+
+        return $this;
+    }
+
+    public function maxButtonCount(int $maxButtonCount): self
+    {
+        $this->maxButtonCount = $maxButtonCount;
+
+        return $this;
+    }
+
+    public function nextPageLabel($nextPageLabel): self
+    {
+        $this->nextPageLabel = $nextPageLabel;
+
+        return $this;
+    }
+
+    public function prevPageLabel($prevPageLabel): self
+    {
+        $this->prevPageLabel = $prevPageLabel;
+
+        return $this;
+    }
+
+    public function firstPageLabel($firstPageLabel): self
+    {
+        $this->firstPageLabel = $firstPageLabel;
+
+        return $this;
+    }
+
+    public function lastPageLabel($lastPageLabel): self
+    {
+        $this->lastPageLabel = $lastPageLabel;
+
+        return $this;
+    }
+
+    public function registerLinkTags(bool $registerLinkTags): self
+    {
+        $this->registerLinkTags = $registerLinkTags;
+
+        return $this;
+    }
+
+    public function hideOnSinglePage(bool $hideOnSinglePage): self
+    {
+        $this->hideOnSinglePage = $hideOnSinglePage;
+
+        return $this;
+    }
+
+    public function disableCurrentPageButton(bool $disableCurrentPageButton): self
+    {
+        $this->disableCurrentPageButton = $disableCurrentPageButton;
+
+        return $this;
     }
 }
