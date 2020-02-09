@@ -2,6 +2,7 @@
 
 namespace Yiisoft\Yii\DataView\Tests\Stubs;
 
+use Yiisoft\Router\RouteNotFoundException;
 use Yiisoft\Router\UrlGeneratorInterface;
 
 class UrlGenerator implements UrlGeneratorInterface
@@ -21,5 +22,14 @@ class UrlGenerator implements UrlGeneratorInterface
     public function setUriPrefix(string $name): void
     {
         $this->urlPrefix = $name;
+    }
+
+    public function generateAbsolute(
+        string $name,
+        array $parameters = [],
+        string $scheme = null,
+        string $host = null
+    ): string {
+        return $name;
     }
 }
