@@ -37,7 +37,7 @@
         "yiisoft/di": "^3.0@dev",
         "yiisoft/log": "^3.0@dev",
         "yiisoft/event-dispatcher": "^3.0@dev",
-        "phpunit/phpunit": "^8.4 || ^9.0",
+        "phpunit/phpunit": "^9.0",
         "hiqdev/composer-config-plugin": "^1.0@dev"
     },
     "extra": {
