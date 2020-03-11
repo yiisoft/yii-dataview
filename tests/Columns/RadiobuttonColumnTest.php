@@ -65,7 +65,7 @@ class RadiobuttonColumnTest extends TestCase
                 static function ($model, $key, $index, $column) {
                     return '';
                 },
-                );
+            );
         $this->assertStringContainsString('<td></td>', $column->renderDataCell([], 1, 0));
 
         $column = RadioButtonColumn::widget()

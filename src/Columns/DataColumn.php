@@ -184,13 +184,13 @@ class DataColumn extends Column
                 $messageFormatter = $this->grid->getMessageFormatter();
 
                 return Html::dropDownList(
-                        $this->attribute,
-                        [
+                    $this->attribute,
+                    [
                             1 => $messageFormatter->format('Yes', [], null),
                             0 => $messageFormatter->format('No', [], null),
                         ],
-                        $options
-                    ) . $error;
+                    $options
+                ) . $error;
             }
 
             return Html::dropDownList($this->attribute, $filterOptions) . $error;

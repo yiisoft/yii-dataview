@@ -343,7 +343,7 @@ class DetailViewTest extends TestCase
                 function () use (&$initTriggered) {
                     $initTriggered = true;
                 },
-                );
+            );
 
         $this->assertTrue($initTriggered);
     }
