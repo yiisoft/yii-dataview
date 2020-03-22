@@ -2,7 +2,7 @@
 
 namespace Yiisoft\Yii\DataView\Tests;
 
-use hiqdev\composer\config\Builder;
+use Yiisoft\Composer\Config\Builder;
 use Yiisoft\Aliases\Aliases;
 use Yiisoft\Di\Container;
 use Yiisoft\Widget\WidgetFactory;
