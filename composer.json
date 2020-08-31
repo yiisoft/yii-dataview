@@ -29,7 +29,7 @@
         "yiisoft/data": "^3.0@dev",
         "yiisoft/factory": "^3.0@dev",
         "yiisoft/router": "^3.0@dev",
-        "yiisoft/strings": "^3.0@dev",
+        "yiisoft/strings": "^1.0",
         "yiisoft/view": "^3.0@dev",
         "yiisoft/widget": "^3.0@dev"
     },
