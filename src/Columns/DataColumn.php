@@ -160,7 +160,7 @@ class DataColumn extends Column
 
     protected function getHeaderCellLabel(): string
     {
-        return $this->label ?? (new Inflector())->camel2words($this->attribute);
+        return $this->label ?? (new Inflector())->toWords($this->attribute);
     }
 
     protected function renderFilterCellContent(): string
