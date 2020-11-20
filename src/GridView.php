@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Yiisoft\Yii\DataView;
 
 use Closure;
@@ -45,38 +47,45 @@ class GridView extends BaseListView
     private string $dataColumnClass = DataColumn::class;
     /**
      * @var string the caption of the grid table
+     *
      * @see captionOptions
      */
     private string $caption = '';
     /**
      * @var array the HTML attributes for the caption element.
+     *
      * @see \Yiisoft\Html\Html::renderTagAttributes() for details on how attributes are being rendered.
      * @see caption
      */
     private array $captionOptions = [];
     /**
      * @var array the HTML attributes for the grid table element.
+     *
      * @see \Yiisoft\Html\Html::renderTagAttributes() for details on how attributes are being rendered.
      */
     private array $tableOptions = ['class' => 'table table-striped table-bordered'];
     /**
      * @var array the HTML attributes for the grid thead element.
+     *
      * @see \Yiisoft\Html\Html::renderTagAttributes() for details on how attributes are being rendered.
      */
     private array $headOptions = [];
     /**
      * @var array the HTML attributes for the container tag of the grid view.
      *            The "tag" element specifies the tag name of the container element and defaults to "div".
+     *
      * @see \Yiisoft\Html\Html::renderTagAttributes() for details on how attributes are being rendered.
      */
     protected array $options = ['class' => 'grid-view'];
     /**
      * @var array the HTML attributes for the table header row.
+     *
      * @see \Yiisoft\Html\Html::renderTagAttributes() for details on how attributes are being rendered.
      */
     private array $headerRowOptions = [];
     /**
      * @var array the HTML attributes for the table footer row.
+     *
      * @see \Yiisoft\Html\Html::renderTagAttributes() for details on how attributes are being rendered.
      */
     private array $footerRowOptions = [];
@@ -92,6 +101,7 @@ class GridView extends BaseListView
      * - `$key`: the key value associated with the current data model
      * - `$index`: the zero-based index of the data model in the model array returned by [[dataProvider]]
      * - `$grid`: the GridView object
+     *
      * @see \Yiisoft\Html\Html::renderTagAttributes() for details on how attributes are being rendered.
      */
     private $rowOptions = [];
@@ -196,6 +206,7 @@ class GridView extends BaseListView
     private string $filterPosition = self::FILTER_POS_BODY;
     /**
      * @var array the HTML attributes for the filter row element.
+     *
      * @see \Yiisoft\Html\Html::renderTagAttributes() for details on how attributes are being rendered.
      */
     private array $filterRowOptions = ['class' => 'filters'];
@@ -219,8 +230,9 @@ class GridView extends BaseListView
     /**
      * Renders the data models for the grid view.
      *
-     * @return string the HTML code of table
      * @throws \JsonException
+     *
+     * @return string the HTML code of table
      */
     public function renderItems(): string
     {
@@ -355,8 +367,9 @@ class GridView extends BaseListView
     /**
      * Renders the table body.
      *
-     * @return string the rendering result.
      * @throws \JsonException
+     *
+     * @return string the rendering result.
      */
     public function renderTableBody(): string
     {
@@ -397,8 +410,10 @@ class GridView extends BaseListView
      * @param mixed $model the data model to be rendered
      * @param mixed $key the key associated with the data model
      * @param int $index the zero-based index of the data model among the model array returned by [[dataProvider]].
-     * @return string the rendering result
+     *
      * @throws \JsonException
+     *
+     * @return string the rendering result
      */
     public function renderTableRow($model, $key, $index): string
     {
@@ -446,8 +461,10 @@ class GridView extends BaseListView
      * Creates a [[DataColumn]] object based on a string in the format of "attribute:format:label".
      *
      * @param string $text the column specification string
-     * @return DataColumn the column instance
+     *
      * @throws InvalidConfigException if the column specification is invalid
+     *
+     * @return DataColumn the column instance
      */
     protected function createDataColumn($text): DataColumn
     {
@@ -485,6 +502,7 @@ class GridView extends BaseListView
 
     /**
      * @param bool $showHeader
+     *
      * @return self
      */
     public function showHeader(bool $showHeader): self
@@ -496,6 +514,7 @@ class GridView extends BaseListView
 
     /**
      * @param array $tableOptions
+     *
      * @return GridView
      */
     public function tableOptions(array $tableOptions): self

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Yiisoft\Yii\DataView\Tests;
 
 use Yiisoft\Data\Reader\Iterable\IterableDataReader;
@@ -13,8 +15,10 @@ class GridViewTest extends TestCase
 {
     /**
      * @dataProvider emptyDataProvider
+     *
      * @param mixed $emptyText
      * @param string $expectedText
+     *
      * @throws \Exception
      */
     public function testEmpty($emptyText, $expectedText): void

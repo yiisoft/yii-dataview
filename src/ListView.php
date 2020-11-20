@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Yiisoft\Yii\DataView;
 
 use Closure;
@@ -27,11 +29,12 @@ class ListView extends BaseListView implements ViewContextInterface
      * ```php
      * function ($model, $key, $index, $widget)
      * ```
+     *
      * @see \Yiisoft\Html\Html::renderTagAttributes() for details on how attributes are being rendered.
      */
     private $itemOptions = [];
     /**
-     * @var string|callable|null the name of the view for rendering each data item, or a callback (e.g. an anonymous
+     * @var callable|string|null the name of the view for rendering each data item, or a callback (e.g. an anonymous
      *     function) for rendering each data item. If it specifies a view name, the following variables will be
      *     available in the view:
      * - `$model`: mixed, the data model
@@ -58,6 +61,7 @@ class ListView extends BaseListView implements ViewContextInterface
     /**
      * @var array the HTML attributes for the container tag of the list view.
      *            The "tag" element specifies the tag name of the container element and defaults to "div".
+     *
      * @see \Yiisoft\Html\Html::renderTagAttributes() for details on how attributes are being rendered.
      */
     protected array $options = ['class' => 'list-view'];
@@ -73,6 +77,7 @@ class ListView extends BaseListView implements ViewContextInterface
      * - `$widget`: the ListView object
      * The return result of the function will be rendered directly.
      * Note: If the function returns `null`, nothing will be rendered before the item.
+     *
      * @see renderBeforeItem
      */
     private $beforeItem;
@@ -81,6 +86,7 @@ class ListView extends BaseListView implements ViewContextInterface
      * It should have the same signature as [[beforeItem]].
      * The return result of the function will be rendered directly.
      * Note: If the function returns `null`, nothing will be rendered after the item.
+     *
      * @see renderAfterItem
      */
     private $afterItem;
@@ -88,8 +94,9 @@ class ListView extends BaseListView implements ViewContextInterface
     /**
      * Renders all data models.
      *
-     * @return string the rendering result
      * @throws \Throwable
+     *
+     * @return string the rendering result
      */
     public function renderItems(): string
     {
@@ -119,7 +126,9 @@ class ListView extends BaseListView implements ViewContextInterface
      * @param mixed $model the data model to be rendered
      * @param mixed $key the key value associated with the data model
      * @param int $index the zero-based index of the data model in the model array returned by [[dataProvider]].
+     *
      * @return string|null [[beforeItem]] call result or `null` when [[beforeItem]] is not a closure
+     *
      * @see beforeItem
      */
     protected function renderBeforeItem($model, $key, $index): ?string
@@ -138,7 +147,9 @@ class ListView extends BaseListView implements ViewContextInterface
      * @param mixed $model the data model to be rendered
      * @param mixed $key the key value associated with the data model
      * @param int $index the zero-based index of the data model in the model array returned by [[dataProvider]].
+     *
      * @return string|null [[afterItem]] call result or `null` when [[afterItem]] is not a closure
+     *
      * @see afterItem
      */
     protected function renderAfterItem($model, $key, $index): ?string
@@ -156,8 +167,10 @@ class ListView extends BaseListView implements ViewContextInterface
      * @param mixed $model the data model to be rendered
      * @param mixed $key the key value associated with the data model
      * @param int $index the zero-based index of the data model in the model array returned by [[dataProvider]].
-     * @return string the rendering result
+     *
      * @throws \Throwable
+     *
+     * @return string the rendering result
      */
     public function renderItem($model, $key, $index): string
     {
@@ -230,6 +243,7 @@ class ListView extends BaseListView implements ViewContextInterface
 
     /**
      * @param callable|string|null $itemView
+     *
      * @return ListView
      */
     public function itemView($itemView): self

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Yiisoft\Yii\DataView\Tests;
 
 use Yiisoft\Data\Paginator\OffsetPaginator;
@@ -113,6 +115,7 @@ HTML
 
     /**
      * @dataProvider itemViewOptions
+     *
      * @param mixed $itemView
      * @param string $expected
      */
@@ -166,6 +169,7 @@ HTML
 
     /**
      * @dataProvider itemOptions
+     *
      * @param mixed $itemOptions
      * @param string $expected
      */
@@ -259,8 +263,10 @@ HTML
     /**
      * @param $dataReader
      * @param $paginator
-     * @return ListView
+     *
      * @throws \Yiisoft\Factory\Exceptions\InvalidConfigException
+     *
+     * @return ListView
      */
     private function getListView($dataReader, $paginator): ListView
     {

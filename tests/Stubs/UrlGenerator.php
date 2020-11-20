@@ -1,8 +1,9 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Yiisoft\Yii\DataView\Tests\Stubs;
 
-use Yiisoft\Router\RouteNotFoundException;
 use Yiisoft\Router\UrlGeneratorInterface;
 
 class UrlGenerator implements UrlGeneratorInterface
