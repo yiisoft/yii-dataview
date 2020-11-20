@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Yiisoft\Yii\DataView\Widget;
 
 use Yiisoft\Arrays\ArrayHelper;
@@ -27,6 +29,7 @@ class LinkPager extends Widget
     private ?PaginatorInterface $paginator = null;
     /**
      * @var array HTML attributes for the pager container tag.
+     *
      * @see Html::renderTagAttributes() for details on how attributes are being rendered.
      */
     private array $options = ['class' => 'pagination'];
@@ -36,6 +39,7 @@ class LinkPager extends Widget
     private array $linkContainerOptions = [];
     /**
      * @var array HTML attributes for the link in a pager container tag.
+     *
      * @see Html::renderTagAttributes() for details on how attributes are being rendered.
      */
     private array $linkOptions = [];
@@ -80,23 +84,23 @@ class LinkPager extends Widget
      */
     private int $maxButtonCount = 10;
     /**
-     * @var string|bool the label for the "next" page button. Note that this will NOT be HTML-encoded.
+     * @var bool|string the label for the "next" page button. Note that this will NOT be HTML-encoded.
      *                  If this property is false, the "next" page button will not be displayed.
      */
     private $nextPageLabel = '&raquo;';
     /**
-     * @var string|bool the text label for the previous page button. Note that this will NOT be HTML-encoded.
+     * @var bool|string the text label for the previous page button. Note that this will NOT be HTML-encoded.
      *                  If this property is false, the "previous" page button will not be displayed.
      */
     private $prevPageLabel = '&laquo;';
     /**
-     * @var string|bool the text label for the "first" page button. Note that this will NOT be HTML-encoded.
+     * @var bool|string the text label for the "first" page button. Note that this will NOT be HTML-encoded.
      *                  If it's specified as true, page number will be used as label.
      *                  Default is false that means the "first" page button will not be displayed.
      */
     private $firstPageLabel = false;
     /**
-     * @var string|bool the text label for the "last" page button. Note that this will NOT be HTML-encoded.
+     * @var bool|string the text label for the "last" page button. Note that this will NOT be HTML-encoded.
      *                  If it's specified as true, page number will be used as label.
      *                  Default is false that means the "last" page button will not be displayed.
      */
@@ -104,6 +108,7 @@ class LinkPager extends Widget
     /**
      * @var bool whether to register link tags in the HTML header for prev, next, first and last page.
      *           Defaults to `false` to avoid conflicts when multiple pagers are used on one page.
+     *
      * @see http://www.w3.org/TR/html401/struct/links.html#h-12.1.2
      * @see registerLinkTagsInternal()
      */
@@ -248,6 +253,7 @@ class LinkPager extends Widget
      * @param string $class the CSS class for the page button.
      * @param bool $disabled whether this page button is disabled
      * @param bool $active whether this page button is active
+     *
      * @return string the rendering result
      */
     protected function renderPageButton($label, $page, $class, $disabled, $active): string

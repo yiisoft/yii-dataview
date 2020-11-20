@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Yiisoft\Yii\DataView;
 
 use Closure;
@@ -73,7 +75,7 @@ class DetailView extends Widget
      */
     protected array $attributes = [];
     /**
-     * @var string|callable the template used to render a single attribute. If a string, the token `{label}`
+     * @var callable|string the template used to render a single attribute. If a string, the token `{label}`
      *                      and `{value}` will be replaced with the label and the value of the corresponding attribute.
      *                      If a callback (e.g. an anonymous function), the signature must be as follows:
      * ```php
@@ -88,6 +90,7 @@ class DetailView extends Widget
     /**
      * @var array the HTML attributes for the container tag of this widget. The `tag` option specifies
      *            what container tag should be used. It defaults to `table` if not set.
+     *
      * @see \Yiisoft\Html\Html::renderTagAttributes() for details on how attributes are being rendered.
      */
     protected array $options = ['class' => 'table table-striped table-bordered detail-view'];
@@ -134,6 +137,7 @@ class DetailView extends Widget
      *
      * @param array $attribute the specification of the attribute to be rendered.
      * @param int $index the zero-based index of the attribute in the [[attributes]] array
+     *
      * @return string the rendering result
      */
     protected function renderAttribute($attribute, $index): string
@@ -230,7 +234,7 @@ class DetailView extends Widget
             }
 
             if ($attribute['value'] instanceof Closure) {
-                $attribute['value'] = \call_user_func($attribute['value'], $this->model, $this);
+                $attribute['value'] = $attribute['value']($this->model, $this);
             }
 
             $this->attributes[$i] = $attribute;
@@ -239,6 +243,7 @@ class DetailView extends Widget
 
     /**
      * @param array|object $model
+     *
      * @return static
      */
     public function model($model): self

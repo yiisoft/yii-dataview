@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Yiisoft\Yii\DataView\Tests\Columns;
 
 use Yiisoft\Yii\DataView\Columns\ActionColumn;

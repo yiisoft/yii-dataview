@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Yiisoft\Yii\DataView;
 
 class MessageFormatter
@@ -7,8 +9,10 @@ class MessageFormatter
     /**
      * In future it will deleted and used any translator instead this helper
      * Copied from https://github.com/yiisoft/validator/blob/master/src/Rule.php#L38
+     *
      * @param string $message
      * @param array $arguments
+     *
      * @return string
      */
     public static function formatMessage(string $message, array $arguments = []): string

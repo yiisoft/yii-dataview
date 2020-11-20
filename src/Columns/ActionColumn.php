@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Yiisoft\Yii\DataView\Columns;
 
 use Closure;
@@ -35,6 +37,7 @@ class ActionColumn extends Column
      * ```php
      * ['__class' => \yii\grid\ActionColumn::class, 'template' => '{view} {update}'],
      * ```
+     *
      * @see buttons
      */
     private string $template = '{view} {update} {delete}';
@@ -207,6 +210,7 @@ class ActionColumn extends Column
      * @param array $model the data model
      * @param mixed $key the key associated with the data model
      * @param int $index the current row index
+     *
      * @return string the created URL
      */
     public function createUrl(string $action, array $model, $key, int $index): string
@@ -229,7 +233,7 @@ class ActionColumn extends Column
 
                 if (isset($this->visibleButtons[$name])) {
                     $isVisible = $this->visibleButtons[$name] instanceof Closure
-                        ? \call_user_func($this->visibleButtons[$name], $model, $key, $index)
+                        ? ($this->visibleButtons[$name])($model, $key, $index)
                         : $this->visibleButtons[$name];
                 } else {
                     $isVisible = true;
@@ -238,7 +242,7 @@ class ActionColumn extends Column
                 if ($isVisible && isset($this->buttons[$name])) {
                     $url = $this->createUrl($name, $model, $key, $index);
 
-                    return \call_user_func($this->buttons[$name], $url, $model, $key);
+                    return ($this->buttons[$name])($url, $model, $key);
                 }
 
                 return '';

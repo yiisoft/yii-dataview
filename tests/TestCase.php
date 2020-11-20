@@ -1,9 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Yiisoft\Yii\DataView\Tests;
 
-use Yiisoft\Composer\Config\Builder;
 use Yiisoft\Aliases\Aliases;
+use Yiisoft\Composer\Config\Builder;
 use Yiisoft\Di\Container;
 use Yiisoft\Widget\WidgetFactory;
 use Yiisoft\Yii\DataView\Columns\ActionColumn;
@@ -32,11 +34,10 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
 
     /**
      * Asserting two strings equality ignoring line endings.
+     *
      * @param string $expected
      * @param string $actual
      * @param string $message
-     *
-     * @return void
      */
     protected function assertEqualsWithoutLE(string $expected, string $actual, string $message = ''): void
     {

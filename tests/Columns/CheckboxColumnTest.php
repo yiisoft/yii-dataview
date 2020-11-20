@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Yiisoft\Yii\DataView\Tests\Columns;
 
 use Yiisoft\Data\Reader\Iterable\IterableDataReader;
@@ -15,6 +17,7 @@ class CheckboxColumnTest extends TestCase
 {
     /**
      * @dataProvider inputName()
+     *
      * @param string $name
      * @param string $expectedPart
      */

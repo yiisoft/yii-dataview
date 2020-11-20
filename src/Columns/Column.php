@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Yiisoft\Yii\DataView\Columns;
 
 use Closure;
@@ -39,11 +41,13 @@ abstract class Column extends Widget
     protected bool $visible = true;
     /**
      * @var array the HTML attributes for the column group tag.
+     *
      * @see \Yiisoft\Html\Html::renderTagAttributes() for details on how attributes are being rendered.
      */
     protected array $options = [];
     /**
      * @var array the HTML attributes for the header cell tag.
+     *
      * @see \Yiisoft\Html\Html::renderTagAttributes() for details on how attributes are being rendered.
      */
     protected array $headerOptions = [];
@@ -54,16 +58,19 @@ abstract class Column extends Widget
      *     $column)`. Where `$model`, `$key`, and `$index` refer to the model, key and index of the row currently being
      *     rendered and `$column` is a reference to the [[Column]] object. A function may be used to assign different
      *     attributes to different rows based on the data in that row.
+     *
      * @see \Yiisoft\Html\Html::renderTagAttributes() for details on how attributes are being rendered.
      */
     protected $contentOptions = [];
     /**
      * @var array the HTML attributes for the footer cell tag.
+     *
      * @see \Yiisoft\Html\Html::renderTagAttributes() for details on how attributes are being rendered.
      */
     protected array $footerOptions = [];
     /**
      * @var array the HTML attributes for the filter cell tag.
+     *
      * @see \Yiisoft\Html\Html::renderTagAttributes() for details on how attributes are being rendered.
      */
     protected array $filterOptions = [];
@@ -96,6 +103,7 @@ abstract class Column extends Widget
      * @param mixed $key the key associated with the data model
      * @param int $index the zero-based index of the data item among the item array returned by
      *     [[GridView::dataProvider]].
+     *
      * @return string the rendering result
      */
     public function renderDataCell(array $model, $key, int $index): string
@@ -159,6 +167,7 @@ abstract class Column extends Widget
      * @param mixed $key the key associated with the data model
      * @param int $index the zero-based index of the data model among the models array returned by
      *     [[GridView::dataProvider]].
+     *
      * @return string the rendering result
      */
     protected function renderDataCellContent(array $model, $key, int $index): string

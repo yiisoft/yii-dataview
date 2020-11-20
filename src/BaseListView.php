@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Yiisoft\Yii\DataView;
 
 use InvalidArgumentException;
@@ -31,17 +33,18 @@ abstract class BaseListView extends Widget
     /**
      * @var array the HTML attributes for the container tag of the list view.
      * The "tag" element specifies the tag name of the container element and defaults to "div".
+     *
      * @see Html::renderTagAttributes() for details on how attributes are being rendered.
      */
     protected array $options = [];
 
     /**
-     * @var DataReaderInterface|SortableDataInterface|FilterableDataInterface|OffsetableDataInterface|CountableDataInterface
+     * @var CountableDataInterface|DataReaderInterface|FilterableDataInterface|OffsetableDataInterface|SortableDataInterface
      * the data provider for the view. This property is required.
      */
     protected $dataReader;
     /**
-     * @var \Yiisoft\Data\Paginator\OffsetPaginator|\Yiisoft\Data\Paginator\KeysetPaginator|null
+     * @var \Yiisoft\Data\Paginator\KeysetPaginator|\Yiisoft\Data\Paginator\OffsetPaginator|null
      */
     protected $paginator;
     /**
@@ -67,20 +70,22 @@ abstract class BaseListView extends Widget
     /**
      * @var array the HTML attributes for the summary of the list view.
      * The "tag" element specifies the tag name of the summary element and defaults to "div".
+     *
      * @see Html::renderTagAttributes() for details on how attributes are being rendered.
      */
     protected array $summaryOptions = ['class' => 'summary'];
     /**
-     * @var bool whether to show an empty list view if {@see $dataReader} returns no data.
+     * @var bool whether to show an empty list view if {@see} returns no data.
      * The default value is false which displays an element according to the {@see $emptyText}
      * and {@see $emptyTextOptions} properties.
      */
     protected bool $showOnEmpty = false;
     /**
-     * @var string|false the HTML content to be displayed when {@see $dataReader} does not have any data.
+     * @var false|string the HTML content to be displayed when {@see} does not have any data.
      * When this is set to `false` no extra HTML content will be generated.
      * The default value is the text "No results found." which will be translated to the current
      * application language.
+     *
      * @see showOnEmpty
      * @see emptyTextOptions
      */
@@ -89,6 +94,7 @@ abstract class BaseListView extends Widget
     /**
      * @var array the HTML attributes for the emptyText of the list view.
      * The "tag" element specifies the tag name of the emptyText element and defaults to "div".
+     *
      * @see Html::renderTagAttributes() for details on how attributes are being rendered.
      */
     protected array $emptyTextOptions = ['class' => 'empty'];
@@ -209,7 +215,8 @@ abstract class BaseListView extends Widget
      * If the named section is not supported, false will be returned.
      *
      * @param string $name the section name, e.g., `{summary}`, `{items}`.
-     * @return string|bool the rendering result of the section, or false if the named section is not supported.
+     *
+     * @return bool|string the rendering result of the section, or false if the named section is not supported.
      */
     public function renderSection(string $name): string
     {
@@ -231,6 +238,7 @@ abstract class BaseListView extends Widget
      * Renders the HTML content indicating that the list view has no data.
      *
      * @return string the rendering result
+     *
      * @see emptyText
      */
     public function renderEmpty(): string
@@ -403,6 +411,7 @@ abstract class BaseListView extends Widget
 
     /**
      * @param CountableDataInterface|DataReaderInterface|FilterableDataInterface|OffsetableDataInterface|SortableDataInterface $dataReader
+     *
      * @return static
      */
     public function dataReader($dataReader): self
@@ -421,6 +430,7 @@ abstract class BaseListView extends Widget
 
     /**
      * @param KeysetPaginator|OffsetPaginator $paginator
+     *
      * @return $this
      */
     public function paginator($paginator): self

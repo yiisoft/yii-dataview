@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Yiisoft\Yii\DataView\Columns;
 
 use Closure;
@@ -46,6 +48,7 @@ class RadioButtonColumn extends Column
      *     return ['value' => $model->attribute];
      * }
      * ```
+     *
      * @see \Yiisoft\Html\Html::renderTagAttributes() for details on how attributes are being rendered.
      */
     private $radioOptions = [];
@@ -69,6 +72,7 @@ class RadioButtonColumn extends Column
 
     /**
      * @param array|Closure $array
+     *
      * @return static
      */
     public function radioOptions($array): self
