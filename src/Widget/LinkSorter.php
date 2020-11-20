@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Yiisoft\Yii\DataView\Widget;
 
 use Yiisoft\Data\Reader\Sort;
@@ -25,12 +27,14 @@ class LinkSorter extends Widget
     private array $attributes = [];
     /**
      * @var array HTML attributes for the sorter container tag.
+     *
      * @see Html::ul() for special attributes.
      * @see Html::renderTagAttributes() for details on how attributes are being rendered.
      */
     private array $options = ['class' => 'sorter'];
     /**
      * @var array HTML attributes for the link in a sorter container tag which are passed to [[Sort::link()]].
+     *
      * @see Html::renderTagAttributes() for details on how attributes are being rendered.
      */
     private array $linkOptions = [];

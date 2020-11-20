@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Yiisoft\Yii\DataView\Tests;
 
 use Yiisoft\Arrays\ArrayableInterface;
@@ -212,8 +214,10 @@ class DetailViewTest extends TestCase
 
     /**
      * @dataProvider modelsProvider()
+     *
      * @param array $expectedValue
      * @param $model
+     *
      * @throws \Yiisoft\Factory\Exceptions\InvalidConfigException
      */
     public function testArrayModel(array $expectedValue, $model): void

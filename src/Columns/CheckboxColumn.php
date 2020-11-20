@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Yiisoft\Yii\DataView\Columns;
 
 use Closure;
@@ -50,6 +52,7 @@ class CheckboxColumn extends Column
      *     return ['value' => $model->name];
      * }
      * ```
+     *
      * @see \Yiisoft\Html\Html::renderTagAttributes() for details on how attributes are being rendered.
      */
     protected $checkboxOptions = [];
@@ -86,6 +89,7 @@ class CheckboxColumn extends Column
 
     /**
      * @param array|callable $array
+     *
      * @return $this
      */
     public function checkboxOptions($array): self
@@ -97,6 +101,7 @@ class CheckboxColumn extends Column
 
     /**
      * @param Closure|string $param
+     *
      * @return $this
      */
     public function content($param): self
@@ -153,6 +158,7 @@ class CheckboxColumn extends Column
      * Returns header checkbox name.
      *
      * @param string $name
+     *
      * @return string header checkbox name
      */
     protected function getHeaderCheckboxName(string $name): string
