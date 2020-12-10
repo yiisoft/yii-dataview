@@ -25,7 +25,7 @@ class LinkSorterTest extends TestCase
     {
         $widget = LinkSorter::widget()
             ->attributes(['id', 'name'])
-            ->sort(new Sort([]));
+            ->sort(new Sort(['id', 'name']));
 
         $output = <<<OUTPUT
 <ul class="sorter">
