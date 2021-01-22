@@ -175,7 +175,7 @@ class ListView extends BaseListView implements ViewContextInterface
     public function renderItem($model, $key, $index): string
     {
         if ($this->itemView === null) {
-            $content = $key;
+            $content = (string) $key;
         } elseif (\is_string($this->itemView)) {
             $content = $this->getView()->render(
                 $this->getAliases()->get($this->getItemViewPath()),
