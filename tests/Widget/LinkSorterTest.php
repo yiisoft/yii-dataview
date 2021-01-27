@@ -16,7 +16,7 @@ class LinkSorterTest extends TestCase
     public function testEmptyWidget(): void
     {
         $widget = LinkSorter::widget()
-            ->sort(new Sort([]));
+            ->sort(Sort::only([]));
 
         $this->assertEquals('<ul class="sorter"></ul>', $widget->run());
     }
@@ -25,7 +25,7 @@ class LinkSorterTest extends TestCase
     {
         $widget = LinkSorter::widget()
             ->attributes(['id', 'name'])
-            ->sort(new Sort(['id', 'name']));
+            ->sort(Sort::only(['id', 'name']));
 
         $output = <<<OUTPUT
 <ul class="sorter">
