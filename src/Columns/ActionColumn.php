@@ -40,6 +40,7 @@ class ActionColumn extends Column
     private array $buttons = [];
     private array $visibleButtons = [];
     private array $buttonOptions = [];
+    private string $primaryKey = 'id';
     private UrlGeneratorInterface $urlGenerator;
     /** @var callable $urlCreator */
     private $urlCreator;
@@ -158,6 +159,20 @@ class ActionColumn extends Column
     }
 
     /**
+     * Indicates which is the primaryKey of the data to be used to generate the url automatically.
+     *
+     * @param string $primaryKey by default the primaryKey is `id`
+     *
+     * @return self
+     */
+    public function primaryKey(string $primaryKey): self
+    {
+        $this->primaryKey = $primaryKey;
+
+        return $this;
+    }
+
+    /**
      * Tokens enclosed within curly brackets are treated as controller action IDs (also called *button names* in the
      * context of action column). They will be replaced by the corresponding button rendering callbacks specified in
      * {@see buttons}. For example, the token `{view}` will be replaced by the result of the callback `buttons['view']`.
@@ -259,7 +274,7 @@ class ActionColumn extends Column
             return call_user_func($this->urlCreator, $action, $model, $key, $index, $this);
         }
 
-        $key = $model['id'] ?? $key;
+        $key = $model[$this->primaryKey] ?? $key;
 
         $params = is_array($key) ? $key : ['id' => (string) $key];
 
