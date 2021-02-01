@@ -16,7 +16,6 @@ use function is_array;
 use function is_callable;
 use function preg_match_all;
 use function preg_replace_callback;
-use function str_contains;
 use function ucfirst;
 
 /**
@@ -136,6 +135,7 @@ class ActionColumn extends Column
      *     },
      * ],
      * ```
+     *
      * @return $this
      */
     public function buttons(array $buttons): self
@@ -231,6 +231,7 @@ class ActionColumn extends Column
      *     'update' => true,
      * ],
      * ```
+     *
      * @return $this
      */
     public function visibleButtons(array $visibleButtons): self
