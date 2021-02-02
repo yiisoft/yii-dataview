@@ -98,6 +98,7 @@ final class CheckboxColumn extends Column
      *     return ['value' => $model['name'];
      * }
      * ```
+     *
      * @return $this
      *
      * {@see Html::renderTagAttributes()} for details on how attributes are being rendered.

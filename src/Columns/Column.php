@@ -19,7 +19,7 @@ use function trim;
  */
 abstract class Column
 {
-    /** @var Closure|callable */
+    /** @var callable|Closure */
     protected $content;
     protected array $contentOptions = [];
     protected GridView $grid;

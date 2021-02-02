@@ -69,6 +69,7 @@ final class RadioButtonColumn extends Column
      *     return ['value' => $model['attribute'];
      * }
      * ```
+     *
      * @return $this
      *
      * {@see Html::renderTagAttributes()} for details on how attributes are being rendered.
