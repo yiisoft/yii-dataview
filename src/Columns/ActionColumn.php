@@ -20,20 +20,36 @@ use function ucfirst;
 
 /**
  * ActionColumn is a column for the {@see GridView} widget that displays buttons for viewing and manipulating the items.
- * To add an ActionColumn to the gridview, add it to the [[GridView::columns|columns]] configuration as follows:
+ * To add an ActionColumn to the gridview, add it to the {@see GridView::columns|columns} configuration as follows:
  * ```php
- * 'columns' => [
- *     // ...
- *     [
- *         '__class' => ActionColumn::class,
- *         // you may configure additional properties here
+ * [
+ *     '__class' => ActionColumn::class,
+ *     'buttons()' => [
+ *         'admin/info' => static function ($url) {
+ *             return Html::a(
+ *                 Html::tag('i', '', [
+ *                     'class' => 'bi bi-eye-fill ms-1',
+ *                     'style' => 'font-size: 2rem;',
+ *                 ]),
+ *                 $url,
+ *                 [
+ *                     'class' => 'text-info',
+ *                     'title' => 'Info',
+ *                 ]
+ *             );
+ *         },
  *     ],
- * ]
+ *     'contentOptions()' => [['class' => 'd-flex justify-content-center']],
+ *     'header()' => ['User Actions'],
+ *     'headerOptions()' => [['class' => 'text-center']],
+ *     'template()' => ['{admin/delete} {admin/info} {admin/reset} {admin/update}'],
+ * ],
  * ```
- * For more details and usage information on ActionColumn, see the [guide article on data
- * widgets](guide:output-data-widgets).
+ *
+ * For more details and usage information on ActionColumn:
+ * see the [guide article on data widgets](guide:output-data-widgets).
  */
-class ActionColumn extends Column
+final class ActionColumn extends Column
 {
     protected array $headerOptions = ['class' => 'action-column'];
     private string $template = '{view} {update} {delete}';
@@ -71,9 +87,9 @@ class ActionColumn extends Column
     /**
      * Initializes the default button rendering callback for single button.
      *
-     * @param string $name Button name as it's written in template
-     * @param string $iconName The part of Bootstrap glyphicon class that makes it unique
-     * @param array $additionalOptions Array of additional options
+     * @param string $name Button name as it's written in template.
+     * @param string $iconName The part of Bootstrap glyphicon class that makes it unique.
+     * @param array $additionalOptions Array of additional options.
      */
     protected function initDefaultButton(string $name, string $iconName, array $additionalOptions = []): void
     {
@@ -132,7 +148,7 @@ class ActionColumn extends Column
      * ```php
      * [
      *     'update' => function ($url, $model, $key) {
-     *         return $model->status === 'editable' ? Html::a('Update', $url) : '';
+     *         return $model['status'] === 'editable' ? Html::a('Update', $url) : '';
      *     },
      * ],
      * ```
@@ -161,7 +177,7 @@ class ActionColumn extends Column
     /**
      * Indicates which is the primaryKey of the data to be used to generate the url automatically.
      *
-     * @param string $primaryKey by default the primaryKey is `id`
+     * @param string $primaryKey by default the primaryKey is `id`.
      *
      * @return self
      */
