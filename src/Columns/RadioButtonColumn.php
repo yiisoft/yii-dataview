@@ -6,9 +6,9 @@ namespace Yiisoft\Yii\DataView\Columns;
 
 use Closure;
 use Yiisoft\Arrays\ArrayHelper;
-use Yiisoft\Yii\DataView\Exception\InvalidConfigException;
 use Yiisoft\Html\Html;
 use Yiisoft\Json\Json;
+use Yiisoft\Yii\DataView\Exception\InvalidConfigException;
 
 use function call_user_func;
 use function is_array;
