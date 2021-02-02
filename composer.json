@@ -25,11 +25,12 @@
         "php": "^7.4|^8.0",
         "ext-json": "*",
         "yiisoft/aliases": "^1.0",
-        "yiisoft/arrays": "^3.0@dev",
+        "yiisoft/arrays": "^1.0.0",
         "yiisoft/data": "^3.0@dev",
         "yiisoft/factory": "^3.0@dev",
         "yiisoft/router": "^3.0@dev",
         "yiisoft/strings": "^1.0",
+        "yiisoft/translator-message-php": "^3.0@dev",
         "yiisoft/view": "^3.0@dev",
         "yiisoft/widget": "^3.0@dev"
     },
