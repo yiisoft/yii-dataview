@@ -31,7 +31,6 @@ abstract class Column
     protected array $options = [];
     private string $footer = '';
 
-
     protected function formatMessage(string $message, array $arguments = []): string
     {
         return MessageFormatter::formatMessage($message, $arguments);
