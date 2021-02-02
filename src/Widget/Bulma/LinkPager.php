@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Yiisoft\Yii\DataView\Widget\Bulma;
 
-use JsonException;
 use Yiisoft\Arrays\ArrayHelper;
 use Yiisoft\Data\Paginator\PaginatorInterface;
 use Yiisoft\Html\Html;
@@ -38,7 +37,7 @@ final class LinkPager extends Widget
     private $optionsNav = ['class' => 'pagination is-centered mt-4'];
     private $optionsUl = ['class' => 'pagination-list'];
     private array $linkOptions = [];
-    private string $pageCssClass = "pagination-link";
+    private string $pageCssClass = 'pagination-link';
     private string $firstPageCssClass = 'pagination-previous';
     private string $lastPageCssClass = 'pagination-next';
     private string $prevPageCssClass = 'pagination-previous has-background-link has-text-white';
