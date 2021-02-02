@@ -31,7 +31,7 @@ use function implode;
  */
 final class LinkPager extends Widget
 {
-    private const REL_SELF = self;
+    private const REL_SELF = 'self';
     private const LINK_NEXT = 'next';
     private const LINK_PREV = 'prev';
     private const LINK_FIRST = 'first';
@@ -121,6 +121,10 @@ final class LinkPager extends Widget
         $paginator = $this->paginator;
         $currentPage = $paginator->getCurrentPage();
         $pageCount = $paginator->getTotalPages();
+
+        if ($pageCount < 2 && $this->hideOnSinglePage) {
+            return '';
+        }
 
         /* button first page */
         if ($this->firstPageLabel !== null) {
