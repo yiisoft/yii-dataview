@@ -24,6 +24,13 @@ final class SerialColumn extends Column
 
     protected function renderDataCellContent(array $model, $key, int $index): string
     {
-        return (string) ($index + 1);
+        $paginator = $this->grid->getPaginator();
+        $row = $index + 1;
+
+        if ($paginator !== null) {
+            $row = $paginator->getOffSet() + $index + 1;
+        }
+
+        return (string) $row;
     }
 }
