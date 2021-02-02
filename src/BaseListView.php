@@ -4,122 +4,61 @@ declare(strict_types=1);
 
 namespace Yiisoft\Yii\DataView;
 
-use InvalidArgumentException;
+use JsonException;
 use Yiisoft\Aliases\Aliases;
 use Yiisoft\Arrays\ArrayHelper;
-use Yiisoft\Data\Paginator\KeysetPaginator;
+use Yiisoft\Data\Paginator\PaginatorInterface;
 use Yiisoft\Data\Paginator\OffsetPaginator;
-use Yiisoft\Data\Reader\CountableDataInterface;
-use Yiisoft\Data\Reader\DataReaderInterface;
-use Yiisoft\Data\Reader\FilterableDataInterface;
-use Yiisoft\Data\Reader\OffsetableDataInterface;
-use Yiisoft\Data\Reader\SortableDataInterface;
 use Yiisoft\Factory\Exceptions\InvalidConfigException;
 use Yiisoft\Html\Html;
+use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\View\WebView;
 use Yiisoft\Widget\Widget;
-use Yiisoft\Yii\DataView\Widget\LinkPager;
+use Yiisoft\Yii\DataView\Factory\GridViewFactory;
+use Yiisoft\Yii\DataView\Widget\Bulma\LinkPager;
 use Yiisoft\Yii\DataView\Widget\LinkSorter;
 
+use function preg_replace_callback;
+
 /**
- * BaseListView is a base class for widgets displaying data from data provider
- * such as ListView and GridView.
+ * BaseListView is a base class for widgets displaying data from data provider such as ListView and GridView.
+ *
  * It provides features like sorting, paging and also filtering the data.
- * For more details and usage information on BaseListView, see the [guide article on data
- * widgets](guide:output-data-widgets).
+ *
+ * For more details and usage information on BaseListView:
+ * see the [guide article on data widgets](guide:output-data-widgets).
  */
 abstract class BaseListView extends Widget
 {
-    /**
-     * @var array the HTML attributes for the container tag of the list view.
-     * The "tag" element specifies the tag name of the container element and defaults to "div".
-     *
-     * @see Html::renderTagAttributes() for details on how attributes are being rendered.
-     */
     protected array $options = [];
-
-    /**
-     * @var CountableDataInterface|DataReaderInterface|FilterableDataInterface|OffsetableDataInterface|SortableDataInterface
-     * the data provider for the view. This property is required.
-     */
-    protected $dataReader;
-    /**
-     * @var \Yiisoft\Data\Paginator\KeysetPaginator|\Yiisoft\Data\Paginator\OffsetPaginator|null
-     */
-    protected $paginator;
-    /**
-     * @var LinkPager|null You can use a different widget class by configuring the "class" element.
-     */
-    protected ?LinkPager $pager = null;
-    /**
-     * @var LinkSorter|null You can use a different widget class by configuring the "class" element.
-     */
+    protected PaginatorInterface $paginator;
     protected ?LinkSorter $sorter = null;
-    /**
-     * @var string the HTML content to be displayed as the summary of the list view.
-     * If you do not want to show the summary, you may set it with an empty string.
-     * The following tokens will be replaced with the corresponding values:
-     * - `{begin}`: the starting row number (1-based) currently being displayed
-     * - `{end}`: the ending row number (1-based) currently being displayed
-     * - `{count}`: the number of rows currently being displayed
-     * - `{totalCount}`: the total number of rows available
-     * - `{page}`: the page number (1-based) current being displayed
-     * - `{pageCount}`: the number of pages available
-     */
-    protected string $summary = 'Showing <b>{begin, number}-{end, number}</b> of <b>{totalCount, number}</b> {totalCount, plural, one{item} other{items}}.';
-    /**
-     * @var array the HTML attributes for the summary of the list view.
-     * The "tag" element specifies the tag name of the summary element and defaults to "div".
-     *
-     * @see Html::renderTagAttributes() for details on how attributes are being rendered.
-     */
+    protected string $summary = 'Showing <b>{begin, number}-{end, number}</b> of <b>{totalCount, number}</b> ' .
+        '{totalCount, plural, one{item} other{items}}.';
     protected array $summaryOptions = ['class' => 'summary'];
-    /**
-     * @var bool whether to show an empty list view if {@see} returns no data.
-     * The default value is false which displays an element according to the {@see $emptyText}
-     * and {@see $emptyTextOptions} properties.
-     */
     protected bool $showOnEmpty = false;
-    /**
-     * @var false|string the HTML content to be displayed when {@see} does not have any data.
-     * When this is set to `false` no extra HTML content will be generated.
-     * The default value is the text "No results found." which will be translated to the current
-     * application language.
-     *
-     * @see showOnEmpty
-     * @see emptyTextOptions
-     */
     protected ?string $emptyText = 'No results found.';
     protected bool $showEmptyText = true;
-    /**
-     * @var array the HTML attributes for the emptyText of the list view.
-     * The "tag" element specifies the tag name of the emptyText element and defaults to "div".
-     *
-     * @see Html::renderTagAttributes() for details on how attributes are being rendered.
-     */
     protected array $emptyTextOptions = ['class' => 'empty'];
-    /**
-     * @var string the layout that determines how different sections of the list view should be organized.
-     * The following tokens will be replaced with the corresponding section contents:
-     * - `{summary}`: the summary section. See {@see renderSummary()}.
-     * - `{items}`: the list items. See {@see renderItems()}.
-     * - `{sorter}`: the sorter. See {@see renderSorter()}.
-     * - `{pager}`: the pager. See {@see renderPager()}.
-     */
     protected string $layout = "{summary}\n{items}\n{pager}";
-    /**
-     * @var WebView
-     */
     private WebView $view;
-    /**
-     * @var Aliases
-     */
     private Aliases $aliases;
+    private string $linkPagerClass = LinkPager::class;
+    protected GridViewFactory $gridViewFactory;
+    protected TranslatorInterface $translator;
 
-    public function __construct(WebView $view, Aliases $aliases)
-    {
-        $this->view = $view;
+    public function __construct(
+        Aliases $aliases,
+        GridViewFactory $gridViewFactory,
+        TranslatorInterface $translator,
+        PaginatorInterface $paginator,
+        WebView $view
+    ) {
         $this->aliases = $aliases;
+        $this->gridViewFactory = $gridViewFactory;
+        $this->translator = $translator;
+        $this->paginator = $paginator;
+        $this->view = $view;
     }
 
     /**
@@ -128,21 +67,6 @@ abstract class BaseListView extends Widget
      * @return string the rendering result.
      */
     abstract public function renderItems(): string;
-
-    /**
-     * @return CountableDataInterface|DataReaderInterface|FilterableDataInterface|OffsetableDataInterface|SortableDataInterface
-     */
-    public function getDataReader()
-    {
-        return $this->dataReader;
-    }
-
-    public function pager(?LinkPager $pager): self
-    {
-        $this->pager = $pager;
-
-        return $this;
-    }
 
     public function sorter(?LinkSorter $sorter): self
     {
@@ -164,33 +88,21 @@ abstract class BaseListView extends Widget
     }
 
     /**
-     * Initializes the view.
-     *
-     * @throws InvalidConfigException
-     */
-    protected function init(): void
-    {
-        if ($this->dataReader === null) {
-            throw new InvalidConfigException('The "dataReader" property must be set.');
-        }
-        if (!isset($this->options['id'])) {
-            $this->options['id'] = $this->getId();
-        }
-    }
-
-    /**
      * Runs the widget.
      */
     public function run(): string
     {
         $this->init();
 
-        if ($this->showOnEmpty ||
-            (
-                $this->dataReader instanceof CountableDataInterface &&
-                $this->dataReader->count() > 0
-            )
-        ) {
+        if ($this->paginator === null) {
+            throw new InvalidConfigException('The "PaginatorInterface::class" property must be set.');
+        }
+
+        if (!isset($this->options['id'])) {
+            $this->options['id'] = $this->getId();
+        }
+
+        if ($this->showOnEmpty || ($this->paginator->getTotalItems() > 0)) {
             $content = preg_replace_callback(
                 '/{\\w+}/',
                 function ($matches) {
@@ -198,7 +110,7 @@ abstract class BaseListView extends Widget
 
                     return $content === false ? $matches[0] : $content;
                 },
-                $this->layout
+                $this->layout,
             );
         } else {
             $content = $this->renderEmpty();
@@ -230,12 +142,14 @@ abstract class BaseListView extends Widget
             case '{sorter}':
                 return $this->renderSorter();
             default:
-                return false;
+                return '';
         }
     }
 
     /**
      * Renders the HTML content indicating that the list view has no data.
+     *
+     * @throws JsonException
      *
      * @return string the rendering result
      *
@@ -257,11 +171,8 @@ abstract class BaseListView extends Widget
      */
     public function renderSummary(): string
     {
-        if (!$this->dataReader instanceof CountableDataInterface) {
-            return '';
-        }
+        $count = $this->paginator->getTotalItems();
 
-        $count = $this->dataReader->count();
         if ($count < 1) {
             return '';
         }
@@ -272,18 +183,21 @@ abstract class BaseListView extends Widget
 
         if ($pagination instanceof OffsetPaginator) {
             $totalCount = $count;
-            $begin = $pagination->getCurrentPageSize() * $pagination->getCurrentPageSize() + 1;
-            $end = $begin + $count - 1;
+            $begin = $pagination->getOffset() + 1;
+            $end = ($begin + $pagination->getPageSize()) - 1;
+
             if ($begin > $end) {
                 $begin = $end;
             }
+
             $page = $pagination->getCurrentPage() + 1;
             $pageCount = $pagination->getCurrentPageSize();
+
             if (($summaryContent = $this->summary) === null) {
                 return Html::tag(
                     $tag,
-                    $this->formatMessage(
-                        'Showing <b>{begin, number}-{end, number}</b> of <b>{totalCount, number}</b> {totalCount, plural, one{item} other{items}}.',
+                    $this->translator->translate(
+                        $this->summary,
                         [
                             'begin' => $begin,
                             'end' => $end,
@@ -291,7 +205,8 @@ abstract class BaseListView extends Widget
                             'totalCount' => $totalCount,
                             'page' => $page,
                             'pageCount' => $pageCount,
-                        ]
+                        ],
+                        'user',
                     ),
                     $summaryOptions
                 );
@@ -299,11 +214,12 @@ abstract class BaseListView extends Widget
         } else {
             $begin = $page = $pageCount = 1;
             $end = $totalCount = $count;
+
             if (($summaryContent = $this->summary) === null) {
                 return Html::tag(
                     $tag,
-                    $this->formatMessage(
-                        'Total <b>{count, number}</b> {count, plural, one{item} other{items}}.',
+                    $this->translator->translate(
+                        $this->summary,
                         [
                             'begin' => $begin,
                             'end' => $end,
@@ -311,7 +227,8 @@ abstract class BaseListView extends Widget
                             'totalCount' => $totalCount,
                             'page' => $page,
                             'pageCount' => $pageCount,
-                        ]
+                        ],
+                        'user',
                     ),
                     $summaryOptions
                 );
@@ -320,8 +237,8 @@ abstract class BaseListView extends Widget
 
         return Html::tag(
             $tag,
-            $this->formatMessage(
-                'Total <b>{count, number}</b> {count, plural, one{item} other{items}}.',
+            $this->translator->translate(
+                $this->summary,
                 [
                     'begin' => $begin,
                     'end' => $end,
@@ -329,7 +246,8 @@ abstract class BaseListView extends Widget
                     'totalCount' => $totalCount,
                     'page' => $page,
                     'pageCount' => $pageCount,
-                ]
+                ],
+                'user',
             ),
             $summaryOptions
         );
@@ -347,20 +265,16 @@ abstract class BaseListView extends Widget
      */
     public function renderPager(): string
     {
-        if (
-            null === $this->pager ||
-            null === $this->paginator ||
-            (
-                $this->dataReader instanceof CountableDataInterface &&
-                $this->dataReader->count() < 1
-            )
-        ) {
+        if ($this->paginator === null || $this->paginator->getTotalItems() < 1) {
             return '';
         }
 
-        $this->pager->paginator($this->paginator);
+        /** @var $class LinkPager */
+        $pager = $this->linkPagerClass::widget();
 
-        return $this->pager->run();
+        return $pager
+            ->paginator($this->paginator)
+            ->render();
     }
 
     /**
@@ -370,15 +284,13 @@ abstract class BaseListView extends Widget
      */
     public function renderSorter(): string
     {
-        $sort = $this->dataReader->getSort();
+        $sort = $this->paginator->getSort();
+
         if (
-            null === $this->sorter ||
-            null === $sort ||
+            $this->sorter === null ||
+            $sort === null ||
             empty($sort->getCriteria()) ||
-            (
-                $this->dataReader instanceof CountableDataInterface &&
-                $this->dataReader->count() < 1
-            )
+            $this->paginator->getTotalItems() < 1
         ) {
             return '';
         }
@@ -400,6 +312,19 @@ abstract class BaseListView extends Widget
         return $this->options;
     }
 
+    /**
+     * @param string|null $emptyText the HTML content to be displayed when {@see} does not have any data.
+     *
+     * When this is set to `false` no extra HTML content will be generated.
+     *
+     * The default value is the text "No results found." which will be translated to the current
+     * application language.
+     *
+     * @return $this
+     *
+     * @see showOnEmpty
+     * @see emptyTextOptions
+     */
     public function emptyText(?string $emptyText): self
     {
         if ($emptyText !== null) {
@@ -410,17 +335,14 @@ abstract class BaseListView extends Widget
     }
 
     /**
-     * @param CountableDataInterface|DataReaderInterface|FilterableDataInterface|OffsetableDataInterface|SortableDataInterface $dataReader
+     * @param array $options the HTML attributes for the container tag of the list view.
      *
-     * @return static
+     * The "tag" element specifies the tag name of the container element and defaults to "div".
+     *
+     * @return $this
+     *
+     * {@see Html::renderTagAttributes()} for details on how attributes are being rendered.
      */
-    public function dataReader($dataReader): self
-    {
-        $this->dataReader = $dataReader;
-
-        return $this;
-    }
-
     public function options(array $options): self
     {
         $this->options = ArrayHelper::merge($this->options, $options);
@@ -428,25 +350,102 @@ abstract class BaseListView extends Widget
         return $this;
     }
 
+    public function linkPagerClass(string $linkPagerClass): self
+    {
+        $this->linkPagerClass = $linkPagerClass;
+
+        return $this;
+    }
+
     /**
-     * @param KeysetPaginator|OffsetPaginator $paginator
+     * @param string $summary the HTML content to be displayed as the summary of the list view.
+     *
+     * If you do not want to show the summary, you may set it with an empty string.
+     *
+     * The following tokens will be replaced with the corresponding values:
+     * - `{begin}`: the starting row number (1-based) currently being displayed
+     * - `{end}`: the ending row number (1-based) currently being displayed
+     * - `{count}`: the number of rows currently being displayed
+     * - `{totalCount}`: the total number of rows available
+     * - `{page}`: the page number (1-based) current being displayed
+     * - `{pageCount}`: the number of pages available
      *
      * @return $this
      */
-    public function paginator($paginator): self
+    public function summary(string $summary): self
     {
-        if ($paginator !== null && !$paginator instanceof KeysetPaginator && !$paginator instanceof OffsetPaginator) {
-            throw new InvalidArgumentException(
-                sprintf(
-                    'Argument "$paginator" must be instance of %s or %s, got %s',
-                    OffsetPaginator::class,
-                    KeysetPaginator::class,
-                    \is_object($paginator) ? \get_class($paginator) : gettype($paginator)
-                )
-            );
-        }
-        $this->paginator = $paginator;
+        $this->summary = $summary;
 
         return $this;
+    }
+
+    /**
+     * @param array $summaryOptions the HTML attributes for the summary of the list view.
+     *
+     * The "tag" element specifies the tag name of the summary element and defaults to "div".
+     *
+     * @return $this
+     *
+     * {@see Html::renderTagAttributes()} for details on how attributes are being rendered.
+     */
+    public function summaryOptions(array $summaryOptions): self
+    {
+        $this->summaryOptions = $summaryOptions;
+
+        return $this;
+    }
+
+    /**
+     * @param bool $showOnEmpty whether to show an empty list view if {@see} returns no data.
+     *
+     * The default value is false which displays an element according to the {@see $emptyText} and
+     * {@see $emptyTextOptions} properties.
+     *
+     * @return $this
+     */
+    public function showOnEmpty(bool $showOnEmpty): self
+    {
+        $this->showOnEmpty = $showOnEmpty;
+
+        return $this;
+    }
+
+    /**
+     * @param array $emptyTextOptions the HTML attributes for the emptyText of the list view.
+     *
+     * The "tag" element specifies the tag name of the emptyText element and defaults to "div".
+     *
+     * @return $this
+     *
+     * {@see Html::renderTagAttributes()} for details on how attributes are being rendered.
+     */
+    public function emptyTextOptions(array $emptyTextOptions): self
+    {
+        $this->emptyTextOptions = $emptyTextOptions;
+
+        return $this;
+    }
+
+    /**
+     * @param string $layout the layout that determines how different sections of the list view should be organized.
+     *
+     * The following tokens will be replaced with the corresponding section contents:
+     * - `{summary}`: the summary section. See {@see renderSummary()}.
+     * - `{items}`: the list items. See {@see renderItems()}.
+     * - `{sorter}`: the sorter. See {@see renderSorter()}.
+     * - `{pager}`: the pager. See {@see renderPager()}.
+     *
+     * @return $this
+     */
+    public function layout(string $layout): self
+    {
+        $this->layout = $layout;
+
+        return $this;
+    }
+
+    public function getPaginator(): PaginatorInterface
+    {
+        return $this->paginator;
     }
 }
