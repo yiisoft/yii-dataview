@@ -273,7 +273,7 @@ abstract class BaseListView extends Widget
         $pager = $this->linkPagerClass::widget();
 
         return $pager
-            ->paginator($this->paginator)
+            ->withPaginator($this->paginator)
             ->render();
     }
 

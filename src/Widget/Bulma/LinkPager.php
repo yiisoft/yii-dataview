@@ -261,11 +261,12 @@ final class LinkPager extends Widget
      *
      * @return $this
      */
-    public function activePageCssClass(string $activePageCssClass): self
+    public function withActivePageCssClass(string $activePageCssClass): self
     {
-        $this->activePageCssClass = $activePageCssClass;
+        $new = clone $this;
+        $new->activePageCssClass = $activePageCssClass;
 
-        return $this;
+        return $new;
     }
 
     /**
@@ -273,11 +274,12 @@ final class LinkPager extends Widget
      *
      * @return $this
      */
-    public function buttonsContainerOptions(array $buttonsContainerOptions): self
+    public function withButtonsContainerOptions(array $buttonsContainerOptions): self
     {
-        $this->buttonsContainerOptions = $buttonsContainerOptions;
+        $new = clone $this;
+        $new->buttonsContainerOptions = $buttonsContainerOptions;
 
-        return $this;
+        return $new;
     }
 
     /**
@@ -285,11 +287,12 @@ final class LinkPager extends Widget
      *
      * @return $this
      */
-    public function disableCurrentPageButton(bool $disableCurrentPageButton): self
+    public function withDisableCurrentPageButton(bool $disableCurrentPageButton): self
     {
-        $this->disableCurrentPageButton = $disableCurrentPageButton;
+        $new = clone $this;
+        $new->disableCurrentPageButton = $disableCurrentPageButton;
 
-        return $this;
+        return $new;
     }
 
     /**
@@ -304,11 +307,12 @@ final class LinkPager extends Widget
      *
      * @return $this
      */
-    public function disabledListItemSubTagOptions(array $disabledListItemSubTagOptions): self
+    public function withDisabledListItemSubTagOptions(array $disabledListItemSubTagOptions): self
     {
-        $this->disabledListItemSubTagOptions = $disabledListItemSubTagOptions;
+        $new = clone $this;
+        $new->disabledListItemSubTagOptions = $disabledListItemSubTagOptions;
 
-        return $this;
+        return $new;
     }
 
     /**
@@ -316,11 +320,12 @@ final class LinkPager extends Widget
      *
      * @return $this
      */
-    public function disabledPageCssClass(string $disabledPageCssClass): self
+    public function withDisabledPageCssClass(string $disabledPageCssClass): self
     {
-        $this->disabledPageCssClass = $disabledPageCssClass;
+        $new = clone $this;
+        $new->disabledPageCssClass = $disabledPageCssClass;
 
-        return $this;
+        return $new;
     }
 
     /**
@@ -328,11 +333,12 @@ final class LinkPager extends Widget
      *
      * @return $this
      */
-    public function firstPageCssClass(string $firstPageCssClass): self
+    public function withFirstPageCssClass(string $firstPageCssClass): self
     {
-        $this->firstPageCssClass = $firstPageCssClass;
+        $new = clone $this;
+        $new->firstPageCssClass = $firstPageCssClass;
 
-        return $this;
+        return $new;
     }
 
     /**
@@ -345,11 +351,12 @@ final class LinkPager extends Widget
      *
      * @return $this
      */
-    public function firstPageLabel(?string $firstPageLabel): self
+    public function withFirstPageLabel(?string $firstPageLabel): self
     {
-        $this->firstPageLabel = $firstPageLabel;
+        $new = clone $this;
+        $new->firstPageLabel = $firstPageLabel;
 
-        return $this;
+        return $new;
     }
 
     /**
@@ -357,11 +364,12 @@ final class LinkPager extends Widget
      *
      * @return $this
      */
-    public function hideOnSinglePage(bool $hideOnSinglePage): self
+    public function withHideOnSinglePage(bool $hideOnSinglePage): self
     {
-        $this->hideOnSinglePage = $hideOnSinglePage;
+        $new = clone $this;
+        $new->hideOnSinglePage = $hideOnSinglePage;
 
-        return $this;
+        return $new;
     }
 
     /**
@@ -369,11 +377,12 @@ final class LinkPager extends Widget
      *
      * @return $this
      */
-    public function lastPageCssClass(string $lastPageCssClass): self
+    public function withLastPageCssClass(string $lastPageCssClass): self
     {
-        $this->lastPageCssClass = $lastPageCssClass;
+        $new = clone $this;
+        $new->lastPageCssClass = $lastPageCssClass;
 
-        return $this;
+        return $new;
     }
 
     /**
@@ -386,11 +395,12 @@ final class LinkPager extends Widget
      *
      * @return $this
      */
-    public function lastPageLabel(?string $lastPageLabel): self
+    public function withLastPageLabel(?string $lastPageLabel): self
     {
-        $this->lastPageLabel = $lastPageLabel;
+        $new = clone $this;
+        $new->lastPageLabel = $lastPageLabel;
 
-        return $this;
+        return $new;
     }
 
     /**
@@ -400,11 +410,12 @@ final class LinkPager extends Widget
      *
      * {@see Html::renderTagAttributes()} for details on how attributes are being rendered.
      */
-    public function linkOptions(array $linkOptions): self
+    public function withLinkOptions(array $linkOptions): self
     {
-        $this->linkOptions = $linkOptions;
+        $new = clone $this;
+        $new->linkOptions = $linkOptions;
 
-        return $this;
+        return $new;
     }
 
     /**
@@ -412,11 +423,12 @@ final class LinkPager extends Widget
      *
      * @return $this
      */
-    public function maxButtonCount(int $maxButtonCount): self
+    public function withMaxButtonCount(int $maxButtonCount): self
     {
-        $this->maxButtonCount = $maxButtonCount;
+        $new = clone $this;
+        $new->maxButtonCount = $maxButtonCount;
 
-        return $this;
+        return $new;
     }
 
     /**
@@ -424,11 +436,12 @@ final class LinkPager extends Widget
      *
      * @return $this
      */
-    public function nextPageCssClass(string $nextPageCssClass): self
+    public function withNextPageCssClass(string $nextPageCssClass): self
     {
-        $this->nextPageCssClass = $nextPageCssClass;
+        $new = clone $this;
+        $new->nextPageCssClass = $nextPageCssClass;
 
-        return $this;
+        return $new;
     }
 
     /**
@@ -438,11 +451,12 @@ final class LinkPager extends Widget
      *
      * @return $this
      */
-    public function nextPageLabel(?string $nextPageLabel): self
+    public function withNextPageLabel(?string $nextPageLabel): self
     {
-        $this->nextPageLabel = $nextPageLabel;
+        $new = clone $this;
+        $new->nextPageLabel = $nextPageLabel;
 
-        return $this;
+        return $new;
     }
 
     /**
@@ -452,11 +466,12 @@ final class LinkPager extends Widget
      *
      * {@see Html::renderTagAttributes()} for details on how attributes are being rendered.
      */
-    public function optionsNav(array $optionsNav): self
+    public function withOptionsNav(array $optionsNav): self
     {
-        $this->optionsNav = $optionsNav;
+        $new = clone $this;
+        $new->optionsNav = $optionsNav;
 
-        return $this;
+        return $new;
     }
 
     /**
@@ -466,11 +481,12 @@ final class LinkPager extends Widget
      *
      * {@see Html::renderTagAttributes()} for details on how attributes are being rendered.
      */
-    public function optionsUl(array $optionsUl): self
+    public function withOptionsUl(array $optionsUl): self
     {
-        $this->optionsUl = $optionsUl;
+        $new = clone $this;
+        $new->optionsUl = $optionsUl;
 
-        return $this;
+        return $new;
     }
 
     /**
@@ -478,11 +494,12 @@ final class LinkPager extends Widget
      *
      * @return $this
      */
-    public function pageCssClass(string $pageCssClass): self
+    public function withPageCssClass(string $pageCssClass): self
     {
-        $this->pageCssClass = $pageCssClass;
+        $new = clone $this;
+        $new->pageCssClass = $pageCssClass;
 
-        return $this;
+        return $new;
     }
 
     /**
@@ -492,11 +509,12 @@ final class LinkPager extends Widget
      *
      * You must set this property in order to make LinkPager work.
      */
-    public function paginator(PaginatorInterface $paginator): self
+    public function withPaginator(PaginatorInterface $paginator): self
     {
-        $this->paginator = $paginator;
+        $new = clone $this;
+        $new->paginator = $paginator;
 
-        return $this;
+        return $new;
     }
 
     /**
@@ -504,11 +522,12 @@ final class LinkPager extends Widget
      *
      * @return $this
      */
-    public function prevPageCssClass(string $prevPageCssClass): self
+    public function withPrevPageCssClass(string $prevPageCssClass): self
     {
-        $this->prevPageCssClass = $prevPageCssClass;
+        $new = clone $this;
+        $new->prevPageCssClass = $prevPageCssClass;
 
-        return $this;
+        return $new;
     }
 
     /**
@@ -519,11 +538,12 @@ final class LinkPager extends Widget
      *
      * @return $this
      */
-    public function prevPageLabel(?string $prevPageLabel): self
+    public function withPrevPageLabel(?string $prevPageLabel): self
     {
-        $this->prevPageLabel = $prevPageLabel;
+        $new = clone $this;
+        $new->prevPageLabel = $prevPageLabel;
 
-        return $this;
+        return $new;
     }
 
     /**
@@ -531,11 +551,12 @@ final class LinkPager extends Widget
      *
      * @return $this
      */
-    public function linkContainerOptions(array $linkContainerOptions): self
+    public function withLinkContainerOptions(array $linkContainerOptions): self
     {
-        $this->linkContainerOptions = $linkContainerOptions;
+        $new = clone $this;
+        $new->linkContainerOptions = $linkContainerOptions;
 
-        return $this;
+        return $new;
     }
 
     /**
@@ -549,11 +570,12 @@ final class LinkPager extends Widget
      * @see http://www.w3.org/TR/html401/struct/links.html#h-12.1.2
      * @see registerLinkTags()
      */
-    public function registerLinkTags(bool $registerLinkTags): self
+    public function withRegisterLinkTags(bool $registerLinkTags): self
     {
-        $this->registerLinkTags = $registerLinkTags;
+        $new = clone $this;
+        $new->registerLinkTags = $registerLinkTags;
 
-        return $this;
+        return $new;
     }
 
     /**
