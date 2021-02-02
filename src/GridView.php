@@ -15,171 +15,46 @@ use Yiisoft\Yii\DataView\Columns\DataColumn;
 
 /**
  * The GridView widget is used to display data in a grid.
- * It provides features like [[sorter|sorting]], [[pager|paging]] and also [[filterModel|filtering]] the data.
+ *
+ * It provides features like {@see sorter|sorting}, {@see pager|paging} and also {@see filterModel|filtering} the data.
+ *
  * A basic usage looks like the following:
  * ```php
- * <?= GridView::widget([
- *     'dataProvider' => $dataProvider,
- *     'columns' => [
- *         'id',
- *         'name',
- *         'created_at:datetime',
- *         // ...
- *     ],
- * ]) ?>
+ * <?= GridView::widget()
+ *     ->columns($columns)
+ *     ->linkPagerClass(LinkPager::class)
+ *     ->run()
+ * ?>
  * ```
- * The columns of the grid table are configured in terms of [[Column]] classes,
- * which are configured via [[columns]].
+ *
+ * The columns of the grid table are configured in terms of {@see Column} classes, which are configured via
+ * {@see columns}.
  * The look and feel of a grid view can be customized using the large amount of properties.
  * For more details and usage information on GridView, see the [guide article on data
  * widgets](guide:output-data-widgets).
  */
-class GridView extends BaseListView
+final class GridView extends BaseListView
 {
     public const FILTER_POS_HEADER = 'header';
     public const FILTER_POS_FOOTER = 'footer';
     public const FILTER_POS_BODY = 'body';
-
-    /**
-     * @var string the default data column class if the class name is not explicitly specified when configuring a data
-     *     column. Defaults to 'yii\grid\DataColumn'.
-     */
-    private string $dataColumnClass = DataColumn::class;
-    /**
-     * @var string the caption of the grid table
-     *
-     * @see captionOptions
-     */
-    private string $caption = '';
-    /**
-     * @var array the HTML attributes for the caption element.
-     *
-     * @see \Yiisoft\Html\Html::renderTagAttributes() for details on how attributes are being rendered.
-     * @see caption
-     */
-    private array $captionOptions = [];
-    /**
-     * @var array the HTML attributes for the grid table element.
-     *
-     * @see \Yiisoft\Html\Html::renderTagAttributes() for details on how attributes are being rendered.
-     */
-    private array $tableOptions = ['class' => 'table table-striped table-bordered'];
-    /**
-     * @var array the HTML attributes for the grid thead element.
-     *
-     * @see \Yiisoft\Html\Html::renderTagAttributes() for details on how attributes are being rendered.
-     */
-    private array $headOptions = [];
-    /**
-     * @var array the HTML attributes for the container tag of the grid view.
-     *            The "tag" element specifies the tag name of the container element and defaults to "div".
-     *
-     * @see \Yiisoft\Html\Html::renderTagAttributes() for details on how attributes are being rendered.
-     */
     protected array $options = ['class' => 'grid-view'];
-    /**
-     * @var array the HTML attributes for the table header row.
-     *
-     * @see \Yiisoft\Html\Html::renderTagAttributes() for details on how attributes are being rendered.
-     */
-    private array $headerRowOptions = [];
-    /**
-     * @var array the HTML attributes for the table footer row.
-     *
-     * @see \Yiisoft\Html\Html::renderTagAttributes() for details on how attributes are being rendered.
-     */
-    private array $footerRowOptions = [];
-    /**
-     * @var array|Closure the HTML attributes for the table body rows. This can be either an array
-     *                    specifying the common HTML attributes for all body rows, or an anonymous function that
-     *                    returns an array of the HTML attributes. The anonymous function will be called once for every
-     *                    data model returned by [[dataProvider]]. It should have the following signature:
-     * ```php
-     * function ($model, $key, $index, $grid)
-     * ```
-     * - `$model`: the current data model being rendered
-     * - `$key`: the key value associated with the current data model
-     * - `$index`: the zero-based index of the data model in the model array returned by [[dataProvider]]
-     * - `$grid`: the GridView object
-     *
-     * @see \Yiisoft\Html\Html::renderTagAttributes() for details on how attributes are being rendered.
-     */
-    private $rowOptions = [];
-    /**
-     * @var Closure|null an anonymous function that is called once BEFORE rendering each data model.
-     *              It should have the similar signature as [[rowOptions]]. The return result of the function
-     *              will be rendered directly.
-     */
-    private ?Closure $beforeRow = null;
-    /**
-     * @var Closure|null an anonymous function that is called once AFTER rendering each data model.
-     *              It should have the similar signature as [[rowOptions]]. The return result of the function
-     *              will be rendered directly.
-     */
-    private ?Closure $afterRow = null;
-    /**
-     * @var bool whether to show the header section of the grid table.
-     */
-    private bool $showHeader = true;
-    /**
-     * @var bool whether to show the footer section of the grid table.
-     */
-    private bool $showFooter = false;
-    /**
-     * @var bool whether to place footer after body in DOM if is true
-     */
-    private bool $placeFooterAfterBody = false;
-    /**
-     * @var bool whether to show the grid view if [[dataProvider]] returns no data.
-     */
     protected bool $showOnEmpty = true;
-    /**
-     * @var \Yiisoft\I18n\MessageFormatterInterface the formatter used to format model attribute values into
-     *     displayable texts.
-     */
-    protected MessageFormatterInterface $messageFormatter;
-    /**
-     * @var array grid column configuration. Each array element represents the configuration
-     *            for one particular grid column. For example,
-     * ```php
-     * [
-     *     ['__class' => \yii\grid\SerialColumn::class],
-     *     [
-     *         '__class' => \yii\grid\DataColumn::class, // this line is optional
-     *         'attribute' => 'name',
-     *         'format' => 'text',
-     *         'label' => 'Name',
-     *     ],
-     *     ['__class' => \yii\grid\CheckboxColumn::class],
-     * ]
-     * ```
-     * If a column is of class [[DataColumn]], the "class" element can be omitted.
-     * As a shortcut format, a string may be used to specify the configuration of a data column
-     * which only contains [[DataColumn::attribute|attribute]], [[DataColumn::format|format]],
-     * and/or [[DataColumn::label|label]] options: `"attribute:format:label"`.
-     * For example, the above "name" column can also be specified as: `"name:text:Name"`.
-     * Both "format" and "label" are optional. They will take default values if absent.
-     * Using the shortcut format the configuration for columns in simple cases would look like this:
-     * ```php
-     * [
-     *     'id',
-     *     'amount:currency:Total Amount',
-     *     'created_at:datetime',
-     * ]
-     * ```
-     * When using a [[dataProvider]] with active records, you can also display values from related records,
-     * e.g. the `name` attribute of the `author` relation:
-     * ```php
-     * // shortcut syntax
-     * 'author.name',
-     * // full syntax
-     * [
-     *     'attribute' => 'author.name',
-     *     // ...
-     * ]
-     * ```
-     */
-    protected array $columns = [];
+    private string $dataColumnClass = DataColumn::class;
+    private string $caption = '';
+    private array $captionOptions = [];
+    private array $tableOptions = ['class' => 'table table-striped table-bordered'];
+    private array $headOptions = [];
+    private array $headerRowOptions = [];
+    private array $footerRowOptions = [];
+    private $rowOptions = [];
+    private ?Closure $beforeRow = null;
+    private ?Closure $afterRow = null;
+    private bool $showHeader = true;
+    private bool $showFooter = false;
+    private bool $placeFooterAfterBody = false;
+    private array $columns = [];
+
     /**
      * @var string the HTML display when the content of a cell is empty.
      *             This property is used to render cells that have no defined content,
@@ -187,6 +62,7 @@ class GridView extends BaseListView
      * Note that this is not used by the [[DataColumn]] if a data item is `null`.
      */
     private string $emptyCell = '&nbsp;';
+
     /**
      * @var object|null the model that keeps the user-entered filter data. When this property is set,
      *                      the grid view will enable column-based filtering. Each data column by default will display
@@ -197,6 +73,7 @@ class GridView extends BaseListView
      * When this property is not set (null) the filtering feature is disabled.
      */
     private ?object $filterModel = null;
+
     /**
      * @var string whether the filters should be displayed in the grid view. Valid values include:
      * - [[FILTER_POS_HEADER]]: the filters will be displayed on top of each column's header cell.
@@ -204,6 +81,7 @@ class GridView extends BaseListView
      * - [[FILTER_POS_FOOTER]]: the filters will be displayed below each column's footer cell.
      */
     private string $filterPosition = self::FILTER_POS_BODY;
+
     /**
      * @var array the HTML attributes for the filter row element.
      *
@@ -211,15 +89,8 @@ class GridView extends BaseListView
      */
     private array $filterRowOptions = ['class' => 'filters'];
 
-    /**
-     * Initializes the grid view.
-     * This method will initialize required property values and instantiate [[columns]] objects.
-     *
-     * @throws \Yiisoft\Factory\Exceptions\InvalidConfigException
-     */
     protected function init(): void
     {
-        parent::init();
         if (!isset($this->filterRowOptions['id'])) {
             $this->filterRowOptions['id'] = ($this->options['id'] ?? $this->getId()) . '-filters';
         }
@@ -373,9 +244,10 @@ class GridView extends BaseListView
      */
     public function renderTableBody(): string
     {
-        $models = $this->getDataReader()->read();
+        $models = $this->getDataReader();
         $keys = array_keys($models);
         $rows = [];
+
         foreach ($models as $index => $model) {
             $key = $keys[$index];
             if ($this->beforeRow !== null) {
@@ -446,13 +318,43 @@ class GridView extends BaseListView
             if (\is_string($column)) {
                 $column = $this->createDataColumn($column);
             } else {
-                $column = $this->dataColumnClass::widget()
-                    ->grid($this);
+                $buttons = null;
+                $value = null;
+
+                if (isset($column['buttons()'])) {
+                    $buttons = $column['buttons()'];
+                    unset($column['buttons()']);
+                }
+
+                if (isset($column['value()'])) {
+                    $value = $column['value()'];
+                    unset($column['value()']);
+                }
+
+                $config = array_merge(
+                    [
+                        '__class' => $this->dataColumnClass,
+                        'grid()' => [$this],
+                    ],
+                    $column,
+                );
+
+                $column = $this->gridViewFactory->createColumnClass($config);
+
+                if ($buttons !== null) {
+                    $column->buttons($buttons);
+                }
+
+                if ($value !== null) {
+                    $column->value($value);
+                }
             }
+
             if (!$column->isVisible()) {
                 unset($this->columns[$i]);
                 continue;
             }
+
             $this->columns[$i] = $column;
         }
     }
@@ -489,10 +391,11 @@ class GridView extends BaseListView
      */
     protected function guessColumns(): void
     {
-        $models = $this->getDataReader()->read();
+        $models = $this->getDataReader();
         $model = reset($models);
+
         if (\is_array($model) || \is_object($model)) {
-            foreach ($model as $name => $value) {
+            foreach ($this->paginator->read() as $name => $value) {
                 if ($value === null || is_scalar($value) || \is_callable([$value, '__toString'])) {
                     $this->columns[] = (string)$name;
                 }
@@ -501,9 +404,9 @@ class GridView extends BaseListView
     }
 
     /**
-     * @param bool $showHeader
+     * @param bool $showHeader whether to show the header section of the grid table.
      *
-     * @return self
+     * @return $this
      */
     public function showHeader(bool $showHeader): self
     {
@@ -513,9 +416,11 @@ class GridView extends BaseListView
     }
 
     /**
-     * @param array $tableOptions
+     * @param array $tableOptions the HTML attributes for the grid table element.
      *
-     * @return GridView
+     * @return $this
+     *
+     * {@see Html::renderTagAttributes()} for details on how attributes are being rendered.
      */
     public function tableOptions(array $tableOptions): self
     {
@@ -524,6 +429,11 @@ class GridView extends BaseListView
         return $this;
     }
 
+    /**
+     * @param bool $showFooter whether to show the footer section of the grid table.
+     *
+     * @return $this
+     */
     public function showFooter(bool $value): self
     {
         $this->showFooter = $value;
@@ -531,6 +441,11 @@ class GridView extends BaseListView
         return $this;
     }
 
+    /**
+     * @param bool $value whether to place footer after body in DOM if is true.
+     *
+     * @return $this
+     */
     public function placeFooterAfterBody(bool $value): self
     {
         $this->placeFooterAfterBody = $value;
@@ -538,6 +453,43 @@ class GridView extends BaseListView
         return $this;
     }
 
+
+    /**
+     * @param array $column grid column configuration. Each array element represents the configuration for one
+     * particular grid column. For example,
+     *
+     * ```php
+     * [
+     *     ['__class' => SerialColumn::class],
+     *     [
+     *         '__class' => DataColumn::class, // this line is optional
+     *         'attribute()' => ['name'],
+     *         'format()' => ['text'],
+     *         'label()' => ['Name'],
+     *     ],
+     *     ['__class' => \yii\grid\CheckboxColumn::class],
+     * ]
+     * ```
+     *
+     * If a column is of class {@see DataColumn}, the "class" element can be omitted.
+     *
+     * As a shortcut format, a string may be used to specify the configuration of a data column which only contains
+     * {@see DataColumn::attribute|attribute}, {@see DataColumn::format|format}, and/or {@see DataColumn::label|label}
+     * options: `"attribute:format:label"`.
+     *
+     * For example, the above "name" column can also be specified as: `"name:text:Name"`.
+     *
+     * Both "format" and "label" are optional. They will take default values if absent.
+     * Using the shortcut format the configuration for columns in simple cases would look like this:
+     *
+     * ```php
+     * [
+     *     'id',
+     *     'amount:currency:Total Amount',
+     *     'created_at:datetime',
+     * ]
+     * ```
+     */
     public function columns(array $columns): self
     {
         $this->columns = $columns;
@@ -573,5 +525,168 @@ class GridView extends BaseListView
     public function getId(): string
     {
         return 'gridview-widget-1';
+    }
+
+    private function getDataReader(): array
+    {
+        $dataReader = [];
+
+        foreach ($this->paginator->read() as $read) {
+            $dataReader[] = $read;
+        }
+
+        return $dataReader;
+    }
+
+    /**
+     * @param string $dataColumnClass the default data column class if the class name is not explicitly specified when
+     * configuring a data column. Defaults to 'DataColumn::class'.
+     *
+     * @return $this
+     */
+    public function dataColumnClass(string $dataColumnClass): self
+    {
+        $this->dataColumnClass = $dataColumnClass;
+
+        return $this;
+    }
+
+    /**
+     * @param string $caption the caption of the grid table
+     *
+     * @return $this
+     *
+     * @see captionOptions
+     */
+    public function caption(string $caption): self
+    {
+        $this->caption = $caption;
+
+        return $this;
+    }
+
+    /**
+     * @param array $captionOptions the HTML attributes for the caption element.
+     *
+     * @return $this
+     *
+     * @see caption
+     * {@see Html::renderTagAttributes()} for details on how attributes are being rendered.
+     */
+    public function captionOptions(array $captionOptions): self
+    {
+        $this->captionOptions = $captionOptions;
+
+        return $this;
+    }
+
+    /**
+     * @param array the HTML attributes for the grid thead element.
+     *
+     * @return $this
+     *
+     * {@see Html::renderTagAttributes()} for details on how attributes are being rendered.
+     */
+    public function headOptions(array $headOptions): self
+    {
+        $this->headOptions = $headOptions;
+
+        return $this;
+    }
+
+    /**
+     * @param array $headerRowOptions the HTML attributes for the table header row.
+     *
+     * @return $this
+     *
+     * {@see Html::renderTagAttributes()} for details on how attributes are being rendered.
+     */
+    public function headerRowOptions($headerRowOptions): self
+    {
+        $this->headerRowOptions = $headerRowOptions;
+
+        return $this;
+    }
+
+    /**
+     * @param array the HTML attributes for the table footer row.
+     *
+     * @return $this
+     *
+     * {@see Html::renderTagAttributes()} for details on how attributes are being rendered.
+     */
+    public function footerRowOptions($footerRowOptions)
+    {
+        $this->footerRowOptions = $footerRowOptions;
+
+        return $this;
+    }
+
+    /**
+     * @param array|Closure $rowOptions the HTML attributes for the table body rows. This can be either an array
+     * specifying the common HTML attributes for all body rows, or an anonymous function that returns an array of
+     * the HTML attributes. The anonymous function will be called once for every data model returned by
+     * {@see dataProvider}. It should have the following signature:
+     *
+     * ```php
+     * function ($model, $key, $index, $grid)
+     * ```
+     * - `$model`: the current data model being rendered
+     * - `$key`: the key value associated with the current data model
+     * - `$index`: the zero-based index of the data model in the model array returned by {@see dataReader]]
+     * - `$grid`: the GridView object
+     *
+     * @return $this
+     *
+     * @see \Yiisoft\Html\Html::renderTagAttributes() for details on how attributes are being rendered.
+     */
+    public function rowOptions($rowOptions): self
+    {
+        $this->rowOptions = $rowOptions;
+
+        return $this;
+    }
+
+    /**
+     * @param Closure|null $beforeRow an anonymous function that is called once BEFORE rendering each data model.
+     * It should have the similar signature as {@see rowOptions}. The return result of the function will be rendered
+     * directly.
+     *
+     * @return $this
+     */
+    public function beforeRow($beforeRow): self
+    {
+        $this->beforeRow = $beforeRow;
+
+        return $this;
+    }
+
+    /**
+     * @param Closure|null $afterRow an anonymous function that is called once AFTER rendering each data model.
+     *
+     * It should have the similar signature as {@see rowOptions}. The return result of the function will be rendered
+     * directly.
+     *
+     * @return $this
+     */
+    public function afterRow($afterRow): self
+    {
+        $this->afterRow = $afterRow;
+
+        return $this;
+    }
+
+    public function pageSize(int $pageSize): self
+    {
+        $this->paginator = $this->paginator->withPageSize($pageSize);
+
+        return $this;
+    }
+
+    public function currentPage(int $currentPage): self
+    {
+        $this->paginator = $this->paginator->withCurrentPage($currentPage);
+
+        return $this;
     }
 }
