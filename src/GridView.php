@@ -453,7 +453,6 @@ final class GridView extends BaseListView
         return $this;
     }
 
-
     /**
      * @param array $column grid column configuration. Each array element represents the configuration for one
      * particular grid column. For example,
