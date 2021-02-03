@@ -49,7 +49,6 @@ final class DetailView extends Widget
     protected array $options = ['class' => 'table table-striped table-bordered detail-view'];
     protected string $emptyHtml = '<span class="not-set">(not set)</span>';
 
-
     /**
      * Renders the detail view.
      *
