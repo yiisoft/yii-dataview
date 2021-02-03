@@ -11,7 +11,6 @@ use Yiisoft\Data\Paginator\PaginatorInterface;
 use Yiisoft\Data\Paginator\OffsetPaginator;
 use Yiisoft\Html\Html;
 use Yiisoft\Translator\TranslatorInterface;
-use Yiisoft\Widget\Widget;
 use Yiisoft\Yii\DataView\Widget\Bulma\LinkPager;
 use Yiisoft\Yii\DataView\Widget\LinkSorter;
 
@@ -58,10 +57,6 @@ abstract class BaseListView extends Widget
 
     public function run(): string
     {
-        if (!isset($this->options['id'])) {
-            $this->options['id'] = $this->getId();
-        }
-
         if ($this->showOnEmpty || ($this->paginator->getTotalItems() > 0)) {
             $content = preg_replace_callback(
                 '/{\\w+}/',

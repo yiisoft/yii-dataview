@@ -87,6 +87,10 @@ final class GridView extends BaseListView
 
     public function run(): string
     {
+        if (!isset($this->options['id'])) {
+            $this->options['id'] = $this->getId() . '-gridview';
+        }
+
         $this->initColumns();
 
         if (!isset($this->filterRowOptions['id'])) {
@@ -431,11 +435,6 @@ final class GridView extends BaseListView
     public function getFilterModel(): ?object
     {
         return $this->filterModel;
-    }
-
-    public function getId(): string
-    {
-        return 'gridview-widget-1';
     }
 
     public function isShowHeader(): bool
