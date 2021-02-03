@@ -6,8 +6,6 @@ namespace Yiisoft\Yii\DataView;
 
 use Yiisoft\Widget\Widget as BaseWidget;
 
-use function strpos;
-
 abstract class Widget extends BaseWidget
 {
     private ?string $id = null;
