@@ -94,7 +94,7 @@ final class ActionColumn extends Column
     protected function initDefaultButton(string $name, string $iconName, array $additionalOptions = []): void
     {
         if (!isset($this->buttons[$name]) && strpos($this->template, '{' . $name . '}') !== false) {
-            $this->buttons[$name] = function ($url) use ($name, $iconName, $additionalOptions) {
+            $this->buttons[$name] = function ($url) use ($name, $iconName, $additionalOptions): string {
                 switch ($name) {
                     case 'view':
                         $title = $this->formatMessage('View', []);

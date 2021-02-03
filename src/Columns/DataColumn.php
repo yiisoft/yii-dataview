@@ -131,7 +131,7 @@ final class DataColumn extends Column
         return $this;
     }
 
-    public function getAttribute(): string
+    public function getAttribute(): ?string
     {
         return $this->attribute;
     }
