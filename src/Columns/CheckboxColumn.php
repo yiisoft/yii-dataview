@@ -6,7 +6,6 @@ namespace Yiisoft\Yii\DataView\Columns;
 
 use Closure;
 use JsonException;
-use Yiisoft\Arrays\ArrayHelper;
 use Yiisoft\Html\Html;
 use Yiisoft\Json\Json;
 use Yiisoft\Yii\DataView\Exception\InvalidConfigException;

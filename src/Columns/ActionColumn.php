@@ -16,7 +16,6 @@ use function is_array;
 use function is_callable;
 use function preg_match_all;
 use function preg_replace_callback;
-use function ucfirst;
 
 /**
  * ActionColumn is a column for the {@see GridView} widget that displays buttons for viewing and manipulating the items.

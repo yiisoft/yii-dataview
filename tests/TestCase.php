@@ -110,7 +110,7 @@ class TestCase extends \PHPUnit\Framework\TestCase
 
             MessageReaderInterface::class => [
                 '__class' => MessageSource::class,
-                '__construct()' =>  [fn (Aliases $aliases) => $aliases->get('@grid-view-translation')],
+                '__construct()' => [fn (Aliases $aliases) => $aliases->get('@grid-view-translation')],
             ],
 
             MessageFormatterInterface::class => IntlMessageFormatter::class,
