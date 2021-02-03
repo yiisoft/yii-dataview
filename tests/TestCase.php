@@ -77,7 +77,6 @@ class TestCase extends \PHPUnit\Framework\TestCase
         $this->actionColumn = $this->container->get(ActionColumn::class);
         $this->checkboxColumn = $this->container->get(CheckboxColumn::class);
         $this->gridView = $this->container->get(GridView::class);
-
     }
 
     private function config(): array
