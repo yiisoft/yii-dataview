@@ -5,10 +5,11 @@ declare(strict_types=1);
 namespace Yiisoft\Yii\DataView;
 
 use JsonException;
+use Psr\Http\Message\ServerRequestInterface;
 use Yiisoft\Arrays\ArrayHelper;
 use Yiisoft\Data\Paginator\KeysetPaginator;
-use Yiisoft\Data\Paginator\PaginatorInterface;
 use Yiisoft\Data\Paginator\OffsetPaginator;
+use Yiisoft\Data\Paginator\PaginatorInterface;
 use Yiisoft\Html\Html;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\Yii\DataView\Widget\Bulma\LinkPager;
@@ -42,6 +43,7 @@ abstract class BaseListView extends Widget
     private int $pageSize = 0;
     private int $currentPage = 1;
     private TranslatorInterface $translator;
+    private ?ServerRequestInterface $serverRequest = null;
 
     public function __construct(TranslatorInterface $translator)
     {
@@ -225,6 +227,7 @@ abstract class BaseListView extends Widget
 
         return $pager
             ->withPaginator($this->paginator)
+            ->withServerRequest($this->serverRequest)
             ->render();
     }
 
@@ -383,6 +386,14 @@ abstract class BaseListView extends Widget
     {
         $new = clone $this;
         $new->paginator = $paginator;
+
+        return $new;
+    }
+
+    public function withServerRequest(ServerRequestInterface $serverRequest): self
+    {
+        $new = clone $this;
+        $new->serverRequest = $serverRequest;
 
         return $new;
     }

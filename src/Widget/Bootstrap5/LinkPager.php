@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Yiisoft\Yii\DataView\Widget\Bootstrap5;
 
 use JsonException;
+use Psr\Http\Message\ServerRequestInterface;
 use Yiisoft\Arrays\ArrayHelper;
 use Yiisoft\Data\Paginator\PaginatorInterface;
 use Yiisoft\Html\Html;
@@ -58,6 +59,7 @@ final class LinkPager extends Widget
     private bool $hideOnSinglePage = true;
     public bool $disableCurrentPageButton = false;
     private array $buttonsContainerOptions = [];
+    private ?ServerRequestInterface $serverRequest = null;
     private UrlGeneratorInterface $urlGenerator;
     private UrlMatcherInterface $urlMatcher;
     private WebView $webView;
@@ -589,6 +591,14 @@ final class LinkPager extends Widget
         return $new;
     }
 
+    public function withServerRequest(ServerRequestInterface $serverRequest): self
+    {
+        $new = clone $this;
+        $new->serverRequest = $serverRequest;
+
+        return $new;
+    }
+
     /**
      * Creates the URL suitable for pagination with the specified page number. This method is mainly called by pagers
      * when creating URLs used to perform pagination.
@@ -608,12 +618,21 @@ final class LinkPager extends Widget
         $currentRoute = $this->urlMatcher->getCurrentRoute();
         $url = '';
 
+        $params = ['page' => $page];
+
+        if ($this->serverRequest !== null) {
+            $params = array_merge(
+                $this->serverRequest->getQueryParams(),
+                ['page' => $page],
+            );
+        }
+
         if ($currentRoute !== null) {
             $action = $currentRoute->getName();
-            $url = $this->urlGenerator->generate($action, ['page' => $page]);
+            $url = $this->urlGenerator->generate($action, $params);
 
             if ($absolute === true) {
-                $url = $this->urlGenerator->generateAbsolute($action, ['page' => $page]);
+                $url = $this->urlGenerator->generateAbsolute($action, $params);
             }
         }
 
