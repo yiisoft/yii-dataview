@@ -9,7 +9,6 @@ use JsonException;
 use Yiisoft\Arrays\ArrayHelper;
 use Yiisoft\Factory\Exceptions\InvalidConfigException;
 use Yiisoft\Html\Html;
-use Yiisoft\I18n\MessageFormatterInterface;
 use Yiisoft\Json\Json;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\Yii\DataView\Columns\Column;
@@ -492,12 +491,11 @@ final class GridView extends BaseListView
     }
 
     /**
-     * @param array $captionOptions the HTML attributes for the caption element.
+     * @param array $captionOptions the HTML attributes for the caption element {@see caption}.
      *
      * @return $this
      *
      * {@see Html::renderTagAttributes()} for details on how attributes are being rendered.
-     * @see caption
      */
     public function withCaptionOptions(array $captionOptions): self
     {
