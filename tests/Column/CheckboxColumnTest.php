@@ -5,9 +5,7 @@ declare(strict_types=1);
 namespace Yiisoft\Yii\DataView\Tests\Columns;
 
 use Yiisoft\Html\Html;
-use Yiisoft\Yii\DataView\Columns\CheckboxColumn;
 use Yiisoft\Yii\DataView\Exception\InvalidConfigException;
-use Yiisoft\Yii\DataView\GridView;
 use Yiisoft\Yii\DataView\Tests\TestCase;
 
 final class CheckboxColumnTest extends TestCase

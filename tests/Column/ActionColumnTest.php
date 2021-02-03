@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Yiisoft\Yii\DataView\Tests\Column;
 
 use Yiisoft\Html\Html;
-use Yiisoft\Yii\DataView\Columns\ActionColumn;
 use Yiisoft\Yii\DataView\Tests\TestCase;
 
 final class ActionColumnTest extends TestCase

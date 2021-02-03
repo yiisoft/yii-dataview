@@ -85,7 +85,7 @@ class TestCase extends \PHPUnit\Framework\TestCase
         return [
             Aliases::class => [
                 '__class' => Aliases::class,
-                '__construct()' => [['@grid-view-translation' => dirname(__DIR__) . '/src/Translation']]
+                '__construct()' => [['@grid-view-translation' => dirname(__DIR__) . '/src/Translation']],
             ],
 
             UrlGeneratorInterface::class => UrlGenerator::class,
@@ -110,7 +110,7 @@ class TestCase extends \PHPUnit\Framework\TestCase
 
             MessageReaderInterface::class => [
                 '__class' => MessageSource::class,
-                '__construct()' =>  [fn (Aliases $aliases) => $aliases->get('@grid-view-translation')]
+                '__construct()' =>  [fn (Aliases $aliases) => $aliases->get('@grid-view-translation')],
             ],
 
             MessageFormatterInterface::class => IntlMessageFormatter::class,
@@ -125,9 +125,9 @@ class TestCase extends \PHPUnit\Framework\TestCase
             TranslatorInterface::class => [
                 '__class' => Translator:: class,
                 '__construct()' => [
-                    'locale' => 'en'
+                    'locale' => 'en',
                 ],
-                'addCategorySource()' => [Reference::to(CategorySource::class)]
+                'addCategorySource()' => [Reference::to(CategorySource::class)],
             ],
 
             ReadableDataInterface::class => static fn () => new IterableDataReader(),
