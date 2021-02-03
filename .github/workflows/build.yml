@@ -9,6 +9,7 @@ jobs:
     name: PHP ${{ matrix.php }}-${{ matrix.os }}
 
     env:
+      extensions: intl
       key: cache-v1
 
     runs-on: ${{ matrix.os }}
@@ -27,10 +28,11 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
-      - name: Install PHP
+      - name: Install PHP with extensions
         uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php }}
+          extensions: ${{ env.extensions }}
           ini-values: date.timezone='UTC'
           coverage: pcov
           tools: composer:v2
