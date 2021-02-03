@@ -5,19 +5,17 @@ declare(strict_types=1);
 namespace Yiisoft\Yii\DataView;
 
 use JsonException;
-use Yiisoft\Aliases\Aliases;
 use Yiisoft\Arrays\ArrayHelper;
+use Yiisoft\Data\Paginator\KeysetPaginator;
 use Yiisoft\Data\Paginator\PaginatorInterface;
 use Yiisoft\Data\Paginator\OffsetPaginator;
-use Yiisoft\Factory\Exceptions\InvalidConfigException;
 use Yiisoft\Html\Html;
 use Yiisoft\Translator\TranslatorInterface;
-use Yiisoft\View\WebView;
 use Yiisoft\Widget\Widget;
-use Yiisoft\Yii\DataView\Factory\GridViewFactory;
 use Yiisoft\Yii\DataView\Widget\Bulma\LinkPager;
 use Yiisoft\Yii\DataView\Widget\LinkSorter;
 
+use function count;
 use function preg_replace_callback;
 
 /**
@@ -41,24 +39,14 @@ abstract class BaseListView extends Widget
     protected bool $showEmptyText = true;
     protected array $emptyTextOptions = ['class' => 'empty'];
     protected string $layout = "{summary}\n{items}\n{pager}";
-    private WebView $view;
-    private Aliases $aliases;
     private string $linkPagerClass = LinkPager::class;
-    protected GridViewFactory $gridViewFactory;
-    protected TranslatorInterface $translator;
+    private int $pageSize = 0;
+    private int $currentPage = 1;
+    private TranslatorInterface $translator;
 
-    public function __construct(
-        Aliases $aliases,
-        GridViewFactory $gridViewFactory,
-        TranslatorInterface $translator,
-        PaginatorInterface $paginator,
-        WebView $view
-    ) {
-        $this->aliases = $aliases;
-        $this->gridViewFactory = $gridViewFactory;
+    public function __construct(TranslatorInterface $translator)
+    {
         $this->translator = $translator;
-        $this->paginator = $paginator;
-        $this->view = $view;
     }
 
     /**
@@ -68,36 +56,8 @@ abstract class BaseListView extends Widget
      */
     abstract public function renderItems(): string;
 
-    public function sorter(?LinkSorter $sorter): self
-    {
-        $this->sorter = $sorter;
-
-        return $this;
-    }
-
-    protected function getAliases(): Aliases
-    {
-        return $this->aliases;
-    }
-
-    public function showEmptyText(bool $value): self
-    {
-        $this->showEmptyText = $value;
-
-        return $this;
-    }
-
-    /**
-     * Runs the widget.
-     */
     public function run(): string
     {
-        $this->init();
-
-        if ($this->paginator === null) {
-            throw new InvalidConfigException('The "PaginatorInterface::class" property must be set.');
-        }
-
         if (!isset($this->options['id'])) {
             $this->options['id'] = $this->getId();
         }
@@ -124,6 +84,7 @@ abstract class BaseListView extends Widget
 
     /**
      * Renders a section of the specified name.
+     *
      * If the named section is not supported, false will be returned.
      *
      * @param string $name the section name, e.g., `{summary}`, `{items}`.
@@ -160,6 +121,7 @@ abstract class BaseListView extends Widget
         if (!$this->showEmptyText) {
             return '';
         }
+
         $options = $this->emptyTextOptions;
         $tag = ArrayHelper::remove($options, 'tag', 'div');
 
@@ -179,19 +141,18 @@ abstract class BaseListView extends Widget
 
         $summaryOptions = $this->summaryOptions;
         $tag = ArrayHelper::remove($summaryOptions, 'tag', 'div');
-        $pagination = $this->paginator;
 
-        if ($pagination instanceof OffsetPaginator) {
-            $totalCount = $count;
-            $begin = $pagination->getOffset() + 1;
-            $end = ($begin + $pagination->getPageSize()) - 1;
+        if ($this->paginator instanceof OffsetPaginator) {
+            $totalCount = count($this->getDataReader());
+            $begin = $this->paginator->getOffset() + 1;
+            $end = ($begin + $totalCount) - 1;
 
             if ($begin > $end) {
                 $begin = $end;
             }
 
-            $page = $pagination->getCurrentPage() + 1;
-            $pageCount = $pagination->getCurrentPageSize();
+            $page = $this->paginator->getCurrentPage() + 1;
+            $pageCount = $this->paginator->getCurrentPageSize();
 
             if (($summaryContent = $this->summary) === null) {
                 return Html::tag(
@@ -243,7 +204,7 @@ abstract class BaseListView extends Widget
                     'begin' => $begin,
                     'end' => $end,
                     'count' => $count,
-                    'totalCount' => $totalCount,
+                    'totalCount' => $count,
                     'page' => $page,
                     'pageCount' => $pageCount,
                 ],
@@ -251,11 +212,6 @@ abstract class BaseListView extends Widget
             ),
             $summaryOptions
         );
-    }
-
-    protected function formatMessage(string $message, array $arguments = []): string
-    {
-        return MessageFormatter::formatMessage($message, $arguments);
     }
 
     /**
@@ -300,16 +256,23 @@ abstract class BaseListView extends Widget
         return $this->sorter->run();
     }
 
-    abstract public function getId(): string;
-
-    public function getView(): WebView
+    public function getPaginator(): PaginatorInterface
     {
-        return $this->view;
+        return $this->paginator;
     }
 
-    public function getOptions(): array
+    /**
+     * @param int $currentPage set current page PaginatorInterface::class {@see OffsetPaginator::withCurrentPage()}
+     * {@see KeysetPaginator::
+     *
+     * @return $this
+     */
+    public function withCurrentPage(int $currentPage): self
     {
-        return $this->options;
+        $new = clone $this;
+        $new->currentPage = $currentPage;
+
+        return $new;
     }
 
     /**
@@ -325,13 +288,64 @@ abstract class BaseListView extends Widget
      * @see showOnEmpty
      * @see emptyTextOptions
      */
-    public function emptyText(?string $emptyText): self
+    public function withEmptyText(?string $emptyText): self
     {
+        $new = clone $this;
+
         if ($emptyText !== null) {
-            $this->emptyText = $emptyText;
+            $new->emptyText = $emptyText;
         }
 
-        return $this;
+        return $new;
+    }
+
+    /**
+     * @param array $emptyTextOptions the HTML attributes for the emptyText of the list view.
+     *
+     * The "tag" element specifies the tag name of the emptyText element and defaults to "div".
+     *
+     * @return $this
+     *
+     * {@see Html::renderTagAttributes()} for details on how attributes are being rendered.
+     */
+    public function withEmptyTextOptions(array $emptyTextOptions): self
+    {
+        $new = clone $this;
+        $new->emptyTextOptions = $emptyTextOptions;
+
+        return $new;
+    }
+
+    /**
+     * @param string $layout the layout that determines how different sections of the list view should be organized.
+     *
+     * The following tokens will be replaced with the corresponding section contents:
+     * - `{summary}`: the summary section. See {@see renderSummary()}.
+     * - `{items}`: the list items. See {@see renderItems()}.
+     * - `{sorter}`: the sorter. See {@see renderSorter()}.
+     * - `{pager}`: the pager. See {@see renderPager()}.
+     *
+     * @return $this
+     */
+    public function withLayout(string $layout): self
+    {
+        $new = clone $this;
+        $new->layout = $layout;
+
+        return $new;
+    }
+
+    /**
+     * @param string $linkPagerClass class for widget {@see LinkPager}.
+     *
+     * @return $this
+     */
+    public function withLinkPagerClass(string $linkPagerClass): self
+    {
+        $new = clone $this;
+        $new->linkPagerClass = $linkPagerClass;
+
+        return $new;
     }
 
     /**
@@ -343,18 +357,55 @@ abstract class BaseListView extends Widget
      *
      * {@see Html::renderTagAttributes()} for details on how attributes are being rendered.
      */
-    public function options(array $options): self
+    public function withOptions(array $options): self
     {
-        $this->options = ArrayHelper::merge($this->options, $options);
+        $new = clone $this;
+
+        $new->options = ArrayHelper::merge($this->options, $options);
+
+        return $new;
+    }
+
+    /**
+     * @param int $pageSize set page size PaginatorInterface {@see OffsetPaginator::withPageSize()}
+     * {@see KeysetPaginator::withPageSize()}.
+     *
+     * @return $this
+     */
+    public function withPageSize(int $pageSize): self
+    {
+        $this->pageSize = $pageSize;
 
         return $this;
     }
 
-    public function linkPagerClass(string $linkPagerClass): self
+    /**
+     * @param PaginatorInterface $paginator set paginator {@see OffsetPaginator} {@see KeysetPaginator}.
+     *
+     * @return $this
+     */
+    public function withPaginator(PaginatorInterface $paginator): self
     {
-        $this->linkPagerClass = $linkPagerClass;
+        $new = clone $this;
+        $new->paginator = $paginator;
 
-        return $this;
+        return $new;
+    }
+
+    /**
+     * @param bool $showOnEmpty whether to show an empty list view if {@see} returns no data.
+     *
+     * The default value is false which displays an element according to the {@see $emptyText} and
+     * {@see $emptyTextOptions} properties.
+     *
+     * @return $this
+     */
+    public function withShowOnEmpty(bool $showOnEmpty): self
+    {
+        $new = clone $this;
+        $new->showOnEmpty = $showOnEmpty;
+
+        return $new;
     }
 
     /**
@@ -372,7 +423,7 @@ abstract class BaseListView extends Widget
      *
      * @return $this
      */
-    public function summary(string $summary): self
+    public function withSummary(string $summary): self
     {
         $this->summary = $summary;
 
@@ -388,64 +439,44 @@ abstract class BaseListView extends Widget
      *
      * {@see Html::renderTagAttributes()} for details on how attributes are being rendered.
      */
-    public function summaryOptions(array $summaryOptions): self
+    public function withSummaryOptions(array $summaryOptions): self
     {
-        $this->summaryOptions = $summaryOptions;
+        $new = clone $this;
+        $new->summaryOptions = $summaryOptions;
 
-        return $this;
+        return $new;
     }
 
-    /**
-     * @param bool $showOnEmpty whether to show an empty list view if {@see} returns no data.
-     *
-     * The default value is false which displays an element according to the {@see $emptyText} and
-     * {@see $emptyTextOptions} properties.
-     *
-     * @return $this
-     */
-    public function showOnEmpty(bool $showOnEmpty): self
+    public function withShowEmptyText(bool $value): self
     {
-        $this->showOnEmpty = $showOnEmpty;
+        $new = clone $this;
+        $new->showEmptyText = $value;
 
-        return $this;
+        return $new;
     }
 
-    /**
-     * @param array $emptyTextOptions the HTML attributes for the emptyText of the list view.
-     *
-     * The "tag" element specifies the tag name of the emptyText element and defaults to "div".
-     *
-     * @return $this
-     *
-     * {@see Html::renderTagAttributes()} for details on how attributes are being rendered.
-     */
-    public function emptyTextOptions(array $emptyTextOptions): self
+    public function withSorter(?LinkSorter $sorter): self
     {
-        $this->emptyTextOptions = $emptyTextOptions;
+        $new = clone $this;
+        $new->sorter = $sorter;
 
-        return $this;
+        return $new;
     }
 
-    /**
-     * @param string $layout the layout that determines how different sections of the list view should be organized.
-     *
-     * The following tokens will be replaced with the corresponding section contents:
-     * - `{summary}`: the summary section. See {@see renderSummary()}.
-     * - `{items}`: the list items. See {@see renderItems()}.
-     * - `{sorter}`: the sorter. See {@see renderSorter()}.
-     * - `{pager}`: the pager. See {@see renderPager()}.
-     *
-     * @return $this
-     */
-    public function layout(string $layout): self
+    protected function getDataReader(): array
     {
-        $this->layout = $layout;
+        $dataReader = [];
 
-        return $this;
-    }
+        if ($this->pageSize > 0) {
+            $this->paginator = $this->paginator->withPageSize($this->pageSize);
+        }
 
-    public function getPaginator(): PaginatorInterface
-    {
-        return $this->paginator;
+        $this->paginator = $this->paginator->withCurrentPage($this->currentPage);
+
+        foreach ($this->paginator->read() as $read) {
+            $dataReader[] = $read;
+        }
+
+        return $dataReader;
     }
 }
