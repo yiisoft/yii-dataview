@@ -57,31 +57,38 @@ final class ActionColumn extends Column
     private array $visibleButtons = [];
     private array $buttonOptions = [];
     private string $primaryKey = 'id';
-    private UrlGeneratorInterface $urlGenerator;
     /** @var callable $urlCreator */
     private $urlCreator;
+    private UrlGeneratorInterface $urlGenerator;
 
     public function __construct(UrlGeneratorInterface $urlGenerator)
     {
         $this->urlGenerator = $urlGenerator;
-        $this->initDefaultButtons();
+
+        $this->loadDefaultButtons();
     }
 
-    private function initDefaultButtons(): void
+    private function loadDefaultButtons(): void
     {
-        $this->initDefaultButton('view', 'eye-open');
-        $this->initDefaultButton('update', 'pencil');
-        $this->initDefaultButton(
-            'delete',
-            'trash',
+        $defaultButtons = ([
+            ['view','&#128065;', []],
+            ['update', '&#128393;', []],
             [
-                'data-confirm' => $this->formatMessage(
-                    'Are you sure you want to delete this item?',
-                    []
-                ),
-                'data-method' => 'post',
-            ]
-        );
+                'delete',
+                '&#128465;',
+                [
+                    'data-confirm' => $this->formatMessage(
+                        'Are you sure you want to delete this item?',
+                        []
+                    ),
+                    'data-method' => 'post',
+                ],
+            ],
+        ]);
+
+        foreach ($defaultButtons as $defaultButton) {
+            $this->loadDefaultButton($defaultButton[0], $defaultButton[1], $defaultButton[2]);
+        }
     }
 
     /**
@@ -91,7 +98,7 @@ final class ActionColumn extends Column
      * @param string $iconName The part of Bootstrap glyphicon class that makes it unique.
      * @param array $additionalOptions Array of additional options.
      */
-    protected function initDefaultButton(string $name, string $iconName, array $additionalOptions = []): void
+    protected function loadDefaultButton(string $name, string $iconName, array $additionalOptions = []): void
     {
         if (!isset($this->buttons[$name]) && strpos($this->template, '{' . $name . '}') !== false) {
             $this->buttons[$name] = function ($url) use ($name, $iconName, $additionalOptions): string {
@@ -101,12 +108,12 @@ final class ActionColumn extends Column
                         break;
                     case 'update':
                         $title = $this->formatMessage('Update', []);
+                        $icon = Html::tag('span', );
                         break;
                     case 'delete':
                         $title = $this->formatMessage('Delete', []);
+                        $icon = Html::tag('span', );
                         break;
-                    default:
-                        $title = ucfirst($name);
                 }
 
                 $options = array_merge(
@@ -119,9 +126,7 @@ final class ActionColumn extends Column
                     $this->buttonOptions
                 );
 
-                $icon = Html::tag('span', '', ['class' => "glyphicon glyphicon-$iconName"]);
-
-                return Html::a($icon, $url, $options);
+                return Html::a(Html::tag('span', $iconName), $url, $options);
             };
         }
     }

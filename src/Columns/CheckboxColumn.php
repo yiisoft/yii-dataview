@@ -45,14 +45,6 @@ final class CheckboxColumn extends Column
 
     public function __construct()
     {
-        if ($this->name === '') {
-            throw new InvalidConfigException('The "name" property must be set.');
-        }
-
-        if (substr_compare($this->name, '[]', -2, 2)) {
-            $this->name .= '[]';
-        }
-
         $this->registerClientScript();
     }
 
@@ -76,13 +68,17 @@ final class CheckboxColumn extends Column
      */
     public function name(string $name): self
     {
+        if ($name === '') {
+            throw new InvalidConfigException('The "name" property must be set.');
+        }
+
         $this->name = $name;
 
         return $this;
     }
 
     /**
-     * @param array|callable $checkBoxOptions the HTML attributes for checkboxes. This can either be an array of
+     * @param array|callable $checkboxOptions the HTML attributes for checkboxes. This can either be an array of
      * attributes or an anonymous function ({@see Closure}) that returns such an array. The signature of the function
      * should be the following:
      *
@@ -103,9 +99,9 @@ final class CheckboxColumn extends Column
      *
      * {@see Html::renderTagAttributes()} for details on how attributes are being rendered.
      */
-    public function checkboxOptions($checkBoxOptions): self
+    public function checkboxOptions($checkboxOptions): self
     {
-        $this->checkboxOptions = ArrayHelper::merge($this->checkboxOptions, $checkBoxOptions);
+        $this->checkboxOptions = $checkboxOptions;
 
         return $this;
     }
@@ -130,7 +126,7 @@ final class CheckboxColumn extends Column
      */
     protected function renderHeaderCellContent(): string
     {
-        if ($this->header !== null || !$this->multiple) {
+        if ($this->header !== '' || !$this->multiple) {
             return parent::renderHeaderCellContent();
         }
 
