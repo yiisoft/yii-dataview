@@ -239,7 +239,7 @@ final class LinkPager extends Widget
         $linkOptions['data-page'] = $page;
 
         if ($disabled) {
-            Html::addCssClass($linkOptions, $this->disabledPageCssClass);
+            Html::addCssClass($options, $this->disabledPageCssClass);
         }
 
         return Html::tag(
