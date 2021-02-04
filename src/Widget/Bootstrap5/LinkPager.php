@@ -45,8 +45,8 @@ final class LinkPager extends Widget
     private string $pageCssClass = 'page-item';
     private string $firstPageCssClass = 'page-item';
     private string $lastPageCssClass = 'page-item';
-    private string $prevPageCssClass = 'page-item"';
-    private string $nextPageCssClass = 'page-item"';
+    private string $prevPageCssClass = 'page-item';
+    private string $nextPageCssClass = 'page-item';
     private string $activePageCssClass = 'active';
     private string $disabledPageCssClass = 'disabled';
     private array $disabledListItemSubTagOptions = [];
