@@ -240,6 +240,8 @@ final class LinkPager extends Widget
 
         if ($disabled) {
             Html::addCssClass($options, $this->disabledPageCssClass);
+            $linkOptions['aria-disabled' = 'true'];
+            $linkOptions['tabindex' = '-1'];
         }
 
         return Html::tag(
