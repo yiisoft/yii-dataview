@@ -223,7 +223,7 @@ final class LinkPager extends Widget
      *
      * @param string $label the text label for the button
      * @param int $page the page number
-     * @param string|null $class the CSS class for the page button.
+     * @param array|null $class the CSS class for the page button.
      * @param bool $disabled whether this page button is disabled
      * @param bool $active whether this page button is active
      *
@@ -231,7 +231,7 @@ final class LinkPager extends Widget
      *
      * @return string the rendering result
      */
-    protected function renderPageButton(string $label, int $page, ?string $class, bool $disabled = false, bool $active = false): string
+    protected function renderPageButton(string $label, int $page, ?array $class, bool $disabled = false, bool $active = false): string
     {
         $options = $this->buttonsContainerOptions;
 
