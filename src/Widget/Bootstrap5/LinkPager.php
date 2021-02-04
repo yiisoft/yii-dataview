@@ -45,8 +45,8 @@ final class LinkPager extends Widget
     private string $pageCssClass = 'page-item';
     private string $firstPageCssClass = 'page-item';
     private string $lastPageCssClass = 'page-item';
-    private string $prevPageCssClass = 'nav-link';
-    private string $nextPageCssClass = 'nav-link';
+    private string $prevPageCssClass = 'page-item"';
+    private string $nextPageCssClass = 'page-item"';
     private string $activePageCssClass = 'active';
     private string $disabledPageCssClass = 'disabled';
     private array $disabledListItemSubTagOptions = [];
@@ -243,16 +243,12 @@ final class LinkPager extends Widget
             Html::addCssClass($options, $this->activePageCssClass);
         }
 
-        if ($disabled) {
-            Html::addCssClass($options, $this->disabledPageCssClass);
-            $disabledItemOptions = $this->disabledListItemSubTagOptions;
-            $tag = ArrayHelper::remove($disabledItemOptions, 'tag', 'span');
-
-            return Html::tag($linkWrapTag, Html::tag($tag, $label, $disabledItemOptions), $options);
-        }
-
         $linkOptions = $this->linkOptions;
         $linkOptions['data-page'] = $page;
+
+        if ($disabled) {
+            Html::addCssClass($linkOptions, $this->disabledPageCssClass);
+        }
 
         return Html::tag(
             $linkWrapTag,
