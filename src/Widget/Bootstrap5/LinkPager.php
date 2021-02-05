@@ -45,8 +45,8 @@ final class LinkPager extends Widget
     private string $pageCssClass = 'page-item';
     private string $firstPageCssClass = 'page-item';
     private string $lastPageCssClass = 'page-item';
-    private string $prevPageCssClass = 'nav-link';
-    private string $nextPageCssClass = 'nav-link';
+    private string $prevPageCssClass = 'page-item';
+    private string $nextPageCssClass = 'page-item';
     private string $activePageCssClass = 'active';
     private string $disabledPageCssClass = 'disabled';
     private array $disabledListItemSubTagOptions = [];
@@ -131,11 +131,13 @@ final class LinkPager extends Widget
         /* button first page */
         if ($this->firstPageLabel !== null) {
             $linkOptions = $this->linkOptions;
-            $linkOptions['data-page'] = 1;
-
             Html::addCssClass($linkOptions, $this->firstPageCssClass);
 
-            $buttons[] = Html::a($this->firstPageLabel, $this->createUrl(1), $linkOptions);
+            $buttons[] = $this->renderPageButton(
+                $this->firstPageLabel,
+                1,
+                $linkOptions,
+            );
         }
 
         /* button previous page */
@@ -143,15 +145,12 @@ final class LinkPager extends Widget
             $prevPageLabelOptions = [];
             Html::addCssClass($prevPageLabelOptions, $this->prevPageCssClass);
 
-            if ($currentPage === 1) {
-                $prevPage = 1;
-                Html::addCssClass($prevPageLabelOptions, $this->disabledPageCssClass);
-            } else {
-                $prevPage = $currentPage - 1;
-            }
-
-            $prevPageLabelOptions['data-page'] = $prevPage;
-            $buttons[] = Html::a($this->prevPageLabel, $this->createUrl($prevPage), $prevPageLabelOptions);
+            $buttons[] = $this->renderPageButton(
+                $this->prevPageLabel,
+                max($currentPage - 1, 1),
+                $prevPageLabelOptions,
+                $currentPage === 1,
+            );
         }
 
         /* buttons pages */
@@ -172,25 +171,24 @@ final class LinkPager extends Widget
             $nextPageLabelOptions = [];
             Html::addCssClass($nextPageLabelOptions, $this->nextPageCssClass);
 
-            if ($currentPage === $pageCount) {
-                $nextPage = $pageCount;
-                Html::addCssClass($nextPageLabelOptions, $this->disabledPageCssClass);
-            } else {
-                $nextPage = $currentPage + 1;
-            }
-
-            $nextPageLabelOptions['data-page'] = $nextPage;
-            $buttons[] = Html::a($this->nextPageLabel, $this->createUrl($nextPage), $nextPageLabelOptions);
+            $buttons[] = $this->renderPageButton(
+                $this->nextPageLabel,
+                min($pageCount, $currentPage + 1),
+                $nextPageLabelOptions,
+                $currentPage === $pageCount,
+            );
         }
 
         /* button last page */
         if ($this->lastPageLabel !== null) {
             $linkOptions = $this->linkOptions;
-            $linkOptions['data-page'] = $pageCount;
-
             Html::addCssClass($linkOptions, $this->lastPageCssClass);
 
-            $buttons[] = Html::a($this->lastPageLabel, $this->createUrl($pageCount), $linkOptions);
+            $buttons[] = $this->renderPageButton(
+                $this->lastPageLabel,
+                $pageCount,
+                $linkOptions,
+            );
         }
 
         $tag = ArrayHelper::remove($this->optionsUl, 'tag', 'ul');
@@ -209,7 +207,7 @@ final class LinkPager extends Widget
      *
      * @param string $label the text label for the button
      * @param int $page the page number
-     * @param string|null $class the CSS class for the page button.
+     * @param array|null $class the CSS class for the page button.
      * @param bool $disabled whether this page button is disabled
      * @param bool $active whether this page button is active
      *
@@ -217,7 +215,7 @@ final class LinkPager extends Widget
      *
      * @return string the rendering result
      */
-    protected function renderPageButton(string $label, int $page, ?string $class, bool $disabled, bool $active): string
+    protected function renderPageButton(string $label, int $page, ?array $class, bool $disabled = false, bool $active = false): string
     {
         $options = $this->buttonsContainerOptions;
 
@@ -229,16 +227,14 @@ final class LinkPager extends Widget
             Html::addCssClass($options, $this->activePageCssClass);
         }
 
-        if ($disabled) {
-            Html::addCssClass($options, $this->disabledPageCssClass);
-            $disabledItemOptions = $this->disabledListItemSubTagOptions;
-            $tag = ArrayHelper::remove($disabledItemOptions, 'tag', 'span');
-
-            return Html::tag($linkWrapTag, Html::tag($tag, $label, $disabledItemOptions), $options);
-        }
-
         $linkOptions = $this->linkOptions;
         $linkOptions['data-page'] = $page;
+
+        if ($disabled) {
+            Html::addCssClass($options, $this->disabledPageCssClass);
+            $linkOptions['aria-disabled'] = 'true';
+            $linkOptions['tabindex'] = '-1';
+        }
 
         return Html::tag(
             $linkWrapTag,
