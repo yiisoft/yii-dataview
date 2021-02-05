@@ -145,13 +145,9 @@ final class LinkPager extends Widget
             $prevPageLabelOptions = [];
             Html::addCssClass($prevPageLabelOptions, $this->prevPageCssClass);
 
-            $prevPage = $currentPage === 1
-                ? 1
-                : $currentPage - 1;
-
             $buttons[] = $this->renderPageButton(
                 $this->prevPageLabel,
-                $prevPage,
+                max($currentPage - 1, 1),
                 $prevPageLabelOptions,
                 $currentPage === 1,
             );
@@ -175,13 +171,9 @@ final class LinkPager extends Widget
             $nextPageLabelOptions = [];
             Html::addCssClass($nextPageLabelOptions, $this->nextPageCssClass);
 
-            $nextPage = $currentPage === $pageCount
-                ? $pageCount
-                : $currentPage + 1;
-
             $buttons[] = $this->renderPageButton(
                 $this->nextPageLabel,
-                $nextPage,
+                min($pageCount, $currentPage + 1),
                 $nextPageLabelOptions,
                 $currentPage === $pageCount,
             );
