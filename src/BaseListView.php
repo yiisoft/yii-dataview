@@ -7,7 +7,6 @@ namespace Yiisoft\Yii\DataView;
 use JsonException;
 use Psr\Http\Message\ServerRequestInterface;
 use Yiisoft\Arrays\ArrayHelper;
-use Yiisoft\Data\Paginator\KeysetPaginator;
 use Yiisoft\Data\Paginator\OffsetPaginator;
 use Yiisoft\Data\Paginator\PaginatorInterface;
 use Yiisoft\Html\Html;
@@ -32,8 +31,8 @@ abstract class BaseListView extends Widget
     protected PaginatorInterface $paginator;
     protected ?LinkSorter $sorter = null;
     protected string $summary = 'Showing <b>{begin, number}-{end, number}</b> of <b>{totalCount, number}</b> ' .
-        '{totalCount, plural, one{item} other{items}}.';
-    protected array $summaryOptions = ['class' => 'summary'];
+        '{totalCount, plural, one{item} other{items}}';
+    protected array $summaryOptions = [];
     protected bool $showOnEmpty = false;
     protected ?string $emptyText = 'No results found.';
     protected bool $showEmptyText = true;
@@ -74,6 +73,7 @@ abstract class BaseListView extends Widget
         }
 
         $options = $this->options;
+        $options['encode'] = false;
         $tag = ArrayHelper::remove($options, 'tag', 'div');
 
         return Html::tag($tag, $content, $options);
@@ -132,11 +132,12 @@ abstract class BaseListView extends Widget
     {
         $count = $this->paginator->getTotalItems();
 
-        if ($count < 1) {
+        if ($count < 1 || $this->summary === '') {
             return '';
         }
 
         $summaryOptions = $this->summaryOptions;
+        $summaryOptions['encode'] = false;
         $tag = ArrayHelper::remove($summaryOptions, 'tag', 'div');
 
         if ($this->paginator instanceof OffsetPaginator) {
@@ -150,47 +151,9 @@ abstract class BaseListView extends Widget
 
             $page = $this->paginator->getCurrentPage() + 1;
             $pageCount = $this->paginator->getCurrentPageSize();
-
-            if (($summaryContent = $this->summary) === null) {
-                return Html::tag(
-                    $tag,
-                    $this->translator->translate(
-                        $this->summary,
-                        [
-                            'begin' => $begin,
-                            'end' => $end,
-                            'count' => $count,
-                            'totalCount' => $totalCount,
-                            'page' => $page,
-                            'pageCount' => $pageCount,
-                        ],
-                        'user',
-                    ),
-                    $summaryOptions
-                );
-            }
         } else {
             $begin = $page = $pageCount = 1;
             $end = $totalCount = $count;
-
-            if (($summaryContent = $this->summary) === null) {
-                return Html::tag(
-                    $tag,
-                    $this->translator->translate(
-                        $this->summary,
-                        [
-                            'begin' => $begin,
-                            'end' => $end,
-                            'count' => $count,
-                            'totalCount' => $totalCount,
-                            'page' => $page,
-                            'pageCount' => $pageCount,
-                        ],
-                        'user',
-                    ),
-                    $summaryOptions
-                );
-            }
         }
 
         return Html::tag(
@@ -201,7 +164,7 @@ abstract class BaseListView extends Widget
                     'begin' => $begin,
                     'end' => $end,
                     'count' => $count,
-                    'totalCount' => $count,
+                    'totalCount' => $this->summary === null ? $totalCount : $count,
                     'page' => $page,
                     'pageCount' => $pageCount,
                 ],

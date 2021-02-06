@@ -73,6 +73,7 @@ final class DetailView extends Widget
         }
 
         $options = $this->options;
+        $options['encode'] = false;
         $tag = ArrayHelper::remove($options, 'tag', 'table');
 
         return Html::tag($tag, implode("\n", $rows), $options);

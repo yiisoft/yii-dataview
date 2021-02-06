@@ -9,7 +9,6 @@ use InvalidArgumentException;
 use Throwable;
 use Yiisoft\Aliases\Aliases;
 use Yiisoft\Arrays\ArrayHelper;
-use Yiisoft\Data\Paginator\PaginatorInterface;
 use Yiisoft\Html\Html;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\View\ViewContextInterface;
@@ -176,6 +175,7 @@ final class ListView extends BaseListView implements ViewContextInterface
             $key,
             JSON_THROW_ON_ERROR | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE
         ) : (string)$key;
+        $options['encode'] = false;
 
         return Html::tag($tag, $content, $options);
     }

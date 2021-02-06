@@ -192,11 +192,13 @@ final class LinkPager extends Widget
         }
 
         $tag = ArrayHelper::remove($this->optionsUl, 'tag', 'ul');
+        $optionsUl = array_merge($this->optionsUl, ['encode' => false]);
+        $optionsNav = array_merge($this->optionsNav, ['encode' => false]);
 
         return Html::tag(
             'nav',
-            Html::tag($tag, implode("\n", $buttons), $this->optionsUl),
-            $this->optionsNav
+            Html::tag($tag, implode("\n", $buttons), $optionsUl),
+            $optionsNav
         );
     }
 
@@ -218,6 +220,7 @@ final class LinkPager extends Widget
     protected function renderPageButton(string $label, int $page, ?array $class, bool $disabled = false, bool $active = false): string
     {
         $options = $this->buttonsContainerOptions;
+        $options['encode'] = false;
 
         $linkWrapTag = ArrayHelper::remove($options, 'tag', 'li');
 
