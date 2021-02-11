@@ -29,10 +29,7 @@
         "yiisoft/data": "^3.0@dev",
         "yiisoft/factory": "^3.0@dev",
         "yiisoft/router": "^3.0@dev",
-        "yiisoft/router-fastroute": "^3.0@dev",
-        "yiisoft/strings": "^1.0",
-        "yiisoft/translator-formatter-intl": "^3.0@dev",
-        "yiisoft/translator-message-php": "^3.0@dev",
+        "yiisoft/strings": "^2.0",
         "yiisoft/view": "^3.0@dev",
         "yiisoft/widget": "^3.0@dev"
     },
