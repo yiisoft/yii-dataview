@@ -92,6 +92,7 @@ final class LinkPager extends Widget
      */
     public function run(): string
     {
+        $html = '';
         $this->buildWidget();
 
         if ($this->paginator === null) {
@@ -103,13 +104,14 @@ final class LinkPager extends Widget
         }
 
         if ($this->frameworkCss === self::BOOTSTRAP) {
-            return $this->renderPageButtonsBootstrap();
+            $html = $this->renderPageButtonsBootstrap();
         }
 
         if ($this->frameworkCss === self::BULMA) {
-            return $this->renderPageButtonsBulma();
+            $html = $this->renderPageButtonsBulma();
         }
 
+        return $html;
     }
 
     /**
@@ -206,7 +208,7 @@ final class LinkPager extends Widget
     }
 
     /**
-     * @param string|null $`firstPageLabel` the text label for the "first" page button. Note that this will NOT be
+     * @param string $firstPageLabel the text label for the "first" page button. Note that this will NOT be
      * HTML-encoded.
      *
      * If it's specified as true, page number will be used as label.
@@ -263,8 +265,7 @@ final class LinkPager extends Widget
     }
 
     /**
-     * @param string|null $lastPageLabel the text label for the "last" page button. Note that this will NOT be
-     * HTML-encoded.
+     * @param string $lastPageLabel the text label for the "last" page button. Note that this will NOT be HTML-encoded.
      *
      * If it's specified as true, page number will be used as label.
      *
@@ -322,7 +323,7 @@ final class LinkPager extends Widget
     }
 
     /**
-     * @param string|null $nextPageLabel the label for the "next" page button. Note that this will NOT be HTML-encoded.
+     * @param string $nextPageLabel the label for the "next" page button. Note that this will NOT be HTML-encoded.
      *
      * If this property is false, the "next" page button will not be displayed.
      *
@@ -416,7 +417,7 @@ final class LinkPager extends Widget
     }
 
     /**
-     * @param string|null $prevPageLabel the text label for the "previous" page button. Note that this will NOT
+     * @param string $prevPageLabel the text label for the "previous" page button. Note that this will NOT
      * be HTML-encoded.
      *
      * If this property is false, the "previous" page button will not be displayed.
@@ -777,7 +778,7 @@ final class LinkPager extends Widget
 
         $links = [self::REL_SELF => $this->createUrl($currentPage, null, $absolute)];
 
-        if ($pageCount = 1) {
+        if ($pageCount === 1) {
             $links[self::LINK_FIRST] = $this->createUrl(1, null, $absolute);
             $links[self::LINK_LAST] = $this->createUrl($pageCount, null, $absolute);
             if ($currentPage > 1) {
