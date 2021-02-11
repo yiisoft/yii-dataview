@@ -11,7 +11,7 @@ use Yiisoft\Data\Paginator\OffsetPaginator;
 use Yiisoft\Data\Paginator\PaginatorInterface;
 use Yiisoft\Html\Html;
 use Yiisoft\Translator\TranslatorInterface;
-use Yiisoft\Yii\DataView\Widget\Bulma\LinkPager;
+use Yiisoft\Yii\DataView\Widget\LinkPager;
 use Yiisoft\Yii\DataView\Widget\LinkSorter;
 
 use function count;
@@ -27,6 +27,12 @@ use function preg_replace_callback;
  */
 abstract class BaseListView extends Widget
 {
+    public const BOOTSTRAP = 'bootstrap';
+    public const BULMA = 'bulma';
+    private const FRAMEWORKCSS = [
+        self::BOOTSTRAP,
+        self::BULMA,
+    ];
     protected array $options = [];
     protected PaginatorInterface $paginator;
     protected ?LinkSorter $sorter = null;
@@ -38,7 +44,6 @@ abstract class BaseListView extends Widget
     protected bool $showEmptyText = true;
     protected array $emptyTextOptions = ['class' => 'empty'];
     protected string $layout = "{summary}\n{items}\n{pager}";
-    private string $linkPagerClass = LinkPager::class;
     private int $pageSize = 0;
     private int $currentPage = 1;
     private TranslatorInterface $translator;
@@ -186,11 +191,11 @@ abstract class BaseListView extends Widget
         }
 
         /** @var $class LinkPager */
-        $pager = $this->linkPagerClass::widget();
+        $pager = LinkPager::widget();
 
         return $pager
-            ->withPaginator($this->paginator)
-            ->withServerRequest($this->serverRequest)
+            ->frameworkCss($this->frameworkCss)
+            ->paginator($this->paginator)
             ->render();
     }
 
@@ -277,6 +282,19 @@ abstract class BaseListView extends Widget
         return $new;
     }
 
+    public function frameworkCss(string $frameworkCss): self
+    {
+        if (!in_array($frameworkCss, self::FRAMEWORKCSS)) {
+            $frameworkCss = implode('", "', self::FRAMEWORKCSS);
+            throw new InvalidConfigException("Invalid framework css. Valid values are: \"$frameworkCss\".");
+        }
+
+        $new = clone $this;
+        $new->frameworkCss = $frameworkCss;
+
+        return $new;
+    }
+
     /**
      * @param string $layout the layout that determines how different sections of the list view should be organized.
      *
@@ -292,19 +310,6 @@ abstract class BaseListView extends Widget
     {
         $new = clone $this;
         $new->layout = $layout;
-
-        return $new;
-    }
-
-    /**
-     * @param string $linkPagerClass class for widget {@see LinkPager}.
-     *
-     * @return $this
-     */
-    public function withLinkPagerClass(string $linkPagerClass): self
-    {
-        $new = clone $this;
-        $new->linkPagerClass = $linkPagerClass;
 
         return $new;
     }

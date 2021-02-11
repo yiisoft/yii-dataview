@@ -75,7 +75,7 @@ class LinkSorter extends Widget
         $links = [];
 
         foreach ($attributes as $name) {
-            $links[] = Html::a($name, sprintf('?sort=%s', $name), $this->linkOptions);
+            $links[] = Html::a($name, sprintf('?sort=%s', $name), array_merge($this->linkOptions, ['encode' => false]));
         }
 
         return Html::ul($links, array_merge($this->options, ['encode' => false]));

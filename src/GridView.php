@@ -136,7 +136,11 @@ final class GridView extends BaseListView
             ]
         );
 
-        return Html::tag('table', implode("\n", $content), $this->tableOptions);
+        return Html::tag(
+            'table',
+            implode("\n", $content),
+            array_merge($this->tableOptions, ['encode' => false])
+        );
     }
 
     /**
@@ -195,7 +199,7 @@ final class GridView extends BaseListView
             $cells[] = $column->renderHeaderCell();
         }
 
-        $content = Html::tag('tr', implode('', $cells), $this->headerRowOptions);
+        $content = Html::tag('tr', implode('', $cells), array_merge($this->headerRowOptions, ['encode' => false]));
 
         if ($this->filterPosition === self::FILTER_POS_HEADER) {
             $content = $this->renderFilters() . $content;
@@ -203,7 +207,7 @@ final class GridView extends BaseListView
             $content .= $this->renderFilters();
         }
 
-        return Html::tag('thead', "\n$content\n", $this->headOptions);
+        return Html::tag('thead', "\n$content\n", array_merge($this->headOptions, ['encode' => false]));
     }
 
     /**
@@ -216,11 +220,14 @@ final class GridView extends BaseListView
     public function renderTableFooter(): string
     {
         $cells = [];
+
         foreach ($this->columns as $column) {
             /* @var $column Column */
             $cells[] = $column->renderFooterCell();
         }
-        $content = Html::tag('tr', implode('', $cells), $this->footerRowOptions);
+
+        $content = Html::tag('tr', implode('', $cells), array_merge($this->footerRowOptions, ['encode' => false]));
+
         if ($this->filterPosition === self::FILTER_POS_FOOTER) {
             $content .= $this->renderFilters();
         }
@@ -244,7 +251,7 @@ final class GridView extends BaseListView
                 $cells[] = $column->renderFilterCell();
             }
 
-            return Html::tag('tr', implode('', $cells), $this->filterRowOptions);
+            return Html::tag('tr', implode('', $cells), array_merge($this->filterRowOptions, ['encode' => false]));
         }
 
         return '';
@@ -318,7 +325,7 @@ final class GridView extends BaseListView
         }
         $options['data-key'] = is_array($key) ? Json::encode($key) : (string)$key;
 
-        return Html::tag('tr', implode('', $cells), $options);
+        return Html::tag('tr', implode('', $cells), array_merge($options, ['encode' => false]));
     }
 
     /**
