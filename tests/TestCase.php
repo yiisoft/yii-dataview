@@ -76,7 +76,8 @@ class TestCase extends \PHPUnit\Framework\TestCase
 
         $this->actionColumn = $this->container->get(ActionColumn::class);
         $this->checkboxColumn = $this->container->get(CheckboxColumn::class);
-        $this->gridView = $this->container->get(GridView::class);
+        $paginatorInterface = $this->container->get(PaginatorInterface::class);
+        $this->gridView = $this->container->get(GridView::class)->withPaginator($paginatorInterface);
     }
 
     private function config(): array
@@ -129,7 +130,7 @@ class TestCase extends \PHPUnit\Framework\TestCase
                 'addCategorySource()' => [Reference::to(CategorySource::class)],
             ],
 
-            ReadableDataInterface::class => static fn () => new IterableDataReader(),
+            ReadableDataInterface::class => static fn () => new IterableDataReader([]),
 
             PaginatorInterface::class => OffsetPaginator::class,
         ];

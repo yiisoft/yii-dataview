@@ -14,48 +14,77 @@ final class CheckboxColumnTest extends TestCase
      * @dataProvider inputName()
      *
      * @param string $name
-     * @param string $expectedPart
+     * @param string $html
      */
-    public function testInputName(string $name, string $expectedPart): void
+    public function testInputName(string $name, string $html): void
     {
-        $column = $this->checkboxColumn
-            ->name($name)
-            ->grid($this->gridView);
-        $this->assertStringContainsString($expectedPart, $column->renderHeaderCell());
+        $column = $this->checkboxColumn->name($name)->grid($this->gridView);
+        $this->assertSame($html, $column->renderHeaderCell());
     }
 
     public function inputName(): array
     {
         return [
-            ['selection', 'name="selection_all"'],
-            ['selections[]', 'name="selections_all"'],
-            ['MyForm[grid1]', 'name="MyForm[grid1_all]"'],
-            ['MyForm[grid1][]', 'name="MyForm[grid1_all]"'],
-            ['MyForm[grid1][key]', 'name="MyForm[grid1][key_all]"'],
-            ['MyForm[grid1][key][]', 'name="MyForm[grid1][key_all]"'],
+            [
+                'selection',
+                '<th><input type="checkbox" class="select-on-check-all" name="selection_all" value="1"></th>',
+            ],
+            [
+                'selections[]',
+                '<th><input type="checkbox" class="select-on-check-all" name="selections_all" value="1"></th>',
+            ],
+            [
+                'MyForm[grid1]',
+                '<th><input type="checkbox" class="select-on-check-all" name="MyForm[grid1_all]" value="1"></th>'
+            ],
+            [
+                'MyForm[grid1][]',
+                '<th><input type="checkbox" class="select-on-check-all" name="MyForm[grid1_all]" value="1"></th>',
+            ],
+            [
+                'MyForm[grid1][key]',
+                '<th><input type="checkbox" class="select-on-check-all" name="MyForm[grid1][key_all]" value="1"></th>',
+            ],
+            [
+                'MyForm[grid1][key][]',
+                '<th><input type="checkbox" class="select-on-check-all" name="MyForm[grid1][key_all]" value="1"></th>',
+            ],
         ];
     }
 
     public function testInputValue(): void
     {
-        $column = $this->checkboxColumn
-            ->grid($this->gridView);
-        $this->assertStringContainsString('value="1"', $column->renderDataCell([], 1, 0));
-        $this->assertStringContainsString('value="42"', $column->renderDataCell([], 42, 0));
-        $this->assertStringContainsString('value="[1,42]"', $column->renderDataCell([], [1, 42], 0));
+        $column = $this->checkboxColumn->grid($this->gridView);
 
-        $column = $this->checkboxColumn
-            ->checkboxOptions(['value' => 42])
-            ->grid($this->gridView);
-        $this->assertStringNotContainsString('value="1"', $column->renderDataCell([], 1, 0));
-        $this->assertStringContainsString('value="42"', $column->renderDataCell([], 1, 0));
+        $html = '<td><input type="checkbox" name="selection" value="1"></td>';
+        $this->assertSame($html, $column->renderDataCell([], 1, 0));
+
+        $html= '<td><input type="checkbox" name="selection" value="42"></td>';
+        $this->assertSame($html, $column->renderDataCell([], 42, 0));
+
+        $html = '<td><input type="checkbox" name="selection" value="[1,42]"></td>';
+        $this->assertSame($html, $column->renderDataCell([], [1, 42], 0));
+
+        $column = $this->checkboxColumn->checkboxOptions(['value' => 42])->grid($this->gridView);
+
+        $html = '<td><input type="checkbox" name="selection" value="42"></td>';
+        $this->assertSame($html, $column->renderDataCell([], 1, 0));
+
+        $html = '<td><input type="checkbox" name="selection" value="42"></td>';
+        $this->assertSame($html, $column->renderDataCell([], 1, 0));
 
         $column = $this->checkboxColumn
             ->checkboxOptions(static fn ($model, $key, $index, $column) => [])
             ->grid($this->gridView);
-        $this->assertStringContainsString('value="1"', $column->renderDataCell([], 1, 0));
-        $this->assertStringContainsString('value="42"', $column->renderDataCell([], 42, 0));
-        $this->assertStringContainsString('value="[1,42]"', $column->renderDataCell([], [1, 42], 0));
+
+        $html = '<td><input type="checkbox" name="selection" value="1"></td>';
+        $this->assertSame($html, $column->renderDataCell([], 1, 0));
+
+        $html = '<td><input type="checkbox" name="selection" value="42"></td>';
+        $this->assertSame($html, $column->renderDataCell([], 42, 0));
+
+        $html = '<td><input type="checkbox" name="selection" value="[1,42]"></td>';
+        $this->assertSame($html, $column->renderDataCell([], [1, 42], 0));
 
         $column = $this->checkboxColumn
             ->checkboxOptions(
@@ -64,7 +93,9 @@ final class CheckboxColumnTest extends TestCase
                 }
             )
             ->grid($this->gridView);
-        $this->assertStringContainsString('value="43"', $column->renderDataCell([], 1, 0));
+
+        $html = '<td><input type="checkbox" name="selection" value="43"></td>';
+        $this->assertSame($html, $column->renderDataCell([], 1, 0));
     }
 
     public function testContent(): void
@@ -76,7 +107,8 @@ final class CheckboxColumnTest extends TestCase
                 }
             )
             ->grid($this->gridView);
-        $this->assertStringContainsString('<td></td>', $column->renderDataCell([], 1, 0));
+
+        $this->assertSame('<td></td>', $column->renderDataCell([], 1, 0));
 
         $column = $this->checkboxColumn
             ->content(
@@ -84,7 +116,9 @@ final class CheckboxColumnTest extends TestCase
                     return Html::checkBox('checkBoxInput', false);
                 }
             )->grid($this->gridView);
-        $this->assertStringContainsString(Html::checkBox('checkBoxInput', false), $column->renderDataCell([], 1, 0));
+
+        $html = '<td>' . Html::checkBox('checkBoxInput', false) . '</td>';
+        $this->assertSame($html, $column->renderDataCell([], 1, 0));
     }
 
     public function testCheckBoxException(): void

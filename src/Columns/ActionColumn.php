@@ -107,11 +107,9 @@ final class ActionColumn extends Column
                         break;
                     case 'update':
                         $title = $this->formatMessage('Update', []);
-                        $icon = Html::tag('span', );
                         break;
                     case 'delete':
                         $title = $this->formatMessage('Delete', []);
-                        $icon = Html::tag('span', );
                         break;
                 }
 
@@ -120,12 +118,15 @@ final class ActionColumn extends Column
                         'title' => $title,
                         'aria-label' => $title,
                         'data-name' => $name,
+                        'encode' => false,
                     ],
                     $additionalOptions,
                     $this->buttonOptions
                 );
 
-                return Html::a(Html::tag('span', $iconName), $url, $options);
+                $icon = Html::tag('span', $iconName, ['encode' => false]);
+
+                return Html::a($icon, $url, $options);
             };
         }
     }

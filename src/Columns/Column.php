@@ -38,12 +38,12 @@ abstract class Column
 
     public function renderHeaderCell(): string
     {
-        return Html::tag('th', $this->renderHeaderCellContent(), $this->headerOptions);
+        return Html::tag('th', $this->renderHeaderCellContent(), array_merge($this->headerOptions, ['encode' => false]));
     }
 
     public function renderFooterCell(): string
     {
-        return Html::tag('td', $this->renderFooterCellContent(), $this->footerOptions);
+        return Html::tag('td', $this->renderFooterCellContent(), array_merge($this->footerOptions, ['encode' => false]));
     }
 
     /**
@@ -65,7 +65,7 @@ abstract class Column
             $options = $this->contentOptions;
         }
 
-        return Html::tag('td', $this->renderDataCellContent($model, $key, $index), $options);
+        return Html::tag('td', $this->renderDataCellContent($model, $key, $index), array_merge($options, ['encode' => false]));
     }
 
     /**
@@ -73,7 +73,7 @@ abstract class Column
      */
     public function renderFilterCell(): string
     {
-        return Html::tag('td', $this->renderFilterCellContent(), $this->filterOptions);
+        return Html::tag('td', $this->renderFilterCellContent(), array_merge($this->filterOptions, ['encode' => false]));
     }
 
     /**
