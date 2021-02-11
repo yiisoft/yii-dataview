@@ -118,12 +118,13 @@ final class ActionColumn extends Column
                         'title' => $title,
                         'aria-label' => $title,
                         'data-name' => $name,
+                        'encode' => false,
                     ],
                     $additionalOptions,
                     $this->buttonOptions
                 );
 
-                $icon = Html::tag('span', $iconName);
+                $icon = Html::tag('span', $iconName, ['encode' => false]);
 
                 return Html::a($icon, $url, $options);
             };
