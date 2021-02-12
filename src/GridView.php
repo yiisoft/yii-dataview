@@ -37,8 +37,8 @@ use function reset;
  * A basic usage looks like the following:
  * ```php
  * <?= GridView::widget()
- *     ->withColumns($columns)
- *     ->withLinkPagerClass(LinkPager::class)
+ *     ->columns($columns)
+ *     ->linkPagerClass(LinkPager::class)
  *     ->run()
  * ?>
  * ```
@@ -457,7 +457,7 @@ final class GridView extends BaseListView
      *
      * @return $this
      */
-    public function withAfterRow(?Closure $afterRow): self
+    public function afterRow(?Closure $afterRow): self
     {
         $new = clone $this;
         $new->afterRow = $afterRow;
@@ -473,7 +473,7 @@ final class GridView extends BaseListView
      *
      * @return $this
      */
-    public function withBeforeRow(?Closure $beforeRow): self
+    public function beforeRow(?Closure $beforeRow): self
     {
         $new = clone $this;
         $new->beforeRow = $beforeRow;
@@ -488,7 +488,7 @@ final class GridView extends BaseListView
      *
      * @see captionOptions
      */
-    public function withCaption(string $caption): self
+    public function caption(string $caption): self
     {
         $new = clone $this;
         $new->caption = $caption;
@@ -503,7 +503,7 @@ final class GridView extends BaseListView
      *
      * {@see Html::renderTagAttributes()} for details on how attributes are being rendered.
      */
-    public function withCaptionOptions(array $captionOptions): self
+    public function captionOptions(array $captionOptions): self
     {
         $new = clone $this;
         $new->captionOptions = $captionOptions;
@@ -550,7 +550,7 @@ final class GridView extends BaseListView
      *
      * @return $this
      */
-    public function withColumns(array $columns): self
+    public function columns(array $columns): self
     {
         $new = clone $this;
         $new->columns = $columns;
@@ -564,7 +564,7 @@ final class GridView extends BaseListView
      *
      * @return $this
      */
-    public function withDataColumnClass(string $dataColumnClass): self
+    public function dataColumnClass(string $dataColumnClass): self
     {
         $new = clone $this;
         $new->dataColumnClass = $dataColumnClass;
@@ -580,7 +580,7 @@ final class GridView extends BaseListView
      *
      * @return $this
      */
-    public function withEmptyCell(string $emptyCell): self
+    public function emptyCell(string $emptyCell): self
     {
         $new = clone $this;
         $new->emptyCell = $emptyCell;
@@ -599,7 +599,7 @@ final class GridView extends BaseListView
      *
      * @return $this
      */
-    public function withFilterModel(?object $filterModel): self
+    public function filterModel(?object $filterModel): self
     {
         $new = clone $this;
         $new->filterModel = $filterModel;
@@ -617,7 +617,7 @@ final class GridView extends BaseListView
      *
      * @return $this
      */
-    public function withFilterPosition(string $filterPosition): self
+    public function filterPosition(string $filterPosition): self
     {
         $new = clone $this;
         $new->filterPosition = $filterPosition;
@@ -632,7 +632,7 @@ final class GridView extends BaseListView
      *
      * {@see Html::renderTagAttributes()} for details on how attributes are being rendered.
      */
-    public function withFilterRowOptions(array $filterRowOptions): self
+    public function filterRowOptions(array $filterRowOptions): self
     {
         $new = clone $this;
         $new->filterRowOptions = $filterRowOptions;
@@ -647,7 +647,7 @@ final class GridView extends BaseListView
      *
      * {@see Html::renderTagAttributes()} for details on how attributes are being rendered.
      */
-    public function withFooterRowOptions(array $footerRowOptions): self
+    public function footerRowOptions(array $footerRowOptions): self
     {
         $new = clone $this;
         $new->footerRowOptions = $footerRowOptions;
@@ -662,7 +662,7 @@ final class GridView extends BaseListView
      *
      * {@see Html::renderTagAttributes()} for details on how attributes are being rendered.
      */
-    public function withHeadOptions(array $headOptions): self
+    public function headOptions(array $headOptions): self
     {
         $new = clone $this;
         $new->headOptions = $headOptions;
@@ -677,7 +677,7 @@ final class GridView extends BaseListView
      *
      * {@see Html::renderTagAttributes()} for details on how attributes are being rendered.
      */
-    public function withHeaderRowOptions(array $headerRowOptions): self
+    public function headerRowOptions(array $headerRowOptions): self
     {
         $new = clone $this;
         $new->headerRowOptions = $headerRowOptions;
@@ -690,7 +690,7 @@ final class GridView extends BaseListView
      *
      * @return $this
      */
-    public function withPlaceFooterAfterBody(bool $value): self
+    public function placeFooterAfterBody(bool $value): self
     {
         $new = clone $this;
         $new->placeFooterAfterBody = $value;
@@ -716,7 +716,7 @@ final class GridView extends BaseListView
      *
      * {@see Html::renderTagAttributes()} for details on how attributes are being rendered.
      */
-    public function withRowOptions($rowOptions): self
+    public function rowOptions($rowOptions): self
     {
         $new = clone $this;
         $new->rowOptions = $rowOptions;
@@ -729,7 +729,7 @@ final class GridView extends BaseListView
      *
      * @return $this
      */
-    public function withShowFooter(bool $showFooter): self
+    public function showFooter(bool $showFooter): self
     {
         $new = clone $this;
         $new->showFooter = $showFooter;
@@ -742,7 +742,7 @@ final class GridView extends BaseListView
      *
      * @return $this
      */
-    public function withShowHeader(bool $showHeader): self
+    public function showHeader(bool $showHeader): self
     {
         $new = clone $this;
         $new->showHeader = $showHeader;
@@ -757,7 +757,7 @@ final class GridView extends BaseListView
      *
      * {@see Html::renderTagAttributes()} for details on how attributes are being rendered.
      */
-    public function withTableOptions(array $tableOptions): self
+    public function tableOptions(array $tableOptions): self
     {
         $new = clone $this;
         $new->tableOptions = ArrayHelper::merge($this->tableOptions, $tableOptions);

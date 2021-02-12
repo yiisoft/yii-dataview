@@ -228,12 +228,12 @@ abstract class BaseListView extends Widget
     }
 
     /**
-     * @param int $currentPage set current page PaginatorInterface::class {@see OffsetPaginator::withCurrentPage()}
+     * @param int $currentPage set current page PaginatorInterface::class {@see OffsetPaginator::currentPage()}
      * {@see KeysetPaginator::
      *
      * @return $this
      */
-    public function withCurrentPage(int $currentPage): self
+    public function currentPage(int $currentPage): self
     {
         $new = clone $this;
         $new->currentPage = $currentPage;
@@ -254,7 +254,7 @@ abstract class BaseListView extends Widget
      * @see showOnEmpty
      * @see emptyTextOptions
      */
-    public function withEmptyText(?string $emptyText): self
+    public function emptyText(?string $emptyText): self
     {
         $new = clone $this;
 
@@ -274,7 +274,7 @@ abstract class BaseListView extends Widget
      *
      * {@see Html::renderTagAttributes()} for details on how attributes are being rendered.
      */
-    public function withEmptyTextOptions(array $emptyTextOptions): self
+    public function emptyTextOptions(array $emptyTextOptions): self
     {
         $new = clone $this;
         $new->emptyTextOptions = $emptyTextOptions;
@@ -306,7 +306,7 @@ abstract class BaseListView extends Widget
      *
      * @return $this
      */
-    public function withLayout(string $layout): self
+    public function layout(string $layout): self
     {
         $new = clone $this;
         $new->layout = $layout;
@@ -323,7 +323,7 @@ abstract class BaseListView extends Widget
      *
      * {@see Html::renderTagAttributes()} for details on how attributes are being rendered.
      */
-    public function withOptions(array $options): self
+    public function options(array $options): self
     {
         $new = clone $this;
 
@@ -333,12 +333,12 @@ abstract class BaseListView extends Widget
     }
 
     /**
-     * @param int $pageSize set page size PaginatorInterface {@see OffsetPaginator::withPageSize()}
-     * {@see KeysetPaginator::withPageSize()}.
+     * @param int $pageSize set page size PaginatorInterface {@see OffsetPaginator::pageSize()}
+     * {@see KeysetPaginator::pageSize()}.
      *
      * @return $this
      */
-    public function withPageSize(int $pageSize): self
+    public function pageSize(int $pageSize): self
     {
         $this->pageSize = $pageSize;
 
@@ -350,18 +350,10 @@ abstract class BaseListView extends Widget
      *
      * @return $this
      */
-    public function withPaginator(PaginatorInterface $paginator): self
+    public function paginator(PaginatorInterface $paginator): self
     {
         $new = clone $this;
         $new->paginator = $paginator;
-
-        return $new;
-    }
-
-    public function withServerRequest(ServerRequestInterface $serverRequest): self
-    {
-        $new = clone $this;
-        $new->serverRequest = $serverRequest;
 
         return $new;
     }
@@ -374,7 +366,7 @@ abstract class BaseListView extends Widget
      *
      * @return $this
      */
-    public function withShowOnEmpty(bool $showOnEmpty): self
+    public function showOnEmpty(bool $showOnEmpty): self
     {
         $new = clone $this;
         $new->showOnEmpty = $showOnEmpty;
@@ -397,7 +389,7 @@ abstract class BaseListView extends Widget
      *
      * @return $this
      */
-    public function withSummary(string $summary): self
+    public function summary(string $summary): self
     {
         $this->summary = $summary;
 
@@ -413,7 +405,7 @@ abstract class BaseListView extends Widget
      *
      * {@see Html::renderTagAttributes()} for details on how attributes are being rendered.
      */
-    public function withSummaryOptions(array $summaryOptions): self
+    public function summaryOptions(array $summaryOptions): self
     {
         $new = clone $this;
         $new->summaryOptions = $summaryOptions;
@@ -421,7 +413,7 @@ abstract class BaseListView extends Widget
         return $new;
     }
 
-    public function withShowEmptyText(bool $value): self
+    public function showEmptyText(bool $value): self
     {
         $new = clone $this;
         $new->showEmptyText = $value;
@@ -429,7 +421,7 @@ abstract class BaseListView extends Widget
         return $new;
     }
 
-    public function withSorter(?LinkSorter $sorter): self
+    public function sorter(?LinkSorter $sorter): self
     {
         $new = clone $this;
         $new->sorter = $sorter;
@@ -442,10 +434,10 @@ abstract class BaseListView extends Widget
         $dataReader = [];
 
         if ($this->pageSize > 0) {
-            $this->paginator = $this->paginator->withPageSize($this->pageSize);
+            $this->paginator = $this->paginator->pageSize($this->pageSize);
         }
 
-        $this->paginator = $this->paginator->withCurrentPage($this->currentPage);
+        $this->paginator = $this->paginator->currentPage($this->currentPage);
 
         foreach ($this->paginator->read() as $read) {
             $dataReader[] = $read;

@@ -115,7 +115,7 @@ final class DetailView extends Widget
      *
      * @return DetailView
      */
-    public function withAttributes(array $attributes): self
+    public function attributes(array $attributes): self
     {
         $new = clone $this;
         $new->attributes = $attributes;
@@ -123,7 +123,7 @@ final class DetailView extends Widget
         return $new;
     }
 
-    public function withEmptyHtml(string $emptyHtml): self
+    public function emptyHtml(string $emptyHtml): self
     {
         $new = clone $this;
         $new->emptyHtml = $emptyHtml;
@@ -138,7 +138,7 @@ final class DetailView extends Widget
      *
      * @return $this
      */
-    public function withModel($model): self
+    public function model($model): self
     {
         $new = clone $this;
         $new->model = $model;
@@ -154,7 +154,7 @@ final class DetailView extends Widget
      *
      * {@see Html::renderTagAttributes()} for details on how attributes are being rendered.
      */
-    public function withOptions(array $options): self
+    public function options(array $options): self
     {
         $new = clone $this;
         $new->options = $options;
@@ -180,7 +180,7 @@ final class DetailView extends Widget
      *
      * @return $this
      */
-    public function withTemplate($template): self
+    public function template($template): self
     {
         $new = clone $this;
         $new->template = $template;

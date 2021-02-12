@@ -219,7 +219,7 @@ final class ListView extends BaseListView implements ViewContextInterface
      *
      * @see renderAfterItem
      */
-    public function withAfterItem(?callable $afterItem): self
+    public function afterItem(?callable $afterItem): self
     {
         $new = clone $this;
         $new->afterItem = $afterItem;
@@ -249,7 +249,7 @@ final class ListView extends BaseListView implements ViewContextInterface
      *
      * @see renderBeforeItem
      */
-    public function withBeforeItem(?callable $beforeItem): self
+    public function beforeItem(?callable $beforeItem): self
     {
         $new = clone $this;
         $new->beforeItem = $beforeItem;
@@ -275,7 +275,7 @@ final class ListView extends BaseListView implements ViewContextInterface
      *
      * {@see Html::renderTagAttributes()} for details on how attributes are being rendered.
      */
-    public function withItemOptions($itemOptions): self
+    public function itemOptions($itemOptions): self
     {
         $new = clone $this;
 
@@ -314,7 +314,7 @@ final class ListView extends BaseListView implements ViewContextInterface
      *
      * @return $this
      */
-    public function withItemView($itemView): self
+    public function itemView($itemView): self
     {
         $new = clone $this;
 
@@ -332,7 +332,7 @@ final class ListView extends BaseListView implements ViewContextInterface
      *
      * @return $this
      */
-    public function withSeparator(string $separator): self
+    public function separator(string $separator): self
     {
         $new = clone $this;
         $new->separator = $separator;
@@ -345,7 +345,7 @@ final class ListView extends BaseListView implements ViewContextInterface
      *
      * @return $this
      */
-    public function withViewPath(string $viewPath): self
+    public function viewPath(string $viewPath): self
     {
         $new = clone $this;
         $new->viewPath = $viewPath;
@@ -360,7 +360,7 @@ final class ListView extends BaseListView implements ViewContextInterface
      *
      * @return $this
      */
-    public function withViewParams(array $viewParams): self
+    public function viewParams(array $viewParams): self
     {
         $new = clone $this;
         $new->viewParams = $viewParams;

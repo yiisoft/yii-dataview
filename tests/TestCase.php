@@ -77,7 +77,7 @@ class TestCase extends \PHPUnit\Framework\TestCase
         $this->actionColumn = $this->container->get(ActionColumn::class);
         $this->checkboxColumn = $this->container->get(CheckboxColumn::class);
         $paginatorInterface = $this->container->get(PaginatorInterface::class);
-        $this->gridView = $this->container->get(GridView::class)->withPaginator($paginatorInterface);
+        $this->gridView = $this->container->get(GridView::class)->paginator($paginatorInterface);
     }
 
     private function config(): array
