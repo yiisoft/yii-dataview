@@ -10,12 +10,12 @@ use Yiisoft\Yii\DataView\Tests\TestCase;
 
 final class ActionColumnTest extends TestCase
 {
-    public function testDefaultButtons(): void
+    public function testActionColumnDefaultButtons(): void
     {
         $this->assertSame(['view', 'update', 'delete'], array_keys($this->actionColumn->getButtons()));
     }
 
-    public function testButtonCustom(): void
+    public function testActionColumnButtonCustom(): void
     {
         $actionColumn = $this->actionColumn
             ->buttons(
@@ -33,7 +33,7 @@ final class ActionColumnTest extends TestCase
         $this->assertSame($html, $actionColumn->renderDataCell(['id' => 1], 1, 0));
     }
 
-    public function testButtonOptions(): void
+    public function testActionColumnButtonOptions(): void
     {
         $actionColumn = $this->actionColumn->buttonOptions(['disabled' => true]);
 
@@ -44,13 +44,13 @@ final class ActionColumnTest extends TestCase
         $this->assertSame($html, $actionColumn->renderDataCell(['id' => 1], 1, 0));
     }
 
-    public function testOneButtonMatched(): void
+    public function testActionColumnOneButtonMatched(): void
     {
         $actionColumn = $this->actionColumn->template('{show} {edit} {delete}');
         $this->assertSame(['delete'], array_keys($actionColumn->getButtons()));
     }
 
-    public function testPrimaryKey(): void
+    public function testActionColumnPrimaryKey(): void
     {
         $actionColumn = $this->actionColumn
             ->buttons(
@@ -68,19 +68,19 @@ final class ActionColumnTest extends TestCase
         $this->assertSame($html, $actionColumn->renderDataCell(['user_id' => 1], 1, 0));
     }
 
-    public function testNoMatchedResults(): void
+    public function testActionColumnNoMatchedResults(): void
     {
         $actionColumn = $this->actionColumn->template('{show} {edit} {remove}');
         $this->assertEmpty($actionColumn->getButtons());
     }
 
-    public function testDashInButtonPlaceholder(): void
+    public function testActionColumnDashInButtonPlaceholder(): void
     {
         $actionColumn = $this->actionColumn->template('{show-items}');
         $this->assertEmpty($actionColumn->getButtons());
     }
 
-    public function testRenderDataCell(): void
+    public function testActionColumnRenderDataCell(): void
     {
         $actionColumn = $this->actionColumn->urlCreator(static fn ($model, $key, $index) => 'http://test.com');
         $columnContents = $actionColumn->renderDataCell(['id' => 1], 1, 0);

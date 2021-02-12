@@ -37,10 +37,10 @@ use function substr_compare;
 final class CheckboxColumn extends Column
 {
     /** @var array|callable */
-    protected $checkboxOptions = [];
-    protected string $name = 'selection';
-    protected bool $multiple = true;
-    protected ?string $cssClass = null;
+    private $checkboxOptions = [];
+    private string $checkboxClassCss = '';
+    private string $name = 'selection';
+    private bool $multiple = true;
 
     public function __construct()
     {
@@ -48,13 +48,13 @@ final class CheckboxColumn extends Column
     }
 
     /**
-     * @param string|null $cssClass the css class that will be used to find the checkboxes.
+     * @param string $checkboxClassCss the css class that will be used to find the checkboxes.
      *
      * @return $this
      */
-    public function cssClass(?string $cssClass): self
+    public function checkboxClassCss(string $checkboxClassCss): self
     {
-        $this->cssClass = $cssClass;
+        $this->checkboxClassCss = $checkboxClassCss;
 
         return $this;
     }
@@ -106,11 +106,13 @@ final class CheckboxColumn extends Column
     }
 
     /**
-     * @param bool $multiple whether it is possible to select multiple rows. Defaults to `true`.
+     * Disable select multiple rows.
      */
-    public function multiple(bool $multiple): void
+    public function withoutMultiple(): self
     {
-        $this->multiple = $multiple;
+        $this->multiple = false;
+
+        return $this;
     }
 
     /**
@@ -148,8 +150,8 @@ final class CheckboxColumn extends Column
             $options['value'] = is_array($key) ? Json::encode($key) : $key;
         }
 
-        if ($this->cssClass !== null) {
-            Html::addCssClass($options, $this->cssClass);
+        if ($this->checkboxClassCss !== '') {
+            Html::addCssClass($options, $this->checkboxClassCss);
         }
 
         return Html::checkbox($this->name, !empty($options['checked']), $options);
@@ -179,7 +181,7 @@ final class CheckboxColumn extends Column
     /**
      * Registers the needed JavaScript.
      */
-    protected function registerClientScript(): void
+    private function registerClientScript(): void
     {
     }
 }

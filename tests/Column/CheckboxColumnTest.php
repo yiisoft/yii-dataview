@@ -10,18 +10,6 @@ use Yiisoft\Yii\DataView\Tests\TestCase;
 
 final class CheckboxColumnTest extends TestCase
 {
-    /**
-     * @dataProvider inputName()
-     *
-     * @param string $name
-     * @param string $html
-     */
-    public function testInputName(string $name, string $html): void
-    {
-        $column = $this->checkboxColumn->name($name)->grid($this->gridView);
-        $this->assertSame($html, $column->renderHeaderCell());
-    }
-
     public function inputName(): array
     {
         return [
@@ -52,7 +40,19 @@ final class CheckboxColumnTest extends TestCase
         ];
     }
 
-    public function testInputValue(): void
+    /**
+     * @dataProvider inputName()
+     *
+     * @param string $name
+     * @param string $html
+     */
+    public function testCheckboxInputName(string $name, string $html): void
+    {
+        $column = $this->checkboxColumn->name($name)->grid($this->gridView);
+        $this->assertSame($html, $column->renderHeaderCell());
+    }
+
+    public function testCheckboxInputValue(): void
     {
         $column = $this->checkboxColumn->grid($this->gridView);
 
@@ -98,7 +98,7 @@ final class CheckboxColumnTest extends TestCase
         $this->assertSame($html, $column->renderDataCell([], 1, 0));
     }
 
-    public function testContent(): void
+    public function testCheckboxContent(): void
     {
         $column = $this->checkboxColumn
             ->content(
@@ -121,7 +121,7 @@ final class CheckboxColumnTest extends TestCase
         $this->assertSame($html, $column->renderDataCell([], 1, 0));
     }
 
-    public function testCheckBoxException(): void
+    public function testCheckboxException(): void
     {
         $this->expectException(InvalidConfigException::class);
         $this->expectExceptionMessage('The "name" property must be set.');
@@ -129,5 +129,26 @@ final class CheckboxColumnTest extends TestCase
         $column = $this->checkboxColumn
             ->name('')
             ->grid($this->gridView);
+    }
+
+    public function testCheckboxClassCss(): void
+    {
+        $column = $this->checkboxColumn->checkboxClassCss('has-bg-link')->grid($this->gridView);
+        $html = <<<'HTML'
+        <td><input type="checkbox" class="has-bg-link" name="selection" value="1"></td>
+        HTML;
+        $this->assertSame($html, $column->renderDataCell([], 1, 0));
+    }
+
+    public function testCheckboxMultiple(): void
+    {
+        $column = $this->checkboxColumn->grid($this->gridView);
+        $html = <<<'HTML'
+        <th><input type="checkbox" class="select-on-check-all" name="selection_all" value="1"></th>
+        HTML;
+        $this->assertSame($html, $column->renderHeaderCell());
+
+        $column = $this->checkboxColumn->withoutMultiple()->grid($this->gridView);
+        $this->assertSame('<th>&nbsp;</th>', $column->renderHeaderCell());
     }
 }
