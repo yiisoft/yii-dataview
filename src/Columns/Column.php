@@ -15,6 +15,7 @@ use function trim;
 
 /**
  * Column is the base class of all {@see GridView} column classes.
+ *
  * For more details and usage information on Column, see the [guide article on data widgets](guide:output-data-widgets).
  */
 abstract class Column
@@ -30,11 +31,6 @@ abstract class Column
     protected bool $visible = true;
     protected array $options = [];
     private string $footer = '';
-
-    protected function formatMessage(string $message, array $arguments = []): string
-    {
-        return MessageFormatter::formatMessage($message, $arguments);
-    }
 
     public function renderHeaderCell(): string
     {
@@ -74,76 +70,6 @@ abstract class Column
     public function renderFilterCell(): string
     {
         return Html::tag('td', $this->renderFilterCellContent(), array_merge($this->filterOptions, ['encode' => false]));
-    }
-
-    /**
-     * Renders the header cell content.
-     *
-     * The default implementation simply renders {@see header}.
-     * This method may be overridden to customize the rendering of the header cell.
-     *
-     * @return string the rendering result
-     */
-    protected function renderHeaderCellContent(): string
-    {
-        return trim($this->header) !== '' ? $this->header : $this->getHeaderCellLabel();
-    }
-
-    /**
-     * Returns header cell label.
-     *
-     * This method may be overridden to customize the label of the header cell.
-     *
-     * @return string label
-     */
-    protected function getHeaderCellLabel(): string
-    {
-        return $this->grid->getEmptyCell();
-    }
-
-    /**
-     * Renders the footer cell content.
-     *
-     * The default implementation simply renders {@see footer}.
-     * This method may be overridden to customize the rendering of the footer cell.
-     *
-     * @return string the rendering result
-     */
-    protected function renderFooterCellContent(): string
-    {
-        return trim($this->footer) !== '' ? $this->footer : $this->grid->getEmptyCell();
-    }
-
-    /**
-     * Renders the data cell content.
-     *
-     * @param array $model the data model
-     * @param mixed $key the key associated with the data model
-     * @param int $index the zero-based index of the data model among the models array returned by
-     * {@see GridView::dataReader}.
-     *
-     * @return string the rendering result
-     */
-    protected function renderDataCellContent(array $model, $key, int $index): string
-    {
-        if ($this->content !== null) {
-            return call_user_func($this->content, $model, $key, $index, $this);
-        }
-
-        return $this->grid->getEmptyCell();
-    }
-
-    /**
-     * Renders the filter cell content.
-     *
-     * The default implementation simply renders a space.
-     * This method may be overridden to customize the rendering of the filter cell (if any).
-     *
-     * @return string the rendering result
-     */
-    protected function renderFilterCellContent(): string
-    {
-        return $this->grid->getEmptyCell();
     }
 
     /**
@@ -282,5 +208,80 @@ abstract class Column
         $this->filterOptions = $filterOptions;
 
         return $this;
+    }
+
+    protected function formatMessage(string $message, array $arguments = []): string
+    {
+        return MessageFormatter::formatMessage($message, $arguments);
+    }
+
+    /**
+     * Returns header cell label.
+     *
+     * This method may be overridden to customize the label of the header cell.
+     *
+     * @return string label
+     */
+    protected function getHeaderCellLabel(): string
+    {
+        return $this->grid->getEmptyCell();
+    }
+
+    /**
+     * Renders the data cell content.
+     *
+     * @param array $model the data model
+     * @param mixed $key the key associated with the data model
+     * @param int $index the zero-based index of the data model among the models array returned by
+     * {@see GridView::dataReader}.
+     *
+     * @return string the rendering result
+     */
+    protected function renderDataCellContent(array $model, $key, int $index): string
+    {
+        if ($this->content !== null) {
+            return call_user_func($this->content, $model, $key, $index, $this);
+        }
+
+        return $this->grid->getEmptyCell();
+    }
+
+    /**
+     * Renders the filter cell content.
+     *
+     * The default implementation simply renders a space.
+     * This method may be overridden to customize the rendering of the filter cell (if any).
+     *
+     * @return string the rendering result
+     */
+    protected function renderFilterCellContent(): string
+    {
+        return $this->grid->getEmptyCell();
+    }
+
+    /**
+     * Renders the footer cell content.
+     *
+     * The default implementation simply renders {@see footer}.
+     * This method may be overridden to customize the rendering of the footer cell.
+     *
+     * @return string the rendering result
+     */
+    protected function renderFooterCellContent(): string
+    {
+        return trim($this->footer) !== '' ? $this->footer : $this->grid->getEmptyCell();
+    }
+
+    /**
+     * Renders the header cell content.
+     *
+     * The default implementation simply renders {@see header}.
+     * This method may be overridden to customize the rendering of the header cell.
+     *
+     * @return string the rendering result
+     */
+    protected function renderHeaderCellContent(): string
+    {
+        return trim($this->header) !== '' ? $this->header : $this->getHeaderCellLabel();
     }
 }

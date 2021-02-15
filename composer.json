@@ -26,7 +26,7 @@
         "ext-json": "*",
         "yiisoft/aliases": "^1.0",
         "yiisoft/arrays": "^1.0",
-        "yiisoft/data": "^3.0@dev",
+        "yiisoft/data": "dev-add-getsort-offsetPaginator",
         "yiisoft/factory": "^3.0@dev",
         "yiisoft/router": "^3.0@dev",
         "yiisoft/strings": "^2.0",
@@ -51,7 +51,9 @@
             "dev-master": "3.0.x-dev"
         },
         "config-plugin": {
-            "tests": "config/tests.php"
+            "web": [
+                "config/web/*.php"
+            ]
         }
     },
     "autoload": {
@@ -70,5 +72,11 @@
     "scripts": {
         "test": "phpunit --testdox --no-interaction",
         "test-watch": "phpunit-watcher watch"
-    }
+    },
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/terabytesoftw/data"
+        }
+    ]
 }

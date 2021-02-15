@@ -67,70 +67,6 @@ final class ActionColumn extends Column
         $this->loadDefaultButtons();
     }
 
-    private function loadDefaultButtons(): void
-    {
-        $defaultButtons = ([
-            ['view','&#128065;', []],
-            ['update', '&#128393;', []],
-            [
-                'delete',
-                '&#128465;',
-                [
-                    'data-confirm' => $this->formatMessage(
-                        'Are you sure you want to delete this item?',
-                        []
-                    ),
-                    'data-method' => 'post',
-                ],
-            ],
-        ]);
-
-        foreach ($defaultButtons as $defaultButton) {
-            $this->loadDefaultButton($defaultButton[0], $defaultButton[1], $defaultButton[2]);
-        }
-    }
-
-    /**
-     * Initializes the default button rendering callback for single button.
-     *
-     * @param string $name Button name as it's written in template.
-     * @param string $iconName The part of Bootstrap glyphicon class that makes it unique.
-     * @param array $additionalOptions Array of additional options.
-     */
-    protected function loadDefaultButton(string $name, string $iconName, array $additionalOptions = []): void
-    {
-        if (!isset($this->buttons[$name]) && strpos($this->template, '{' . $name . '}') !== false) {
-            $this->buttons[$name] = function ($url) use ($name, $iconName, $additionalOptions): string {
-                switch ($name) {
-                    case 'view':
-                        $title = $this->formatMessage('View', []);
-                        break;
-                    case 'update':
-                        $title = $this->formatMessage('Update', []);
-                        break;
-                    case 'delete':
-                        $title = $this->formatMessage('Delete', []);
-                        break;
-                }
-
-                $options = array_merge(
-                    [
-                        'title' => $title,
-                        'aria-label' => $title,
-                        'data-name' => $name,
-                        'encode' => false,
-                    ],
-                    $additionalOptions,
-                    $this->buttonOptions
-                );
-
-                $icon = Html::tag('span', $iconName, ['encode' => false]);
-
-                return Html::a($icon, $url, $options);
-            };
-        }
-    }
-
     public function getButtons(): array
     {
         return $this->buttons;
@@ -277,31 +213,6 @@ final class ActionColumn extends Column
         return $this;
     }
 
-    /**
-     * Creates a URL for the given action and model.
-     *
-     * This method is called for each button and each row.
-     *
-     * @param string $action the button name (or action ID)
-     * @param array $model the data model
-     * @param mixed $key the key associated with the data model
-     * @param int $index the current row index
-     *
-     * @return string the created URL
-     */
-    public function createUrl(string $action, array $model, $key, int $index): string
-    {
-        if (is_callable($this->urlCreator)) {
-            return call_user_func($this->urlCreator, $action, $model, $key, $index, $this);
-        }
-
-        $key = $model[$this->primaryKey] ?? $key;
-
-        $params = is_array($key) ? $key : ['id' => (string) $key];
-
-        return $this->urlGenerator->generate($action, $params);
-    }
-
     protected function renderDataCellContent(array $model, $key, int $index): string
     {
         return preg_replace_callback(
@@ -327,5 +238,94 @@ final class ActionColumn extends Column
             },
             $this->template
         );
+    }
+
+    /**
+     * Creates a URL for the given action and model.
+     *
+     * This method is called for each button and each row.
+     *
+     * @param string $action the button name (or action ID)
+     * @param array $model the data model
+     * @param mixed $key the key associated with the data model
+     * @param int $index the current row index
+     *
+     * @return string the created URL
+     */
+    private function createUrl(string $action, array $model, $key, int $index): string
+    {
+        if (is_callable($this->urlCreator)) {
+            return call_user_func($this->urlCreator, $action, $model, $key, $index, $this);
+        }
+
+        $key = $model[$this->primaryKey] ?? $key;
+
+        $params = is_array($key) ? $key : ['id' => (string) $key];
+
+        return $this->urlGenerator->generate($action, $params);
+    }
+
+    private function loadDefaultButtons(): void
+    {
+        $defaultButtons = ([
+            ['view','&#128065;', []],
+            ['update', '&#128393;', []],
+            [
+                'delete',
+                '&#128465;',
+                [
+                    'data-confirm' => $this->formatMessage(
+                        'Are you sure you want to delete this item?',
+                        []
+                    ),
+                    'data-method' => 'post',
+                ],
+            ],
+        ]);
+
+        foreach ($defaultButtons as $defaultButton) {
+            $this->loadDefaultButton($defaultButton[0], $defaultButton[1], $defaultButton[2]);
+        }
+    }
+
+    /**
+     * Initializes the default button rendering callback for single button.
+     *
+     * @param string $name Button name as it's written in template.
+     * @param string $iconName The part of Bootstrap glyphicon class that makes it unique.
+     * @param array $additionalOptions Array of additional options.
+     */
+    private function loadDefaultButton(string $name, string $iconName, array $additionalOptions = []): void
+    {
+        if (!isset($this->buttons[$name]) && strpos($this->template, '{' . $name . '}') !== false) {
+            $this->buttons[$name] = function ($url) use ($name, $iconName, $additionalOptions): string {
+                switch ($name) {
+                    case 'view':
+                        $title = $this->formatMessage('View', []);
+                        break;
+                    case 'update':
+                        $title = $this->formatMessage('Update', []);
+                        break;
+                    case 'delete':
+                        $title = $this->formatMessage('Delete', []);
+                        break;
+                }
+
+                $options = array_merge(
+                    [
+                        'title' => $title,
+                        'aria-label' => $title,
+                        'data-name' => $name,
+                        'encode' => false,
+                    ],
+                    $additionalOptions,
+                    $this->buttonOptions
+                );
+
+                $icon = Html::tag('span', $iconName, ['encode' => false]);
+
+                return Html::a($icon, $url, $options);
+            };
+        }
     }
 }

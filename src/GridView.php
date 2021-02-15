@@ -85,7 +85,7 @@ final class GridView extends BaseListView
         parent::__construct($translator);
     }
 
-    public function run(): string
+    protected function run(): string
     {
         if (!isset($this->options['id'])) {
             $this->options['id'] = $this->getId() . '-gridview';
@@ -141,292 +141,6 @@ final class GridView extends BaseListView
             implode("\n", $content),
             array_merge($this->tableOptions, ['encode' => false])
         );
-    }
-
-    /**
-     * Renders the caption element.
-     *
-     * @throws JsonException
-     *
-     * @return string|null ?string the rendered caption element or `false` if no caption element should be rendered.
-     */
-    public function renderCaption(): ?string
-    {
-        if (!empty($this->caption)) {
-            return Html::tag('caption', $this->caption, $this->captionOptions);
-        }
-
-        return null;
-    }
-
-    /**
-     * Renders the column group HTML.
-     *
-     * @throws JsonException
-     *
-     * @return bool|string the column group HTML or `false` if no column group should be rendered.
-     */
-    public function renderColumnGroup()
-    {
-        foreach ($this->columns as $column) {
-            /* @var $column Column */
-            if (!empty($column->getOptions())) {
-                $cols = [];
-                foreach ($this->columns as $col) {
-                    $cols[] = Html::tag('col', '', $col->options);
-                }
-
-                return Html::tag('colgroup', implode("\n", $cols));
-            }
-        }
-
-        return false;
-    }
-
-    /**
-     * Renders the table header.
-     *
-     * @throws JsonException
-     *
-     * @return string the rendering result.
-     */
-    public function renderTableHeader(): string
-    {
-        $cells = [];
-
-        foreach ($this->columns as $column) {
-            /* @var $column Column */
-            $cells[] = $column->renderHeaderCell();
-        }
-
-        $content = Html::tag('tr', implode('', $cells), array_merge($this->headerRowOptions, ['encode' => false]));
-
-        if ($this->filterPosition === self::FILTER_POS_HEADER) {
-            $content = $this->renderFilters() . $content;
-        } elseif ($this->filterPosition === self::FILTER_POS_BODY) {
-            $content .= $this->renderFilters();
-        }
-
-        return Html::tag('thead', "\n$content\n", array_merge($this->headOptions, ['encode' => false]));
-    }
-
-    /**
-     * Renders the table footer.
-     *
-     * @throws JsonException
-     *
-     * @return string the rendering result.
-     */
-    public function renderTableFooter(): string
-    {
-        $cells = [];
-
-        foreach ($this->columns as $column) {
-            /* @var $column Column */
-            $cells[] = $column->renderFooterCell();
-        }
-
-        $content = Html::tag('tr', implode('', $cells), array_merge($this->footerRowOptions, ['encode' => false]));
-
-        if ($this->filterPosition === self::FILTER_POS_FOOTER) {
-            $content .= $this->renderFilters();
-        }
-
-        return "<tfoot>\n" . $content . "\n</tfoot>";
-    }
-
-    /**
-     * Renders the filter.
-     *
-     * @throws JsonException
-     *
-     * @return string the rendering result.
-     */
-    public function renderFilters(): string
-    {
-        if ($this->getFilterModel() !== null) {
-            $cells = [];
-            foreach ($this->columns as $column) {
-                /* @var $column Column */
-                $cells[] = $column->renderFilterCell();
-            }
-
-            return Html::tag('tr', implode('', $cells), array_merge($this->filterRowOptions, ['encode' => false]));
-        }
-
-        return '';
-    }
-
-    /**
-     * Renders the table body.
-     *
-     * @throws JsonException
-     *
-     * @return string the rendering result.
-     */
-    public function renderTableBody(): string
-    {
-        $models = $this->getDataReader();
-        $keys = array_keys($models);
-        $rows = [];
-
-        foreach ($models as $index => $model) {
-            $key = $keys[$index];
-            if ($this->beforeRow !== null) {
-                $row = call_user_func($this->beforeRow, $model, $key, $index, $this);
-                if (!empty($row)) {
-                    $rows[] = $row;
-                }
-            }
-
-            $rows[] = $this->renderTableRow($model, $key, $index);
-
-            if ($this->afterRow !== null) {
-                $row = call_user_func($this->afterRow, $model, $key, $index, $this);
-                if (!empty($row)) {
-                    $rows[] = $row;
-                }
-            }
-        }
-
-        if (empty($rows) && $this->emptyText !== null) {
-            $colspan = count($this->columns);
-
-            return "<tbody>\n<tr><td colspan=\"$colspan\">" . $this->renderEmpty() . "</td></tr>\n</tbody>";
-        }
-
-        return "<tbody>\n" . implode("\n", $rows) . "\n</tbody>";
-    }
-
-    /**
-     * Renders a table row with the given data model and key.
-     *
-     * @param mixed $model the data model to be rendered
-     * @param mixed $key the key associated with the data model
-     * @param mixed $index the zero-based index of the data model among the model array returned by [[dataProvider]].
-     *
-     * @throws JsonException
-     *
-     * @return string the rendering result
-     */
-    public function renderTableRow($model, $key, $index): string
-    {
-        $cells = [];
-
-        /* @var $column Column */
-        foreach ($this->columns as $column) {
-            $cells[] = $column->renderDataCell($model, $key, $index);
-        }
-
-        if ($this->rowOptions instanceof Closure) {
-            $options = call_user_func($this->rowOptions, $model, $key, $index, $this);
-        } else {
-            $options = $this->rowOptions;
-        }
-        $options['data-key'] = is_array($key) ? Json::encode($key) : (string)$key;
-
-        return Html::tag('tr', implode('', $cells), array_merge($options, ['encode' => false]));
-    }
-
-    /**
-     * Creates column objects and initializes them.
-     *
-     * @throws InvalidConfigException
-     */
-    protected function initColumns(): void
-    {
-        if (empty($this->columns)) {
-            $this->guessColumns();
-        }
-
-        foreach ($this->columns as $i => $column) {
-            if (is_string($column)) {
-                $column = $this->createDataColumn($column);
-            } else {
-                $buttons = null;
-                $value = null;
-
-                if (isset($column['buttons()'])) {
-                    $buttons = $column['buttons()'];
-                    unset($column['buttons()']);
-                }
-
-                if (isset($column['value()'])) {
-                    $value = $column['value()'];
-                    unset($column['value()']);
-                }
-
-                $config = array_merge(
-                    [
-                        '__class' => $this->dataColumnClass,
-                        'grid()' => [$this],
-                    ],
-                    $column,
-                );
-
-                $column = $this->gridViewFactory->createColumnClass($config);
-
-                if ($buttons !== null) {
-                    $column->buttons($buttons);
-                }
-
-                if ($value !== null) {
-                    $column->value($value);
-                }
-            }
-
-            if (!$column->isVisible()) {
-                unset($this->columns[$i]);
-                continue;
-            }
-
-            $this->columns[$i] = $column;
-        }
-    }
-
-    /**
-     * Creates a {@see DataColumn} object based on a string in the format of "attribute:format:label".
-     *
-     * @param string $text the column specification string.
-     *
-     * @throws InvalidConfigException if the column specification is invalid.
-     *
-     * @return Column the column instance.
-     */
-    protected function createDataColumn(string $text): Column
-    {
-        if (!preg_match('/^([^:]+)(:(\w*))?(:(.*))?$/', $text, $matches)) {
-            throw new InvalidConfigException(
-                'The column must be specified in the format of "attribute", "attribute:format" or ' .
-                '"attribute:format:label"'
-            );
-        }
-
-        $config = [
-            '__class' => DataColumn::class,
-            'attribute()' => [$matches[1]],
-            'label()' => [$matches[5] ?? null],
-        ];
-
-        return $this->gridViewFactory->createColumnClass($config);
-    }
-
-    /**
-     * This function tries to guess the columns to show from the given data if {@see columns} are not explicitly
-     * specified.
-     */
-    protected function guessColumns(): void
-    {
-        $models = $this->getDataReader();
-        $model = reset($models);
-
-        if (is_array($model) || is_object($model)) {
-            foreach ($this->paginator->read() as $name => $value) {
-                if ($value === null || is_scalar($value) || is_callable([$value, '__toString'])) {
-                    $this->columns[] = (string)$name;
-                }
-            }
-        }
     }
 
     public function getColumns(): array
@@ -763,5 +477,292 @@ final class GridView extends BaseListView
         $new->tableOptions = ArrayHelper::merge($this->tableOptions, $tableOptions);
 
         return $new;
+    }
+
+    /**
+     * Creates a {@see DataColumn} object based on a string in the format of "attribute:format:label".
+     *
+     * @param string $text the column specification string.
+     *
+     * @throws InvalidConfigException if the column specification is invalid.
+     *
+     * @return Column the column instance.
+     */
+    private function createDataColumn(string $text): Column
+    {
+        if (!preg_match('/^([^:]+)(:(\w*))?(:(.*))?$/', $text, $matches)) {
+            throw new InvalidConfigException(
+                'The column must be specified in the format of "attribute", "attribute:format" or ' .
+                '"attribute:format:label"'
+            );
+        }
+
+        $config = [
+            '__class' => DataColumn::class,
+            'attribute()' => [$matches[1]],
+            'label()' => [$matches[5] ?? null],
+            'grid()' => [$this],
+        ];
+
+        return $this->gridViewFactory->createColumnClass($config);
+    }
+
+    /**
+     * This function tries to guess the columns to show from the given data if {@see columns} are not explicitly
+     * specified.
+     */
+    private function guessColumns(): void
+    {
+        $models = $this->getDataReader();
+        $model = reset($models);
+
+        if (is_array($model) || is_object($model)) {
+            foreach ($this->paginator->read() as $name => $value) {
+                if ($value === null || is_scalar($value) || is_callable([$value, '__toString'])) {
+                    $this->columns[] = (string)$name;
+                }
+            }
+        }
+    }
+
+    /**
+     * Creates column objects and initializes them.
+     *
+     * @throws InvalidConfigException
+     */
+    private function initColumns(): void
+    {
+        if (empty($this->columns)) {
+            $this->guessColumns();
+        }
+
+        foreach ($this->columns as $i => $column) {
+            if (is_string($column)) {
+                $column = $this->createDataColumn($column);
+            } else {
+                $buttons = null;
+                $value = null;
+
+                if (isset($column['buttons()'])) {
+                    $buttons = $column['buttons()'];
+                    unset($column['buttons()']);
+                }
+
+                if (isset($column['value()'])) {
+                    $value = $column['value()'];
+                    unset($column['value()']);
+                }
+
+                $config = array_merge(
+                    [
+                        '__class' => $this->dataColumnClass,
+                        'grid()' => [$this],
+                    ],
+                    $column,
+                );
+
+                $column = $this->gridViewFactory->createColumnClass($config);
+
+                if ($buttons !== null) {
+                    $column->buttons($buttons);
+                }
+
+                if ($value !== null) {
+                    $column->value($value);
+                }
+            }
+
+            if (!$column->isVisible()) {
+                unset($this->columns[$i]);
+                continue;
+            }
+
+            $this->columns[$i] = $column;
+        }
+    }
+
+    /**
+     * Renders the caption element.
+     *
+     * @throws JsonException
+     *
+     * @return string|null ?string the rendered caption element or `false` if no caption element should be rendered.
+     */
+    private function renderCaption(): ?string
+    {
+        if (!empty($this->caption)) {
+            return Html::tag('caption', $this->caption, $this->captionOptions);
+        }
+
+        return null;
+    }
+
+    /**
+     * Renders the column group HTML.
+     *
+     * @throws JsonException
+     *
+     * @return bool|string the column group HTML or `false` if no column group should be rendered.
+     */
+    private function renderColumnGroup()
+    {
+        foreach ($this->columns as $column) {
+            /* @var $column Column */
+            if (!empty($column->getOptions())) {
+                $cols = [];
+                foreach ($this->columns as $col) {
+                    $cols[] = Html::tag('col', '', $col->options);
+                }
+
+                return Html::tag('colgroup', implode("\n", $cols));
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Renders the filter.
+     *
+     * @throws JsonException
+     *
+     * @return string the rendering result.
+     */
+    private function renderFilters(): string
+    {
+        if ($this->getFilterModel() !== null) {
+            $cells = [];
+            foreach ($this->columns as $column) {
+                /* @var $column Column */
+                $cells[] = $column->renderFilterCell();
+            }
+
+            return Html::tag('tr', implode('', $cells), array_merge($this->filterRowOptions, ['encode' => false]));
+        }
+
+        return '';
+    }
+
+    /**
+     * Renders the table body.
+     *
+     * @throws JsonException
+     *
+     * @return string the rendering result.
+     */
+    private function renderTableBody(): string
+    {
+        $models = $this->getDataReader();
+        $keys = array_keys($models);
+        $rows = [];
+
+        foreach ($models as $index => $model) {
+            $key = $keys[$index];
+            if ($this->beforeRow !== null) {
+                $row = call_user_func($this->beforeRow, $model, $key, $index, $this);
+                if (!empty($row)) {
+                    $rows[] = $row;
+                }
+            }
+
+            $rows[] = $this->renderTableRow($model, $key, $index);
+
+            if ($this->afterRow !== null) {
+                $row = call_user_func($this->afterRow, $model, $key, $index, $this);
+                if (!empty($row)) {
+                    $rows[] = $row;
+                }
+            }
+        }
+
+        if (empty($rows) && $this->emptyText !== null) {
+            $colspan = count($this->columns);
+
+            return "<tbody>\n<tr><td colspan=\"$colspan\">" . $this->renderEmpty() . "</td></tr>\n</tbody>\n";
+        }
+
+        return "<tbody>\n" . implode("\n", $rows) . "\n</tbody>\n";
+    }
+
+    /**
+     * Renders the table footer.
+     *
+     * @throws JsonException
+     *
+     * @return string the rendering result.
+     */
+    private function renderTableFooter(): string
+    {
+        $cells = [];
+
+        foreach ($this->columns as $column) {
+            /* @var $column Column */
+            $cells[] = $column->renderFooterCell();
+        }
+
+        $content = Html::tag('tr', implode('', $cells), array_merge($this->footerRowOptions, ['encode' => false]));
+
+        if ($this->filterPosition === self::FILTER_POS_FOOTER) {
+            $content .= $this->renderFilters();
+        }
+
+        return "<tfoot>\n" . $content . "\n</tfoot>";
+    }
+
+    /**
+     * Renders the table header.
+     *
+     * @throws JsonException
+     *
+     * @return string the rendering result.
+     */
+    private function renderTableHeader(): string
+    {
+        $cells = [];
+
+        foreach ($this->columns as $column) {
+            /* @var $column Column */
+            $cells[] = $column->renderHeaderCell();
+        }
+
+        $content = Html::tag('tr', implode('', $cells), array_merge($this->headerRowOptions, ['encode' => false]));
+
+        if ($this->filterPosition === self::FILTER_POS_HEADER) {
+            $content = $this->renderFilters() . $content;
+        } elseif ($this->filterPosition === self::FILTER_POS_BODY) {
+            $content .= $this->renderFilters();
+        }
+
+        return "\n" . Html::tag('thead', "\n$content\n", array_merge($this->headOptions, ['encode' => false]));
+    }
+
+    /**
+     * Renders a table row with the given data model and key.
+     *
+     * @param mixed $model the data model to be rendered
+     * @param mixed $key the key associated with the data model
+     * @param mixed $index the zero-based index of the data model among the model array returned by [[dataProvider]].
+     *
+     * @throws JsonException
+     *
+     * @return string the rendering result
+     */
+    private function renderTableRow($model, $key, $index): string
+    {
+        $cells = [];
+
+        /* @var $column Column */
+        foreach ($this->columns as $column) {
+            $cells[] = $column->renderDataCell($model, $key, $index);
+        }
+
+        if ($this->rowOptions instanceof Closure) {
+            $options = call_user_func($this->rowOptions, $model, $key, $index, $this);
+        } else {
+            $options = $this->rowOptions;
+        }
+        $options['data-key'] = is_array($key) ? Json::encode($key) : (string)$key;
+
+        return Html::tag('tr', implode('', $cells), array_merge($options, ['encode' => false]));
     }
 }

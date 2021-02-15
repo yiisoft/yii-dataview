@@ -5,6 +5,7 @@
       <directory>./</directory>
     </include>
     <exclude>
+      <directory>./config</directory>
       <directory>./tests</directory>
       <directory>./vendor</directory>
     </exclude>

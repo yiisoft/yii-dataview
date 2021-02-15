@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Yiisoft\Yii\DataView;
 
 use JsonException;
-use Psr\Http\Message\ServerRequestInterface;
 use Yiisoft\Arrays\ArrayHelper;
 use Yiisoft\Data\Paginator\OffsetPaginator;
 use Yiisoft\Data\Paginator\PaginatorInterface;
 use Yiisoft\Html\Html;
 use Yiisoft\Translator\TranslatorInterface;
+use Yiisoft\Yii\DataView\Exception\InvalidConfigException;
 use Yiisoft\Yii\DataView\Widget\LinkPager;
 use Yiisoft\Yii\DataView\Widget\LinkSorter;
 
@@ -29,10 +29,6 @@ abstract class BaseListView extends Widget
 {
     public const BOOTSTRAP = 'bootstrap';
     public const BULMA = 'bulma';
-    private const FRAMEWORKCSS = [
-        self::BOOTSTRAP,
-        self::BULMA,
-    ];
     protected array $options = [];
     protected PaginatorInterface $paginator;
     protected ?LinkSorter $sorter = null;
@@ -44,10 +40,15 @@ abstract class BaseListView extends Widget
     protected bool $showEmptyText = true;
     protected array $emptyTextOptions = ['class' => 'empty'];
     protected string $layout = "{summary}\n{items}\n{pager}";
+    private const FRAMEWORKCSS = [
+        self::BOOTSTRAP,
+        self::BULMA,
+    ];
+    private array $attributes = [];
+    private string $frameworkCss = self::BOOTSTRAP;
     private int $pageSize = 0;
     private int $currentPage = 1;
     private TranslatorInterface $translator;
-    private ?ServerRequestInterface $serverRequest = null;
 
     public function __construct(TranslatorInterface $translator)
     {
@@ -61,7 +62,7 @@ abstract class BaseListView extends Widget
      */
     abstract public function renderItems(): string;
 
-    public function run(): string
+    protected function run(): string
     {
         if ($this->showOnEmpty || ($this->paginator->getTotalItems() > 0)) {
             $content = preg_replace_callback(
@@ -84,142 +85,9 @@ abstract class BaseListView extends Widget
         return Html::tag($tag, $content, $options);
     }
 
-    /**
-     * Renders a section of the specified name.
-     *
-     * If the named section is not supported, false will be returned.
-     *
-     * @param string $name the section name, e.g., `{summary}`, `{items}`.
-     *
-     * @return bool|string the rendering result of the section, or false if the named section is not supported.
-     */
-    public function renderSection(string $name): string
+    public function getAttributes(): array
     {
-        switch ($name) {
-            case '{summary}':
-                return $this->renderSummary();
-            case '{items}':
-                return $this->renderItems();
-            case '{pager}':
-                return $this->renderPager();
-            case '{sorter}':
-                return $this->renderSorter();
-            default:
-                return '';
-        }
-    }
-
-    /**
-     * Renders the HTML content indicating that the list view has no data.
-     *
-     * @throws JsonException
-     *
-     * @return string the rendering result
-     *
-     * @see emptyText
-     */
-    public function renderEmpty(): string
-    {
-        if (!$this->showEmptyText) {
-            return '';
-        }
-
-        $options = $this->emptyTextOptions;
-        $tag = ArrayHelper::remove($options, 'tag', 'div');
-
-        return Html::tag($tag, $this->emptyText, $options);
-    }
-
-    /**
-     * Renders the summary text.
-     */
-    public function renderSummary(): string
-    {
-        $count = $this->paginator->getTotalItems();
-
-        if ($count < 1 || $this->summary === '') {
-            return '';
-        }
-
-        $summaryOptions = $this->summaryOptions;
-        $summaryOptions['encode'] = false;
-        $tag = ArrayHelper::remove($summaryOptions, 'tag', 'div');
-
-        if ($this->paginator instanceof OffsetPaginator) {
-            $totalCount = count($this->getDataReader());
-            $begin = $this->paginator->getOffset() + 1;
-            $end = ($begin + $totalCount) - 1;
-
-            if ($begin > $end) {
-                $begin = $end;
-            }
-
-            $page = $this->paginator->getCurrentPage() + 1;
-            $pageCount = $this->paginator->getCurrentPageSize();
-        } else {
-            $begin = $page = $pageCount = 1;
-            $end = $totalCount = $count;
-        }
-
-        return Html::tag(
-            $tag,
-            $this->translator->translate(
-                $this->summary,
-                [
-                    'begin' => $begin,
-                    'end' => $end,
-                    'count' => $count,
-                    'totalCount' => $this->summary === null ? $totalCount : $count,
-                    'page' => $page,
-                    'pageCount' => $pageCount,
-                ],
-                'user',
-            ),
-            $summaryOptions
-        );
-    }
-
-    /**
-     * Renders the pager.
-     *
-     * @return string the rendering result
-     */
-    public function renderPager(): string
-    {
-        if ($this->paginator === null || $this->paginator->getTotalItems() < 1) {
-            return '';
-        }
-
-        /** @var $class LinkPager */
-        $pager = LinkPager::widget();
-
-        return $pager
-            ->frameworkCss($this->frameworkCss)
-            ->paginator($this->paginator)
-            ->render();
-    }
-
-    /**
-     * Renders the sorter.
-     *
-     * @return string the rendering result
-     */
-    public function renderSorter(): string
-    {
-        $sort = $this->paginator->getSort();
-
-        if (
-            $this->sorter === null ||
-            $sort === null ||
-            empty($sort->getCriteria()) ||
-            $this->paginator->getTotalItems() < 1
-        ) {
-            return '';
-        }
-
-        $this->sorter->sort($sort);
-
-        return $this->sorter->run();
+        return $this->attributes;
     }
 
     public function getPaginator(): PaginatorInterface
@@ -326,7 +194,6 @@ abstract class BaseListView extends Widget
     public function options(array $options): self
     {
         $new = clone $this;
-
         $new->options = ArrayHelper::merge($this->options, $options);
 
         return $new;
@@ -340,9 +207,10 @@ abstract class BaseListView extends Widget
      */
     public function pageSize(int $pageSize): self
     {
-        $this->pageSize = $pageSize;
+        $new = clone $this;
+        $new->pageSize = $pageSize;
 
-        return $this;
+        return $new;
     }
 
     /**
@@ -391,9 +259,10 @@ abstract class BaseListView extends Widget
      */
     public function summary(string $summary): self
     {
-        $this->summary = $summary;
+        $new = clone $this;
+        $new->summary = $summary;
 
-        return $this;
+        return $new;
     }
 
     /**
@@ -421,28 +290,152 @@ abstract class BaseListView extends Widget
         return $new;
     }
 
-    public function sorter(?LinkSorter $sorter): self
-    {
-        $new = clone $this;
-        $new->sorter = $sorter;
-
-        return $new;
-    }
-
     protected function getDataReader(): array
     {
         $dataReader = [];
 
         if ($this->pageSize > 0) {
-            $this->paginator = $this->paginator->pageSize($this->pageSize);
+            $this->paginator = $this->paginator->withPageSize($this->pageSize);
         }
 
-        $this->paginator = $this->paginator->currentPage($this->currentPage);
+        $this->paginator = $this->paginator->withCurrentPage($this->currentPage);
 
         foreach ($this->paginator->read() as $read) {
+            $this->attributes = array_keys($read);
             $dataReader[] = $read;
         }
 
         return $dataReader;
+    }
+
+    /**
+     * Renders the HTML content indicating that the list view has no data.
+     *
+     * @throws JsonException
+     *
+     * @return string the rendering result
+     *
+     * @see emptyText
+     */
+    protected function renderEmpty(): string
+    {
+        if (!$this->showEmptyText) {
+            return '';
+        }
+
+        $options = $this->emptyTextOptions;
+        $tag = ArrayHelper::remove($options, 'tag', 'div');
+
+        return Html::tag($tag, $this->emptyText, $options);
+    }
+
+    /**
+     * Renders the summary text.
+     */
+    private function renderSummary(): string
+    {
+        $count = $this->paginator->getTotalItems();
+
+        if ($count < 1 || $this->summary === '') {
+            return '';
+        }
+
+        $summaryOptions = $this->summaryOptions;
+        $summaryOptions['encode'] = false;
+        $tag = ArrayHelper::remove($summaryOptions, 'tag', 'div');
+
+        if ($this->paginator instanceof OffsetPaginator) {
+            $totalCount = count($this->getDataReader());
+            $begin = $this->paginator->getOffset() + 1;
+            $end = ($begin + $totalCount) - 1;
+
+            if ($begin > $end) {
+                $begin = $end;
+            }
+
+            $page = $this->paginator->getCurrentPage() + 1;
+            $pageCount = $this->paginator->getCurrentPageSize();
+        } else {
+            $begin = $page = $pageCount = 1;
+            $end = $totalCount = $count;
+        }
+
+        return Html::tag(
+            $tag,
+            $this->translator->translate(
+                $this->summary,
+                [
+                    'begin' => $begin,
+                    'end' => $end,
+                    'count' => $count,
+                    'totalCount' => $this->summary === null ? $totalCount : $count,
+                    'page' => $page,
+                    'pageCount' => $pageCount,
+                ],
+                'yii-gridview',
+            ),
+            $summaryOptions
+        );
+    }
+
+    /**
+     * Renders the pager.
+     *
+     * @throws InvalidConfigException|\Yiisoft\Factory\Exceptions\InvalidConfigException
+     *
+     * @return string the rendering result
+     */
+    private function renderPager(): string
+    {
+        if ($this->paginator === null || $this->paginator->getTotalItems() < 1) {
+            return '';
+        }
+
+        return LinkPager::widget()->frameworkCss($this->frameworkCss)->paginator($this->paginator)->render();
+    }
+
+    /**
+     * Renders a section of the specified name.
+     *
+     * If the named section is not supported, false will be returned.
+     *
+     * @param string $name the section name, e.g., `{summary}`, `{items}`.
+     *
+     * @throws InvalidConfigException|\Yiisoft\Factory\Exceptions\InvalidConfigException
+     *
+     * @return bool|string the rendering result of the section, or false if the named section is not supported.
+     */
+    private function renderSection(string $name): string
+    {
+        switch ($name) {
+            case '{summary}':
+                return $this->renderSummary();
+            case '{items}':
+                return $this->renderItems();
+            case '{pager}':
+                return $this->renderPager();
+            case '{sorter}':
+                return $this->renderSorter();
+            default:
+                return '';
+        }
+    }
+
+    /**
+     * Renders the sorter.
+     *
+     * @throws \Yiisoft\Factory\Exceptions\InvalidConfigException
+     *
+     * @return string the rendering result
+     */
+    private function renderSorter(): string
+    {
+        $sort = $this->paginator->getSort();
+
+        if ($sort === null || empty($sort->getCriteria()) || $this->paginator->getTotalItems() < 1) {
+            return '';
+        }
+
+        return LinkSorter::widget()->sort($sort)->frameworkCss($this->frameworkCss)->render();
     }
 }

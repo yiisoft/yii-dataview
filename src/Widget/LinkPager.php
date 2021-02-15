@@ -44,17 +44,17 @@ final class LinkPager extends Widget
     ];
     private array $buttonsContainerAttributes = [];
     private array $disabledListItemSubTagAttributes = [];
-    private array $linkAttributes = [];
+    private array $linkAttributes = ['class' => 'page-link'];
     private array $linkContainerAttributes = [];
-    private array $navAttributes = [];
-    private array $ulAttributes = [];
-    private string $activePageCssClass = '';
-    private string $disabledPageCssClass = '';
-    private string $firstPageCssClass = '';
-    private string $lastPageCssClass = '';
-    private string $nextPageCssClass = '';
-    private string $pageCssClass = '';
-    private string $prevPageCssClass = '';
+    private array $navAttributes = ['aria-label' => 'Pagination'];
+    private array $ulAttributes = ['class' => 'pagination justify-content-center mt-4'];
+    private string $activePageCssClass = 'active';
+    private string $disabledPageCssClass = 'disabled';
+    private string $firstPageCssClass = 'page-item';
+    private string $lastPageCssClass = 'page-item';
+    private string $nextPageCssClass = 'page-item';
+    private string $pageCssClass = 'page-item';
+    private string $prevPageCssClass = 'page-item';
     private string $firstPageLabel = '';
     private string $lastPageLabel = '';
     private string $nextPageLabel = 'Next Page';
@@ -66,7 +66,7 @@ final class LinkPager extends Widget
     public array $queryParamsRequest = [];
     private int $maxButtonCount = 10;
     private bool $registerLinkTags = false;
-    private PaginatorInterface $paginator;
+    private PaginatorInterface $pagination;
     private UrlGeneratorInterface $urlGenerator;
     private UrlMatcherInterface $urlMatcher;
     private WebView $webView;
@@ -794,27 +794,9 @@ final class LinkPager extends Widget
 
     private function buildWidget(): void
     {
-        if ($this->frameworkCss === self::BOOTSTRAP) {
-            $this->buildBootstrap();
-        }
-
         if ($this->frameworkCss === self::BULMA) {
             $this->buildBulma();
         }
-    }
-
-    private function buildBootstrap(): void
-    {
-        $this->navAttributes['aria-label'] = 'Pagination';
-        $this->ulAttributes['class'] = 'pagination justify-content-center mt-4';
-        $this->linkAttributes['class'] = 'page-link';
-        $this->pageCssClass = 'page-item';
-        $this->firstPageCssClass = 'page-item';
-        $this->lastPageCssClass = 'page-item';
-        $this->prevPageCssClass = 'page-item';
-        $this->nextPageCssClass = 'page-item';
-        $this->activePageCssClass = 'active';
-        $this->disabledPageCssClass = 'disabled';
     }
 
     private function buildBulma(): void

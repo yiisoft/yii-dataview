@@ -17,13 +17,16 @@ final class ActionColumnTest extends TestCase
 
     public function testActionColumnButtonCustom(): void
     {
+        $gridView = $this->createGridView();
+        $gridView = $gridView->paginator($this->createOffsetPaginator());
+
         $actionColumn = $this->actionColumn
             ->buttons(
                 [
                     'admin/custom' => static fn ($url) => Html::a('custon', $url, ['class' => 'text-danger', 'title' => 'Custom', 'encode' => false]),
                 ]
             )
-            ->grid($this->gridView)
+            ->grid($gridView)
             ->template('{admin/custom}');
 
         $html = <<<'HTML'

@@ -4,6 +4,10 @@ declare(strict_types=1);
 
 namespace Yiisoft\Yii\DataView;
 
+use function is_array;
+use function is_object;
+use function is_resource;
+
 class MessageFormatter
 {
     /**
@@ -19,11 +23,11 @@ class MessageFormatter
     {
         $replacements = [];
         foreach ($arguments as $key => $value) {
-            if (\is_array($value)) {
+            if (is_array($value)) {
                 $value = 'array';
-            } elseif (\is_object($value)) {
+            } elseif (is_object($value)) {
                 $value = 'object';
-            } elseif (\is_resource($value)) {
+            } elseif (is_resource($value)) {
                 $value = 'resource';
             }
             $replacements['{' . $key . '}'] = $value;

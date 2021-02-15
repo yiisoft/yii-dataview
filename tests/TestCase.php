@@ -5,11 +5,18 @@ declare(strict_types=1);
 namespace Yiisoft\Yii\DataView\Tests;
 
 use Psr\Container\ContainerInterface;
+use Psr\EventDispatcher\EventDispatcherInterface;
+use Psr\EventDispatcher\ListenerProviderInterface;
+use Psr\Log\LoggerInterface;
+use Psr\Log\NullLogger;
 use Yiisoft\Aliases\Aliases;
 use Yiisoft\Data\Paginator\OffsetPaginator;
+use Yiisoft\Data\Paginator\PaginatorInterface;
 use Yiisoft\Data\Reader\Iterable\IterableDataReader;
-use Yiisoft\Data\Reader\ReadableDataInterface;
+use Yiisoft\Data\Reader\Sort;
 use Yiisoft\Di\Container;
+use Yiisoft\EventDispatcher\Dispatcher\Dispatcher;
+use Yiisoft\EventDispatcher\Provider\Provider;
 use Yiisoft\Factory\Definitions\Reference;
 use Yiisoft\Router\FastRoute\UrlGenerator;
 use Yiisoft\Router\FastRoute\UrlMatcher;
@@ -27,17 +34,20 @@ use Yiisoft\Translator\MessageReaderInterface;
 use Yiisoft\Translator\Message\Php\MessageSource;
 use Yiisoft\Translator\Translator;
 use Yiisoft\Translator\TranslatorInterface;
+use Yiisoft\View\WebView;
 use Yiisoft\Widget\WidgetFactory;
 use Yiisoft\Yii\DataView\Columns\ActionColumn;
 use Yiisoft\Yii\DataView\Columns\CheckboxColumn;
+use Yiisoft\Yii\DataView\Columns\DataColumn;
 use Yiisoft\Yii\DataView\GridView;
 
 class TestCase extends \PHPUnit\Framework\TestCase
 {
     protected ActionColumn $actionColumn;
     protected CheckBoxColumn $checkBoxColumn;
-    protected GridView $gridView;
+    protected DataColumn $dataColumn;
     private ContainerInterface $container;
+    private PaginatorInterface $paginator;
 
     protected function setUp(): void
     {
@@ -50,7 +60,13 @@ class TestCase extends \PHPUnit\Framework\TestCase
     {
         parent::tearDown();
 
-        unset($this->actionColumn, $this->checkBoxColumn, $this->container, $this->gridView);
+        unset(
+            $this->actionColumn,
+            $this->checkBoxColumn,
+            $this->dataColumn,
+            $this->container,
+            $this->paginator,
+        );
     }
 
     /**
@@ -68,6 +84,38 @@ class TestCase extends \PHPUnit\Framework\TestCase
         $this->assertEquals($expected, $actual, $message);
     }
 
+    protected function createGridView(
+        array $columns = [],
+        int $currentPage = 1,
+        int $pageSize = 5,
+        string $frameworkCss = GridView::BOOTSTRAP
+    ): GridView {
+        return GridView::widget()
+            ->columns($columns)
+            ->currentPage($currentPage)
+            ->frameworkCss($frameworkCss)
+            ->pageSize($pageSize);
+    }
+
+    protected function createOffsetPaginator(array $sortParams = []): OffsetPaginator
+    {
+        $dataReader = new IterableDataReader([
+            ['id' => '1', 'name' => 'tests 1', 'total' => '10'],
+            ['id' => '2', 'name' => 'tests 2', 'total' => '20'],
+            ['id' => '3', 'name' => 'tests 3', 'total' => '30'],
+            ['id' => '4', 'name' => 'tests 4', 'total' => '40'],
+            ['id' => '5', 'name' => 'tests 5', 'total' => '50'],
+            ['id' => '6', 'name' => 'tests 6', 'total' => '60'],
+        ]);
+
+        if ($sortParams !== []) {
+            $sort = Sort::only($sortParams);
+            $dataReader = $dataReader->withSort($sort);
+        }
+
+        return new OffsetPaginator($dataReader);
+    }
+
     private function configContainer(): void
     {
         $this->container = new Container($this->config());
@@ -76,8 +124,7 @@ class TestCase extends \PHPUnit\Framework\TestCase
 
         $this->actionColumn = $this->container->get(ActionColumn::class);
         $this->checkboxColumn = $this->container->get(CheckboxColumn::class);
-        $paginatorInterface = $this->container->get(PaginatorInterface::class);
-        $this->gridView = $this->container->get(GridView::class)->paginator($paginatorInterface);
+        $this->dataColumn = $this->container->get(DataColumn::class);
     }
 
     private function config(): array
@@ -86,6 +133,19 @@ class TestCase extends \PHPUnit\Framework\TestCase
             Aliases::class => [
                 '__class' => Aliases::class,
                 '__construct()' => [['@grid-view-translation' => dirname(__DIR__) . '/src/Translation']],
+            ],
+
+            LoggerInterface::class => NullLogger::class,
+
+            ListenerProviderInterface::class => Provider::class,
+
+            EventDispatcherInterface::class => Dispatcher::class,
+
+            WebView::class => [
+                '__class' => WebView::class,
+                '__construct()' => [
+                    'basePath' => __DIR__ . '/runtime',
+                ],
             ],
 
             UrlGeneratorInterface::class => UrlGenerator::class,
@@ -129,10 +189,6 @@ class TestCase extends \PHPUnit\Framework\TestCase
                 ],
                 'addCategorySource()' => [Reference::to(CategorySource::class)],
             ],
-
-            ReadableDataInterface::class => static fn () => new IterableDataReader([]),
-
-            PaginatorInterface::class => OffsetPaginator::class,
         ];
     }
 }

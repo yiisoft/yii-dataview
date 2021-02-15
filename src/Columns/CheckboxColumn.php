@@ -18,6 +18,7 @@ use function substr_compare;
 
 /**
  * CheckboxColumn displays a column of checkboxes in a grid view.
+ *
  * To add a CheckboxColumn to the {@see GridView}, add it to the {@see GridView::columns|columns} configuration as
  * follows:
  *
@@ -62,6 +63,8 @@ final class CheckboxColumn extends Column
     /**
      * @param string $name the name of the input checkbox input fields. This will be appended with `[]` to ensure it is
      * an array.
+     *
+     * @throws InvalidConfigException
      *
      * @return $this
      */
@@ -164,7 +167,7 @@ final class CheckboxColumn extends Column
      *
      * @return string header checkbox name
      */
-    protected function getHeaderCheckboxName(string $name): string
+    private function getHeaderCheckboxName(string $name): string
     {
         if (substr_compare($name, '[]', -2, 2) === 0) {
             $name = substr($name, 0, -2);
