@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Yiisoft\Yii\DataView\Tests\Column;
 
-use Yiisoft\Data\Reader\Sort;
-use Yiisoft\VarDumper\VarDumper;
 use Yiisoft\Yii\DataView\GridView;
 use Yiisoft\Yii\DataView\Tests\TestCase;
 

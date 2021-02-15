@@ -23,7 +23,7 @@ final class CheckboxColumnTest extends TestCase
             ],
             [
                 'MyForm[grid1]',
-                '<th><input type="checkbox" class="select-on-check-all" name="MyForm[grid1_all]" value="1"></th>'
+                '<th><input type="checkbox" class="select-on-check-all" name="MyForm[grid1_all]" value="1"></th>',
             ],
             [
                 'MyForm[grid1][]',
@@ -66,7 +66,7 @@ final class CheckboxColumnTest extends TestCase
         $html = '<td><input type="checkbox" name="selection" value="1"></td>';
         $this->assertSame($html, $column->renderDataCell([], 1, 0));
 
-        $html= '<td><input type="checkbox" name="selection" value="42"></td>';
+        $html = '<td><input type="checkbox" name="selection" value="42"></td>';
         $this->assertSame($html, $column->renderDataCell([], 42, 0));
 
         $html = '<td><input type="checkbox" name="selection" value="[1,42]"></td>';
