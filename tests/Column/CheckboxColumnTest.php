@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Yiisoft\Yii\DataView\Tests\Columns;
+namespace Yiisoft\Yii\DataView\Tests\Column;
 
 use Yiisoft\Html\Html;
 use Yiisoft\Yii\DataView\Exception\InvalidConfigException;
