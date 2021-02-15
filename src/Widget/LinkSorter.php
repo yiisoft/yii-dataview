@@ -214,7 +214,7 @@ final class LinkSorter extends Widget
     private function createUrl(string $attribute, bool $absolute = false): string
     {
         $action = '';
-        $params[$this->attribute] = $this->createSorterParam($attribute);
+        $params['sort'] = $this->createSorterParam($attribute);
         $page = ['page' => $this->currentPage];
         $params = array_merge($page, $this->requestAttributes, $this->requestQueryParams, $params);
 
