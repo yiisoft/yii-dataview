@@ -44,7 +44,6 @@ abstract class BaseListView extends Widget
         self::BOOTSTRAP,
         self::BULMA,
     ];
-    private array $attributes = [];
     private string $frameworkCss = self::BOOTSTRAP;
     private int $pageSize = 0;
     private int $currentPage = 1;
@@ -83,11 +82,6 @@ abstract class BaseListView extends Widget
         $tag = ArrayHelper::remove($options, 'tag', 'div');
 
         return Html::tag($tag, $content, $options);
-    }
-
-    public function getAttributes(): array
-    {
-        return $this->attributes;
     }
 
     public function getPaginator(): PaginatorInterface
@@ -301,7 +295,6 @@ abstract class BaseListView extends Widget
         $this->paginator = $this->paginator->withCurrentPage($this->currentPage);
 
         foreach ($this->paginator->read() as $read) {
-            $this->attributes = array_keys($read);
             $dataReader[] = $read;
         }
 
