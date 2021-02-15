@@ -263,7 +263,10 @@ final class DataColumn extends Column
         if ($this->attribute !== null && $sort !== null && isset($sort->getCriteria()[$this->attribute])) {
             return LinkSorter::widget()
                 ->attribute($this->attribute)
+                ->currentPage($this->grid->getPaginator()->getCurrentPage())
                 ->linkOptions(array_merge($this->sortLinkOptions, ['label' => $label]))
+                ->requestAttributes($this->grid->getRequestAttributes())
+                ->requestQueryParams($this->grid->getRequestQueryParams())
                 ->sort($sort)
                 ->render();
         }

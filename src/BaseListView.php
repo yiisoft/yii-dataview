@@ -47,6 +47,8 @@ abstract class BaseListView extends Widget
     private string $frameworkCss = self::BOOTSTRAP;
     private int $pageSize = 0;
     private int $currentPage = 1;
+    private array $requestAttributes = [];
+    private array $requestQueryParams = [];
     private TranslatorInterface $translator;
 
     public function __construct(TranslatorInterface $translator)
@@ -157,6 +159,16 @@ abstract class BaseListView extends Widget
         return $new;
     }
 
+    public function getRequestAttributes(): array
+    {
+        return $this->requestAttributes;
+    }
+
+    public function getRequestQueryParams(): array
+    {
+        return $this->requestQueryParams;
+    }
+
     /**
      * @param string $layout the layout that determines how different sections of the list view should be organized.
      *
@@ -216,6 +228,22 @@ abstract class BaseListView extends Widget
     {
         $new = clone $this;
         $new->paginator = $paginator;
+
+        return $new;
+    }
+
+    public function requestAttributes(array $requestAttributes): self
+    {
+        $new = clone $this;
+        $new->requestAttributes = $requestAttributes;
+
+        return $new;
+    }
+
+    public function requestQueryParams(array $requestQueryParams): self
+    {
+        $new = clone $this;
+        $new->requestQueryParams = $requestQueryParams;
 
         return $new;
     }
@@ -384,7 +412,12 @@ abstract class BaseListView extends Widget
             return '';
         }
 
-        return LinkPager::widget()->frameworkCss($this->frameworkCss)->paginator($this->paginator)->render();
+        return LinkPager::widget()
+            ->frameworkCss($this->frameworkCss)
+            ->paginator($this->paginator)
+            ->requestAttributes($this->requestAttributes)
+            ->requestQueryParams($this->requestQueryParams)
+            ->render();
     }
 
     /**

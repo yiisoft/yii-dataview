@@ -32,9 +32,12 @@ final class LinkSorter extends Widget
         self::BULMA,
     ];
     private string $attribute = '';
+    private int $currentPage = 1;
     private string $frameworkCss = self::BOOTSTRAP;
     private array $linkOptions = [];
     private array $options = [];
+    private array $requestAttributes = [];
+    private array $requestQueryParams = [];
     private Inflector $inflector;
     private Sort $sort;
     private UrlGeneratorInterface $urlGenerator;
@@ -77,6 +80,14 @@ final class LinkSorter extends Widget
         return $new;
     }
 
+    public function currentPage(int $currentPage): self
+    {
+        $new = clone $this;
+        $new->currentPage = $currentPage;
+
+        return $new;
+    }
+
     public function frameworkCss(string $frameworkCss): self
     {
         if (!in_array($frameworkCss, self::FRAMEWORKCSS)) {
@@ -113,6 +124,22 @@ final class LinkSorter extends Widget
     {
         $new = clone $this;
         $new->options = $options;
+
+        return $new;
+    }
+
+    public function requestAttributes(array $requestAttributes): self
+    {
+        $new = clone $this;
+        $new->requestAttributes = $requestAttributes;
+
+        return $new;
+    }
+
+    public function requestQueryParams(array $requestQueryParams): self
+    {
+        $new = clone $this;
+        $new->requestQueryParams = $requestQueryParams;
 
         return $new;
     }
@@ -188,6 +215,8 @@ final class LinkSorter extends Widget
     {
         $action = '';
         $params[$this->attribute] = $this->createSorterParam($attribute);
+        $page = ['page' => $this->currentPage];
+        $params = array_merge($page, $this->requestAttributes, $this->requestQueryParams, $params);
 
         $currentRoute = $this->urlMatcher->getCurrentRoute();
 
@@ -195,7 +224,7 @@ final class LinkSorter extends Widget
             $action = $currentRoute->getName();
         }
 
-        return $this->urlGenerator->generate($action, ['sort' => $this->createSorterParam($attribute)]);
+        return $this->urlGenerator->generate($action, $params);
     }
 
     /**

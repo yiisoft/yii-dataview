@@ -59,13 +59,13 @@ final class LinkPager extends Widget
     private string $lastPageLabel = '';
     private string $nextPageLabel = 'Next Page';
     private string $prevPageLabel = 'Previous';
-    public array $attributesRequest = [];
     public bool $disableCurrentPageButton = false;
     private string $frameworkCss = self::BOOTSTRAP;
     private bool $hideOnSinglePage = true;
-    public array $queryParamsRequest = [];
     private int $maxButtonCount = 10;
     private bool $registerLinkTags = false;
+    private array $requestAttributes = [];
+    private array $requestQueryParams = [];
     private PaginatorInterface $pagination;
     private UrlGeneratorInterface $urlGenerator;
     private UrlMatcherInterface $urlMatcher;
@@ -123,14 +123,6 @@ final class LinkPager extends Widget
     {
         $new = clone $this;
         $new->activePageCssClass = $activePageCssClass;
-
-        return $new;
-    }
-
-    public function attributesRequest(array $attributesRequest): self
-    {
-        $new = clone $this;
-        $new->attributesRequest = $attributesRequest;
 
         return $new;
     }
@@ -352,14 +344,6 @@ final class LinkPager extends Widget
         return $new;
     }
 
-    public function queryParamsRequest(array $queryParamsRequest): self
-    {
-        $new = clone $this;
-        $new->queryParamsRequest = $queryParamsRequest;
-
-        return $new;
-    }
-
     /**
      * @param array $ulAttributes HTML attributes for the pager container tag.
      *
@@ -441,6 +425,22 @@ final class LinkPager extends Widget
     {
         $new = clone $this;
         $new->linkContainerAttributes = $linkContainerAttributes;
+
+        return $new;
+    }
+
+    public function requestAttributes(array $requestAttributes): self
+    {
+        $new = clone $this;
+        $new->requestAttributes = $requestAttributes;
+
+        return $new;
+    }
+
+    public function requestQueryParams(array $requestQueryParams): self
+    {
+        $new = clone $this;
+        $new->requestQueryParams = $requestQueryParams;
 
         return $new;
     }
@@ -756,7 +756,7 @@ final class LinkPager extends Widget
         $currentRoute = $this->urlMatcher->getCurrentRoute();
         $url = '';
 
-        $params = array_merge(['page' => $page], $this->attributesRequest, $this->queryParamsRequest);
+        $params = array_merge(['page' => $page], $this->requestAttributes, $this->requestQueryParams);
 
         if ($currentRoute !== null) {
             $action = $currentRoute->getName();
