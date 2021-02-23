@@ -42,7 +42,7 @@
         "vimeo/psalm": "^4.5",
         "yiisoft/composer-config-plugin": "^1.0@dev",
         "yiisoft/di": "^3.0@dev",
-        "yiisoft/event-dispatcher": "^3.0@dev",
+        "yiisoft/event-dispatcher": "^1.0",
         "yiisoft/log": "^1.0",
         "yiisoft/router-fastroute": "^3.0@dev"
     },

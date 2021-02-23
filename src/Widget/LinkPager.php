@@ -561,14 +561,14 @@ final class LinkPager extends Widget
         }
 
         $tag = ArrayHelper::remove($this->ulAttributes, 'tag', 'ul');
-        $ulAttributes = array_merge($this->ulAttributes, ['encode' => false]);
-        $navAttributes = array_merge($this->navAttributes, ['encode' => false]);
 
         return Html::tag(
             'nav',
-            Html::tag($tag, implode("\n", $buttons), $ulAttributes),
-            $navAttributes,
-        );
+            Html::tag($tag, implode("\n", $buttons))->attributes($this->ulAttributes)->encode(false)->render(),
+        )
+        ->attributes($this->navAttributes)
+        ->encode(false)
+        ->render();
     }
 
     /**
@@ -714,9 +714,11 @@ final class LinkPager extends Widget
                 $label,
                 $this->createUrl($page),
                 $linkAttributes
-            ),
-            array_merge($buttonsAttributes, ['encode' => false]),
-        );
+            )->render()
+        )
+        ->attributes($buttonsAttributes)
+        ->encode(false)
+        ->render();
     }
 
     /**
