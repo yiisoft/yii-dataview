@@ -28,6 +28,7 @@
         "yiisoft/arrays": "^1.0",
         "yiisoft/data": "dev-add-getsort-offsetPaginator as 3.0.x-dev",
         "yiisoft/factory": "^3.0@dev",
+        "yiisoft/html": "^3.0@dev",
         "yiisoft/router": "^3.0@dev",
         "yiisoft/strings": "^2.0",
         "yiisoft/translator-formatter-intl": "^3.0@dev",
