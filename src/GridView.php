@@ -136,11 +136,7 @@ final class GridView extends BaseListView
             ]
         );
 
-        return Html::tag(
-            'table',
-            implode("\n", $content),
-            array_merge($this->tableOptions, ['encode' => false])
-        );
+        return Html::tag('table', implode("\n", $content), $this->tableOptions)->encode(false)->render();
     }
 
     public function getColumns(): array
@@ -591,7 +587,7 @@ final class GridView extends BaseListView
     private function renderCaption(): ?string
     {
         if (!empty($this->caption)) {
-            return Html::tag('caption', $this->caption, $this->captionOptions);
+            return Html::tag('caption', $this->caption, $this->captionOptions)->render();
         }
 
         return null;
@@ -611,10 +607,10 @@ final class GridView extends BaseListView
             if (!empty($column->getOptions())) {
                 $cols = [];
                 foreach ($this->columns as $col) {
-                    $cols[] = Html::tag('col', '', $col->options);
+                    $cols[] = Html::tag('col', '', $col->options)->render();
                 }
 
-                return Html::tag('colgroup', implode("\n", $cols));
+                return Html::tag('colgroup', implode("\n", $cols))->render();
             }
         }
 
@@ -637,7 +633,7 @@ final class GridView extends BaseListView
                 $cells[] = $column->renderFilterCell();
             }
 
-            return Html::tag('tr', implode('', $cells), array_merge($this->filterRowOptions, ['encode' => false]));
+            return Html::tag('tr', implode('', $cells), $this->filterRowOptions)->encode(false)->render();
         }
 
         return '';
@@ -700,7 +696,7 @@ final class GridView extends BaseListView
             $cells[] = $column->renderFooterCell();
         }
 
-        $content = Html::tag('tr', implode('', $cells), array_merge($this->footerRowOptions, ['encode' => false]));
+        $content = Html::tag('tr', implode('', $cells), $this->footerRowOptions)->encode(false)->render();
 
         if ($this->filterPosition === self::FILTER_POS_FOOTER) {
             $content .= $this->renderFilters();
@@ -725,7 +721,7 @@ final class GridView extends BaseListView
             $cells[] = $column->renderHeaderCell();
         }
 
-        $content = Html::tag('tr', implode('', $cells), array_merge($this->headerRowOptions, ['encode' => false]));
+        $content = Html::tag('tr', implode('', $cells), $this->headerRowOptions)->encode(false)->render();
 
         if ($this->filterPosition === self::FILTER_POS_HEADER) {
             $content = $this->renderFilters() . $content;
@@ -733,7 +729,7 @@ final class GridView extends BaseListView
             $content .= $this->renderFilters();
         }
 
-        return "\n" . Html::tag('thead', "\n$content\n", array_merge($this->headOptions, ['encode' => false]));
+        return "\n" . Html::tag('thead', "\n$content\n", $this->headOptions)->encode(false)->render();
     }
 
     /**
@@ -763,6 +759,6 @@ final class GridView extends BaseListView
         }
         $options['data-key'] = is_array($key) ? Json::encode($key) : (string)$key;
 
-        return Html::tag('tr', implode('', $cells), array_merge($options, ['encode' => false]));
+        return Html::tag('tr', implode('', $cells), $options)->encode(false)->render();
     }
 }

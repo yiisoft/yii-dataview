@@ -102,7 +102,8 @@ final class LinkSorter extends Widget
     }
 
     /**
-     * @param array $linkOptions HTML attributes for the link in a sorter container tag which are passed to {@see Sort::link()}.
+     * @param array $linkOptions HTML attributes for the link in a sorter container tag which are passed to
+     * {@see Sort::link()}.
      *
      * {@see Html::renderTagAttributes()} for details on how attributes are being rendered.
      */
@@ -275,6 +276,6 @@ final class LinkSorter extends Widget
             Html::addCssClass($this->options, ['link' => 'has-text-link']);
         }
 
-        return Html::a($label, $url, array_merge($this->options, ['encode' => false]));
+        return Html::a($label, $url, $this->options)->encode(false)->render();
     }
 }
