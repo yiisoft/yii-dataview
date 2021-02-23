@@ -80,10 +80,9 @@ abstract class BaseListView extends Widget
         }
 
         $options = $this->options;
-        $options['encode'] = false;
         $tag = ArrayHelper::remove($options, 'tag', 'div');
 
-        return Html::tag($tag, $content, $options);
+        return Html::tag($tag, $content)->attributes($options)->encode(false)->render();
     }
 
     public function getPaginator(): PaginatorInterface
@@ -347,7 +346,7 @@ abstract class BaseListView extends Widget
         $options = $this->emptyTextOptions;
         $tag = ArrayHelper::remove($options, 'tag', 'div');
 
-        return Html::tag($tag, $this->emptyText, $options);
+        return Html::tag($tag, $this->emptyText)->attributes($options)->render();
     }
 
     /**
@@ -362,7 +361,6 @@ abstract class BaseListView extends Widget
         }
 
         $summaryOptions = $this->summaryOptions;
-        $summaryOptions['encode'] = false;
         $tag = ArrayHelper::remove($summaryOptions, 'tag', 'div');
 
         if ($this->paginator instanceof OffsetPaginator) {
@@ -395,8 +393,9 @@ abstract class BaseListView extends Widget
                 ],
                 'yii-gridview',
             ),
-            $summaryOptions
-        );
+        )
+        ->attributes($summaryOptions)
+        ->encode(false);
     }
 
     /**
