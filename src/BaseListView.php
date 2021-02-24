@@ -92,7 +92,6 @@ abstract class BaseListView extends Widget
 
     /**
      * @param int $currentPage set current page PaginatorInterface::class {@see OffsetPaginator::currentPage()}
-     * {@see KeysetPaginator::
      *
      * @return $this
      */
