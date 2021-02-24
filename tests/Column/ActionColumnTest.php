@@ -22,7 +22,11 @@ final class ActionColumnTest extends TestCase
         $actionColumn = $this->actionColumn
             ->buttons(
                 [
-                    'admin/custom' => static fn ($url) => Html::a('custon', $url, ['class' => 'text-danger', 'title' => 'Custom', 'encode' => false]),
+                    'admin/custom' => static fn ($url) => Html::a(
+                        'custon',
+                        $url,
+                        ['class' => 'text-danger', 'title' => 'Custom'],
+                    )->encode(false)->render(),
                 ]
             )
             ->grid($gridView)
@@ -57,14 +61,16 @@ final class ActionColumnTest extends TestCase
         $actionColumn = $this->actionColumn
             ->buttons(
                 [
-                    'admin/custom' => static fn ($url) => Html::a($url, ['class' => 'text-danger', 'title' => 'Custom']),
+                    'admin/custom' => static fn ($url): string => Html::a($url)
+                        ->attributes(['class' => 'text-danger', 'title' => 'Custom'])
+                        ->encode(false)->render(),
                 ]
             )
             ->template('{admin/custom}')
             ->primaryKey('user_id');
 
         $html = <<<'HTML'
-        <td><a href='{"class":"text-danger","title":"Custom"}'>/admin/custom/1</a></td>
+        <td><a class="text-danger" title="Custom">/admin/custom/1</a></td>
         HTML;
 
         $this->assertSame($html, $actionColumn->renderDataCell(['user_id' => 1], 1, 0));

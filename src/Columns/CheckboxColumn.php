@@ -134,9 +134,10 @@ final class CheckboxColumn extends Column
             return parent::renderHeaderCellContent();
         }
 
-        return Html::checkbox(
-            $this->getHeaderCheckboxName($this->name), false, ['class' => 'select-on-check-all']
-        )->render();
+        $options['class'] = 'select-on-check-all';
+        $options['value'] = '1';
+
+        return Html::checkbox($this->getHeaderCheckboxName($this->name), false)->attributes($options)->render();
     }
 
     protected function renderDataCellContent(array $model, $key, int $index): string
@@ -159,7 +160,7 @@ final class CheckboxColumn extends Column
             Html::addCssClass($options, $this->checkboxClassCss);
         }
 
-        return Html::checkbox($this->name, !empty($options['checked']), $options)->render();
+        return Html::checkbox($this->name)->attributes($options)->render();
     }
 
     /**

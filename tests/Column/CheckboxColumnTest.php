@@ -123,11 +123,11 @@ final class CheckboxColumnTest extends TestCase
         $column = $this->checkboxColumn
             ->content(
                 static function ($model, $key, $index, $column) {
-                    return Html::checkBox('checkBoxInput', false);
+                    return Html::checkBox('checkBoxInput')->render();
                 }
             )->grid($gridView);
 
-        $html = '<td>' . Html::checkBox('checkBoxInput', false) . '</td>';
+        $html = '<td>' . Html::checkBox('checkBoxInput')->render() . '</td>';
         $this->assertSame($html, $column->renderDataCell([], 1, 0));
     }
 
