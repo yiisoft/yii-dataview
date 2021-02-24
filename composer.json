@@ -26,7 +26,7 @@
         "ext-json": "*",
         "yiisoft/aliases": "^1.0",
         "yiisoft/arrays": "^1.0",
-        "yiisoft/data": "dev-add-getsort-offsetPaginator as 3.0.x-dev",
+        "yiisoft/data": "^3.0@dev",
         "yiisoft/factory": "^3.0@dev",
         "yiisoft/html": "^3.0@dev",
         "yiisoft/router": "^3.0@dev",
@@ -73,11 +73,5 @@
     "scripts": {
         "test": "phpunit --testdox --no-interaction",
         "test-watch": "phpunit-watcher watch"
-    },
-    "repositories": [
-        {
-            "type": "vcs",
-            "url": "https://github.com/terabytesoftw/data"
-        }
-    ]
+    }
 }
