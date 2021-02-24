@@ -190,7 +190,7 @@ class TestCase extends \PHPUnit\Framework\TestCase
                 $translator->addCategorySource($categorySource);
 
                 return $translator;
-            }
+            },
         ];
     }
 }
