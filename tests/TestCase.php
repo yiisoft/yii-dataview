@@ -182,13 +182,16 @@ class TestCase extends \PHPUnit\Framework\TestCase
                 ],
             ],
 
-            TranslatorInterface::class => [
-                '__class' => Translator:: class,
-                '__construct()' => [
-                    'locale' => 'en',
-                ],
-                'addCategorySource()' => [Reference::to(CategorySource::class)],
-            ],
+            TranslatorInterface::class => static function (
+                MessageReaderInterface $messageReader,
+                MessageFormatterInterface $messageFormatter
+            ) {
+                $translator = new Translator('en');
+                $categorySource = new CategorySource('yii-gridview', $messageReader, $messageFormatter);
+                $translator->addCategorySource($categorySource);
+
+                return $translator;
+            }
         ];
     }
 }
