@@ -292,13 +292,11 @@ final class DataColumn extends Column
             if ($this->format === 'boolean') {
                 $options = array_merge(['prompt' => ''], $filterOptions);
 
-                $messageFormatter = $this->grid->getMessageFormatter();
-
                 return Html::dropDownList(
                     $this->attribute,
                     [
-                        1 => $messageFormatter->format('Yes', [], ''),
-                        0 => $messageFormatter->format('No', [], ''),
+                        1 => 'Yes',
+                        0 => 'No',
                     ],
                     $options
                 ) . $error;
@@ -313,10 +311,7 @@ final class DataColumn extends Column
     protected function renderDataCellContent(array $model, $key, int $index): string
     {
         if ($this->content === null) {
-            return $this->formatMessage(
-                $this->getDataCellValue($model, $key, $index),
-                [$this->format]
-            );
+            return $this->getDataCellValue($model, $key, $index);
         }
 
         return parent::renderDataCellContent($model, $key, $index);

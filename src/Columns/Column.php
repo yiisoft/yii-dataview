@@ -8,7 +8,6 @@ use Closure;
 use JsonException;
 use Yiisoft\Html\Html;
 use Yiisoft\Yii\DataView\GridView;
-use Yiisoft\Yii\DataView\MessageFormatter;
 
 use function call_user_func;
 use function trim;
@@ -208,11 +207,6 @@ abstract class Column
         $this->filterOptions = $filterOptions;
 
         return $this;
-    }
-
-    protected function formatMessage(string $message, array $arguments = []): string
-    {
-        return MessageFormatter::formatMessage($message, $arguments);
     }
 
     /**

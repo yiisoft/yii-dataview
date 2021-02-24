@@ -274,10 +274,7 @@ final class ActionColumn extends Column
                 'delete',
                 '&#128465;',
                 [
-                    'data-confirm' => $this->formatMessage(
-                        'Are you sure you want to delete this item?',
-                        []
-                    ),
+                    'data-confirm' => 'Are you sure you want to delete this item?',
                     'data-method' => 'post',
                 ],
             ],
@@ -301,13 +298,13 @@ final class ActionColumn extends Column
             $this->buttons[$name] = function ($url) use ($name, $iconName, $additionalOptions): string {
                 switch ($name) {
                     case 'view':
-                        $title = $this->formatMessage('View', []);
+                        $title = 'View';
                         break;
                     case 'update':
-                        $title = $this->formatMessage('Update', []);
+                        $title = 'Update';
                         break;
                     case 'delete':
-                        $title = $this->formatMessage('Delete', []);
+                        $title = 'Delete';
                         break;
                 }
 
