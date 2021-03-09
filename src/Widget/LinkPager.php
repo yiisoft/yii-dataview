@@ -754,7 +754,7 @@ final class LinkPager extends Widget
     private function createLinks(): array
     {
         /** @var int */
-        $currentPage =  $this->paginator->getCurrentPage();
+        $currentPage = $this->paginator->getCurrentPage();
 
         /** @var int */
         $pageCount = $this->paginator->getTotalPages();
