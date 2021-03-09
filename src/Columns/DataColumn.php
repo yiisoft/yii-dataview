@@ -19,7 +19,7 @@ use function is_string;
 /**
  * DataColumn is the default column type for the {@see GridView} widget.
  *
- * It is used to show data columns and allows {@see enableSorting|sorting} and {@see filter|filtering} them.
+ * It is used to show data columns and allows {@see sorting} and {@see filter} them.
  *
  * A simple data column definition refers to an attribute in the data model of the GridView's data provider. The name of
  * the attribute is specified by {@see attribute}. By setting {@see value} and {@see label}, the header and cell content
@@ -161,7 +161,7 @@ final class DataColumn extends Column
      *
      * @return string the data cell value.
      */
-    public function getDataCellValue(array $model, $key, int $index): ?string
+    public function getDataCellValue(array $model, $key, int $index): string
     {
         if ($this->value !== null) {
             if (is_string($this->value)) {
@@ -174,7 +174,7 @@ final class DataColumn extends Column
             return ArrayHelper::getValue($model, $this->attribute);
         }
 
-        return null;
+        return '';
     }
 
     /**
@@ -211,7 +211,7 @@ final class DataColumn extends Column
      *
      * @return $this
      */
-    public function withoutEnableSorting(): self
+    public function disableSorting(): self
     {
         $this->enableSorting = false;
 

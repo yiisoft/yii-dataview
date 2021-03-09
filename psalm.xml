@@ -12,4 +12,10 @@
             <directory name="vendor" />
         </ignoreFiles>
     </projectFiles>
+
+    <issueHandlers>
+        <!-- Do not initialize properties to null.  -->
+        <PropertyNotSetInConstructor errorLevel="suppress" />
+        <RedundantPropertyInitializationCheck errorLevel="suppress" />
+    </issueHandlers>
 </psalm>

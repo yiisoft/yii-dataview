@@ -144,12 +144,12 @@ final class CheckboxColumnTest extends TestCase
             ->grid($gridView);
     }
 
-    public function testCheckboxClassCss(): void
+    public function testCheckboxCssClass(): void
     {
         $gridView = $this->createGridView();
         $gridView = $gridView->paginator($this->createOffsetPaginator());
 
-        $column = $this->checkboxColumn->checkboxClassCss('has-bg-link')->grid($gridView);
+        $column = $this->checkboxColumn->checkboxCssClass('has-bg-link')->grid($gridView);
 
         $html = <<<'HTML'
         <td><input type="checkbox" class="has-bg-link" name="selection" value="1"></td>
@@ -169,7 +169,7 @@ final class CheckboxColumnTest extends TestCase
         HTML;
         $this->assertSame($html, $column->renderHeaderCell());
 
-        $column = $this->checkboxColumn->withoutMultiple()->grid($gridView);
+        $column = $this->checkboxColumn->multiple(false)->grid($gridView);
         $this->assertSame('<th>&nbsp;</th>', $column->renderHeaderCell());
     }
 }

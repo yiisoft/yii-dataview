@@ -43,9 +43,7 @@ final class LinkPager extends Widget
         self::BULMA,
     ];
     private array $buttonsContainerAttributes = [];
-    private array $disabledListItemSubTagAttributes = [];
     private array $linkAttributes = ['class' => 'page-link'];
-    private array $linkContainerAttributes = [];
     private array $navAttributes = ['aria-label' => 'Pagination'];
     private array $ulAttributes = ['class' => 'pagination justify-content-center mt-4'];
     private string $activePageCssClass = 'active';
@@ -66,7 +64,7 @@ final class LinkPager extends Widget
     private bool $registerLinkTags = false;
     private array $requestAttributes = [];
     private array $requestQueryParams = [];
-    private PaginatorInterface $pagination;
+    private PaginatorInterface $paginator;
     private UrlGeneratorInterface $urlGenerator;
     private UrlMatcherInterface $urlMatcher;
     private WebView $webView;
@@ -149,26 +147,6 @@ final class LinkPager extends Widget
     {
         $new = clone $this;
         $new->disableCurrentPageButton = $disableCurrentPageButton;
-
-        return $new;
-    }
-
-    /**
-     * @param array $disabledListItemSubTagAttributes the options for the disabled tag to be generated inside the disabled
-     * list element.
-     *
-     * In order to customize the html tag, please use the tag key.
-     *
-     * ```php
-     * $disabledListItemSubTagAttributes = ['tag' => 'div', 'class' => 'disabled-div'];
-     * ```
-     *
-     * @return $this
-     */
-    public function disabledListItemSubTagAttributes(array $disabledListItemSubTagAttributes): self
-    {
-        $new = clone $this;
-        $new->disabledListItemSubTagAttributes = $disabledListItemSubTagAttributes;
 
         return $new;
     }
@@ -416,19 +394,6 @@ final class LinkPager extends Widget
         return $new;
     }
 
-    /**
-     * @param array $linkContainerAttributes HTML attributes which will be applied to all link containers.
-     *
-     * @return $this
-     */
-    public function linkContainerAttributes(array $linkContainerAttributes): self
-    {
-        $new = clone $this;
-        $new->linkContainerAttributes = $linkContainerAttributes;
-
-        return $new;
-    }
-
     public function requestAttributes(array $requestAttributes): self
     {
         $new = clone $this;
@@ -560,6 +525,7 @@ final class LinkPager extends Widget
             );
         }
 
+        /** @var string */
         $tag = ArrayHelper::remove($this->ulAttributes, 'tag', 'ul');
 
         return Html::tag(
@@ -577,14 +543,19 @@ final class LinkPager extends Widget
      * @throws JsonException
      *
      * @return string the rendering result
+     *
+     * @psalm-suppress UndefinedInterfaceMethod
      */
     private function renderPageButtonsBulma(): string
     {
         $buttons = [];
         $links = [];
-        $paginator = $this->paginator;
-        $currentPage = $paginator->getCurrentPage();
-        $pageCount = $paginator->getTotalPages();
+
+        /** @var int */
+        $currentPage = $this->paginator->paginatorgetCurrentPage();
+
+        /** @var int */
+        $pageCount = $this->paginator->getTotalPages();
 
         if ($pageCount < 2 && $this->hideOnSinglePage) {
             return '';
@@ -619,6 +590,10 @@ final class LinkPager extends Widget
         [$beginPage, $endPage] = $this->getPageRange();
         Html::addCssClass($this->buttonsContainerAttributes, $this->pageCssClass);
 
+        /**
+         * @var int $beginPage
+         * @var int $endPage
+         */
         for ($i = $beginPage; $i <= $endPage; ++$i) {
             $buttons[] = $this->renderPageButton(
                 (string) $i,
@@ -654,12 +629,13 @@ final class LinkPager extends Widget
             );
         }
 
+        /** @var string */
         $tag = ArrayHelper::remove($this->ulAttributes, 'tag', 'ul');
 
         return Html::tag(
             'nav',
-            implode("\n", $links) . Html::tag($tag, implode("\n", $buttons), $ulAttributes),
-            $navAttributes,
+            implode("\n", $links) . Html::tag($tag, implode("\n", $buttons), $this->ulAttributes),
+            $this->navAttributes,
         )->encode(false)->render();
     }
 
@@ -685,6 +661,7 @@ final class LinkPager extends Widget
         bool $disabled = false,
         bool $active = false
     ): string {
+        /** @var string */
         $linkWrapTag = ArrayHelper::remove($buttonsAttributes, 'tag', 'li');
         $linkAttributes = $this->linkAttributes;
         $linkAttributes['data-page'] = $page;
@@ -721,10 +698,15 @@ final class LinkPager extends Widget
 
     /**
      * @return array the begin and end pages that need to be displayed.
+     *
+     * @psalm-suppress UndefinedInterfaceMethod
      */
     private function getPageRange(): array
     {
+        /** @var int */
         $currentPage = $this->paginator->getCurrentPage();
+
+        /** @var int */
         $pageCount = $this->paginator->getTotalPages();
 
         $beginPage = max(1, $currentPage - (int) ($this->maxButtonCount / 2));
@@ -751,7 +733,7 @@ final class LinkPager extends Widget
      * {@see params}
      * {@see forcePageParam}
      */
-    private function createUrl(int $page, int $pageSize = null, bool $absolute = false): string
+    private function createUrl(int $page, int $pageSize = null): string
     {
         $currentRoute = $this->urlMatcher->getCurrentRoute();
         $url = '';
@@ -761,31 +743,32 @@ final class LinkPager extends Widget
         if ($currentRoute !== null) {
             $action = $currentRoute->getName();
             $url = $this->urlGenerator->generate($action, $params);
-
-            if ($absolute === true) {
-                $url = $this->urlGenerator->generateAbsolute($action, $params);
-            }
         }
 
         return $url;
     }
 
-    private function createLinks(bool $absolute = false): array
+    /**
+     * @psalm-suppress UndefinedInterfaceMethod
+     */
+    private function createLinks(): array
     {
-        $paginator = $this->paginator;
-        $currentPage = $paginator->getCurrentPage();
-        $pageCount = $paginator->getTotalPages();
+        /** @var int */
+        $currentPage =  $this->paginator->getCurrentPage();
 
-        $links = [self::REL_SELF => $this->createUrl($currentPage, null, $absolute)];
+        /** @var int */
+        $pageCount = $this->paginator->getTotalPages();
+
+        $links = [self::REL_SELF => $this->createUrl($currentPage, null)];
 
         if ($pageCount === 1) {
-            $links[self::LINK_FIRST] = $this->createUrl(1, null, $absolute);
-            $links[self::LINK_LAST] = $this->createUrl($pageCount, null, $absolute);
+            $links[self::LINK_FIRST] = $this->createUrl(1, null);
+            $links[self::LINK_LAST] = $this->createUrl($pageCount, null);
             if ($currentPage > 1) {
-                $links[self::LINK_PREV] = $this->createUrl($currentPage, null, $absolute);
+                $links[self::LINK_PREV] = $this->createUrl($currentPage, null);
             }
             if ($currentPage < $pageCount) {
-                $links[self::LINK_NEXT] = $this->createUrl($currentPage, null, $absolute);
+                $links[self::LINK_NEXT] = $this->createUrl($currentPage, null);
             }
         }
 

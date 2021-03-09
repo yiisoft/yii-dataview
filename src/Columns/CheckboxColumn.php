@@ -39,7 +39,7 @@ final class CheckboxColumn extends Column
 {
     /** @var array|callable */
     private $checkboxOptions = [];
-    private string $checkboxClassCss = '';
+    private string $checkboxCssClass = '';
     private string $name = 'selection';
     private bool $multiple = true;
 
@@ -49,13 +49,13 @@ final class CheckboxColumn extends Column
     }
 
     /**
-     * @param string $checkboxClassCss the css class that will be used to find the checkboxes.
+     * @param string $checkboxCssClass the css class that will be used to find the checkboxes.
      *
      * @return $this
      */
-    public function checkboxClassCss(string $checkboxClassCss): self
+    public function checkboxCssClass(string $checkboxCssClass): self
     {
-        $this->checkboxClassCss = $checkboxClassCss;
+        $this->checkboxCssClass = $checkboxCssClass;
 
         return $this;
     }
@@ -110,10 +110,14 @@ final class CheckboxColumn extends Column
 
     /**
      * Disable select multiple rows.
+     *
+     * @param bool $multiple
+     *
+     * @return $this
      */
-    public function withoutMultiple(): self
+    public function multiple(bool $multiple = true): self
     {
-        $this->multiple = false;
+        $this->multiple = $multiple;
 
         return $this;
     }
@@ -156,8 +160,8 @@ final class CheckboxColumn extends Column
             $options['value'] = is_array($key) ? Json::encode($key) : $key;
         }
 
-        if ($this->checkboxClassCss !== '') {
-            Html::addCssClass($options, $this->checkboxClassCss);
+        if ($this->checkboxCssClass !== '') {
+            Html::addCssClass($options, $this->checkboxCssClass);
         }
 
         return Html::checkbox($this->name)->attributes($options)->render();

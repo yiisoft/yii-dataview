@@ -100,45 +100,6 @@ final class GridView extends BaseListView
         return parent::run();
     }
 
-    /**
-     * Renders the data models for the grid view.
-     *
-     * @throws JsonException
-     *
-     * @return string the HTML code of table
-     */
-    public function renderItems(): string
-    {
-        $caption = $this->renderCaption();
-        $columnGroup = $this->renderColumnGroup();
-        $tableHeader = $this->showHeader ? $this->renderTableHeader() : false;
-        $tableBody = $this->renderTableBody();
-
-        $tableFooter = false;
-        $tableFooterAfterBody = false;
-
-        if ($this->showFooter) {
-            if ($this->placeFooterAfterBody) {
-                $tableFooterAfterBody = $this->renderTableFooter();
-            } else {
-                $tableFooter = $this->renderTableFooter();
-            }
-        }
-
-        $content = array_filter(
-            [
-                $caption,
-                $columnGroup,
-                $tableHeader,
-                $tableFooter,
-                $tableBody,
-                $tableFooterAfterBody,
-            ]
-        );
-
-        return Html::tag('table', implode("\n", $content), $this->tableOptions)->encode(false)->render();
-    }
-
     public function getColumns(): array
     {
         return $this->columns;
@@ -473,6 +434,45 @@ final class GridView extends BaseListView
         $new->tableOptions = ArrayHelper::merge($this->tableOptions, $tableOptions);
 
         return $new;
+    }
+
+    /**
+     * Renders the data models for the grid view.
+     *
+     * @throws JsonException
+     *
+     * @return string the HTML code of table
+     */
+    protected function renderItems(): string
+    {
+        $caption = $this->renderCaption();
+        $columnGroup = $this->renderColumnGroup();
+        $tableHeader = $this->showHeader ? $this->renderTableHeader() : false;
+        $tableBody = $this->renderTableBody();
+
+        $tableFooter = false;
+        $tableFooterAfterBody = false;
+
+        if ($this->showFooter) {
+            if ($this->placeFooterAfterBody) {
+                $tableFooterAfterBody = $this->renderTableFooter();
+            } else {
+                $tableFooter = $this->renderTableFooter();
+            }
+        }
+
+        $content = array_filter(
+            [
+                $caption,
+                $columnGroup,
+                $tableHeader,
+                $tableFooter,
+                $tableBody,
+                $tableFooterAfterBody,
+            ]
+        );
+
+        return Html::tag('table', implode("\n", $content), $this->tableOptions)->encode(false)->render();
     }
 
     /**

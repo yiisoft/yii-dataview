@@ -34,7 +34,6 @@ final class LinkSorter extends Widget
     private string $attribute = '';
     private int $currentPage = 1;
     private string $frameworkCss = self::BOOTSTRAP;
-    private array $linkOptions = [];
     private array $options = [];
     private array $requestAttributes = [];
     private array $requestQueryParams = [];
@@ -60,10 +59,6 @@ final class LinkSorter extends Widget
      */
     protected function run(): string
     {
-        if ($this->sort === null) {
-            throw new InvalidConfigException('The "sort" property must be set.');
-        }
-
         return $this->renderSorterLink();
     }
 
@@ -97,20 +92,6 @@ final class LinkSorter extends Widget
 
         $new = clone $this;
         $new->frameworkCss = $frameworkCss;
-
-        return $new;
-    }
-
-    /**
-     * @param array $linkOptions HTML attributes for the link in a sorter container tag which are passed to
-     * {@see Sort::link()}.
-     *
-     * {@see Html::renderTagAttributes()} for details on how attributes are being rendered.
-     */
-    public function linkOptions(array $linkOptions): self
-    {
-        $new = clone $this;
-        $new->linkOptions = $linkOptions;
 
         return $new;
     }
@@ -172,6 +153,7 @@ final class LinkSorter extends Widget
             throw new InvalidConfigException("Unknown attribute: $attribute");
         }
 
+        /** @var array */
         $definition = $attributes[$attribute];
 
         $directions = $this->sort->getCriteria();
@@ -180,6 +162,7 @@ final class LinkSorter extends Widget
             $direction = $directions[$attribute] === SORT_DESC ? SORT_ASC : SORT_DESC;
             unset($directions[$attribute]);
         } else {
+            /** @var int */
             $direction = $definition['default'] ?? SORT_ASC;
         }
 
@@ -187,8 +170,9 @@ final class LinkSorter extends Widget
 
         $sorts = [];
 
-        foreach ($directions as $attribute => $direction) {
-            $sorts[] = $direction === SORT_DESC ? '-' . $attribute : $attribute;
+        /** @var array<string, int> $directions */
+        foreach ($directions as $key => $direction) {
+            $sorts[] = $direction === SORT_DESC ? '-' . $key : $key;
         }
 
         return implode(',', $sorts);
@@ -212,12 +196,14 @@ final class LinkSorter extends Widget
      * {@see attributeOrders}
      * {@see params}
      */
-    private function createUrl(string $attribute, bool $absolute = false): string
+    private function createUrl(string $attribute): string
     {
         $action = '';
+        $params = [];
         $params['sort'] = $this->createSorterParam($attribute);
         $page = ['page' => $this->currentPage];
         $params = array_merge($page, $this->requestAttributes, $this->requestQueryParams, $params);
+        $url = '';
 
         $currentRoute = $this->urlMatcher->getCurrentRoute();
 
@@ -245,14 +231,15 @@ final class LinkSorter extends Widget
      *
      * @return string the generated hyperlink
      */
-    private function renderSorterlink(): string
+    private function renderSorterLink(): string
     {
         $orderCriteria = $this->sort->getCriteria();
+        /** @var int|null */
         $direction = $orderCriteria[$this->attribute] ?? null;
 
         if ($direction !== null) {
             $sorterClass = $direction === SORT_DESC ? 'desc' : 'asc';
-            if (isset($this->options['class'])) {
+            if (isset($this->options['class']) && is_string($this->options['class'])) {
                 $this->options['class'] .= ' ' . $sorterClass;
             } else {
                 $this->options['class'] = $sorterClass;
@@ -264,10 +251,10 @@ final class LinkSorter extends Widget
         $this->options['data-sort'] = $this->createSorterParam($this->attribute);
 
         if (isset($this->options['label'])) {
-            $label = $this->inflector->toHumanReadable($this->options['label']);
+            $label = $this->inflector->toHumanReadable((string) $this->options['label']);
             unset($this->options['label']);
         } elseif (isset($orderCriteria[$this->attribute]['label'])) {
-            $label = $this->inflector->toHumanReadable($orderCriteria[$this->attribute]['label']);
+            $label = $this->inflector->toHumanReadable((string) $orderCriteria[$this->attribute]['label']);
         } else {
             $label = $this->inflector->toHumanReadable($this->attribute);
         }

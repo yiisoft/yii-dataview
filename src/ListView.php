@@ -55,35 +55,6 @@ final class ListView extends BaseListView implements ViewContextInterface
     }
 
     /**
-     * Renders all data models.
-     *
-     * @throws Throwable
-     *
-     * @return string the rendering result
-     */
-    public function renderItems(): string
-    {
-        $models = $this->getDataReader();
-        $keys = array_keys($models);
-        $rows = [];
-
-        foreach (array_values($models) as $index => $model) {
-            $key = $keys[$index];
-            if (($before = $this->renderBeforeItem($model, $key, $index)) !== null) {
-                $rows[] = $before;
-            }
-
-            $rows[] = $this->renderItem($model, $key, $index);
-
-            if (($after = $this->renderAfterItem($model, $key, $index)) !== null) {
-                $rows[] = $after;
-            }
-        }
-
-        return implode($this->separator, $rows);
-    }
-
-    /**
      * Calls {@see beforeItem} closure, returns execution result.
      *
      * If {@see beforeItem} is not a closure, `null` will be returned.
@@ -127,56 +98,6 @@ final class ListView extends BaseListView implements ViewContextInterface
         }
 
         return null;
-    }
-
-    /**
-     * Renders a single data model.
-     *
-     * @param mixed $model the data model to be rendered
-     * @param mixed $key the key value associated with the data model
-     * @param mixed $index the zero-based index of the data model in the model array returned by
-     * {@see PaginatorInterface}.
-     *
-     * @throws Throwable
-     *
-     * @return string the rendering result
-     */
-    public function renderItem($model, $key, $index): string
-    {
-        if ($this->itemView === null) {
-            $content = (string) $key;
-        } elseif (is_string($this->itemView)) {
-            $content = $this->webView->render(
-                $this->getItemViewPath(),
-                array_merge(
-                    [
-                        'model' => $model,
-                        'key' => $key,
-                        'index' => $index,
-                        'widget' => $this,
-                    ],
-                    $this->viewParams
-                ),
-                $this
-            );
-        } elseif (is_callable($this->itemView)) {
-            $content = call_user_func($this->itemView, $model, $key, $index, $this);
-        } else {
-            throw new InvalidConfigException('Unknown type of $itemView');
-        }
-        if ($this->itemOptions instanceof Closure) {
-            $options = call_user_func($this->itemOptions, $model, $key, $index, $this);
-        } else {
-            $options = $this->itemOptions;
-        }
-
-        $tag = ArrayHelper::remove($options, 'tag', 'div');
-        $options['data-key'] = is_array($key) ? json_encode(
-            $key,
-            JSON_THROW_ON_ERROR | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE
-        ) : (string)$key;
-
-        return Html::tag($tag, $content)->attributes($options)->encode(false)->render();
     }
 
     /**
@@ -365,5 +286,84 @@ final class ListView extends BaseListView implements ViewContextInterface
         $new->viewParams = $viewParams;
 
         return $new;
+    }
+
+    /**
+     * Renders all data models.
+     *
+     * @throws Throwable
+     *
+     * @return string the rendering result
+     */
+    protected function renderItems(): string
+    {
+        $models = $this->getDataReader();
+        $keys = array_keys($models);
+        $rows = [];
+
+        foreach (array_values($models) as $index => $model) {
+            $key = $keys[$index];
+            if (($before = $this->renderBeforeItem($model, $key, $index)) !== null) {
+                $rows[] = $before;
+            }
+
+            $rows[] = $this->renderItem($model, $key, $index);
+
+            if (($after = $this->renderAfterItem($model, $key, $index)) !== null) {
+                $rows[] = $after;
+            }
+        }
+
+        return implode($this->separator, $rows);
+    }
+
+    /**
+     * Renders a single data model.
+     *
+     * @param mixed $model the data model to be rendered
+     * @param mixed $key the key value associated with the data model
+     * @param mixed $index the zero-based index of the data model in the model array returned by
+     * {@see PaginatorInterface}.
+     *
+     * @throws Throwable
+     *
+     * @return string the rendering result
+     */
+    private function renderItem($model, $key, $index): string
+    {
+        if ($this->itemView === null) {
+            $content = (string) $key;
+        } elseif (is_string($this->itemView)) {
+            $content = $this->webView->render(
+                $this->getItemViewPath(),
+                array_merge(
+                    [
+                        'model' => $model,
+                        'key' => $key,
+                        'index' => $index,
+                        'widget' => $this,
+                    ],
+                    $this->viewParams
+                ),
+                $this
+            );
+        } elseif (is_callable($this->itemView)) {
+            $content = call_user_func($this->itemView, $model, $key, $index, $this);
+        } else {
+            throw new InvalidConfigException('Unknown type of $itemView');
+        }
+        if ($this->itemOptions instanceof Closure) {
+            $options = call_user_func($this->itemOptions, $model, $key, $index, $this);
+        } else {
+            $options = $this->itemOptions;
+        }
+
+        $tag = ArrayHelper::remove($options, 'tag', 'div');
+        $options['data-key'] = is_array($key) ? json_encode(
+            $key,
+            JSON_THROW_ON_ERROR | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE
+        ) : (string)$key;
+
+        return Html::tag($tag, $content)->attributes($options)->encode(false)->render();
     }
 }

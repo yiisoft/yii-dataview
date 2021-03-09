@@ -207,10 +207,7 @@ final class DetailView extends Widget
                 $this->template,
                 [
                     '{label}' => $attribute['label'],
-                    '{value}' => $this->formatMessage(
-                        $attribute['value'],
-                        [$attribute['format']]
-                    ),
+                    '{value}' => $attribute['value'],
                     '{captionOptions}' => $captionOptions,
                     '{contentOptions}' => $contentOptions,
                 ]
@@ -218,15 +215,6 @@ final class DetailView extends Widget
         }
 
         return call_user_func($this->template, $attribute, $index, $this);
-    }
-
-    private function formatMessage(?string $message, array $arguments = []): string
-    {
-        if ($message === null) {
-            return $this->emptyHtml;
-        }
-
-        return MessageFormatter::formatMessage($message, $arguments);
     }
 
     /**

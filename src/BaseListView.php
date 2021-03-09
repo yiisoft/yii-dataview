@@ -61,7 +61,7 @@ abstract class BaseListView extends Widget
      *
      * @return string the rendering result.
      */
-    abstract public function renderItems(): string;
+    abstract protected function renderItems(): string;
 
     protected function run(): string
     {
@@ -428,7 +428,7 @@ abstract class BaseListView extends Widget
      *
      * @throws InvalidConfigException|\Yiisoft\Factory\Exceptions\InvalidConfigException
      *
-     * @return bool|string the rendering result of the section, or false if the named section is not supported.
+     * @return string the rendering result of the section, or false if the named section is not supported.
      */
     private function renderSection(string $name): string
     {
