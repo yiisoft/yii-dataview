@@ -6,63 +6,44 @@ namespace Yiisoft\Yii\DataView\Columns;
 
 use Closure;
 use Yiisoft\Arrays\ArrayHelper;
-use Yiisoft\Factory\Exceptions\InvalidConfigException;
 use Yiisoft\Html\Html;
 use Yiisoft\Json\Json;
+use Yiisoft\Yii\DataView\Exception\InvalidConfigException;
+
+use function call_user_func;
+use function is_array;
 
 /**
  * RadioButtonColumn displays a column of radio buttons in a grid view.
- * To add a RadioButtonColumn to the [[GridView]], add it to the [[GridView::columns|columns]] configuration as follows:
+ *
+ * To add a RadioButtonColumn to the {@see GridView}, add it to the {@see GridView::columns|columns} configuration as
+ * follows:
+ *
  * ```php
- * 'columns' => [
- *     // ...
- *     [
- *         '__class' => \yii\grid\RadioButtonColumn::class,
- *         'radioOptions' => function ($model) {
- *              return [
- *                  'value' => $model['value'],
- *                  'checked' => $model['value'] == 2
- *              ];
- *          }
- *     ],
- * ]
+ * [
+ *     '__class' => RadioButtonColumn::class,
+ *     'header()' => ['#'],
+ * ];
  * ```
  */
-class RadioButtonColumn extends Column
+final class RadioButtonColumn extends Column
 {
-    /**
-     * @var string the name of the input radio button input fields.
-     */
-    private string $name = 'radioButtonSelection';
-    /**
-     * @var array|\Closure the HTML attributes for the radio buttons. This can either be an array of
-     *                     attributes or an anonymous function ([[Closure]]) returning such an array.
-     * The signature of the function should be as follows: `function ($model, $key, $index, $column)`
-     * where `$model`, `$key`, and `$index` refer to the model, key and index of the row currently being rendered
-     * and `$column` is a reference to the [[RadioButtonColumn]] object.
-     * A function may be used to assign different attributes to different rows based on the data in that row.
-     * Specifically if you want to set a different value for the radio button you can use this option
-     * in the following way (in this example using the `name` attribute of the model):
-     * ```php
-     * 'radioOptions' => function ($model, $key, $index, $column) {
-     *     return ['value' => $model->attribute];
-     * }
-     * ```
-     *
-     * @see \Yiisoft\Html\Html::renderTagAttributes() for details on how attributes are being rendered.
-     */
+    /** @var array|Closure */
     private $radioOptions = [];
+    private string $name = 'radioButtonSelection';
 
-    /**
-     * @throws \Yiisoft\Factory\Exceptions\InvalidConfigException if [[name]] is not set.
-     */
-    protected function init(): void
+    public function __construct()
     {
         if (empty($this->name)) {
             throw new InvalidConfigException('The "name" property must be set.');
         }
     }
 
+    /**
+     * @param string $name the name of the input radio button input fields.
+     *
+     * @return self
+     */
     public function name(string $name): self
     {
         $this->name = $name;
@@ -71,46 +52,55 @@ class RadioButtonColumn extends Column
     }
 
     /**
-     * @param array|Closure $array
+     * @param array|Closure $radioOptions the HTML attributes for the radio buttons. This can either be an array of
+     * attributes or an anonymous function ({@see Closure}) returning such an array.
      *
-     * @return static
+     * The signature of the function should be as follows: `function ($model, $key, $index, $column)` where
+     * `$model`, `$key`, and `$index` refer to the model, key and index of the row currently being rendered and
+     * `$column` is a reference to the {@see RadioButtonColumn} object.
+     *
+     * A function may be used to assign different attributes to different rows based on the data in that row.
+     *
+     * Specifically if you want to set a different value for the radio button you can use this option in the following
+     * way (in this example using the `name` attribute of the model):
+     *
+     * ```php
+     * 'radioOptions' => function ($model, $key, $index, $column) {
+     *     return ['value' => $model['attribute'];
+     * }
+     * ```
+     *
+     * @return $this
+     *
+     * {@see Html::renderTagAttributes()} for details on how attributes are being rendered.
      */
-    public function radioOptions($array): self
+    public function radioOptions($radioOptions): self
     {
-        if ($array instanceof Closure) {
-            $this->radioOptions = $array;
+        if ($radioOptions instanceof Closure) {
+            $this->radioOptions = $radioOptions;
         } else {
-            $this->radioOptions = ArrayHelper::merge($this->radioOptions, $array);
+            $this->radioOptions = ArrayHelper::merge($this->radioOptions, $radioOptions);
         }
-
-        return $this;
-    }
-
-    public function content(callable $param): self
-    {
-        $this->content = $param;
 
         return $this;
     }
 
     protected function renderDataCellContent(array $model, $key, int $index): string
     {
-        $this->init();
-
         if ($this->content !== null) {
             return parent::renderDataCellContent($model, $key, $index);
         }
 
         if ($this->radioOptions instanceof Closure) {
-            $options = \call_user_func($this->radioOptions, $model, $key, $index, $this);
+            $options = call_user_func($this->radioOptions, $model, $key, $index, $this);
         } else {
             $options = $this->radioOptions;
             if (!isset($options['value'])) {
-                $options['value'] = \is_array($key) ? Json::encode($key) : $key;
+                $options['value'] = is_array($key) ? Json::encode($key) : $key;
             }
         }
         $checked = $options['checked'] ?? false;
 
-        return Html::radio($this->name, $checked, $options);
+        return Html::radio($this->name, $checked)->attributes($options)->render();
     }
 }
