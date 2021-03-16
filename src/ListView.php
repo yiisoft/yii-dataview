@@ -34,8 +34,8 @@ final class ListView extends BaseListView implements ViewContextInterface
     protected array $options = ['class' => 'list-view'];
     /** @var array|Closure */
     private $itemOptions = [];
-    /** @var callable|string|null */
-    private $itemView;
+    /** @var callable|string */
+    private $itemView = '';
     private string $viewPath = '';
     private array $viewParams = [];
     private string $separator = "\n";
@@ -64,17 +64,17 @@ final class ListView extends BaseListView implements ViewContextInterface
      * @param mixed $index the zero-based index of the data model in the model array returned by
      * {@see PaginatorInterface}.
      *
-     * @return string|null {@see beforeItem} call result or `null` when {@see beforeItem} is not a closure.
+     * @return string {@see beforeItem} call result or `null` when {@see beforeItem} is not a closure.
      *
      * @see beforeItem
      */
-    protected function renderBeforeItem($model, $key, $index): ?string
+    protected function renderBeforeItem($model, $key, $index): string
     {
         if ($this->beforeItem instanceof Closure) {
-            return call_user_func($this->beforeItem, $model, $key, $index, $this);
+            return (string) call_user_func($this->beforeItem, $model, $key, $index, $this);
         }
 
-        return null;
+        return '';
     }
 
     /**
@@ -87,17 +87,17 @@ final class ListView extends BaseListView implements ViewContextInterface
      * @param mixed $index the zero-based index of the data model in the model array returned by
      * {@see PaginatorInterface}.
      *
-     * @return string|null {@see afterItem} call result or `null` when {@see afterItem} is not a closure
+     * @return string {@see afterItem} call result or `null` when {@see afterItem} is not a closure
      *
      * @see afterItem
      */
-    protected function renderAfterItem($model, $key, $index): ?string
+    protected function renderAfterItem($model, $key, $index): string
     {
         if ($this->afterItem instanceof Closure) {
-            return call_user_func($this->afterItem, $model, $key, $index, $this);
+            return (string) call_user_func($this->afterItem, $model, $key, $index, $this);
         }
 
-        return null;
+        return '';
     }
 
     /**
@@ -116,10 +116,10 @@ final class ListView extends BaseListView implements ViewContextInterface
         return $this->aliases->get($path);
     }
 
-    public function getItemViewPath(): ?string
+    public function getItemViewPath(): string
     {
         if (is_callable($this->itemView)) {
-            return ($this->itemView)();
+            return (string) ($this->itemView)();
         }
 
         return $this->itemView;
@@ -199,19 +199,17 @@ final class ListView extends BaseListView implements ViewContextInterface
     {
         $new = clone $this;
 
-        if (is_array($itemOptions)) {
+        if (!is_array($itemOptions) && !is_callable($itemOptions)) {
+            throw new InvalidArgumentException('itemOptions must be either array or callable');
+        }
+
+        if (is_array($itemOptions) && is_array($this->itemOptions)) {
             $new->itemOptions = ArrayHelper::merge($this->itemOptions, $itemOptions);
-
-            return $new;
-        }
-
-        if (is_callable($itemOptions)) {
+        } else {
             $new->itemOptions = $itemOptions;
-
-            return $new;
         }
 
-        throw new InvalidArgumentException('itemOptions must be either array or callable');
+        return $new;
     }
 
     /**
@@ -238,7 +236,7 @@ final class ListView extends BaseListView implements ViewContextInterface
     {
         $new = clone $this;
 
-        if ($itemView !== null && !is_string($itemView) && !is_callable($itemView)) {
+        if (!is_string($itemView) && !is_callable($itemView)) {
             throw new InvalidArgumentException('itemView should be either null, string or callable');
         }
 
@@ -301,15 +299,16 @@ final class ListView extends BaseListView implements ViewContextInterface
         $keys = array_keys($models);
         $rows = [];
 
+        /** @var array<array-key, array|object> $models */
         foreach (array_values($models) as $index => $model) {
             $key = $keys[$index];
-            if (($before = $this->renderBeforeItem($model, $key, $index)) !== null) {
+            if (($before = $this->renderBeforeItem($model, $key, $index)) !== '') {
                 $rows[] = $before;
             }
 
             $rows[] = $this->renderItem($model, $key, $index);
 
-            if (($after = $this->renderAfterItem($model, $key, $index)) !== null) {
+            if (($after = $this->renderAfterItem($model, $key, $index)) !== '') {
                 $rows[] = $after;
             }
         }
@@ -331,7 +330,7 @@ final class ListView extends BaseListView implements ViewContextInterface
      */
     private function renderItem($model, $key, $index): string
     {
-        if ($this->itemView === null) {
+        if ($this->itemView === '') {
             $content = (string) $key;
         } elseif (is_string($this->itemView)) {
             $content = $this->webView->render(
@@ -347,17 +346,20 @@ final class ListView extends BaseListView implements ViewContextInterface
                 ),
                 $this
             );
-        } elseif (is_callable($this->itemView)) {
-            $content = call_user_func($this->itemView, $model, $key, $index, $this);
         } else {
-            throw new InvalidConfigException('Unknown type of $itemView');
+            /** @var string */
+            $content = call_user_func($this->itemView, $model, $key, $index, $this);
         }
+
         if ($this->itemOptions instanceof Closure) {
+            /** @var array */
             $options = call_user_func($this->itemOptions, $model, $key, $index, $this);
         } else {
+            /** @var array */
             $options = $this->itemOptions;
         }
 
+        /** @psalm-var non-empty-string */
         $tag = ArrayHelper::remove($options, 'tag', 'div');
         $options['data-key'] = is_array($key) ? json_encode(
             $key,

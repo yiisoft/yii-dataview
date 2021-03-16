@@ -19,25 +19,24 @@ final class GridViewFactory
     }
 
     /**
-     * Creates a DataColumn defined by config passed
+     * Creates a DataColumn defined by config passed.
      *
-     * @param array $config parameters for creating a widget
+     * @param array $config parameters for creating a widget.
      *
-     * @throws RuntimeException if factory was not initialized
-     * @throws InvalidConfigException
-     *
-     * @psalm-suppress MoreSpecificReturnType
+     * @throws RuntimeException
      *
      * @return Column
      */
     public function createColumnClass(array $config): Column
     {
-        $class = $this->factory->create($config);
+        $columnClass = $this->factory->create($config);
 
-        if (!($class instanceof Column)) {
-            throw new RuntimeException(sprintf('The "%s" is not an instance of the "%s".', $class, Column::class));
+        if (!($columnClass instanceof Column)) {
+            throw new RuntimeException(
+                sprintf('The "%s" is not an instance of the "%s".', get_class($columnClass), Column::class)
+            );
         }
 
-        return $class;
+        return $columnClass;
     }
 }

@@ -11,6 +11,7 @@ use Yiisoft\Factory\Exceptions\InvalidConfigException;
 use Yiisoft\Html\Html;
 use Yiisoft\Json\Json;
 use Yiisoft\Translator\TranslatorInterface;
+use Yiisoft\Yii\DataView\Columns\ActionColumn;
 use Yiisoft\Yii\DataView\Columns\Column;
 use Yiisoft\Yii\DataView\Columns\DataColumn;
 use Yiisoft\Yii\DataView\Factory\GridViewFactory;
@@ -71,6 +72,7 @@ final class GridView extends BaseListView
     private bool $showHeader = true;
     private bool $showFooter = false;
     private bool $placeFooterAfterBody = false;
+    /** @var array<array-key,array<array-key,Column>|Column|string> */
     private array $columns = [];
     private string $emptyCell = '&nbsp;';
     private ?object $filterModel = null;
@@ -94,7 +96,7 @@ final class GridView extends BaseListView
         $this->initColumns();
 
         if (!isset($this->filterRowOptions['id'])) {
-            $this->filterRowOptions['id'] = ($this->options['id'] ?? $this->getId()) . '-filters';
+            $this->filterRowOptions['id'] = $this->getId() . '-filters';
         }
 
         return parent::run();
@@ -218,6 +220,8 @@ final class GridView extends BaseListView
      *     'created_at:datetime',
      * ]
      * ```
+     *
+     * @psalm-param array<array-key,array<array-key,Column>|Column|string> $columns
      *
      * @return $this
      */
@@ -370,18 +374,8 @@ final class GridView extends BaseListView
     }
 
     /**
-     * @param array|Closure $rowOptions the HTML attributes for the table body rows. This can be either an array
-     * specifying the common HTML attributes for all body rows, or an anonymous function that returns an array of
-     * the HTML attributes. The anonymous function will be called once for every data model returned by
-     * {@see dataProvider}. It should have the following signature:
-     *
-     * ```php
-     * function ($model, $key, $index, $grid)
-     * ```
-     * - `$model`: the current data model being rendered.
-     * - `$key`: the key value associated with the current data model.
-     * - `$index`: the zero-based index of the data model in the model array returned by {@see dataReader}.
-     * - `$grid`: the GridView object.
+     * @param array $rowOptions the HTML attributes for the table body rows. This can be either an array specifying the
+     * common HTML attributes for all body rows.
      *
      * @return $this
      *
@@ -510,13 +504,13 @@ final class GridView extends BaseListView
     private function guessColumns(): void
     {
         $models = $this->getDataReader();
-        $model = reset($models);
 
-        if (is_array($model) || is_object($model)) {
-            foreach ($this->paginator->read() as $name => $value) {
-                if ($value === null || is_scalar($value) || is_callable([$value, '__toString'])) {
-                    $this->columns[] = (string)$name;
-                }
+        reset($models);
+
+        /** @var array<array-key,object|int|bool|string|null> $models */
+        foreach ($models as $name => $value) {
+            if ($value === null || is_scalar($value) || is_callable([$value, '__toString'])) {
+                $this->columns[] = (string) $name;
             }
         }
     }
@@ -535,18 +529,20 @@ final class GridView extends BaseListView
         foreach ($this->columns as $i => $column) {
             if (is_string($column)) {
                 $column = $this->createDataColumn($column);
-            } else {
+            } elseif (is_array($column)) {
                 $buttons = null;
                 $value = null;
 
-                if (isset($column['buttons()'])) {
-                    $buttons = $column['buttons()'];
-                    unset($column['buttons()']);
+                if (isset($column['buttons'])) {
+                    /** @var array */
+                    $buttons = $column['buttons'];
+                    unset($column['buttons']);
                 }
 
-                if (isset($column['value()'])) {
-                    $value = $column['value()'];
-                    unset($column['value()']);
+                if (isset($column['value'])) {
+                    /** @var Closure|string|null */
+                    $value = $column['value'];
+                    unset($column['value']);
                 }
 
                 $config = array_merge(
@@ -559,11 +555,11 @@ final class GridView extends BaseListView
 
                 $column = $this->gridViewFactory->createColumnClass($config);
 
-                if ($buttons !== null) {
+                if ($column instanceof ActionColumn && $buttons !== null) {
                     $column->buttons($buttons);
                 }
 
-                if ($value !== null) {
+                if ($column instanceof DataColumn && $value !== null) {
                     $column->value($value);
                 }
             }
@@ -603,11 +599,12 @@ final class GridView extends BaseListView
     private function renderColumnGroup()
     {
         foreach ($this->columns as $column) {
-            /* @var $column Column */
-            if (!empty($column->getOptions())) {
+            if ($column instanceof Column && !empty($column->getOptions())) {
                 $cols = [];
                 foreach ($this->columns as $col) {
-                    $cols[] = Html::tag('col', '', $col->options)->render();
+                    if ($col instanceof Column) {
+                        $cols[] = Html::tag('col', '', $col->getOptions())->render();
+                    }
                 }
 
                 return Html::tag('colgroup', implode("\n", $cols))->render();
@@ -629,8 +626,9 @@ final class GridView extends BaseListView
         if ($this->getFilterModel() !== null) {
             $cells = [];
             foreach ($this->columns as $column) {
-                /* @var $column Column */
-                $cells[] = $column->renderFilterCell();
+                if ($column instanceof Column) {
+                    $cells[] = $column->renderFilterCell();
+                }
             }
 
             return Html::tag('tr', implode('', $cells), $this->filterRowOptions)->encode(false)->render();
@@ -652,10 +650,14 @@ final class GridView extends BaseListView
         $keys = array_keys($models);
         $rows = [];
 
+        /** @var array<int,array> $models */
         foreach ($models as $index => $model) {
             $key = $keys[$index];
+
             if ($this->beforeRow !== null) {
+                /** @var array */
                 $row = call_user_func($this->beforeRow, $model, $key, $index, $this);
+
                 if (!empty($row)) {
                     $rows[] = $row;
                 }
@@ -664,6 +666,7 @@ final class GridView extends BaseListView
             $rows[] = $this->renderTableRow($model, $key, $index);
 
             if ($this->afterRow !== null) {
+                /** @var array */
                 $row = call_user_func($this->afterRow, $model, $key, $index, $this);
                 if (!empty($row)) {
                     $rows[] = $row;
@@ -692,8 +695,9 @@ final class GridView extends BaseListView
         $cells = [];
 
         foreach ($this->columns as $column) {
-            /* @var $column Column */
-            $cells[] = $column->renderFooterCell();
+            if ($column instanceof Column) {
+                $cells[] = $column->renderFooterCell();
+            }
         }
 
         $content = Html::tag('tr', implode('', $cells), $this->footerRowOptions)->encode(false)->render();
@@ -717,8 +721,9 @@ final class GridView extends BaseListView
         $cells = [];
 
         foreach ($this->columns as $column) {
-            /* @var $column Column */
-            $cells[] = $column->renderHeaderCell();
+            if ($column instanceof Column) {
+                $cells[] = $column->renderHeaderCell();
+            }
         }
 
         $content = Html::tag('tr', implode('', $cells), $this->headerRowOptions)->encode(false)->render();
@@ -735,9 +740,9 @@ final class GridView extends BaseListView
     /**
      * Renders a table row with the given data model and key.
      *
-     * @param mixed $model the data model to be rendered
+     * @param array|object $model the data model to be rendered
      * @param mixed $key the key associated with the data model
-     * @param mixed $index the zero-based index of the data model among the model array returned by [[dataProvider]].
+     * @param mixed $index the zero-based index of the data model among the model array returned by {@see dataReader}.
      *
      * @throws JsonException
      *
@@ -747,18 +752,14 @@ final class GridView extends BaseListView
     {
         $cells = [];
 
-        /* @var $column Column */
         foreach ($this->columns as $column) {
-            $cells[] = $column->renderDataCell($model, $key, $index);
+            if ($column instanceof Column) {
+                $cells[] = $column->renderDataCell($model, $key, $index);
+            }
         }
 
-        if ($this->rowOptions instanceof Closure) {
-            $options = call_user_func($this->rowOptions, $model, $key, $index, $this);
-        } else {
-            $options = $this->rowOptions;
-        }
-        $options['data-key'] = is_array($key) ? Json::encode($key) : (string)$key;
+        $this->rowOptions['data-key'] = is_array($key) ? Json::encode($key) : (string)$key;
 
-        return Html::tag('tr', implode('', $cells), $options)->encode(false)->render();
+        return Html::tag('tr', implode('', $cells), $this->rowOptions)->encode(false)->render();
     }
 }

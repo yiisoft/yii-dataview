@@ -93,7 +93,7 @@ final class LinkPager extends Widget
         $html = '';
         $this->buildWidget();
 
-        if ($this->paginator === null) {
+        if (!isset($this->paginator)) {
             throw new InvalidConfigException('The "paginator" property must be set.');
         }
 
@@ -101,15 +101,7 @@ final class LinkPager extends Widget
             $this->registerLinkTagsInternal();
         }
 
-        if ($this->frameworkCss === self::BOOTSTRAP) {
-            $html = $this->renderPageButtonsBootstrap();
-        }
-
-        if ($this->frameworkCss === self::BULMA) {
-            $html = $this->renderPageButtonsBulma();
-        }
-
-        return $html;
+        return $this->renderPageButtons();
     }
 
     /**
@@ -438,107 +430,14 @@ final class LinkPager extends Widget
      */
     private function registerLinkTagsInternal(): void
     {
+        /** @var array */
         foreach ($this->createLinks() as $rel => $href) {
             $this->webView->registerLinkTag(['rel' => $rel, 'href' => $href]);
         }
     }
 
     /**
-     * Renders the page buttons for framework css bootstrap.
-     *
-     * @throws JsonException
-     *
-     * @return string the rendering result
-     */
-    private function renderPageButtonsBootstrap(): string
-    {
-        $buttons = [];
-        $paginator = $this->paginator;
-        $currentPage = $paginator->getCurrentPage();
-        $pageCount = $paginator->getTotalPages();
-
-        if ($pageCount < 2 && $this->hideOnSinglePage) {
-            return '';
-        }
-
-        /* button first page */
-        if ($this->firstPageLabel !== '') {
-            $linkAttributes = $this->linkAttributes;
-            Html::addCssClass($linkAttributes, $this->firstPageCssClass);
-
-            $buttons[] = $this->renderPageButton(
-                $this->firstPageLabel,
-                1,
-                $linkAttributes,
-            );
-        }
-
-        /* button previous page */
-        if ($this->prevPageLabel !== '') {
-            $prevPageLabelOptions = [];
-            Html::addCssClass($prevPageLabelOptions, $this->prevPageCssClass);
-
-            $buttons[] = $this->renderPageButton(
-                $this->prevPageLabel,
-                max($currentPage - 1, 1),
-                $prevPageLabelOptions,
-                $currentPage === 1,
-            );
-        }
-
-        /* buttons pages */
-        [$beginPage, $endPage] = $this->getPageRange();
-        Html::addCssClass($this->buttonsContainerAttributes, $this->pageCssClass);
-
-        for ($i = $beginPage; $i <= $endPage; ++$i) {
-            $buttons[] = $this->renderPageButton(
-                (string) $i,
-                $i,
-                $this->buttonsContainerAttributes,
-                $this->disableCurrentPageButton && $i === $currentPage,
-                $i === $currentPage,
-            );
-        }
-
-        /* button next page */
-        if ($this->nextPageLabel !== '') {
-            $nextPageLabelOptions = [];
-            Html::addCssClass($nextPageLabelOptions, $this->nextPageCssClass);
-
-            $buttons[] = $this->renderPageButton(
-                $this->nextPageLabel,
-                min($pageCount, $currentPage + 1),
-                $nextPageLabelOptions,
-                $currentPage === $pageCount,
-            );
-        }
-
-        /* button last page */
-        if ($this->lastPageLabel !== '') {
-            $linkAttributes = $this->linkAttributes;
-            Html::addCssClass($linkAttributes, $this->lastPageCssClass);
-
-            $buttons[] = $this->renderPageButton(
-                $this->lastPageLabel,
-                $pageCount,
-                $linkAttributes,
-            );
-        }
-
-        /** @var string */
-        $tag = ArrayHelper::remove($this->ulAttributes, 'tag', 'ul');
-
-        return Html::tag(
-            'nav',
-            Html::tag($tag, implode("\n", $buttons))->attributes($this->ulAttributes)->encode(false)->render(),
-        )
-        ->attributes($this->navAttributes)
-        ->encode(false)
-        ->render();
-    }
-
-    /**
-     * Renders the page buttons for framework css bulma.
+     * Renders the page buttons.
      *
      * @throws JsonException
      *
@@ -546,13 +445,13 @@ final class LinkPager extends Widget
      *
      * @psalm-suppress UndefinedInterfaceMethod
      */
-    private function renderPageButtonsBulma(): string
+    private function renderPageButtons(): string
     {
         $buttons = [];
         $links = [];
 
         /** @var int */
-        $currentPage = $this->paginator->paginatorgetCurrentPage();
+        $currentPage = $this->paginator->getCurrentPage();
 
         /** @var int */
         $pageCount = $this->paginator->getTotalPages();
@@ -561,82 +460,40 @@ final class LinkPager extends Widget
             return '';
         }
 
-        /* link button first page */
-        if ($this->firstPageLabel !== '') {
-            $linkAttributes = $this->linkAttributes;
-            Html::addCssClass($linkAttributes, $this->firstPageCssClass);
+        $renderFirstPageButtonLink = $this->renderFirstPageButtonLink();
+        $renderPreviousPageButtonLink = $this->renderPreviousPageButtonLink($currentPage);
+        $renderPageButtonLinks = $this->renderPageButtonLinks($currentPage);
+        $renderNextPageButtonLink = $this->renderNextPageButtonLink($currentPage, $pageCount);
+        $renderLastPageButtonLink = $this->renderLastPageButtonLink($pageCount);
 
-            $links[] = $this->renderPageButton(
-                $this->firstPageLabel,
-                1,
-                $linkAttributes,
-            );
-        }
-
-        /* link button previous page */
-        if ($this->prevPageLabel !== '') {
-            $prevPageLabelOptions = [];
-            Html::addCssClass($prevPageLabelOptions, $this->prevPageCssClass);
-
-            $links[] = $this->renderPageButton(
-                $this->prevPageLabel,
-                max($currentPage - 1, 1),
-                $prevPageLabelOptions,
-                $currentPage === 1,
-            );
-        }
-
-        /* link buttons pages */
-        [$beginPage, $endPage] = $this->getPageRange();
-        Html::addCssClass($this->buttonsContainerAttributes, $this->pageCssClass);
-
-        /**
-         * @var int $beginPage
-         * @var int $endPage
-         */
-        for ($i = $beginPage; $i <= $endPage; ++$i) {
-            $buttons[] = $this->renderPageButton(
-                (string) $i,
-                $i,
-                $this->buttonsContainerAttributes,
-                $this->disableCurrentPageButton && $i === $currentPage,
-                $i === $currentPage,
-            );
-        }
-
-        /* link button next page */
-        if ($this->nextPageLabel !== '') {
-            $nextPageLabelOptions = [];
-            Html::addCssClass($nextPageLabelOptions, $this->nextPageCssClass);
-
-            $links[] = $this->renderPageButton(
-                $this->nextPageLabel,
-                min($pageCount, $currentPage + 1),
-                $nextPageLabelOptions,
-                $currentPage === $pageCount,
-            );
-        }
-
-        /* link button last page */
-        if ($this->lastPageLabel !== '') {
-            $linkAttributes = $this->linkAttributes;
-            Html::addCssClass($linkAttributes, $this->lastPageCssClass);
-
-            $links[] = $this->renderPageButton(
-                $this->lastPageLabel,
-                $pageCount,
-                $linkAttributes,
-            );
-        }
-
-        /** @var string */
+        /** @psalm-var non-empty-string */
         $tag = ArrayHelper::remove($this->ulAttributes, 'tag', 'ul');
 
-        return Html::tag(
-            'nav',
-            implode("\n", $links) . Html::tag($tag, implode("\n", $buttons), $this->ulAttributes),
-            $this->navAttributes,
-        )->encode(false)->render();
+        $html =
+            Html::openTag('nav', $this->navAttributes) . "\n" .
+                Html::tag(
+                    $tag,
+                    "\n" .
+                    trim($renderFirstPageButtonLink) . trim($renderPreviousPageButtonLink) .
+                    "\n" .
+                    implode("\n", $renderPageButtonLinks) .
+                    "\n" .
+                    trim($renderNextPageButtonLink) . trim($renderLastPageButtonLink) .
+                    "\n",
+                    $this->ulAttributes
+                )->encode(false) . "\n" .
+            Html::closeTag('nav') . "\n";
+
+        if ($this->frameworkCss === self::BULMA) {
+            $html =
+                Html::openTag('nav', $this->navAttributes) . "\n" .
+                    trim($renderFirstPageButtonLink) . trim($renderPreviousPageButtonLink) .
+                    Html::tag($tag, "\n" . implode("\n", $renderPageButtonLinks), $this->ulAttributes) .
+                    trim($renderNextPageButtonLink) . trim($renderLastPageButtonLink) . "\n" .
+                Html::closeTag('nav');
+        }
+
+        return $html;
     }
 
     /**
@@ -661,7 +518,7 @@ final class LinkPager extends Widget
         bool $disabled = false,
         bool $active = false
     ): string {
-        /** @var string */
+        /** @psalm-var non-empty-string */
         $linkWrapTag = ArrayHelper::remove($buttonsAttributes, 'tag', 'li');
         $linkAttributes = $this->linkAttributes;
         $linkAttributes['data-page'] = $page;
@@ -794,5 +651,86 @@ final class LinkPager extends Widget
         $this->nextPageCssClass = 'pagination-next has-background-link has-text-white';
         $this->activePageCssClass = 'is-current';
         $this->disabledPageCssClass = 'disabled';
+    }
+
+    private function renderFirstPageButtonLink(): string
+    {
+        $html = '';
+
+        if ($this->firstPageLabel !== '') {
+            $html = $this->renderPageButton($this->firstPageLabel, 1, ['class' => $this->firstPageCssClass]);
+        }
+
+        return $html;
+    }
+
+    private function renderPreviousPageButtonLink(int $currentPage): string
+    {
+        $html = '';
+
+        if ($this->prevPageLabel !== '') {
+            $html = $this->renderPageButton(
+                $this->prevPageLabel,
+                max($currentPage - 1, 1),
+                ['class' => $this->prevPageCssClass],
+                $currentPage === 1,
+            );
+        }
+
+        return $html;
+    }
+
+    private function renderPageButtonLinks(int $currentPage): array
+    {
+        $buttons = [];
+
+        /**
+         * link buttons pages
+         *
+         * @var int $beginPage
+         * @var int $endPage
+         */
+        [$beginPage, $endPage] = $this->getPageRange();
+
+        Html::addCssClass($this->buttonsContainerAttributes, $this->pageCssClass);
+
+        for ($i = $beginPage; $i <= $endPage; ++$i) {
+            $buttons[] = $this->renderPageButton(
+                (string) $i,
+                $i,
+                $this->buttonsContainerAttributes,
+                $this->disableCurrentPageButton && $i === $currentPage,
+                $i === $currentPage,
+            );
+        }
+
+        return $buttons;
+    }
+
+    private function renderNextPageButtonLink(int $currentPage, int $pageCount): string
+    {
+        $html = '';
+
+        if ($this->nextPageLabel !== '') {
+            $html = $this->renderPageButton(
+                $this->nextPageLabel,
+                min($pageCount, $currentPage + 1),
+                ['class' => $this->nextPageCssClass],
+                $currentPage === $pageCount,
+            );
+        }
+
+        return $html;
+    }
+
+    private function renderLastPageButtonLink(int $pageCount): string
+    {
+        $html = '';
+
+        if ($this->lastPageLabel !== '') {
+            $html = $this->renderPageButton($this->lastPageLabel, $pageCount, ['class' => $this->lastPageCssClass]);
+        }
+
+        return $html;
     }
 }

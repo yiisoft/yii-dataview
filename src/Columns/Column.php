@@ -44,15 +44,16 @@ abstract class Column
     /**
      * Renders a data cell.
      *
-     * @param array $model the data model being rendered
+     * @param array|object $model the data model being rendered
      * @param mixed $key the key associated with the data model
-     * @param int $index the zero-based index of the data item among the item array returned by {GridView::dataReader}.
+     * @param mixed $index the zero-based index of the data item among the item array returned by
+     * {GridView::dataReader}.
      *
      * @throws JsonException
      *
      * @return string the rendering result
      */
-    public function renderDataCell(array $model, $key, int $index): string
+    public function renderDataCell($model, $key, $index): string
     {
         if ($this->contentOptions instanceof Closure) {
             $options = call_user_func($this->contentOptions, $model, $key, $index, $this);
