@@ -353,7 +353,6 @@ abstract class BaseListView extends Widget
 
     /**
      * Renders the summary text.
-     *
      */
     private function renderSummary(): string
     {
@@ -462,7 +461,6 @@ abstract class BaseListView extends Widget
      * @throws \Yiisoft\Factory\Exceptions\InvalidConfigException
      *
      * @return string the rendering result
-     *
      */
     private function renderSorter(): string
     {

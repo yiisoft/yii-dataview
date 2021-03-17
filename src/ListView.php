@@ -13,7 +13,6 @@ use Yiisoft\Html\Html;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\View\ViewContextInterface;
 use Yiisoft\View\WebView;
-use Yiisoft\Yii\DataView\Exception\InvalidConfigException;
 
 use function array_keys;
 use function array_merge;

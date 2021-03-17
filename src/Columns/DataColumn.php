@@ -13,7 +13,6 @@ use Yiisoft\Yii\DataView\Widget\LinkSorter;
 
 use function array_merge;
 use function call_user_func;
-use function is_array;
 use function is_string;
 
 /**
