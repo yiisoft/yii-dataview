@@ -6,7 +6,7 @@ namespace Yiisoft\Yii\DataView\Widget;
 
 use JsonException;
 use Yiisoft\Arrays\ArrayHelper;
-use Yiisoft\Data\Paginator\PaginatorInterface;
+use Yiisoft\Data\Paginator\OffsetPaginator;
 use Yiisoft\Html\Html;
 use Yiisoft\Router\UrlGeneratorInterface;
 use Yiisoft\Router\UrlMatcherInterface;
@@ -64,7 +64,7 @@ final class LinkPager extends Widget
     private bool $registerLinkTags = false;
     private array $requestAttributes = [];
     private array $requestQueryParams = [];
-    private PaginatorInterface $paginator;
+    private OffsetPaginator $paginator;
     private UrlGeneratorInterface $urlGenerator;
     private UrlMatcherInterface $urlMatcher;
     private WebView $webView;
@@ -90,7 +90,6 @@ final class LinkPager extends Widget
      */
     public function run(): string
     {
-        $html = '';
         $this->buildWidget();
 
         if (!isset($this->paginator)) {
@@ -343,13 +342,11 @@ final class LinkPager extends Widget
     }
 
     /**
-     * @param PaginatorInterface $paginator the paginator object that this pager is associated with.
+     * @param OffsetPaginator $paginator set paginator {@see OffsetPaginator} {@see KeysetPaginator}.
      *
      * @return $this
-     *
-     * You must set this property in order to make LinkPager work.
      */
-    public function paginator(PaginatorInterface $paginator): self
+    public function paginator(OffsetPaginator $paginator): self
     {
         $new = clone $this;
         $new->paginator = $paginator;
@@ -442,14 +439,9 @@ final class LinkPager extends Widget
      * @throws JsonException
      *
      * @return string the rendering result
-     *
-     * @psalm-suppress UndefinedInterfaceMethod
      */
     private function renderPageButtons(): string
     {
-        $buttons = [];
-        $links = [];
-
         /** @var int */
         $currentPage = $this->paginator->getCurrentPage();
 
@@ -555,8 +547,6 @@ final class LinkPager extends Widget
 
     /**
      * @return array the begin and end pages that need to be displayed.
-     *
-     * @psalm-suppress UndefinedInterfaceMethod
      */
     private function getPageRange(): array
     {
@@ -583,7 +573,6 @@ final class LinkPager extends Widget
      * @param int $page the zero-based page number that the URL should point to.
      * @param int|null $pageSize the number of items on each page. If not set, the value of {@see pageSize} will be
      * used.
-     * @param bool $absolute whether to create an absolute URL. Defaults to `false`.
      *
      * @return string the created URL.
      *
@@ -605,9 +594,6 @@ final class LinkPager extends Widget
         return $url;
     }
 
-    /**
-     * @psalm-suppress UndefinedInterfaceMethod
-     */
     private function createLinks(): array
     {
         /** @var int */

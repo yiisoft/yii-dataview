@@ -22,14 +22,23 @@ final class SerialColumn extends Column
 {
     protected string $header = '#';
 
-    protected function renderDataCellContent(array $model, $key, int $index): string
+    /**
+     * Renders the data cell content.
+     *
+     * @param array|object $model the data model.
+     * @param mixed $key the key associated with the data model.
+     * @param int $index the zero-based index of the data model among the models array returned by
+     * {@see GridView::dataReader}.
+     *
+     * @return string the rendering result.
+     */
+    protected function renderDataCellContent($model, $key, int $index): string
     {
         $paginator = $this->grid->getPaginator();
         $row = $index + 1;
 
-        if ($paginator !== null) {
-            $row = $paginator->getOffSet() + $index + 1;
-        }
+        /** @var int */
+        $row = $paginator->getOffSet() + $index + 1;
 
         return (string) $row;
     }

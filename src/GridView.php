@@ -33,7 +33,8 @@ use function reset;
 /**
  * The GridView widget is used to display data in a grid.
  *
- * It provides features like {@see sorter|sorting}, {@see pager|paging} and also {@see filterModel|filtering} the data.
+ * It provides features like {@see sorter|sorting}, {@see pager|paging} and also {@see filterModelName|filtering}
+ * the data.
  *
  * A basic usage looks like the following:
  * ```php
@@ -75,7 +76,7 @@ final class GridView extends BaseListView
     /** @var array<array-key,array<array-key,Column>|Column|string> */
     private array $columns = [];
     private string $emptyCell = '&nbsp;';
-    private ?object $filterModel = null;
+    private string $filterModelName = '';
     private string $filterPosition = self::FILTER_POS_BODY;
     private array $filterRowOptions = ['class' => 'filters'];
     private GridViewFactory $gridViewFactory;
@@ -112,9 +113,9 @@ final class GridView extends BaseListView
         return $this->emptyCell;
     }
 
-    public function getFilterModel(): ?object
+    public function getFilterModelName(): string
     {
-        return $this->filterModel;
+        return $this->filterModelName;
     }
 
     public function isShowHeader(): bool
@@ -264,20 +265,18 @@ final class GridView extends BaseListView
     }
 
     /**
-     * @param object|null $filterModel the model that keeps the user-entered filter data. When this property is set, the
-     * grid view will enable column-based filtering. Each data column by default will display a text field at the top
-     * that users can fill in to filter the data. Note that in order to show an input field for filtering, a column must
-     * have its {@see DataColumn::attribute} property set and the attribute should be active in the current scenario of
-     * $filterModel or have {@see DataColumn::filter} set as the HTML code for the input field.
+     * @param string the form model name that keeps the user-entered filter data. When this property is set, the grid
+     * view will enable column-based filtering. Each data column by default will display a text field at the top that
+     * users can fill in to filter the data.
      *
-     * When this property is not set (null) the filtering feature is disabled.
-     *
-     * @return $this
+     * Note that in order to show an input field for filtering, a column must have its {@see DataColumn::attribute}
+     * property set and the attribute should be active in the current scenario of $filterModelName or have
+     * {@see DataColumn::filter} set as the HTML code for the input field.
      */
-    public function filterModel(?object $filterModel): self
+    public function filterModelName(string $filterModelName): self
     {
         $new = clone $this;
-        $new->filterModel = $filterModel;
+        $new->filterModelName = $filterModelName;
 
         return $new;
     }
@@ -623,8 +622,9 @@ final class GridView extends BaseListView
      */
     private function renderFilters(): string
     {
-        if ($this->getFilterModel() !== null) {
+        if ($this->getFilterModelName() !== '') {
             $cells = [];
+
             foreach ($this->columns as $column) {
                 if ($column instanceof Column) {
                     $cells[] = $column->renderFilterCell();
@@ -674,7 +674,7 @@ final class GridView extends BaseListView
             }
         }
 
-        if (empty($rows) && $this->emptyText !== null) {
+        if (empty($rows) && $this->emptyText !== '') {
             $colspan = count($this->columns);
 
             return "<tbody>\n<tr><td colspan=\"$colspan\">" . $this->renderEmpty() . "</td></tr>\n</tbody>\n";
@@ -742,13 +742,13 @@ final class GridView extends BaseListView
      *
      * @param array|object $model the data model to be rendered
      * @param mixed $key the key associated with the data model
-     * @param mixed $index the zero-based index of the data model among the model array returned by {@see dataReader}.
+     * @param int $index the zero-based index of the data model among the model array returned by {@see dataReader}.
      *
      * @throws JsonException
      *
      * @return string the rendering result
      */
-    private function renderTableRow($model, $key, $index): string
+    private function renderTableRow($model, $key, int $index): string
     {
         $cells = [];
 

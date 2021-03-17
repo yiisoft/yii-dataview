@@ -41,8 +41,8 @@ use function strtr;
  */
 final class DetailView extends Widget
 {
-    /** @var array|object */
-    private $model;
+    /** @var array|object|null */
+    private $model = null;
     private array $attributes = [];
     /** @var callable|string */
     private $template = '<tr><th{captionOptions}>{label}</th><td{contentOptions}>{value}</td></tr>';
@@ -68,11 +68,15 @@ final class DetailView extends Widget
 
         $rows = [];
         $i = 0;
+
+        /** @var array<array-key,mixed> */
         foreach ($this->attributes as $attribute) {
             $rows[] = $this->renderAttribute($attribute, $i++);
         }
 
         $options = $this->options;
+
+        /** @psalm-var non-empty-string */
         $tag = ArrayHelper::remove($options, 'tag', 'table');
 
         return Html::tag($tag, implode("\n", $rows), $options)->encode(false)->render();
@@ -131,14 +135,22 @@ final class DetailView extends Widget
     }
 
     /**
-     * @param array|object $model the data model whose details are to be displayed. This can be a {@see object}
-     * instance, an associative array, an object that implements {@see \Yiisoft\Arrays\ArrayableInterface} interface or
-     * simply an object with defined public accessible non-static properties.
+     * @param array|object $model the data model whose details are to be displayed.
+     *
+     * This can be a {@see object} instance, an associative {@see array}, an object that implements
+     * {@see \Yiisoft\Arrays\ArrayableInterface} interface or simply an object with defined public accessible non-static
+     * properties.
+     *
+     * @psalm-suppress DocblockTypeContradiction
      *
      * @return $this
      */
     public function model($model): self
     {
+        if (!is_array($model) && !is_object($model)) {
+            throw new InvalidConfigException('The "model" property must be either an array or an object.');
+        }
+
         $new = clone $this;
         $new->model = $model;
 
@@ -200,8 +212,13 @@ final class DetailView extends Widget
     private function renderAttribute(array $attribute, int $index): string
     {
         if (is_string($this->template)) {
-            $captionOptions = Html::renderTagAttributes(ArrayHelper::getValue($attribute, 'captionOptions', []));
-            $contentOptions = Html::renderTagAttributes(ArrayHelper::getValue($attribute, 'contentOptions', []));
+            /** @var array */
+            $captionOptions = ArrayHelper::getValue($attribute, 'captionOptions', []);
+            $captionOptions = Html::renderTagAttributes($captionOptions);
+
+            /** @var array */
+            $contentOptions = ArrayHelper::getValue($attribute, 'contentOptions', []);
+            $contentOptions = Html::renderTagAttributes($contentOptions);
 
             return strtr(
                 $this->template,
@@ -214,7 +231,7 @@ final class DetailView extends Widget
             );
         }
 
-        return call_user_func($this->template, $attribute, $index, $this);
+        return (string) call_user_func($this->template, $attribute, $index, $this);
     }
 
     /**
@@ -229,10 +246,8 @@ final class DetailView extends Widget
                 $this->attributes = $this->model instanceof ArrayableInterface
                     ? array_keys($this->model->toArray())
                     : array_keys(get_object_vars($this->model));
-            } elseif (is_array($this->model)) {
+            } elseif ($this->model !== null) {
                 $this->attributes = array_keys($this->model);
-            } else {
-                throw new InvalidConfigException('The "model" property must be either an array or an object.');
             }
 
             sort($this->attributes);
@@ -268,13 +283,15 @@ final class DetailView extends Widget
             }
 
             if (isset($attribute['attribute'])) {
+                /** @var string */
                 $attributeName = $attribute['attribute'];
 
                 if (!isset($attribute['label'])) {
                     $attribute['label'] = (new Inflector())->toWords($attributeName);
                 }
 
-                if (!array_key_exists('value', $attribute)) {
+                if (!array_key_exists('value', $attribute) && $this->model !== null) {
+                    /** @var mixed */
                     $attribute['value'] = ArrayHelper::getValue($this->model, $attributeName);
                 }
             } elseif (!isset($attribute['label']) || !array_key_exists('value', $attribute)) {
@@ -285,6 +302,7 @@ final class DetailView extends Widget
             }
 
             if ($attribute['value'] instanceof Closure) {
+                /** @var mixed */
                 $attribute['value'] = $attribute['value']($this->model, $this);
             }
 

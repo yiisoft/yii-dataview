@@ -78,27 +78,43 @@ final class RadioButtonColumn extends Column
     {
         if ($radioOptions instanceof Closure) {
             $this->radioOptions = $radioOptions;
-        } else {
+        } elseif (is_array($this->radioOptions)) {
             $this->radioOptions = ArrayHelper::merge($this->radioOptions, $radioOptions);
         }
 
         return $this;
     }
 
-    protected function renderDataCellContent(array $model, $key, int $index): string
+    /**
+     * Renders the data cell content.
+     *
+     * @param array|object $model the data model.
+     * @param mixed $key the key associated with the data model.
+     * @param int $index the zero-based index of the data model among the models array returned by
+     * {@see GridView::dataReader}.
+     *
+     * @return string the rendering result.
+     */
+    protected function renderDataCellContent($model, $key, int $index): string
     {
         if ($this->content !== null) {
             return parent::renderDataCellContent($model, $key, $index);
         }
 
         if ($this->radioOptions instanceof Closure) {
+            /** @var array */
             $options = call_user_func($this->radioOptions, $model, $key, $index, $this);
         } else {
+            /** @var array */
             $options = $this->radioOptions;
+
             if (!isset($options['value'])) {
+                /** @var mixed */
                 $options['value'] = is_array($key) ? Json::encode($key) : $key;
             }
         }
+
+        /** @var bool */
         $checked = $options['checked'] ?? false;
 
         return Html::radio($this->name, $checked)->attributes($options)->render();

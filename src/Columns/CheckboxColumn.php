@@ -138,25 +138,39 @@ final class CheckboxColumn extends Column
             return parent::renderHeaderCellContent();
         }
 
+        $options = [];
         $options['class'] = 'select-on-check-all';
         $options['value'] = '1';
 
         return Html::checkbox($this->getHeaderCheckboxName($this->name), false)->attributes($options)->render();
     }
 
-    protected function renderDataCellContent(array $model, $key, int $index): string
+    /**
+     * Renders the data cell content.
+     *
+     * @param array|object $model the data model.
+     * @param mixed $key the key associated with the data model.
+     * @param int $index the zero-based index of the data model among the models array returned by
+     * {@see GridView::dataReader}.
+     *
+     * @return string the rendering result.
+     */
+    protected function renderDataCellContent($model, $key, int $index): string
     {
         if ($this->content !== null) {
             return parent::renderDataCellContent($model, $key, $index);
         }
 
         if (is_callable($this->checkboxOptions)) {
+            /** @var array */
             $options = call_user_func($this->checkboxOptions, $model, $key, $index, $this);
         } else {
+            /** @var array */
             $options = $this->checkboxOptions;
         }
 
         if (!isset($options['value'])) {
+            /** @var mixed */
             $options['value'] = is_array($key) ? Json::encode($key) : $key;
         }
 
