@@ -28,7 +28,7 @@
         "yiisoft/arrays": "^1.0",
         "yiisoft/data": "^3.0@dev",
         "yiisoft/factory": "^3.0@dev",
-        "yiisoft/html": "^3.0@dev",
+        "yiisoft/html": "^1.0",
         "yiisoft/router": "^3.0@dev",
         "yiisoft/strings": "^2.0",
         "yiisoft/translator-formatter-intl": "^3.0@dev",
