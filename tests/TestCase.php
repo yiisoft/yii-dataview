@@ -45,6 +45,7 @@ class TestCase extends \PHPUnit\Framework\TestCase
     protected ActionColumn $actionColumn;
     protected CheckBoxColumn $checkBoxColumn;
     protected DataColumn $dataColumn;
+    protected UrlMatcherInterface $urlMatcher;
     private ContainerInterface $container;
     private PaginatorInterface $paginator;
 
@@ -65,6 +66,7 @@ class TestCase extends \PHPUnit\Framework\TestCase
             $this->dataColumn,
             $this->container,
             $this->paginator,
+            $this->urlMatcher,
         );
     }
 
@@ -124,6 +126,7 @@ class TestCase extends \PHPUnit\Framework\TestCase
         $this->actionColumn = $this->container->get(ActionColumn::class);
         $this->checkboxColumn = $this->container->get(CheckboxColumn::class);
         $this->dataColumn = $this->container->get(DataColumn::class);
+        $this->urlMatcher = $this->container->get(UrlMatcherInterface::class);
     }
 
     private function config(): array
@@ -154,6 +157,8 @@ class TestCase extends \PHPUnit\Framework\TestCase
             RouteCollectorInterface::class => Group::create(
                 null,
                 [
+                    Route::methods(['GET', 'POST'], '/admin/index', [TestDelete::class, 'run'])
+                        ->name('admin'),
                     Route::methods(['GET', 'POST'], '/admin/delete[/{id}]', [TestDelete::class, 'run'])
                         ->name('delete'),
                     Route::methods(['GET', 'POST'], '/admin/update[/{id}]', [TestUpdate::class, 'run'])

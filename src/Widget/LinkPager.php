@@ -480,7 +480,7 @@ final class LinkPager extends Widget
             $html =
                 Html::openTag('nav', $this->navAttributes) . "\n" .
                     trim($renderFirstPageButtonLink) . trim($renderPreviousPageButtonLink) .
-                    Html::tag($tag, "\n" . implode("\n", $renderPageButtonLinks), $this->ulAttributes) .
+                    Html::tag($tag, "\n" . implode("\n", $renderPageButtonLinks), $this->ulAttributes)->encode(false) .
                     trim($renderNextPageButtonLink) . trim($renderLastPageButtonLink) . "\n" .
                 Html::closeTag('nav');
         }

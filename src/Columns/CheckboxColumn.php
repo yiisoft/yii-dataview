@@ -157,7 +157,7 @@ final class CheckboxColumn extends Column
      */
     protected function renderDataCellContent($model, $key, int $index): string
     {
-        if ($this->content !== null) {
+        if (!empty($this->content)) {
             return parent::renderDataCellContent($model, $key, $index);
         }
 

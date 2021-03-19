@@ -102,25 +102,23 @@ final class DataColumn extends Column
      *
      * {@see Html::renderTagAttributes()} for details on how attributes are being rendered.
      */
-    public function filterInputOptions(array $filterInputOptions): void
+    public function filterInputOptions(array $filterInputOptions): self
     {
         $this->filterInputOptions = $filterInputOptions;
+
+        return $this;
     }
 
     /**
-     * @param array|Closure|string $format in which format should the value of each data model be displayed as
-     * (e.g. `"raw"`, `"text"`, `"html"`, `['date', 'php:Y-m-d']`). Supported formats are determined by the
-     * {@see GridView::formatter|formatter} used by the {@see GridView}. Default format is "text" which will format the
-     * value as an HTML-encoded plain text when {@see \Yiisoft\I18n\Formatter} is used as the
-     * {@see GridView::$formatter|formatter} of the GridView.
+     * Set filter value default text input field.
+     *
+     * @param bool|float|int|string|null $filterValueDefault
      *
      * @return $this
-     *
-     * @see \Yiisoft\I18n\MessageFormatterInterface::format()
      */
-    public function format($format): self
+    public function filterValueDefault($filterValueDefault): self
     {
-        $this->format = $format;
+        $this->filterValueDefault = $filterValueDefault;
 
         return $this;
     }
@@ -139,11 +137,6 @@ final class DataColumn extends Column
         $this->label = $label;
 
         return $this;
-    }
-
-    public function getAttribute(): ?string
-    {
-        return $this->attribute;
     }
 
     /**
@@ -195,7 +188,7 @@ final class DataColumn extends Column
      *
      * @see label
      */
-    public function withoutEncodeLabel(): self
+    public function notEncodeLabel(): self
     {
         $this->encodeLabel = false;
 
@@ -270,7 +263,12 @@ final class DataColumn extends Column
         $paginator = $this->grid->getPaginator();
         $sort = $paginator->getSort();
 
-        if ($this->attribute !== '' && $sort !== null && isset($sort->getCriteria()[$this->attribute])) {
+        if (
+            $this->attribute !== '' &&
+            $sort !== null &&
+            isset($sort->getCriteria()[$this->attribute]) &&
+            $this->enableSorting
+        ) {
             return LinkSorter::widget()
                 ->attribute($this->attribute)
                 ->currentPage($this->grid->getPaginator()->getCurrentPage())
@@ -317,10 +315,10 @@ final class DataColumn extends Column
      */
     protected function renderDataCellContent($model, $key, int $index): string
     {
-        if ($this->content === null) {
-            return $this->getDataCellValue($model, $key, $index);
+        if (!empty($this->content)) {
+            return parent::renderDataCellContent($model, $key, $index);
         }
 
-        return parent::renderDataCellContent($model, $key, $index);
+        return $this->getDataCellValue($model, $key, $index);
     }
 }

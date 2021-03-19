@@ -392,10 +392,10 @@ final class GridView extends BaseListView
      *
      * @return $this
      */
-    public function showFooter(bool $showFooter): self
+    public function showFooter(): self
     {
         $new = clone $this;
-        $new->showFooter = $showFooter;
+        $new->showFooter = true;
 
         return $new;
     }
@@ -488,7 +488,7 @@ final class GridView extends BaseListView
         $config = [
             '__class' => DataColumn::class,
             'attribute()' => [$matches[1]],
-            'label()' => [$matches[5] ?? null],
+            'label()' => [$matches[5] ?? ''],
             'grid()' => [$this],
         ];
 
@@ -529,12 +529,19 @@ final class GridView extends BaseListView
                 $column = $this->createDataColumn($column);
             } elseif (is_array($column)) {
                 $buttons = null;
+                $content = null;
                 $value = null;
 
                 if (isset($column['buttons'])) {
                     /** @var array */
                     $buttons = $column['buttons'];
                     unset($column['buttons']);
+                }
+
+                if (isset($column['content'])) {
+                    /** @var callable|null */
+                    $content = $column['content'];
+                    unset($column['content']);
                 }
 
                 if (isset($column['value'])) {
@@ -555,6 +562,10 @@ final class GridView extends BaseListView
 
                 if ($column instanceof ActionColumn && $buttons !== null) {
                     $column->buttons($buttons);
+                }
+
+                if ($content !== null) {
+                    $column->content($content);
                 }
 
                 if ($column instanceof DataColumn && $value !== null) {

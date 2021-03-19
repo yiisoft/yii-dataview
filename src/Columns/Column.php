@@ -20,8 +20,8 @@ use function trim;
  */
 abstract class Column
 {
-    /** @var callable|Closure|null */
-    protected $content = null;
+    /** @var callable */
+    protected $content;
     protected array $contentOptions = [];
     protected GridView $grid;
     protected array $filterOptions = [];
@@ -72,14 +72,14 @@ abstract class Column
     }
 
     /**
-     * @param callable|null $content This is a callable that will be used to generate the content of each cell.
+     * @param callable $content This is a callable that will be used to generate the content of each cell.
      * The signature of the function should be the following: `function ($model, $key, $index, $column)`.
      * Where `$model`, `$key`, and `$index` refer to the model, key and index of the row currently being rendered and
      * `$column` is a reference to the {@see Column} object.
      *
      * @return $this
      */
-    public function content(?callable $content): self
+    public function content(callable $content): self
     {
         $this->content = $content;
 
@@ -210,6 +210,18 @@ abstract class Column
     }
 
     /**
+     * @param bool whether this column is visible. Defaults to true.
+     *
+     * @return $this
+     */
+    public function notVisible(): self
+    {
+        $this->visible = false;
+
+        return $this;
+    }
+
+    /**
      * Returns header cell label.
      *
      * This method may be overridden to customize the label of the header cell.
@@ -233,11 +245,13 @@ abstract class Column
      */
     protected function renderDataCellContent($model, $key, int $index): string
     {
-        if ($this->content !== null) {
-            return (string) call_user_func($this->content, $model, $key, $index, $this);
+        $html = $this->grid->getEmptyCell();
+
+        if (!empty($this->content)) {
+            $html = (string) call_user_func($this->content, $model, $key, $index, $this);
         }
 
-        return $this->grid->getEmptyCell();
+        return $html;
     }
 
     /**
