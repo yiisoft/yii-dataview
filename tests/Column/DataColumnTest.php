@@ -135,7 +135,7 @@ final class DataColumnTest extends TestCase
             'name',
             [
                 'attribute()' => ['total'],
-                'content' => static fn() => '',
+                'content' => static fn () => '',
             ],
         ];
 
