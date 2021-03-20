@@ -14,6 +14,7 @@ use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\Yii\DataView\Columns\ActionColumn;
 use Yiisoft\Yii\DataView\Columns\Column;
 use Yiisoft\Yii\DataView\Columns\DataColumn;
+use Yiisoft\Yii\DataView\Columns\RadioButtonColumn;
 use Yiisoft\Yii\DataView\Factory\GridViewFactory;
 
 use function array_filter;
@@ -72,7 +73,7 @@ final class GridView extends BaseListView
     private bool $showHeader = true;
     private bool $showFooter = false;
     private bool $placeFooterAfterBody = false;
-    /** @var array<array-key,array<array-key,Column>|Column|string> */
+    /** @var array<array-key,array<array-key,Column>|Column|string|callable|Closure> */
     private array $columns = [];
     private string $emptyCell = '&nbsp;';
     private string $filterModelName = '';
@@ -531,6 +532,7 @@ final class GridView extends BaseListView
                 $buttons = null;
                 $content = null;
                 $value = null;
+                $radioOptions = null;
 
                 if (isset($column['buttons'])) {
                     /** @var array */
@@ -538,14 +540,20 @@ final class GridView extends BaseListView
                     unset($column['buttons']);
                 }
 
-                if (isset($column['content'])) {
+                if (isset($column['content']) && is_callable($column['content'])) {
                     /** @var callable|null */
                     $content = $column['content'];
                     unset($column['content']);
                 }
 
-                if (isset($column['value'])) {
-                    /** @var Closure|string|null */
+                if (isset($column['radioOptions']) && $column['radioOptions'] instanceof Closure) {
+                    /** @var Closure|null */
+                    $radioOptions = $column['radioOptions'];
+                    unset($column['radioOptions']);
+                }
+
+                if (isset($column['value']) && $column['value'] instanceof Closure) {
+                    /** @var Closure|null */
                     $value = $column['value'];
                     unset($column['value']);
                 }
@@ -568,12 +576,16 @@ final class GridView extends BaseListView
                     $column->content($content);
                 }
 
+                if ($column instanceof RadioButtonColumn && $radioOptions !== null) {
+                    $column->radioOptions($radioOptions);
+                }
+
                 if ($column instanceof DataColumn && $value !== null) {
                     $column->value($value);
                 }
             }
 
-            if (!$column->isVisible()) {
+            if ($column instanceof Column && !$column->isVisible()) {
                 unset($this->columns[$i]);
                 continue;
             }

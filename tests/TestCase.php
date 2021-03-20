@@ -38,6 +38,7 @@ use Yiisoft\Widget\WidgetFactory;
 use Yiisoft\Yii\DataView\Columns\ActionColumn;
 use Yiisoft\Yii\DataView\Columns\CheckboxColumn;
 use Yiisoft\Yii\DataView\Columns\DataColumn;
+use Yiisoft\Yii\DataView\Columns\RadioButtonColumn;
 use Yiisoft\Yii\DataView\GridView;
 
 class TestCase extends \PHPUnit\Framework\TestCase
@@ -45,6 +46,7 @@ class TestCase extends \PHPUnit\Framework\TestCase
     protected ActionColumn $actionColumn;
     protected CheckBoxColumn $checkBoxColumn;
     protected DataColumn $dataColumn;
+    protected RadioButtonColumn $radioButtonColumn;
     protected UrlMatcherInterface $urlMatcher;
     private ContainerInterface $container;
     private PaginatorInterface $paginator;
@@ -66,6 +68,7 @@ class TestCase extends \PHPUnit\Framework\TestCase
             $this->dataColumn,
             $this->container,
             $this->paginator,
+            $this->radioButtonColumn,
             $this->urlMatcher,
         );
     }
@@ -126,6 +129,7 @@ class TestCase extends \PHPUnit\Framework\TestCase
         $this->actionColumn = $this->container->get(ActionColumn::class);
         $this->checkboxColumn = $this->container->get(CheckboxColumn::class);
         $this->dataColumn = $this->container->get(DataColumn::class);
+        $this->radioButtonColumn = $this->container->get(RadioButtonColumn::class);
         $this->urlMatcher = $this->container->get(UrlMatcherInterface::class);
     }
 

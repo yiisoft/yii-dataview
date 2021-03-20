@@ -850,7 +850,7 @@ final class DataColumnTest extends TestCase
             'username',
             [
                 'attribute()' => ['total'],
-                'value' => 'id',
+                'value()' => ['id'],
             ],
         ];
 

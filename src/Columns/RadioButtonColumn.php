@@ -32,13 +32,6 @@ final class RadioButtonColumn extends Column
     private $radioOptions = [];
     private string $name = 'radioButtonSelection';
 
-    public function __construct()
-    {
-        if (empty($this->name)) {
-            throw new InvalidConfigException('The "name" property must be set.');
-        }
-    }
-
     /**
      * @param string $name the name of the input radio button input fields.
      *
@@ -46,6 +39,10 @@ final class RadioButtonColumn extends Column
      */
     public function name(string $name): self
     {
+        if (empty($name)) {
+            throw new InvalidConfigException('The "name" property it cannot be empty.');
+        }
+
         $this->name = $name;
 
         return $this;
