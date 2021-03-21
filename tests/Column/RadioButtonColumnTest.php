@@ -33,11 +33,11 @@ final class RadioButtonColumnTest extends TestCase
         <tr><th>x</th></tr>
         </thead>
         <tbody>
-        <tr data-key="0"><td></td></tr>
-        <tr data-key="1"><td></td></tr>
-        <tr data-key="2"><td></td></tr>
-        <tr data-key="3"><td></td></tr>
-        <tr data-key="4"><td></td></tr>
+        <tr><td></td></tr>
+        <tr><td></td></tr>
+        <tr><td></td></tr>
+        <tr><td></td></tr>
+        <tr><td></td></tr>
         </tbody>
         </table>
         <nav aria-label="Pagination">
@@ -74,11 +74,11 @@ final class RadioButtonColumnTest extends TestCase
         <tr><th>&nbsp;</th></tr>
         </thead>
         <tbody>
-        <tr data-key="0"><td><input type="radio" name="testMe" value="0"></td></tr>
-        <tr data-key="1"><td><input type="radio" name="testMe" value="1"></td></tr>
-        <tr data-key="2"><td><input type="radio" name="testMe" value="2"></td></tr>
-        <tr data-key="3"><td><input type="radio" name="testMe" value="3"></td></tr>
-        <tr data-key="4"><td><input type="radio" name="testMe" value="4"></td></tr>
+        <tr><td><input type="radio" name="testMe" value="0"></td></tr>
+        <tr><td><input type="radio" name="testMe" value="1"></td></tr>
+        <tr><td><input type="radio" name="testMe" value="2"></td></tr>
+        <tr><td><input type="radio" name="testMe" value="3"></td></tr>
+        <tr><td><input type="radio" name="testMe" value="4"></td></tr>
         </tbody>
         </table>
         <nav aria-label="Pagination">
@@ -115,11 +115,11 @@ final class RadioButtonColumnTest extends TestCase
         <tr><th>&nbsp;</th></tr>
         </thead>
         <tbody>
-        <tr data-key="0"><td><input type="radio" class="testMe" name="radioButtonSelection" value="0"></td></tr>
-        <tr data-key="1"><td><input type="radio" class="testMe" name="radioButtonSelection" value="1"></td></tr>
-        <tr data-key="2"><td><input type="radio" class="testMe" name="radioButtonSelection" value="2"></td></tr>
-        <tr data-key="3"><td><input type="radio" class="testMe" name="radioButtonSelection" value="3"></td></tr>
-        <tr data-key="4"><td><input type="radio" class="testMe" name="radioButtonSelection" value="4"></td></tr>
+        <tr><td><input type="radio" class="testMe" name="radioButtonSelection" value="0"></td></tr>
+        <tr><td><input type="radio" class="testMe" name="radioButtonSelection" value="1"></td></tr>
+        <tr><td><input type="radio" class="testMe" name="radioButtonSelection" value="2"></td></tr>
+        <tr><td><input type="radio" class="testMe" name="radioButtonSelection" value="3"></td></tr>
+        <tr><td><input type="radio" class="testMe" name="radioButtonSelection" value="4"></td></tr>
         </tbody>
         </table>
         <nav aria-label="Pagination">
@@ -154,11 +154,11 @@ final class RadioButtonColumnTest extends TestCase
         <tr><th>Id</th><th>Name</th><th>Total</th><th>&nbsp;</th></tr>
         </thead>
         <tbody>
-        <tr data-key="0"><td>1</td><td>tests 1</td><td>10</td><td><input type="radio" name="radioButtonSelection" value="0"></td></tr>
-        <tr data-key="1"><td>2</td><td>tests 2</td><td>20</td><td><input type="radio" name="radioButtonSelection" value="0"></td></tr>
-        <tr data-key="2"><td>3</td><td>tests 3</td><td>30</td><td><input type="radio" name="radioButtonSelection" value="0"></td></tr>
-        <tr data-key="3"><td>4</td><td>tests 4</td><td>40</td><td><input type="radio" name="radioButtonSelection" value="0"></td></tr>
-        <tr data-key="4"><td>5</td><td>tests 5</td><td>50</td><td><input type="radio" name="radioButtonSelection" value="1"></td></tr>
+        <tr><td>1</td><td>tests 1</td><td>10</td><td><input type="radio" name="radioButtonSelection" value="0"></td></tr>
+        <tr><td>2</td><td>tests 2</td><td>20</td><td><input type="radio" name="radioButtonSelection" value="0"></td></tr>
+        <tr><td>3</td><td>tests 3</td><td>30</td><td><input type="radio" name="radioButtonSelection" value="0"></td></tr>
+        <tr><td>4</td><td>tests 4</td><td>40</td><td><input type="radio" name="radioButtonSelection" value="0"></td></tr>
+        <tr><td>5</td><td>tests 5</td><td>50</td><td><input type="radio" name="radioButtonSelection" value="1"></td></tr>
         </tbody>
         </table>
         <nav aria-label="Pagination">

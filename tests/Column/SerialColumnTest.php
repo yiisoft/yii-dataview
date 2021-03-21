@@ -31,11 +31,11 @@ final class SerialColumnTest extends TestCase
         <tr><th>x</th></tr>
         </thead>
         <tbody>
-        <tr data-key="0"><td>1</td></tr>
-        <tr data-key="1"><td>2</td></tr>
-        <tr data-key="2"><td>3</td></tr>
-        <tr data-key="3"><td>4</td></tr>
-        <tr data-key="4"><td>5</td></tr>
+        <tr><td>1</td></tr>
+        <tr><td>2</td></tr>
+        <tr><td>3</td></tr>
+        <tr><td>4</td></tr>
+        <tr><td>5</td></tr>
         </tbody>
         </table>
         <nav aria-label="Pagination">

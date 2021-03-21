@@ -29,11 +29,11 @@ final class DataColumnTest extends TestCase
         <tr><th>Id</th><th>Name</th></tr>
         </thead>
         <tbody>
-        <tr data-key="0"><td>1</td><td>tests 1</td></tr>
-        <tr data-key="1"><td>2</td><td>tests 2</td></tr>
-        <tr data-key="2"><td>3</td><td>tests 3</td></tr>
-        <tr data-key="3"><td>4</td><td>tests 4</td></tr>
-        <tr data-key="4"><td>5</td><td>tests 5</td></tr>
+        <tr><td>1</td><td>tests 1</td></tr>
+        <tr><td>2</td><td>tests 2</td></tr>
+        <tr><td>3</td><td>tests 3</td></tr>
+        <tr><td>4</td><td>tests 4</td></tr>
+        <tr><td>5</td><td>tests 5</td></tr>
         </tbody>
         </table>
         <nav aria-label="Pagination">
@@ -63,11 +63,11 @@ final class DataColumnTest extends TestCase
         <tr><th>Id</th><th>Name</th></tr>
         </thead>
         <tbody>
-        <tr data-key="0"><td>1</td><td>tests 1</td></tr>
-        <tr data-key="1"><td>2</td><td>tests 2</td></tr>
-        <tr data-key="2"><td>3</td><td>tests 3</td></tr>
-        <tr data-key="3"><td>4</td><td>tests 4</td></tr>
-        <tr data-key="4"><td>5</td><td>tests 5</td></tr>
+        <tr><td>1</td><td>tests 1</td></tr>
+        <tr><td>2</td><td>tests 2</td></tr>
+        <tr><td>3</td><td>tests 3</td></tr>
+        <tr><td>4</td><td>tests 4</td></tr>
+        <tr><td>5</td><td>tests 5</td></tr>
         </tbody>
         </table>
         <nav aria-label="Pagination">
@@ -106,11 +106,11 @@ final class DataColumnTest extends TestCase
         <tr><th>Id</th><th>Name</th><th>Total</th></tr>
         </thead>
         <tbody>
-        <tr data-key="0"><td>1</td><td>tests 1</td><td>2</td></tr>
-        <tr data-key="1"><td>2</td><td>tests 2</td><td>4</td></tr>
-        <tr data-key="2"><td>3</td><td>tests 3</td><td>6</td></tr>
-        <tr data-key="3"><td>4</td><td>tests 4</td><td>8</td></tr>
-        <tr data-key="4"><td>5</td><td>tests 5</td><td>10</td></tr>
+        <tr><td>1</td><td>tests 1</td><td>2</td></tr>
+        <tr><td>2</td><td>tests 2</td><td>4</td></tr>
+        <tr><td>3</td><td>tests 3</td><td>6</td></tr>
+        <tr><td>4</td><td>tests 4</td><td>8</td></tr>
+        <tr><td>5</td><td>tests 5</td><td>10</td></tr>
         </tbody>
         </table>
         <nav aria-label="Pagination">
@@ -149,11 +149,11 @@ final class DataColumnTest extends TestCase
         <tr><th>Id</th><th>Name</th><th>Total</th></tr>
         </thead>
         <tbody>
-        <tr data-key="0"><td>1</td><td>tests 1</td><td></td></tr>
-        <tr data-key="1"><td>2</td><td>tests 2</td><td></td></tr>
-        <tr data-key="2"><td>3</td><td>tests 3</td><td></td></tr>
-        <tr data-key="3"><td>4</td><td>tests 4</td><td></td></tr>
-        <tr data-key="4"><td>5</td><td>tests 5</td><td></td></tr>
+        <tr><td>1</td><td>tests 1</td><td></td></tr>
+        <tr><td>2</td><td>tests 2</td><td></td></tr>
+        <tr><td>3</td><td>tests 3</td><td></td></tr>
+        <tr><td>4</td><td>tests 4</td><td></td></tr>
+        <tr><td>5</td><td>tests 5</td><td></td></tr>
         </tbody>
         </table>
         <nav aria-label="Pagination">
@@ -188,11 +188,11 @@ final class DataColumnTest extends TestCase
         <tr><th>Id</th><th>Name</th></tr>
         </thead>
         <tbody>
-        <tr data-key="0"><td>1</td><td class="has-text-centered">tests 1</td></tr>
-        <tr data-key="1"><td>2</td><td class="has-text-centered">tests 2</td></tr>
-        <tr data-key="2"><td>3</td><td class="has-text-centered">tests 3</td></tr>
-        <tr data-key="3"><td>4</td><td class="has-text-centered">tests 4</td></tr>
-        <tr data-key="4"><td>5</td><td class="has-text-centered">tests 5</td></tr>
+        <tr><td>1</td><td class="has-text-centered">tests 1</td></tr>
+        <tr><td>2</td><td class="has-text-centered">tests 2</td></tr>
+        <tr><td>3</td><td class="has-text-centered">tests 3</td></tr>
+        <tr><td>4</td><td class="has-text-centered">tests 4</td></tr>
+        <tr><td>5</td><td class="has-text-centered">tests 5</td></tr>
         </tbody>
         </table>
         <nav aria-label="Pagination">
@@ -231,11 +231,11 @@ final class DataColumnTest extends TestCase
         <tr><th>Id</th><th>Name</th></tr><tr id="w1-filters" class="filters"><td><input type="text" class="form-control" name="testMe[id]"></td><td>&nbsp;</td></tr>
         </thead>
         <tbody>
-        <tr data-key="0"><td>1</td><td>tests 1</td></tr>
-        <tr data-key="1"><td>2</td><td>tests 2</td></tr>
-        <tr data-key="2"><td>3</td><td>tests 3</td></tr>
-        <tr data-key="3"><td>4</td><td>tests 4</td></tr>
-        <tr data-key="4"><td>5</td><td>tests 5</td></tr>
+        <tr><td>1</td><td>tests 1</td></tr>
+        <tr><td>2</td><td>tests 2</td></tr>
+        <tr><td>3</td><td>tests 3</td></tr>
+        <tr><td>4</td><td>tests 4</td></tr>
+        <tr><td>5</td><td>tests 5</td></tr>
         </tbody>
         </table>
         <nav aria-label="Pagination">
@@ -274,11 +274,11 @@ final class DataColumnTest extends TestCase
         <tr><th>Id</th><th>Name</th></tr><tr id="w1-filters" class="filters"><td><input type="text" class="text-center form-control" name="testMe[id]" maxlength="5"></td><td>&nbsp;</td></tr>
         </thead>
         <tbody>
-        <tr data-key="0"><td>1</td><td>tests 1</td></tr>
-        <tr data-key="1"><td>2</td><td>tests 2</td></tr>
-        <tr data-key="2"><td>3</td><td>tests 3</td></tr>
-        <tr data-key="3"><td>4</td><td>tests 4</td></tr>
-        <tr data-key="4"><td>5</td><td>tests 5</td></tr>
+        <tr><td>1</td><td>tests 1</td></tr>
+        <tr><td>2</td><td>tests 2</td></tr>
+        <tr><td>3</td><td>tests 3</td></tr>
+        <tr><td>4</td><td>tests 4</td></tr>
+        <tr><td>5</td><td>tests 5</td></tr>
         </tbody>
         </table>
         <nav aria-label="Pagination">
@@ -354,11 +354,11 @@ final class DataColumnTest extends TestCase
         <tr><th>Id</th><th>Name</th></tr><tr id="w1-filters" class="filters"><td class="text-center"><input type="text" class="form-control" name="testMe[id]"></td><td>&nbsp;</td></tr>
         </thead>
         <tbody>
-        <tr data-key="0"><td>1</td><td>tests 1</td></tr>
-        <tr data-key="1"><td>2</td><td>tests 2</td></tr>
-        <tr data-key="2"><td>3</td><td>tests 3</td></tr>
-        <tr data-key="3"><td>4</td><td>tests 4</td></tr>
-        <tr data-key="4"><td>5</td><td>tests 5</td></tr>
+        <tr><td>1</td><td>tests 1</td></tr>
+        <tr><td>2</td><td>tests 2</td></tr>
+        <tr><td>3</td><td>tests 3</td></tr>
+        <tr><td>4</td><td>tests 4</td></tr>
+        <tr><td>5</td><td>tests 5</td></tr>
         </tbody>
         </table>
         <nav aria-label="Pagination">
@@ -397,11 +397,11 @@ final class DataColumnTest extends TestCase
         <tr><th>Id</th><th>Name</th></tr><tr id="w1-filters" class="filters"><td><input type="text" class="form-control" name="testMe[id]" value="0"></td><td>&nbsp;</td></tr>
         </thead>
         <tbody>
-        <tr data-key="0"><td>1</td><td>tests 1</td></tr>
-        <tr data-key="1"><td>2</td><td>tests 2</td></tr>
-        <tr data-key="2"><td>3</td><td>tests 3</td></tr>
-        <tr data-key="3"><td>4</td><td>tests 4</td></tr>
-        <tr data-key="4"><td>5</td><td>tests 5</td></tr>
+        <tr><td>1</td><td>tests 1</td></tr>
+        <tr><td>2</td><td>tests 2</td></tr>
+        <tr><td>3</td><td>tests 3</td></tr>
+        <tr><td>4</td><td>tests 4</td></tr>
+        <tr><td>5</td><td>tests 5</td></tr>
         </tbody>
         </table>
         <nav aria-label="Pagination">
@@ -440,11 +440,11 @@ final class DataColumnTest extends TestCase
         <tr><td>&nbsp;</td><td>&nbsp;</td><td>90</td></tr>
         </tfoot>
         <tbody>
-        <tr data-key="0"><td>1</td><td>tests 1</td><td>10</td></tr>
-        <tr data-key="1"><td>2</td><td>tests 2</td><td>20</td></tr>
-        <tr data-key="2"><td>3</td><td>tests 3</td><td>30</td></tr>
-        <tr data-key="3"><td>4</td><td>tests 4</td><td>40</td></tr>
-        <tr data-key="4"><td>5</td><td>tests 5</td><td>50</td></tr>
+        <tr><td>1</td><td>tests 1</td><td>10</td></tr>
+        <tr><td>2</td><td>tests 2</td><td>20</td></tr>
+        <tr><td>3</td><td>tests 3</td><td>30</td></tr>
+        <tr><td>4</td><td>tests 4</td><td>40</td></tr>
+        <tr><td>5</td><td>tests 5</td><td>50</td></tr>
         </tbody>
         </table>
         <nav aria-label="Pagination">
@@ -483,11 +483,11 @@ final class DataColumnTest extends TestCase
         <tr><td>&nbsp;</td><td>&nbsp;</td><td class="has-text-link">90</td></tr>
         </tfoot>
         <tbody>
-        <tr data-key="0"><td>1</td><td>tests 1</td><td>10</td></tr>
-        <tr data-key="1"><td>2</td><td>tests 2</td><td>20</td></tr>
-        <tr data-key="2"><td>3</td><td>tests 3</td><td>30</td></tr>
-        <tr data-key="3"><td>4</td><td>tests 4</td><td>40</td></tr>
-        <tr data-key="4"><td>5</td><td>tests 5</td><td>50</td></tr>
+        <tr><td>1</td><td>tests 1</td><td>10</td></tr>
+        <tr><td>2</td><td>tests 2</td><td>20</td></tr>
+        <tr><td>3</td><td>tests 3</td><td>30</td></tr>
+        <tr><td>4</td><td>tests 4</td><td>40</td></tr>
+        <tr><td>5</td><td>tests 5</td><td>50</td></tr>
         </tbody>
         </table>
         <nav aria-label="Pagination">
@@ -591,11 +591,11 @@ final class DataColumnTest extends TestCase
         <tr><th>&lt;id&gt;</th><th>Name</th></tr>
         </thead>
         <tbody>
-        <tr data-key="0"><td>1</td><td>tests 1</td></tr>
-        <tr data-key="1"><td>2</td><td>tests 2</td></tr>
-        <tr data-key="2"><td>3</td><td>tests 3</td></tr>
-        <tr data-key="3"><td>4</td><td>tests 4</td></tr>
-        <tr data-key="4"><td>5</td><td>tests 5</td></tr>
+        <tr><td>1</td><td>tests 1</td></tr>
+        <tr><td>2</td><td>tests 2</td></tr>
+        <tr><td>3</td><td>tests 3</td></tr>
+        <tr><td>4</td><td>tests 4</td></tr>
+        <tr><td>5</td><td>tests 5</td></tr>
         </tbody>
         </table>
         <nav aria-label="Pagination">
@@ -629,11 +629,11 @@ final class DataColumnTest extends TestCase
         <tr><th><i class="fas fa-home">id</i></th><th>Name</th></tr>
         </thead>
         <tbody>
-        <tr data-key="0"><td>1</td><td>tests 1</td></tr>
-        <tr data-key="1"><td>2</td><td>tests 2</td></tr>
-        <tr data-key="2"><td>3</td><td>tests 3</td></tr>
-        <tr data-key="3"><td>4</td><td>tests 4</td></tr>
-        <tr data-key="4"><td>5</td><td>tests 5</td></tr>
+        <tr><td>1</td><td>tests 1</td></tr>
+        <tr><td>2</td><td>tests 2</td></tr>
+        <tr><td>3</td><td>tests 3</td></tr>
+        <tr><td>4</td><td>tests 4</td></tr>
+        <tr><td>5</td><td>tests 5</td></tr>
         </tbody>
         </table>
         <nav aria-label="Pagination">
@@ -666,11 +666,11 @@ final class DataColumnTest extends TestCase
         <tr><th><a class="asc" href="/admin/index?page=1&amp;sort=-id" data-sort="-id">Id</a></th><th><a class="asc" href="/admin/index?page=1&amp;sort=-name" data-sort="-name">Name</a></th></tr>
         </thead>
         <tbody>
-        <tr data-key="0"><td>1</td><td>tests 1</td></tr>
-        <tr data-key="1"><td>2</td><td>tests 2</td></tr>
-        <tr data-key="2"><td>3</td><td>tests 3</td></tr>
-        <tr data-key="3"><td>4</td><td>tests 4</td></tr>
-        <tr data-key="4"><td>5</td><td>tests 5</td></tr>
+        <tr><td>1</td><td>tests 1</td></tr>
+        <tr><td>2</td><td>tests 2</td></tr>
+        <tr><td>3</td><td>tests 3</td></tr>
+        <tr><td>4</td><td>tests 4</td></tr>
+        <tr><td>5</td><td>tests 5</td></tr>
         </tbody>
         </table>
         <nav aria-label="Pagination">
@@ -709,11 +709,11 @@ final class DataColumnTest extends TestCase
         <tr><th><a class="asc" href="/admin/index?page=1&amp;sort=-id" data-sort="-id">Id</a></th><th>Name</th><th>Total</th></tr>
         </thead>
         <tbody>
-        <tr data-key="0"><td>1</td><td>tests 1</td><td>10</td></tr>
-        <tr data-key="1"><td>2</td><td>tests 2</td><td>20</td></tr>
-        <tr data-key="2"><td>3</td><td>tests 3</td><td>30</td></tr>
-        <tr data-key="3"><td>4</td><td>tests 4</td><td>40</td></tr>
-        <tr data-key="4"><td>5</td><td>tests 5</td><td>50</td></tr>
+        <tr><td>1</td><td>tests 1</td><td>10</td></tr>
+        <tr><td>2</td><td>tests 2</td><td>20</td></tr>
+        <tr><td>3</td><td>tests 3</td><td>30</td></tr>
+        <tr><td>4</td><td>tests 4</td><td>40</td></tr>
+        <tr><td>5</td><td>tests 5</td><td>50</td></tr>
         </tbody>
         </table>
         <nav aria-label="Pagination">
@@ -752,11 +752,11 @@ final class DataColumnTest extends TestCase
         <tr><th><a class="testMe asc" href="/admin/index?page=1&amp;sort=-id" data-sort="-id">Id</a></th><th><a class="asc" href="/admin/index?page=1&amp;sort=-name" data-sort="-name">Name</a></th><th>Total</th></tr>
         </thead>
         <tbody>
-        <tr data-key="0"><td>1</td><td>tests 1</td><td>10</td></tr>
-        <tr data-key="1"><td>2</td><td>tests 2</td><td>20</td></tr>
-        <tr data-key="2"><td>3</td><td>tests 3</td><td>30</td></tr>
-        <tr data-key="3"><td>4</td><td>tests 4</td><td>40</td></tr>
-        <tr data-key="4"><td>5</td><td>tests 5</td><td>50</td></tr>
+        <tr><td>1</td><td>tests 1</td><td>10</td></tr>
+        <tr><td>2</td><td>tests 2</td><td>20</td></tr>
+        <tr><td>3</td><td>tests 3</td><td>30</td></tr>
+        <tr><td>4</td><td>tests 4</td><td>40</td></tr>
+        <tr><td>5</td><td>tests 5</td><td>50</td></tr>
         </tbody>
         </table>
         <nav aria-label="Pagination">
@@ -826,11 +826,11 @@ final class DataColumnTest extends TestCase
         <tr><th>Id</th><th>Name</th><th>Total</th></tr>
         </thead>
         <tbody>
-        <tr data-key="0"><td>1</td><td>tests 1</td><td>10</td></tr>
-        <tr data-key="1"><td>2</td><td>tests 2</td><td>20</td></tr>
-        <tr data-key="2"><td>3</td><td>tests 3</td><td>30</td></tr>
-        <tr data-key="3"><td>4</td><td>tests 4</td><td>40</td></tr>
-        <tr data-key="4"><td>5</td><td>tests 5</td><td>*50*</td></tr>
+        <tr><td>1</td><td>tests 1</td><td>10</td></tr>
+        <tr><td>2</td><td>tests 2</td><td>20</td></tr>
+        <tr><td>3</td><td>tests 3</td><td>30</td></tr>
+        <tr><td>4</td><td>tests 4</td><td>40</td></tr>
+        <tr><td>5</td><td>tests 5</td><td>*50*</td></tr>
         </tbody>
         </table>
         <nav aria-label="Pagination">
@@ -864,11 +864,11 @@ final class DataColumnTest extends TestCase
         <tr><th>Id</th><th>Username</th><th>Total</th></tr>
         </thead>
         <tbody>
-        <tr data-key="0"><td>1</td><td></td><td>1</td></tr>
-        <tr data-key="1"><td>2</td><td></td><td>2</td></tr>
-        <tr data-key="2"><td>3</td><td></td><td>3</td></tr>
-        <tr data-key="3"><td>4</td><td></td><td>4</td></tr>
-        <tr data-key="4"><td>5</td><td></td><td>5</td></tr>
+        <tr><td>1</td><td></td><td>1</td></tr>
+        <tr><td>2</td><td></td><td>2</td></tr>
+        <tr><td>3</td><td></td><td>3</td></tr>
+        <tr><td>4</td><td></td><td>4</td></tr>
+        <tr><td>5</td><td></td><td>5</td></tr>
         </tbody>
         </table>
         <nav aria-label="Pagination">

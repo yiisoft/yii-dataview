@@ -39,11 +39,11 @@ abstract class BaseListView extends Widget
     protected bool $showEmptyText = true;
     protected array $emptyTextOptions = ['class' => 'empty'];
     protected string $layout = "{summary}\n{items}\n{pager}";
+    protected string $frameworkCss = self::BOOTSTRAP;
     private const FRAMEWORKCSS = [
         self::BOOTSTRAP,
         self::BULMA,
     ];
-    private string $frameworkCss = self::BOOTSTRAP;
     private int $pageSize = 0;
     private int $currentPage = 1;
     private array $requestAttributes = [];
