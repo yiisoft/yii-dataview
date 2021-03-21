@@ -318,7 +318,7 @@ final class DetailViewTest extends TestCase
                 [
                     ['attribute' => 'id'],
                     ['attribute' => 'username', 'value' => 'testMe'],
-                    ['attribute' => 'total', 'value' => static fn() => 10 * 20],
+                    ['attribute' => 'total', 'value' => static fn () => 10 * 20],
                 ],
             )
             ->model(['id' => 1, 'username' => 'tests 1', 'total' => '10']);

@@ -780,7 +780,7 @@ final class GridView extends BaseListView
             }
         }
 
-        if ($cells !== [] && $this->frameworkCss === static::BULMA) {
+        if ($cells !== [] && $this->frameworkCss === self::BULMA) {
             $this->rowOptions['data-key'] = is_array($key) ? Json::encode($key) : (string)$key;
         }
 

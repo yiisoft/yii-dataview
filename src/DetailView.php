@@ -17,7 +17,6 @@ use function is_array;
 use function is_object;
 use function is_string;
 use function preg_match;
-use function sort;
 use function strtr;
 
 /**
@@ -322,7 +321,7 @@ final class DetailView extends Widget
 
                 if ($attribute['value'] instanceof Closure) {
                     /** @var mixed */
-                    $attribute['value'] = call_user_func($attribute['value'], $this->model, $this);
+                    $attribute['value'] = $attribute['value']($this->model, $this);
                 }
             }
 

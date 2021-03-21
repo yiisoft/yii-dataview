@@ -360,7 +360,7 @@ final class ListView extends BaseListView implements ViewContextInterface
 
         /** @psalm-var non-empty-string */
         $tag = ArrayHelper::remove($options, 'tag', 'div');
-        if ($content !== '' && $this->frameworkCss === static::BULMA) {
+        if ($content !== '' && $this->frameworkCss === self::BULMA) {
             $options['data-key'] = is_array($key) ? json_encode(
                 $key,
                 JSON_THROW_ON_ERROR | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE
