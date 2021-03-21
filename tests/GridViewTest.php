@@ -20,7 +20,7 @@ final class GridViewTest extends TestCase
         GridView::counter(0);
 
         $gridView = GridView::widget()
-            ->beforeRow(static fn () =>  '<div class="testMe">')
+            ->beforeRow(static fn () => '<div class="testMe">')
             ->afterRow(static fn () => '</div>')
             ->paginator($this->createOffsetPaginator());
 
