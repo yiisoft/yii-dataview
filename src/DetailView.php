@@ -7,15 +7,11 @@ namespace Yiisoft\Yii\DataView;
 use Closure;
 use JsonException;
 use Yiisoft\Arrays\ArrayHelper;
-use Yiisoft\Arrays\ArrayableInterface;
 use Yiisoft\Html\Html;
 use Yiisoft\Strings\Inflector;
 use Yiisoft\Yii\DataView\Exception\InvalidConfigException;
 
 use function array_key_exists;
-use function array_keys;
-use function call_user_func;
-use function get_object_vars;
 use function implode;
 use function is_array;
 use function is_object;
