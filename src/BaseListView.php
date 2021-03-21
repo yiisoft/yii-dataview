@@ -111,13 +111,11 @@ abstract class BaseListView extends Widget
      * @see showOnEmpty
      * @see emptyTextOptions
      */
-    public function emptyText(?string $emptyText): self
+    public function emptyText(string $emptyText): self
     {
         $new = clone $this;
 
-        if ($emptyText !== null) {
-            $new->emptyText = $emptyText;
-        }
+        $new->emptyText = $emptyText;
 
         return $new;
     }

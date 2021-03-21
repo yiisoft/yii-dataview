@@ -7,7 +7,6 @@ namespace Yiisoft\Yii\DataView;
 use Closure;
 use JsonException;
 use Yiisoft\Arrays\ArrayHelper;
-use Yiisoft\Factory\Exceptions\InvalidConfigException;
 use Yiisoft\Html\Html;
 use Yiisoft\Json\Json;
 use Yiisoft\Translator\TranslatorInterface;
@@ -15,6 +14,7 @@ use Yiisoft\Yii\DataView\Columns\ActionColumn;
 use Yiisoft\Yii\DataView\Columns\Column;
 use Yiisoft\Yii\DataView\Columns\DataColumn;
 use Yiisoft\Yii\DataView\Columns\RadioButtonColumn;
+use Yiisoft\Yii\DataView\Exception\InvalidConfigException;
 use Yiisoft\Yii\DataView\Factory\GridViewFactory;
 
 use function array_filter;
@@ -90,6 +90,10 @@ final class GridView extends BaseListView
 
     protected function run(): string
     {
+        if (!isset($this->paginator)) {
+            throw new InvalidConfigException('The "paginator" property must be set.');
+        }
+
         if (!isset($this->options['id'])) {
             $this->options['id'] = $this->getId() . '-gridview';
         }
@@ -103,11 +107,6 @@ final class GridView extends BaseListView
         return parent::run();
     }
 
-    public function getColumns(): array
-    {
-        return $this->columns;
-    }
-
     public function getEmptyCell(): string
     {
         return $this->emptyCell;
@@ -116,11 +115,6 @@ final class GridView extends BaseListView
     public function getFilterModelName(): string
     {
         return $this->filterModelName;
-    }
-
-    public function isShowHeader(): bool
-    {
-        return $this->showHeader;
     }
 
     /**
@@ -533,6 +527,7 @@ final class GridView extends BaseListView
                 $content = null;
                 $value = null;
                 $radioOptions = null;
+                $visibleButtons = null;
 
                 if (isset($column['buttons'])) {
                     /** @var array */
@@ -556,6 +551,12 @@ final class GridView extends BaseListView
                     /** @var Closure|null */
                     $value = $column['value'];
                     unset($column['value']);
+                }
+
+                if (isset($column['visibleButtons'])) {
+                    /** @var array */
+                    $visibleButtons = $column['visibleButtons'];
+                    unset($column['visibleButtons']);
                 }
 
                 $config = array_merge(
@@ -582,6 +583,10 @@ final class GridView extends BaseListView
 
                 if ($column instanceof DataColumn && $value !== null) {
                     $column->value($value);
+                }
+
+                if ($column instanceof ActionColumn && $visibleButtons !== null) {
+                    $column->visibleButtons($visibleButtons);
                 }
             }
 
