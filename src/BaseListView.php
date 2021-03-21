@@ -99,7 +99,7 @@ abstract class BaseListView extends Widget
     }
 
     /**
-     * @param string|null $emptyText the HTML content to be displayed when {@see} does not have any data.
+     * @param string $emptyText the HTML content to be displayed when {@see} does not have any data.
      *
      * When this is set to `false` no extra HTML content will be generated.
      *
