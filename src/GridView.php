@@ -72,7 +72,6 @@ final class GridView extends BaseListView
     private ?Closure $afterRow = null;
     private bool $showHeader = true;
     private bool $showFooter = false;
-    private bool $placeFooterAfterBody = false;
     /** @var array<array-key,array<array-key,Column>|Column|string|callable|Closure> */
     private array $columns = [];
     private string $emptyCell = '&nbsp;';
@@ -354,19 +353,6 @@ final class GridView extends BaseListView
     }
 
     /**
-     * @param bool $value whether to place footer after body in DOM if is true.
-     *
-     * @return $this
-     */
-    public function placeFooterAfterBody(bool $value): self
-    {
-        $new = clone $this;
-        $new->placeFooterAfterBody = $value;
-
-        return $new;
-    }
-
-    /**
      * @param array $rowOptions the HTML attributes for the table body rows. This can be either an array specifying the
      * common HTML attributes for all body rows.
      *
@@ -438,14 +424,9 @@ final class GridView extends BaseListView
         $tableBody = $this->renderTableBody();
 
         $tableFooter = false;
-        $tableFooterAfterBody = false;
 
         if ($this->showFooter) {
-            if ($this->placeFooterAfterBody) {
-                $tableFooterAfterBody = $this->renderTableFooter();
-            } else {
-                $tableFooter = $this->renderTableFooter();
-            }
+            $tableFooter = $this->renderTableFooter();
         }
 
         $content = array_filter(
@@ -455,7 +436,6 @@ final class GridView extends BaseListView
                 $tableHeader,
                 $tableFooter,
                 $tableBody,
-                $tableFooterAfterBody,
             ]
         );
 

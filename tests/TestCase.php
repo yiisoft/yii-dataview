@@ -50,6 +50,7 @@ class TestCase extends \PHPUnit\Framework\TestCase
     protected GridViewFactory $gridViewFactory;
     protected RadioButtonColumn $radioButtonColumn;
     protected UrlMatcherInterface $urlMatcher;
+    protected WebView $webView;
     private ContainerInterface $container;
     private PaginatorInterface $paginator;
 
@@ -73,6 +74,7 @@ class TestCase extends \PHPUnit\Framework\TestCase
             $this->paginator,
             $this->radioButtonColumn,
             $this->urlMatcher,
+            $this->webView,
         );
     }
 
@@ -135,6 +137,7 @@ class TestCase extends \PHPUnit\Framework\TestCase
         $this->gridViewFactory = $this->container->get(GridViewFactory::class);
         $this->radioButtonColumn = $this->container->get(RadioButtonColumn::class);
         $this->urlMatcher = $this->container->get(UrlMatcherInterface::class);
+        $this->webView = $this->container->get(WebView::class);
     }
 
     private function config(): array

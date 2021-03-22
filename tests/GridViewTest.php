@@ -226,13 +226,6 @@ final class GridViewTest extends TestCase
         $this->assertEqualsWithoutLE($html, $gridView->render());
     }
 
-    public function testPaginatorEmpty(): void
-    {
-        $this->expectException(InvalidConfigException::class);
-        $this->expectExceptionMessage('The "paginator" property must be set.');
-        GridView::widget()->render();
-    }
-
     public function testEmptyCell(): void
     {
         GridView::counter(0);
@@ -511,6 +504,78 @@ final class GridViewTest extends TestCase
         $gridView = GridView::widget()->frameworkCss('NoExist');
     }
 
+    public function testHeadOptions(): void
+    {
+        GridView::counter(0);
+
+        $gridView = GridView::widget()
+            ->columns(
+                [
+                    [
+                        'attribute()' => ['id'],
+                    ],
+
+                ]
+            )
+            ->headOptions(['class' => 'text-centered'])
+            ->paginator($this->createOffsetPaginator());
+
+        $html = <<<'HTML'
+        <div id="w1-gridview" class="grid-view"><div>Showing <b>1-6</b> of <b>6</b> items</div>
+        <table class="table table-striped table-bordered">
+        <thead class="text-centered">
+        <tr><th>Id</th></tr>
+        </thead>
+        <tbody>
+        <tr><td>1</td></tr>
+        <tr><td>2</td></tr>
+        <tr><td>3</td></tr>
+        <tr><td>4</td></tr>
+        <tr><td>5</td></tr>
+        <tr><td>6</td></tr>
+        </tbody>
+        </table>
+        </div>
+        HTML;
+        $this->assertEqualsWithoutLE($html, $gridView->render());
+    }
+
+    public function testHeaderRowOptions(): void
+    {
+        GridView::counter(0);
+
+        $gridView = GridView::widget()
+            ->columns(
+                [
+                    [
+                        'attribute()' => ['id'],
+                    ],
+
+                ]
+            )
+            ->headerRowOptions(['class' => 'text-centered'])
+            ->paginator($this->createOffsetPaginator());
+
+        $html = <<<'HTML'
+        <div id="w1-gridview" class="grid-view"><div>Showing <b>1-6</b> of <b>6</b> items</div>
+        <table class="table table-striped table-bordered">
+        <thead>
+        <tr class="text-centered"><th>Id</th></tr>
+        </thead>
+        <tbody>
+        <tr><td>1</td></tr>
+        <tr><td>2</td></tr>
+        <tr><td>3</td></tr>
+        <tr><td>4</td></tr>
+        <tr><td>5</td></tr>
+        <tr><td>6</td></tr>
+        </tbody>
+        </table>
+        </div>
+        HTML;
+        $this->assertEqualsWithoutLE($html, $gridView->render());
+    }
+
     public function testId(): void
     {
         GridView::counter(0);
@@ -571,6 +636,13 @@ final class GridViewTest extends TestCase
         </div>
         HTML;
         $this->assertEqualsWithoutLE($html, $gridView->render());
+    }
+
+    public function testPaginatorEmpty(): void
+    {
+        $this->expectException(InvalidConfigException::class);
+        $this->expectExceptionMessage('The "paginator" property must be set.');
+        GridView::widget()->render();
     }
 
     public function testShowHeader(): void

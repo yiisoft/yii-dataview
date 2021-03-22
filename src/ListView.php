@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Yiisoft\Yii\DataView;
 
 use Closure;
-use InvalidArgumentException;
 use Throwable;
 use Yiisoft\Aliases\Aliases;
 use Yiisoft\Arrays\ArrayHelper;
@@ -13,6 +12,7 @@ use Yiisoft\Html\Html;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\View\ViewContextInterface;
 use Yiisoft\View\WebView;
+use Yiisoft\Yii\DataView\Exception\InvalidConfigException;
 
 use function array_keys;
 use function array_merge;
@@ -51,6 +51,19 @@ final class ListView extends BaseListView implements ViewContextInterface
         $this->webView = $webView;
 
         parent::__construct($translator);
+    }
+
+    protected function run(): string
+    {
+        if (!isset($this->paginator)) {
+            throw new InvalidConfigException('The "paginator" property must be set.');
+        }
+
+        if (!isset($this->options['id'])) {
+            $this->options['id'] = $this->getId() . '-listview';
+        }
+
+        return parent::run();
     }
 
     /**
@@ -113,15 +126,6 @@ final class ListView extends BaseListView implements ViewContextInterface
         }
 
         return $this->aliases->get($path);
-    }
-
-    public function getItemViewPath(): string
-    {
-        if (is_callable($this->itemView)) {
-            return (string) ($this->itemView)();
-        }
-
-        return $this->itemView;
     }
 
     /**
@@ -199,7 +203,7 @@ final class ListView extends BaseListView implements ViewContextInterface
         $new = clone $this;
 
         if (!is_array($itemOptions) && !is_callable($itemOptions)) {
-            throw new InvalidArgumentException('itemOptions must be either array or callable');
+            throw new InvalidConfigException('itemOptions property must be either array or callable.');
         }
 
         if (is_array($itemOptions) && is_array($this->itemOptions)) {
@@ -236,7 +240,7 @@ final class ListView extends BaseListView implements ViewContextInterface
         $new = clone $this;
 
         if (!is_string($itemView) && !is_callable($itemView)) {
-            throw new InvalidArgumentException('itemView should be either null, string or callable');
+            throw new InvalidConfigException('itemView property should be string or callable.');
         }
 
         $new->itemView = $itemView;
@@ -333,7 +337,7 @@ final class ListView extends BaseListView implements ViewContextInterface
             $content = (string) $key;
         } elseif (is_string($this->itemView)) {
             $content = $this->webView->render(
-                $this->getItemViewPath(),
+                $this->itemView,
                 array_merge(
                     [
                         'model' => $model,
