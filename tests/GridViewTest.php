@@ -514,7 +514,6 @@ final class GridViewTest extends TestCase
                     [
                         'attribute()' => ['id'],
                     ],
-
                 ]
             )
             ->headOptions(['class' => 'text-centered'])
@@ -550,7 +549,6 @@ final class GridViewTest extends TestCase
                     [
                         'attribute()' => ['id'],
                     ],
-
                 ]
             )
             ->headerRowOptions(['class' => 'text-centered'])
