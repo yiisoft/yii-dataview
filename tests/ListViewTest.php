@@ -6,7 +6,6 @@ namespace Yiisoft\Yii\DataView\Tests;
 
 use Yiisoft\Yii\DataView\Exception\InvalidConfigException;
 use Yiisoft\Yii\DataView\ListView;
-use Yiisoft\Yii\DataView\Tests\TestCase;
 
 final class ListViewTest extends TestCase
 {
