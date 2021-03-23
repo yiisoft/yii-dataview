@@ -482,7 +482,7 @@ final class LinkPager extends Widget
                     trim($renderFirstPageButtonLink) . trim($renderPreviousPageButtonLink) .
                     Html::tag($tag, "\n" . implode("\n", $renderPageButtonLinks), $this->ulAttributes)->encode(false) .
                     trim($renderNextPageButtonLink) . trim($renderLastPageButtonLink) . "\n" .
-                Html::closeTag('nav')  . "\n";
+                Html::closeTag('nav') . "\n";
         }
 
         return $html;
