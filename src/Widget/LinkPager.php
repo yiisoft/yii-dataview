@@ -11,8 +11,8 @@ use Yiisoft\Html\Html;
 use Yiisoft\Router\UrlGeneratorInterface;
 use Yiisoft\Router\UrlMatcherInterface;
 use Yiisoft\View\WebView;
-use Yiisoft\Widget\Widget;
 use Yiisoft\Yii\DataView\Exception\InvalidConfigException;
+use Yiisoft\Yii\DataView\Widget;
 
 use function implode;
 
@@ -59,7 +59,7 @@ final class LinkPager extends Widget
     private string $prevPageLabel = 'Previous';
     public bool $disableCurrentPageButton = false;
     private string $frameworkCss = self::BOOTSTRAP;
-    private bool $hideOnSinglePage = true;
+    private bool $hideOnSinglePage = false;
     private int $maxButtonCount = 10;
     private bool $registerLinkTags = false;
     private array $requestAttributes = [];
@@ -88,7 +88,7 @@ final class LinkPager extends Widget
      *
      * @return string
      */
-    public function run(): string
+    protected function run(): string
     {
         $this->buildWidget();
 
@@ -134,7 +134,7 @@ final class LinkPager extends Widget
      *
      * @return $this
      */
-    public function disableCurrentPageButton(bool $disableCurrentPageButton): self
+    public function disableCurrentPageButton(bool $disableCurrentPageButton = true): self
     {
         $new = clone $this;
         $new->disableCurrentPageButton = $disableCurrentPageButton;
@@ -204,7 +204,7 @@ final class LinkPager extends Widget
      *
      * @return $this
      */
-    public function hideOnSinglePage(bool $hideOnSinglePage): self
+    public function hideOnSinglePage(bool $hideOnSinglePage = true): self
     {
         $new = clone $this;
         $new->hideOnSinglePage = $hideOnSinglePage;
@@ -448,7 +448,7 @@ final class LinkPager extends Widget
         /** @var int */
         $pageCount = $this->paginator->getTotalPages();
 
-        if ($pageCount < 2 && $this->hideOnSinglePage) {
+        if ($pageCount < 2 || $this->hideOnSinglePage) {
             return '';
         }
 
@@ -466,11 +466,11 @@ final class LinkPager extends Widget
                 Html::tag(
                     $tag,
                     "\n" .
-                    trim($renderFirstPageButtonLink) . trim($renderPreviousPageButtonLink) .
+                    $renderFirstPageButtonLink . $renderPreviousPageButtonLink .
                     "\n" .
                     implode("\n", $renderPageButtonLinks) .
                     "\n" .
-                    trim($renderNextPageButtonLink) . trim($renderLastPageButtonLink) .
+                    $renderNextPageButtonLink . $renderLastPageButtonLink .
                     "\n",
                     $this->ulAttributes
                 )->encode(false) . "\n" .
@@ -482,7 +482,7 @@ final class LinkPager extends Widget
                     trim($renderFirstPageButtonLink) . trim($renderPreviousPageButtonLink) .
                     Html::tag($tag, "\n" . implode("\n", $renderPageButtonLinks), $this->ulAttributes)->encode(false) .
                     trim($renderNextPageButtonLink) . trim($renderLastPageButtonLink) . "\n" .
-                Html::closeTag('nav');
+                Html::closeTag('nav')  . "\n";
         }
 
         return $html;
@@ -515,11 +515,11 @@ final class LinkPager extends Widget
         $linkAttributes = $this->linkAttributes;
         $linkAttributes['data-page'] = $page;
 
-        if ($active) {
+        if ($active && !$disabled) {
             Html::addCssClass($buttonsAttributes, $this->activePageCssClass);
         }
 
-        if ($disabled) {
+        if ($disabled && !$active) {
             $linkAttributes['aria-disabled'] = 'true';
             $linkAttributes['tabindex'] = '-1';
         }
@@ -647,7 +647,7 @@ final class LinkPager extends Widget
             $html = $this->renderPageButton($this->firstPageLabel, 1, ['class' => $this->firstPageCssClass]);
         }
 
-        return $html;
+        return $html !== '' ? $html . "\n" : '';
     }
 
     private function renderPreviousPageButtonLink(int $currentPage): string
@@ -717,6 +717,6 @@ final class LinkPager extends Widget
             $html = $this->renderPageButton($this->lastPageLabel, $pageCount, ['class' => $this->lastPageCssClass]);
         }
 
-        return $html;
+        return $html !== '' ? $html . "\n" : '';
     }
 }

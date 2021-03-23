@@ -209,6 +209,20 @@ final class ListViewTest extends TestCase
         </div>
         HTML;
         $this->assertEqualsWithoutLE($html, $listView->render());
+
+        $listView = ListView::widget()->frameworkCss(ListView::BULMA)->paginator($this->createOffsetPaginator());
+
+        $html = <<<'HTML'
+        <div id="w2-listview" class="list-view"><div>Showing <b>1-6</b> of <b>6</b> items</div>
+        <div data-key="0"></div>
+        <div data-key="1">1</div>
+        <div data-key="2">2</div>
+        <div data-key="3">3</div>
+        <div data-key="4">4</div>
+        <div data-key="5">5</div>
+        </div>
+        HTML;
+        $this->assertEqualsWithoutLE($html, $listView->render());
     }
 
     public function testPaginatorEmpty(): void

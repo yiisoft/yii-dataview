@@ -501,7 +501,7 @@ final class GridViewTest extends TestCase
     {
         $this->expectException(InvalidConfigException::class);
         $this->expectExceptionMessage('Invalid framework css. Valid values are: "bootstrap", "bulma".');
-        $gridView = GridView::widget()->frameworkCss('NoExist');
+        GridView::widget()->frameworkCss('NoExist');
     }
 
     public function testHeadOptions(): void

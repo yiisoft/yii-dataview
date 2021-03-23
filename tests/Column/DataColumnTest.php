@@ -326,7 +326,8 @@ final class DataColumnTest extends TestCase
         <li class="pagination-previous has-background-link has-text-white" disabled><a href="" data-page="1" aria-disabled="true" tabindex="-1">Previous</a></li><ul class="pagination-list justify-content-center mt-4">
         <li class="pagination-link is-current"><a href="" data-page="1">1</a></li>
         <li class="pagination-link"><a href="" data-page="2">2</a></li></ul><li class="pagination-next has-background-link has-text-white"><a href="" data-page="2">Next Page</a></li>
-        </nav></div>
+        </nav>
+        </div>
         HTML;
         $this->assertEqualsWithoutLE($html, $gridView->render());
     }
