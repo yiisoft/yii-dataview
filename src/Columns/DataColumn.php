@@ -272,6 +272,7 @@ final class DataColumn extends Column
             return LinkSorter::widget()
                 ->attribute($this->attribute)
                 ->currentPage($this->grid->getPaginator()->getCurrentPage())
+                ->frameworkCss($this->grid->getFrameworkCss())
                 ->options(array_merge($this->sortLinkOptions, ['label' => $label]))
                 ->requestAttributes($this->grid->getRequestAttributes())
                 ->requestQueryParams($this->grid->getRequestQueryParams())

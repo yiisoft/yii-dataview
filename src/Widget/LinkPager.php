@@ -410,7 +410,7 @@ final class LinkPager extends Widget
      * @see http://www.w3.org/TR/html401/struct/links.html#h-12.1.2
      * @see registerLinkTags()
      */
-    public function registerLinkTags(bool $registerLinkTags): self
+    public function registerLinkTags(bool $registerLinkTags = true): self
     {
         $new = clone $this;
         $new->registerLinkTags = $registerLinkTags;
@@ -704,6 +704,10 @@ final class LinkPager extends Widget
                 ['class' => $this->nextPageCssClass],
                 $currentPage === $pageCount,
             );
+
+            if ($this->lastPageLabel !== '') {
+                $html .= "\n";
+            }
         }
 
         return $html;
@@ -717,6 +721,6 @@ final class LinkPager extends Widget
             $html = $this->renderPageButton($this->lastPageLabel, $pageCount, ['class' => $this->lastPageCssClass]);
         }
 
-        return $html !== '' ? $html . "\n" : '';
+        return $html;
     }
 }

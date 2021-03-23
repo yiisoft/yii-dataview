@@ -685,6 +685,35 @@ final class DataColumnTest extends TestCase
         </div>
         HTML;
         $this->assertEqualsWithoutLE($html, $gridView->render());
+
+
+        $gridView = $this->createGridView(['id', 'name']);
+        $gridView = $gridView
+            ->frameworkCss(GridView::BULMA)
+            ->paginator($this->createOffsetPaginator(['id', 'name']));
+
+        $html = <<<'HTML'
+        <div id="w2-gridview" class="grid-view"><div>Showing <b>1-5</b> of <b>6</b> items</div>
+        <table class="table table-striped table-bordered">
+        <thead>
+        <tr><th><a class="asc has-text-link" href="/admin/index?page=1&amp;sort=-id" data-sort="-id">Id</a></th><th><a class="asc has-text-link" href="/admin/index?page=1&amp;sort=-name" data-sort="-name">Name</a></th></tr>
+        </thead>
+        <tbody>
+        <tr data-key="0"><td>1</td><td>tests 1</td></tr>
+        <tr data-key="1"><td>2</td><td>tests 2</td></tr>
+        <tr data-key="2"><td>3</td><td>tests 3</td></tr>
+        <tr data-key="3"><td>4</td><td>tests 4</td></tr>
+        <tr data-key="4"><td>5</td><td>tests 5</td></tr>
+        </tbody>
+        </table>
+        <nav class="pagination is-centered mt-4" aria-label="Pagination">
+        <li class="pagination-previous has-background-link has-text-white" disabled><a href="/admin/index?page=1" data-page="1" aria-disabled="true" tabindex="-1">Previous</a></li><ul class="pagination-list justify-content-center mt-4">
+        <li class="pagination-link is-current"><a href="/admin/index?page=1" data-page="1">1</a></li>
+        <li class="pagination-link"><a href="/admin/index?page=2" data-page="2">2</a></li></ul><li class="pagination-next has-background-link has-text-white"><a href="/admin/index?page=2" data-page="2">Next Page</a></li>
+        </nav>
+        </div>
+        HTML;
+        $this->assertEqualsWithoutLE($html, $gridView->render());
     }
 
     public function testSortingDisable(): void

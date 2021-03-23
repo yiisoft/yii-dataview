@@ -6,12 +6,12 @@ namespace Yiisoft\Yii\DataView\Widget;
 
 use JsonException;
 use Yiisoft\Data\Reader\Sort;
-use Yiisoft\Factory\Exceptions\InvalidConfigException;
 use Yiisoft\Html\Html;
 use Yiisoft\Router\UrlGeneratorInterface;
 use Yiisoft\Router\UrlMatcherInterface;
 use Yiisoft\Strings\Inflector;
 use Yiisoft\Widget\Widget;
+use Yiisoft\Yii\DataView\Exception\InvalidConfigException;
 
 use function array_merge;
 use function implode;
