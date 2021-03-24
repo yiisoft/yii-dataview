@@ -802,14 +802,14 @@ final class DataColumnTest extends TestCase
         $this->assertEqualsWithoutLE($html, $gridView->render());
     }
 
-    public function testNotVisible(): void
+    public function testInvisible(): void
     {
         GridView::counter(0);
 
         $columns = [
             ['label()' => ['id']],
             ['label()' => ['name']],
-            ['label()' => ['total'], 'notVisible()' => []],
+            ['label()' => ['total'], 'invisible()' => []],
         ];
 
         $gridView = $this->createGridView($columns);

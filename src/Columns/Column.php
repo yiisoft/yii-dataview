@@ -214,7 +214,7 @@ abstract class Column
      *
      * @return $this
      */
-    public function notVisible(): self
+    public function invisible(): self
     {
         $this->visible = false;
 

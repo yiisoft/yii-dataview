@@ -66,7 +66,7 @@ final class DetailView extends Widget
             throw new InvalidConfigException('Please specify the "model" property.');
         }
 
-        $attributesNormalize = $this->normalizeAttributes();
+        $normalizedAttributes = $this->normalizeAttributes();
 
         if (!isset($this->options['id'])) {
             $this->options['id'] = $this->getId() . '-detailview';
@@ -76,7 +76,7 @@ final class DetailView extends Widget
         $rows = [];
 
         /** @var array<array-key,mixed> */
-        foreach ($attributesNormalize as $attribute) {
+        foreach ($normalizedAttributes as $attribute) {
             $rows[] = $this->renderAttribute($attribute, $i++);
         }
 
@@ -172,7 +172,7 @@ final class DetailView extends Widget
      *
      * @psalm-suppress DocblockTypeContradiction
      *
-     * @return $this
+     * @return self
      */
     public function model($model): self
     {
@@ -290,7 +290,7 @@ final class DetailView extends Widget
                 $attribute = [
                     'attribute' => $matches[1],
                     'format' => $matches[3] ?? 'text',
-                    'label' => $matches[5]  ?? null,
+                    'label' => $matches[5] ?? null,
                 ];
             }
 

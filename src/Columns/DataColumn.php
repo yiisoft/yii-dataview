@@ -291,9 +291,9 @@ final class DataColumn extends Column
 
         if ($this->filterAttribute !== '') {
             if ($this->grid->getCssFramework() === 'bulma') {
-                Html::AddCssClass($this->filterInputOptions, ['input' => 'input']);
+                Html::addCssClass($this->filterInputOptions, ['input' => 'input']);
             } else {
-                Html::AddCssClass($this->filterInputOptions, ['input' => 'form-control']);
+                Html::addCssClass($this->filterInputOptions, ['input' => 'form-control']);
             }
 
             $name = $this->getInputName($this->grid->getFilterModelName(), $this->filterAttribute);
