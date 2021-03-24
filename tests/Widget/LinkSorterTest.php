@@ -10,10 +10,10 @@ use Yiisoft\Yii\DataView\Widget\LinkSorter;
 
 final class LinkSorterTest extends TestCase
 {
-    public function testFrameworkCssException(): void
+    public function testCssFrameworkException(): void
     {
         $this->expectException(InvalidConfigException::class);
-        $this->expectExceptionMessage('Invalid framework css. Valid values are: "bootstrap", "bulma".');
-        LinkSorter::widget()->frameworkCss('NoExist');
+        $this->expectExceptionMessage('Invalid CSS framework. Valid values are: "bootstrap", "bulma".');
+        LinkSorter::widget()->cssFramework('NoExist');
     }
 }

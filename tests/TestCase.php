@@ -97,12 +97,12 @@ class TestCase extends \PHPUnit\Framework\TestCase
         array $columns = [],
         int $currentPage = 1,
         int $pageSize = 5,
-        string $frameworkCss = GridView::BOOTSTRAP
+        string $cssFramework = GridView::BOOTSTRAP
     ): GridView {
         return GridView::widget()
             ->columns($columns)
             ->currentPage($currentPage)
-            ->frameworkCss($frameworkCss)
+            ->cssFramework($cssFramework)
             ->pageSize($pageSize);
     }
 

@@ -39,8 +39,8 @@ abstract class BaseListView extends Widget
     protected bool $showEmptyText = true;
     protected array $emptyTextOptions = ['class' => 'empty'];
     protected string $layout = "{summary}\n{items}\n{pager}";
-    protected string $frameworkCss = self::BOOTSTRAP;
-    private const FRAMEWORKCSS = [
+    protected string $cssFramework = self::BOOTSTRAP;
+    private const CSS_FRAMEWORKS = [
         self::BOOTSTRAP,
         self::BULMA,
     ];
@@ -137,15 +137,15 @@ abstract class BaseListView extends Widget
         return $new;
     }
 
-    public function frameworkCss(string $frameworkCss): self
+    public function cssFramework(string $cssFramework): self
     {
-        if (!in_array($frameworkCss, self::FRAMEWORKCSS)) {
-            $frameworkCss = implode('", "', self::FRAMEWORKCSS);
-            throw new InvalidConfigException("Invalid framework css. Valid values are: \"$frameworkCss\".");
+        if (!in_array($cssFramework, self::CSS_FRAMEWORKS)) {
+            $cssFramework = implode('", "', self::CSS_FRAMEWORKS);
+            throw new InvalidConfigException("Invalid CSS framework. Valid values are: \"$cssFramework\".");
         }
 
         $new = clone $this;
-        $new->frameworkCss = $frameworkCss;
+        $new->cssFramework = $cssFramework;
 
         return $new;
     }
@@ -303,9 +303,9 @@ abstract class BaseListView extends Widget
         return $new;
     }
 
-    public function getFrameworkCss(): string
+    public function getCssFramework(): string
     {
-        return $this->frameworkCss;
+        return $this->cssFramework;
     }
 
     protected function getDataReader(): array
@@ -354,7 +354,6 @@ abstract class BaseListView extends Widget
      */
     private function renderSummary(): string
     {
-        /** @var int */
         $count = $this->paginator->getTotalItems();
 
         if ($count < 1 || $this->summary === '') {
@@ -366,10 +365,8 @@ abstract class BaseListView extends Widget
         /** @psalm-var non-empty-string */
         $tag = ArrayHelper::remove($summaryOptions, 'tag', 'div');
 
-        /** @var int */
         $totalCount = count($this->getDataReader());
 
-        /** @var int */
         $begin = $this->paginator->getOffset() + 1;
         $end = ($begin + $totalCount) - 1;
 
@@ -377,10 +374,7 @@ abstract class BaseListView extends Widget
             $begin = $end;
         }
 
-        /** @var int */
         $page = $this->paginator->getCurrentPage() + 1;
-
-        /** @var int */
         $pageCount = $this->paginator->getCurrentPageSize();
 
         return Html::tag(
@@ -420,7 +414,7 @@ abstract class BaseListView extends Widget
 
         return LinkPager::widget()
             ->paginator($this->paginator)
-            ->frameworkCss($this->frameworkCss)
+            ->cssFramework($this->cssFramework)
             ->requestAttributes($this->requestAttributes)
             ->requestQueryParams($this->requestQueryParams)
             ->render();
@@ -468,6 +462,6 @@ abstract class BaseListView extends Widget
             return '';
         }
 
-        return LinkSorter::widget()->sort($sort)->frameworkCss($this->frameworkCss)->render();
+        return LinkSorter::widget()->sort($sort)->cssFramework($this->cssFramework)->render();
     }
 }

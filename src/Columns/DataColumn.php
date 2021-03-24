@@ -272,7 +272,7 @@ final class DataColumn extends Column
             return LinkSorter::widget()
                 ->attribute($this->attribute)
                 ->currentPage($this->grid->getPaginator()->getCurrentPage())
-                ->frameworkCss($this->grid->getFrameworkCss())
+                ->cssFramework($this->grid->getCssFramework())
                 ->options(array_merge($this->sortLinkOptions, ['label' => $label]))
                 ->requestAttributes($this->grid->getRequestAttributes())
                 ->requestQueryParams($this->grid->getRequestQueryParams())
@@ -290,7 +290,7 @@ final class DataColumn extends Column
         }
 
         if ($this->filterAttribute !== '') {
-            if ($this->grid->getFrameworkCss() === 'bulma') {
+            if ($this->grid->getCssFramework() === 'bulma') {
                 Html::AddCssClass($this->filterInputOptions, ['input' => 'input']);
             } else {
                 Html::AddCssClass($this->filterInputOptions, ['input' => 'form-control']);

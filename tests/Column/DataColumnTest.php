@@ -306,7 +306,7 @@ final class DataColumnTest extends TestCase
         $gridView = $gridView
             ->paginator($this->createOffsetPaginator())
             ->filterModelName('testMe')
-            ->frameworkCss(GridView::BULMA);
+            ->cssFramework(GridView::BULMA);
 
         $html = <<<'HTML'
         <div id="w2-gridview" class="grid-view"><div>Showing <b>1-5</b> of <b>6</b> items</div>
@@ -689,7 +689,7 @@ final class DataColumnTest extends TestCase
 
         $gridView = $this->createGridView(['id', 'name']);
         $gridView = $gridView
-            ->frameworkCss(GridView::BULMA)
+            ->cssFramework(GridView::BULMA)
             ->paginator($this->createOffsetPaginator(['id', 'name']));
 
         $html = <<<'HTML'

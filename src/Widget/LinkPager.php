@@ -38,7 +38,7 @@ final class LinkPager extends Widget
     private const LINK_LAST = 'last';
     private const BOOTSTRAP = 'bootstrap';
     private const BULMA = 'bulma';
-    private const FRAMEWORKCSS = [
+    private const CSS_FRAMEWORKS = [
         self::BOOTSTRAP,
         self::BULMA,
     ];
@@ -58,7 +58,7 @@ final class LinkPager extends Widget
     private string $nextPageLabel = 'Next Page';
     private string $prevPageLabel = 'Previous';
     public bool $disableCurrentPageButton = false;
-    private string $frameworkCss = self::BOOTSTRAP;
+    private string $cssFramework = self::BOOTSTRAP;
     private bool $hideOnSinglePage = false;
     private int $maxButtonCount = 10;
     private bool $registerLinkTags = false;
@@ -186,15 +186,15 @@ final class LinkPager extends Widget
         return $new;
     }
 
-    public function frameworkCss(string $frameworkCss): self
+    public function cssFramework(string $cssFramework): self
     {
-        if (!in_array($frameworkCss, self::FRAMEWORKCSS)) {
-            $frameworkCss = implode('", "', self::FRAMEWORKCSS);
-            throw new InvalidConfigException("Invalid framework css. Valid values are: \"$frameworkCss\".");
+        if (!in_array($cssFramework, self::CSS_FRAMEWORKS)) {
+            $cssFramework = implode('", "', self::CSS_FRAMEWORKS);
+            throw new InvalidConfigException("Invalid CSS framework. Valid values are: \"$cssFramework\".");
         }
 
         $new = clone $this;
-        $new->frameworkCss = $frameworkCss;
+        $new->cssFramework = $cssFramework;
 
         return $new;
     }
@@ -476,7 +476,7 @@ final class LinkPager extends Widget
                 )->encode(false) . "\n" .
             Html::closeTag('nav') . "\n";
 
-        if ($this->frameworkCss === self::BULMA) {
+        if ($this->cssFramework === self::BULMA) {
             $html =
                 Html::openTag('nav', $this->navAttributes) . "\n" .
                     trim($renderFirstPageButtonLink) . trim($renderPreviousPageButtonLink) .
@@ -524,11 +524,11 @@ final class LinkPager extends Widget
             $linkAttributes['tabindex'] = '-1';
         }
 
-        if ($disabled && $this->frameworkCss === self::BOOTSTRAP) {
+        if ($disabled && $this->cssFramework === self::BOOTSTRAP) {
             Html::addCssClass($buttonsAttributes, $this->disabledPageCssClass);
         }
 
-        if ($disabled && $this->frameworkCss === self::BULMA) {
+        if ($disabled && $this->cssFramework === self::BULMA) {
             $buttonsAttributes['disabled'] = true;
         }
 
@@ -620,7 +620,7 @@ final class LinkPager extends Widget
 
     private function buildWidget(): void
     {
-        if ($this->frameworkCss === self::BULMA) {
+        if ($this->cssFramework === self::BULMA) {
             $this->buildBulma();
         }
     }

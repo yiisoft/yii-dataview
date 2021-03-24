@@ -497,11 +497,11 @@ final class GridViewTest extends TestCase
         $this->assertEqualsWithoutLE($html, $gridView->render());
     }
 
-    public function testFrameworkCssException(): void
+    public function testInvalidCssFrameworkException(): void
     {
         $this->expectException(InvalidConfigException::class);
-        $this->expectExceptionMessage('Invalid framework css. Valid values are: "bootstrap", "bulma".');
-        GridView::widget()->frameworkCss('NoExist');
+        $this->expectExceptionMessage('Invalid CSS framework. Valid values are: "bootstrap", "bulma".');
+        GridView::widget()->cssFramework('NoExist');
     }
 
     public function testHeadOptions(): void

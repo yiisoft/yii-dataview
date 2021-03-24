@@ -123,11 +123,11 @@ final class LinkPagerTest extends TestCase
         $this->assertEqualsWithoutLE($html, $linkPager->render());
     }
 
-    public function testFrameworkCssException(): void
+    public function testCssFrameworkException(): void
     {
         $this->expectException(InvalidConfigException::class);
-        $this->expectExceptionMessage('Invalid framework css. Valid values are: "bootstrap", "bulma".');
-        LinkPager::widget()->frameworkCss('NoExist');
+        $this->expectExceptionMessage('Invalid CSS framework. Valid values are: "bootstrap", "bulma".');
+        LinkPager::widget()->cssFramework('NoExist');
     }
 
     public function testHideOnSinglePage(): void
