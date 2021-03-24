@@ -38,13 +38,19 @@ use Yiisoft\Widget\WidgetFactory;
 use Yiisoft\Yii\DataView\Columns\ActionColumn;
 use Yiisoft\Yii\DataView\Columns\CheckboxColumn;
 use Yiisoft\Yii\DataView\Columns\DataColumn;
+use Yiisoft\Yii\DataView\Columns\RadioButtonColumn;
 use Yiisoft\Yii\DataView\GridView;
+use Yiisoft\Yii\DataView\Factory\GridViewFactory;
 
 class TestCase extends \PHPUnit\Framework\TestCase
 {
     protected ActionColumn $actionColumn;
     protected CheckBoxColumn $checkBoxColumn;
     protected DataColumn $dataColumn;
+    protected GridViewFactory $gridViewFactory;
+    protected RadioButtonColumn $radioButtonColumn;
+    protected UrlMatcherInterface $urlMatcher;
+    protected WebView $webView;
     private ContainerInterface $container;
     private PaginatorInterface $paginator;
 
@@ -64,7 +70,11 @@ class TestCase extends \PHPUnit\Framework\TestCase
             $this->checkBoxColumn,
             $this->dataColumn,
             $this->container,
+            $this->gridViewFactory,
             $this->paginator,
+            $this->radioButtonColumn,
+            $this->urlMatcher,
+            $this->webView,
         );
     }
 
@@ -87,12 +97,12 @@ class TestCase extends \PHPUnit\Framework\TestCase
         array $columns = [],
         int $currentPage = 1,
         int $pageSize = 5,
-        string $frameworkCss = GridView::BOOTSTRAP
+        string $cssFramework = GridView::BOOTSTRAP
     ): GridView {
         return GridView::widget()
             ->columns($columns)
             ->currentPage($currentPage)
-            ->frameworkCss($frameworkCss)
+            ->cssFramework($cssFramework)
             ->pageSize($pageSize);
     }
 
@@ -124,6 +134,10 @@ class TestCase extends \PHPUnit\Framework\TestCase
         $this->actionColumn = $this->container->get(ActionColumn::class);
         $this->checkboxColumn = $this->container->get(CheckboxColumn::class);
         $this->dataColumn = $this->container->get(DataColumn::class);
+        $this->gridViewFactory = $this->container->get(GridViewFactory::class);
+        $this->radioButtonColumn = $this->container->get(RadioButtonColumn::class);
+        $this->urlMatcher = $this->container->get(UrlMatcherInterface::class);
+        $this->webView = $this->container->get(WebView::class);
     }
 
     private function config(): array
@@ -154,6 +168,8 @@ class TestCase extends \PHPUnit\Framework\TestCase
             RouteCollectorInterface::class => Group::create(
                 null,
                 [
+                    Route::methods(['GET', 'POST'], '/admin/index', [TestDelete::class, 'run'])
+                        ->name('admin'),
                     Route::methods(['GET', 'POST'], '/admin/delete[/{id}]', [TestDelete::class, 'run'])
                         ->name('delete'),
                     Route::methods(['GET', 'POST'], '/admin/update[/{id}]', [TestUpdate::class, 'run'])

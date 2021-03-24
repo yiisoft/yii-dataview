@@ -56,8 +56,8 @@ final class ActionColumn extends Column
     private array $visibleButtons = [];
     private array $buttonOptions = [];
     private string $primaryKey = 'id';
-    /** @var callable $urlCreator */
-    private $urlCreator;
+    /** @var callable|null */
+    private $urlCreator = null;
     private UrlGeneratorInterface $urlGenerator;
 
     public function __construct(UrlGeneratorInterface $urlGenerator)
@@ -153,7 +153,7 @@ final class ActionColumn extends Column
     {
         $result = preg_match_all('/{([\w\-\/]+)}/', $template, $matches);
 
-        if ($result > 0 && is_array($matches) && !empty($matches[1])) {
+        if ($result > 0 && !empty($matches[1])) {
             $this->buttons = array_intersect_key($this->buttons, array_flip($matches[1]));
         }
 
@@ -213,31 +213,41 @@ final class ActionColumn extends Column
         return $this;
     }
 
-    protected function renderDataCellContent(array $model, $key, int $index): string
+    /**
+     * Renders the data cell content.
+     *
+     * @param array|object $model the data model.
+     * @param mixed $key the key associated with the data model.
+     * @param int $index the zero-based index of the data model among the models array returned by
+     * {@see GridView::dataReader}.
+     *
+     * @return string the rendering result.
+     */
+    protected function renderDataCellContent($model, $key, int $index): string
     {
-        return preg_replace_callback(
-            '/{([\w\-\/]+)}/',
-            function ($matches) use ($model, $key, $index) {
-                $name = $matches[1];
+        return preg_replace_callback('/{([\w\-\/]+)}/', function (array $matches) use ($model, $key, $index): string {
+            /** @var string */
+            $name = $matches[1];
 
-                if (isset($this->visibleButtons[$name])) {
-                    $isVisible = $this->visibleButtons[$name] instanceof Closure
-                        ? ($this->visibleButtons[$name])($model, $key, $index)
-                        : $this->visibleButtons[$name];
-                } else {
-                    $isVisible = true;
+            if (isset($this->visibleButtons[$name])) {
+                /** @var bool */
+                $isVisible = $this->visibleButtons[$name] instanceof Closure
+                    ? $this->visibleButtons[$name]($model, $key, $index)
+                    : $this->visibleButtons[$name];
+            } else {
+                $isVisible = true;
+            }
+
+            if ($isVisible && isset($this->buttons[$name])) {
+                $url = $this->createUrl($name, $model, $key, $index);
+
+                if ($this->buttons[$name] instanceof Closure) {
+                    return (string) $this->buttons[$name]($url, $model, $key);
                 }
+            }
 
-                if ($isVisible && isset($this->buttons[$name])) {
-                    $url = $this->createUrl($name, $model, $key, $index);
-
-                    return ($this->buttons[$name])($url, $model, $key);
-                }
-
-                return '';
-            },
-            $this->template
-        );
+            return '';
+        }, $this->template);
     }
 
     /**
@@ -246,18 +256,19 @@ final class ActionColumn extends Column
      * This method is called for each button and each row.
      *
      * @param string $action the button name (or action ID)
-     * @param array $model the data model
+     * @param array|object $model the data model
      * @param mixed $key the key associated with the data model
      * @param int $index the current row index
      *
      * @return string the created URL
      */
-    private function createUrl(string $action, array $model, $key, int $index): string
+    private function createUrl(string $action, $model, $key, int $index): string
     {
         if (is_callable($this->urlCreator)) {
-            return call_user_func($this->urlCreator, $action, $model, $key, $index, $this);
+            return (string) call_user_func($this->urlCreator, $action, $model, $key, $index, $this);
         }
 
+        /** @var mixed */
         $key = $model[$this->primaryKey] ?? $key;
 
         $params = is_array($key) ? $key : ['id' => (string) $key];
@@ -294,8 +305,10 @@ final class ActionColumn extends Column
      */
     private function loadDefaultButton(string $name, string $iconName, array $additionalOptions = []): void
     {
+        $title = '';
+
         if (!isset($this->buttons[$name]) && strpos($this->template, '{' . $name . '}') !== false) {
-            $this->buttons[$name] = function ($url) use ($name, $iconName, $additionalOptions): string {
+            $this->buttons[$name] = function (?string $url) use ($name, $iconName, $additionalOptions, $title): string {
                 switch ($name) {
                     case 'view':
                         $title = 'View';

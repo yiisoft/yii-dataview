@@ -7,7 +7,6 @@ namespace Yiisoft\Yii\DataView;
 use JsonException;
 use Yiisoft\Arrays\ArrayHelper;
 use Yiisoft\Data\Paginator\OffsetPaginator;
-use Yiisoft\Data\Paginator\PaginatorInterface;
 use Yiisoft\Html\Html;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\Yii\DataView\Exception\InvalidConfigException;
@@ -30,21 +29,21 @@ abstract class BaseListView extends Widget
     public const BOOTSTRAP = 'bootstrap';
     public const BULMA = 'bulma';
     protected array $options = [];
-    protected PaginatorInterface $paginator;
+    protected OffsetPaginator $paginator;
     protected ?LinkSorter $sorter = null;
     protected string $summary = 'Showing <b>{begin, number}-{end, number}</b> of <b>{totalCount, number}</b> ' .
         '{totalCount, plural, one{item} other{items}}';
     protected array $summaryOptions = [];
     protected bool $showOnEmpty = false;
-    protected ?string $emptyText = 'No results found.';
+    protected string $emptyText = 'No results found.';
     protected bool $showEmptyText = true;
     protected array $emptyTextOptions = ['class' => 'empty'];
     protected string $layout = "{summary}\n{items}\n{pager}";
-    private const FRAMEWORKCSS = [
+    protected string $cssFramework = self::BOOTSTRAP;
+    private const CSS_FRAMEWORKS = [
         self::BOOTSTRAP,
         self::BULMA,
     ];
-    private string $frameworkCss = self::BOOTSTRAP;
     private int $pageSize = 0;
     private int $currentPage = 1;
     private array $requestAttributes = [];
@@ -66,32 +65,28 @@ abstract class BaseListView extends Widget
     protected function run(): string
     {
         if ($this->showOnEmpty || ($this->paginator->getTotalItems() > 0)) {
-            $content = preg_replace_callback(
-                '/{\\w+}/',
-                function ($matches) {
-                    $content = $this->renderSection($matches[0]);
-
-                    return $content === false ? $matches[0] : $content;
-                },
-                $this->layout,
-            );
+            $content = preg_replace_callback('/{\\w+}/', function (array $matches): string {
+                return $this->renderSection((string) $matches[0]);
+            }, $this->layout);
         } else {
             $content = $this->renderEmpty();
         }
 
         $options = $this->options;
+
+        /** @psalm-var non-empty-string */
         $tag = ArrayHelper::remove($options, 'tag', 'div');
 
         return Html::tag($tag, $content)->attributes($options)->encode(false)->render();
     }
 
-    public function getPaginator(): PaginatorInterface
+    public function getPaginator(): OffsetPaginator
     {
         return $this->paginator;
     }
 
     /**
-     * @param int $currentPage set current page PaginatorInterface::class {@see OffsetPaginator::currentPage()}
+     * @param int $currentPage set current page OffsetPaginator::class {@see OffsetPaginator::currentPage()}
      *
      * @return $this
      */
@@ -104,7 +99,7 @@ abstract class BaseListView extends Widget
     }
 
     /**
-     * @param string|null $emptyText the HTML content to be displayed when {@see} does not have any data.
+     * @param string $emptyText the HTML content to be displayed when {@see} does not have any data.
      *
      * When this is set to `false` no extra HTML content will be generated.
      *
@@ -116,13 +111,11 @@ abstract class BaseListView extends Widget
      * @see showOnEmpty
      * @see emptyTextOptions
      */
-    public function emptyText(?string $emptyText): self
+    public function emptyText(string $emptyText): self
     {
         $new = clone $this;
 
-        if ($emptyText !== null) {
-            $new->emptyText = $emptyText;
-        }
+        $new->emptyText = $emptyText;
 
         return $new;
     }
@@ -144,15 +137,15 @@ abstract class BaseListView extends Widget
         return $new;
     }
 
-    public function frameworkCss(string $frameworkCss): self
+    public function cssFramework(string $cssFramework): self
     {
-        if (!in_array($frameworkCss, self::FRAMEWORKCSS)) {
-            $frameworkCss = implode('", "', self::FRAMEWORKCSS);
-            throw new InvalidConfigException("Invalid framework css. Valid values are: \"$frameworkCss\".");
+        if (!in_array($cssFramework, self::CSS_FRAMEWORKS)) {
+            $cssFramework = implode('", "', self::CSS_FRAMEWORKS);
+            throw new InvalidConfigException("Invalid CSS framework. Valid values are: \"$cssFramework\".");
         }
 
         $new = clone $this;
-        $new->frameworkCss = $frameworkCss;
+        $new->cssFramework = $cssFramework;
 
         return $new;
     }
@@ -204,7 +197,7 @@ abstract class BaseListView extends Widget
     }
 
     /**
-     * @param int $pageSize set page size PaginatorInterface {@see OffsetPaginator::pageSize()}
+     * @param int $pageSize set page size OffsetPaginator {@see OffsetPaginator::pageSize()}
      * {@see KeysetPaginator::pageSize()}.
      *
      * @return $this
@@ -218,11 +211,11 @@ abstract class BaseListView extends Widget
     }
 
     /**
-     * @param PaginatorInterface $paginator set paginator {@see OffsetPaginator} {@see KeysetPaginator}.
+     * @param OffsetPaginator $paginator set paginator {@see OffsetPaginator} {@see KeysetPaginator}.
      *
      * @return $this
      */
-    public function paginator(PaginatorInterface $paginator): self
+    public function paginator(OffsetPaginator $paginator): self
     {
         $new = clone $this;
         $new->paginator = $paginator;
@@ -310,6 +303,11 @@ abstract class BaseListView extends Widget
         return $new;
     }
 
+    public function getCssFramework(): string
+    {
+        return $this->cssFramework;
+    }
+
     protected function getDataReader(): array
     {
         $dataReader = [];
@@ -320,6 +318,7 @@ abstract class BaseListView extends Widget
 
         $this->paginator = $this->paginator->withCurrentPage($this->currentPage);
 
+        /** @var array */
         foreach ($this->paginator->read() as $read) {
             $dataReader[] = $read;
         }
@@ -343,6 +342,8 @@ abstract class BaseListView extends Widget
         }
 
         $options = $this->emptyTextOptions;
+
+        /** @psalm-var non-empty-string */
         $tag = ArrayHelper::remove($options, 'tag', 'div');
 
         return Html::tag($tag, $this->emptyText)->attributes($options)->render();
@@ -360,23 +361,21 @@ abstract class BaseListView extends Widget
         }
 
         $summaryOptions = $this->summaryOptions;
+
+        /** @psalm-var non-empty-string */
         $tag = ArrayHelper::remove($summaryOptions, 'tag', 'div');
 
-        if ($this->paginator instanceof OffsetPaginator) {
-            $totalCount = count($this->getDataReader());
-            $begin = $this->paginator->getOffset() + 1;
-            $end = ($begin + $totalCount) - 1;
+        $totalCount = count($this->getDataReader());
 
-            if ($begin > $end) {
-                $begin = $end;
-            }
+        $begin = $this->paginator->getOffset() + 1;
+        $end = ($begin + $totalCount) - 1;
 
-            $page = $this->paginator->getCurrentPage() + 1;
-            $pageCount = $this->paginator->getCurrentPageSize();
-        } else {
-            $begin = $page = $pageCount = 1;
-            $end = $totalCount = $count;
+        if ($begin > $end) {
+            $begin = $end;
         }
+
+        $page = $this->paginator->getCurrentPage() + 1;
+        $pageCount = $this->paginator->getCurrentPageSize();
 
         return Html::tag(
             $tag,
@@ -386,7 +385,7 @@ abstract class BaseListView extends Widget
                     'begin' => $begin,
                     'end' => $end,
                     'count' => $count,
-                    'totalCount' => $this->summary === null ? $totalCount : $count,
+                    'totalCount' => empty($this->summary) ? $totalCount : $count,
                     'page' => $page,
                     'pageCount' => $pageCount,
                 ],
@@ -401,19 +400,21 @@ abstract class BaseListView extends Widget
     /**
      * Renders the pager.
      *
-     * @throws InvalidConfigException|\Yiisoft\Factory\Exceptions\InvalidConfigException
+     * @throws InvalidConfigException
      *
      * @return string the rendering result
+     *
+     * @psalm-suppress MixedArgumentTypeCoercion
      */
     private function renderPager(): string
     {
-        if ($this->paginator === null || $this->paginator->getTotalItems() < 1) {
+        if ($this->paginator->getTotalItems() < 1) {
             return '';
         }
 
         return LinkPager::widget()
-            ->frameworkCss($this->frameworkCss)
             ->paginator($this->paginator)
+            ->cssFramework($this->cssFramework)
             ->requestAttributes($this->requestAttributes)
             ->requestQueryParams($this->requestQueryParams)
             ->render();
@@ -461,6 +462,6 @@ abstract class BaseListView extends Widget
             return '';
         }
 
-        return LinkSorter::widget()->sort($sort)->frameworkCss($this->frameworkCss)->render();
+        return LinkSorter::widget()->sort($sort)->cssFramework($this->cssFramework)->render();
     }
 }

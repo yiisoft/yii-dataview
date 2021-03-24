@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Yiisoft\Yii\DataView\Columns;
 
 use Closure;
+use InvalidArgumentException;
 use JsonException;
 use Yiisoft\Html\Html;
 use Yiisoft\Yii\DataView\GridView;
@@ -19,7 +20,7 @@ use function trim;
  */
 abstract class Column
 {
-    /** @var callable|Closure */
+    /** @var callable */
     protected $content;
     protected array $contentOptions = [];
     protected GridView $grid;
@@ -44,23 +45,22 @@ abstract class Column
     /**
      * Renders a data cell.
      *
-     * @param array $model the data model being rendered
-     * @param mixed $key the key associated with the data model
-     * @param int $index the zero-based index of the data item among the item array returned by {GridView::dataReader}.
+     * @param array|object $model the data model being rendered.
+     * @param mixed $key the key associated with the data model.
+     * @param int $index the zero-based index of the data item among the item array returned by
+     * {GridView::dataReader}.
      *
      * @throws JsonException
      *
-     * @return string the rendering result
+     * @return string the rendering result.
      */
-    public function renderDataCell(array $model, $key, int $index): string
+    public function renderDataCell($model, $key, int $index): string
     {
-        if ($this->contentOptions instanceof Closure) {
-            $options = call_user_func($this->contentOptions, $model, $key, $index, $this);
-        } else {
-            $options = $this->contentOptions;
-        }
-
-        return Html::tag('td', $this->renderDataCellContent($model, $key, $index), $options)->encode(false)->render();
+        return Html::tag(
+            'td',
+            $this->renderDataCellContent($model, $key, $index),
+            $this->contentOptions
+        )->encode(false)->render();
     }
 
     /**
@@ -72,14 +72,14 @@ abstract class Column
     }
 
     /**
-     * @param callable|null $content This is a callable that will be used to generate the content of each cell.
+     * @param callable $content This is a callable that will be used to generate the content of each cell.
      * The signature of the function should be the following: `function ($model, $key, $index, $column)`.
      * Where `$model`, `$key`, and `$index` refer to the model, key and index of the row currently being rendered and
      * `$column` is a reference to the {@see Column} object.
      *
      * @return $this
      */
-    public function content(?callable $content): self
+    public function content(callable $content): self
     {
         $this->content = $content;
 
@@ -210,6 +210,18 @@ abstract class Column
     }
 
     /**
+     * @param bool whether this column is visible. Defaults to true.
+     *
+     * @return $this
+     */
+    public function invisible(): self
+    {
+        $this->visible = false;
+
+        return $this;
+    }
+
+    /**
      * Returns header cell label.
      *
      * This method may be overridden to customize the label of the header cell.
@@ -224,20 +236,22 @@ abstract class Column
     /**
      * Renders the data cell content.
      *
-     * @param array $model the data model
-     * @param mixed $key the key associated with the data model
+     * @param array|object $model the data model.
+     * @param mixed $key the key associated with the data model.
      * @param int $index the zero-based index of the data model among the models array returned by
      * {@see GridView::dataReader}.
      *
-     * @return string the rendering result
+     * @return string the rendering result.
      */
-    protected function renderDataCellContent(array $model, $key, int $index): string
+    protected function renderDataCellContent($model, $key, int $index): string
     {
-        if ($this->content !== null) {
-            return call_user_func($this->content, $model, $key, $index, $this);
+        $html = $this->grid->getEmptyCell();
+
+        if (!empty($this->content)) {
+            $html = (string) call_user_func($this->content, $model, $key, $index, $this);
         }
 
-        return $this->grid->getEmptyCell();
+        return $html;
     }
 
     /**
@@ -277,5 +291,72 @@ abstract class Column
     protected function renderHeaderCellContent(): string
     {
         return trim($this->header) !== '' ? $this->header : $this->getHeaderCellLabel();
+    }
+
+    /**
+     * Generates an appropriate input name for the specified attribute name or expression.
+     *
+     * This method generates a name that can be used as the input name to collect user input for the specified
+     * attribute. The name is generated according to the of the form and the given attribute name. For example, if the
+     * form name of the `Post` form is `Post`, then the input name generated for the `content` attribute would be
+     * `Post[content]`.
+     *
+     * @param string $formName the form name.
+     * @param string $attribute the attribute name or expression.
+     *
+     * @throws InvalidArgumentException if the attribute name contains non-word characters
+     * or empty form name for tabular inputs
+     *
+     * @return string the generated input name.
+     */
+    protected function getInputName(string $formName, string $attribute): string
+    {
+        $data = $this->parseAttribute($attribute);
+
+        if ($formName === '' && $data['prefix'] === '') {
+            return $attribute;
+        }
+
+        if ($formName !== '') {
+            return $formName . $data['prefix'] . '[' . $data['name'] . ']' . $data['suffix'];
+        }
+
+        throw new InvalidArgumentException($formName . '::formName() cannot be empty for tabular inputs.');
+    }
+
+    /**
+     * This method parses an attribute expression and returns an associative array containing real attribute name,
+     * prefix and suffix.
+     *
+     * For example: `['name' => 'content', 'prefix' => '', 'suffix' => '[0]']`
+     *
+     * An attribute expression is an attribute name prefixed and/or suffixed with array indexes. It is mainly used in
+     * tabular data input and/or input of array type. Below are some examples:
+     *
+     * - `[0]content` is used in tabular data input to represent the "content" attribute for the first model in tabular
+     *    input;
+     * - `dates[0]` represents the first array element of the "dates" attribute;
+     * - `[0]dates[0]` represents the first array element of the "dates" attribute for the first model in tabular
+     *    input.
+     *
+     * @param string $attribute the attribute name or expression
+     *
+     * @throws InvalidArgumentException if the attribute name contains non-word characters.
+     *
+     * @return array
+     *
+     * @psalm-return array<array-key,string>
+     */
+    private function parseAttribute(string $attribute): array
+    {
+        if (!preg_match('/(^|.*\])([\w\.\+]+)(\[.*|$)/u', $attribute, $matches)) {
+            throw new InvalidArgumentException('Attribute name must contain word characters only.');
+        }
+
+        return [
+            'name' => $matches[2],
+            'prefix' => $matches[1],
+            'suffix' => $matches[3],
+        ];
     }
 }

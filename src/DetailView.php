@@ -6,22 +6,17 @@ namespace Yiisoft\Yii\DataView;
 
 use Closure;
 use JsonException;
-use Yiisoft\Arrays\ArrayableInterface;
 use Yiisoft\Arrays\ArrayHelper;
-use Yiisoft\Factory\Exceptions\InvalidConfigException;
 use Yiisoft\Html\Html;
 use Yiisoft\Strings\Inflector;
+use Yiisoft\Yii\DataView\Exception\InvalidConfigException;
 
 use function array_key_exists;
-use function array_keys;
-use function call_user_func;
-use function get_object_vars;
 use function implode;
 use function is_array;
 use function is_object;
 use function is_string;
 use function preg_match;
-use function sort;
 use function strtr;
 
 /**
@@ -41,13 +36,20 @@ use function strtr;
  */
 final class DetailView extends Widget
 {
-    /** @var array|object */
-    private $model;
+    /** @var array|object|null */
+    private $model = null;
     private array $attributes = [];
-    /** @var callable|string */
-    private $template = '<tr><th{captionOptions}>{label}</th><td{contentOptions}>{value}</td></tr>';
+    private array $captionOptions = [];
+    private array $contentOptions = [];
+    private Inflector $inflector;
+    private array $rowOptions = [];
+    private string $template = '<tr{rowOptions}><th{captionOptions}>{label}</th><td{contentOptions}>{value}</td></tr>';
     private array $options = ['class' => 'table table-striped table-bordered detail-view'];
-    private string $emptyHtml = '<span class="not-set">(not set)</span>';
+
+    public function __construct(Inflector $inflector, Html $html)
+    {
+        $this->inflector = $inflector;
+    }
 
     /**
      * Renders the detail view.
@@ -64,23 +66,28 @@ final class DetailView extends Widget
             throw new InvalidConfigException('Please specify the "model" property.');
         }
 
-        $this->normalizeAttributes();
+        $normalizedAttributes = $this->normalizeAttributes();
 
+        if (!isset($this->options['id'])) {
+            $this->options['id'] = $this->getId() . '-detailview';
+        }
+
+        $i = 1;
         $rows = [];
-        $i = 0;
-        foreach ($this->attributes as $attribute) {
+
+        /** @var array<array-key,mixed> */
+        foreach ($normalizedAttributes as $attribute) {
             $rows[] = $this->renderAttribute($attribute, $i++);
         }
 
         $options = $this->options;
-        $tag = ArrayHelper::remove($options, 'tag', 'table');
 
-        return Html::tag($tag, implode("\n", $rows), $options)->encode(false)->render();
-    }
+        /** @psalm-var non-empty-string */
+        $tag = $options['tag'] ?? 'table';
 
-    public function getAttributes(): array
-    {
-        return $this->attributes;
+        unset($options['tag']);
+
+        return Html::tag($tag, "\n" . implode("\n", $rows) . "\n", $options)->encode(false)->render();
     }
 
     /**
@@ -122,23 +129,57 @@ final class DetailView extends Widget
         return $new;
     }
 
-    public function emptyHtml(string $emptyHtml): self
+    /**
+     * @param array $captionOptions the `HTML` attributes for customize all labels tag.
+     *
+     * The `tag` option specifies what container tag should be used. It defaults to `table` if not set.
+     *
+     * {@see Html::renderTagAttributes()} for details on how attributes are being rendered.
+     *
+     * @return $this
+     */
+    public function captionOptions(array $captionOptions): self
     {
         $new = clone $this;
-        $new->emptyHtml = $emptyHtml;
+        $new->captionOptions = $captionOptions;
 
         return $new;
     }
 
     /**
-     * @param array|object $model the data model whose details are to be displayed. This can be a {@see object}
-     * instance, an associative array, an object that implements {@see \Yiisoft\Arrays\ArrayableInterface} interface or
-     * simply an object with defined public accessible non-static properties.
+     * @param array $contentOptions the `HTML` attributes for customize all values tag.
+     *
+     * The `tag` option specifies what container tag should be used. It defaults to `table` if not set.
+     *
+     * {@see Html::renderTagAttributes()} for details on how attributes are being rendered.
      *
      * @return $this
      */
+    public function contentOptions(array $contentOptions): self
+    {
+        $new = clone $this;
+        $new->contentOptions = $contentOptions;
+
+        return $new;
+    }
+
+    /**
+     * @param array|object $model the data model whose details are to be displayed.
+     *
+     * This can be a {@see object} instance, an associative {@see array}, an object that implements
+     * {@see \Yiisoft\Arrays\ArrayableInterface} interface or simply an object with defined public accessible non-static
+     * properties.
+     *
+     * @psalm-suppress DocblockTypeContradiction
+     *
+     * @return self
+     */
     public function model($model): self
     {
+        if (!is_array($model) && !is_object($model)) {
+            throw new InvalidConfigException('The "model" property must be either an array or an object.');
+        }
+
         $new = clone $this;
         $new->model = $model;
 
@@ -162,24 +203,31 @@ final class DetailView extends Widget
     }
 
     /**
-     * @param callable|string $template the template used to render a single attribute. If a string, the token
-     * `{label}` and `{value}` will  be replaced with the label and the value of the corresponding attribute.
+     * @param array $rowOptions the `HTML` attributes for customize all rows data.
      *
-     * If a callback (e.g. an anonymous function), the signature must be as follows:
+     * The `tag` option specifies what container tag should be used. It defaults to `table` if not set.
      *
-     * ```php
-     * function ($attribute, $index, $widget)
-     * ```
-     *
-     * where `$attribute` refer to the specification of the attribute being rendered, `$index` is the zero-based index
-     * of the attribute in the [[attributes]] array, and `$widget` refers to this widget instance.
-     *
-     * The tokens `{captionOptions}` and `{contentOptions}` are available, which will represent HTML attributes of HTML
-     * container elements for the label and value.
+     * {@see Html::renderTagAttributes()} for details on how attributes are being rendered.
      *
      * @return $this
      */
-    public function template($template): self
+    public function rowOptions(array $rowOptions): self
+    {
+        $new = clone $this;
+        $new->rowOptions = $rowOptions;
+
+        return $new;
+    }
+
+    /**
+     * @param string $template the template used to render a single attribute.
+     *
+     * The tokens `{captionOptions}`, `{contentOptions}` and `{rowOptions}` are available, which will represent HTML
+     * attributes of HTML container elements for the label and value.
+     *
+     * @return $this
+     */
+    public function template(string $template): self
     {
         $new = clone $this;
         $new->template = $template;
@@ -199,22 +247,25 @@ final class DetailView extends Widget
      */
     private function renderAttribute(array $attribute, int $index): string
     {
-        if (is_string($this->template)) {
-            $captionOptions = Html::renderTagAttributes(ArrayHelper::getValue($attribute, 'captionOptions', []));
-            $contentOptions = Html::renderTagAttributes(ArrayHelper::getValue($attribute, 'contentOptions', []));
+        /** @var array */
+        $captionOptions = $attribute['captionOptions'] ?? [];
+        $captionOptions = array_merge_recursive($this->captionOptions, $captionOptions);
 
-            return strtr(
-                $this->template,
-                [
-                    '{label}' => $attribute['label'],
-                    '{value}' => $attribute['value'],
-                    '{captionOptions}' => $captionOptions,
-                    '{contentOptions}' => $contentOptions,
-                ]
-            );
-        }
+        /** @var array */
+        $contentOptions = $attribute['contentOptions'] ?? [];
+        $contentOptions = array_merge_recursive($this->contentOptions, $contentOptions);
 
-        return call_user_func($this->template, $attribute, $index, $this);
+        /** @var array */
+        $rowOptions = $attribute['rowOptions'] ?? [];
+        $rowOptions = array_merge_recursive($this->rowOptions, $rowOptions);
+
+        return strtr($this->template, [
+            '{label}' => $attribute['label'],
+            '{value}' => $attribute['value'],
+            '{captionOptions}' => Html::renderTagAttributes($captionOptions),
+            '{contentOptions}' => Html::renderTagAttributes($contentOptions),
+            '{rowOptions}' => Html::renderTagAttributes($rowOptions),
+        ]);
     }
 
     /**
@@ -222,28 +273,17 @@ final class DetailView extends Widget
      *
      * @throws InvalidConfigException
      */
-    private function normalizeAttributes(): void
+    private function normalizeAttributes(): array
     {
-        if ($this->attributes === []) {
-            if (is_object($this->model)) {
-                $this->attributes = $this->model instanceof ArrayableInterface
-                    ? array_keys($this->model->toArray())
-                    : array_keys(get_object_vars($this->model));
-            } elseif (is_array($this->model)) {
-                $this->attributes = array_keys($this->model);
-            } else {
-                throw new InvalidConfigException('The "model" property must be either an array or an object.');
-            }
+        $attributes = $this->attributes;
 
-            sort($this->attributes);
-        }
-
-        foreach ($this->attributes as $i => $attribute) {
+        /** @var array<array-key,array|string|Closure> $attributes */
+        foreach ($attributes as $i => $attribute) {
             if (is_string($attribute)) {
                 if (!preg_match('/^([^:]+)(:(\w*))?(:(.*))?$/', $attribute, $matches)) {
                     throw new InvalidConfigException(
-                        'The attribute must be specified in the format of "attribute", "attribute:format" or ' .
-                        '"attribute:format:label"'
+                        'The attribute must be specified in the format of "attribute", "attribute:format" or '
+                        . '"attribute:format:label" '
                     );
                 }
 
@@ -254,41 +294,40 @@ final class DetailView extends Widget
                 ];
             }
 
-            if (!is_array($attribute)) {
-                throw new InvalidConfigException('The attribute configuration must be an array.');
-            }
-
-            if (isset($attribute['visible']) && !$attribute['visible']) {
-                unset($this->attributes[$i]);
-                continue;
-            }
-
-            if (!isset($attribute['format'])) {
-                $attribute['format'] = 'text';
-            }
-
-            if (isset($attribute['attribute'])) {
-                $attributeName = $attribute['attribute'];
-
-                if (!isset($attribute['label'])) {
-                    $attribute['label'] = (new Inflector())->toWords($attributeName);
+            if (is_array($attribute)) {
+                if (isset($attribute['visible']) && !$attribute['visible']) {
+                    unset($attributes[$i]);
+                    continue;
                 }
 
-                if (!array_key_exists('value', $attribute)) {
-                    $attribute['value'] = ArrayHelper::getValue($this->model, $attributeName);
+                if (!isset($attribute['format'])) {
+                    $attribute['format'] = 'text';
                 }
-            } elseif (!isset($attribute['label']) || !array_key_exists('value', $attribute)) {
-                throw new InvalidConfigException(
-                    'The attribute configuration requires the "attribute" element to determine the value and display ' .
-                    'label.'
-                );
+
+                if (isset($attribute['attribute'])) {
+                    /** @var string */
+                    $attributeName = $attribute['attribute'];
+                    if (!isset($attribute['label'])) {
+                        $attribute['label'] = $this->inflector->toHumanReadable($attributeName, true);
+                    }
+
+                    if (!array_key_exists('value', $attribute) && $this->model !== null) {
+                        /** @var mixed */
+                        $attribute['value'] = ArrayHelper::getValue($this->model, $attributeName);
+                    }
+                } elseif (!isset($attribute['label']) || !array_key_exists('value', $attribute)) {
+                    throw new InvalidConfigException('The attribute configuration requires the "attribute" element to determine the value and display label.');
+                }
+
+                if ($attribute['value'] instanceof Closure) {
+                    /** @var mixed */
+                    $attribute['value'] = $attribute['value']($this->model, $this);
+                }
             }
 
-            if ($attribute['value'] instanceof Closure) {
-                $attribute['value'] = $attribute['value']($this->model, $this);
-            }
-
-            $this->attributes[$i] = $attribute;
+            $attributes[$i] = $attribute;
         }
+
+        return $attributes;
     }
 }

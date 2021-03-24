@@ -6,12 +6,12 @@ namespace Yiisoft\Yii\DataView\Widget;
 
 use JsonException;
 use Yiisoft\Data\Reader\Sort;
-use Yiisoft\Factory\Exceptions\InvalidConfigException;
 use Yiisoft\Html\Html;
 use Yiisoft\Router\UrlGeneratorInterface;
 use Yiisoft\Router\UrlMatcherInterface;
 use Yiisoft\Strings\Inflector;
 use Yiisoft\Widget\Widget;
+use Yiisoft\Yii\DataView\Exception\InvalidConfigException;
 
 use function array_merge;
 use function implode;
@@ -27,13 +27,13 @@ final class LinkSorter extends Widget
 {
     private const BOOTSTRAP = 'bootstrap';
     private const BULMA = 'bulma';
-    private const FRAMEWORKCSS = [
+    private const CSS_FRAMEWORKS = [
         self::BOOTSTRAP,
         self::BULMA,
     ];
     private string $attribute = '';
     private int $currentPage = 1;
-    private string $frameworkCss = self::BOOTSTRAP;
+    private string $cssFramework = self::BOOTSTRAP;
     private array $options = [];
     private array $requestAttributes = [];
     private array $requestQueryParams = [];
@@ -83,15 +83,15 @@ final class LinkSorter extends Widget
         return $new;
     }
 
-    public function frameworkCss(string $frameworkCss): self
+    public function cssFramework(string $cssFramework): self
     {
-        if (!in_array($frameworkCss, self::FRAMEWORKCSS)) {
-            $frameworkCss = implode('", "', self::FRAMEWORKCSS);
-            throw new InvalidConfigException("Invalid framework css. Valid values are: \"$frameworkCss\".");
+        if (!in_array($cssFramework, self::CSS_FRAMEWORKS)) {
+            $cssFramework = implode('", "', self::CSS_FRAMEWORKS);
+            throw new InvalidConfigException("Invalid CSS framework. Valid values are: \"$cssFramework\".");
         }
 
         $new = clone $this;
-        $new->frameworkCss = $frameworkCss;
+        $new->cssFramework = $cssFramework;
 
         return $new;
     }
@@ -259,7 +259,7 @@ final class LinkSorter extends Widget
             $label = $this->inflector->toHumanReadable($this->attribute);
         }
 
-        if ($this->frameworkCss === self::BULMA) {
+        if ($this->cssFramework === self::BULMA) {
             Html::addCssClass($this->options, ['link' => 'has-text-link']);
         }
 

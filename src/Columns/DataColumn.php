@@ -13,7 +13,6 @@ use Yiisoft\Yii\DataView\Widget\LinkSorter;
 
 use function array_merge;
 use function call_user_func;
-use function is_array;
 use function is_string;
 
 /**
@@ -34,10 +33,10 @@ use function is_string;
  * [
  *     'attribute()' => ['registration_ip'],
  *     'label()' => ['Ip'],
- *     'value()' => static function ($arClass) {
- *         return $arClass['registration_ip'] === null
+ *     'value()' => static function ($model) {
+ *         return $model['registration_ip'] === null
  *             ? '(not set)'
- *             : $arClass['registration_ip'];
+ *             : $model['registration_ip'];
  *     },
  * ];
  * ```
@@ -49,8 +48,7 @@ final class DataColumn extends Column
 {
     /** @var array|Closure|string */
     private $format = 'text';
-    /** @var array|false|string|null */
-    private $filter;
+    private string $filter = '';
     /** @var Closure|string|null */
     private $value;
     private string $attribute = '';
@@ -59,6 +57,9 @@ final class DataColumn extends Column
     private bool $enableSorting = true;
     private array $sortLinkOptions = [];
     private array $filterInputOptions = [];
+    public string $filterAttribute = '';
+    /** @var bool|float|int|string|null */
+    private $filterValueDefault = null;
 
     /**
      * @param string $attribute the attribute name associated with this column. When neither {@see content} nor
@@ -75,18 +76,12 @@ final class DataColumn extends Column
     }
 
     /**
-     * @param array|false|string|null $filter the HTML code representing a filter input (e.g. a text field, a dropdown
-     * list) that is used for this data column. This property is effective only when {@see GridView::filterModel} is
-     * set.
-     * - If this property is not set, a text field will be generated as the filter input with attributes defined with
-     * {@see filterInputOptions}.
-     * - If this property is an array, a dropdown list will be generated that uses this property value as the list
-     * options.
-     * - If you don't want a filter for this data column, set this value to be false.
+     * @param string the HTML code representing a filter input (e.g. a text field, a dropdown list) that is used for
+     * this data column. This property is effective only when {@see filterModelName} is set.
      *
      * @return $this
      */
-    public function filter($filter): self
+    public function filter(string $filter): self
     {
         $this->filter = $filter;
 
@@ -107,25 +102,23 @@ final class DataColumn extends Column
      *
      * {@see Html::renderTagAttributes()} for details on how attributes are being rendered.
      */
-    public function filterInputOptions(array $filterInputOptions): void
+    public function filterInputOptions(array $filterInputOptions): self
     {
         $this->filterInputOptions = $filterInputOptions;
+
+        return $this;
     }
 
     /**
-     * @param array|Closure|string $format in which format should the value of each data model be displayed as
-     * (e.g. `"raw"`, `"text"`, `"html"`, `['date', 'php:Y-m-d']`). Supported formats are determined by the
-     * {@see GridView::formatter|formatter} used by the {@see GridView}. Default format is "text" which will format the
-     * value as an HTML-encoded plain text when {@see \Yiisoft\I18n\Formatter} is used as the
-     * {@see GridView::$formatter|formatter} of the GridView.
+     * Set filter value default text input field.
+     *
+     * @param bool|float|int|string|null $filterValueDefault
      *
      * @return $this
-     *
-     * @see \Yiisoft\I18n\MessageFormatterInterface::format()
      */
-    public function format($format): self
+    public function filterValueDefault($filterValueDefault): self
     {
-        $this->format = $format;
+        $this->filterValueDefault = $filterValueDefault;
 
         return $this;
     }
@@ -146,32 +139,28 @@ final class DataColumn extends Column
         return $this;
     }
 
-    public function getAttribute(): ?string
-    {
-        return $this->attribute;
-    }
-
     /**
      * Returns the data cell value.
      *
-     * @param mixed $model the data model.
+     * @param array|object $model the data model.
      * @param mixed $key the key associated with the data model.
      * @param int $index the zero-based index of the data model among the models array returned by
      * {@see GridView::dataReader}.
      *
      * @return string the data cell value.
      */
-    public function getDataCellValue(array $model, $key, int $index): string
+    public function getDataCellValue($model, $key, int $index): string
     {
         if ($this->value !== null) {
             if (is_string($this->value)) {
-                return ArrayHelper::getValue($model, $this->value);
+                return (string) ArrayHelper::getValue($model, $this->value);
             }
 
-            return call_user_func($this->value, $model, $key, $index, $this);
+            return (string) call_user_func($this->value, $model, $key, $index, $this);
         }
-        if ($this->attribute !== null) {
-            return ArrayHelper::getValue($model, $this->attribute);
+
+        if ($this->attribute !== '') {
+            return (string) ArrayHelper::getValue($model, $this->attribute);
         }
 
         return '';
@@ -199,7 +188,7 @@ final class DataColumn extends Column
      *
      * @see label
      */
-    public function withoutEncodeLabel(): self
+    public function notEncodeLabel(): self
     {
         $this->encodeLabel = false;
 
@@ -240,6 +229,20 @@ final class DataColumn extends Column
         return $this;
     }
 
+    /**
+     * @param string the attribute name of the {@see filterModelName} associated with this column.
+     *
+     * If not set, will have the same value as {@see attribute}.
+     *
+     * @return $this
+     */
+    public function filterAttribute(string $filterAttribute): self
+    {
+        $this->filterAttribute = $filterAttribute;
+
+        return $this;
+    }
+
     protected function getHeaderCellLabel(): string
     {
         return $this->label === '' ? (new Inflector())->toHumanReadable($this->attribute) : $this->label;
@@ -260,11 +263,17 @@ final class DataColumn extends Column
         $paginator = $this->grid->getPaginator();
         $sort = $paginator->getSort();
 
-        if ($this->attribute !== null && $sort !== null && isset($sort->getCriteria()[$this->attribute])) {
+        if (
+            $this->attribute !== '' &&
+            $sort !== null &&
+            isset($sort->getCriteria()[$this->attribute]) &&
+            $this->enableSorting
+        ) {
             return LinkSorter::widget()
                 ->attribute($this->attribute)
                 ->currentPage($this->grid->getPaginator()->getCurrentPage())
-                ->linkOptions(array_merge($this->sortLinkOptions, ['label' => $label]))
+                ->cssFramework($this->grid->getCssFramework())
+                ->options(array_merge($this->sortLinkOptions, ['label' => $label]))
                 ->requestAttributes($this->grid->getRequestAttributes())
                 ->requestQueryParams($this->grid->getRequestQueryParams())
                 ->sort($sort)
@@ -276,44 +285,41 @@ final class DataColumn extends Column
 
     protected function renderFilterCellContent(): string
     {
-        if (is_string($this->filter)) {
+        if ($this->filter !== '') {
             return $this->filter;
         }
 
-        if ($this->filter !== false) {
-            $error = '';
-
-            $filterOptions = array_merge(['class' => 'form-control', 'id' => null], $this->filterInputOptions);
-            if (is_array($this->filter)) {
-                $options = array_merge(['prompt' => ''], $filterOptions);
-
-                return Html::dropDownList($this->attribute, $this->filter, $options) . $error;
-            }
-            if ($this->format === 'boolean') {
-                $options = array_merge(['prompt' => ''], $filterOptions);
-
-                return Html::dropDownList(
-                    $this->attribute,
-                    [
-                        1 => 'Yes',
-                        0 => 'No',
-                    ],
-                    $options
-                ) . $error;
+        if ($this->filterAttribute !== '') {
+            if ($this->grid->getCssFramework() === 'bulma') {
+                Html::addCssClass($this->filterInputOptions, ['input' => 'input']);
+            } else {
+                Html::addCssClass($this->filterInputOptions, ['input' => 'form-control']);
             }
 
-            return Html::dropDownList($this->attribute, $filterOptions) . $error;
+            $name = $this->getInputName($this->grid->getFilterModelName(), $this->filterAttribute);
+
+            return (string) Html::textInput($name, $this->filterValueDefault)->attributes($this->filterInputOptions);
         }
 
         return parent::renderFilterCellContent();
     }
 
-    protected function renderDataCellContent(array $model, $key, int $index): string
+    /**
+     * Renders the data cell content.
+     *
+     * @param array|object $model the data model.
+     * @param mixed $key the key associated with the data model.
+     * @param int $index the zero-based index of the data model among the models array returned by
+     * {@see GridView::dataReader}.
+     *
+     * @return string the rendering result.
+     */
+    protected function renderDataCellContent($model, $key, int $index): string
     {
-        if ($this->content === null) {
-            return $this->getDataCellValue($model, $key, $index);
+        if (!empty($this->content)) {
+            return parent::renderDataCellContent($model, $key, $index);
         }
 
-        return parent::renderDataCellContent($model, $key, $index);
+        return $this->getDataCellValue($model, $key, $index);
     }
 }

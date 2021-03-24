@@ -7,12 +7,14 @@ namespace Yiisoft\Yii\DataView;
 use Closure;
 use JsonException;
 use Yiisoft\Arrays\ArrayHelper;
-use Yiisoft\Factory\Exceptions\InvalidConfigException;
 use Yiisoft\Html\Html;
 use Yiisoft\Json\Json;
 use Yiisoft\Translator\TranslatorInterface;
+use Yiisoft\Yii\DataView\Columns\ActionColumn;
 use Yiisoft\Yii\DataView\Columns\Column;
 use Yiisoft\Yii\DataView\Columns\DataColumn;
+use Yiisoft\Yii\DataView\Columns\RadioButtonColumn;
+use Yiisoft\Yii\DataView\Exception\InvalidConfigException;
 use Yiisoft\Yii\DataView\Factory\GridViewFactory;
 
 use function array_filter;
@@ -23,7 +25,6 @@ use function count;
 use function implode;
 use function is_array;
 use function is_callable;
-use function is_object;
 use function is_scalar;
 use function is_string;
 use function preg_match;
@@ -32,7 +33,8 @@ use function reset;
 /**
  * The GridView widget is used to display data in a grid.
  *
- * It provides features like {@see sorter|sorting}, {@see pager|paging} and also {@see filterModel|filtering} the data.
+ * It provides features like {@see sorter|sorting}, {@see pager|paging} and also {@see filterModelName|filtering}
+ * the data.
  *
  * A basic usage looks like the following:
  * ```php
@@ -70,10 +72,10 @@ final class GridView extends BaseListView
     private ?Closure $afterRow = null;
     private bool $showHeader = true;
     private bool $showFooter = false;
-    private bool $placeFooterAfterBody = false;
+    /** @var array<array-key,array<array-key,Column>|Column|string|callable|Closure> */
     private array $columns = [];
     private string $emptyCell = '&nbsp;';
-    private ?object $filterModel = null;
+    private string $filterModelName = '';
     private string $filterPosition = self::FILTER_POS_BODY;
     private array $filterRowOptions = ['class' => 'filters'];
     private GridViewFactory $gridViewFactory;
@@ -87,6 +89,10 @@ final class GridView extends BaseListView
 
     protected function run(): string
     {
+        if (!isset($this->paginator)) {
+            throw new InvalidConfigException('The "paginator" property must be set.');
+        }
+
         if (!isset($this->options['id'])) {
             $this->options['id'] = $this->getId() . '-gridview';
         }
@@ -94,15 +100,10 @@ final class GridView extends BaseListView
         $this->initColumns();
 
         if (!isset($this->filterRowOptions['id'])) {
-            $this->filterRowOptions['id'] = ($this->options['id'] ?? $this->getId()) . '-filters';
+            $this->filterRowOptions['id'] = $this->getId() . '-filters';
         }
 
         return parent::run();
-    }
-
-    public function getColumns(): array
-    {
-        return $this->columns;
     }
 
     public function getEmptyCell(): string
@@ -110,14 +111,9 @@ final class GridView extends BaseListView
         return $this->emptyCell;
     }
 
-    public function getFilterModel(): ?object
+    public function getFilterModelName(): string
     {
-        return $this->filterModel;
-    }
-
-    public function isShowHeader(): bool
-    {
-        return $this->showHeader;
+        return $this->filterModelName;
     }
 
     /**
@@ -219,6 +215,8 @@ final class GridView extends BaseListView
      * ]
      * ```
      *
+     * @psalm-param array<array-key,array<array-key,Column>|Column|string> $columns
+     *
      * @return $this
      */
     public function columns(array $columns): self
@@ -260,20 +258,18 @@ final class GridView extends BaseListView
     }
 
     /**
-     * @param object|null $filterModel the model that keeps the user-entered filter data. When this property is set, the
-     * grid view will enable column-based filtering. Each data column by default will display a text field at the top
-     * that users can fill in to filter the data. Note that in order to show an input field for filtering, a column must
-     * have its {@see DataColumn::attribute} property set and the attribute should be active in the current scenario of
-     * $filterModel or have {@see DataColumn::filter} set as the HTML code for the input field.
+     * @param string the form model name that keeps the user-entered filter data. When this property is set, the grid
+     * view will enable column-based filtering. Each data column by default will display a text field at the top that
+     * users can fill in to filter the data.
      *
-     * When this property is not set (null) the filtering feature is disabled.
-     *
-     * @return $this
+     * Note that in order to show an input field for filtering, a column must have its {@see DataColumn::attribute}
+     * property set and the attribute should be active in the current scenario of $filterModelName or have
+     * {@see DataColumn::filter} set as the HTML code for the input field.
      */
-    public function filterModel(?object $filterModel): self
+    public function filterModelName(string $filterModelName): self
     {
         $new = clone $this;
-        $new->filterModel = $filterModel;
+        $new->filterModelName = $filterModelName;
 
         return $new;
     }
@@ -357,31 +353,8 @@ final class GridView extends BaseListView
     }
 
     /**
-     * @param bool $value whether to place footer after body in DOM if is true.
-     *
-     * @return $this
-     */
-    public function placeFooterAfterBody(bool $value): self
-    {
-        $new = clone $this;
-        $new->placeFooterAfterBody = $value;
-
-        return $new;
-    }
-
-    /**
-     * @param array|Closure $rowOptions the HTML attributes for the table body rows. This can be either an array
-     * specifying the common HTML attributes for all body rows, or an anonymous function that returns an array of
-     * the HTML attributes. The anonymous function will be called once for every data model returned by
-     * {@see dataProvider}. It should have the following signature:
-     *
-     * ```php
-     * function ($model, $key, $index, $grid)
-     * ```
-     * - `$model`: the current data model being rendered.
-     * - `$key`: the key value associated with the current data model.
-     * - `$index`: the zero-based index of the data model in the model array returned by {@see dataReader}.
-     * - `$grid`: the GridView object.
+     * @param array $rowOptions the HTML attributes for the table body rows. This can be either an array specifying the
+     * common HTML attributes for all body rows.
      *
      * @return $this
      *
@@ -400,10 +373,10 @@ final class GridView extends BaseListView
      *
      * @return $this
      */
-    public function showFooter(bool $showFooter): self
+    public function showFooter(): self
     {
         $new = clone $this;
-        $new->showFooter = $showFooter;
+        $new->showFooter = true;
 
         return $new;
     }
@@ -451,14 +424,9 @@ final class GridView extends BaseListView
         $tableBody = $this->renderTableBody();
 
         $tableFooter = false;
-        $tableFooterAfterBody = false;
 
         if ($this->showFooter) {
-            if ($this->placeFooterAfterBody) {
-                $tableFooterAfterBody = $this->renderTableFooter();
-            } else {
-                $tableFooter = $this->renderTableFooter();
-            }
+            $tableFooter = $this->renderTableFooter();
         }
 
         $content = array_filter(
@@ -468,7 +436,6 @@ final class GridView extends BaseListView
                 $tableHeader,
                 $tableFooter,
                 $tableBody,
-                $tableFooterAfterBody,
             ]
         );
 
@@ -496,7 +463,7 @@ final class GridView extends BaseListView
         $config = [
             '__class' => DataColumn::class,
             'attribute()' => [$matches[1]],
-            'label()' => [$matches[5] ?? null],
+            'label()' => [$matches[5] ?? ''],
             'grid()' => [$this],
         ];
 
@@ -510,13 +477,13 @@ final class GridView extends BaseListView
     private function guessColumns(): void
     {
         $models = $this->getDataReader();
-        $model = reset($models);
 
-        if (is_array($model) || is_object($model)) {
-            foreach ($this->paginator->read() as $name => $value) {
-                if ($value === null || is_scalar($value) || is_callable([$value, '__toString'])) {
-                    $this->columns[] = (string)$name;
-                }
+        reset($models);
+
+        /** @var array<array-key,object|int|bool|string|null> $models */
+        foreach ($models as $name => $value) {
+            if ($value === null || is_scalar($value) || is_callable([$value, '__toString'])) {
+                $this->columns[] = (string) $name;
             }
         }
     }
@@ -535,18 +502,41 @@ final class GridView extends BaseListView
         foreach ($this->columns as $i => $column) {
             if (is_string($column)) {
                 $column = $this->createDataColumn($column);
-            } else {
+            } elseif (is_array($column)) {
                 $buttons = null;
+                $content = null;
                 $value = null;
+                $radioOptions = null;
+                $visibleButtons = null;
 
-                if (isset($column['buttons()'])) {
-                    $buttons = $column['buttons()'];
-                    unset($column['buttons()']);
+                if (isset($column['buttons'])) {
+                    /** @var array */
+                    $buttons = $column['buttons'];
+                    unset($column['buttons']);
                 }
 
-                if (isset($column['value()'])) {
-                    $value = $column['value()'];
-                    unset($column['value()']);
+                if (isset($column['content']) && is_callable($column['content'])) {
+                    /** @var callable|null */
+                    $content = $column['content'];
+                    unset($column['content']);
+                }
+
+                if (isset($column['radioOptions']) && $column['radioOptions'] instanceof Closure) {
+                    /** @var Closure|null */
+                    $radioOptions = $column['radioOptions'];
+                    unset($column['radioOptions']);
+                }
+
+                if (isset($column['value']) && $column['value'] instanceof Closure) {
+                    /** @var Closure|null */
+                    $value = $column['value'];
+                    unset($column['value']);
+                }
+
+                if (isset($column['visibleButtons'])) {
+                    /** @var array */
+                    $visibleButtons = $column['visibleButtons'];
+                    unset($column['visibleButtons']);
                 }
 
                 $config = array_merge(
@@ -559,16 +549,28 @@ final class GridView extends BaseListView
 
                 $column = $this->gridViewFactory->createColumnClass($config);
 
-                if ($buttons !== null) {
+                if ($column instanceof ActionColumn && $buttons !== null) {
                     $column->buttons($buttons);
                 }
 
-                if ($value !== null) {
+                if ($content !== null) {
+                    $column->content($content);
+                }
+
+                if ($column instanceof RadioButtonColumn && $radioOptions !== null) {
+                    $column->radioOptions($radioOptions);
+                }
+
+                if ($column instanceof DataColumn && $value !== null) {
                     $column->value($value);
+                }
+
+                if ($column instanceof ActionColumn && $visibleButtons !== null) {
+                    $column->visibleButtons($visibleButtons);
                 }
             }
 
-            if (!$column->isVisible()) {
+            if ($column instanceof Column && !$column->isVisible()) {
                 unset($this->columns[$i]);
                 continue;
             }
@@ -603,11 +605,12 @@ final class GridView extends BaseListView
     private function renderColumnGroup()
     {
         foreach ($this->columns as $column) {
-            /* @var $column Column */
-            if (!empty($column->getOptions())) {
+            if ($column instanceof Column && !empty($column->getOptions())) {
                 $cols = [];
                 foreach ($this->columns as $col) {
-                    $cols[] = Html::tag('col', '', $col->options)->render();
+                    if ($col instanceof Column) {
+                        $cols[] = Html::tag('col', '', $col->getOptions())->render();
+                    }
                 }
 
                 return Html::tag('colgroup', implode("\n", $cols))->render();
@@ -626,11 +629,13 @@ final class GridView extends BaseListView
      */
     private function renderFilters(): string
     {
-        if ($this->getFilterModel() !== null) {
+        if ($this->getFilterModelName() !== '') {
             $cells = [];
+
             foreach ($this->columns as $column) {
-                /* @var $column Column */
-                $cells[] = $column->renderFilterCell();
+                if ($column instanceof Column) {
+                    $cells[] = $column->renderFilterCell();
+                }
             }
 
             return Html::tag('tr', implode('', $cells), $this->filterRowOptions)->encode(false)->render();
@@ -652,10 +657,14 @@ final class GridView extends BaseListView
         $keys = array_keys($models);
         $rows = [];
 
+        /** @var array<int,array> $models */
         foreach ($models as $index => $model) {
             $key = $keys[$index];
+
             if ($this->beforeRow !== null) {
+                /** @var array */
                 $row = call_user_func($this->beforeRow, $model, $key, $index, $this);
+
                 if (!empty($row)) {
                     $rows[] = $row;
                 }
@@ -664,6 +673,7 @@ final class GridView extends BaseListView
             $rows[] = $this->renderTableRow($model, $key, $index);
 
             if ($this->afterRow !== null) {
+                /** @var array */
                 $row = call_user_func($this->afterRow, $model, $key, $index, $this);
                 if (!empty($row)) {
                     $rows[] = $row;
@@ -671,7 +681,7 @@ final class GridView extends BaseListView
             }
         }
 
-        if (empty($rows) && $this->emptyText !== null) {
+        if (empty($rows) && $this->emptyText !== '') {
             $colspan = count($this->columns);
 
             return "<tbody>\n<tr><td colspan=\"$colspan\">" . $this->renderEmpty() . "</td></tr>\n</tbody>\n";
@@ -692,8 +702,9 @@ final class GridView extends BaseListView
         $cells = [];
 
         foreach ($this->columns as $column) {
-            /* @var $column Column */
-            $cells[] = $column->renderFooterCell();
+            if ($column instanceof Column) {
+                $cells[] = $column->renderFooterCell();
+            }
         }
 
         $content = Html::tag('tr', implode('', $cells), $this->footerRowOptions)->encode(false)->render();
@@ -717,8 +728,9 @@ final class GridView extends BaseListView
         $cells = [];
 
         foreach ($this->columns as $column) {
-            /* @var $column Column */
-            $cells[] = $column->renderHeaderCell();
+            if ($column instanceof Column) {
+                $cells[] = $column->renderHeaderCell();
+            }
         }
 
         $content = Html::tag('tr', implode('', $cells), $this->headerRowOptions)->encode(false)->render();
@@ -735,30 +747,28 @@ final class GridView extends BaseListView
     /**
      * Renders a table row with the given data model and key.
      *
-     * @param mixed $model the data model to be rendered
+     * @param array|object $model the data model to be rendered
      * @param mixed $key the key associated with the data model
-     * @param mixed $index the zero-based index of the data model among the model array returned by [[dataProvider]].
+     * @param int $index the zero-based index of the data model among the model array returned by {@see dataReader}.
      *
      * @throws JsonException
      *
      * @return string the rendering result
      */
-    private function renderTableRow($model, $key, $index): string
+    private function renderTableRow($model, $key, int $index): string
     {
         $cells = [];
 
-        /* @var $column Column */
         foreach ($this->columns as $column) {
-            $cells[] = $column->renderDataCell($model, $key, $index);
+            if ($column instanceof Column) {
+                $cells[] = $column->renderDataCell($model, $key, $index);
+            }
         }
 
-        if ($this->rowOptions instanceof Closure) {
-            $options = call_user_func($this->rowOptions, $model, $key, $index, $this);
-        } else {
-            $options = $this->rowOptions;
+        if ($cells !== [] && $this->cssFramework === self::BULMA) {
+            $this->rowOptions['data-key'] = is_array($key) ? Json::encode($key) : (string)$key;
         }
-        $options['data-key'] = is_array($key) ? Json::encode($key) : (string)$key;
 
-        return Html::tag('tr', implode('', $cells), $options)->encode(false)->render();
+        return Html::tag('tr', implode('', $cells), $this->rowOptions)->encode(false)->render();
     }
 }
