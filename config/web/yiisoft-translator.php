@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use Yiisoft\Factory\Definitions\Reference;
+use Yiisoft\Factory\Definition\Reference;
 use Yiisoft\Translator\CategorySource;
 use Yiisoft\Translator\Translator;
 use Yiisoft\Translator\TranslatorInterface;

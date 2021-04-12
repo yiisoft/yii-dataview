@@ -427,7 +427,7 @@ abstract class BaseListView extends Widget
      *
      * @param string $name the section name, e.g., `{summary}`, `{items}`.
      *
-     * @throws InvalidConfigException|\Yiisoft\Factory\Exceptions\InvalidConfigException
+     * @throws InvalidConfigException|\Yiisoft\Factory\Exception\InvalidConfigException
      *
      * @return string the rendering result of the section, or false if the named section is not supported.
      */
@@ -450,7 +450,7 @@ abstract class BaseListView extends Widget
     /**
      * Renders the sorter.
      *
-     * @throws \Yiisoft\Factory\Exceptions\InvalidConfigException
+     * @throws \Yiisoft\Factory\Exception\InvalidConfigException
      *
      * @return string the rendering result
      */
