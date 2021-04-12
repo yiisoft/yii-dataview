@@ -22,7 +22,7 @@ use function preg_replace_callback;
  * To add an ActionColumn to the gridview, add it to the {@see GridView::columns|columns} configuration as follows:
  * ```php
  * [
- *     '__class' => ActionColumn::class,
+ *     'class' => ActionColumn::class,
  *     'buttons()' => [
  *         'admin/info' => static function ($url) {
  *             return Html::a(
@@ -138,7 +138,7 @@ final class ActionColumn extends Column
      *
      * ```php
      * 'columns' => [
-     *     '__class' => ActionColumn::class,
+     *     'class' => ActionColumn::class,
      *     'template()' => ['{view} {update}'],
      * ],
      * ```

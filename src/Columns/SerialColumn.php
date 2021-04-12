@@ -12,7 +12,7 @@ namespace Yiisoft\Yii\DataView\Columns;
  *
  * ```php
  * [
- *     '__class' => SerialColumn::class,
+ *     'class' => SerialColumn::class,
  * ],
  * ```
  * For more details and usage information on SerialColumn:
