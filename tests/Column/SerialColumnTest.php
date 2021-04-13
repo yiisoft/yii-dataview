@@ -16,7 +16,7 @@ final class SerialColumnTest extends TestCase
 
         $columns = [
             [
-                '__class' => SerialColumn::class,
+                'class' => SerialColumn::class,
                 'header()' => ['x'],
             ],
         ];

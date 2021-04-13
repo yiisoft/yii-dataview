@@ -18,7 +18,7 @@ final class GridViewFactoryTest extends TestCase
 {
     public function testCreateActionColumnClass(): void
     {
-        $config = ['__class' => ActionColumn::class];
+        $config = ['class' => ActionColumn::class];
 
         $column = $this->gridViewFactory->createColumnClass($config);
         $this->assertInstanceOf(Column::class, $column);
@@ -26,7 +26,7 @@ final class GridViewFactoryTest extends TestCase
 
     public function testCreateCheckboxClass(): void
     {
-        $config = ['__class' => CheckboxColumn::class];
+        $config = ['class' => CheckboxColumn::class];
 
         $column = $this->gridViewFactory->createColumnClass($config);
         $this->assertInstanceOf(Column::class, $column);
@@ -34,7 +34,7 @@ final class GridViewFactoryTest extends TestCase
 
     public function testCreateDataColumnClass(): void
     {
-        $config = ['__class' => DataColumn::class];
+        $config = ['class' => DataColumn::class];
 
         $column = $this->gridViewFactory->createColumnClass($config);
         $this->assertInstanceOf(Column::class, $column);
@@ -42,7 +42,7 @@ final class GridViewFactoryTest extends TestCase
 
     public function testCreateRadioButtonColumnClass(): void
     {
-        $config = ['__class' => RadioButtonColumn::class];
+        $config = ['class' => RadioButtonColumn::class];
 
         $column = $this->gridViewFactory->createColumnClass($config);
         $this->assertInstanceOf(Column::class, $column);
@@ -50,7 +50,7 @@ final class GridViewFactoryTest extends TestCase
 
     public function testCreateSerialColumnClass(): void
     {
-        $config = ['__class' => SerialColumn::class];
+        $config = ['class' => SerialColumn::class];
 
         $column = $this->gridViewFactory->createColumnClass($config);
         $this->assertInstanceOf(Column::class, $column);
@@ -58,7 +58,7 @@ final class GridViewFactoryTest extends TestCase
 
     public function testException(): void
     {
-        $config = ['__class' => stdClass::class];
+        $config = ['class' => stdClass::class];
 
         $this->expectException(RuntimeException::class);
         $this->expectExceptionMessage(

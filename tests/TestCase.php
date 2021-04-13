@@ -144,7 +144,7 @@ class TestCase extends \PHPUnit\Framework\TestCase
     {
         return [
             Aliases::class => [
-                '__class' => Aliases::class,
+                'class' => Aliases::class,
                 '__construct()' => [['@grid-view-translation' => dirname(__DIR__) . '/src/Translation']],
             ],
 
@@ -155,7 +155,7 @@ class TestCase extends \PHPUnit\Framework\TestCase
             EventDispatcherInterface::class => Dispatcher::class,
 
             WebView::class => [
-                '__class' => WebView::class,
+                'class' => WebView::class,
                 '__construct()' => [
                     'basePath' => __DIR__ . '/runtime',
                 ],
@@ -184,14 +184,14 @@ class TestCase extends \PHPUnit\Framework\TestCase
             RouteCollectionInterface::class => RouteCollection::class,
 
             MessageReaderInterface::class => [
-                '__class' => MessageSource::class,
+                'class' => MessageSource::class,
                 '__construct()' => [fn (Aliases $aliases) => $aliases->get('@grid-view-translation')],
             ],
 
             MessageFormatterInterface::class => IntlMessageFormatter::class,
 
             CategorySource::class => [
-                '__class' => CategorySource::class,
+                'class' => CategorySource::class,
                 '__construct()' => [
                     'name' => 'yii-gridview',
                 ],

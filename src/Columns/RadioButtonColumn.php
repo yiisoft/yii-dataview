@@ -21,7 +21,7 @@ use function is_array;
  *
  * ```php
  * [
- *     '__class' => RadioButtonColumn::class,
+ *     'class' => RadioButtonColumn::class,
  *     'header()' => ['#'],
  * ];
  * ```

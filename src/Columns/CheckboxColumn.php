@@ -24,7 +24,7 @@ use function substr_compare;
  *
  * ```php
  * [
- *     '__class' => CheckBoxColumn::class,
+ *     'class' => CheckBoxColumn::class,
  *     'header()' => ['#'],
  * ];
  * ```

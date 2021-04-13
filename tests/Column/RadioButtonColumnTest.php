@@ -17,7 +17,7 @@ final class RadioButtonColumnTest extends TestCase
 
         $columns = [
             [
-                '__class' => RadioButtonColumn::class,
+                'class' => RadioButtonColumn::class,
                 'content' => static fn () => '',
                 'header()' => ['x'],
             ],
@@ -59,7 +59,7 @@ final class RadioButtonColumnTest extends TestCase
 
         $columns = [
             [
-                '__class' => RadioButtonColumn::class,
+                'class' => RadioButtonColumn::class,
                 'name()' => ['testMe'],
             ],
         ];
@@ -100,7 +100,7 @@ final class RadioButtonColumnTest extends TestCase
 
         $columns = [
             [
-                '__class' => RadioButtonColumn::class,
+                'class' => RadioButtonColumn::class,
                 'radioOptions()' => [['class' => 'testMe']],
             ],
         ];
@@ -139,7 +139,7 @@ final class RadioButtonColumnTest extends TestCase
             'name',
             'total',
             [
-                '__class' => RadioButtonColumn::class,
+                'class' => RadioButtonColumn::class,
                 'radioOptions' => static fn ($model) => ['value' => $model['total'] > 40 ? 1 : 0],
             ],
         ];
@@ -176,7 +176,7 @@ final class RadioButtonColumnTest extends TestCase
 
     public function testNameIsEmpty(): void
     {
-        $gridView = $this->createGridView([['__class' => RadioButtonColumn::class,'name()' => ['']]]);
+        $gridView = $this->createGridView([['class' => RadioButtonColumn::class,'name()' => ['']]]);
         $gridView = $gridView->paginator($this->createOffsetPaginator());
 
         $this->expectException(InvalidConfigException::class);
