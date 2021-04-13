@@ -24,7 +24,7 @@
     "require": {
         "php": "^7.4|^8.0",
         "ext-json": "*",
-        "yiisoft/aliases": "^1.0",
+        "yiisoft/aliases": "^1.1|^2.0",
         "yiisoft/arrays": "^1.0",
         "yiisoft/data": "^3.0@dev",
         "yiisoft/factory": "^3.0@dev",
