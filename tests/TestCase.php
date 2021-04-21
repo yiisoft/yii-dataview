@@ -165,20 +165,17 @@ class TestCase extends \PHPUnit\Framework\TestCase
 
             UrlMatcherInterface::class => UrlMatcher::class,
 
-            RouteCollectorInterface::class => Group::create(
-                null,
-                [
-                    Route::methods(['GET', 'POST'], '/admin/index', [TestDelete::class, 'run'])
-                        ->name('admin'),
-                    Route::methods(['GET', 'POST'], '/admin/delete[/{id}]', [TestDelete::class, 'run'])
-                        ->name('delete'),
-                    Route::methods(['GET', 'POST'], '/admin/update[/{id}]', [TestUpdate::class, 'run'])
-                        ->name('update'),
-                    Route::methods(['GET', 'POST'], '/admin/view[/{id}]', [TestView::class, 'run'])
-                        ->name('view'),
-                    Route::methods(['GET', 'POST'], '/admin/custom[/{id}]', [TestCustom::class, 'run'])
-                        ->name('admin/custom'),
-                ]
+            RouteCollectorInterface::class => Group::create()->routes(
+                Route::methods(['GET', 'POST'], '/admin/index')->action([TestDelete::class, 'run'])
+                    ->name('admin'),
+                Route::methods(['GET', 'POST'], '/admin/delete[/{id}]')->action([TestDelete::class, 'run'])
+                    ->name('delete'),
+                Route::methods(['GET', 'POST'], '/admin/update[/{id}]')->action([TestUpdate::class, 'run'])
+                    ->name('update'),
+                Route::methods(['GET', 'POST'], '/admin/view[/{id}]')->action([TestView::class, 'run'])
+                    ->name('view'),
+                Route::methods(['GET', 'POST'], '/admin/custom[/{id}]')->action([TestCustom::class, 'run'])
+                    ->name('admin/custom')
             ),
 
             RouteCollectionInterface::class => RouteCollection::class,
