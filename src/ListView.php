@@ -336,7 +336,7 @@ final class ListView extends BaseListView implements ViewContextInterface
         if ($this->itemView === '') {
             $content = (string) $key;
         } elseif (is_string($this->itemView)) {
-            $content = $this->webView->render(
+            $content = $this->webView->withContext($this)->render(
                 $this->itemView,
                 array_merge(
                     [
@@ -346,8 +346,7 @@ final class ListView extends BaseListView implements ViewContextInterface
                         'widget' => $this,
                     ],
                     $this->viewParams
-                ),
-                $this
+                )
             );
         } else {
             /** @var string */
