@@ -8,6 +8,10 @@ use RuntimeException;
 use Yiisoft\Yii\DataView\Columns\Column;
 use Yiisoft\Factory\Factory;
 
+use function get_class;
+use function gettype;
+use function is_object;
+
 final class GridViewFactory
 {
     private Factory $factory;
@@ -32,7 +36,11 @@ final class GridViewFactory
 
         if (!($columnClass instanceof Column)) {
             throw new RuntimeException(
-                sprintf('The "%s" is not an instance of the "%s".', get_class($columnClass), Column::class)
+                sprintf(
+                    'The "%s" is not an instance of the "%s".',
+                    is_object($columnClass) ? get_class($columnClass) : gettype($columnClass),
+                    Column::class
+                )
             );
         }
 

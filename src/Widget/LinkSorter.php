@@ -203,7 +203,6 @@ final class LinkSorter extends Widget
         $params['sort'] = $this->createSorterParam($attribute);
         $page = ['page' => $this->currentPage];
         $params = array_merge($page, $this->requestAttributes, $this->requestQueryParams, $params);
-        $url = '';
 
         $currentRoute = $this->urlMatcher->getCurrentRoute();
 

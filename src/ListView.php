@@ -357,7 +357,6 @@ final class ListView extends BaseListView implements ViewContextInterface
             /** @var array */
             $options = call_user_func($this->itemOptions, $model, $key, $index, $this);
         } else {
-            /** @var array */
             $options = $this->itemOptions;
         }
 

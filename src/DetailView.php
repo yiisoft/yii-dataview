@@ -72,12 +72,11 @@ final class DetailView extends Widget
             $this->options['id'] = $this->getId() . '-detailview';
         }
 
-        $i = 1;
         $rows = [];
 
         /** @var array<array-key,mixed> */
         foreach ($normalizedAttributes as $attribute) {
-            $rows[] = $this->renderAttribute($attribute, $i++);
+            $rows[] = $this->renderAttribute($attribute);
         }
 
         $options = $this->options;
@@ -239,13 +238,12 @@ final class DetailView extends Widget
      * Renders a single attribute.
      *
      * @param array $attribute the specification of the attribute to be rendered.
-     * @param int $index the zero-based index of the attribute in the {@see attributes} array.
      *
      * @throws JsonException
      *
      * @return string the rendering result
      */
-    private function renderAttribute(array $attribute, int $index): string
+    private function renderAttribute(array $attribute): string
     {
         /** @var array */
         $captionOptions = $attribute['captionOptions'] ?? [];
