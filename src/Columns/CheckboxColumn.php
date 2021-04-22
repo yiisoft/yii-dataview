@@ -165,7 +165,6 @@ final class CheckboxColumn extends Column
             /** @var array */
             $options = call_user_func($this->checkboxOptions, $model, $key, $index, $this);
         } else {
-            /** @var array */
             $options = $this->checkboxOptions;
         }
 

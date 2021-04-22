@@ -102,7 +102,6 @@ final class RadioButtonColumn extends Column
             /** @var array */
             $options = call_user_func($this->radioOptions, $model, $key, $index, $this);
         } else {
-            /** @var array */
             $options = $this->radioOptions;
 
             if (!isset($options['value'])) {

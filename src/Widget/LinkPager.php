@@ -442,10 +442,7 @@ final class LinkPager extends Widget
      */
     private function renderPageButtons(): string
     {
-        /** @var int */
         $currentPage = $this->paginator->getCurrentPage();
-
-        /** @var int */
         $pageCount = $this->paginator->getTotalPages();
 
         if ($pageCount < 2 || $this->hideOnSinglePage) {
@@ -550,10 +547,7 @@ final class LinkPager extends Widget
      */
     private function getPageRange(): array
     {
-        /** @var int */
         $currentPage = $this->paginator->getCurrentPage();
-
-        /** @var int */
         $pageCount = $this->paginator->getTotalPages();
 
         $beginPage = max(1, $currentPage - (int) ($this->maxButtonCount / 2));
@@ -571,15 +565,13 @@ final class LinkPager extends Widget
      * when creating URLs used to perform pagination.
      *
      * @param int $page the zero-based page number that the URL should point to.
-     * @param int|null $pageSize the number of items on each page. If not set, the value of {@see pageSize} will be
-     * used.
      *
      * @return string the created URL.
      *
      * {@see params}
      * {@see forcePageParam}
      */
-    private function createUrl(int $page, int $pageSize = null): string
+    private function createUrl(int $page): string
     {
         $currentRoute = $this->urlMatcher->getCurrentRoute();
         $url = '';
@@ -596,22 +588,19 @@ final class LinkPager extends Widget
 
     private function createLinks(): array
     {
-        /** @var int */
         $currentPage = $this->paginator->getCurrentPage();
-
-        /** @var int */
         $pageCount = $this->paginator->getTotalPages();
 
-        $links = [self::REL_SELF => $this->createUrl($currentPage, null)];
+        $links = [self::REL_SELF => $this->createUrl($currentPage)];
 
         if ($pageCount === 1) {
-            $links[self::LINK_FIRST] = $this->createUrl(1, null);
-            $links[self::LINK_LAST] = $this->createUrl($pageCount, null);
+            $links[self::LINK_FIRST] = $this->createUrl(1);
+            $links[self::LINK_LAST] = $this->createUrl($pageCount);
             if ($currentPage > 1) {
-                $links[self::LINK_PREV] = $this->createUrl($currentPage, null);
+                $links[self::LINK_PREV] = $this->createUrl($currentPage);
             }
             if ($currentPage < $pageCount) {
-                $links[self::LINK_NEXT] = $this->createUrl($currentPage, null);
+                $links[self::LINK_NEXT] = $this->createUrl($currentPage);
             }
         }
 
