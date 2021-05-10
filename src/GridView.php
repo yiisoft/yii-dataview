@@ -10,10 +10,8 @@ use Yiisoft\Arrays\ArrayHelper;
 use Yiisoft\Html\Html;
 use Yiisoft\Json\Json;
 use Yiisoft\Translator\TranslatorInterface;
-use Yiisoft\Yii\DataView\Columns\ActionColumn;
 use Yiisoft\Yii\DataView\Columns\Column;
 use Yiisoft\Yii\DataView\Columns\DataColumn;
-use Yiisoft\Yii\DataView\Columns\RadioButtonColumn;
 use Yiisoft\Yii\DataView\Exception\InvalidConfigException;
 use Yiisoft\Yii\DataView\Factory\GridViewFactory;
 

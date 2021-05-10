@@ -159,7 +159,7 @@ final class GridViewTest extends TestCase
                                             'title' => 'Delete',
                                         ],
                                     )->encode(false)->render();
-                                }
+                                },
                             ],
                         ],
                         'visibleButtons()' => [
