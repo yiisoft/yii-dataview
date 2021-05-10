@@ -17,6 +17,7 @@ use Yiisoft\Data\Reader\Sort;
 use Yiisoft\Di\Container;
 use Yiisoft\EventDispatcher\Dispatcher\Dispatcher;
 use Yiisoft\EventDispatcher\Provider\Provider;
+use Yiisoft\Factory\Definition\DynamicReference;
 use Yiisoft\Router\FastRoute\UrlGenerator;
 use Yiisoft\Router\FastRoute\UrlMatcher;
 use Yiisoft\Router\Group;
@@ -28,9 +29,9 @@ use Yiisoft\Router\UrlGeneratorInterface;
 use Yiisoft\Router\UrlMatcherInterface;
 use Yiisoft\Translator\CategorySource;
 use Yiisoft\Translator\Formatter\Intl\IntlMessageFormatter;
+use Yiisoft\Translator\Message\Php\MessageSource;
 use Yiisoft\Translator\MessageFormatterInterface;
 use Yiisoft\Translator\MessageReaderInterface;
-use Yiisoft\Translator\Message\Php\MessageSource;
 use Yiisoft\Translator\Translator;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\View\WebView;
@@ -39,8 +40,8 @@ use Yiisoft\Yii\DataView\Columns\ActionColumn;
 use Yiisoft\Yii\DataView\Columns\CheckboxColumn;
 use Yiisoft\Yii\DataView\Columns\DataColumn;
 use Yiisoft\Yii\DataView\Columns\RadioButtonColumn;
-use Yiisoft\Yii\DataView\GridView;
 use Yiisoft\Yii\DataView\Factory\GridViewFactory;
+use Yiisoft\Yii\DataView\GridView;
 
 class TestCase extends \PHPUnit\Framework\TestCase
 {
@@ -182,7 +183,11 @@ class TestCase extends \PHPUnit\Framework\TestCase
 
             MessageReaderInterface::class => [
                 'class' => MessageSource::class,
-                '__construct()' => [fn (Aliases $aliases) => $aliases->get('@grid-view-translation')],
+                '__construct()' => [
+                    DynamicReference::to(
+                        static fn (Aliases $aliases) => $aliases->get('@grid-view-translation'),
+                    ),
+                ],
             ],
 
             MessageFormatterInterface::class => IntlMessageFormatter::class,

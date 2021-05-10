@@ -10,10 +10,8 @@ use Yiisoft\Arrays\ArrayHelper;
 use Yiisoft\Html\Html;
 use Yiisoft\Json\Json;
 use Yiisoft\Translator\TranslatorInterface;
-use Yiisoft\Yii\DataView\Columns\ActionColumn;
 use Yiisoft\Yii\DataView\Columns\Column;
 use Yiisoft\Yii\DataView\Columns\DataColumn;
-use Yiisoft\Yii\DataView\Columns\RadioButtonColumn;
 use Yiisoft\Yii\DataView\Exception\InvalidConfigException;
 use Yiisoft\Yii\DataView\Factory\GridViewFactory;
 
@@ -503,42 +501,6 @@ final class GridView extends BaseListView
             if (is_string($column)) {
                 $column = $this->createDataColumn($column);
             } elseif (is_array($column)) {
-                $buttons = null;
-                $content = null;
-                $value = null;
-                $radioOptions = null;
-                $visibleButtons = null;
-
-                if (isset($column['buttons'])) {
-                    /** @var array */
-                    $buttons = $column['buttons'];
-                    unset($column['buttons']);
-                }
-
-                if (isset($column['content']) && is_callable($column['content'])) {
-                    /** @var callable|null */
-                    $content = $column['content'];
-                    unset($column['content']);
-                }
-
-                if (isset($column['radioOptions']) && $column['radioOptions'] instanceof Closure) {
-                    /** @var Closure|null */
-                    $radioOptions = $column['radioOptions'];
-                    unset($column['radioOptions']);
-                }
-
-                if (isset($column['value']) && $column['value'] instanceof Closure) {
-                    /** @var Closure|null */
-                    $value = $column['value'];
-                    unset($column['value']);
-                }
-
-                if (isset($column['visibleButtons'])) {
-                    /** @var array */
-                    $visibleButtons = $column['visibleButtons'];
-                    unset($column['visibleButtons']);
-                }
-
                 $config = array_merge(
                     [
                         'class' => $this->dataColumnClass,
@@ -548,26 +510,6 @@ final class GridView extends BaseListView
                 );
 
                 $column = $this->gridViewFactory->createColumnClass($config);
-
-                if ($column instanceof ActionColumn && $buttons !== null) {
-                    $column->buttons($buttons);
-                }
-
-                if ($content !== null) {
-                    $column->content($content);
-                }
-
-                if ($column instanceof RadioButtonColumn && $radioOptions !== null) {
-                    $column->radioOptions($radioOptions);
-                }
-
-                if ($column instanceof DataColumn && $value !== null) {
-                    $column->value($value);
-                }
-
-                if ($column instanceof ActionColumn && $visibleButtons !== null) {
-                    $column->visibleButtons($visibleButtons);
-                }
             }
 
             if ($column instanceof Column && !$column->isVisible()) {

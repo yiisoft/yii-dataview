@@ -146,22 +146,26 @@ final class GridViewTest extends TestCase
                     [
                         'class' => ActionColumn::class,
                         'header()' => ['Operations'],
-                        'buttons' => [
-                            'delete' => function ($url) {
-                                return Html::a(
-                                    Html::tag('span', '&#128465;')->encode(false)->render(),
-                                    $url,
-                                    [
-                                        'class' => 'text-danger',
-                                        'data-method' => 'POST',
-                                        'data-confirm' => 'Are you sure to delete this user?',
-                                        'title' => 'Delete',
-                                    ],
-                                )->encode(false);
-                            },
+                        'buttons()' => [
+                            [
+                                'delete' => static function (string $url): string {
+                                    return Html::a(
+                                        Html::tag('span', '&#128465;')->encode(false)->render(),
+                                        $url,
+                                        [
+                                            'class' => 'text-danger',
+                                            'data-method' => 'POST',
+                                            'data-confirm' => 'Are you sure to delete this user?',
+                                            'title' => 'Delete',
+                                        ],
+                                    )->encode(false)->render();
+                                },
+                            ],
                         ],
-                        'visibleButtons' => [
-                            'view' => static fn ($model, $key, $index) => true,
+                        'visibleButtons()' => [
+                            [
+                                'view' => static fn ($model, $key, $index) => true,
+                            ],
                         ],
                     ],
                 ],

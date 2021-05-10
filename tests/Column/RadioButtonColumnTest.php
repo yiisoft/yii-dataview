@@ -18,7 +18,7 @@ final class RadioButtonColumnTest extends TestCase
         $columns = [
             [
                 'class' => RadioButtonColumn::class,
-                'content' => static fn () => '',
+                'content()' => [static fn () => ''],
                 'header()' => ['x'],
             ],
         ];
@@ -140,7 +140,7 @@ final class RadioButtonColumnTest extends TestCase
             'total',
             [
                 'class' => RadioButtonColumn::class,
-                'radioOptions' => static fn ($model) => ['value' => $model['total'] > 40 ? 1 : 0],
+                'radioOptions()' => [static fn ($model) => ['value' => $model['total'] > 40 ? 1 : 0]],
             ],
         ];
 

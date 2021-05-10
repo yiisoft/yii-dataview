@@ -92,7 +92,7 @@ final class DataColumnTest extends TestCase
             'name',
             [
                 'attribute()' => ['total'],
-                'content' => static fn ($model) => ($model['total'] * 20) / 100,
+                'content()' => [static fn ($model) => ($model['total'] * 20) / 100],
             ],
         ];
 
@@ -135,7 +135,7 @@ final class DataColumnTest extends TestCase
             'name',
             [
                 'attribute()' => ['total'],
-                'content' => static fn () => '',
+                'content()' => [static fn () => ''],
             ],
         ];
 
@@ -841,8 +841,10 @@ final class DataColumnTest extends TestCase
             'name',
             [
                 'attribute()' => ['total'],
-                'value' => static fn ($model): string => $model['total'] === '50'
-                    ? '*' . $model['total'] . '*' : $model['total'],
+                'value()' => [
+                    static fn ($model): string => $model['total'] === '50'
+                        ? '*' . $model['total'] . '*' : $model['total'],
+                ],
             ],
         ];
 
