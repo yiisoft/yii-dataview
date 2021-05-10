@@ -21,7 +21,7 @@ final class ListViewTest extends TestCase
         $html = <<<'HTML'
         <div id="w1-listview" class="list-view"><div>Showing <b>1-6</b> of <b>6</b> items</div>
         <div class="testMe">
-        <div></div>
+        <div>0</div>
         </div>
         <div class="testMe">
         <div>1</div>
@@ -200,7 +200,7 @@ final class ListViewTest extends TestCase
 
         $html = <<<'HTML'
         <div id="w1-listview" class="list-view"><div>Showing <b>1-6</b> of <b>6</b> items</div>
-        <div></div>
+        <div>0</div>
         <div>1</div>
         <div>2</div>
         <div>3</div>
@@ -214,7 +214,7 @@ final class ListViewTest extends TestCase
 
         $html = <<<'HTML'
         <div id="w2-listview" class="list-view"><div>Showing <b>1-6</b> of <b>6</b> items</div>
-        <div data-key="0"></div>
+        <div data-key="0">0</div>
         <div data-key="1">1</div>
         <div data-key="2">2</div>
         <div data-key="3">3</div>
@@ -240,7 +240,7 @@ final class ListViewTest extends TestCase
 
         $html = <<<'HTML'
         <div id="w1-listview" class="list-view"><div>Showing <b>1-6</b> of <b>6</b> items</div>
-        <div></div>
+        <div>0</div>
         <div>1</div>
         <div>2</div>
         <div>3</div>
