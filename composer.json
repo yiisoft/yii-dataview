@@ -32,7 +32,7 @@
         "yiisoft/json": "^1.0",
         "yiisoft/router": "^3.0@dev",
         "yiisoft/strings": "^2.0",
-        "yiisoft/translator": "3.0.x-dev",
+        "yiisoft/translator": "^1.0",
         "yiisoft/translator-formatter-intl": "^3.0@dev",
         "yiisoft/translator-message-php": "^3.0@dev",
         "yiisoft/view": "^3.0@dev",
