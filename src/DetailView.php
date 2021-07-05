@@ -275,7 +275,7 @@ final class DetailView extends Widget
     {
         $attributes = $this->attributes;
 
-        /** @var array<array-key,array|string|Closure> $attributes */
+        /** @var array<array-key,array|Closure|string> $attributes */
         foreach ($attributes as $i => $attribute) {
             if (is_string($attribute)) {
                 if (!preg_match('/^([^:]+)(:(\w*))?(:(.*))?$/', $attribute, $matches)) {

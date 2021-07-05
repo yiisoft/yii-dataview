@@ -70,7 +70,7 @@ final class GridView extends BaseListView
     private ?Closure $afterRow = null;
     private bool $showHeader = true;
     private bool $showFooter = false;
-    /** @var array<array-key,array<array-key,Column>|Column|string|callable|Closure> */
+    /** @var array<array-key,array<array-key,Column>|callable|Closure|Column|string> */
     private array $columns = [];
     private string $emptyCell = '&nbsp;';
     private string $filterModelName = '';
@@ -478,7 +478,7 @@ final class GridView extends BaseListView
 
         reset($models);
 
-        /** @var array<array-key,object|int|bool|string|null> $models */
+        /** @var array<array-key,object|bool|int|string|null> $models */
         foreach ($models as $name => $value) {
             if ($value === null || is_scalar($value) || is_callable([$value, '__toString'])) {
                 $this->columns[] = (string) $name;
