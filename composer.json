@@ -35,7 +35,7 @@
         "yiisoft/translator": "^1.0",
         "yiisoft/translator-formatter-intl": "^1.0",
         "yiisoft/translator-message-php": "^1.0",
-        "yiisoft/view": "^3.0@dev",
+        "yiisoft/view": "^1.0",
         "yiisoft/widget": "^3.0@dev"
     },
     "require-dev": {
