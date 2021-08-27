@@ -17,7 +17,7 @@ use Yiisoft\Data\Reader\Sort;
 use Yiisoft\Di\Container;
 use Yiisoft\EventDispatcher\Dispatcher\Dispatcher;
 use Yiisoft\EventDispatcher\Provider\Provider;
-use Yiisoft\Factory\Definition\DynamicReference;
+use Yiisoft\Definitions\DynamicReference;
 use Yiisoft\Router\FastRoute\UrlGenerator;
 use Yiisoft\Router\FastRoute\UrlMatcher;
 use Yiisoft\Router\Group;

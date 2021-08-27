@@ -7,6 +7,7 @@ namespace Yiisoft\Yii\DataView;
 use JsonException;
 use Yiisoft\Arrays\ArrayHelper;
 use Yiisoft\Data\Paginator\OffsetPaginator;
+use Yiisoft\Definitions\Exception\InvalidConfigException as InvalidDefinitionConfigException;
 use Yiisoft\Html\Html;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\Yii\DataView\Exception\InvalidConfigException;
@@ -427,7 +428,7 @@ abstract class BaseListView extends Widget
      *
      * @param string $name the section name, e.g., `{summary}`, `{items}`.
      *
-     * @throws InvalidConfigException|\Yiisoft\Factory\Exception\InvalidConfigException
+     * @throws InvalidConfigException|InvalidDefinitionConfigException
      *
      * @return string the rendering result of the section, or false if the named section is not supported.
      */
@@ -450,7 +451,7 @@ abstract class BaseListView extends Widget
     /**
      * Renders the sorter.
      *
-     * @throws \Yiisoft\Factory\Exception\InvalidConfigException
+     * @throws InvalidDefinitionConfigException
      *
      * @return string the rendering result
      */
