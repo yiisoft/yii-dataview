@@ -7,8 +7,8 @@ namespace Yiisoft\Yii\DataView\Widget;
 use JsonException;
 use Yiisoft\Data\Reader\Sort;
 use Yiisoft\Html\Html;
+use Yiisoft\Router\CurrentRoute;
 use Yiisoft\Router\UrlGeneratorInterface;
-use Yiisoft\Router\UrlMatcherInterface;
 use Yiisoft\Strings\Inflector;
 use Yiisoft\Widget\Widget;
 use Yiisoft\Yii\DataView\Exception\InvalidConfigException;
@@ -37,19 +37,19 @@ final class LinkSorter extends Widget
     private array $options = [];
     private array $requestAttributes = [];
     private array $requestQueryParams = [];
+    private CurrentRoute $currentRoute;
     private Inflector $inflector;
     private Sort $sort;
     private UrlGeneratorInterface $urlGenerator;
-    private UrlMatcherInterface $urlMatcher;
 
     public function __construct(
+        CurrentRoute $currentRoute,
         Inflector $inflector,
-        UrlGeneratorInterface $urlGenerator,
-        UrlMatcherInterface $urlMatcher
+        UrlGeneratorInterface $urlGenerator
     ) {
+        $this->currentRoute = $currentRoute;
         $this->inflector = $inflector;
         $this->urlGenerator = $urlGenerator;
-        $this->urlMatcher = $urlMatcher;
     }
 
     /**
@@ -204,7 +204,7 @@ final class LinkSorter extends Widget
         $page = ['page' => $this->currentPage];
         $params = array_merge($page, $this->requestAttributes, $this->requestQueryParams, $params);
 
-        $currentRoute = $this->urlMatcher->getCurrentRoute();
+        $currentRoute = $this->currentRoute->getRoute();
 
         if ($currentRoute !== null) {
             $action = $currentRoute->getName();

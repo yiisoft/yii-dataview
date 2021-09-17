@@ -21,10 +21,10 @@ final class LinkPagerTest extends TestCase
         $html = <<<'HTML'
         <nav aria-label="Pagination">
         <ul class="pagination justify-content-center mt-4">
-        <li class="page-item disabled"><a class="page-link" href="" data-page="1" aria-disabled="true" tabindex="-1">Previous</a></li>
-        <li class="page-item test-active"><a class="page-link" href="" data-page="1">1</a></li>
-        <li class="page-item"><a class="page-link" href="" data-page="2">2</a></li>
-        <li class="page-item"><a class="page-link" href="" data-page="2">Next Page</a></li>
+        <li class="page-item disabled"><a class="page-link" href data-page="1" aria-disabled="true" tabindex="-1">Previous</a></li>
+        <li class="page-item test-active"><a class="page-link" href data-page="1">1</a></li>
+        <li class="page-item"><a class="page-link" href data-page="2">2</a></li>
+        <li class="page-item"><a class="page-link" href data-page="2">Next Page</a></li>
         </ul>
         </nav>
 
@@ -43,10 +43,10 @@ final class LinkPagerTest extends TestCase
         $html = <<<'HTML'
         <nav aria-label="Pagination">
         <ul class="pagination justify-content-center mt-4">
-        <li class="page-item disabled"><a class="page-link" href="" data-page="1" aria-disabled="true" tabindex="-1">Previous</a></li>
-        <li class="text-danger page-item active"><a class="page-link" href="" data-page="1">1</a></li>
-        <li class="text-danger page-item"><a class="page-link" href="" data-page="2">2</a></li>
-        <li class="page-item"><a class="page-link" href="" data-page="2">Next Page</a></li>
+        <li class="page-item disabled"><a class="page-link" href data-page="1" aria-disabled="true" tabindex="-1">Previous</a></li>
+        <li class="text-danger page-item active"><a class="page-link" href data-page="1">1</a></li>
+        <li class="text-danger page-item"><a class="page-link" href data-page="2">2</a></li>
+        <li class="page-item"><a class="page-link" href data-page="2">Next Page</a></li>
         </ul>
         </nav>
 
@@ -65,10 +65,10 @@ final class LinkPagerTest extends TestCase
         $html = <<<'HTML'
         <nav aria-label="Pagination">
         <ul class="pagination justify-content-center mt-4">
-        <li class="page-item disabled"><a class="page-link" href="" data-page="1" aria-disabled="true" tabindex="-1">Previous</a></li>
-        <li class="page-item disabled"><a class="page-link" href="" data-page="1">1</a></li>
-        <li class="page-item"><a class="page-link" href="" data-page="2">2</a></li>
-        <li class="page-item"><a class="page-link" href="" data-page="2">Next Page</a></li>
+        <li class="page-item disabled"><a class="page-link" href data-page="1" aria-disabled="true" tabindex="-1">Previous</a></li>
+        <li class="page-item disabled"><a class="page-link" href data-page="1">1</a></li>
+        <li class="page-item"><a class="page-link" href data-page="2">2</a></li>
+        <li class="page-item"><a class="page-link" href data-page="2">Next Page</a></li>
         </ul>
         </nav>
 
@@ -88,10 +88,10 @@ final class LinkPagerTest extends TestCase
         $html = <<<'HTML'
         <nav aria-label="Pagination">
         <ul class="pagination justify-content-center mt-4">
-        <li class="page-item test-disabled"><a class="page-link" href="" data-page="1" aria-disabled="true" tabindex="-1">Previous</a></li>
-        <li class="page-item active"><a class="page-link" href="" data-page="1">1</a></li>
-        <li class="page-item"><a class="page-link" href="" data-page="2">2</a></li>
-        <li class="page-item"><a class="page-link" href="" data-page="2">Next Page</a></li>
+        <li class="page-item test-disabled"><a class="page-link" href data-page="1" aria-disabled="true" tabindex="-1">Previous</a></li>
+        <li class="page-item active"><a class="page-link" href data-page="1">1</a></li>
+        <li class="page-item"><a class="page-link" href data-page="2">2</a></li>
+        <li class="page-item"><a class="page-link" href data-page="2">Next Page</a></li>
         </ul>
         </nav>
 
@@ -111,11 +111,11 @@ final class LinkPagerTest extends TestCase
         $html = <<<'HTML'
         <nav aria-label="Pagination">
         <ul class="pagination justify-content-center mt-4">
-        <li class="test-class"><a class="page-link" href="" data-page="1">First</a></li>
-        <li class="page-item disabled"><a class="page-link" href="" data-page="1" aria-disabled="true" tabindex="-1">Previous</a></li>
-        <li class="page-item active"><a class="page-link" href="" data-page="1">1</a></li>
-        <li class="page-item"><a class="page-link" href="" data-page="2">2</a></li>
-        <li class="page-item"><a class="page-link" href="" data-page="2">Next Page</a></li>
+        <li class="test-class"><a class="page-link" href data-page="1">First</a></li>
+        <li class="page-item disabled"><a class="page-link" href data-page="1" aria-disabled="true" tabindex="-1">Previous</a></li>
+        <li class="page-item active"><a class="page-link" href data-page="1">1</a></li>
+        <li class="page-item"><a class="page-link" href data-page="2">2</a></li>
+        <li class="page-item"><a class="page-link" href data-page="2">Next Page</a></li>
         </ul>
         </nav>
 
@@ -152,11 +152,11 @@ final class LinkPagerTest extends TestCase
         $html = <<<'HTML'
         <nav aria-label="Pagination">
         <ul class="pagination justify-content-center mt-4">
-        <li class="page-item disabled"><a class="page-link" href="" data-page="1" aria-disabled="true" tabindex="-1">Previous</a></li>
-        <li class="page-item active"><a class="page-link" href="" data-page="1">1</a></li>
-        <li class="page-item"><a class="page-link" href="" data-page="2">2</a></li>
-        <li class="page-item"><a class="page-link" href="" data-page="2">Next Page</a></li>
-        <li class="test-class"><a class="page-link" href="" data-page="2">Last</a></li>
+        <li class="page-item disabled"><a class="page-link" href data-page="1" aria-disabled="true" tabindex="-1">Previous</a></li>
+        <li class="page-item active"><a class="page-link" href data-page="1">1</a></li>
+        <li class="page-item"><a class="page-link" href data-page="2">2</a></li>
+        <li class="page-item"><a class="page-link" href data-page="2">Next Page</a></li>
+        <li class="test-class"><a class="page-link" href data-page="2">Last</a></li>
         </ul>
         </nav>
 
@@ -175,10 +175,10 @@ final class LinkPagerTest extends TestCase
         $html = <<<'HTML'
         <nav aria-label="Pagination">
         <ul class="pagination justify-content-center mt-4">
-        <li class="page-item disabled"><a class="test-class" href="" data-page="1" aria-disabled="true" tabindex="-1">Previous</a></li>
-        <li class="page-item active"><a class="test-class" href="" data-page="1">1</a></li>
-        <li class="page-item"><a class="test-class" href="" data-page="2">2</a></li>
-        <li class="page-item"><a class="test-class" href="" data-page="2">Next Page</a></li>
+        <li class="page-item disabled"><a class="test-class" href data-page="1" aria-disabled="true" tabindex="-1">Previous</a></li>
+        <li class="page-item active"><a class="test-class" href data-page="1">1</a></li>
+        <li class="page-item"><a class="test-class" href data-page="2">2</a></li>
+        <li class="page-item"><a class="test-class" href data-page="2">Next Page</a></li>
         </ul>
         </nav>
 
@@ -197,9 +197,9 @@ final class LinkPagerTest extends TestCase
         $html = <<<'HTML'
         <nav aria-label="Pagination">
         <ul class="pagination justify-content-center mt-4">
-        <li class="page-item disabled"><a class="page-link" href="" data-page="1" aria-disabled="true" tabindex="-1">Previous</a></li>
-        <li class="page-item active"><a class="page-link" href="" data-page="1">1</a></li>
-        <li class="page-item"><a class="page-link" href="" data-page="2">Next Page</a></li>
+        <li class="page-item disabled"><a class="page-link" href data-page="1" aria-disabled="true" tabindex="-1">Previous</a></li>
+        <li class="page-item active"><a class="page-link" href data-page="1">1</a></li>
+        <li class="page-item"><a class="page-link" href data-page="2">Next Page</a></li>
         </ul>
         </nav>
 
@@ -219,10 +219,10 @@ final class LinkPagerTest extends TestCase
         $html = <<<'HTML'
         <nav aria-label="Pagination">
         <ul class="pagination justify-content-center mt-4">
-        <li class="page-item disabled"><a class="page-link" href="" data-page="1" aria-disabled="true" tabindex="-1">Previous</a></li>
-        <li class="page-item active"><a class="page-link" href="" data-page="1">1</a></li>
-        <li class="page-item"><a class="page-link" href="" data-page="2">2</a></li>
-        <li class="test-class"><a class="page-link" href="" data-page="2">Next Page</a></li>
+        <li class="page-item disabled"><a class="page-link" href data-page="1" aria-disabled="true" tabindex="-1">Previous</a></li>
+        <li class="page-item active"><a class="page-link" href data-page="1">1</a></li>
+        <li class="page-item"><a class="page-link" href data-page="2">2</a></li>
+        <li class="test-class"><a class="page-link" href data-page="2">Next Page</a></li>
         </ul>
         </nav>
 
@@ -241,10 +241,10 @@ final class LinkPagerTest extends TestCase
         $html = <<<'HTML'
         <nav class="test-class">
         <ul class="pagination justify-content-center mt-4">
-        <li class="page-item disabled"><a class="page-link" href="" data-page="1" aria-disabled="true" tabindex="-1">Previous</a></li>
-        <li class="page-item active"><a class="page-link" href="" data-page="1">1</a></li>
-        <li class="page-item"><a class="page-link" href="" data-page="2">2</a></li>
-        <li class="page-item"><a class="page-link" href="" data-page="2">Next Page</a></li>
+        <li class="page-item disabled"><a class="page-link" href data-page="1" aria-disabled="true" tabindex="-1">Previous</a></li>
+        <li class="page-item active"><a class="page-link" href data-page="1">1</a></li>
+        <li class="page-item"><a class="page-link" href data-page="2">2</a></li>
+        <li class="page-item"><a class="page-link" href data-page="2">Next Page</a></li>
         </ul>
         </nav>
 
@@ -263,10 +263,10 @@ final class LinkPagerTest extends TestCase
         $html = <<<'HTML'
         <nav aria-label="Pagination">
         <ul class="pagination justify-content-center mt-4">
-        <li class="page-item disabled"><a class="page-link" href="" data-page="1" aria-disabled="true" tabindex="-1">Previous</a></li>
-        <li class="test-class active"><a class="page-link" href="" data-page="1">1</a></li>
-        <li class="test-class"><a class="page-link" href="" data-page="2">2</a></li>
-        <li class="page-item"><a class="page-link" href="" data-page="2">Next Page</a></li>
+        <li class="page-item disabled"><a class="page-link" href data-page="1" aria-disabled="true" tabindex="-1">Previous</a></li>
+        <li class="test-class active"><a class="page-link" href data-page="1">1</a></li>
+        <li class="test-class"><a class="page-link" href data-page="2">2</a></li>
+        <li class="page-item"><a class="page-link" href data-page="2">Next Page</a></li>
         </ul>
         </nav>
 
@@ -286,10 +286,10 @@ final class LinkPagerTest extends TestCase
         $html = <<<'HTML'
         <nav aria-label="Pagination">
         <ul class="pagination justify-content-center mt-4">
-        <li class="test-class disabled"><a class="page-link" href="" data-page="1" aria-disabled="true" tabindex="-1">Previous</a></li>
-        <li class="page-item active"><a class="page-link" href="" data-page="1">1</a></li>
-        <li class="page-item"><a class="page-link" href="" data-page="2">2</a></li>
-        <li class="page-item"><a class="page-link" href="" data-page="2">Next Page</a></li>
+        <li class="test-class disabled"><a class="page-link" href data-page="1" aria-disabled="true" tabindex="-1">Previous</a></li>
+        <li class="page-item active"><a class="page-link" href data-page="1">1</a></li>
+        <li class="page-item"><a class="page-link" href data-page="2">2</a></li>
+        <li class="page-item"><a class="page-link" href data-page="2">Next Page</a></li>
         </ul>
         </nav>
 
@@ -315,10 +315,10 @@ final class LinkPagerTest extends TestCase
         $html = <<<'HTML'
         <nav aria-label="Pagination">
         <ul class="test-class">
-        <li class="page-item disabled"><a class="page-link" href="" data-page="1" aria-disabled="true" tabindex="-1">Previous</a></li>
-        <li class="page-item active"><a class="page-link" href="" data-page="1">1</a></li>
-        <li class="page-item"><a class="page-link" href="" data-page="2">2</a></li>
-        <li class="page-item"><a class="page-link" href="" data-page="2">Next Page</a></li>
+        <li class="page-item disabled"><a class="page-link" href data-page="1" aria-disabled="true" tabindex="-1">Previous</a></li>
+        <li class="page-item active"><a class="page-link" href data-page="1">1</a></li>
+        <li class="page-item"><a class="page-link" href data-page="2">2</a></li>
+        <li class="page-item"><a class="page-link" href data-page="2">Next Page</a></li>
         </ul>
         </nav>
 

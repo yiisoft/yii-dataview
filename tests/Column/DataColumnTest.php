@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Yiisoft\Yii\DataView\Tests\Column;
 
 use Nyholm\Psr7\ServerRequest;
+use Yiisoft\Router\Route;
 use Yiisoft\Yii\DataView\GridView;
 use Yiisoft\Yii\DataView\Tests\TestCase;
 
@@ -38,10 +39,10 @@ final class DataColumnTest extends TestCase
         </table>
         <nav aria-label="Pagination">
         <ul class="pagination justify-content-center mt-4">
-        <li class="page-item disabled"><a class="page-link" href="" data-page="1" aria-disabled="true" tabindex="-1">Previous</a></li>
-        <li class="page-item active"><a class="page-link" href="" data-page="1">1</a></li>
-        <li class="page-item"><a class="page-link" href="" data-page="2">2</a></li>
-        <li class="page-item"><a class="page-link" href="" data-page="2">Next Page</a></li>
+        <li class="page-item disabled"><a class="page-link" href data-page="1" aria-disabled="true" tabindex="-1">Previous</a></li>
+        <li class="page-item active"><a class="page-link" href data-page="1">1</a></li>
+        <li class="page-item"><a class="page-link" href data-page="2">2</a></li>
+        <li class="page-item"><a class="page-link" href data-page="2">Next Page</a></li>
         </ul>
         </nav>
         </div>
@@ -72,10 +73,10 @@ final class DataColumnTest extends TestCase
         </table>
         <nav aria-label="Pagination">
         <ul class="pagination justify-content-center mt-4">
-        <li class="page-item disabled"><a class="page-link" href="" data-page="1" aria-disabled="true" tabindex="-1">Previous</a></li>
-        <li class="page-item active"><a class="page-link" href="" data-page="1">1</a></li>
-        <li class="page-item"><a class="page-link" href="" data-page="2">2</a></li>
-        <li class="page-item"><a class="page-link" href="" data-page="2">Next Page</a></li>
+        <li class="page-item disabled"><a class="page-link" href data-page="1" aria-disabled="true" tabindex="-1">Previous</a></li>
+        <li class="page-item active"><a class="page-link" href data-page="1">1</a></li>
+        <li class="page-item"><a class="page-link" href data-page="2">2</a></li>
+        <li class="page-item"><a class="page-link" href data-page="2">Next Page</a></li>
         </ul>
         </nav>
         </div>
@@ -115,10 +116,10 @@ final class DataColumnTest extends TestCase
         </table>
         <nav aria-label="Pagination">
         <ul class="pagination justify-content-center mt-4">
-        <li class="page-item disabled"><a class="page-link" href="" data-page="1" aria-disabled="true" tabindex="-1">Previous</a></li>
-        <li class="page-item active"><a class="page-link" href="" data-page="1">1</a></li>
-        <li class="page-item"><a class="page-link" href="" data-page="2">2</a></li>
-        <li class="page-item"><a class="page-link" href="" data-page="2">Next Page</a></li>
+        <li class="page-item disabled"><a class="page-link" href data-page="1" aria-disabled="true" tabindex="-1">Previous</a></li>
+        <li class="page-item active"><a class="page-link" href data-page="1">1</a></li>
+        <li class="page-item"><a class="page-link" href data-page="2">2</a></li>
+        <li class="page-item"><a class="page-link" href data-page="2">Next Page</a></li>
         </ul>
         </nav>
         </div>
@@ -158,10 +159,10 @@ final class DataColumnTest extends TestCase
         </table>
         <nav aria-label="Pagination">
         <ul class="pagination justify-content-center mt-4">
-        <li class="page-item disabled"><a class="page-link" href="" data-page="1" aria-disabled="true" tabindex="-1">Previous</a></li>
-        <li class="page-item active"><a class="page-link" href="" data-page="1">1</a></li>
-        <li class="page-item"><a class="page-link" href="" data-page="2">2</a></li>
-        <li class="page-item"><a class="page-link" href="" data-page="2">Next Page</a></li>
+        <li class="page-item disabled"><a class="page-link" href data-page="1" aria-disabled="true" tabindex="-1">Previous</a></li>
+        <li class="page-item active"><a class="page-link" href data-page="1">1</a></li>
+        <li class="page-item"><a class="page-link" href data-page="2">2</a></li>
+        <li class="page-item"><a class="page-link" href data-page="2">Next Page</a></li>
         </ul>
         </nav>
         </div>
@@ -197,10 +198,10 @@ final class DataColumnTest extends TestCase
         </table>
         <nav aria-label="Pagination">
         <ul class="pagination justify-content-center mt-4">
-        <li class="page-item disabled"><a class="page-link" href="" data-page="1" aria-disabled="true" tabindex="-1">Previous</a></li>
-        <li class="page-item active"><a class="page-link" href="" data-page="1">1</a></li>
-        <li class="page-item"><a class="page-link" href="" data-page="2">2</a></li>
-        <li class="page-item"><a class="page-link" href="" data-page="2">Next Page</a></li>
+        <li class="page-item disabled"><a class="page-link" href data-page="1" aria-disabled="true" tabindex="-1">Previous</a></li>
+        <li class="page-item active"><a class="page-link" href data-page="1">1</a></li>
+        <li class="page-item"><a class="page-link" href data-page="2">2</a></li>
+        <li class="page-item"><a class="page-link" href data-page="2">Next Page</a></li>
         </ul>
         </nav>
         </div>
@@ -240,10 +241,10 @@ final class DataColumnTest extends TestCase
         </table>
         <nav aria-label="Pagination">
         <ul class="pagination justify-content-center mt-4">
-        <li class="page-item disabled"><a class="page-link" href="" data-page="1" aria-disabled="true" tabindex="-1">Previous</a></li>
-        <li class="page-item active"><a class="page-link" href="" data-page="1">1</a></li>
-        <li class="page-item"><a class="page-link" href="" data-page="2">2</a></li>
-        <li class="page-item"><a class="page-link" href="" data-page="2">Next Page</a></li>
+        <li class="page-item disabled"><a class="page-link" href data-page="1" aria-disabled="true" tabindex="-1">Previous</a></li>
+        <li class="page-item active"><a class="page-link" href data-page="1">1</a></li>
+        <li class="page-item"><a class="page-link" href data-page="2">2</a></li>
+        <li class="page-item"><a class="page-link" href data-page="2">Next Page</a></li>
         </ul>
         </nav>
         </div>
@@ -283,10 +284,10 @@ final class DataColumnTest extends TestCase
         </table>
         <nav aria-label="Pagination">
         <ul class="pagination justify-content-center mt-4">
-        <li class="page-item disabled"><a class="page-link" href="" data-page="1" aria-disabled="true" tabindex="-1">Previous</a></li>
-        <li class="page-item active"><a class="page-link" href="" data-page="1">1</a></li>
-        <li class="page-item"><a class="page-link" href="" data-page="2">2</a></li>
-        <li class="page-item"><a class="page-link" href="" data-page="2">Next Page</a></li>
+        <li class="page-item disabled"><a class="page-link" href data-page="1" aria-disabled="true" tabindex="-1">Previous</a></li>
+        <li class="page-item active"><a class="page-link" href data-page="1">1</a></li>
+        <li class="page-item"><a class="page-link" href data-page="2">2</a></li>
+        <li class="page-item"><a class="page-link" href data-page="2">Next Page</a></li>
         </ul>
         </nav>
         </div>
@@ -323,9 +324,9 @@ final class DataColumnTest extends TestCase
         </tbody>
         </table>
         <nav class="pagination is-centered mt-4" aria-label="Pagination">
-        <li class="pagination-previous has-background-link has-text-white" disabled><a href="" data-page="1" aria-disabled="true" tabindex="-1">Previous</a></li><ul class="pagination-list justify-content-center mt-4">
-        <li class="pagination-link is-current"><a href="" data-page="1">1</a></li>
-        <li class="pagination-link"><a href="" data-page="2">2</a></li></ul><li class="pagination-next has-background-link has-text-white"><a href="" data-page="2">Next Page</a></li>
+        <li class="pagination-previous has-background-link has-text-white" disabled><a href data-page="1" aria-disabled="true" tabindex="-1">Previous</a></li><ul class="pagination-list justify-content-center mt-4">
+        <li class="pagination-link is-current"><a href data-page="1">1</a></li>
+        <li class="pagination-link"><a href data-page="2">2</a></li></ul><li class="pagination-next has-background-link has-text-white"><a href data-page="2">Next Page</a></li>
         </nav>
         </div>
         HTML;
@@ -364,10 +365,10 @@ final class DataColumnTest extends TestCase
         </table>
         <nav aria-label="Pagination">
         <ul class="pagination justify-content-center mt-4">
-        <li class="page-item disabled"><a class="page-link" href="" data-page="1" aria-disabled="true" tabindex="-1">Previous</a></li>
-        <li class="page-item active"><a class="page-link" href="" data-page="1">1</a></li>
-        <li class="page-item"><a class="page-link" href="" data-page="2">2</a></li>
-        <li class="page-item"><a class="page-link" href="" data-page="2">Next Page</a></li>
+        <li class="page-item disabled"><a class="page-link" href data-page="1" aria-disabled="true" tabindex="-1">Previous</a></li>
+        <li class="page-item active"><a class="page-link" href data-page="1">1</a></li>
+        <li class="page-item"><a class="page-link" href data-page="2">2</a></li>
+        <li class="page-item"><a class="page-link" href data-page="2">Next Page</a></li>
         </ul>
         </nav>
         </div>
@@ -407,10 +408,10 @@ final class DataColumnTest extends TestCase
         </table>
         <nav aria-label="Pagination">
         <ul class="pagination justify-content-center mt-4">
-        <li class="page-item disabled"><a class="page-link" href="" data-page="1" aria-disabled="true" tabindex="-1">Previous</a></li>
-        <li class="page-item active"><a class="page-link" href="" data-page="1">1</a></li>
-        <li class="page-item"><a class="page-link" href="" data-page="2">2</a></li>
-        <li class="page-item"><a class="page-link" href="" data-page="2">Next Page</a></li>
+        <li class="page-item disabled"><a class="page-link" href data-page="1" aria-disabled="true" tabindex="-1">Previous</a></li>
+        <li class="page-item active"><a class="page-link" href data-page="1">1</a></li>
+        <li class="page-item"><a class="page-link" href data-page="2">2</a></li>
+        <li class="page-item"><a class="page-link" href data-page="2">Next Page</a></li>
         </ul>
         </nav>
         </div>
@@ -450,10 +451,10 @@ final class DataColumnTest extends TestCase
         </table>
         <nav aria-label="Pagination">
         <ul class="pagination justify-content-center mt-4">
-        <li class="page-item disabled"><a class="page-link" href="" data-page="1" aria-disabled="true" tabindex="-1">Previous</a></li>
-        <li class="page-item active"><a class="page-link" href="" data-page="1">1</a></li>
-        <li class="page-item"><a class="page-link" href="" data-page="2">2</a></li>
-        <li class="page-item"><a class="page-link" href="" data-page="2">Next Page</a></li>
+        <li class="page-item disabled"><a class="page-link" href data-page="1" aria-disabled="true" tabindex="-1">Previous</a></li>
+        <li class="page-item active"><a class="page-link" href data-page="1">1</a></li>
+        <li class="page-item"><a class="page-link" href data-page="2">2</a></li>
+        <li class="page-item"><a class="page-link" href data-page="2">Next Page</a></li>
         </ul>
         </nav>
         </div>
@@ -493,10 +494,10 @@ final class DataColumnTest extends TestCase
         </table>
         <nav aria-label="Pagination">
         <ul class="pagination justify-content-center mt-4">
-        <li class="page-item disabled"><a class="page-link" href="" data-page="1" aria-disabled="true" tabindex="-1">Previous</a></li>
-        <li class="page-item active"><a class="page-link" href="" data-page="1">1</a></li>
-        <li class="page-item"><a class="page-link" href="" data-page="2">2</a></li>
-        <li class="page-item"><a class="page-link" href="" data-page="2">Next Page</a></li>
+        <li class="page-item disabled"><a class="page-link" href data-page="1" aria-disabled="true" tabindex="-1">Previous</a></li>
+        <li class="page-item active"><a class="page-link" href data-page="1">1</a></li>
+        <li class="page-item"><a class="page-link" href data-page="2">2</a></li>
+        <li class="page-item"><a class="page-link" href data-page="2">Next Page</a></li>
         </ul>
         </nav>
         </div>
@@ -601,10 +602,10 @@ final class DataColumnTest extends TestCase
         </table>
         <nav aria-label="Pagination">
         <ul class="pagination justify-content-center mt-4">
-        <li class="page-item disabled"><a class="page-link" href="" data-page="1" aria-disabled="true" tabindex="-1">Previous</a></li>
-        <li class="page-item active"><a class="page-link" href="" data-page="1">1</a></li>
-        <li class="page-item"><a class="page-link" href="" data-page="2">2</a></li>
-        <li class="page-item"><a class="page-link" href="" data-page="2">Next Page</a></li>
+        <li class="page-item disabled"><a class="page-link" href data-page="1" aria-disabled="true" tabindex="-1">Previous</a></li>
+        <li class="page-item active"><a class="page-link" href data-page="1">1</a></li>
+        <li class="page-item"><a class="page-link" href data-page="2">2</a></li>
+        <li class="page-item"><a class="page-link" href data-page="2">Next Page</a></li>
         </ul>
         </nav>
         </div>
@@ -639,10 +640,10 @@ final class DataColumnTest extends TestCase
         </table>
         <nav aria-label="Pagination">
         <ul class="pagination justify-content-center mt-4">
-        <li class="page-item disabled"><a class="page-link" href="" data-page="1" aria-disabled="true" tabindex="-1">Previous</a></li>
-        <li class="page-item active"><a class="page-link" href="" data-page="1">1</a></li>
-        <li class="page-item"><a class="page-link" href="" data-page="2">2</a></li>
-        <li class="page-item"><a class="page-link" href="" data-page="2">Next Page</a></li>
+        <li class="page-item disabled"><a class="page-link" href data-page="1" aria-disabled="true" tabindex="-1">Previous</a></li>
+        <li class="page-item active"><a class="page-link" href data-page="1">1</a></li>
+        <li class="page-item"><a class="page-link" href data-page="2">2</a></li>
+        <li class="page-item"><a class="page-link" href data-page="2">Next Page</a></li>
         </ul>
         </nav>
         </div>
@@ -654,8 +655,9 @@ final class DataColumnTest extends TestCase
     {
         GridView::counter(0);
 
-        $request = new ServerRequest('GET', '/admin/index');
-        $this->urlMatcher->match($request);
+        $this->currentRoute->setRoute(
+            Route::methods(['GET', 'POST'], '/admin/index')->action([TestDelete::class, 'run'])->name('admin'),
+        );
 
         $gridView = $this->createGridView(['id', 'name']);
         $gridView = $gridView->paginator($this->createOffsetPaginator(['id', 'name']));
@@ -720,8 +722,9 @@ final class DataColumnTest extends TestCase
     {
         GridView::counter(0);
 
-        $request = new ServerRequest('GET', '/admin/index');
-        $this->urlMatcher->match($request);
+        $this->currentRoute->setRoute(
+            Route::methods(['GET', 'POST'], '/admin/index')->action([TestDelete::class, 'run'])->name('admin'),
+        );
 
         $gridView = $this->createGridView(
             [
@@ -763,8 +766,9 @@ final class DataColumnTest extends TestCase
     {
         GridView::counter(0);
 
-        $request = new ServerRequest('GET', '/admin/index');
-        $this->urlMatcher->match($request);
+        $this->currentRoute->setRoute(
+            Route::methods(['GET', 'POST'], '/admin/index')->action([TestDelete::class, 'run'])->name('admin'),
+        );
 
         $gridView = $this->createGridView(
             [
@@ -867,10 +871,10 @@ final class DataColumnTest extends TestCase
         </table>
         <nav aria-label="Pagination">
         <ul class="pagination justify-content-center mt-4">
-        <li class="page-item disabled"><a class="page-link" href="" data-page="1" aria-disabled="true" tabindex="-1">Previous</a></li>
-        <li class="page-item active"><a class="page-link" href="" data-page="1">1</a></li>
-        <li class="page-item"><a class="page-link" href="" data-page="2">2</a></li>
-        <li class="page-item"><a class="page-link" href="" data-page="2">Next Page</a></li>
+        <li class="page-item disabled"><a class="page-link" href data-page="1" aria-disabled="true" tabindex="-1">Previous</a></li>
+        <li class="page-item active"><a class="page-link" href data-page="1">1</a></li>
+        <li class="page-item"><a class="page-link" href data-page="2">2</a></li>
+        <li class="page-item"><a class="page-link" href data-page="2">Next Page</a></li>
         </ul>
         </nav>
         </div>
@@ -905,10 +909,10 @@ final class DataColumnTest extends TestCase
         </table>
         <nav aria-label="Pagination">
         <ul class="pagination justify-content-center mt-4">
-        <li class="page-item disabled"><a class="page-link" href="" data-page="1" aria-disabled="true" tabindex="-1">Previous</a></li>
-        <li class="page-item active"><a class="page-link" href="" data-page="1">1</a></li>
-        <li class="page-item"><a class="page-link" href="" data-page="2">2</a></li>
-        <li class="page-item"><a class="page-link" href="" data-page="2">Next Page</a></li>
+        <li class="page-item disabled"><a class="page-link" href data-page="1" aria-disabled="true" tabindex="-1">Previous</a></li>
+        <li class="page-item active"><a class="page-link" href data-page="1">1</a></li>
+        <li class="page-item"><a class="page-link" href data-page="2">2</a></li>
+        <li class="page-item"><a class="page-link" href data-page="2">Next Page</a></li>
         </ul>
         </nav>
         </div>

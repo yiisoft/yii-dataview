@@ -40,10 +40,10 @@ final class SerialColumnTest extends TestCase
         </table>
         <nav aria-label="Pagination">
         <ul class="pagination justify-content-center mt-4">
-        <li class="page-item disabled"><a class="page-link" href="" data-page="1" aria-disabled="true" tabindex="-1">Previous</a></li>
-        <li class="page-item active"><a class="page-link" href="" data-page="1">1</a></li>
-        <li class="page-item"><a class="page-link" href="" data-page="2">2</a></li>
-        <li class="page-item"><a class="page-link" href="" data-page="2">Next Page</a></li>
+        <li class="page-item disabled"><a class="page-link" href data-page="1" aria-disabled="true" tabindex="-1">Previous</a></li>
+        <li class="page-item active"><a class="page-link" href data-page="1">1</a></li>
+        <li class="page-item"><a class="page-link" href data-page="2">2</a></li>
+        <li class="page-item"><a class="page-link" href data-page="2">Next Page</a></li>
         </ul>
         </nav>
         </div>
