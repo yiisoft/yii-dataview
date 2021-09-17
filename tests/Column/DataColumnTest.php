@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Yiisoft\Yii\DataView\Tests\Column;
 
-use Nyholm\Psr7\ServerRequest;
 use Yiisoft\Router\Route;
 use Yiisoft\Yii\DataView\GridView;
 use Yiisoft\Yii\DataView\Tests\TestCase;

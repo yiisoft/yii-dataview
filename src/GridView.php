@@ -592,6 +592,8 @@ final class GridView extends BaseListView
      * @throws JsonException
      *
      * @return string the rendering result.
+     *
+     * @psalm-suppress InvalidArgument
      */
     private function renderTableBody(): string
     {
@@ -615,7 +617,7 @@ final class GridView extends BaseListView
             $rows[] = $this->renderTableRow($model, $key, $index);
 
             if ($this->afterRow !== null) {
-                /** @var array */
+                /** @var array<array-key, string> */
                 $row = call_user_func($this->afterRow, $model, $key, $index, $this);
                 if (!empty($row)) {
                     $rows[] = $row;
@@ -625,7 +627,6 @@ final class GridView extends BaseListView
 
         if (empty($rows) && $this->emptyText !== '') {
             $colspan = count($this->columns);
-
             return "<tbody>\n<tr><td colspan=\"$colspan\">" . $this->renderEmpty() . "</td></tr>\n</tbody>\n";
         }
 

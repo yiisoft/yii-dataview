@@ -26,7 +26,6 @@ use Yiisoft\Router\Route;
 use Yiisoft\Router\RouteCollection;
 use Yiisoft\Router\RouteCollectionInterface;
 use Yiisoft\Router\RouteCollector;
-use Yiisoft\Router\RouteCollectorInterface;
 use Yiisoft\Router\UrlGeneratorInterface;
 use Yiisoft\Translator\CategorySource;
 use Yiisoft\Translator\Formatter\Intl\IntlMessageFormatter;

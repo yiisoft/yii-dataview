@@ -8,6 +8,7 @@ use JsonException;
 use Yiisoft\Arrays\ArrayHelper;
 use Yiisoft\Data\Paginator\OffsetPaginator;
 use Yiisoft\Html\Html;
+use Yiisoft\Html\Tag\Link;
 use Yiisoft\Router\CurrentRoute;
 use Yiisoft\Router\UrlGeneratorInterface;
 use Yiisoft\View\WebView;
@@ -427,9 +428,11 @@ final class LinkPager extends Widget
      */
     private function registerLinkTagsInternal(): void
     {
-        /** @var array */
-        foreach ($this->createLinks() as $rel => $href) {
-            $this->webView->registerLinkTag(['rel' => $rel, 'href' => $href]);
+        /** @psalm-var array<string, string> $links */
+        $links = $this->createLinks();
+
+        foreach ($links as $rel => $href) {
+            $this->webView->registerLinkTag(Link::tag()->url($href)->rel($rel));
         }
     }
 
@@ -655,6 +658,9 @@ final class LinkPager extends Widget
         return $html;
     }
 
+    /**
+     * @return string[]
+     */
     private function renderPageButtonLinks(int $currentPage): array
     {
         $buttons = [];
