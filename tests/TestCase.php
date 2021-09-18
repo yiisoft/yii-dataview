@@ -14,19 +14,19 @@ use Yiisoft\Data\Paginator\OffsetPaginator;
 use Yiisoft\Data\Paginator\PaginatorInterface;
 use Yiisoft\Data\Reader\Iterable\IterableDataReader;
 use Yiisoft\Data\Reader\Sort;
+use Yiisoft\Definitions\DynamicReference;
 use Yiisoft\Di\Container;
 use Yiisoft\EventDispatcher\Dispatcher\Dispatcher;
 use Yiisoft\EventDispatcher\Provider\Provider;
-use Yiisoft\Definitions\DynamicReference;
+use Yiisoft\Router\CurrentRoute;
 use Yiisoft\Router\FastRoute\UrlGenerator;
 use Yiisoft\Router\FastRoute\UrlMatcher;
 use Yiisoft\Router\Group;
 use Yiisoft\Router\Route;
 use Yiisoft\Router\RouteCollection;
 use Yiisoft\Router\RouteCollectionInterface;
-use Yiisoft\Router\RouteCollectorInterface;
+use Yiisoft\Router\RouteCollector;
 use Yiisoft\Router\UrlGeneratorInterface;
-use Yiisoft\Router\UrlMatcherInterface;
 use Yiisoft\Translator\CategorySource;
 use Yiisoft\Translator\Formatter\Intl\IntlMessageFormatter;
 use Yiisoft\Translator\Message\Php\MessageSource;
@@ -47,10 +47,10 @@ class TestCase extends \PHPUnit\Framework\TestCase
 {
     protected ActionColumn $actionColumn;
     protected CheckBoxColumn $checkBoxColumn;
+    protected CurrentRoute $currentRoute;
     protected DataColumn $dataColumn;
     protected GridViewFactory $gridViewFactory;
     protected RadioButtonColumn $radioButtonColumn;
-    protected UrlMatcherInterface $urlMatcher;
     protected WebView $webView;
     private ContainerInterface $container;
     private PaginatorInterface $paginator;
@@ -134,10 +134,10 @@ class TestCase extends \PHPUnit\Framework\TestCase
 
         $this->actionColumn = $this->container->get(ActionColumn::class);
         $this->checkboxColumn = $this->container->get(CheckboxColumn::class);
+        $this->currentRoute = $this->container->get(CurrentRoute::class);
         $this->dataColumn = $this->container->get(DataColumn::class);
         $this->gridViewFactory = $this->container->get(GridViewFactory::class);
         $this->radioButtonColumn = $this->container->get(RadioButtonColumn::class);
-        $this->urlMatcher = $this->container->get(UrlMatcherInterface::class);
         $this->webView = $this->container->get(WebView::class);
     }
 
@@ -166,20 +166,26 @@ class TestCase extends \PHPUnit\Framework\TestCase
 
             UrlMatcherInterface::class => UrlMatcher::class,
 
-            RouteCollectorInterface::class => Group::create()->routes(
-                Route::methods(['GET', 'POST'], '/admin/index')->action([TestDelete::class, 'run'])
-                    ->name('admin'),
-                Route::methods(['GET', 'POST'], '/admin/delete[/{id}]')->action([TestDelete::class, 'run'])
-                    ->name('delete'),
-                Route::methods(['GET', 'POST'], '/admin/update[/{id}]')->action([TestUpdate::class, 'run'])
-                    ->name('update'),
-                Route::methods(['GET', 'POST'], '/admin/view[/{id}]')->action([TestView::class, 'run'])
-                    ->name('view'),
-                Route::methods(['GET', 'POST'], '/admin/custom[/{id}]')->action([TestCustom::class, 'run'])
-                    ->name('admin/custom')
-            ),
+            RouteCollectionInterface::class => static function (RouteCollector $collector) {
+                $collector
+                    ->addGroup(
+                        Group::create(null)
+                            ->routes(
+                                Route::methods(['GET', 'POST'], '/admin/index')->action([TestDelete::class, 'run'])
+                                    ->name('admin'),
+                                Route::methods(['GET', 'POST'], '/admin/delete[/{id}]')->action([TestDelete::class, 'run'])
+                                    ->name('delete'),
+                                Route::methods(['GET', 'POST'], '/admin/update[/{id}]')->action([TestUpdate::class, 'run'])
+                                    ->name('update'),
+                                Route::methods(['GET', 'POST'], '/admin/view[/{id}]')->action([TestView::class, 'run'])
+                                    ->name('view'),
+                                Route::methods(['GET', 'POST'], '/admin/custom[/{id}]')->action([TestCustom::class, 'run'])
+                                    ->name('admin/custom'),
+                            ),
+                    );
 
-            RouteCollectionInterface::class => RouteCollection::class,
+                return new RouteCollection($collector);
+            },
 
             MessageReaderInterface::class => [
                 'class' => MessageSource::class,

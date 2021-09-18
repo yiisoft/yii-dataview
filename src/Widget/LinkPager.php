@@ -8,8 +8,9 @@ use JsonException;
 use Yiisoft\Arrays\ArrayHelper;
 use Yiisoft\Data\Paginator\OffsetPaginator;
 use Yiisoft\Html\Html;
+use Yiisoft\Html\Tag\Link;
+use Yiisoft\Router\CurrentRoute;
 use Yiisoft\Router\UrlGeneratorInterface;
-use Yiisoft\Router\UrlMatcherInterface;
 use Yiisoft\View\WebView;
 use Yiisoft\Yii\DataView\Exception\InvalidConfigException;
 use Yiisoft\Yii\DataView\Widget;
@@ -64,18 +65,18 @@ final class LinkPager extends Widget
     private bool $registerLinkTags = false;
     private array $requestAttributes = [];
     private array $requestQueryParams = [];
+    private CurrentRoute $currentRoute;
     private OffsetPaginator $paginator;
     private UrlGeneratorInterface $urlGenerator;
-    private UrlMatcherInterface $urlMatcher;
     private WebView $webView;
 
     public function __construct(
+        CurrentRoute $currentRoute,
         UrlGeneratorInterface $urlGenerator,
-        UrlMatcherInterface $urlMatcher,
         WebView $webView
     ) {
+        $this->currentRoute = $currentRoute;
         $this->urlGenerator = $urlGenerator;
-        $this->urlMatcher = $urlMatcher;
         $this->webView = $webView;
     }
 
@@ -427,9 +428,11 @@ final class LinkPager extends Widget
      */
     private function registerLinkTagsInternal(): void
     {
-        /** @var array */
-        foreach ($this->createLinks() as $rel => $href) {
-            $this->webView->registerLinkTag(['rel' => $rel, 'href' => $href]);
+        /** @psalm-var array<string, string> $links */
+        $links = $this->createLinks();
+
+        foreach ($links as $rel => $href) {
+            $this->webView->registerLinkTag(Link::tag()->url($href)->rel($rel));
         }
     }
 
@@ -573,7 +576,7 @@ final class LinkPager extends Widget
      */
     private function createUrl(int $page): string
     {
-        $currentRoute = $this->urlMatcher->getCurrentRoute();
+        $currentRoute = $this->currentRoute->getRoute();
         $url = '';
 
         $params = array_merge(['page' => $page], $this->requestAttributes, $this->requestQueryParams);
@@ -655,6 +658,9 @@ final class LinkPager extends Widget
         return $html;
     }
 
+    /**
+     * @return string[]
+     */
     private function renderPageButtonLinks(int $currentPage): array
     {
         $buttons = [];

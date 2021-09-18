@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Yiisoft\Yii\DataView\Tests;
 
-use Nyholm\Psr7\ServerRequest;
 use Yiisoft\Data\Paginator\OffsetPaginator;
 use Yiisoft\Data\Reader\Iterable\IterableDataReader;
 use Yiisoft\Html\Html;
+use Yiisoft\Router\Route;
 use Yiisoft\Yii\DataView\Columns\ActionColumn;
 use Yiisoft\Yii\DataView\Columns\DataColumn;
 use Yiisoft\Yii\DataView\Exception\InvalidConfigException;
@@ -367,10 +367,10 @@ final class GridViewTest extends TestCase
         </table>
         <nav aria-label="Pagination">
         <ul class="pagination justify-content-center mt-4">
-        <li class="page-item disabled"><a class="page-link" href="" data-page="1" aria-disabled="true" tabindex="-1">Previous</a></li>
-        <li class="page-item active"><a class="page-link" href="" data-page="1">1</a></li>
-        <li class="page-item"><a class="page-link" href="" data-page="2">2</a></li>
-        <li class="page-item"><a class="page-link" href="" data-page="2">Next Page</a></li>
+        <li class="page-item disabled"><a class="page-link" href data-page="1" aria-disabled="true" tabindex="-1">Previous</a></li>
+        <li class="page-item active"><a class="page-link" href data-page="1">1</a></li>
+        <li class="page-item"><a class="page-link" href data-page="2">2</a></li>
+        <li class="page-item"><a class="page-link" href data-page="2">Next Page</a></li>
         </ul>
         </nav>
         </div>
@@ -402,10 +402,10 @@ final class GridViewTest extends TestCase
         </table>
         <nav aria-label="Pagination">
         <ul class="pagination justify-content-center mt-4">
-        <li class="page-item disabled"><a class="page-link" href="" data-page="1" aria-disabled="true" tabindex="-1">Previous</a></li>
-        <li class="page-item active"><a class="page-link" href="" data-page="1">1</a></li>
-        <li class="page-item"><a class="page-link" href="" data-page="2">2</a></li>
-        <li class="page-item"><a class="page-link" href="" data-page="2">Next Page</a></li>
+        <li class="page-item disabled"><a class="page-link" href data-page="1" aria-disabled="true" tabindex="-1">Previous</a></li>
+        <li class="page-item active"><a class="page-link" href data-page="1">1</a></li>
+        <li class="page-item"><a class="page-link" href data-page="2">2</a></li>
+        <li class="page-item"><a class="page-link" href data-page="2">Next Page</a></li>
         </ul>
         </nav>
         </div>
@@ -450,10 +450,10 @@ final class GridViewTest extends TestCase
         </table>
         <nav aria-label="Pagination">
         <ul class="pagination justify-content-center mt-4">
-        <li class="page-item disabled"><a class="page-link" href="" data-page="1" aria-disabled="true" tabindex="-1">Previous</a></li>
-        <li class="page-item active"><a class="page-link" href="" data-page="1">1</a></li>
-        <li class="page-item"><a class="page-link" href="" data-page="2">2</a></li>
-        <li class="page-item"><a class="page-link" href="" data-page="2">Next Page</a></li>
+        <li class="page-item disabled"><a class="page-link" href data-page="1" aria-disabled="true" tabindex="-1">Previous</a></li>
+        <li class="page-item active"><a class="page-link" href data-page="1">1</a></li>
+        <li class="page-item"><a class="page-link" href data-page="2">2</a></li>
+        <li class="page-item"><a class="page-link" href data-page="2">Next Page</a></li>
         </ul>
         </nav>
         </div>
@@ -490,10 +490,10 @@ final class GridViewTest extends TestCase
         </table>
         <nav aria-label="Pagination">
         <ul class="pagination justify-content-center mt-4">
-        <li class="page-item disabled"><a class="page-link" href="" data-page="1" aria-disabled="true" tabindex="-1">Previous</a></li>
-        <li class="page-item active"><a class="page-link" href="" data-page="1">1</a></li>
-        <li class="page-item"><a class="page-link" href="" data-page="2">2</a></li>
-        <li class="page-item"><a class="page-link" href="" data-page="2">Next Page</a></li>
+        <li class="page-item disabled"><a class="page-link" href data-page="1" aria-disabled="true" tabindex="-1">Previous</a></li>
+        <li class="page-item active"><a class="page-link" href data-page="1">1</a></li>
+        <li class="page-item"><a class="page-link" href data-page="2">2</a></li>
+        <li class="page-item"><a class="page-link" href data-page="2">Next Page</a></li>
         </ul>
         </nav>
         </div>
@@ -629,10 +629,10 @@ final class GridViewTest extends TestCase
         </table>
         <nav aria-label="Pagination">
         <ul class="pagination justify-content-center mt-4">
-        <li class="page-item disabled"><a class="page-link" href="" data-page="1" aria-disabled="true" tabindex="-1">Previous</a></li>
-        <li class="page-item active"><a class="page-link" href="" data-page="1">1</a></li>
-        <li class="page-item"><a class="page-link" href="" data-page="2">2</a></li>
-        <li class="page-item"><a class="page-link" href="" data-page="2">Next Page</a></li>
+        <li class="page-item disabled"><a class="page-link" href data-page="1" aria-disabled="true" tabindex="-1">Previous</a></li>
+        <li class="page-item active"><a class="page-link" href data-page="1">1</a></li>
+        <li class="page-item"><a class="page-link" href data-page="2">2</a></li>
+        <li class="page-item"><a class="page-link" href data-page="2">Next Page</a></li>
         </ul>
         </nav>
         </div>
@@ -717,8 +717,9 @@ final class GridViewTest extends TestCase
     {
         GridView::counter(0);
 
-        $request = new ServerRequest('GET', '/admin/index');
-        $this->urlMatcher->match($request);
+        $this->currentRoute->setRoute(
+            Route::methods(['GET', 'POST'], '/admin/index')->action([TestDelete::class, 'run'])->name('admin'),
+        );
 
         $gridView = GridView::widget()
             ->columns(['id'])
@@ -758,8 +759,9 @@ final class GridViewTest extends TestCase
     {
         GridView::counter(0);
 
-        $request = new ServerRequest('GET', '/admin/index');
-        $this->urlMatcher->match($request);
+        $this->currentRoute->setRoute(
+            Route::methods(['GET', 'POST'], '/admin/index')->action([TestDelete::class, 'run'])->name('admin'),
+        );
 
         $gridView = GridView::widget()
             ->columns(['id'])
@@ -818,10 +820,10 @@ final class GridViewTest extends TestCase
         </table>
         <nav aria-label="Pagination">
         <ul class="pagination justify-content-center mt-4">
-        <li class="page-item disabled"><a class="page-link" href="" data-page="1" aria-disabled="true" tabindex="-1">Previous</a></li>
-        <li class="page-item active"><a class="page-link" href="" data-page="1">1</a></li>
-        <li class="page-item"><a class="page-link" href="" data-page="2">2</a></li>
-        <li class="page-item"><a class="page-link" href="" data-page="2">Next Page</a></li>
+        <li class="page-item disabled"><a class="page-link" href data-page="1" aria-disabled="true" tabindex="-1">Previous</a></li>
+        <li class="page-item active"><a class="page-link" href data-page="1">1</a></li>
+        <li class="page-item"><a class="page-link" href data-page="2">2</a></li>
+        <li class="page-item"><a class="page-link" href data-page="2">Next Page</a></li>
         </ul>
         </nav>
         </div>
@@ -855,10 +857,10 @@ final class GridViewTest extends TestCase
         </table>
         <nav aria-label="Pagination">
         <ul class="pagination justify-content-center mt-4">
-        <li class="page-item disabled"><a class="page-link" href="" data-page="1" aria-disabled="true" tabindex="-1">Previous</a></li>
-        <li class="page-item active"><a class="page-link" href="" data-page="1">1</a></li>
-        <li class="page-item"><a class="page-link" href="" data-page="2">2</a></li>
-        <li class="page-item"><a class="page-link" href="" data-page="2">Next Page</a></li>
+        <li class="page-item disabled"><a class="page-link" href data-page="1" aria-disabled="true" tabindex="-1">Previous</a></li>
+        <li class="page-item active"><a class="page-link" href data-page="1">1</a></li>
+        <li class="page-item"><a class="page-link" href data-page="2">2</a></li>
+        <li class="page-item"><a class="page-link" href data-page="2">Next Page</a></li>
         </ul>
         </nav>
         </div>
@@ -936,10 +938,10 @@ final class GridViewTest extends TestCase
         </table>
         <nav aria-label="Pagination">
         <ul class="pagination justify-content-center mt-4">
-        <li class="page-item disabled"><a class="page-link" href="" data-page="1" aria-disabled="true" tabindex="-1">Previous</a></li>
-        <li class="page-item active"><a class="page-link" href="" data-page="1">1</a></li>
-        <li class="page-item"><a class="page-link" href="" data-page="2">2</a></li>
-        <li class="page-item"><a class="page-link" href="" data-page="2">Next Page</a></li>
+        <li class="page-item disabled"><a class="page-link" href data-page="1" aria-disabled="true" tabindex="-1">Previous</a></li>
+        <li class="page-item active"><a class="page-link" href data-page="1">1</a></li>
+        <li class="page-item"><a class="page-link" href data-page="2">2</a></li>
+        <li class="page-item"><a class="page-link" href data-page="2">Next Page</a></li>
         </ul>
         </nav>
         </div>
