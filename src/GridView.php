@@ -542,7 +542,7 @@ final class GridView extends BaseListView
      *
      * @throws JsonException
      *
-     * @return bool|string the column group HTML or `false` if no column group should be rendered.
+     * @return string|null the column group HTML or `false` if no column group should be rendered.
      */
     private function renderColumnGroup()
     {
@@ -555,11 +555,11 @@ final class GridView extends BaseListView
                     }
                 }
 
-                return Html::tag('colgroup', implode("\n", $cols))->render();
+                return Html::tag('colgroup', implode("\n", $cols))->encode(false)->render();
             }
         }
 
-        return false;
+        return null;
     }
 
     /**
