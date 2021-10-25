@@ -16,7 +16,7 @@ return [
     ],
 
     TranslatorInterface::class => [
-        'class' => Translator:: class,
+        'class' => Translator::class,
         'addCategorySource()' => [Reference::to(CategorySource::class)],
     ],
 ];
