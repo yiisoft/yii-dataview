@@ -16,6 +16,7 @@ use Yiisoft\Data\Reader\Iterable\IterableDataReader;
 use Yiisoft\Data\Reader\Sort;
 use Yiisoft\Definitions\DynamicReference;
 use Yiisoft\Di\Container;
+use Yiisoft\Di\ContainerConfig;
 use Yiisoft\EventDispatcher\Dispatcher\Dispatcher;
 use Yiisoft\EventDispatcher\Provider\Provider;
 use Yiisoft\Router\CurrentRoute;
@@ -129,7 +130,9 @@ class TestCase extends \PHPUnit\Framework\TestCase
 
     private function configContainer(): void
     {
-        $this->container = new Container($this->config());
+        $config = ContainerConfig::create()
+            ->withDefinitions($this->config());
+        $this->container = new Container($config);
 
         WidgetFactory::initialize($this->container, []);
 
