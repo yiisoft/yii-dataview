@@ -27,7 +27,7 @@
         "yiisoft/aliases": "^1.1|^2.0",
         "yiisoft/arrays": "^2.0",
         "yiisoft/data": "3.0.x-dev",
-        "yiisoft/factory": "^3.0@dev",
+        "yiisoft/factory": "^1.0",
         "yiisoft/html": "^2.2",
         "yiisoft/json": "^1.0",
         "yiisoft/router": "3.0.x-dev",
