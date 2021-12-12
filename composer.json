@@ -36,7 +36,7 @@
         "yiisoft/translator-formatter-intl": "^1.0",
         "yiisoft/translator-message-php": "^1.0",
         "yiisoft/view": "^4.0",
-        "yiisoft/widget": "^3.0@dev"
+        "yiisoft/widget": "^1.0"
     },
     "require-dev": {
         "maglnet/composer-require-checker": "^3.2",
