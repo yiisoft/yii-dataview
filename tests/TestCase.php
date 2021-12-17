@@ -207,7 +207,7 @@ class TestCase extends \PHPUnit\Framework\TestCase
             CategorySource::class => [
                 'class' => CategorySource::class,
                 '__construct()' => [
-                    'name' => 'yii-gridview',
+                    'name' => 'app',
                 ],
             ],
 
@@ -216,7 +216,7 @@ class TestCase extends \PHPUnit\Framework\TestCase
                 MessageFormatterInterface $messageFormatter
             ) {
                 $translator = new Translator('en');
-                $categorySource = new CategorySource('yii-gridview', $messageReader, $messageFormatter);
+                $categorySource = new CategorySource('app', $messageReader, $messageFormatter);
                 $translator->addCategorySource($categorySource);
 
                 return $translator;
