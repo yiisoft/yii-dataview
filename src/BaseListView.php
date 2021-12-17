@@ -390,7 +390,6 @@ abstract class BaseListView extends Widget
                     'page' => $page,
                     'pageCount' => $pageCount,
                 ],
-                'yii-gridview',
             ),
         )
         ->attributes($summaryOptions)
