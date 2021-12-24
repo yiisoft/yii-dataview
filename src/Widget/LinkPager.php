@@ -9,7 +9,7 @@ use Yiisoft\Arrays\ArrayHelper;
 use Yiisoft\Data\Paginator\OffsetPaginator;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\Link;
-use Yiisoft\Router\CurrentRouteInterface;
+use Yiisoft\Router\CurrentRoute;
 use Yiisoft\Router\UrlGeneratorInterface;
 use Yiisoft\View\WebView;
 use Yiisoft\Yii\DataView\Exception\InvalidConfigException;
@@ -65,13 +65,13 @@ final class LinkPager extends Widget
     private bool $registerLinkTags = false;
     private array $requestAttributes = [];
     private array $requestQueryParams = [];
-    private CurrentRouteInterface $currentRoute;
+    private CurrentRoute $currentRoute;
     private OffsetPaginator $paginator;
     private UrlGeneratorInterface $urlGenerator;
     private WebView $webView;
 
     public function __construct(
-        CurrentRouteInterface $currentRoute,
+        CurrentRoute $currentRoute,
         UrlGeneratorInterface $urlGenerator,
         WebView $webView
     ) {
