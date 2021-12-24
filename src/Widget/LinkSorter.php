@@ -7,7 +7,7 @@ namespace Yiisoft\Yii\DataView\Widget;
 use JsonException;
 use Yiisoft\Data\Reader\Sort;
 use Yiisoft\Html\Html;
-use Yiisoft\Router\CurrentRouteInterface;
+use Yiisoft\Router\CurrentRoute;
 use Yiisoft\Router\UrlGeneratorInterface;
 use Yiisoft\Strings\Inflector;
 use Yiisoft\Widget\Widget;
@@ -37,13 +37,13 @@ final class LinkSorter extends Widget
     private array $options = [];
     private array $requestAttributes = [];
     private array $requestQueryParams = [];
-    private CurrentRouteInterface $currentRoute;
+    private CurrentRoute $currentRoute;
     private Inflector $inflector;
     private Sort $sort;
     private UrlGeneratorInterface $urlGenerator;
 
     public function __construct(
-        CurrentRouteInterface $currentRoute,
+        CurrentRoute $currentRoute,
         Inflector $inflector,
         UrlGeneratorInterface $urlGenerator
     ) {

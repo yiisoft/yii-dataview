@@ -20,7 +20,6 @@ use Yiisoft\Di\ContainerConfig;
 use Yiisoft\EventDispatcher\Dispatcher\Dispatcher;
 use Yiisoft\EventDispatcher\Provider\Provider;
 use Yiisoft\Router\CurrentRoute;
-use Yiisoft\Router\CurrentRouteInterface;
 use Yiisoft\Router\FastRoute\UrlGenerator;
 use Yiisoft\Router\FastRoute\UrlMatcher;
 use Yiisoft\Router\Group;
@@ -49,7 +48,7 @@ class TestCase extends \PHPUnit\Framework\TestCase
 {
     protected ActionColumn $actionColumn;
     protected CheckBoxColumn $checkBoxColumn;
-    protected CurrentRouteInterface $currentRoute;
+    protected CurrentRoute $currentRoute;
     protected DataColumn $dataColumn;
     protected GridViewFactory $gridViewFactory;
     protected RadioButtonColumn $radioButtonColumn;
@@ -138,7 +137,7 @@ class TestCase extends \PHPUnit\Framework\TestCase
 
         $this->actionColumn = $this->container->get(ActionColumn::class);
         $this->checkboxColumn = $this->container->get(CheckboxColumn::class);
-        $this->currentRoute = $this->container->get(CurrentRouteInterface::class);
+        $this->currentRoute = $this->container->get(CurrentRoute::class);
         $this->dataColumn = $this->container->get(DataColumn::class);
         $this->gridViewFactory = $this->container->get(GridViewFactory::class);
         $this->radioButtonColumn = $this->container->get(RadioButtonColumn::class);
@@ -159,7 +158,7 @@ class TestCase extends \PHPUnit\Framework\TestCase
 
             EventDispatcherInterface::class => Dispatcher::class,
 
-            CurrentRouteInterface::class => CurrentRoute::class,
+            CurrentRoute::class => CurrentRoute::class,
 
             WebView::class => [
                 'class' => WebView::class,
