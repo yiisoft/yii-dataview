@@ -654,8 +654,9 @@ final class DataColumnTest extends TestCase
     {
         GridView::counter(0);
 
-        $this->currentRoute->setRoute(
+        $this->currentRoute->setRouteWithArguments(
             Route::methods(['GET', 'POST'], '/admin/index')->action([TestDelete::class, 'run'])->name('admin'),
+            []
         );
 
         $gridView = $this->createGridView(['id', 'name']);
@@ -721,8 +722,9 @@ final class DataColumnTest extends TestCase
     {
         GridView::counter(0);
 
-        $this->currentRoute->setRoute(
+        $this->currentRoute->setRouteWithArguments(
             Route::methods(['GET', 'POST'], '/admin/index')->action([TestDelete::class, 'run'])->name('admin'),
+            []
         );
 
         $gridView = $this->createGridView(
@@ -765,8 +767,9 @@ final class DataColumnTest extends TestCase
     {
         GridView::counter(0);
 
-        $this->currentRoute->setRoute(
+        $this->currentRoute->setRouteWithArguments(
             Route::methods(['GET', 'POST'], '/admin/index')->action([TestDelete::class, 'run'])->name('admin'),
+            []
         );
 
         $gridView = $this->createGridView(

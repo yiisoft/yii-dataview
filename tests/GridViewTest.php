@@ -717,8 +717,9 @@ final class GridViewTest extends TestCase
     {
         GridView::counter(0);
 
-        $this->currentRoute->setRoute(
+        $this->currentRoute->setRouteWithArguments(
             Route::methods(['GET', 'POST'], '/admin/index')->action([TestDelete::class, 'run'])->name('admin'),
+            []
         );
 
         $gridView = GridView::widget()
@@ -744,10 +745,10 @@ final class GridViewTest extends TestCase
         </table>
         <nav aria-label="Pagination">
         <ul class="pagination justify-content-center mt-4">
-        <li class="page-item disabled"><a class="page-link" href="/admin/index?page=1&amp;filter=1" data-page="1" aria-disabled="true" tabindex="-1">Previous</a></li>
-        <li class="page-item active"><a class="page-link" href="/admin/index?page=1&amp;filter=1" data-page="1">1</a></li>
-        <li class="page-item"><a class="page-link" href="/admin/index?page=2&amp;filter=1" data-page="2">2</a></li>
-        <li class="page-item"><a class="page-link" href="/admin/index?page=2&amp;filter=1" data-page="2">Next Page</a></li>
+        <li class="page-item disabled"><a class="page-link" href="/admin/index?filter=1&amp;page=1" data-page="1" aria-disabled="true" tabindex="-1">Previous</a></li>
+        <li class="page-item active"><a class="page-link" href="/admin/index?filter=1&amp;page=1" data-page="1">1</a></li>
+        <li class="page-item"><a class="page-link" href="/admin/index?filter=1&amp;page=2" data-page="2">2</a></li>
+        <li class="page-item"><a class="page-link" href="/admin/index?filter=1&amp;page=2" data-page="2">Next Page</a></li>
         </ul>
         </nav>
         </div>
@@ -759,8 +760,9 @@ final class GridViewTest extends TestCase
     {
         GridView::counter(0);
 
-        $this->currentRoute->setRoute(
+        $this->currentRoute->setRouteWithArguments(
             Route::methods(['GET', 'POST'], '/admin/index')->action([TestDelete::class, 'run'])->name('admin'),
+            []
         );
 
         $gridView = GridView::widget()
@@ -786,10 +788,10 @@ final class GridViewTest extends TestCase
         </table>
         <nav aria-label="Pagination">
         <ul class="pagination justify-content-center mt-4">
-        <li class="page-item disabled"><a class="page-link" href="/admin/index?page=1&amp;filter=1" data-page="1" aria-disabled="true" tabindex="-1">Previous</a></li>
-        <li class="page-item active"><a class="page-link" href="/admin/index?page=1&amp;filter=1" data-page="1">1</a></li>
-        <li class="page-item"><a class="page-link" href="/admin/index?page=2&amp;filter=1" data-page="2">2</a></li>
-        <li class="page-item"><a class="page-link" href="/admin/index?page=2&amp;filter=1" data-page="2">Next Page</a></li>
+        <li class="page-item disabled"><a class="page-link" href="/admin/index?filter=1&amp;page=1" data-page="1" aria-disabled="true" tabindex="-1">Previous</a></li>
+        <li class="page-item active"><a class="page-link" href="/admin/index?filter=1&amp;page=1" data-page="1">1</a></li>
+        <li class="page-item"><a class="page-link" href="/admin/index?filter=1&amp;page=2" data-page="2">2</a></li>
+        <li class="page-item"><a class="page-link" href="/admin/index?filter=1&amp;page=2" data-page="2">Next Page</a></li>
         </ul>
         </nav>
         </div>

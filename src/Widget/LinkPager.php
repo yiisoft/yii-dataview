@@ -63,9 +63,10 @@ final class LinkPager extends Widget
     private bool $hideOnSinglePage = false;
     private int $maxButtonCount = 10;
     private bool $registerLinkTags = false;
-    private array $requestAttributes = [];
-    private array $requestQueryParams = [];
+    private ?array $requestAttributes = null;
+    private ?array $requestQueryParams = null;
     private CurrentRoute $currentRoute;
+    private string $pageParam = 'page';
     private OffsetPaginator $paginator;
     private UrlGeneratorInterface $urlGenerator;
     private WebView $webView;
@@ -78,6 +79,23 @@ final class LinkPager extends Widget
         $this->currentRoute = $currentRoute;
         $this->urlGenerator = $urlGenerator;
         $this->webView = $webView;
+    }
+
+    protected function beforeRun(): bool
+    {
+        if ($this->requestAttributes === null) {
+            $this->requestAttributes = $this->currentRoute->getArguments();
+        }
+
+        if ($this->requestQueryParams === null) {
+            $this->requestQueryParams = [];
+
+            if ($uri = $this->currentRoute->getUri()) {
+                parse_str($uri->getQuery(), $this->requestQueryParams);
+            }
+        }
+
+        return parent::beforeRun();
     }
 
     /**
@@ -102,6 +120,21 @@ final class LinkPager extends Widget
         }
 
         return $this->renderPageButtons();
+    }
+
+    /**
+     * Name of $_GET page param using for pagination
+     *
+     * @param string $value
+     *
+     * @return self
+     */
+    public function pageParam(string $value): self
+    {
+        $new = clone $this;
+        $new->pageParam = $value;
+
+        return $new;
     }
 
     /**
@@ -384,7 +417,7 @@ final class LinkPager extends Widget
         return $new;
     }
 
-    public function requestAttributes(array $requestAttributes): self
+    public function requestAttributes(?array $requestAttributes): self
     {
         $new = clone $this;
         $new->requestAttributes = $requestAttributes;
@@ -392,7 +425,7 @@ final class LinkPager extends Widget
         return $new;
     }
 
-    public function requestQueryParams(array $requestQueryParams): self
+    public function requestQueryParams(?array $requestQueryParams): self
     {
         $new = clone $this;
         $new->requestQueryParams = $requestQueryParams;
@@ -576,17 +609,17 @@ final class LinkPager extends Widget
      */
     private function createUrl(int $page): string
     {
-        $currentRoute = $this->currentRoute->getRoute();
-        $url = '';
+        $params = array_merge($this->requestAttributes, $this->requestQueryParams, [$this->pageParam => $page]);
 
-        $params = array_merge(['page' => $page], $this->requestAttributes, $this->requestQueryParams);
-
-        if ($currentRoute !== null) {
-            $action = $currentRoute->getName();
-            $url = $this->urlGenerator->generate($action, $params);
+        if ($name = $this->currentRoute->getName()) {
+            return $this->urlGenerator->generate($name, $params);
         }
 
-        return $url;
+        if (count($params) > 1) {
+            return '?' . http_build_query($params);
+        }
+
+        return '';
     }
 
     private function createLinks(): array
