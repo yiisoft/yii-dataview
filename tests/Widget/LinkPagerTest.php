@@ -15,7 +15,7 @@ final class LinkPagerTest extends TestCase
         LinkPager::counter(0);
 
         $linkPager = LinkPager::widget()
-            ->activePageCssClass('test-active')
+            ->activeButtonAttributes(['class' => 'test-active'])
             ->paginator($this->createOffsetPaginator()->withPageSize(5));
 
         $html = <<<'HTML'
@@ -27,9 +27,8 @@ final class LinkPagerTest extends TestCase
         <li class="page-item"><a class="page-link" href data-page="2">Next Page</a></li>
         </ul>
         </nav>
-
         HTML;
-        $this->assertEqualsWithoutLE($html, $linkPager->render());
+        $this->assertEqualsWithoutLE($this->removeLE($html), $this->removeLE($linkPager->render()));
     }
 
     public function testButtonsContainerAttributes(): void
@@ -37,7 +36,7 @@ final class LinkPagerTest extends TestCase
         LinkPager::counter(0);
 
         $linkPager = LinkPager::widget()
-            ->buttonsContainerAttributes(['class' => 'text-danger'])
+            ->buttonsContainerAttributes(['class' => 'text-danger page-item'])
             ->paginator($this->createOffsetPaginator()->withPageSize(5));
 
         $html = <<<'HTML'
@@ -49,7 +48,6 @@ final class LinkPagerTest extends TestCase
         <li class="page-item"><a class="page-link" href data-page="2">Next Page</a></li>
         </ul>
         </nav>
-
         HTML;
         $this->assertEqualsWithoutLE($html, $linkPager->render());
     }
@@ -71,7 +69,6 @@ final class LinkPagerTest extends TestCase
         <li class="page-item"><a class="page-link" href data-page="2">Next Page</a></li>
         </ul>
         </nav>
-
         HTML;
         $this->assertEqualsWithoutLE($html, $linkPager->render());
     }
@@ -81,7 +78,7 @@ final class LinkPagerTest extends TestCase
         LinkPager::counter(0);
 
         $linkPager = LinkPager::widget()
-            ->disabledPageCssClass('test-disabled')
+            ->disabledButtonAttributes(['class' => 'test-disabled'])
             ->paginator($this->createOffsetPaginator()->withPageSize(5));
 
 
@@ -94,7 +91,6 @@ final class LinkPagerTest extends TestCase
         <li class="page-item"><a class="page-link" href data-page="2">Next Page</a></li>
         </ul>
         </nav>
-
         HTML;
         $this->assertEqualsWithoutLE($html, $linkPager->render());
     }
@@ -104,23 +100,23 @@ final class LinkPagerTest extends TestCase
         LinkPager::counter(0);
 
         $linkPager = LinkPager::widget()
-            ->firstPageCssClass('test-class')
-            ->firstPageLabel('First')
+            ->firstPageAttributes([
+                'class' => 'test-class',
+            ])->firstPageLabel('First')
             ->paginator($this->createOffsetPaginator()->withPageSize(5));
 
         $html = <<<'HTML'
         <nav aria-label="Pagination">
         <ul class="pagination justify-content-center mt-4">
-        <li class="test-class"><a class="page-link" href data-page="1">First</a></li>
+        <li class="test-class disabled"><a class="page-link" href data-page="1" aria-disabled="true" tabindex="-1">First</a></li>
         <li class="page-item disabled"><a class="page-link" href data-page="1" aria-disabled="true" tabindex="-1">Previous</a></li>
         <li class="page-item active"><a class="page-link" href data-page="1">1</a></li>
         <li class="page-item"><a class="page-link" href data-page="2">2</a></li>
         <li class="page-item"><a class="page-link" href data-page="2">Next Page</a></li>
         </ul>
         </nav>
-
         HTML;
-        $this->assertEqualsWithoutLE($html, $linkPager->render());
+        $this->assertEqualsWithoutLE($this->removeLE($html), $this->removeLE($linkPager->render()));
     }
 
     public function testCssFrameworkException(): void
@@ -145,8 +141,9 @@ final class LinkPagerTest extends TestCase
         LinkPager::counter(0);
 
         $linkPager = LinkPager::widget()
-            ->lastPageCssClass('test-class')
-            ->lastPageLabel('Last')
+            ->lastPageAttributes([
+                'class' => 'test-class'
+            ])->lastPageLabel('Last')
             ->paginator($this->createOffsetPaginator()->withPageSize(5));
 
         $html = <<<'HTML'
@@ -159,9 +156,8 @@ final class LinkPagerTest extends TestCase
         <li class="test-class"><a class="page-link" href data-page="2">Last</a></li>
         </ul>
         </nav>
-
         HTML;
-        $this->assertEqualsWithoutLE($html, $linkPager->render());
+        $this->assertEqualsWithoutLE($this->removeLE($html), $this->removeLE($linkPager->render()));
     }
 
     public function testLinkAttributes(): void
@@ -181,7 +177,6 @@ final class LinkPagerTest extends TestCase
         <li class="page-item"><a class="test-class" href data-page="2">Next Page</a></li>
         </ul>
         </nav>
-
         HTML;
         $this->assertEqualsWithoutLE($html, $linkPager->render());
     }
@@ -202,7 +197,6 @@ final class LinkPagerTest extends TestCase
         <li class="page-item"><a class="page-link" href data-page="2">Next Page</a></li>
         </ul>
         </nav>
-
         HTML;
         $this->assertEqualsWithoutLE($html, $linkPager->render());
     }
@@ -212,7 +206,7 @@ final class LinkPagerTest extends TestCase
         LinkPager::counter(0);
 
         $linkPager = LinkPager::widget()
-            ->nextPageCssClass('test-class')
+            ->nextPageAttributes(['class' => 'test-class'])
             ->nextPageLabel('Next Page')
             ->paginator($this->createOffsetPaginator()->withPageSize(5));
 
@@ -225,7 +219,6 @@ final class LinkPagerTest extends TestCase
         <li class="test-class"><a class="page-link" href data-page="2">Next Page</a></li>
         </ul>
         </nav>
-
         HTML;
         $this->assertEqualsWithoutLE($html, $linkPager->render());
     }
@@ -247,7 +240,6 @@ final class LinkPagerTest extends TestCase
         <li class="page-item"><a class="page-link" href data-page="2">Next Page</a></li>
         </ul>
         </nav>
-
         HTML;
         $this->assertEqualsWithoutLE($html, $linkPager->render());
     }
@@ -257,7 +249,7 @@ final class LinkPagerTest extends TestCase
         LinkPager::counter(0);
 
         $linkPager = LinkPager::widget()
-            ->pageCssClass('test-class')
+            ->buttonsContainerAttributes(['class' => 'test-class'])
             ->paginator($this->createOffsetPaginator()->withPageSize(5));
 
         $html = <<<'HTML'
@@ -269,7 +261,6 @@ final class LinkPagerTest extends TestCase
         <li class="page-item"><a class="page-link" href data-page="2">Next Page</a></li>
         </ul>
         </nav>
-
         HTML;
         $this->assertEqualsWithoutLE($html, $linkPager->render());
     }
@@ -280,7 +271,7 @@ final class LinkPagerTest extends TestCase
 
         $linkPager = LinkPager::widget()
             ->prevPageLabel('Previous')
-            ->prevPageCssClass('test-class')
+            ->prevPageAttributes(['class' => 'test-class'])
             ->paginator($this->createOffsetPaginator()->withPageSize(5));
 
         $html = <<<'HTML'
@@ -292,7 +283,6 @@ final class LinkPagerTest extends TestCase
         <li class="page-item"><a class="page-link" href data-page="2">Next Page</a></li>
         </ul>
         </nav>
-
         HTML;
         $this->assertEqualsWithoutLE($html, $linkPager->render());
     }
@@ -321,8 +311,36 @@ final class LinkPagerTest extends TestCase
         <li class="page-item"><a class="page-link" href data-page="2">Next Page</a></li>
         </ul>
         </nav>
-
         HTML;
+        $this->assertEqualsWithoutLE($html, $linkPager->render());
+    }
+
+    public function testEncode(): void
+    {
+        $linkPager = LinkPager::widget()
+            ->paginator($this->createOffsetPaginator()->withPageSize(5))
+            ->prevPageLabel('<span aria-hidden="true">&laquo;</span>')
+            ->nextPageLabel('<span aria-hidden="true">&raquo;</span>')
+            ->prevPageAttributes([
+                'class' => 'page-item',
+                'encode' => false,
+            ])
+            ->nextPageAttributes([
+                'class' => 'page-item',
+                'encode' => false,
+            ]);
+
+        $html = <<<'HTML'
+        <nav aria-label="Pagination">
+        <ul class="pagination justify-content-center mt-4">
+        <li class="page-item disabled"><a class="page-link" href data-page="1" aria-disabled="true" tabindex="-1"><span aria-hidden="true">&laquo;</span></a></li>
+        <li class="page-item active"><a class="page-link" href data-page="1">1</a></li>
+        <li class="page-item"><a class="page-link" href data-page="2">2</a></li>
+        <li class="page-item"><a class="page-link" href data-page="2"><span aria-hidden="true">&raquo;</span></a></li>
+        </ul>
+        </nav>
+        HTML;
+
         $this->assertEqualsWithoutLE($html, $linkPager->render());
     }
 }

@@ -50,7 +50,7 @@ final class RadioButtonColumnTest extends TestCase
         </nav>
         </div>
         HTML;
-        $this->assertEqualsWithoutLE($html, $gridView->render());
+        $this->assertEqualsWithoutLE($this->removeLE($html), $this->removeLE($gridView->render()));
     }
 
     public function testName(): void
@@ -91,7 +91,7 @@ final class RadioButtonColumnTest extends TestCase
         </nav>
         </div>
         HTML;
-        $this->assertEqualsWithoutLE($html, $gridView->render());
+        $this->assertEqualsWithoutLE($this->removeLE($html), $this->removeLE($gridView->render()));
     }
 
     public function testRadioOptions(): void
@@ -132,7 +132,7 @@ final class RadioButtonColumnTest extends TestCase
         </nav>
         </div>
         HTML;
-        $this->assertEqualsWithoutLE($html, $gridView->render());
+        $this->assertEqualsWithoutLE($this->removeLE($html), $this->removeLE($gridView->render()));
 
         $columns = [
             'id',
@@ -171,7 +171,7 @@ final class RadioButtonColumnTest extends TestCase
         </nav>
         </div>
         HTML;
-        $this->assertEqualsWithoutLE($html, $gridView->render());
+        $this->assertEqualsWithoutLE($this->removeLE($html), $this->removeLE($gridView->render()));
     }
 
     public function testNameIsEmpty(): void

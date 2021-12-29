@@ -80,6 +80,11 @@ class TestCase extends \PHPUnit\Framework\TestCase
         );
     }
 
+    protected function removeLE(string $value): string
+    {
+        return str_replace(["\r", "\n"], "", $value);
+    }
+
     /**
      * Asserting two strings equality ignoring line endings.
      *

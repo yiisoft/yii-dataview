@@ -53,7 +53,7 @@ final class GridViewTest extends TestCase
         </table>
         </div>
         HTML;
-        $this->assertEqualsWithoutLE($html, $gridView->render());
+        $this->assertEqualsWithoutLE($this->removeLE($html), $this->removeLE($gridView->render()));
     }
 
     public function testAutoIdPrefix(): void
@@ -77,7 +77,7 @@ final class GridViewTest extends TestCase
         </table>
         </div>
         HTML;
-        $this->assertEqualsWithoutLE($html, $gridView->render());
+        $this->assertEqualsWithoutLE($this->removeLE($html), $this->removeLE($gridView->render()));
     }
 
     public function testCaption(): void
@@ -375,7 +375,7 @@ final class GridViewTest extends TestCase
         </nav>
         </div>
         HTML;
-        $this->assertEqualsWithoutLE($html, $gridView->render());
+        $this->assertEqualsWithoutLE($this->removeLE($html), $this->removeLE($gridView->render()));
 
         $gridView = $gridView
             ->filterModelName('testMe')
@@ -410,7 +410,7 @@ final class GridViewTest extends TestCase
         </nav>
         </div>
         HTML;
-        $this->assertEqualsWithoutLE($html, $gridView->render());
+        $this->assertEqualsWithoutLE($this->removeLE($html), $this->removeLE($gridView->render()));
     }
 
     public function testFilterRowOptions(): void
@@ -458,7 +458,7 @@ final class GridViewTest extends TestCase
         </nav>
         </div>
         HTML;
-        $this->assertEqualsWithoutLE($html, $gridView->render());
+        $this->assertEqualsWithoutLE($this->removeLE($html), $this->removeLE($gridView->render()));
     }
 
     public function testFooterRowOptions(): void
@@ -498,7 +498,7 @@ final class GridViewTest extends TestCase
         </nav>
         </div>
         HTML;
-        $this->assertEqualsWithoutLE($html, $gridView->render());
+        $this->assertEqualsWithoutLE($this->removeLE($html), $this->removeLE($gridView->render()));
     }
 
     public function testInvalidCssFrameworkException(): void
@@ -540,7 +540,7 @@ final class GridViewTest extends TestCase
         </table>
         </div>
         HTML;
-        $this->assertEqualsWithoutLE($html, $gridView->render());
+        $this->assertEqualsWithoutLE($this->removeLE($html), $this->removeLE($gridView->render()));
     }
 
     public function testHeaderRowOptions(): void
@@ -575,7 +575,7 @@ final class GridViewTest extends TestCase
         </table>
         </div>
         HTML;
-        $this->assertEqualsWithoutLE($html, $gridView->render());
+        $this->assertEqualsWithoutLE($this->removeLE($html), $this->removeLE($gridView->render()));
     }
 
     public function testId(): void
@@ -599,7 +599,7 @@ final class GridViewTest extends TestCase
         </table>
         </div>
         HTML;
-        $this->assertEqualsWithoutLE($html, $gridView->render());
+        $this->assertEqualsWithoutLE($this->removeLE($html), $this->removeLE($gridView->render()));
     }
 
     public function testLayout(): void
@@ -637,7 +637,7 @@ final class GridViewTest extends TestCase
         </nav>
         </div>
         HTML;
-        $this->assertEqualsWithoutLE($html, $gridView->render());
+        $this->assertEqualsWithoutLE($this->removeLE($html), $this->removeLE($gridView->render()));
     }
 
     public function testPaginatorEmpty(): void
@@ -681,7 +681,7 @@ final class GridViewTest extends TestCase
         </table>
         </div>
         HTML;
-        $this->assertEqualsWithoutLE($html, $gridView->render());
+        $this->assertEqualsWithoutLE($this->removeLE($html), $this->removeLE($gridView->render()));
     }
 
     public function testRenderSummary(): void
@@ -710,7 +710,7 @@ final class GridViewTest extends TestCase
         </table>
         </div>
         HTML;
-        $this->assertEqualsWithoutLE($html, $gridView->render());
+        $this->assertEqualsWithoutLE($this->removeLE($html), $this->removeLE($gridView->render()));
     }
 
     public function testRequestAttributes(): void
@@ -753,7 +753,7 @@ final class GridViewTest extends TestCase
         </nav>
         </div>
         HTML;
-        $this->assertEqualsWithoutLE($html, $gridView->render());
+        $this->assertEqualsWithoutLE($this->removeLE($html), $this->removeLE($gridView->render()));
     }
 
     public function testRequestQueryParams(): void
@@ -796,7 +796,7 @@ final class GridViewTest extends TestCase
         </nav>
         </div>
         HTML;
-        $this->assertEqualsWithoutLE($html, $gridView->render());
+        $this->assertEqualsWithoutLE($this->removeLE($html), $this->removeLE($gridView->render()));
     }
 
     public function testRowOptions(): void
@@ -830,7 +830,7 @@ final class GridViewTest extends TestCase
         </nav>
         </div>
         HTML;
-        $this->assertEqualsWithoutLE($html, $gridView->render());
+        $this->assertEqualsWithoutLE($this->removeLE($html), $this->removeLE($gridView->render()));
     }
 
     public function testShowFooter(): void
@@ -867,7 +867,7 @@ final class GridViewTest extends TestCase
         </nav>
         </div>
         HTML;
-        $this->assertEqualsWithoutLE($html, $gridView->render());
+        $this->assertEqualsWithoutLE($this->removeLE($html), $this->removeLE($gridView->render()));
     }
 
     public function testSummaryOptions(): void
@@ -897,7 +897,7 @@ final class GridViewTest extends TestCase
         </table>
         </div>
         HTML;
-        $this->assertEqualsWithoutLE($html, $gridView->render());
+        $this->assertEqualsWithoutLE($this->removeLE($html), $this->removeLE($gridView->render()));
     }
 
     public function testShowOnEmpty(): void
@@ -912,7 +912,7 @@ final class GridViewTest extends TestCase
         $html = <<<'HTML'
         <div id="w1-gridview" class="grid-view"><div class="empty">No results found.</div></div>
         HTML;
-        $this->assertEqualsWithoutLE($html, $gridView->render());
+        $this->assertEqualsWithoutLE($this->removeLE($html), $this->removeLE($gridView->render()));
     }
 
     public function testTableOptions(): void
@@ -948,6 +948,6 @@ final class GridViewTest extends TestCase
         </nav>
         </div>
         HTML;
-        $this->assertEqualsWithoutLE($html, $gridView->render());
+        $this->assertEqualsWithoutLE($this->removeLE($html), $this->removeLE($gridView->render()));
     }
 }
