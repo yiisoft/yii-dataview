@@ -274,7 +274,7 @@ final class DataColumn extends Column
                 ->currentPage($this->grid->getPaginator()->getCurrentPage())
                 ->cssFramework($this->grid->getCssFramework())
                 ->options(array_merge($this->sortLinkOptions, ['label' => $label]))
-                ->requestAttributes($this->grid->getRequestAttributes())
+                ->requestArguments($this->grid->getRequestArguments())
                 ->requestQueryParams($this->grid->getRequestQueryParams())
                 ->sort($sort)
                 ->render();

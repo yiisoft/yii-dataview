@@ -35,8 +35,8 @@ final class LinkSorter extends Widget
     private int $currentPage = 1;
     private string $cssFramework = self::BOOTSTRAP;
     private array $options = [];
-    private array $requestAttributes = [];
-    private array $requestQueryParams = [];
+    private ?array $requestArguments = null;
+    private ?array $requestQueryParams = null;
     private CurrentRoute $currentRoute;
     private Inflector $inflector;
     private Sort $sort;
@@ -50,6 +50,23 @@ final class LinkSorter extends Widget
         $this->currentRoute = $currentRoute;
         $this->inflector = $inflector;
         $this->urlGenerator = $urlGenerator;
+    }
+
+    protected function beforeRun(): bool
+    {
+        if ($this->requestArguments === null) {
+            $this->requestArguments = $this->currentRoute->getArguments();
+        }
+
+        if ($this->requestQueryParams === null) {
+            $this->requestQueryParams = [];
+
+            if ($uri = $this->currentRoute->getUri()) {
+                parse_str($uri->getQuery(), $this->requestQueryParams);
+            }
+        }
+
+        return parent::beforeRun();
     }
 
     /**
@@ -110,15 +127,15 @@ final class LinkSorter extends Widget
         return $new;
     }
 
-    public function requestAttributes(array $requestAttributes): self
+    public function requestArguments(?array $requestArguments): self
     {
         $new = clone $this;
-        $new->requestAttributes = $requestAttributes;
+        $new->requestArguments = $requestArguments;
 
         return $new;
     }
 
-    public function requestQueryParams(array $requestQueryParams): self
+    public function requestQueryParams(?array $requestQueryParams): self
     {
         $new = clone $this;
         $new->requestQueryParams = $requestQueryParams;
@@ -198,19 +215,16 @@ final class LinkSorter extends Widget
      */
     private function createUrl(string $attribute): string
     {
-        $action = '';
         $params = [];
         $params['sort'] = $this->createSorterParam($attribute);
         $page = ['page' => $this->currentPage];
-        $params = array_merge($page, $this->requestAttributes, $this->requestQueryParams, $params);
+        $queryParams = array_merge($page, $this->requestQueryParams, $params);
 
-        $currentRoute = $this->currentRoute->getRoute();
-
-        if ($currentRoute !== null) {
-            $action = $currentRoute->getName();
+        if ($name = $this->currentRoute->getName()) {
+            return $this->urlGenerator->generate($name, $this->requestArguments, $queryParams);
         }
 
-        return $this->urlGenerator->generate($action, $params);
+        return '?' . http_build_query($queryParams);
     }
 
     /**

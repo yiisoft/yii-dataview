@@ -48,6 +48,6 @@ final class SerialColumnTest extends TestCase
         </nav>
         </div>
         HTML;
-        $this->assertEqualsWithoutLE($html, $gridView->render());
+        $this->assertEqualsHTML($html, $gridView->render());
     }
 }

@@ -375,7 +375,7 @@ final class GridViewTest extends TestCase
         </nav>
         </div>
         HTML;
-        $this->assertEqualsWithoutLE($html, $gridView->render());
+        $this->assertEqualsHTML($html, $gridView->render());
 
         $gridView = $gridView
             ->filterModelName('testMe')
@@ -410,7 +410,7 @@ final class GridViewTest extends TestCase
         </nav>
         </div>
         HTML;
-        $this->assertEqualsWithoutLE($html, $gridView->render());
+        $this->assertEqualsHTML($html, $gridView->render());
     }
 
     public function testFilterRowOptions(): void
@@ -458,7 +458,7 @@ final class GridViewTest extends TestCase
         </nav>
         </div>
         HTML;
-        $this->assertEqualsWithoutLE($html, $gridView->render());
+        $this->assertEqualsHTML($html, $gridView->render());
     }
 
     public function testFooterRowOptions(): void
@@ -498,7 +498,7 @@ final class GridViewTest extends TestCase
         </nav>
         </div>
         HTML;
-        $this->assertEqualsWithoutLE($html, $gridView->render());
+        $this->assertEqualsHTML($html, $gridView->render());
     }
 
     public function testInvalidCssFrameworkException(): void
@@ -637,7 +637,7 @@ final class GridViewTest extends TestCase
         </nav>
         </div>
         HTML;
-        $this->assertEqualsWithoutLE($html, $gridView->render());
+        $this->assertEqualsHTML($html, $gridView->render());
     }
 
     public function testPaginatorEmpty(): void
@@ -713,12 +713,13 @@ final class GridViewTest extends TestCase
         $this->assertEqualsWithoutLE($html, $gridView->render());
     }
 
-    public function testRequestAttributes(): void
+    public function testRequestArguments(): void
     {
         GridView::counter(0);
 
-        $this->currentRoute->setRoute(
+        $this->currentRoute->setRouteWithArguments(
             Route::methods(['GET', 'POST'], '/admin/index')->action([TestDelete::class, 'run'])->name('admin'),
+            []
         );
 
         $gridView = GridView::widget()
@@ -726,7 +727,7 @@ final class GridViewTest extends TestCase
             ->currentPage(1)
             ->paginator($this->createOffsetPaginator())
             ->pageSize(5)
-            ->requestAttributes(['filter' => 1]);
+            ->requestArguments(['filter' => 1]);
 
         $html = <<<'HTML'
         <div id="w1-gridview" class="grid-view"><div>Showing <b>1-5</b> of <b>6</b> items</div>
@@ -744,23 +745,24 @@ final class GridViewTest extends TestCase
         </table>
         <nav aria-label="Pagination">
         <ul class="pagination justify-content-center mt-4">
-        <li class="page-item disabled"><a class="page-link" href="/admin/index?page=1&amp;filter=1" data-page="1" aria-disabled="true" tabindex="-1">Previous</a></li>
-        <li class="page-item active"><a class="page-link" href="/admin/index?page=1&amp;filter=1" data-page="1">1</a></li>
-        <li class="page-item"><a class="page-link" href="/admin/index?page=2&amp;filter=1" data-page="2">2</a></li>
-        <li class="page-item"><a class="page-link" href="/admin/index?page=2&amp;filter=1" data-page="2">Next Page</a></li>
+        <li class="page-item disabled"><a class="page-link" href="/admin/index?filter=1&amp;page=1" data-page="1" aria-disabled="true" tabindex="-1">Previous</a></li>
+        <li class="page-item active"><a class="page-link" href="/admin/index?filter=1&amp;page=1" data-page="1">1</a></li>
+        <li class="page-item"><a class="page-link" href="/admin/index?filter=1&amp;page=2" data-page="2">2</a></li>
+        <li class="page-item"><a class="page-link" href="/admin/index?filter=1&amp;page=2" data-page="2">Next Page</a></li>
         </ul>
         </nav>
         </div>
         HTML;
-        $this->assertEqualsWithoutLE($html, $gridView->render());
+        $this->assertEqualsHTML($html, $gridView->render());
     }
 
     public function testRequestQueryParams(): void
     {
         GridView::counter(0);
 
-        $this->currentRoute->setRoute(
+        $this->currentRoute->setRouteWithArguments(
             Route::methods(['GET', 'POST'], '/admin/index')->action([TestDelete::class, 'run'])->name('admin'),
+            []
         );
 
         $gridView = GridView::widget()
@@ -786,15 +788,15 @@ final class GridViewTest extends TestCase
         </table>
         <nav aria-label="Pagination">
         <ul class="pagination justify-content-center mt-4">
-        <li class="page-item disabled"><a class="page-link" href="/admin/index?page=1&amp;filter=1" data-page="1" aria-disabled="true" tabindex="-1">Previous</a></li>
-        <li class="page-item active"><a class="page-link" href="/admin/index?page=1&amp;filter=1" data-page="1">1</a></li>
-        <li class="page-item"><a class="page-link" href="/admin/index?page=2&amp;filter=1" data-page="2">2</a></li>
-        <li class="page-item"><a class="page-link" href="/admin/index?page=2&amp;filter=1" data-page="2">Next Page</a></li>
+        <li class="page-item disabled"><a class="page-link" href="/admin/index?filter=1&amp;page=1" data-page="1" aria-disabled="true" tabindex="-1">Previous</a></li>
+        <li class="page-item active"><a class="page-link" href="/admin/index?filter=1&amp;page=1" data-page="1">1</a></li>
+        <li class="page-item"><a class="page-link" href="/admin/index?filter=1&amp;page=2" data-page="2">2</a></li>
+        <li class="page-item"><a class="page-link" href="/admin/index?filter=1&amp;page=2" data-page="2">Next Page</a></li>
         </ul>
         </nav>
         </div>
         HTML;
-        $this->assertEqualsWithoutLE($html, $gridView->render());
+        $this->assertEqualsHTML($html, $gridView->render());
     }
 
     public function testRowOptions(): void
@@ -828,7 +830,7 @@ final class GridViewTest extends TestCase
         </nav>
         </div>
         HTML;
-        $this->assertEqualsWithoutLE($html, $gridView->render());
+        $this->assertEqualsHTML($html, $gridView->render());
     }
 
     public function testShowFooter(): void
@@ -865,7 +867,7 @@ final class GridViewTest extends TestCase
         </nav>
         </div>
         HTML;
-        $this->assertEqualsWithoutLE($html, $gridView->render());
+        $this->assertEqualsHTML($html, $gridView->render());
     }
 
     public function testSummaryOptions(): void
@@ -946,6 +948,6 @@ final class GridViewTest extends TestCase
         </nav>
         </div>
         HTML;
-        $this->assertEqualsWithoutLE($html, $gridView->render());
+        $this->assertEqualsHTML($html, $gridView->render());
     }
 }

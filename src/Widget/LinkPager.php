@@ -43,28 +43,44 @@ final class LinkPager extends Widget
         self::BOOTSTRAP,
         self::BULMA,
     ];
-    private array $buttonsContainerAttributes = [];
-    private array $linkAttributes = ['class' => 'page-link'];
+    private array $buttonsContainerAttributes = [
+        'class' => 'page-item',
+    ];
+    private array $activeButtonAttributes = [
+        'class' => 'active',
+    ];
+    private array $disabledButtonAttributes = [
+        'class' => 'disabled',
+    ];
+    private array $linkAttributes = [
+        'class' => 'page-link',
+   ];
+    private array $activeLinkAttributes = [];
+    private array $disabledLinkAttributes = [];
     private array $navAttributes = ['aria-label' => 'Pagination'];
     private array $ulAttributes = ['class' => 'pagination justify-content-center mt-4'];
-    private string $activePageCssClass = 'active';
-    private string $disabledPageCssClass = 'disabled';
-    private string $firstPageCssClass = 'page-item';
-    private string $lastPageCssClass = 'page-item';
-    private string $nextPageCssClass = 'page-item';
-    private string $pageCssClass = 'page-item';
-    private string $prevPageCssClass = 'page-item';
-    private string $firstPageLabel = '';
-    private string $lastPageLabel = '';
-    private string $nextPageLabel = 'Next Page';
+    private ?string $firstPageLabel = null;
+    private array $firstPageAttributes = [];
+    private ?string $lastPageLabel = null;
+    private array $lastPageAttributes = [
+        'class' => 'page-item',
+    ];
+    private ?string $nextPageLabel = 'Next Page';
+    private array $nextPageAttributes = [
+        'class' => 'page-item',
+    ];
     private string $prevPageLabel = 'Previous';
+    private array $prevPageAttributes = [
+        'class' => 'page-item',
+    ];
     public bool $disableCurrentPageButton = false;
     private string $cssFramework = self::BOOTSTRAP;
     private bool $hideOnSinglePage = false;
     private int $maxButtonCount = 10;
     private bool $registerLinkTags = false;
-    private array $requestAttributes = [];
-    private array $requestQueryParams = [];
+    private ?array $requestArguments = null;
+    private ?array $requestQueryParams = null;
+    private string $pageParam = 'page';
     private CurrentRoute $currentRoute;
     private OffsetPaginator $paginator;
     private UrlGeneratorInterface $urlGenerator;
@@ -80,6 +96,27 @@ final class LinkPager extends Widget
         $this->webView = $webView;
     }
 
+    protected function beforeRun(): bool
+    {
+        if (!isset($this->paginator)) {
+            throw new InvalidConfigException('The "paginator" property must be set.');
+        }
+
+        if ($this->requestArguments === null) {
+            $this->requestArguments = $this->currentRoute->getArguments();
+        }
+
+        if ($this->requestQueryParams === null) {
+            $this->requestQueryParams = [];
+
+            if ($uri = $this->currentRoute->getUri()) {
+                parse_str($uri->getQuery(), $this->requestQueryParams);
+            }
+        }
+
+        return parent::beforeRun();
+    }
+
     /**
      * Executes the widget.
      *
@@ -93,10 +130,6 @@ final class LinkPager extends Widget
     {
         $this->buildWidget();
 
-        if (!isset($this->paginator)) {
-            throw new InvalidConfigException('The "paginator" property must be set.');
-        }
-
         if ($this->registerLinkTags) {
             $this->registerLinkTagsInternal();
         }
@@ -105,16 +138,31 @@ final class LinkPager extends Widget
     }
 
     /**
-     * @param string the CSS class for the active (currently selected) page button.
+     * Set option for widget
      *
-     * @return $this
+     * @param string $name
+     * @param mixed $value
+     *
+     * @return self
      */
-    public function activePageCssClass(string $activePageCssClass): self
+    private function setOption(string $name, $value): self
     {
         $new = clone $this;
-        $new->activePageCssClass = $activePageCssClass;
+        $new->{$name} = $value;
 
         return $new;
+    }
+
+    /**
+     * Name of $_GET page param using for pagination
+     *
+     * @param string $value
+     *
+     * @return self
+     */
+    public function pageParam(string $value): self
+    {
+        return $this->setOption('pageParam', $value);
     }
 
     /**
@@ -124,10 +172,68 @@ final class LinkPager extends Widget
      */
     public function buttonsContainerAttributes(array $buttonsContainerAttributes): self
     {
-        $new = clone $this;
-        $new->buttonsContainerAttributes = $buttonsContainerAttributes;
+        return $this->setOption('buttonsContainerAttributes', $buttonsContainerAttributes);
+    }
 
-        return $new;
+    /**
+     * @param array $attributes attributes for the active (currently selected) page button.
+     *
+     * @return self
+     */
+    public function activeButtonAttributes(array $attributes): self
+    {
+        return $this->setOption('activeButtonAttributes', $attributes);
+    }
+
+    /**
+     * @param array $attributes HTML attributes for disabled link container
+     *
+     * @return self
+     */
+    public function disabledButtonAttributes(array $attributes): self
+    {
+        return $this->setOption('disabledButtonAttributes', $attributes);
+    }
+
+    /**
+     * @param array $attributes HTML attributes for the "first" page button.
+     *
+     * @return $this
+     */
+    public function firstPageAttributes(array $attributes): self
+    {
+        return $this->setOption('firstPageAttributes', $attributes);
+    }
+
+    /**
+     * @param string|null the text label for the "first" page button.
+     *
+     * @return $this
+     */
+    public function firstPageLabel(?string $label): self
+    {
+        return $this->setOption('firstPageLabel', $label);
+    }
+
+    /**
+     * @param array $attributes HTML attributes for the "last" page button.
+     *
+     * @return $this
+     */
+    public function lastPageAttributes(array $attributes): self
+    {
+        return $this->setOption('lastPageAttributes', $attributes);
+    }
+
+    /**
+     *
+     * @param string|null the text label for the "last" page button
+     *
+     * @return self
+     */
+    public function lastPageLabel(?string $label): self
+    {
+        return $this->setOption('lastPageLabel', $label);
     }
 
     /**
@@ -137,54 +243,7 @@ final class LinkPager extends Widget
      */
     public function disableCurrentPageButton(bool $disableCurrentPageButton = true): self
     {
-        $new = clone $this;
-        $new->disableCurrentPageButton = $disableCurrentPageButton;
-
-        return $new;
-    }
-
-    /**
-     * @param string $disabledPageCssClass the CSS class for the disabled page buttons.
-     *
-     * @return $this
-     */
-    public function disabledPageCssClass(string $disabledPageCssClass): self
-    {
-        $new = clone $this;
-        $new->disabledPageCssClass = $disabledPageCssClass;
-
-        return $new;
-    }
-
-    /**
-     * @param string $firstPageCssClass the CSS class for the "first" page button.
-     *
-     * @return $this
-     */
-    public function firstPageCssClass(string $firstPageCssClass): self
-    {
-        $new = clone $this;
-        $new->firstPageCssClass = $firstPageCssClass;
-
-        return $new;
-    }
-
-    /**
-     * @param string $firstPageLabel the text label for the "first" page button. Note that this will NOT be
-     * HTML-encoded.
-     *
-     * If it's specified as true, page number will be used as label.
-     *
-     * Default is false that means the "first" page button will not be displayed.
-     *
-     * @return $this
-     */
-    public function firstPageLabel(string $firstPageLabel): self
-    {
-        $new = clone $this;
-        $new->firstPageLabel = $firstPageLabel;
-
-        return $new;
+        return $this->setOption('disableCurrentPageButton', $disableCurrentPageButton);
     }
 
     public function cssFramework(string $cssFramework): self
@@ -194,10 +253,7 @@ final class LinkPager extends Widget
             throw new InvalidConfigException("Invalid CSS framework. Valid values are: \"$cssFramework\".");
         }
 
-        $new = clone $this;
-        $new->cssFramework = $cssFramework;
-
-        return $new;
+        return $this->setOption('cssFramework', $cssFramework);
     }
 
     /**
@@ -207,40 +263,7 @@ final class LinkPager extends Widget
      */
     public function hideOnSinglePage(bool $hideOnSinglePage = true): self
     {
-        $new = clone $this;
-        $new->hideOnSinglePage = $hideOnSinglePage;
-
-        return $new;
-    }
-
-    /**
-     * @param string $lastPageCssClass the CSS class for the "last" page button.
-     *
-     * @return $this
-     */
-    public function lastPageCssClass(string $lastPageCssClass): self
-    {
-        $new = clone $this;
-        $new->lastPageCssClass = $lastPageCssClass;
-
-        return $new;
-    }
-
-    /**
-     * @param string $lastPageLabel the text label for the "last" page button. Note that this will NOT be HTML-encoded.
-     *
-     * If it's specified as true, page number will be used as label.
-     *
-     * Default is false that means the "last" page button will not be displayed.
-     *
-     * @return $this
-     */
-    public function lastPageLabel(string $lastPageLabel): self
-    {
-        $new = clone $this;
-        $new->lastPageLabel = $lastPageLabel;
-
-        return $new;
+        return $this->setOption('hideOnSinglePage', $hideOnSinglePage);
     }
 
     /**
@@ -252,10 +275,27 @@ final class LinkPager extends Widget
      */
     public function linkAttributes(array $linkAttributes): self
     {
-        $new = clone $this;
-        $new->linkAttributes = $linkAttributes;
+        return $this->setOption('linkAttributes', $linkAttributes);
+    }
 
-        return $new;
+    /**
+     * @param array $attributes HTML attributes for the active (currently selected) link.
+     *
+     * @return self
+     */
+    public function activeLinkAttributes(array $attributes): self
+    {
+        return $this->setOption('activeLinkAttributes', $attributes);
+    }
+
+    /**
+     * @param array $attributes HTML attributes for the disabled link.
+     *
+     * @return self
+     */
+    public function disabledLinkAttributes(array $attributes): self
+    {
+        return $this->setOption('disabledLinkAttributes', $attributes);
     }
 
     /**
@@ -265,38 +305,27 @@ final class LinkPager extends Widget
      */
     public function maxButtonCount(int $maxButtonCount): self
     {
-        $new = clone $this;
-        $new->maxButtonCount = $maxButtonCount;
-
-        return $new;
+        return $this->setOption('maxButtonCount', $maxButtonCount);
     }
 
     /**
-     * @param string $nextPageCssClass the CSS class for the "next" page button.
+     * @param array $attributes HTML attributes for the "next" page button.
      *
      * @return $this
      */
-    public function nextPageCssClass(string $nextPageCssClass): self
+    public function nextPageAttributes(array $attributes): self
     {
-        $new = clone $this;
-        $new->nextPageCssClass = $nextPageCssClass;
-
-        return $new;
+        return $this->setOption('nextPageAttributes', $attributes);
     }
 
     /**
-     * @param string $nextPageLabel the label for the "next" page button. Note that this will NOT be HTML-encoded.
-     *
-     * If this property is false, the "next" page button will not be displayed.
+     * @param string|null $label for the "next" page button
      *
      * @return $this
      */
-    public function nextPageLabel(string $nextPageLabel): self
+    public function nextPageLabel(?string $label): self
     {
-        $new = clone $this;
-        $new->nextPageLabel = $nextPageLabel;
-
-        return $new;
+        return $this->setOption('nextPageLabel', $label);
     }
 
     /**
@@ -308,10 +337,7 @@ final class LinkPager extends Widget
      */
     public function navAttributes(array $navAttributes): self
     {
-        $new = clone $this;
-        $new->navAttributes = $navAttributes;
-
-        return $new;
+        return $this->setOption('navAttributes', $navAttributes);
     }
 
     /**
@@ -323,23 +349,7 @@ final class LinkPager extends Widget
      */
     public function ulAttributes(array $ulAttributes): self
     {
-        $new = clone $this;
-        $new->ulAttributes = $ulAttributes;
-
-        return $new;
-    }
-
-    /**
-     * @param string $pageCssClass the CSS class for the each page button.
-     *
-     * @return $this
-     */
-    public function pageCssClass(string $pageCssClass): self
-    {
-        $new = clone $this;
-        $new->pageCssClass = $pageCssClass;
-
-        return $new;
+        return $this->setOption('ulAttributes', $ulAttributes);
     }
 
     /**
@@ -349,55 +359,37 @@ final class LinkPager extends Widget
      */
     public function paginator(OffsetPaginator $paginator): self
     {
-        $new = clone $this;
-        $new->paginator = $paginator;
-
-        return $new;
+        return $this->setOption('paginator', $paginator);
     }
 
     /**
-     * @param string $prevPageCssClass the CSS class for the "previous" page button.
+     * @param array $attributes HTML attributes for the "previous" page button.
      *
      * @return $this
      */
-    public function prevPageCssClass(string $prevPageCssClass): self
+    public function prevPageAttributes(array $attributes): self
     {
-        $new = clone $this;
-        $new->prevPageCssClass = $prevPageCssClass;
-
-        return $new;
+        return $this->setOption('prevPageAttributes', $attributes);
     }
 
     /**
-     * @param string $prevPageLabel the text label for the "previous" page button. Note that this will NOT
-     * be HTML-encoded.
-     *
-     * If this property is false, the "previous" page button will not be displayed.
+     * @param string|null $label the text label for the "previous" page button.
      *
      * @return $this
      */
-    public function prevPageLabel(string $prevPageLabel): self
+    public function prevPageLabel(?string $label): self
     {
-        $new = clone $this;
-        $new->prevPageLabel = $prevPageLabel;
-
-        return $new;
+        return $this->setOption('prevPageLabel', $label);
     }
 
-    public function requestAttributes(array $requestAttributes): self
+    public function requestArguments(?array $requestArguments): self
     {
-        $new = clone $this;
-        $new->requestAttributes = $requestAttributes;
-
-        return $new;
+        return $this->setOption('requestArguments', $requestArguments);
     }
 
-    public function requestQueryParams(array $requestQueryParams): self
+    public function requestQueryParams(?array $requestQueryParams): self
     {
-        $new = clone $this;
-        $new->requestQueryParams = $requestQueryParams;
-
-        return $new;
+        return $this->setOption('requestQueryParams', $requestQueryParams);
     }
 
     /**
@@ -413,10 +405,7 @@ final class LinkPager extends Widget
      */
     public function registerLinkTags(bool $registerLinkTags = true): self
     {
-        $new = clone $this;
-        $new->registerLinkTags = $registerLinkTags;
-
-        return $new;
+        return $this->setOption('registerLinkTags', $registerLinkTags);
     }
 
     /**
@@ -437,6 +426,26 @@ final class LinkPager extends Widget
     }
 
     /**
+     * Merge default/main attributes for current attributes to active/disabled/etc status
+     *
+     * @param array $mainAttributes
+     * @param array $additionalAttributes
+     *
+     * @return array
+     */
+    private static function mergeAttributes(array $mainAttributes, array $additionalAttributes): array
+    {
+        $class = ArrayHelper::remove($additionalAttributes, 'class');
+        $attributes = array_merge($mainAttributes, $additionalAttributes);
+
+        if ($class) {
+            Html::addCssClass($attributes, $class);
+        }
+
+        return $attributes;
+    }
+
+    /**
      * Renders the page buttons.
      *
      * @throws JsonException
@@ -452,37 +461,33 @@ final class LinkPager extends Widget
             return '';
         }
 
-        $renderFirstPageButtonLink = $this->renderFirstPageButtonLink();
+        $renderFirstPageButtonLink = $this->renderFirstPageButtonLink($currentPage);
         $renderPreviousPageButtonLink = $this->renderPreviousPageButtonLink($currentPage);
         $renderPageButtonLinks = $this->renderPageButtonLinks($currentPage);
         $renderNextPageButtonLink = $this->renderNextPageButtonLink($currentPage, $pageCount);
-        $renderLastPageButtonLink = $this->renderLastPageButtonLink($pageCount);
+        $renderLastPageButtonLink = $this->renderLastPageButtonLink($currentPage, $pageCount);
 
         /** @psalm-var non-empty-string */
         $tag = ArrayHelper::remove($this->ulAttributes, 'tag', 'ul');
 
         $html =
-            Html::openTag('nav', $this->navAttributes) . "\n" .
+            Html::openTag('nav', $this->navAttributes) .
                 Html::tag(
                     $tag,
-                    "\n" .
                     $renderFirstPageButtonLink . $renderPreviousPageButtonLink .
-                    "\n" .
-                    implode("\n", $renderPageButtonLinks) .
-                    "\n" .
-                    $renderNextPageButtonLink . $renderLastPageButtonLink .
-                    "\n",
+                    implode('', $renderPageButtonLinks) .
+                    $renderNextPageButtonLink . $renderLastPageButtonLink,
                     $this->ulAttributes
-                )->encode(false) . "\n" .
-            Html::closeTag('nav') . "\n";
+                )->encode(false) .
+            Html::closeTag('nav');
 
         if ($this->cssFramework === self::BULMA) {
             $html =
-                Html::openTag('nav', $this->navAttributes) . "\n" .
+                Html::openTag('nav', $this->navAttributes) .
                     trim($renderFirstPageButtonLink) . trim($renderPreviousPageButtonLink) .
-                    Html::tag($tag, "\n" . implode("\n", $renderPageButtonLinks), $this->ulAttributes)->encode(false) .
-                    trim($renderNextPageButtonLink) . trim($renderLastPageButtonLink) . "\n" .
-                Html::closeTag('nav') . "\n";
+                    Html::tag($tag, implode('', $renderPageButtonLinks), $this->ulAttributes)->encode(false) .
+                    trim($renderNextPageButtonLink) . trim($renderLastPageButtonLink) .
+                Html::closeTag('nav');
         }
 
         return $html;
@@ -516,21 +521,19 @@ final class LinkPager extends Widget
         $linkAttributes['data-page'] = $page;
 
         if ($active && !$disabled) {
-            Html::addCssClass($buttonsAttributes, $this->activePageCssClass);
+            $linkAttributes = self::mergeAttributes($linkAttributes, $this->activeLinkAttributes);
+            $buttonsAttributes = self::mergeAttributes($buttonsAttributes, $this->activeButtonAttributes);
+        } elseif ($disabled) {
+            $linkAttributes = self::mergeAttributes($linkAttributes, $this->disabledLinkAttributes);
+            $buttonsAttributes = self::mergeAttributes($buttonsAttributes, $this->disabledButtonAttributes);
+
+            if (!$active) {
+                $linkAttributes['aria-disabled'] = 'true';
+                $linkAttributes['tabindex'] = '-1';
+            }
         }
 
-        if ($disabled && !$active) {
-            $linkAttributes['aria-disabled'] = 'true';
-            $linkAttributes['tabindex'] = '-1';
-        }
-
-        if ($disabled && $this->cssFramework === self::BOOTSTRAP) {
-            Html::addCssClass($buttonsAttributes, $this->disabledPageCssClass);
-        }
-
-        if ($disabled && $this->cssFramework === self::BULMA) {
-            $buttonsAttributes['disabled'] = true;
-        }
+        $encode = is_numeric($label) ? null : (bool) ArrayHelper::remove($buttonsAttributes, 'encode', true);
 
         return Html::tag(
             $linkWrapTag,
@@ -538,7 +541,7 @@ final class LinkPager extends Widget
                 $label,
                 $this->createUrl($page),
                 $linkAttributes
-            )->render()
+            )->encode($encode)->render()
         )
         ->attributes($buttonsAttributes)
         ->encode(false)
@@ -576,17 +579,17 @@ final class LinkPager extends Widget
      */
     private function createUrl(int $page): string
     {
-        $currentRoute = $this->currentRoute->getRoute();
-        $url = '';
+        $queryParameters = array_merge($this->requestQueryParams, [$this->pageParam => $page]);
 
-        $params = array_merge(['page' => $page], $this->requestAttributes, $this->requestQueryParams);
-
-        if ($currentRoute !== null) {
-            $action = $currentRoute->getName();
-            $url = $this->urlGenerator->generate($action, $params);
+        if ($name = $this->currentRoute->getName()) {
+            return $this->urlGenerator->generate($name, $this->requestArguments, $queryParameters);
         }
 
-        return $url;
+        if (count($queryParameters) > 1) {
+            return '?' . http_build_query($queryParameters);
+        }
+
+        return '';
     }
 
     private function createLinks(): array
@@ -622,40 +625,41 @@ final class LinkPager extends Widget
         $this->navAttributes['class'] = 'pagination is-centered mt-4';
         $this->ulAttributes['class'] = 'pagination-list justify-content-center mt-4';
         $this->linkAttributes = [];
-        $this->pageCssClass = 'pagination-link';
-        $this->firstPageCssClass = 'pagination-previous';
-        $this->lastPageCssClass = 'pagination-next';
-        $this->prevPageCssClass = 'pagination-previous has-background-link has-text-white';
-        $this->nextPageCssClass = 'pagination-next has-background-link has-text-white';
-        $this->activePageCssClass = 'is-current';
-        $this->disabledPageCssClass = 'disabled';
+        $this->buttonsContainerAttributes = ['class' => 'pagination-link'];
+        $this->firstPageAttributes = ['class' => 'pagination-previous'];
+        $this->lastPageAttributes = ['class' => 'pagination-next'];
+        $this->prevPageAttributes = ['class' => 'pagination-previous has-background-link has-text-white'];
+        $this->nextPageAttributes = ['class' => 'pagination-next has-background-link has-text-white'];
+        $this->activeButtonAttributes = ['class' => 'is-current'];
+        $this->disabledButtonAttributes = ['disabled' => true];
     }
 
-    private function renderFirstPageButtonLink(): string
+    private function renderFirstPageButtonLink(int $currentPage): string
     {
-        $html = '';
-
-        if ($this->firstPageLabel !== '') {
-            $html = $this->renderPageButton($this->firstPageLabel, 1, ['class' => $this->firstPageCssClass]);
+        if ($this->firstPageLabel === null) {
+            return '';
         }
 
-        return $html !== '' ? $html . "\n" : '';
+        return $this->renderPageButton(
+            $this->firstPageLabel,
+            1,
+            $this->firstPageAttributes,
+            $currentPage === 1
+        );
     }
 
     private function renderPreviousPageButtonLink(int $currentPage): string
     {
-        $html = '';
-
-        if ($this->prevPageLabel !== '') {
-            $html = $this->renderPageButton(
-                $this->prevPageLabel,
-                max($currentPage - 1, 1),
-                ['class' => $this->prevPageCssClass],
-                $currentPage === 1,
-            );
+        if ($this->prevPageLabel === null) {
+            return '';
         }
 
-        return $html;
+        return $this->renderPageButton(
+            $this->prevPageLabel,
+            max($currentPage - 1, 1),
+            $this->prevPageAttributes,
+            $currentPage === 1
+        );
     }
 
     /**
@@ -673,8 +677,6 @@ final class LinkPager extends Widget
          */
         [$beginPage, $endPage] = $this->getPageRange();
 
-        Html::addCssClass($this->buttonsContainerAttributes, $this->pageCssClass);
-
         for ($i = $beginPage; $i <= $endPage; ++$i) {
             $buttons[] = $this->renderPageButton(
                 (string) $i,
@@ -690,32 +692,29 @@ final class LinkPager extends Widget
 
     private function renderNextPageButtonLink(int $currentPage, int $pageCount): string
     {
-        $html = '';
-
-        if ($this->nextPageLabel !== '') {
-            $html = $this->renderPageButton(
-                $this->nextPageLabel,
-                min($pageCount, $currentPage + 1),
-                ['class' => $this->nextPageCssClass],
-                $currentPage === $pageCount,
-            );
-
-            if ($this->lastPageLabel !== '') {
-                $html .= "\n";
-            }
+        if ($this->nextPageLabel === null) {
+            return '';
         }
 
-        return $html;
+        return $this->renderPageButton(
+            $this->nextPageLabel,
+            min($pageCount, $currentPage + 1),
+            $this->nextPageAttributes,
+            $currentPage === $pageCount,
+        );
     }
 
-    private function renderLastPageButtonLink(int $pageCount): string
+    private function renderLastPageButtonLink(int $currentPage, int $pageCount): string
     {
-        $html = '';
-
-        if ($this->lastPageLabel !== '') {
-            $html = $this->renderPageButton($this->lastPageLabel, $pageCount, ['class' => $this->lastPageCssClass]);
+        if ($this->lastPageLabel === null) {
+            return '';
         }
 
-        return $html;
+        return $this->renderPageButton(
+            $this->lastPageLabel,
+            $pageCount,
+            $this->lastPageAttributes,
+            $currentPage === $pageCount
+        );
     }
 }
