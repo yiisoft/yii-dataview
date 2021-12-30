@@ -54,7 +54,7 @@ final class LinkPager extends Widget
     ];
     private array $linkAttributes = [
         'class' => 'page-link',
-   ];
+    ];
     private array $activeLinkAttributes = [];
     private array $disabledLinkAttributes = [];
     private array $navAttributes = ['aria-label' => 'Pagination'];
@@ -154,6 +154,22 @@ final class LinkPager extends Widget
     }
 
     /**
+     * Set option[class] for widget param
+     *
+     * @param string $name
+     * @param string $className
+     *
+     * @return self
+     */
+    private function setClassToOption(string $name, string $className): self
+    {
+        $value = $this->{$name};
+        $value['class'] = $className;
+
+        return $this->setOption($name, $value);
+    }
+
+    /**
      * Name of $_GET page param using for pagination
      *
      * @param string $value
@@ -186,6 +202,16 @@ final class LinkPager extends Widget
     }
 
     /**
+     * @param string $className the CSS class for the active (currently selected) page button.
+     *
+     * @return $this
+     */
+    public function activePageCssClass(string $className): self
+    {
+        return $this->setClassToOption('activeButtonAttributes', $className);
+    }
+
+    /**
      * @param array $attributes HTML attributes for disabled link container
      *
      * @return self
@@ -196,6 +222,26 @@ final class LinkPager extends Widget
     }
 
     /**
+     * @param string $className the CSS class for the disabled page buttons.
+     *
+     * @return $this
+     */
+    public function disabledPageCssClass(string $className): self
+    {
+        return $this->setClassToOption('disabledButtonAttributes', $className);
+    }
+
+    /**
+     * @param string $className the CSS class for the each page button.
+     *
+     * @return $this
+     */
+    public function pageCssClass(string $className): self
+    {
+        return $this->setClassToOption('buttonsContainerAttributes', $className);
+    }
+
+    /**
      * @param array $attributes HTML attributes for the "first" page button.
      *
      * @return $this
@@ -203,6 +249,16 @@ final class LinkPager extends Widget
     public function firstPageAttributes(array $attributes): self
     {
         return $this->setOption('firstPageAttributes', $attributes);
+    }
+
+    /**
+     * @param string $className the CSS class for the "first" page button.
+     *
+     * @return $this
+     */
+    public function firstPageCssClass(string $className): self
+    {
+        return $this->setClassToOption('firstPageAttributes', $className);
     }
 
     /**
@@ -226,7 +282,16 @@ final class LinkPager extends Widget
     }
 
     /**
+     * @param string $className the CSS class for the "last" page button.
      *
+     * @return $this
+     */
+    public function lastPageCssClass(string $className): self
+    {
+        return $this->setClassToOption('lastPageAttributes', $className);
+    }
+
+    /**
      * @param string|null the text label for the "last" page button
      *
      * @return self
@@ -319,6 +384,16 @@ final class LinkPager extends Widget
     }
 
     /**
+     * @param string $className the CSS class for the "next" page button.
+     *
+     * @return $this
+     */
+    public function nextPageCssClass(string $className): self
+    {
+        return $this->setClassToOption('nextPageAttributes', $className);
+    }
+
+    /**
      * @param string|null $label for the "next" page button
      *
      * @return $this
@@ -370,6 +445,16 @@ final class LinkPager extends Widget
     public function prevPageAttributes(array $attributes): self
     {
         return $this->setOption('prevPageAttributes', $attributes);
+    }
+
+    /**
+     * @param string $className the CSS class for the "previous" page button.
+     *
+     * @return $this
+     */
+    public function prevPageCssClass(string $className): self
+    {
+        return $this->setClassToOption('prevPageAttributes', $className);
     }
 
     /**

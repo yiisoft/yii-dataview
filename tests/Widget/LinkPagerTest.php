@@ -29,6 +29,25 @@ final class LinkPagerTest extends TestCase
         </nav>
         HTML;
         $this->assertEqualsHTML($html, $linkPager->render());
+
+        LinkPager::counter(0);
+
+        $linkPager = LinkPager::widget()
+            ->activeButtonAttributes(['data-active' => true])
+            ->activePageCssClass('test-active')
+            ->paginator($this->createOffsetPaginator()->withPageSize(5));
+
+        $html = <<<'HTML'
+        <nav aria-label="Pagination">
+        <ul class="pagination justify-content-center mt-4">
+        <li class="page-item disabled"><a class="page-link" href data-page="1" aria-disabled="true" tabindex="-1">Previous</a></li>
+        <li class="page-item test-active" data-active><a class="page-link" href data-page="1">1</a></li>
+        <li class="page-item"><a class="page-link" href data-page="2">2</a></li>
+        <li class="page-item"><a class="page-link" href data-page="2">Next Page</a></li>
+        </ul>
+        </nav>
+        HTML;
+        $this->assertEqualsHTML($html, $linkPager->render());
     }
 
     public function testButtonsContainerAttributes(): void
@@ -93,6 +112,26 @@ final class LinkPagerTest extends TestCase
         </nav>
         HTML;
         $this->assertEqualsHTML($html, $linkPager->render());
+
+        LinkPager::counter(0);
+
+        $linkPager = LinkPager::widget()
+            ->disabledButtonAttributes(['data-disabled' => true])
+            ->disabledPageCssClass('test-disabled')
+            ->paginator($this->createOffsetPaginator()->withPageSize(5));
+
+        $html = <<<'HTML'
+        <nav aria-label="Pagination">
+        <ul class="pagination justify-content-center mt-4">
+        <li class="page-item test-disabled" data-disabled><a class="page-link" href data-page="1" aria-disabled="true" tabindex="-1">Previous</a></li>
+        <li class="page-item active"><a class="page-link" href data-page="1">1</a></li>
+        <li class="page-item"><a class="page-link" href data-page="2">2</a></li>
+        <li class="page-item"><a class="page-link" href data-page="2">Next Page</a></li>
+        </ul>
+        </nav>
+        HTML;
+
+        $this->assertEqualsHTML($html, $linkPager->render());
     }
 
     public function testFirstPageLabel(): void
@@ -142,7 +181,7 @@ final class LinkPagerTest extends TestCase
 
         $linkPager = LinkPager::widget()
             ->lastPageAttributes([
-                'class' => 'test-class'
+                'class' => 'test-class',
             ])->lastPageLabel('Last')
             ->paginator($this->createOffsetPaginator()->withPageSize(5));
 
@@ -221,6 +260,26 @@ final class LinkPagerTest extends TestCase
         </nav>
         HTML;
         $this->assertEqualsHTML($html, $linkPager->render());
+
+        LinkPager::counter(0);
+
+        $linkPager = LinkPager::widget()
+            ->nextPageAttributes(['data-next' => true])
+            ->nextPageCssClass('next')
+            ->nextPageLabel('Next Page')
+            ->paginator($this->createOffsetPaginator()->withPageSize(5));
+
+        $html = <<<'HTML'
+        <nav aria-label="Pagination">
+        <ul class="pagination justify-content-center mt-4">
+        <li class="page-item disabled"><a class="page-link" href data-page="1" aria-disabled="true" tabindex="-1">Previous</a></li>
+        <li class="page-item active"><a class="page-link" href data-page="1">1</a></li>
+        <li class="page-item"><a class="page-link" href data-page="2">2</a></li>
+        <li class="next" data-next><a class="page-link" href data-page="2">Next Page</a></li>
+        </ul>
+        </nav>
+        HTML;
+        $this->assertEqualsHTML($html, $linkPager->render());
     }
 
     public function testNavAttributes(): void
@@ -263,6 +322,25 @@ final class LinkPagerTest extends TestCase
         </nav>
         HTML;
         $this->assertEqualsHTML($html, $linkPager->render());
+
+        LinkPager::counter(0);
+
+        $linkPager = LinkPager::widget()
+            ->buttonsContainerAttributes(['data-test' => true])
+            ->pageCssClass('test-class')
+            ->paginator($this->createOffsetPaginator()->withPageSize(5));
+
+        $html = <<<'HTML'
+        <nav aria-label="Pagination">
+        <ul class="pagination justify-content-center mt-4">
+        <li class="page-item disabled"><a class="page-link" href data-page="1" aria-disabled="true" tabindex="-1">Previous</a></li>
+        <li class="test-class active" data-test><a class="page-link" href data-page="1">1</a></li>
+        <li class="test-class" data-test><a class="page-link" href data-page="2">2</a></li>
+        <li class="page-item"><a class="page-link" href data-page="2">Next Page</a></li>
+        </ul>
+        </nav>
+        HTML;
+        $this->assertEqualsHTML($html, $linkPager->render());
     }
 
     public function testPrevPageLabel(): void
@@ -278,6 +356,26 @@ final class LinkPagerTest extends TestCase
         <nav aria-label="Pagination">
         <ul class="pagination justify-content-center mt-4">
         <li class="test-class disabled"><a class="page-link" href data-page="1" aria-disabled="true" tabindex="-1">Previous</a></li>
+        <li class="page-item active"><a class="page-link" href data-page="1">1</a></li>
+        <li class="page-item"><a class="page-link" href data-page="2">2</a></li>
+        <li class="page-item"><a class="page-link" href data-page="2">Next Page</a></li>
+        </ul>
+        </nav>
+        HTML;
+        $this->assertEqualsHTML($html, $linkPager->render());
+
+        LinkPager::counter(0);
+
+        $linkPager = LinkPager::widget()
+            ->prevPageLabel('Previous')
+            ->prevPageAttributes(['data-prev' => true])
+            ->prevPageCssClass('prev')
+            ->paginator($this->createOffsetPaginator()->withPageSize(5));
+
+        $html = <<<'HTML'
+        <nav aria-label="Pagination">
+        <ul class="pagination justify-content-center mt-4">
+        <li class="prev disabled" data-prev><a class="page-link" href data-page="1" aria-disabled="true" tabindex="-1">Previous</a></li>
         <li class="page-item active"><a class="page-link" href data-page="1">1</a></li>
         <li class="page-item"><a class="page-link" href data-page="2">2</a></li>
         <li class="page-item"><a class="page-link" href data-page="2">Next Page</a></li>
