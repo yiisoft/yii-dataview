@@ -47,8 +47,8 @@ abstract class BaseListView extends Widget
     ];
     private int $pageSize = 0;
     private int $currentPage = 1;
-    private array $requestAttributes = [];
-    private array $requestQueryParams = [];
+    private ?array $requestArguments = null;
+    private ?array $requestQueryParams = null;
     private TranslatorInterface $translator;
 
     public function __construct(TranslatorInterface $translator)
@@ -151,12 +151,12 @@ abstract class BaseListView extends Widget
         return $new;
     }
 
-    public function getRequestAttributes(): array
+    public function getRequestArguments(): ?array
     {
-        return $this->requestAttributes;
+        return $this->requestArguments;
     }
 
-    public function getRequestQueryParams(): array
+    public function getRequestQueryParams(): ?array
     {
         return $this->requestQueryParams;
     }
@@ -224,15 +224,15 @@ abstract class BaseListView extends Widget
         return $new;
     }
 
-    public function requestAttributes(array $requestAttributes): self
+    public function requestArguments(?array $requestArguments): self
     {
         $new = clone $this;
-        $new->requestAttributes = $requestAttributes;
+        $new->requestArguments = $requestArguments;
 
         return $new;
     }
 
-    public function requestQueryParams(array $requestQueryParams): self
+    public function requestQueryParams(?array $requestQueryParams): self
     {
         $new = clone $this;
         $new->requestQueryParams = $requestQueryParams;
@@ -415,7 +415,7 @@ abstract class BaseListView extends Widget
         return LinkPager::widget()
             ->paginator($this->paginator)
             ->cssFramework($this->cssFramework)
-            ->requestAttributes($this->requestAttributes)
+            ->requestArguments($this->requestArguments)
             ->requestQueryParams($this->requestQueryParams)
             ->render();
     }

@@ -46,7 +46,7 @@ final class DataColumnTest extends TestCase
         </nav>
         </div>
         HTML;
-        $this->assertEqualsWithoutLE($this->removeLE($html), $this->removeLE($gridView->render()));
+        $this->assertEqualsHTML($html, $gridView->render());
     }
 
     public function testAttributeStringFormat(): void
@@ -80,7 +80,7 @@ final class DataColumnTest extends TestCase
         </nav>
         </div>
         HTML;
-        $this->assertEqualsWithoutLE($this->removeLE($html), $this->removeLE($gridView->render()));
+        $this->assertEqualsHTML($html, $gridView->render());
     }
 
     public function testContent(): void
@@ -123,7 +123,7 @@ final class DataColumnTest extends TestCase
         </nav>
         </div>
         HTML;
-        $this->assertEqualsWithoutLE($this->removeLE($html), $this->removeLE($gridView->render()));
+        $this->assertEqualsHTML($html, $gridView->render());
     }
 
     public function testContentIsEmpty(): void
@@ -166,7 +166,7 @@ final class DataColumnTest extends TestCase
         </nav>
         </div>
         HTML;
-        $this->assertEqualsWithoutLE($this->removeLE($html), $this->removeLE($gridView->render()));
+        $this->assertEqualsHTML($html, $gridView->render());
     }
 
     public function testContentOptions(): void
@@ -205,7 +205,7 @@ final class DataColumnTest extends TestCase
         </nav>
         </div>
         HTML;
-        $this->assertEqualsWithoutLE($this->removeLE($html), $this->removeLE($gridView->render()));
+        $this->assertEqualsHTML($html, $gridView->render());
     }
 
     public function testFilter(): void
@@ -248,7 +248,7 @@ final class DataColumnTest extends TestCase
         </nav>
         </div>
         HTML;
-        $this->assertEqualsWithoutLE($this->removeLE($html), $this->removeLE($gridView->render()));
+        $this->assertEqualsHTML($html, $gridView->render());
     }
 
     public function testFilterInputOptions(): void
@@ -291,7 +291,7 @@ final class DataColumnTest extends TestCase
         </nav>
         </div>
         HTML;
-        $this->assertEqualsWithoutLE($this->removeLE($html), $this->removeLE($gridView->render()));
+        $this->assertEqualsHTML($html, $gridView->render());
 
         $columns = [
             [
@@ -329,7 +329,7 @@ final class DataColumnTest extends TestCase
         </nav>
         </div>
         HTML;
-        $this->assertEqualsWithoutLE($this->removeLE($html), $this->removeLE($gridView->render()));
+        $this->assertEqualsHTML($html, $gridView->render());
     }
 
     public function testFilterOptions(): void
@@ -372,7 +372,7 @@ final class DataColumnTest extends TestCase
         </nav>
         </div>
         HTML;
-        $this->assertEqualsWithoutLE($this->removeLE($html), $this->removeLE($gridView->render()));
+        $this->assertEqualsHTML($html, $gridView->render());
     }
 
     public function testFilterValueDefault(): void
@@ -415,7 +415,7 @@ final class DataColumnTest extends TestCase
         </nav>
         </div>
         HTML;
-        $this->assertEqualsWithoutLE($this->removeLE($html), $this->removeLE($gridView->render()));
+        $this->assertEqualsHTML($html, $gridView->render());
     }
 
     public function testFooter(): void
@@ -458,7 +458,7 @@ final class DataColumnTest extends TestCase
         </nav>
         </div>
         HTML;
-        $this->assertEqualsWithoutLE($this->removeLE($html), $this->removeLE($gridView->render()));
+        $this->assertEqualsHTML($html, $gridView->render());
     }
 
     public function testFooterOptions(): void
@@ -501,7 +501,7 @@ final class DataColumnTest extends TestCase
         </nav>
         </div>
         HTML;
-        $this->assertEqualsWithoutLE($this->removeLE($html), $this->removeLE($gridView->render()));
+        $this->assertEqualsHTML($html, $gridView->render());
     }
 
     public function testHeader(): void
@@ -538,7 +538,7 @@ final class DataColumnTest extends TestCase
         $html = <<<'HTML'
         <tr><th class="has-text-danger">id</th><th>name</th><th>total</th></tr>
         HTML;
-        $this->assertStringContainsString($this->removeLE($html), $this->removeLE($gridView->render()));
+        $this->assertStringContainsString($html, $gridView->render());
     }
 
     public function testLabel(): void
@@ -557,7 +557,7 @@ final class DataColumnTest extends TestCase
         $html = <<<'HTML'
         <tr><th>id</th><th>name</th><th>total</th></tr>
         HTML;
-        $this->assertStringContainsString($this->removeLE($html), $this->removeLE($gridView->render()));
+        $this->assertStringContainsString($html, $gridView->render());
     }
 
     public function testLabelEmpty(): void
@@ -570,7 +570,7 @@ final class DataColumnTest extends TestCase
         $html = <<<'HTML'
         <tr><th>Id</th><th>Name</th><th>Total</th></tr>
         HTML;
-        $this->assertStringContainsString($this->removeLE($html), $this->removeLE($gridView->render()));
+        $this->assertStringContainsString($html, $gridView->render());
     }
 
     public function testNotEncodeLabel(): void
@@ -609,7 +609,7 @@ final class DataColumnTest extends TestCase
         </nav>
         </div>
         HTML;
-        $this->assertEqualsWithoutLE($this->removeLE($html), $this->removeLE($gridView->render()));
+        $this->assertEqualsHTML($html, $gridView->render());
 
         $columns = [
             [
@@ -647,7 +647,7 @@ final class DataColumnTest extends TestCase
         </nav>
         </div>
         HTML;
-        $this->assertEqualsWithoutLE($this->removeLE($html), $this->removeLE($gridView->render()));
+        $this->assertEqualsHTML($html, $gridView->render());
     }
 
     public function testSorting(): void
@@ -686,7 +686,7 @@ final class DataColumnTest extends TestCase
         </nav>
         </div>
         HTML;
-        $this->assertEqualsWithoutLE($this->removeLE($html), $this->removeLE($gridView->render()));
+        $this->assertEqualsHTML($html, $gridView->render());
 
 
         $gridView = $this->createGridView(['id', 'name']);
@@ -715,7 +715,7 @@ final class DataColumnTest extends TestCase
         </nav>
         </div>
         HTML;
-        $this->assertEqualsWithoutLE($this->removeLE($html), $this->removeLE($gridView->render()));
+        $this->assertEqualsHTML($html, $gridView->render());
     }
 
     public function testSortingDisable(): void
@@ -760,7 +760,7 @@ final class DataColumnTest extends TestCase
         </nav>
         </div>
         HTML;
-        $this->assertEqualsWithoutLE($this->removeLE($html), $this->removeLE($gridView->render()));
+        $this->assertEqualsHTML($html, $gridView->render());
     }
 
     public function testSortLinkOption(): void
@@ -805,7 +805,7 @@ final class DataColumnTest extends TestCase
         </nav>
         </div>
         HTML;
-        $this->assertEqualsWithoutLE($this->removeLE($html), $this->removeLE($gridView->render()));
+        $this->assertEqualsHTML($html, $gridView->render());
     }
 
     public function testInvisible(): void
@@ -881,7 +881,7 @@ final class DataColumnTest extends TestCase
         </nav>
         </div>
         HTML;
-        $this->assertEqualsWithoutLE($this->removeLE($html), $this->removeLE($gridView->render()));
+        $this->assertEqualsHTML($html, $gridView->render());
 
         $columns = [
             'id',
@@ -919,6 +919,6 @@ final class DataColumnTest extends TestCase
         </nav>
         </div>
         HTML;
-        $this->assertEqualsWithoutLE($this->removeLE($html), $this->removeLE($gridView->render()));
+        $this->assertEqualsHTML($html, $gridView->render());
     }
 }

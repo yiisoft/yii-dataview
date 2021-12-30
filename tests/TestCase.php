@@ -43,6 +43,7 @@ use Yiisoft\Yii\DataView\Columns\DataColumn;
 use Yiisoft\Yii\DataView\Columns\RadioButtonColumn;
 use Yiisoft\Yii\DataView\Factory\GridViewFactory;
 use Yiisoft\Yii\DataView\GridView;
+use DOMDocument;
 
 class TestCase extends \PHPUnit\Framework\TestCase
 {
@@ -80,9 +81,38 @@ class TestCase extends \PHPUnit\Framework\TestCase
         );
     }
 
-    protected function removeLE(string $value): string
+    private static function loadHtml(string $html): DOMDocument
     {
-        return str_replace(["\r", "\n"], "", $value);
+        $dom = new DOMDocument();
+        $dom->recover = false;
+        $dom->formatOutput = true;
+        $dom->preserveWhiteSpace = false;
+        $html = str_replace(["\r", "\n"], '', $html);
+
+        if (defined('LIBXML_NOBLANKS')) {
+            $dom->loadHtml($html, LIBXML_NOBLANKS);
+        } else {
+            $dom->loadHtml($html);
+        }
+
+        return $dom;
+    }
+
+    protected function assertEqualsHTML(string $expected, string $actual, string $message = ''): void
+    {
+        libxml_use_internal_errors(true);
+        $expectedDOM = self::loadHtml($expected);
+        $actualDOM = self::loadHtml($actual);
+        $actualBody = $actualDOM->getElementsByTagName('body')->item(0);
+        $expectedBody = $expectedDOM->getElementsByTagName('body')->item(0);
+
+        $expected = $expectedDOM->saveHTML($expectedBody);
+        $actual = $actualDOM->saveHTML($actualBody);
+
+        libxml_clear_errors();
+
+        $this->assertEquals($expectedBody->childNodes->count(), $actualBody->childNodes->count());
+        $this->assertEquals($expected, $actual, $message);
     }
 
     /**

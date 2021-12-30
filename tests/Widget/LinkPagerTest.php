@@ -28,7 +28,7 @@ final class LinkPagerTest extends TestCase
         </ul>
         </nav>
         HTML;
-        $this->assertEqualsWithoutLE($this->removeLE($html), $this->removeLE($linkPager->render()));
+        $this->assertEqualsHTML($html, $linkPager->render());
     }
 
     public function testButtonsContainerAttributes(): void
@@ -49,7 +49,7 @@ final class LinkPagerTest extends TestCase
         </ul>
         </nav>
         HTML;
-        $this->assertEqualsWithoutLE($html, $linkPager->render());
+        $this->assertEqualsHTML($html, $linkPager->render());
     }
 
     public function testDisableCurrentPageButton(): void
@@ -70,7 +70,7 @@ final class LinkPagerTest extends TestCase
         </ul>
         </nav>
         HTML;
-        $this->assertEqualsWithoutLE($html, $linkPager->render());
+        $this->assertEqualsHTML($html, $linkPager->render());
     }
 
     public function testDisabledPageCssClass(): void
@@ -92,7 +92,7 @@ final class LinkPagerTest extends TestCase
         </ul>
         </nav>
         HTML;
-        $this->assertEqualsWithoutLE($html, $linkPager->render());
+        $this->assertEqualsHTML($html, $linkPager->render());
     }
 
     public function testFirstPageLabel(): void
@@ -116,7 +116,7 @@ final class LinkPagerTest extends TestCase
         </ul>
         </nav>
         HTML;
-        $this->assertEqualsWithoutLE($this->removeLE($html), $this->removeLE($linkPager->render()));
+        $this->assertEqualsHTML($html, $linkPager->render());
     }
 
     public function testCssFrameworkException(): void
@@ -157,7 +157,7 @@ final class LinkPagerTest extends TestCase
         </ul>
         </nav>
         HTML;
-        $this->assertEqualsWithoutLE($this->removeLE($html), $this->removeLE($linkPager->render()));
+        $this->assertEqualsHTML($html, $linkPager->render());
     }
 
     public function testLinkAttributes(): void
@@ -178,7 +178,7 @@ final class LinkPagerTest extends TestCase
         </ul>
         </nav>
         HTML;
-        $this->assertEqualsWithoutLE($html, $linkPager->render());
+        $this->assertEqualsHTML($html, $linkPager->render());
     }
 
     public function testMaxButtonCount(): void
@@ -198,7 +198,7 @@ final class LinkPagerTest extends TestCase
         </ul>
         </nav>
         HTML;
-        $this->assertEqualsWithoutLE($html, $linkPager->render());
+        $this->assertEqualsHTML($html, $linkPager->render());
     }
 
     public function testNextPageLabel(): void
@@ -220,7 +220,7 @@ final class LinkPagerTest extends TestCase
         </ul>
         </nav>
         HTML;
-        $this->assertEqualsWithoutLE($html, $linkPager->render());
+        $this->assertEqualsHTML($html, $linkPager->render());
     }
 
     public function testNavAttributes(): void
@@ -241,7 +241,7 @@ final class LinkPagerTest extends TestCase
         </ul>
         </nav>
         HTML;
-        $this->assertEqualsWithoutLE($html, $linkPager->render());
+        $this->assertEqualsHTML($html, $linkPager->render());
     }
 
     public function testPageCssClass(): void
@@ -262,7 +262,7 @@ final class LinkPagerTest extends TestCase
         </ul>
         </nav>
         HTML;
-        $this->assertEqualsWithoutLE($html, $linkPager->render());
+        $this->assertEqualsHTML($html, $linkPager->render());
     }
 
     public function testPrevPageLabel(): void
@@ -284,7 +284,7 @@ final class LinkPagerTest extends TestCase
         </ul>
         </nav>
         HTML;
-        $this->assertEqualsWithoutLE($html, $linkPager->render());
+        $this->assertEqualsHTML($html, $linkPager->render());
     }
 
     public function testPaginatorEmpty(): void
@@ -312,7 +312,7 @@ final class LinkPagerTest extends TestCase
         </ul>
         </nav>
         HTML;
-        $this->assertEqualsWithoutLE($html, $linkPager->render());
+        $this->assertEqualsHTML($html, $linkPager->render());
     }
 
     public function testEncode(): void
@@ -341,6 +341,6 @@ final class LinkPagerTest extends TestCase
         </nav>
         HTML;
 
-        $this->assertEqualsWithoutLE($html, $linkPager->render());
+        $this->assertEqualsHTML($html, $linkPager->render());
     }
 }
