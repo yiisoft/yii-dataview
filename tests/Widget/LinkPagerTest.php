@@ -441,4 +441,33 @@ final class LinkPagerTest extends TestCase
 
         $this->assertEqualsHTML($html, $linkPager->render());
     }
+
+    public function testQueryParams(): void
+    {
+        LinkPager::counter(0);
+
+        $linkPager = LinkPager::widget()
+            ->paginator($this->createOffsetPaginator()->withPageSize(5))
+            ->requestQueryParams([
+                'param1' => 'foo',
+                'param2' => 'bar',
+                'paramArray' => [
+                    'foo',
+                    'bar',
+                ],
+            ]);
+
+        $html = <<<'HTML'
+        <nav aria-label="Pagination">
+        <ul class="pagination justify-content-center mt-4">
+        <li class="page-item disabled"><a class="page-link" href="?param1=foo&amp;param2=bar&amp;paramArray%5B0%5D=foo&amp;paramArray%5B1%5D=bar&amp;page=1" data-page="1" aria-disabled="true" tabindex="-1">Previous</a></li>
+        <li class="page-item active"><a class="page-link" href="?param1=foo&amp;param2=bar&amp;paramArray%5B0%5D=foo&amp;paramArray%5B1%5D=bar&amp;page=1" data-page="1">1</a></li>
+        <li class="page-item"><a class="page-link" href="?param1=foo&amp;param2=bar&amp;paramArray%5B0%5D=foo&amp;paramArray%5B1%5D=bar&amp;page=2" data-page="2">2</a></li>
+        <li class="page-item"><a class="page-link" href="?param1=foo&amp;param2=bar&amp;paramArray%5B0%5D=foo&amp;paramArray%5B1%5D=bar&amp;page=2" data-page="2">Next Page</a></li>
+        </ul>
+        </nav>
+        HTML;
+
+        $this->assertEqualsHTML($html, $linkPager->render());
+    }
 }

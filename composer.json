@@ -30,7 +30,7 @@
         "yiisoft/factory": "^1.0",
         "yiisoft/html": "^2.2",
         "yiisoft/json": "^1.0",
-        "yiisoft/router": "3.0.x-dev",
+        "yiisoft/router": "^1.0",
         "yiisoft/strings": "^2.0",
         "yiisoft/translator": "^1.0",
         "yiisoft/translator-formatter-intl": "^1.0",
@@ -48,7 +48,7 @@
         "yiisoft/di": "^1.0",
         "yiisoft/event-dispatcher": "^1.0",
         "yiisoft/log": "^1.0",
-        "yiisoft/router-fastroute": "^3.0@dev"
+        "yiisoft/router-fastroute": "^1.0"
     },
     "extra": {
         "branch-alias": {
