@@ -142,7 +142,7 @@ final class LinkPagerTest extends TestCase
 
         $linkPager = LinkPager::widget()
             ->lastPageAttributes([
-                'class' => 'test-class'
+                'class' => 'test-class',
             ])->lastPageLabel('Last')
             ->paginator($this->createOffsetPaginator()->withPageSize(5));
 

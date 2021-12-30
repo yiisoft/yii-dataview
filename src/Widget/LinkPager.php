@@ -54,7 +54,7 @@ final class LinkPager extends Widget
     ];
     private array $linkAttributes = [
         'class' => 'page-link',
-   ];
+    ];
     private array $activeLinkAttributes = [];
     private array $disabledLinkAttributes = [];
     private array $navAttributes = ['aria-label' => 'Pagination'];
@@ -226,7 +226,6 @@ final class LinkPager extends Widget
     }
 
     /**
-     *
      * @param string|null the text label for the "last" page button
      *
      * @return self
