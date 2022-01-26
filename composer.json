@@ -15,9 +15,10 @@
     "support": {
         "source": "https://github.com/yiisoft/yii-dataview",
         "issues": "https://github.com/yiisoft/yii-dataview/issues",
-        "forum": "http://www.yiiframework.com/forum/",
-        "wiki": "http://www.yiiframework.com/wiki/",
-        "irc": "irc://irc.freenode.net/yii"
+        "forum": "https://www.yiiframework.com/forum/",
+        "wiki": "https://www.yiiframework.com/wiki/",
+        "irc": "irc://irc.freenode.net/yii",
+        "chat": "https://t.me/yii3en"
     },
     "minimum-stability": "dev",
     "prefer-stable": true,
@@ -42,9 +43,9 @@
         "maglnet/composer-require-checker": "^3.2",
         "nyholm/psr7": "^1.3",
         "phpunit/phpunit": "^9.5",
-        "roave/infection-static-analysis-plugin": "^1.7",
+        "roave/infection-static-analysis-plugin": "^1.16",
         "spatie/phpunit-watcher": "^1.23",
-        "vimeo/psalm": "^4.7",
+        "vimeo/psalm": "^4.18",
         "yiisoft/di": "^1.0",
         "yiisoft/event-dispatcher": "^1.0",
         "yiisoft/log": "^1.0",
