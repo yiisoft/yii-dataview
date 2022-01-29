@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Yiisoft\Yii\DataView\Widget;
 
+use Stringable;
 use JsonException;
 use InvalidArgumentException;
 use RuntimeException;
@@ -78,7 +79,7 @@ final class LinkPager extends Widget
     private array $nextPageAttributes = [
         'class' => 'page-item',
     ];
-    private string $prevPageLabel = 'Previous';
+    private ?string $prevPageLabel = 'Previous';
     private array $prevPageAttributes = [
         'class' => 'page-item',
     ];
@@ -191,6 +192,7 @@ final class LinkPager extends Widget
             throw new RuntimeException("Attribute {$name} is not array and it can't be merged.");
         }
 
+        /** @psalm-suppress MixedArgument */
         return $this->setOption($name, array_merge($this->{$name}, $value));
     }
 
@@ -575,6 +577,7 @@ final class LinkPager extends Widget
      */
     private static function mergeAttributes(array $mainAttributes, array $additionalAttributes): array
     {
+        /** @var array<array-key, string>|string|null $class */
         $class = ArrayHelper::remove($additionalAttributes, 'class');
         $attributes = array_merge($mainAttributes, $additionalAttributes);
 
@@ -705,9 +708,10 @@ final class LinkPager extends Widget
      */
     private function createUrl(int $page): string
     {
-        $queryParameters = array_merge($this->requestQueryParams, [$this->pageParam => $page]);
+        $queryParameters = array_merge($this->requestQueryParams ?? [], [$this->pageParam => $page]);
 
         if ($name = $this->currentRoute->getName()) {
+            /** @var array<string, Stringable|null|scalar> $this->requestArguments */
             return $this->urlGenerator->generate($name, $this->requestArguments, $queryParameters);
         }
 

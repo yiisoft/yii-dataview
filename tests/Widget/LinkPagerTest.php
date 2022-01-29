@@ -483,14 +483,14 @@ final class LinkPagerTest extends TestCase
                 'tag' => 'div',
                 'class' => 'pagination js-pages',
             ])->buttonsContainerAttributes([
-                'tag' => null
+                'tag' => null,
             ])->nextPageAttributes([
                 'tag' => 'div',
                 'class' => 'pagination-nav clearfix',
             ])->linkAttributes([
                 'class' => 'pagination-page',
             ])->lastPageAttributes([
-                'tag' => null
+                'tag' => null,
             ])->listTemplate(
                 LinkPager::NEXT_PAGE_BUTTON .
                 '<div class="pagination-pages clearfix">' .
