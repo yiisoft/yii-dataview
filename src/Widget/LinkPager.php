@@ -41,7 +41,6 @@ final class LinkPager extends Widget
     public const NEXT_PAGE_BUTTON = '{next_page}';
     public const LAST_PAGE_BUTTON = '{last_page}';
 
-
     private const REL_SELF = 'self';
     private const LINK_NEXT = 'next';
     private const LINK_PREV = 'prev';
@@ -155,6 +154,8 @@ final class LinkPager extends Widget
      * @param string $name
      * @param mixed $value
      *
+     * @throws InvalidArgumentException
+     *
      * @return self
      */
     private function setOption(string $name, $value): self
@@ -175,10 +176,10 @@ final class LinkPager extends Widget
      * @param string $name
      * @param array $value
      *
-     * @return self
-     *
      * @throws InvalidArgumentException
      * @throws RuntimeException
+     *
+     * @return self
      */
     private function mergeOption(string $name, array $value): self
     {
