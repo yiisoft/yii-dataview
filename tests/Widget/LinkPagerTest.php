@@ -470,4 +470,48 @@ final class LinkPagerTest extends TestCase
 
         $this->assertEqualsHTML($html, $linkPager->render());
     }
+
+    public function testCustomMarkup(): void
+    {
+        LinkPager::counter(0);
+
+        $avito = LinkPager::widget()
+            ->paginator($this->createOffsetPaginator()->withPageSize(5))
+            ->navAttributes([
+                'class' => 'b-shop-pagination'
+            ])->ulAttributes([
+                'tag' => 'div',
+                'class' => 'pagination js-pages'
+            ])->buttonsContainerAttributes([
+                'tag' => null
+            ])->nextPageAttributes([
+                'tag' => 'div',
+                'class' => 'pagination-nav clearfix'
+            ])->linkAttributes([
+                'class' => 'pagination-page'
+            ])->lastPageAttributes([
+                'tag' => null
+            ])->listTemplate(
+                LinkPager::NEXT_PAGE_BUTTON .
+                '<div class="pagination-pages clearfix">' .
+                    LinkPager::PAGES .
+                    LinkPager::LAST_PAGE_BUTTON .
+                '</div>'
+            )->lastPageLabel('Last Page');
+
+        $html = <<<'HTML'
+        <nav class="b-shop-pagination">
+        <div class="pagination js-pages">
+        <div class="pagination-nav clearfix"><a class="pagination-page" href data-page="2">Next Page</a></div>
+        <div class="pagination-pages clearfix">
+        <a class="pagination-page" href data-page="1">1</a>
+        <a class="pagination-page" href data-page="2">2</a>
+        <a class="pagination-page" href data-page="2">Last Page</a>
+        </div>
+        </div>
+        </nav>
+        HTML;
+
+        $this->assertEqualsHTML($html, $avito->render());
+    }
 }
