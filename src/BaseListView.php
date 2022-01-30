@@ -67,7 +67,7 @@ abstract class BaseListView extends Widget
     {
         if ($this->showOnEmpty || ($this->paginator->getTotalItems() > 0)) {
             $content = preg_replace_callback('/{\\w+}/', function (array $matches): string {
-                return $this->renderSection((string) $matches[0]);
+                return $this->renderSection($matches[0]);
             }, $this->layout);
         } else {
             $content = $this->renderEmpty();
