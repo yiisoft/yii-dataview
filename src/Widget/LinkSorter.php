@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Yiisoft\Yii\DataView\Widget;
 
+use Stringable;
 use JsonException;
 use Yiisoft\Data\Reader\Sort;
 use Yiisoft\Html\Html;
@@ -23,6 +24,7 @@ use function implode;
  *
  * For more details and usage information on LinkSorter, see the [guide article on sorting](guide:output-sorting).
  */
+            /** @var array<string, scalar|Stringable|null> $this->requestArguments */
 final class LinkSorter extends Widget
 {
     private const BOOTSTRAP = 'bootstrap';
@@ -218,9 +220,10 @@ final class LinkSorter extends Widget
         $params = [];
         $params['sort'] = $this->createSorterParam($attribute);
         $page = ['page' => $this->currentPage];
-        $queryParams = array_merge($page, $this->requestQueryParams, $params);
+        $queryParams = array_merge($page, $this->requestQueryParams ?? [], $params);
 
         if ($name = $this->currentRoute->getName()) {
+            /** @var array<string, scalar|Stringable|null> $this->requestArguments */
             return $this->urlGenerator->generate($name, $this->requestArguments, $queryParams);
         }
 

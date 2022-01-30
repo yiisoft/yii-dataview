@@ -188,12 +188,13 @@ final class LinkPager extends Widget
             throw new InvalidArgumentException("Attribute {$name} is not defined.");
         }
 
-        if (!is_array($this->{$name})) {
+        $currentValue = $this->{$name};
+
+        if (!is_array($currentValue)) {
             throw new RuntimeException("Attribute {$name} is not array and it can't be merged.");
         }
 
-        /** @psalm-suppress MixedArgument */
-        return $this->setOption($name, array_merge($this->{$name}, $value));
+        return $this->setOption($name, array_merge($currentValue, $value));
     }
 
     /**
@@ -711,7 +712,7 @@ final class LinkPager extends Widget
         $queryParameters = array_merge($this->requestQueryParams ?? [], [$this->pageParam => $page]);
 
         if ($name = $this->currentRoute->getName()) {
-            /** @var array<string, Stringable|null|scalar> $this->requestArguments */
+            /** @var array<string, scalar|Stringable|null> $this->requestArguments */
             return $this->urlGenerator->generate($name, $this->requestArguments, $queryParameters);
         }
 
