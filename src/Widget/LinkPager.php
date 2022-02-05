@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Yiisoft\Yii\DataView\Widget;
 
 use Stringable;
-use JsonException;
 use InvalidArgumentException;
+use JsonException;
 use RuntimeException;
 use Yiisoft\Arrays\ArrayHelper;
 use Yiisoft\Data\Paginator\OffsetPaginator;
@@ -16,7 +16,6 @@ use Yiisoft\Router\CurrentRoute;
 use Yiisoft\Router\UrlGeneratorInterface;
 use Yiisoft\View\WebView;
 use Yiisoft\Yii\DataView\Exception\InvalidConfigException;
-use Yiisoft\Yii\DataView\Widget;
 
 use function implode;
 
@@ -33,7 +32,7 @@ use function implode;
  *
  * For more details and usage information on LinkPager, see the [guide article on paginator](guide:output-paginator).
  */
-final class LinkPager extends Widget
+final class LinkPager extends AbstractLinkWidget
 {
     public const FIRST_PAGE_BUTTON = '{first_page}';
     public const PREV_PAGE_BUTTON = '{prev_page}';
@@ -88,14 +87,9 @@ final class LinkPager extends Widget
     private bool $hideOnSinglePage = false;
     private int $maxButtonCount = 10;
     private bool $registerLinkTags = false;
-    private ?array $requestArguments = null;
-    private ?array $requestQueryParams = null;
-    private string $pageParam = 'page';
     private string $template = self::PAGE_LIST;
     private string $listTemplate = self::FIRST_PAGE_BUTTON . self::PREV_PAGE_BUTTON . self::PAGES . self::NEXT_PAGE_BUTTON . self::LAST_PAGE_BUTTON;
-    private CurrentRoute $currentRoute;
     private OffsetPaginator $paginator;
-    private UrlGeneratorInterface $urlGenerator;
     private WebView $webView;
 
     public function __construct(
@@ -103,8 +97,8 @@ final class LinkPager extends Widget
         UrlGeneratorInterface $urlGenerator,
         WebView $webView
     ) {
-        $this->currentRoute = $currentRoute;
-        $this->urlGenerator = $urlGenerator;
+        parent::__construct($currentRoute, $urlGenerator);
+
         $this->webView = $webView;
     }
 
@@ -112,18 +106,6 @@ final class LinkPager extends Widget
     {
         if (!isset($this->paginator)) {
             throw new InvalidConfigException('The "paginator" property must be set.');
-        }
-
-        if ($this->requestArguments === null) {
-            $this->requestArguments = $this->currentRoute->getArguments();
-        }
-
-        if ($this->requestQueryParams === null) {
-            $this->requestQueryParams = [];
-
-            if ($uri = $this->currentRoute->getUri()) {
-                parse_str($uri->getQuery(), $this->requestQueryParams);
-            }
         }
 
         return parent::beforeRun();
@@ -225,18 +207,6 @@ final class LinkPager extends Widget
         $new->listTemplate = $template;
 
         return $new;
-    }
-
-    /**
-     * Name of $_GET page param using for pagination
-     *
-     * @param string $value
-     *
-     * @return self
-     */
-    public function pageParam(string $value): self
-    {
-        return $this->setOption('pageParam', $value);
     }
 
     /**
@@ -525,16 +495,6 @@ final class LinkPager extends Widget
         return $this->setOption('prevPageLabel', $label);
     }
 
-    public function requestArguments(?array $requestArguments): self
-    {
-        return $this->setOption('requestArguments', $requestArguments);
-    }
-
-    public function requestQueryParams(?array $requestQueryParams): self
-    {
-        return $this->setOption('requestQueryParams', $requestQueryParams);
-    }
-
     /**
      * @param bool $registerLinkTags whether to register link tags in the HTML header for prev, next, first and last
      * page.
@@ -709,18 +669,21 @@ final class LinkPager extends Widget
      */
     private function createUrl(int $page): string
     {
-        $queryParameters = array_merge($this->requestQueryParams ?? [], [$this->pageParam => $page]);
+        $requestArguments = $this->requestArguments ?? [];
+        $queryParameters = $this->requestQueryParams ?? [];
+
+        if ($this->pageArgument) {
+            $requestArguments[$this->pageParam] = $page;
+        } else {
+            $queryParameters[$this->pageParam] = $page;
+        }
 
         if ($name = $this->currentRoute->getName()) {
-            /** @var array<string, scalar|Stringable|null> $this->requestArguments */
-            return $this->urlGenerator->generate($name, $this->requestArguments, $queryParameters);
+            /** @var array<string, scalar|Stringable|null> $requestArguments */
+            return $this->urlGenerator->generate($name, $requestArguments, $queryParameters);
         }
 
-        if (count($queryParameters) > 1) {
-            return '?' . http_build_query($queryParameters);
-        }
-
-        return '';
+        return $queryParameters ? '?' . http_build_query($queryParameters) : '';
     }
 
     private function createLinks(): array
