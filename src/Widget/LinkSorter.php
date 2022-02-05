@@ -179,13 +179,14 @@ final class LinkSorter extends AbstractLinkWidget
     {
         $requestArguments = $this->requestArguments ?? [];
         $queryParams = $this->requestQueryParams ?? [];
-        $queryParams['sort'] = $this->createSorterParam($attribute);
 
         if ($this->pageArgument) {
             $requestArguments[$this->pageParam] = $this->currentPage;
         } else {
             $queryParams[$this->pageParam] = $this->currentPage;
         }
+
+        $queryParams['sort'] = $this->createSorterParam($attribute);
 
         if ($name = $this->currentRoute->getName()) {
             /** @var array<string, scalar|Stringable|null> $requestArguments */

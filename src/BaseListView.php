@@ -47,6 +47,7 @@ abstract class BaseListView extends Widget
     ];
     private int $pageSize = 0;
     private int $currentPage = 1;
+    private ?bool $pageArgument = null;
     private ?array $requestArguments = null;
     private ?array $requestQueryParams = null;
     private TranslatorInterface $translator;
@@ -240,6 +241,14 @@ abstract class BaseListView extends Widget
         return $new;
     }
 
+    public function pageArgument(?bool $value = true): self
+    {
+        $new = clone $this;
+        $new->pageArgument = $value;
+
+        return $new;
+    }
+
     /**
      * @param bool $showOnEmpty whether to show an empty list view if {@see} returns no data.
      *
@@ -415,6 +424,7 @@ abstract class BaseListView extends Widget
         return LinkPager::widget()
             ->paginator($this->paginator)
             ->cssFramework($this->cssFramework)
+            ->pageArgument($this->pageArgument)
             ->requestArguments($this->requestArguments)
             ->requestQueryParams($this->requestQueryParams)
             ->render();
@@ -462,6 +472,6 @@ abstract class BaseListView extends Widget
             return '';
         }
 
-        return LinkSorter::widget()->sort($sort)->cssFramework($this->cssFramework)->render();
+        return LinkSorter::widget()->sort($sort)->pageArgument($this->pageArgument)->cssFramework($this->cssFramework)->render();
     }
 }

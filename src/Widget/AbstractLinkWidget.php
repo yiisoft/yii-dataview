@@ -13,7 +13,7 @@ abstract class AbstractLinkWidget extends Widget
     protected ?array $requestArguments = null;
     protected ?array $requestQueryParams = null;
     protected string $pageParam = 'page';
-    protected bool $pageArgument = false;
+    protected ?bool $pageArgument = null;
     protected CurrentRoute $currentRoute;
     protected UrlGeneratorInterface $urlGenerator;
 
@@ -27,6 +27,10 @@ abstract class AbstractLinkWidget extends Widget
 
     protected function beforeRun(): bool
     {
+        if ($this->pageArgument === null) {
+            $this->pageArgument = array_key_exists($this->pageParam, $this->currentRoute->getArguments());
+        }
+
         if ($this->requestArguments === null) {
             $this->requestArguments = $this->currentRoute->getArguments();
         }
@@ -51,7 +55,7 @@ abstract class AbstractLinkWidget extends Widget
      *
      * {@see UrlGeneratorInterface::generate()} for detail
      */
-    public function requestArguments(?array $requestArguments): static
+    public function requestArguments(?array $requestArguments): self
     {
         $new = clone $this;
         $new->requestArguments = $requestArguments;
@@ -94,11 +98,11 @@ abstract class AbstractLinkWidget extends Widget
     /**
      * Use route argument instead of $_GET param for page number, like /page-{pageParam:\d+}
      *
-     * @param bool $value
+     * @param bool|null $value
      *
      * @return self
      */
-    public function pageArgument(bool $value = true): self
+    public function pageArgument(?bool $value = true): self
     {
         $new = clone $this;
         $new->pageArgument = $value;
