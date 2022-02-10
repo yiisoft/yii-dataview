@@ -478,7 +478,7 @@ final class GridView extends BaseListView
 
         reset($models);
 
-        /** @var array<array-key,object|bool|int|string|null> $models */
+        /** @var array<array-key,bool|int|object|string|null> $models */
         foreach ($models as $name => $value) {
             if ($value === null || is_scalar($value) || is_callable([$value, '__toString'])) {
                 $this->columns[] = (string) $name;
