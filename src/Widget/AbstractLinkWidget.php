@@ -51,7 +51,7 @@ abstract class AbstractLinkWidget extends Widget
      *
      * @param array|null $requestArguments
      *
-     * @return self
+     * @return static
      *
      * {@see UrlGeneratorInterface::generate()} for detail
      */
@@ -68,7 +68,7 @@ abstract class AbstractLinkWidget extends Widget
      *
      * @param array|null $requestQueryParams
      *
-     * @return self
+     * @return static
      *
      * {@see UrlGeneratorInterface::generate()} for detail
      */
@@ -85,7 +85,7 @@ abstract class AbstractLinkWidget extends Widget
      *
      * @param string $value
      *
-     * @return self
+     * @return static
      */
     public function pageParam(string $value): self
     {
@@ -100,7 +100,7 @@ abstract class AbstractLinkWidget extends Widget
      *
      * @param bool|null $value
      *
-     * @return self
+     * @return static
      */
     public function pageArgument(?bool $value = true): self
     {

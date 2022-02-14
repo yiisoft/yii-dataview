@@ -68,6 +68,7 @@ abstract class BaseListView extends Widget
     {
         if ($this->showOnEmpty || ($this->paginator->getTotalItems() > 0)) {
             $content = preg_replace_callback('/{\\w+}/', function (array $matches): string {
+                /** @var string[] $matches */
                 return $this->renderSection($matches[0]);
             }, $this->layout);
         } else {
@@ -241,6 +242,13 @@ abstract class BaseListView extends Widget
         return $new;
     }
 
+    /**
+     * Use route argument instead of $_GET param for page number, like /page-{pageParam:\d+}
+     *
+     * @param bool|null $value
+     *
+     * @return self
+     */
     public function pageArgument(?bool $value = true): self
     {
         $new = clone $this;
@@ -472,6 +480,10 @@ abstract class BaseListView extends Widget
             return '';
         }
 
-        return LinkSorter::widget()->sort($sort)->pageArgument($this->pageArgument)->cssFramework($this->cssFramework)->render();
+        return LinkSorter::widget()
+            ->sort($sort)
+            ->pageArgument($this->pageArgument)
+            ->cssFramework($this->cssFramework)
+            ->render();
     }
 }
