@@ -4,16 +4,15 @@ declare(strict_types=1);
 
 namespace Yiisoft\Yii\DataView\Widget;
 
+use Stringable;
 use JsonException;
 use Yiisoft\Data\Reader\Sort;
 use Yiisoft\Html\Html;
 use Yiisoft\Router\CurrentRoute;
 use Yiisoft\Router\UrlGeneratorInterface;
 use Yiisoft\Strings\Inflector;
-use Yiisoft\Widget\Widget;
 use Yiisoft\Yii\DataView\Exception\InvalidConfigException;
 
-use function array_merge;
 use function implode;
 
 /**
@@ -23,7 +22,7 @@ use function implode;
  *
  * For more details and usage information on LinkSorter, see the [guide article on sorting](guide:output-sorting).
  */
-final class LinkSorter extends Widget
+final class LinkSorter extends AbstractLinkWidget
 {
     private const BOOTSTRAP = 'bootstrap';
     private const BULMA = 'bulma';
@@ -35,38 +34,17 @@ final class LinkSorter extends Widget
     private int $currentPage = 1;
     private string $cssFramework = self::BOOTSTRAP;
     private array $options = [];
-    private ?array $requestArguments = null;
-    private ?array $requestQueryParams = null;
-    private CurrentRoute $currentRoute;
     private Inflector $inflector;
     private Sort $sort;
-    private UrlGeneratorInterface $urlGenerator;
 
     public function __construct(
         CurrentRoute $currentRoute,
         Inflector $inflector,
         UrlGeneratorInterface $urlGenerator
     ) {
-        $this->currentRoute = $currentRoute;
+        parent::__construct($currentRoute, $urlGenerator);
+
         $this->inflector = $inflector;
-        $this->urlGenerator = $urlGenerator;
-    }
-
-    protected function beforeRun(): bool
-    {
-        if ($this->requestArguments === null) {
-            $this->requestArguments = $this->currentRoute->getArguments();
-        }
-
-        if ($this->requestQueryParams === null) {
-            $this->requestQueryParams = [];
-
-            if ($uri = $this->currentRoute->getUri()) {
-                parse_str($uri->getQuery(), $this->requestQueryParams);
-            }
-        }
-
-        return parent::beforeRun();
     }
 
     /**
@@ -123,22 +101,6 @@ final class LinkSorter extends Widget
     {
         $new = clone $this;
         $new->options = $options;
-
-        return $new;
-    }
-
-    public function requestArguments(?array $requestArguments): self
-    {
-        $new = clone $this;
-        $new->requestArguments = $requestArguments;
-
-        return $new;
-    }
-
-    public function requestQueryParams(?array $requestQueryParams): self
-    {
-        $new = clone $this;
-        $new->requestQueryParams = $requestQueryParams;
 
         return $new;
     }
@@ -215,13 +177,20 @@ final class LinkSorter extends Widget
      */
     private function createUrl(string $attribute): string
     {
-        $params = [];
-        $params['sort'] = $this->createSorterParam($attribute);
-        $page = ['page' => $this->currentPage];
-        $queryParams = array_merge($page, $this->requestQueryParams, $params);
+        $requestArguments = $this->requestArguments ?? [];
+        $queryParams = $this->requestQueryParams ?? [];
+
+        if ($this->pageArgument) {
+            $requestArguments[$this->pageParam] = $this->currentPage;
+        } else {
+            $queryParams[$this->pageParam] = $this->currentPage;
+        }
+
+        $queryParams['sort'] = $this->createSorterParam($attribute);
 
         if ($name = $this->currentRoute->getName()) {
-            return $this->urlGenerator->generate($name, $this->requestArguments, $queryParams);
+            /** @var array<string, scalar|Stringable|null> $requestArguments */
+            return $this->urlGenerator->generate($name, $requestArguments, $queryParams);
         }
 
         return '?' . http_build_query($queryParams);

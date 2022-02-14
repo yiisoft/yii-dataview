@@ -226,7 +226,6 @@ final class ActionColumn extends Column
     protected function renderDataCellContent($model, $key, int $index): string
     {
         return preg_replace_callback('/{([\w\-\/]+)}/', function (array $matches) use ($model, $key, $index): string {
-            /** @var string */
             $name = $matches[1];
 
             if (isset($this->visibleButtons[$name])) {
@@ -271,6 +270,7 @@ final class ActionColumn extends Column
         /** @var mixed */
         $key = $model[$this->primaryKey] ?? $key;
 
+        /** @psalm-var array<string, \Stringable|null|scalar> $params */
         $params = is_array($key) ? $key : ['id' => (string) $key];
 
         return $this->urlGenerator->generate($action, $params);
