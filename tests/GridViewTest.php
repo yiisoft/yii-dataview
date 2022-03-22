@@ -179,17 +179,17 @@ final class GridViewTest extends TestCase
         <tr><th>Id</th><th>Username</th><th>Total</th><th class="action-column">Operations</th></tr>
         </thead>
         <tbody>
-        <tr><td>1</td><td></td><td>10</td><td>  <a class="text-danger" href="/admin/delete/1" title="Delete" data-method="POST" data-confirm="Are you sure to delete this user?"><span>&#128465;</span></a></td></tr>
-        <tr><td>2</td><td></td><td>20</td><td>  <a class="text-danger" href="/admin/delete/2" title="Delete" data-method="POST" data-confirm="Are you sure to delete this user?"><span>&#128465;</span></a></td></tr>
-        <tr><td>3</td><td></td><td>30</td><td>  <a class="text-danger" href="/admin/delete/3" title="Delete" data-method="POST" data-confirm="Are you sure to delete this user?"><span>&#128465;</span></a></td></tr>
-        <tr><td>4</td><td></td><td>40</td><td>  <a class="text-danger" href="/admin/delete/4" title="Delete" data-method="POST" data-confirm="Are you sure to delete this user?"><span>&#128465;</span></a></td></tr>
-        <tr><td>5</td><td></td><td>50</td><td>  <a class="text-danger" href="/admin/delete/5" title="Delete" data-method="POST" data-confirm="Are you sure to delete this user?"><span>&#128465;</span></a></td></tr>
-        <tr><td>6</td><td></td><td>60</td><td>  <a class="text-danger" href="/admin/delete/6" title="Delete" data-method="POST" data-confirm="Are you sure to delete this user?"><span>&#128465;</span></a></td></tr>
+        <tr><td>1</td><td></td><td>10</td><td><a class="text-danger" href="/admin/delete/1" title="Delete" data-method="POST" data-confirm="Are you sure to delete this user?"><span>&#128465;</span></a></td></tr>
+        <tr><td>2</td><td></td><td>20</td><td><a class="text-danger" href="/admin/delete/2" title="Delete" data-method="POST" data-confirm="Are you sure to delete this user?"><span>&#128465;</span></a></td></tr>
+        <tr><td>3</td><td></td><td>30</td><td><a class="text-danger" href="/admin/delete/3" title="Delete" data-method="POST" data-confirm="Are you sure to delete this user?"><span>&#128465;</span></a></td></tr>
+        <tr><td>4</td><td></td><td>40</td><td><a class="text-danger" href="/admin/delete/4" title="Delete" data-method="POST" data-confirm="Are you sure to delete this user?"><span>&#128465;</span></a></td></tr>
+        <tr><td>5</td><td></td><td>50</td><td><a class="text-danger" href="/admin/delete/5" title="Delete" data-method="POST" data-confirm="Are you sure to delete this user?"><span>&#128465;</span></a></td></tr>
+        <tr><td>6</td><td></td><td>60</td><td><a class="text-danger" href="/admin/delete/6" title="Delete" data-method="POST" data-confirm="Are you sure to delete this user?"><span>&#128465;</span></a></td></tr>
         </tbody>
         </table>
         </div>
         HTML;
-        $this->assertEqualsWithoutLE($html, $gridView->render());
+        $this->assertEqualsHTML($html, $gridView->render());
     }
 
     public function testColumnsException(): void

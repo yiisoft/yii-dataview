@@ -83,7 +83,7 @@ final class LinkPagerTest extends TestCase
         <nav aria-label="Pagination">
         <ul class="pagination justify-content-center mt-4">
         <li class="page-item disabled"><a class="page-link" href="?page=1" data-page="1" aria-disabled="true" tabindex="-1">Previous</a></li>
-        <li class="page-item disabled"><a class="page-link" href="?page=1" data-page="1">1</a></li>
+        <li class="page-item active disabled"><a class="page-link" href="?page=1" data-page="1">1</a></li>
         <li class="page-item"><a class="page-link" href="?page=2" data-page="2">2</a></li>
         <li class="page-item"><a class="page-link" href="?page=2" data-page="2">Next Page</a></li>
         </ul>
@@ -567,6 +567,28 @@ final class LinkPagerTest extends TestCase
         <li class="page-item test-active"><a class="page-link" href data-page="1">1</a></li>
         <li class="page-item"><a class="page-link" href data-page="2">2</a></li>
         <li class="page-item"><a class="page-link" href data-page="2">Next Page</a></li>
+        </ul>
+        </nav>
+        HTML;
+        $this->assertEqualsHTML($html, $linkPager->render());
+    }
+
+    public function testHideFirstPageParam(): void
+    {
+        LinkPager::counter(0);
+
+        $linkPager = LinkPager::widget()
+            ->hideFirstPageParam()
+            ->activeButtonAttributes(['class' => 'test-active'])
+            ->paginator($this->createOffsetPaginator()->withPageSize(5));
+
+        $html = <<<'HTML'
+        <nav aria-label="Pagination">
+        <ul class="pagination justify-content-center mt-4">
+        <li class="page-item disabled"><a class="page-link" href data-page="1" aria-disabled="true" tabindex="-1">Previous</a></li>
+        <li class="page-item test-active"><a class="page-link" href data-page="1">1</a></li>
+        <li class="page-item"><a class="page-link" href="?page=2" data-page="2">2</a></li>
+        <li class="page-item"><a class="page-link" href="?page=2" data-page="2">Next Page</a></li>
         </ul>
         </nav>
         HTML;

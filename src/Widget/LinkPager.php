@@ -52,6 +52,7 @@ final class LinkPager extends AbstractLinkWidget
         self::BOOTSTRAP,
         self::BULMA,
     ];
+    private bool $hideFirstPageParam = false;
     private array $buttonsContainerAttributes = [
         'class' => 'page-item',
     ];
@@ -69,7 +70,9 @@ final class LinkPager extends AbstractLinkWidget
     private array $navAttributes = ['aria-label' => 'Pagination'];
     private array $ulAttributes = ['class' => 'pagination justify-content-center mt-4'];
     private ?string $firstPageLabel = null;
-    private array $firstPageAttributes = [];
+    private array $firstPageAttributes = [
+        'class' => 'page-item',
+    ];
     private ?string $lastPageLabel = null;
     private array $lastPageAttributes = [
         'class' => 'page-item',
@@ -360,6 +363,21 @@ final class LinkPager extends AbstractLinkWidget
     }
 
     /**
+     * Enable/Disable hidding pageParam on first page
+     *
+     * @param bool $value
+     *
+     * @return self
+     */
+    public function hideFirstPageParam(bool $value = true): self
+    {
+        $new = clone $this;
+        $new->hideFirstPageParam = $value;
+
+        return $new;
+    }
+
+    /**
      * @param array $linkAttributes HTML attributes for the link in a pager container tag.
      *
      * @return $this
@@ -610,15 +628,15 @@ final class LinkPager extends AbstractLinkWidget
         bool $disabled = false,
         bool $active = false
     ): string {
-        /** @psalm-var non-empty-string */
-        $linkWrapTag = ArrayHelper::remove($buttonsAttributes, 'tag', 'li');
         $linkAttributes = $this->linkAttributes;
         $linkAttributes['data-page'] = $page;
 
-        if ($active && !$disabled) {
+        if ($active) {
             $linkAttributes = self::mergeAttributes($linkAttributes, $this->activeLinkAttributes);
             $buttonsAttributes = self::mergeAttributes($buttonsAttributes, $this->activeButtonAttributes);
-        } elseif ($disabled) {
+        }
+
+        if ($disabled) {
             $linkAttributes = self::mergeAttributes($linkAttributes, $this->disabledLinkAttributes);
             $buttonsAttributes = self::mergeAttributes($buttonsAttributes, $this->disabledButtonAttributes);
 
@@ -628,7 +646,10 @@ final class LinkPager extends AbstractLinkWidget
             }
         }
 
-        $encode = is_numeric($label) ? null : (bool) ArrayHelper::remove($buttonsAttributes, 'encode', true);
+        /** @psalm-var non-empty-string */
+        $linkWrapTag = ArrayHelper::remove($buttonsAttributes, 'tag', 'li');
+        /** @var bool $encode */
+        $encode = ArrayHelper::remove($buttonsAttributes, 'encode', !is_numeric($label));
         $link = Html::a($label, $this->createUrl($page), $linkAttributes)->encode($encode)->render();
 
         if ($linkWrapTag) {
@@ -672,7 +693,13 @@ final class LinkPager extends AbstractLinkWidget
         $requestArguments = $this->requestArguments ?? [];
         $queryParameters = $this->requestQueryParams ?? [];
 
-        if ($this->pageArgument) {
+        if ($this->hideFirstPageParam && $page === 1) {
+            if ($this->pageArgument) {
+                unset($requestArguments[$this->pageParam]);
+            } else {
+                unset($queryParameters[$this->pageParam]);
+            }
+        } elseif ($this->pageArgument) {
             $requestArguments[$this->pageParam] = $page;
         } else {
             $queryParameters[$this->pageParam] = $page;

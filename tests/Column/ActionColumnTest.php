@@ -44,10 +44,18 @@ final class ActionColumnTest extends TestCase
         $actionColumn = $this->actionColumn->buttonOptions(['disabled' => true]);
 
         $html = <<<'HTML'
-        <td><a href="/admin/view/1" disabled title="View" aria-label="View" data-name="view"><span>&#128065;</span></a> <a href="/admin/update/1" disabled title="Update" aria-label="Update" data-name="update"><span>&#128393;</span></a> <a href="/admin/delete/1" disabled title="Delete" aria-label="Delete" data-name="delete" data-confirm="Are you sure you want to delete this item?" data-method="post"><span>&#128465;</span></a></td>
+        <td>
+        <a href="/admin/view/1" disabled title="View" aria-label="View" data-name="view">
+        <span>&#128065;</span>
+        </a> <a href="/admin/update/1" disabled title="Update" aria-label="Update" data-name="update">
+        <span>&#128393;</span>
+        </a> <a href="/admin/delete/1" disabled title="Delete" aria-label="Delete" data-name="delete" data-confirm="Are you sure you want to delete this item?" data-method="post">
+        <span>&#128465;</span>
+        </a>
+        </td>
         HTML;
 
-        $this->assertSame($html, $actionColumn->renderDataCell(['id' => 1], 1, 0));
+        $this->assertEqualsHTML($html, $actionColumn->renderDataCell(['id' => 1], 1, 0));
     }
 
     public function testActionColumnOneButtonMatched(): void
@@ -71,6 +79,14 @@ final class ActionColumnTest extends TestCase
 
         $html = <<<'HTML'
         <td><a class="text-danger" title="Custom">/admin/custom/1</a></td>
+        HTML;
+
+        $this->assertSame($html, $actionColumn->renderDataCell(['user_id' => 1], 1, 0));
+
+        $actionColumn->primaryAlias('test_id');
+
+        $html = <<<'HTML'
+        <td><a class="text-danger" title="Custom">/admin/custom?test_id=1</a></td>
         HTML;
 
         $this->assertSame($html, $actionColumn->renderDataCell(['user_id' => 1], 1, 0));
