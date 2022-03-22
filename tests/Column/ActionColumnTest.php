@@ -83,7 +83,7 @@ final class ActionColumnTest extends TestCase
 
         $this->assertSame($html, $actionColumn->renderDataCell(['user_id' => 1], 1, 0));
 
-        $actionColumn->primaryAlias('test_id');
+        $actionColumn->primaryArgument('test_id');
 
         $html = <<<'HTML'
         <td><a class="text-danger" title="Custom">/admin/custom?test_id=1</a></td>
@@ -148,5 +148,36 @@ final class ActionColumnTest extends TestCase
         $actionColumn->visibleButtons(['update' => static fn ($model, $key, $index) => $model['id'] !== 1]);
         $columnContents = $this->actionColumn->renderDataCell(['id' => 1], 1, 0);
         $this->assertNotSame('<td>update_button</td>', $columnContents);
+    }
+
+    public function testWithHtmlA(): void
+    {
+        $actionColumn = $this->actionColumn
+                ->buttons([
+                    'admin/custom' => Html::a('Custom view'),
+                ]);
+
+        $html = <<<'HTML'
+        <td><a href="/admin/custom/1">Custom view</a></td>
+        HTML;
+
+        $this->assertSame($html, $actionColumn->renderDataCell(['id' => 1], 1, 0));
+    }
+
+    public function testQueryParams(): void
+    {
+        $actionColumn = $this->actionColumn
+                ->primaryParam('user_id')
+                ->queryParams([
+                    'custom-param' => 1
+                ])->buttons([
+                    'admin/custom' => Html::a('Custom view'),
+                ]);
+
+        $html = <<<'HTML'
+        <td><a href="/admin/custom?custom-param=1&amp;user_id=1">Custom view</a></td>
+        HTML;
+
+        $this->assertSame($html, $actionColumn->renderDataCell(['id' => 1], 1, 0));
     }
 }

@@ -5,10 +5,11 @@ declare(strict_types=1);
 namespace Yiisoft\Yii\DataView\Columns;
 
 use Closure;
-use Stringable;
 use Yiisoft\Html\Html;
+use Yiisoft\Html\Tag\A;
 use Yiisoft\Router\UrlGeneratorInterface;
 use Yiisoft\Yii\DataView\Columns\Column;
+use Yiisoft\Arrays\ArrayHelper;
 
 use function array_merge;
 use function call_user_func;
@@ -54,7 +55,10 @@ final class ActionColumn extends Column
     private array $visibleButtons = [];
     private array $buttonOptions = [];
     private string $primaryKey = 'id';
-    private ?string $primaryAlias = 'id';
+    private ?string $primaryArgument = 'id';
+    private ?string $primaryParam = null;
+    private array $arguments = [];
+    private array $queryParams = [];
     /** @var callable|null */
     private $urlCreator = null;
     private UrlGeneratorInterface $urlGenerator;
@@ -133,9 +137,58 @@ final class ActionColumn extends Column
         return $this;
     }
 
-    public function primaryAlias(?string $primaryAlias): self
+    /**
+     * Set/Enable/Disable primaryKey in query argument
+     *
+     * @param string|null $primaryArgument
+     *
+     * @return self
+     */
+    public function primaryArgument(?string $primaryArgument): self
     {
-        $this->primaryAlias = $primaryAlias;
+        $this->primaryArgument = $primaryArgument;
+
+        return $this;
+    }
+
+    /**
+     * Additional arguments for url
+     *
+     * @param array $arguments
+     *
+     * @return self
+     */
+    public function arguments(array $arguments): self
+    {
+        $this->arguments = $arguments;
+
+        return $this;
+    }
+
+    /**
+     * Query params for url
+     *
+     * @param array $params
+     *
+     * @return self
+     */
+    public function queryParams(array $params): self
+    {
+        $this->queryParams = $params;
+
+        return $this;
+    }
+
+    /**
+     * Set/Enable/Disable url with ID in querystring instead of arguments
+     *
+     * @param string|null $primaryParam
+     *
+     * @return self
+     */
+    public function primaryParam(?string $primaryParam): self
+    {
+        $this->primaryParam = $primaryParam;
 
         return $this;
     }
@@ -262,6 +315,9 @@ final class ActionColumn extends Column
 
             if (!$isVisible) {
                 $tokens[$token] = '';
+            } elseif ($button instanceof A) {
+                $url = $this->createUrl($name, $model, $key, $index);
+                $tokens[$token] = $button->href($url)->render();
             } elseif ($button instanceof Closure) {
                 $url = $this->createUrl($name, $model, $key, $index);
                 $tokens[$token] = (string) $button($url, $model, $key);
@@ -291,14 +347,21 @@ final class ActionColumn extends Column
             return (string) call_user_func($this->urlCreator, $action, $model, $key, $index, $this);
         }
 
-        /** @var mixed */
-        $key = $model[$this->primaryKey] ?? $key;
-        $pk = $this->primaryAlias ?? $this->primaryKey;
+        $params = $this->queryParams;
+        $arguments = $this->arguments;
+        $pk = $this->primaryParam ?? $this->primaryArgument ?? $this->primaryKey;
+        /** @var array<string, \Stringable|null|scalar>|\Stringable|null|scalar $key */
+        $key = ArrayHelper::getValueByPath($model, $this->primaryKey, $key);
+        /** @var array<string, \Stringable|null|scalar> $value */
+        $value = is_array($key) ? $key : [$pk => (string) $key];
 
-        /** @psalm-var array<string, \Stringable|null|scalar> $params */
-        $params = is_array($key) ? $key : [$pk => (string) $key];
+        if ($this->primaryParam) {
+            $params = array_merge($params, $value);
+        } else {
+            $arguments = array_merge($arguments, $value);
+        }
 
-        return $this->urlGenerator->generate($action, $params);
+        return $this->urlGenerator->generate($action, $arguments, $params);
     }
 
     private function loadDefaultButtons(): void
