@@ -235,8 +235,6 @@ final class LinkSorter extends AbstractLinkWidget
         if (isset($this->options['label'])) {
             $label = $this->inflector->toHumanReadable((string) $this->options['label']);
             unset($this->options['label']);
-        } elseif (isset($orderCriteria[$this->attribute]['label'])) {
-            $label = $this->inflector->toHumanReadable((string) $orderCriteria[$this->attribute]['label']);
         } else {
             $label = $this->inflector->toHumanReadable($this->attribute);
         }
