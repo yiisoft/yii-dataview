@@ -592,7 +592,7 @@ final class LinkPager extends AbstractLinkWidget
             self::LAST_PAGE_BUTTON => $this->renderLastPageButtonLink($currentPage, $pageCount),
         ];
 
-        /** @psalm-var non-empty-string */
+        /** @var string|null $tag */
         $tag = ArrayHelper::remove($this->ulAttributes, 'tag', 'ul');
 
         if ($tag) {
@@ -646,14 +646,21 @@ final class LinkPager extends AbstractLinkWidget
             }
         }
 
-        /** @psalm-var non-empty-string */
-        $linkWrapTag = ArrayHelper::remove($buttonsAttributes, 'tag', 'li');
+        /** @var string|null $buttonTag */
+        $buttonTag = ArrayHelper::remove($buttonsAttributes, 'tag', 'li');
+        /** @var string|null $tag */
+        $tag = $active || $disabled ? ArrayHelper::remove($linkAttributes, 'tag') : null;
         /** @var bool $encode */
         $encode = ArrayHelper::remove($buttonsAttributes, 'encode', !is_numeric($label));
-        $link = Html::a($label, $this->createUrl($page), $linkAttributes)->encode($encode)->render();
 
-        if ($linkWrapTag) {
-            return Html::tag($linkWrapTag, $link, $buttonsAttributes)->encode(false)->render();
+        if ($tag) {
+            $link = Html::tag($tag, $label, $linkAttributes)->encode($encode)->render();
+        } else {
+            $link = Html::a($label, $this->createUrl($page), $linkAttributes)->encode($encode)->render();
+        }
+
+        if ($buttonTag) {
+            return Html::tag($buttonTag, $link, $buttonsAttributes)->encode(false)->render();
         }
 
         return $link;

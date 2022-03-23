@@ -442,6 +442,48 @@ final class LinkPagerTest extends TestCase
         $this->assertEqualsHTML($html, $linkPager->render());
     }
 
+    public function testActiveAndDisabledTag(): void
+    {
+        LinkPager::counter(0);
+
+        $linkPager = LinkPager::widget()
+            ->disabledLinkAttributes([
+                'tag' => 'span',
+            ])->paginator($this->createOffsetPaginator()->withPageSize(5));
+
+        $html = <<<'HTML'
+        <nav aria-label="Pagination">
+        <ul class="pagination justify-content-center mt-4">
+        <li class="page-item disabled"><span class="page-link" data-page="1" aria-disabled="true" tabindex="-1">Previous</span></li>
+        <li class="page-item active"><a class="page-link" href="?page=1" data-page="1">1</a></li>
+        <li class="page-item"><a class="page-link" href="?page=2" data-page="2">2</a></li>
+        <li class="page-item"><a class="page-link" href="?page=2" data-page="2">Next Page</a></li>
+        </ul>
+        </nav>
+        HTML;
+        $this->assertEqualsHTML($html, $linkPager->render());
+
+
+        LinkPager::counter(0);
+
+        $linkPager = LinkPager::widget()
+            ->activeLinkAttributes([
+                'tag' => 'span',
+            ])->paginator($this->createOffsetPaginator()->withPageSize(5));
+
+        $html = <<<'HTML'
+        <nav aria-label="Pagination">
+        <ul class="pagination justify-content-center mt-4">
+        <li class="page-item disabled"><a class="page-link" href="?page=1" data-page="1" aria-disabled="true" tabindex="-1">Previous</a></li>
+        <li class="page-item active"><span class="page-link" data-page="1">1</span></li>
+        <li class="page-item"><a class="page-link" href="?page=2" data-page="2">2</a></li>
+        <li class="page-item"><a class="page-link" href="?page=2" data-page="2">Next Page</a></li>
+        </ul>
+        </nav>
+        HTML;
+        $this->assertEqualsHTML($html, $linkPager->render());
+    }
+
     public function testQueryParams(): void
     {
         LinkPager::counter(0);
