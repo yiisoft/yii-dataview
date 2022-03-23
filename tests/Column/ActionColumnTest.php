@@ -83,7 +83,7 @@ final class ActionColumnTest extends TestCase
 
         $this->assertSame($html, $actionColumn->renderDataCell(['user_id' => 1], 1, 0));
 
-        $actionColumn->primaryArgument('test_id');
+        $actionColumn->primaryName('test_id');
 
         $html = <<<'HTML'
         <td><a class="text-danger" title="Custom">/admin/custom?test_id=1</a></td>
@@ -167,7 +167,8 @@ final class ActionColumnTest extends TestCase
     public function testQueryParams(): void
     {
         $actionColumn = $this->actionColumn
-                ->primaryParam('user_id')
+                ->primaryParam()
+                ->primaryName('user_id')
                 ->queryParams([
                     'custom-param' => 1
                 ])->buttons([

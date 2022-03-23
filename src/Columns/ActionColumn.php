@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Yiisoft\Yii\DataView\Columns;
 
 use Closure;
+use Stringable;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\A;
 use Yiisoft\Router\UrlGeneratorInterface;
@@ -55,8 +56,8 @@ final class ActionColumn extends Column
     private array $visibleButtons = [];
     private array $buttonOptions = [];
     private string $primaryKey = 'id';
-    private ?string $primaryArgument = 'id';
-    private ?string $primaryParam = null;
+    private ?string $primaryName = 'id';
+    private bool $primaryParam = false;
     private array $arguments = [];
     private array $queryParams = [];
     /** @var callable|null */
@@ -138,15 +139,15 @@ final class ActionColumn extends Column
     }
 
     /**
-     * Set/Enable/Disable primaryKey in query argument
+     * Set/Remove primary name if not equals primaryKey
      *
-     * @param string|null $primaryArgument
+     * @param string|null $primaryName
      *
      * @return self
      */
-    public function primaryArgument(?string $primaryArgument): self
+    public function primaryName(?string $primaryName): self
     {
-        $this->primaryArgument = $primaryArgument;
+        $this->primaryName = $primaryName;
 
         return $this;
     }
@@ -182,13 +183,13 @@ final class ActionColumn extends Column
     /**
      * Set/Enable/Disable url with ID in querystring instead of arguments
      *
-     * @param string|null $primaryParam
+     * @param bool $value
      *
      * @return self
      */
-    public function primaryParam(?string $primaryParam): self
+    public function primaryParam(bool $value = true): self
     {
-        $this->primaryParam = $primaryParam;
+        $this->primaryParam = $value;
 
         return $this;
     }
@@ -349,10 +350,9 @@ final class ActionColumn extends Column
 
         $params = $this->queryParams;
         $arguments = $this->arguments;
-        $pk = $this->primaryParam ?? $this->primaryArgument ?? $this->primaryKey;
-        /** @var array<string, \Stringable|null|scalar>|\Stringable|null|scalar $key */
+        $pk = $this->primaryName ?? $this->primaryKey;
+        /** @psalm-suppress MixedAssignment */
         $key = ArrayHelper::getValueByPath($model, $this->primaryKey, $key);
-        /** @var array<string, \Stringable|null|scalar> $value */
         $value = is_array($key) ? $key : [$pk => (string) $key];
 
         if ($this->primaryParam) {
@@ -360,7 +360,7 @@ final class ActionColumn extends Column
         } else {
             $arguments = array_merge($arguments, $value);
         }
-
+        /** @var array<string, Stringable|null|scalar> $arguments */
         return $this->urlGenerator->generate($action, $arguments, $params);
     }
 
