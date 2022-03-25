@@ -199,7 +199,7 @@ final class GridViewTest extends TestCase
 
         $this->expectException(InvalidConfigException::class);
         $this->expectExceptionMessage(
-            'The column must be specified in the format of "attribute", "attribute:format" or "attribute:format:label"'
+            'The attribute must be specified in the format of "attribute", "attribute:format" or "attribute:format:label"'
         );
         $gridView = GridView::widget()->columns([''])->paginator($offsetPaginator)->render();
     }

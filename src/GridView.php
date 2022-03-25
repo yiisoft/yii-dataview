@@ -441,34 +441,6 @@ final class GridView extends BaseListView
     }
 
     /**
-     * Creates a {@see DataColumn} object based on a string in the format of "attribute:format:label".
-     *
-     * @param string $text the column specification string.
-     *
-     * @throws InvalidConfigException if the column specification is invalid.
-     *
-     * @return Column the column instance.
-     */
-    private function createDataColumn(string $text): Column
-    {
-        if (!preg_match('/^([^:]+)(:(\w*))?(:(.*))?$/', $text, $matches)) {
-            throw new InvalidConfigException(
-                'The column must be specified in the format of "attribute", "attribute:format" or ' .
-                '"attribute:format:label"'
-            );
-        }
-
-        $config = [
-            'class' => DataColumn::class,
-            'attribute()' => [$matches[1]],
-            'label()' => [$matches[5] ?? ''],
-            'grid()' => [$this],
-        ];
-
-        return $this->gridViewFactory->createColumnClass($config);
-    }
-
-    /**
      * This function tries to guess the columns to show from the given data if {@see columns} are not explicitly
      * specified.
      */
@@ -499,8 +471,12 @@ final class GridView extends BaseListView
 
         foreach ($this->columns as $i => $column) {
             if (is_string($column)) {
-                $column = $this->createDataColumn($column);
-            } elseif (is_array($column)) {
+                $column = [
+                    'attribute()' => [$column],
+                ];
+            }
+
+            if (is_array($column)) {
                 $config = array_merge(
                     [
                         'class' => $this->dataColumnClass,

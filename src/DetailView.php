@@ -6,9 +6,11 @@ namespace Yiisoft\Yii\DataView;
 
 use Closure;
 use JsonException;
+use InvalidArgumentException;
 use Yiisoft\Arrays\ArrayHelper;
 use Yiisoft\Html\Html;
 use Yiisoft\Strings\Inflector;
+use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\Yii\DataView\Exception\InvalidConfigException;
 
 use function array_key_exists;
@@ -42,13 +44,24 @@ final class DetailView extends Widget
     private array $captionOptions = [];
     private array $contentOptions = [];
     private Inflector $inflector;
+    private TranslatorInterface $translator;
     private array $rowOptions = [];
     private string $template = '<tr{rowOptions}><th{captionOptions}>{label}</th><td{contentOptions}>{value}</td></tr>';
     private array $options = ['class' => 'table table-striped table-bordered detail-view'];
 
-    public function __construct(Inflector $inflector, Html $html)
+    public function __construct(Inflector $inflector, TranslatorInterface $translator)
     {
         $this->inflector = $inflector;
+        $this->translator = $translator;
+    }
+
+    protected function beforeRun(): bool
+    {
+        if ($this->model === null) {
+            throw new InvalidConfigException('Please specify the "model" property.');
+        }
+
+        return parent::beforeRun();
     }
 
     /**
@@ -62,12 +75,6 @@ final class DetailView extends Widget
      */
     public function run(): string
     {
-        if ($this->model === null) {
-            throw new InvalidConfigException('Please specify the "model" property.');
-        }
-
-        $normalizedAttributes = $this->normalizeAttributes();
-
         if (!isset($this->options['id'])) {
             $this->options['id'] = $this->getId() . '-detailview';
         }
@@ -75,8 +82,11 @@ final class DetailView extends Widget
         $rows = [];
 
         /** @var array<array-key,mixed> */
-        foreach ($normalizedAttributes as $attribute) {
-            $rows[] = $this->renderAttribute($attribute);
+        foreach ($this->attributes as $params) {
+            if ($attribute = $this->normalizeAttribute($params)) {
+                /** @var array<array-key,mixed>|string $params */
+                $rows[] = $this->renderAttribute($attribute, is_array($params) ? $params : []);
+            }
         }
 
         $options = $this->options;
@@ -237,29 +247,31 @@ final class DetailView extends Widget
     /**
      * Renders a single attribute.
      *
-     * @param array $attribute the specification of the attribute to be rendered.
+     * @param Attribute $attribute
+     * @param array $params the specification of the attribute to be rendered.
      *
      * @throws JsonException
      *
      * @return string the rendering result
      */
-    private function renderAttribute(array $attribute): string
+    private function renderAttribute(Attribute $attribute, array $params): string
     {
         /** @var array */
-        $captionOptions = $attribute['captionOptions'] ?? [];
+        $captionOptions = $params['captionOptions'] ?? [];
         $captionOptions = array_merge_recursive($this->captionOptions, $captionOptions);
 
         /** @var array */
-        $contentOptions = $attribute['contentOptions'] ?? [];
+        $contentOptions = $params['contentOptions'] ?? [];
         $contentOptions = array_merge_recursive($this->contentOptions, $contentOptions);
 
         /** @var array */
-        $rowOptions = $attribute['rowOptions'] ?? [];
+        $rowOptions = $params['rowOptions'] ?? [];
         $rowOptions = array_merge_recursive($this->rowOptions, $rowOptions);
 
+        /** @var array|object $this->model */
         return strtr($this->template, [
-            '{label}' => $attribute['label'],
-            '{value}' => $attribute['value'],
+            '{label}' => $attribute->getLabel() ?? $this->inflector->toHumanReadable($attribute->getName(), true),
+            '{value}' => $attribute->getValue($this->model, $this),
             '{captionOptions}' => Html::renderTagAttributes($captionOptions),
             '{contentOptions}' => Html::renderTagAttributes($contentOptions),
             '{rowOptions}' => Html::renderTagAttributes($rowOptions),
@@ -267,65 +279,38 @@ final class DetailView extends Widget
     }
 
     /**
-     * Normalizes the attribute specifications.
+     * @param array|string $params
      *
-     * @throws InvalidConfigException
+     * @return Attribute|null
      */
-    private function normalizeAttributes(): array
+    private function normalizeAttribute($params): ?Attribute
     {
-        $attributes = $this->attributes;
-
-        /** @var array<array-key,array|Closure|string> $attributes */
-        foreach ($attributes as $i => $attribute) {
-            if (is_string($attribute)) {
-                if (!preg_match('/^([^:]+)(:(\w*))?(:(.*))?$/', $attribute, $matches)) {
-                    throw new InvalidConfigException(
-                        'The attribute must be specified in the format of "attribute", "attribute:format" or '
-                        . '"attribute:format:label" '
-                    );
-                }
-
-                $attribute = [
-                    'attribute' => $matches[1],
-                    'format' => $matches[3] ?? 'text',
-                    'label' => $matches[5] ?? null,
-                ];
+        if (is_string($params)) {
+            return (new Attribute($this->translator))->name($params);
+        }
+        /** @psalm-suppress RedundantConditionGivenDocblockType */
+        if (is_array($params)) {
+            if (isset($params['visible']) && !$params['visible']) {
+                return null;
             }
 
-            if (is_array($attribute)) {
-                if (isset($attribute['visible']) && !$attribute['visible']) {
-                    unset($attributes[$i]);
-                    continue;
-                }
+            if (!isset($params['attribute']) && (!isset($params['label']) || !array_key_exists('value', $params))) {
+                throw new InvalidConfigException('The attribute configuration requires the "attribute" element to determine the value and display label.');
+            }
+            /** @psalm-suppress MixedArgument */
+            $attribute = (new Attribute($this->translator))
+                ->format($params['format'] ?? null)
+                ->label($params['label'] ?? null)
+                ->value($params['value'] ?? null);
 
-                if (!isset($attribute['format'])) {
-                    $attribute['format'] = 'text';
-                }
-
-                if (isset($attribute['attribute'])) {
-                    /** @var string */
-                    $attributeName = $attribute['attribute'];
-                    if (!isset($attribute['label'])) {
-                        $attribute['label'] = $this->inflector->toHumanReadable($attributeName, true);
-                    }
-
-                    if (!array_key_exists('value', $attribute) && $this->model !== null) {
-                        /** @var mixed */
-                        $attribute['value'] = ArrayHelper::getValue($this->model, $attributeName);
-                    }
-                } elseif (!isset($attribute['label']) || !array_key_exists('value', $attribute)) {
-                    throw new InvalidConfigException('The attribute configuration requires the "attribute" element to determine the value and display label.');
-                }
-
-                if ($attribute['value'] instanceof Closure) {
-                    /** @var mixed */
-                    $attribute['value'] = $attribute['value']($this->model, $this);
-                }
+            if (isset($params['attribute'])) {
+                /** @psalm-suppress MixedArgument */
+                return $attribute->name($params['attribute']);
             }
 
-            $attributes[$i] = $attribute;
+            return $attribute;
         }
 
-        return $attributes;
+        throw new InvalidArgumentException('Attribute must be type of "array" or "string".');
     }
 }
