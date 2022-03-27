@@ -4,10 +4,8 @@ declare(strict_types=1);
 
 namespace Yiisoft\Yii\DataView;
 
-use Closure;
 use JsonException;
 use InvalidArgumentException;
-use Yiisoft\Arrays\ArrayHelper;
 use Yiisoft\Html\Html;
 use Yiisoft\Strings\Inflector;
 use Yiisoft\Translator\TranslatorInterface;
@@ -40,6 +38,7 @@ final class DetailView extends Widget
 {
     /** @var array|object|null */
     private $model = null;
+    private ?string $emptyValue = '';
     private array $attributes = [];
     private array $captionOptions = [];
     private array $contentOptions = [];
@@ -80,21 +79,23 @@ final class DetailView extends Widget
         }
 
         $rows = [];
+        $options = $this->options;
+        /** @psalm-var non-empty-string */
+        $tag = $options['tag'] ?? 'table';
+
+        unset($options['tag']);
 
         /** @var array<array-key,mixed> */
         foreach ($this->attributes as $params) {
             if ($attribute = $this->normalizeAttribute($params)) {
                 /** @var array<array-key,mixed>|string $params */
-                $rows[] = $this->renderAttribute($attribute, is_array($params) ? $params : []);
+                $row = $this->renderAttribute($attribute, is_array($params) ? $params : []);
+
+                if ($row !== null) {
+                    $rows[] = $row;
+                }
             }
         }
-
-        $options = $this->options;
-
-        /** @psalm-var non-empty-string */
-        $tag = $options['tag'] ?? 'table';
-
-        unset($options['tag']);
 
         return Html::tag($tag, "\n" . implode("\n", $rows) . "\n", $options)->encode(false)->render();
     }
@@ -245,17 +246,42 @@ final class DetailView extends Widget
     }
 
     /**
+     * Set value for empty string. Null for hide empty value
+     *
+     * @param string|null $value
+     *
+     * @return self
+     */
+    public function emptyValue(?string $value): self
+    {
+        $new = clone $this;
+        $new->emptyValue = $value;
+
+        return $new;
+    }
+
+    /**
      * Renders a single attribute.
      *
-     * @param Attribute $attribute
+     * @param DataAttribute $attribute
      * @param array $params the specification of the attribute to be rendered.
      *
      * @throws JsonException
      *
      * @return string the rendering result
      */
-    private function renderAttribute(Attribute $attribute, array $params): string
+    private function renderAttribute(DataAttribute $attribute, array $params): ?string
     {
+        $value = $attribute->getValue($this->model, $this);
+
+        if ($value === '') {
+            if ($this->emptyValue === null) {
+                return null;
+            }
+
+            $value = $this->emptyValue;
+        }
+
         /** @var array */
         $captionOptions = $params['captionOptions'] ?? [];
         $captionOptions = array_merge_recursive($this->captionOptions, $captionOptions);
@@ -271,7 +297,7 @@ final class DetailView extends Widget
         /** @var array|object $this->model */
         return strtr($this->template, [
             '{label}' => $attribute->getLabel() ?? $this->inflector->toHumanReadable($attribute->getName(), true),
-            '{value}' => $attribute->getValue($this->model, $this),
+            '{value}' => $value,
             '{captionOptions}' => Html::renderTagAttributes($captionOptions),
             '{contentOptions}' => Html::renderTagAttributes($contentOptions),
             '{rowOptions}' => Html::renderTagAttributes($rowOptions),
@@ -279,17 +305,29 @@ final class DetailView extends Widget
     }
 
     /**
-     * @param array|string $params
+     * @param mixed $params
      *
-     * @return Attribute|null
+     * @throws InvalidArgumentException
+     *
+     * @return DataAttribute|null
      */
-    private function normalizeAttribute($params): ?Attribute
+    private function normalizeAttribute($params): ?DataAttribute
     {
         if (is_string($params)) {
-            return (new Attribute($this->translator))->name($params);
+            return (new DataAttribute($this->translator))->name($params);
         }
-        /** @psalm-suppress RedundantConditionGivenDocblockType */
+
         if (is_array($params)) {
+            /**
+             * @psalm-var array{
+             *   atribute: string,
+             *   label?: string|null,
+             *   value?: \Closure|\Stringable|string|null,
+             *   format?: \Closure|string|null,
+             *   visible?: bool,
+             *   encode?: bool,
+             * } $params
+             */
             if (isset($params['visible']) && !$params['visible']) {
                 return null;
             }
@@ -297,14 +335,14 @@ final class DetailView extends Widget
             if (!isset($params['attribute']) && (!isset($params['label']) || !array_key_exists('value', $params))) {
                 throw new InvalidConfigException('The attribute configuration requires the "attribute" element to determine the value and display label.');
             }
-            /** @psalm-suppress MixedArgument */
-            $attribute = (new Attribute($this->translator))
+
+            $attribute = (new DataAttribute($this->translator))
                 ->format($params['format'] ?? null)
                 ->label($params['label'] ?? null)
-                ->value($params['value'] ?? null);
+                ->value($params['value'] ?? null)
+                ->encode($params['encode'] ?? false);
 
-            if (isset($params['attribute'])) {
-                /** @psalm-suppress MixedArgument */
+            if (isset($params['attribute']) && is_string($params['attribute'])) {
                 return $attribute->name($params['attribute']);
             }
 

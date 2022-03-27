@@ -346,4 +346,50 @@ final class DetailViewTest extends TestCase
             ->model(['id' => 1, 'username' => 'tests 1', 'total' => '10']);
         $this->assertEqualsWithoutLE($html, $detailView->render());
     }
+
+    public function testEmptyValue(): void
+    {
+        DetailView::counter(0);
+
+        $html = <<<'HTML'
+        <table id="w1-detailview" class="table table-striped table-bordered detail-view">
+        <tr><th>Id</th><td>1</td></tr>
+        <tr><th>Total</th><td>10</td></tr>
+        </table>
+        HTML;
+
+        $detailView = DetailView::widget()
+            ->emptyValue(null)
+            ->attributes(
+                [
+                    ['attribute' => 'id'],
+                    ['attribute' => 'username'],
+                    ['attribute' => 'total'],
+                ],
+            )
+            ->model(['id' => 1, 'username' => '', 'total' => '10']);
+        $this->assertEqualsWithoutLE($html, $detailView->render());
+
+        DetailView::counter(0);
+
+        $html = <<<'HTML'
+        <table id="w1-detailview" class="table table-striped table-bordered detail-view">
+        <tr><th>Id</th><td>1</td></tr>
+        <tr><th>Username</th><td> - </td></tr>
+        <tr><th>Total</th><td>10</td></tr>
+        </table>
+        HTML;
+
+        $detailView = DetailView::widget()
+            ->emptyValue(' - ')
+            ->attributes(
+                [
+                    ['attribute' => 'id'],
+                    ['attribute' => 'username'],
+                    ['attribute' => 'total'],
+                ],
+            )
+            ->model(['id' => 1, 'username' => '', 'total' => '10']);
+        $this->assertEqualsWithoutLE($html, $detailView->render());
+    }
 }

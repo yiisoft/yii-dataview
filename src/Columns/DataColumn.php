@@ -10,7 +10,7 @@ use Yiisoft\Data\Reader\Sort;
 use Yiisoft\Html\Html;
 use Yiisoft\Strings\Inflector;
 use Yiisoft\Yii\DataView\Widget\LinkSorter;
-use Yiisoft\Yii\DataView\Attribute;
+use Yiisoft\Yii\DataView\DataAttribute;
 use Yiisoft\Translator\TranslatorInterface;
 
 use function array_merge;
@@ -48,11 +48,12 @@ use function is_string;
  */
 final class DataColumn extends Column
 {
-    private Attribute $attribute;
+    private DataAttribute $attribute;
     private string $filter = '';
     private bool $encodeLabel = true;
     private bool $enableSorting = true;
     private array $sortLinkOptions = [];
+    private string $emptyValue = '';
     private array $filterInputOptions = [];
     public string $filterAttribute = '';
     /** @var bool|float|int|string|null */
@@ -60,7 +61,7 @@ final class DataColumn extends Column
 
     public function __construct(TranslatorInterface $translator)
     {
-        $this->attribute = new Attribute($translator);
+        $this->attribute = new DataAttribute($translator);
     }
 
     /**
@@ -142,6 +143,20 @@ final class DataColumn extends Column
     }
 
     /**
+     * Enable/Disabe encode value
+     *
+     * @param bool $encode
+     *
+     * @return self
+     */
+    public function encode(bool $encode = true): self
+    {
+        $this->attribute = $this->attribute->encode($encode);
+
+        return $this;
+    }
+
+    /**
      * Returns the data cell value.
      *
      * @param array|object $model the data model.
@@ -153,7 +168,9 @@ final class DataColumn extends Column
      */
     public function getDataCellValue($model, $key, int $index): string
     {
-        return $this->attribute->getValue($model, $key, $index, $this);
+        $value = $this->attribute->getValue($model, $key, $index, $this);
+
+        return $value === '' ? $this->emptyValue : $value;
     }
 
     /**
@@ -241,6 +258,13 @@ final class DataColumn extends Column
     public function filterAttribute(string $filterAttribute): self
     {
         $this->filterAttribute = $filterAttribute;
+
+        return $this;
+    }
+
+    public function emptyValue(string $value): self
+    {
+        $this->emptyValue = $value;
 
         return $this;
     }

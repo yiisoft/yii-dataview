@@ -13,7 +13,7 @@ use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\Arrays\ArrayHelper;
 use Yiisoft\Html\Html;
 
-final class Attribute
+final class DataAttribute
 {
     private string $name = '';
     private ?string $label = null;
@@ -67,7 +67,7 @@ final class Attribute
         return $this->label;
     }
 
-    public function encode(bool $encode): self
+    public function encode(bool $encode = true): self
     {
         $this->encode = $encode;
 
@@ -111,7 +111,7 @@ final class Attribute
     }
 
     /**
-     * @param array|object $model
+     * @param mixed $model
      *
      * @throws RuntimeException
      * @throws InvalidArgumentException
@@ -119,23 +119,21 @@ final class Attribute
      * @return string
      */
     public function getValue($model): string
-    {   /** @psalm-suppress DocblockTypeContradiction */
+    {
         if (!is_array($model) && !is_object($model)) {
             throw new InvalidArgumentException('Model must be type of "array" or "object"');
         }
 
         $value = null;
 
-        if ($this->value) {
-            if ($this->value instanceof Stringable) {
-                $value = (string) $this->value;
-            } elseif (is_string($this->value)) {
-                /** @var mixed */
-                $value = ArrayHelper::getValueByPath($model, $this->value);
-            } else {
-                /** @var mixed */
-                $value = call_user_func_array($this->value, func_get_args());
-            }
+        if (is_string($this->value)) {
+            /** @var mixed */
+            $value = ArrayHelper::getValueByPath($model, $this->value);
+        } elseif ($this->value instanceof Stringable) {
+            $value = (string) $this->value;
+        } elseif ($this->value instanceof Closure) {
+            /** @var mixed */
+            $value = call_user_func_array($this->value, func_get_args());
         } elseif ($this->name) {
             /** @var mixed */
             $value = ArrayHelper::getValueByPath($model, $this->name);
@@ -145,13 +143,11 @@ final class Attribute
             return '';
         }
 
-        if ($this->format) {
-            if ($this->format instanceof Closure) {
-                /** @var mixed */
-                $value = call_user_func($this->format, $value);
-            } else {
-                $value = $this->translator->translate($this->format, (array) $value);
-            }
+        if (is_string($this->format)) {
+            $value = $this->translator->translate($this->format, (array) $value);
+        } elseif ($this->format instanceof Closure) {
+            /** @var mixed */
+            $value = call_user_func($this->format, $value);
         }
 
         return $this->encode ? Html::encode($value) : (string) $value;
