@@ -21,7 +21,7 @@ final class DataAttribute
     private $format;
     private bool $encode = false;
     private TranslatorInterface $translator ;
-    /** @var Closure|Stringable|string|null */
+    /** @var Closure|string|Stringable|null */
     private $value;
 
     public function __construct(TranslatorInterface $translator)
@@ -93,7 +93,7 @@ final class DataAttribute
     }
 
     /**
-     * @param Closure|Stringable|string|null $value
+     * @param Closure|string|Stringable|null $value
      *
      * @throws InvalidArgumentException
      *
@@ -104,7 +104,7 @@ final class DataAttribute
         if ($value !== null && !is_string($value) && !is_a($value, Closure::class) && !is_a($value, Stringable::class)) {
             throw new InvalidArgumentException('Value must be type of "null", "string" or Closure instance');
         }
-        /** @var Closure|Stringable|string|null $value */
+        /** @var Closure|string|Stringable|null $value */
         $this->value = $value;
 
         return $this;
@@ -133,7 +133,7 @@ final class DataAttribute
             $value = (string) $this->value;
         } elseif ($this->value instanceof Closure) {
             /** @var mixed */
-            $value = call_user_func_array($this->value, func_get_args());
+            $value = ($this->value)(...func_get_args());
         } elseif ($this->name) {
             /** @var mixed */
             $value = ArrayHelper::getValueByPath($model, $this->name);
@@ -147,7 +147,7 @@ final class DataAttribute
             $value = $this->translator->translate($this->format, (array) $value);
         } elseif ($this->format instanceof Closure) {
             /** @var mixed */
-            $value = call_user_func($this->format, $value);
+            $value = ($this->format)($value);
         }
 
         return $this->encode ? Html::encode($value) : (string) $value;

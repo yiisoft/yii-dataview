@@ -169,7 +169,7 @@ final class ActionColumnTest extends TestCase
                 ->withIdInQueryString()
                 ->primaryKeyName('user_id')
                 ->queryParameters([
-                    'custom-param' => 1
+                    'custom-param' => 1,
                 ])->buttons([
                     'admin/custom' => Html::a('Custom view'),
                 ]);

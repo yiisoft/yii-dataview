@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Yiisoft\Yii\DataView\Columns;
 
 use Closure;
-use Yiisoft\Arrays\ArrayHelper;
 use Yiisoft\Data\Reader\Sort;
 use Yiisoft\Html\Html;
 use Yiisoft\Strings\Inflector;
@@ -14,8 +13,6 @@ use Yiisoft\Yii\DataView\DataAttribute;
 use Yiisoft\Translator\TranslatorInterface;
 
 use function array_merge;
-use function call_user_func;
-use function is_string;
 
 /**
  * DataColumn is the default column type for the {@see GridView} widget.
@@ -237,7 +234,7 @@ final class DataColumn extends Column
     }
 
     /**
-     * @param string|Closure|null $format
+     * @param Closure|string|null $format
      *
      * @return self
      */

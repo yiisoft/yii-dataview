@@ -9,7 +9,6 @@ use Stringable;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\A;
 use Yiisoft\Router\UrlGeneratorInterface;
-use Yiisoft\Yii\DataView\Columns\Column;
 use Yiisoft\Arrays\ArrayHelper;
 
 use function array_merge;
@@ -301,7 +300,7 @@ final class ActionColumn extends Column
         $buttons = $this->getButtons();
         $template = $this->getTemplate();
 
-        /** @var array<string, Closure|Stringable|string> $buttons */
+        /** @var array<string, Closure|string|Stringable> $buttons */
         foreach ($buttons as $name => $button) {
             $token = '{' . $name . '}';
 
@@ -360,7 +359,7 @@ final class ActionColumn extends Column
         } else {
             $arguments = array_merge($arguments, $value);
         }
-        /** @var array<string, Stringable|null|scalar> $arguments */
+        /** @var array<string, scalar|Stringable|null> $arguments */
         return $this->urlGenerator->generate($action, $arguments, $parameters);
     }
 
