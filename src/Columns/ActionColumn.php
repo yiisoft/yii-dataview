@@ -56,10 +56,10 @@ final class ActionColumn extends Column
     private array $visibleButtons = [];
     private array $buttonOptions = [];
     private string $primaryKey = 'id';
-    private ?string $primaryName = 'id';
-    private bool $primaryParam = false;
+    private ?string $primaryKeyName = null;
+    private bool $idInQueryString = false;
     private array $arguments = [];
-    private array $queryParams = [];
+    private array $queryParameters = [];
     /** @var callable|null */
     private $urlCreator = null;
     private UrlGeneratorInterface $urlGenerator;
@@ -139,21 +139,21 @@ final class ActionColumn extends Column
     }
 
     /**
-     * Set/Remove primary name if not equals primaryKey
+     * Set primary key name. By default it equals to primaryKey.
      *
-     * @param string|null $primaryName
+     * @param string|null $primaryKeyName
      *
      * @return self
      */
-    public function primaryName(?string $primaryName): self
+    public function primaryKeyName(?string $primaryKeyName): self
     {
-        $this->primaryName = $primaryName;
+        $this->primaryKeyName = $primaryKeyName;
 
         return $this;
     }
 
     /**
-     * Additional arguments for url
+     * Additional arguments for URL.
      *
      * @param array $arguments
      *
@@ -167,29 +167,29 @@ final class ActionColumn extends Column
     }
 
     /**
-     * Query params for url
+     * Query parameters for URL.
      *
-     * @param array $params
+     * @param array $parameters
      *
      * @return self
      */
-    public function queryParams(array $params): self
+    public function queryParameters(array $parameters): self
     {
-        $this->queryParams = $params;
+        $this->queryParameters = $parameters;
 
         return $this;
     }
 
     /**
-     * Set/Enable/Disable url with ID in querystring instead of arguments
+     * Enable/Disable url with ID in querystring instead of arguments
      *
      * @param bool $value
      *
      * @return self
      */
-    public function primaryParam(bool $value = true): self
+    public function withIdInQueryString(bool $value = true): self
     {
-        $this->primaryParam = $value;
+        $this->idInQueryString = $value;
 
         return $this;
     }
@@ -348,20 +348,20 @@ final class ActionColumn extends Column
             return (string) call_user_func($this->urlCreator, $action, $model, $key, $index, $this);
         }
 
-        $params = $this->queryParams;
         $arguments = $this->arguments;
-        $pk = $this->primaryName ?? $this->primaryKey;
+        $parameters = $this->queryParameters;
+        $pk = $this->primaryKeyName ?? $this->primaryKey;
         /** @psalm-suppress MixedAssignment */
         $key = ArrayHelper::getValueByPath($model, $this->primaryKey, $key);
         $value = is_array($key) ? $key : [$pk => (string) $key];
 
-        if ($this->primaryParam) {
-            $params = array_merge($params, $value);
+        if ($this->idInQueryString) {
+            $parameters = array_merge($parameters, $value);
         } else {
             $arguments = array_merge($arguments, $value);
         }
         /** @var array<string, Stringable|null|scalar> $arguments */
-        return $this->urlGenerator->generate($action, $arguments, $params);
+        return $this->urlGenerator->generate($action, $arguments, $parameters);
     }
 
     private function loadDefaultButtons(): void

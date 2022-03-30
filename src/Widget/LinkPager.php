@@ -52,7 +52,7 @@ final class LinkPager extends AbstractLinkWidget
         self::BOOTSTRAP,
         self::BULMA,
     ];
-    private bool $hideFirstPageParam = false;
+    private bool $hideFirstPageParameter = false;
     private array $buttonsContainerAttributes = [
         'class' => 'page-item',
     ];
@@ -369,10 +369,10 @@ final class LinkPager extends AbstractLinkWidget
      *
      * @return self
      */
-    public function hideFirstPageParam(bool $value = true): self
+    public function hideFirstPageParameter(bool $value = true): self
     {
         $new = clone $this;
-        $new->hideFirstPageParam = $value;
+        $new->hideFirstPageParameter = $value;
 
         return $new;
     }
@@ -700,7 +700,7 @@ final class LinkPager extends AbstractLinkWidget
         $requestArguments = $this->requestArguments ?? [];
         $queryParameters = $this->requestQueryParams ?? [];
 
-        if ($this->hideFirstPageParam && $page === 1) {
+        if ($this->hideFirstPageParameter && $page === 1) {
             if ($this->pageArgument) {
                 unset($requestArguments[$this->pageParam]);
             } else {

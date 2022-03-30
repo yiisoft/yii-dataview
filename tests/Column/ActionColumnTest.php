@@ -74,8 +74,7 @@ final class ActionColumnTest extends TestCase
                         ->encode(false)->render(),
                 ]
             )
-            ->template('{admin/custom}')
-            ->primaryKey('user_id');
+            ->template('{admin/custom}');
 
         $html = <<<'HTML'
         <td><a class="text-danger" title="Custom">/admin/custom/1</a></td>
@@ -83,7 +82,7 @@ final class ActionColumnTest extends TestCase
 
         $this->assertSame($html, $actionColumn->renderDataCell(['user_id' => 1], 1, 0));
 
-        $actionColumn->primaryName('test_id');
+        $actionColumn->primaryKeyName('test_id');
 
         $html = <<<'HTML'
         <td><a class="text-danger" title="Custom">/admin/custom?test_id=1</a></td>
@@ -167,9 +166,9 @@ final class ActionColumnTest extends TestCase
     public function testQueryParams(): void
     {
         $actionColumn = $this->actionColumn
-                ->primaryParam()
-                ->primaryName('user_id')
-                ->queryParams([
+                ->withIdInQueryString()
+                ->primaryKeyName('user_id')
+                ->queryParameters([
                     'custom-param' => 1
                 ])->buttons([
                     'admin/custom' => Html::a('Custom view'),

@@ -620,7 +620,7 @@ final class LinkPagerTest extends TestCase
         LinkPager::counter(0);
 
         $linkPager = LinkPager::widget()
-            ->hideFirstPageParam()
+            ->hideFirstPageParameter()
             ->activeButtonAttributes(['class' => 'test-active'])
             ->paginator($this->createOffsetPaginator()->withPageSize(5));
 
