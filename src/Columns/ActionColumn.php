@@ -5,17 +5,17 @@ declare(strict_types=1);
 namespace Yiisoft\Yii\DataView\Columns;
 
 use Closure;
+use Stringable;
 use Yiisoft\Html\Html;
+use Yiisoft\Html\Tag\A;
 use Yiisoft\Router\UrlGeneratorInterface;
+use Yiisoft\Yii\DataView\Columns\Column;
+use Yiisoft\Arrays\ArrayHelper;
 
-use function array_flip;
-use function array_intersect_key;
 use function array_merge;
 use function call_user_func;
 use function is_array;
 use function is_callable;
-use function preg_match_all;
-use function preg_replace_callback;
 
 /**
  * ActionColumn is a column for the {@see GridView} widget that displays buttons for viewing and manipulating the items.
@@ -51,11 +51,15 @@ use function preg_replace_callback;
 final class ActionColumn extends Column
 {
     protected array $headerOptions = ['class' => 'action-column'];
-    private string $template = '{view} {update} {delete}';
+    private ?string $template = null;
     private array $buttons = [];
     private array $visibleButtons = [];
     private array $buttonOptions = [];
     private string $primaryKey = 'id';
+    private ?string $primaryKeyName = null;
+    private bool $idInQueryString = false;
+    private array $arguments = [];
+    private array $queryParameters = [];
     /** @var callable|null */
     private $urlCreator = null;
     private UrlGeneratorInterface $urlGenerator;
@@ -63,12 +67,17 @@ final class ActionColumn extends Column
     public function __construct(UrlGeneratorInterface $urlGenerator)
     {
         $this->urlGenerator = $urlGenerator;
-
-        $this->loadDefaultButtons();
     }
 
+    /**
+     * @return array
+     */
     public function getButtons(): array
     {
+        if ($this->buttons === []) {
+            $this->loadDefaultButtons();
+        }
+
         return $this->buttons;
     }
 
@@ -130,6 +139,75 @@ final class ActionColumn extends Column
     }
 
     /**
+     * Set primary key name. By default it equals to primaryKey.
+     *
+     * @param string|null $primaryKeyName
+     *
+     * @return self
+     */
+    public function primaryKeyName(?string $primaryKeyName): self
+    {
+        $this->primaryKeyName = $primaryKeyName;
+
+        return $this;
+    }
+
+    /**
+     * Additional arguments for URL.
+     *
+     * @param array $arguments
+     *
+     * @return self
+     */
+    public function arguments(array $arguments): self
+    {
+        $this->arguments = $arguments;
+
+        return $this;
+    }
+
+    /**
+     * Query parameters for URL.
+     *
+     * @param array $parameters
+     *
+     * @return self
+     */
+    public function queryParameters(array $parameters): self
+    {
+        $this->queryParameters = $parameters;
+
+        return $this;
+    }
+
+    /**
+     * Enable/Disable url with ID in querystring instead of arguments
+     *
+     * @param bool $value
+     *
+     * @return self
+     */
+    public function withIdInQueryString(bool $value = true): self
+    {
+        $this->idInQueryString = $value;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getTemplate(): string
+    {
+        if ($this->template === null) {
+            $tokens = array_map(static fn ($name) => '{' . $name . '}', array_keys($this->getButtons()));
+            $this->template = implode(' ', $tokens);
+        }
+
+        return $this->template;
+    }
+
+    /**
      * Tokens enclosed within curly brackets are treated as controller action IDs (also called *button names* in the
      * context of action column). They will be replaced by the corresponding button rendering callbacks specified in
      * {@see buttons}. For example, the token `{view}` will be replaced by the result of the callback `buttons['view']`.
@@ -149,14 +227,8 @@ final class ActionColumn extends Column
      *
      * @see buttons
      */
-    public function template(string $template): self
+    public function template(?string $template): self
     {
-        $result = preg_match_all('/{([\w\-\/]+)}/', $template, $matches);
-
-        if ($result > 0 && !empty($matches[1])) {
-            $this->buttons = array_intersect_key($this->buttons, array_flip($matches[1]));
-        }
-
         $this->template = $template;
 
         return $this;
@@ -225,8 +297,13 @@ final class ActionColumn extends Column
      */
     protected function renderDataCellContent($model, $key, int $index): string
     {
-        return preg_replace_callback('/{([\w\-\/]+)}/', function (array $matches) use ($model, $key, $index): string {
-            $name = $matches[1];
+        $tokens = [];
+        $buttons = $this->getButtons();
+        $template = $this->getTemplate();
+
+        /** @var array<string, Closure|Stringable|string> $buttons */
+        foreach ($buttons as $name => $button) {
+            $token = '{' . $name . '}';
 
             if (isset($this->visibleButtons[$name])) {
                 /** @var bool */
@@ -237,16 +314,20 @@ final class ActionColumn extends Column
                 $isVisible = true;
             }
 
-            if ($isVisible && isset($this->buttons[$name])) {
+            if (!$isVisible) {
+                $tokens[$token] = '';
+            } elseif ($button instanceof A) {
                 $url = $this->createUrl($name, $model, $key, $index);
-
-                if ($this->buttons[$name] instanceof Closure) {
-                    return (string) $this->buttons[$name]($url, $model, $key);
-                }
+                $tokens[$token] = $button->href($url)->render();
+            } elseif ($button instanceof Closure) {
+                $url = $this->createUrl($name, $model, $key, $index);
+                $tokens[$token] = (string) $button($url, $model, $key);
+            } else {
+                $tokens[$token] = (string) $button;
             }
+        }
 
-            return '';
-        }, $this->template);
+        return trim(strtr($template, $tokens));
     }
 
     /**
@@ -267,13 +348,20 @@ final class ActionColumn extends Column
             return (string) call_user_func($this->urlCreator, $action, $model, $key, $index, $this);
         }
 
-        /** @var mixed */
-        $key = $model[$this->primaryKey] ?? $key;
+        $arguments = $this->arguments;
+        $parameters = $this->queryParameters;
+        $pk = $this->primaryKeyName ?? $this->primaryKey;
+        /** @psalm-suppress MixedAssignment */
+        $key = ArrayHelper::getValueByPath($model, $this->primaryKey, $key);
+        $value = is_array($key) ? $key : [$pk => (string) $key];
 
-        /** @psalm-var array<string, \Stringable|null|scalar> $params */
-        $params = is_array($key) ? $key : ['id' => (string) $key];
-
-        return $this->urlGenerator->generate($action, $params);
+        if ($this->idInQueryString) {
+            $parameters = array_merge($parameters, $value);
+        } else {
+            $arguments = array_merge($arguments, $value);
+        }
+        /** @var array<string, Stringable|null|scalar> $arguments */
+        return $this->urlGenerator->generate($action, $arguments, $parameters);
     }
 
     private function loadDefaultButtons(): void
@@ -307,7 +395,7 @@ final class ActionColumn extends Column
     {
         $title = '';
 
-        if (!isset($this->buttons[$name]) && strpos($this->template, '{' . $name . '}') !== false) {
+        if (!isset($this->buttons[$name]) && ($this->template === null || strpos($this->template, '{' . $name . '}'))) {
             $this->buttons[$name] = function (?string $url) use ($name, $iconName, $additionalOptions, $title): string {
                 switch ($name) {
                     case 'view':

@@ -44,10 +44,18 @@ final class ActionColumnTest extends TestCase
         $actionColumn = $this->actionColumn->buttonOptions(['disabled' => true]);
 
         $html = <<<'HTML'
-        <td><a href="/admin/view/1" disabled title="View" aria-label="View" data-name="view"><span>&#128065;</span></a> <a href="/admin/update/1" disabled title="Update" aria-label="Update" data-name="update"><span>&#128393;</span></a> <a href="/admin/delete/1" disabled title="Delete" aria-label="Delete" data-name="delete" data-confirm="Are you sure you want to delete this item?" data-method="post"><span>&#128465;</span></a></td>
+        <td>
+        <a href="/admin/view/1" disabled title="View" aria-label="View" data-name="view">
+        <span>&#128065;</span>
+        </a> <a href="/admin/update/1" disabled title="Update" aria-label="Update" data-name="update">
+        <span>&#128393;</span>
+        </a> <a href="/admin/delete/1" disabled title="Delete" aria-label="Delete" data-name="delete" data-confirm="Are you sure you want to delete this item?" data-method="post">
+        <span>&#128465;</span>
+        </a>
+        </td>
         HTML;
 
-        $this->assertSame($html, $actionColumn->renderDataCell(['id' => 1], 1, 0));
+        $this->assertEqualsHTML($html, $actionColumn->renderDataCell(['id' => 1], 1, 0));
     }
 
     public function testActionColumnOneButtonMatched(): void
@@ -66,11 +74,18 @@ final class ActionColumnTest extends TestCase
                         ->encode(false)->render(),
                 ]
             )
-            ->template('{admin/custom}')
-            ->primaryKey('user_id');
+            ->template('{admin/custom}');
 
         $html = <<<'HTML'
         <td><a class="text-danger" title="Custom">/admin/custom/1</a></td>
+        HTML;
+
+        $this->assertSame($html, $actionColumn->renderDataCell(['user_id' => 1], 1, 0));
+
+        $actionColumn->primaryKeyName('test_id');
+
+        $html = <<<'HTML'
+        <td><a class="text-danger" title="Custom">/admin/custom?test_id=1</a></td>
         HTML;
 
         $this->assertSame($html, $actionColumn->renderDataCell(['user_id' => 1], 1, 0));
@@ -132,5 +147,37 @@ final class ActionColumnTest extends TestCase
         $actionColumn->visibleButtons(['update' => static fn ($model, $key, $index) => $model['id'] !== 1]);
         $columnContents = $this->actionColumn->renderDataCell(['id' => 1], 1, 0);
         $this->assertNotSame('<td>update_button</td>', $columnContents);
+    }
+
+    public function testWithHtmlA(): void
+    {
+        $actionColumn = $this->actionColumn
+                ->buttons([
+                    'admin/custom' => Html::a('Custom view'),
+                ]);
+
+        $html = <<<'HTML'
+        <td><a href="/admin/custom/1">Custom view</a></td>
+        HTML;
+
+        $this->assertSame($html, $actionColumn->renderDataCell(['id' => 1], 1, 0));
+    }
+
+    public function testQueryParams(): void
+    {
+        $actionColumn = $this->actionColumn
+                ->withIdInQueryString()
+                ->primaryKeyName('user_id')
+                ->queryParameters([
+                    'custom-param' => 1
+                ])->buttons([
+                    'admin/custom' => Html::a('Custom view'),
+                ]);
+
+        $html = <<<'HTML'
+        <td><a href="/admin/custom?custom-param=1&amp;user_id=1">Custom view</a></td>
+        HTML;
+
+        $this->assertSame($html, $actionColumn->renderDataCell(['id' => 1], 1, 0));
     }
 }

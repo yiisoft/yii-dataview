@@ -10,6 +10,8 @@ use Yiisoft\Data\Reader\Sort;
 use Yiisoft\Html\Html;
 use Yiisoft\Strings\Inflector;
 use Yiisoft\Yii\DataView\Widget\LinkSorter;
+use Yiisoft\Yii\DataView\DataAttribute;
+use Yiisoft\Translator\TranslatorInterface;
 
 use function array_merge;
 use function call_user_func;
@@ -46,20 +48,21 @@ use function is_string;
  */
 final class DataColumn extends Column
 {
-    /** @var array|Closure|string */
-    private $format = 'text';
+    private DataAttribute $attribute;
     private string $filter = '';
-    /** @var Closure|string|null */
-    private $value;
-    private string $attribute = '';
-    private string $label = '';
     private bool $encodeLabel = true;
     private bool $enableSorting = true;
     private array $sortLinkOptions = [];
+    private string $emptyValue = '';
     private array $filterInputOptions = [];
     public string $filterAttribute = '';
     /** @var bool|float|int|string|null */
     private $filterValueDefault = null;
+
+    public function __construct(TranslatorInterface $translator)
+    {
+        $this->attribute = new DataAttribute($translator);
+    }
 
     /**
      * @param string $attribute the attribute name associated with this column. When neither {@see content} nor
@@ -68,9 +71,9 @@ final class DataColumn extends Column
      *
      * @return $this
      */
-    public function attribute(string $attribute): self
+    public function attribute(string $name): self
     {
-        $this->attribute = $attribute;
+        $this->attribute = $this->attribute->name($name);
 
         return $this;
     }
@@ -134,7 +137,21 @@ final class DataColumn extends Column
      */
     public function label(string $label): self
     {
-        $this->label = $label;
+        $this->attribute = $this->attribute->label($label);
+
+        return $this;
+    }
+
+    /**
+     * Enable/Disabe encode value
+     *
+     * @param bool $encode
+     *
+     * @return self
+     */
+    public function encode(bool $encode = true): self
+    {
+        $this->attribute = $this->attribute->encode($encode);
 
         return $this;
     }
@@ -151,19 +168,9 @@ final class DataColumn extends Column
      */
     public function getDataCellValue($model, $key, int $index): string
     {
-        if ($this->value !== null) {
-            if (is_string($this->value)) {
-                return (string) ArrayHelper::getValue($model, $this->value);
-            }
+        $value = $this->attribute->getValue($model, $key, $index, $this);
 
-            return (string) call_user_func($this->value, $model, $key, $index, $this);
-        }
-
-        if ($this->attribute !== '') {
-            return (string) ArrayHelper::getValue($model, $this->attribute);
-        }
-
-        return '';
+        return $value === '' ? $this->emptyValue : $value;
     }
 
     /**
@@ -224,7 +231,19 @@ final class DataColumn extends Column
      */
     public function value($value): self
     {
-        $this->value = $value;
+        $this->attribute = $this->attribute->value($value);
+
+        return $this;
+    }
+
+    /**
+     * @param string|Closure|null $format
+     *
+     * @return self
+     */
+    public function format($format): self
+    {
+        $this->attribute = $this->attribute->format($format);
 
         return $this;
     }
@@ -243,14 +262,21 @@ final class DataColumn extends Column
         return $this;
     }
 
+    public function emptyValue(string $value): self
+    {
+        $this->emptyValue = $value;
+
+        return $this;
+    }
+
     protected function getHeaderCellLabel(): string
     {
-        return $this->label === '' ? (new Inflector())->toHumanReadable($this->attribute) : $this->label;
+        return $this->attribute->getLabel() ?? (new Inflector())->toHumanReadable($this->attribute->getName());
     }
 
     protected function renderHeaderCellContent(): string
     {
-        if ($this->header !== '' || ($this->label === '' && $this->attribute === '')) {
+        if ($this->header !== '' || (!$this->attribute->getLabel() && !$this->attribute->getName())) {
             return parent::renderHeaderCellContent();
         }
 
@@ -264,13 +290,13 @@ final class DataColumn extends Column
         $sort = $paginator->getSort();
 
         if (
-            $this->attribute !== '' &&
+            $this->attribute->getName() &&
             $sort !== null &&
-            isset($sort->getCriteria()[$this->attribute]) &&
+            isset($sort->getCriteria()[$this->attribute->getName()]) &&
             $this->enableSorting
         ) {
             return LinkSorter::widget()
-                ->attribute($this->attribute)
+                ->attribute($this->attribute->getName())
                 ->currentPage($this->grid->getPaginator()->getCurrentPage())
                 ->cssFramework($this->grid->getCssFramework())
                 ->options(array_merge($this->sortLinkOptions, ['label' => $label]))

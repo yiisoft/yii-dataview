@@ -43,7 +43,6 @@ use Yiisoft\Yii\DataView\Columns\DataColumn;
 use Yiisoft\Yii\DataView\Columns\RadioButtonColumn;
 use Yiisoft\Yii\DataView\Factory\GridViewFactory;
 use Yiisoft\Yii\DataView\GridView;
-use DOMDocument;
 
 class TestCase extends \PHPUnit\Framework\TestCase
 {
@@ -81,37 +80,27 @@ class TestCase extends \PHPUnit\Framework\TestCase
         );
     }
 
-    private static function loadHtml(string $html): DOMDocument
+    private static function loadHtml(string $html): string
     {
-        $dom = new DOMDocument();
-        $dom->recover = false;
-        $dom->formatOutput = true;
-        $dom->preserveWhiteSpace = false;
-        $html = str_replace(["\r", "\n"], '', $html);
+        $output = str_replace(["\r", "\n"], '', $html);
+        $output = str_replace(['>', '</'], [">\n", "\n</"], $output);
+        $output = str_replace("\n\n", "\n", $output);
 
-        if (defined('LIBXML_NOBLANKS')) {
-            $dom->loadHtml($html, LIBXML_NOBLANKS);
-        } else {
-            $dom->loadHtml($html);
-        }
-
-        return $dom;
+        return trim($output);
     }
 
+    /**
+     * Test two strings as HTML content
+     *
+     * @param string $expected
+     * @param string $actual
+     * @param string $message
+     */
     protected function assertEqualsHTML(string $expected, string $actual, string $message = ''): void
     {
-        libxml_use_internal_errors(true);
-        $expectedDOM = self::loadHtml($expected);
-        $actualDOM = self::loadHtml($actual);
-        $actualBody = $actualDOM->getElementsByTagName('body')->item(0);
-        $expectedBody = $expectedDOM->getElementsByTagName('body')->item(0);
+        $expected = self::loadHtml($expected);
+        $actual = self::loadHtml($actual);
 
-        $expected = $expectedDOM->saveHTML($expectedBody);
-        $actual = $actualDOM->saveHTML($actualBody);
-
-        libxml_clear_errors();
-
-        $this->assertEquals($expectedBody->childNodes->count(), $actualBody->childNodes->count());
         $this->assertEquals($expected, $actual, $message);
     }
 

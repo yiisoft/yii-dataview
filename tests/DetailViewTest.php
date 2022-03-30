@@ -49,8 +49,7 @@ final class DetailViewTest extends TestCase
     {
         $this->expectException(InvalidConfigException::class);
         $this->expectExceptionMessage(
-            'The attribute must be specified in the format of "attribute", "attribute:format" or ' .
-            '"attribute:format:label"'
+            'The attribute must be specified in the format of "attribute", "attribute:format" or "attribute:format:label"'
         );
         $detailView = DetailView::widget()
             ->attributes([''])
@@ -309,7 +308,7 @@ final class DetailViewTest extends TestCase
         <table id="w1-detailview" class="table table-striped table-bordered detail-view">
         <tr><th>Id</th><td>1</td></tr>
         <tr><th>Username</th><td>testMe</td></tr>
-        <tr><th>Total</th><td>200</td></tr>
+        <tr><th>Total</th><td>2,000</td></tr>
         </table>
         HTML;
 
@@ -317,11 +316,11 @@ final class DetailViewTest extends TestCase
             ->attributes(
                 [
                     ['attribute' => 'id'],
-                    ['attribute' => 'username', 'value' => 'testMe'],
-                    ['attribute' => 'total', 'value' => static fn () => 10 * 20],
+                    ['attribute' => 'username', 'value' => static fn () => 'testMe'],
+                    ['attribute' => 'total:number'],
                 ],
             )
-            ->model(['id' => 1, 'username' => 'tests 1', 'total' => '10']);
+            ->model(['id' => 1, 'username' => 'tests 1', 'total' => 2000]);
         $this->assertEqualsWithoutLE($html, $detailView->render());
     }
 
@@ -345,6 +344,52 @@ final class DetailViewTest extends TestCase
                 ],
             )
             ->model(['id' => 1, 'username' => 'tests 1', 'total' => '10']);
+        $this->assertEqualsWithoutLE($html, $detailView->render());
+    }
+
+    public function testEmptyValue(): void
+    {
+        DetailView::counter(0);
+
+        $html = <<<'HTML'
+        <table id="w1-detailview" class="table table-striped table-bordered detail-view">
+        <tr><th>Id</th><td>1</td></tr>
+        <tr><th>Total</th><td>10</td></tr>
+        </table>
+        HTML;
+
+        $detailView = DetailView::widget()
+            ->emptyValue(null)
+            ->attributes(
+                [
+                    ['attribute' => 'id'],
+                    ['attribute' => 'username'],
+                    ['attribute' => 'total'],
+                ],
+            )
+            ->model(['id' => 1, 'username' => '', 'total' => '10']);
+        $this->assertEqualsWithoutLE($html, $detailView->render());
+
+        DetailView::counter(0);
+
+        $html = <<<'HTML'
+        <table id="w1-detailview" class="table table-striped table-bordered detail-view">
+        <tr><th>Id</th><td>1</td></tr>
+        <tr><th>Username</th><td> - </td></tr>
+        <tr><th>Total</th><td>10</td></tr>
+        </table>
+        HTML;
+
+        $detailView = DetailView::widget()
+            ->emptyValue(' - ')
+            ->attributes(
+                [
+                    ['attribute' => 'id'],
+                    ['attribute' => 'username'],
+                    ['attribute' => 'total'],
+                ],
+            )
+            ->model(['id' => 1, 'username' => '', 'total' => '10']);
         $this->assertEqualsWithoutLE($html, $detailView->render());
     }
 }

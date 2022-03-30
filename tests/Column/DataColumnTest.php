@@ -80,6 +80,7 @@ final class DataColumnTest extends TestCase
         </nav>
         </div>
         HTML;
+
         $this->assertEqualsHTML($html, $gridView->render());
     }
 
@@ -907,6 +908,93 @@ final class DataColumnTest extends TestCase
         <tr><td>3</td><td></td><td>3</td></tr>
         <tr><td>4</td><td></td><td>4</td></tr>
         <tr><td>5</td><td></td><td>5</td></tr>
+        </tbody>
+        </table>
+        <nav aria-label="Pagination">
+        <ul class="pagination justify-content-center mt-4">
+        <li class="page-item disabled"><a class="page-link" href="?page=1" data-page="1" aria-disabled="true" tabindex="-1">Previous</a></li>
+        <li class="page-item active"><a class="page-link" href="?page=1" data-page="1">1</a></li>
+        <li class="page-item"><a class="page-link" href="?page=2" data-page="2">2</a></li>
+        <li class="page-item"><a class="page-link" href="?page=2" data-page="2">Next Page</a></li>
+        </ul>
+        </nav>
+        </div>
+        HTML;
+        $this->assertEqualsHTML($html, $gridView->render());
+    }
+
+    public function testFormat(): void
+    {
+        GridView::counter(0);
+
+        $columns = [
+            'id',
+            'name',
+            [
+                'attribute()' => ['total:number'],
+                'value()' => [
+                    static fn ($data) => $data['total'] * 1000,
+                ],
+            ],
+        ];
+
+        $gridView = $this->createGridView($columns);
+        $gridView = $gridView->paginator($this->createOffsetPaginator());
+
+        $html = <<<'HTML'
+        <div id="w1-gridview" class="grid-view"><div>Showing <b>1-5</b> of <b>6</b> items</div>
+        <table class="table table-striped table-bordered">
+        <thead>
+        <tr><th>Id</th><th>Name</th><th>Total</th></tr>
+        </thead>
+        <tbody>
+        <tr><td>1</td><td>tests 1</td><td>10,000</td></tr>
+        <tr><td>2</td><td>tests 2</td><td>20,000</td></tr>
+        <tr><td>3</td><td>tests 3</td><td>30,000</td></tr>
+        <tr><td>4</td><td>tests 4</td><td>40,000</td></tr>
+        <tr><td>5</td><td>tests 5</td><td>50,000</td></tr>
+        </tbody>
+        </table>
+        <nav aria-label="Pagination">
+        <ul class="pagination justify-content-center mt-4">
+        <li class="page-item disabled"><a class="page-link" href="?page=1" data-page="1" aria-disabled="true" tabindex="-1">Previous</a></li>
+        <li class="page-item active"><a class="page-link" href="?page=1" data-page="1">1</a></li>
+        <li class="page-item"><a class="page-link" href="?page=2" data-page="2">2</a></li>
+        <li class="page-item"><a class="page-link" href="?page=2" data-page="2">Next Page</a></li>
+        </ul>
+        </nav>
+        </div>
+        HTML;
+        $this->assertEqualsHTML($html, $gridView->render());
+
+        GridView::counter(0);
+
+        $columns = [
+            'id',
+            'name',
+            [
+                'attribute()' => ['total:number'],
+                'value()' => [
+                    static fn ($data) => $data['total'] * 100.5,
+                ],
+            ],
+        ];
+
+        $gridView = $this->createGridView($columns);
+        $gridView = $gridView->paginator($this->createOffsetPaginator());
+
+        $html = <<<'HTML'
+        <div id="w1-gridview" class="grid-view"><div>Showing <b>1-5</b> of <b>6</b> items</div>
+        <table class="table table-striped table-bordered">
+        <thead>
+        <tr><th>Id</th><th>Name</th><th>Total</th></tr>
+        </thead>
+        <tbody>
+        <tr><td>1</td><td>tests 1</td><td>1,005</td></tr>
+        <tr><td>2</td><td>tests 2</td><td>2,010</td></tr>
+        <tr><td>3</td><td>tests 3</td><td>3,015</td></tr>
+        <tr><td>4</td><td>tests 4</td><td>4,020</td></tr>
+        <tr><td>5</td><td>tests 5</td><td>5,025</td></tr>
         </tbody>
         </table>
         <nav aria-label="Pagination">
