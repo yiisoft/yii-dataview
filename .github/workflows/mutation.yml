@@ -6,8 +6,7 @@ on:
       - 'CHANGELOG.md'
       - '.gitignore'
       - '.gitattributes'
-      - 'infection.json.dist'
-      - 'phpunit.xml.dist'
+      - 'psalm.xml'
 
   push:
     paths-ignore:
@@ -16,16 +15,17 @@ on:
       - 'CHANGELOG.md'
       - '.gitignore'
       - '.gitattributes'
-      - 'infection.json.dist'
-      - 'phpunit.xml.dist'
+      - 'psalm.xml'
 
-name: static analysis
+name: mutation test
 
 jobs:
-  psalm:
-    uses: yiisoft/actions/.github/workflows/psalm.yml@master
+  mutation:
+    uses: yiisoft/actions/.github/workflows/roave-infection.yml@master
     with:
       os: >-
         ['ubuntu-latest']
       php: >-
-        ['7.4', '8.0', '8.1']
+        ['8.1']
+    secrets:
+      STRYKER_DASHBOARD_API_KEY: ${{ secrets.STRYKER_DASHBOARD_API_KEY }}
