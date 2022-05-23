@@ -48,7 +48,7 @@
         "vimeo/psalm": "^4.18",
         "yiisoft/di": "^1.0",
         "yiisoft/event-dispatcher": "^1.0",
-        "yiisoft/log": "^1.0",
+        "yiisoft/log": "^2.0",
         "yiisoft/router-fastroute": "^1.0"
     },
     "extra": {
