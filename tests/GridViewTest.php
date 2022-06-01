@@ -63,7 +63,9 @@ final class GridViewTest extends TestCase
         $dataReader = new IterableDataReader([]);
         $offsetPaginator = new OffsetPaginator($dataReader);
 
-        $gridView = GridView::widget()->autoIdPrefix('test')->paginator($offsetPaginator);
+        $gridView = GridView::widget()
+            ->autoIdPrefix('test')
+            ->paginator($offsetPaginator);
 
         $html = <<<'HTML'
         <div id="test1-gridview" class="grid-view">
@@ -87,7 +89,9 @@ final class GridViewTest extends TestCase
         $dataReader = new IterableDataReader([]);
         $offsetPaginator = new OffsetPaginator($dataReader);
 
-        $gridView = GridView::widget()->caption('GridView testing.')->paginator($offsetPaginator);
+        $gridView = GridView::widget()
+            ->caption('GridView testing.')
+            ->paginator($offsetPaginator);
 
         $html = <<<'HTML'
         <div id="w1-gridview" class="grid-view">
@@ -150,7 +154,9 @@ final class GridViewTest extends TestCase
                             [
                                 'delete' => static function (string $url): string {
                                     return Html::a(
-                                        Html::tag('span', '&#128465;')->encode(false)->render(),
+                                        Html::tag('span', '&#128465;')
+                                            ->encode(false)
+                                            ->render(),
                                         $url,
                                         [
                                             'class' => 'text-danger',
@@ -158,7 +164,9 @@ final class GridViewTest extends TestCase
                                             'data-confirm' => 'Are you sure to delete this user?',
                                             'title' => 'Delete',
                                         ],
-                                    )->encode(false)->render();
+                                    )
+                                        ->encode(false)
+                                        ->render();
                                 },
                             ],
                         ],
@@ -201,14 +209,19 @@ final class GridViewTest extends TestCase
         $this->expectExceptionMessage(
             'The attribute must be specified in the format of "attribute", "attribute:format" or "attribute:format:label"'
         );
-        $gridView = GridView::widget()->columns([''])->paginator($offsetPaginator)->render();
+        $gridView = GridView::widget()
+            ->columns([''])
+            ->paginator($offsetPaginator)
+            ->render();
     }
 
     public function testDataColumnClass(): void
     {
         GridView::counter(0);
 
-        $gridView = GridView::widget()->dataColumnClass(DataColumn::class)->paginator($this->createOffsetPaginator());
+        $gridView = GridView::widget()
+            ->dataColumnClass(DataColumn::class)
+            ->paginator($this->createOffsetPaginator());
 
         $html = <<<'HTML'
         <div id="w1-gridview" class="grid-view"><div>Showing <b>1-6</b> of <b>6</b> items</div>
@@ -270,7 +283,9 @@ final class GridViewTest extends TestCase
         $dataReader = new IterableDataReader([]);
         $offsetPaginator = new OffsetPaginator($dataReader);
 
-        $gridView = GridView::widget()->emptyText('')->paginator($offsetPaginator);
+        $gridView = GridView::widget()
+            ->emptyText('')
+            ->paginator($offsetPaginator);
 
         $html = <<<'HTML'
         <div id="w1-gridview" class="grid-view">
@@ -286,7 +301,9 @@ final class GridViewTest extends TestCase
         HTML;
         $this->assertEqualsWithoutLE($html, $gridView->render());
 
-        $gridView = GridView::widget()->emptyText('Not Found')->paginator($offsetPaginator);
+        $gridView = GridView::widget()
+            ->emptyText('Not Found')
+            ->paginator($offsetPaginator);
 
         $html = <<<'HTML'
         <div id="w2-gridview" class="grid-view">
@@ -585,7 +602,9 @@ final class GridViewTest extends TestCase
         $dataReader = new IterableDataReader([]);
         $offsetPaginator = new OffsetPaginator($dataReader);
 
-        $gridView = GridView::widget()->id('testMe')->paginator($offsetPaginator);
+        $gridView = GridView::widget()
+            ->id('testMe')
+            ->paginator($offsetPaginator);
 
         $html = <<<'HTML'
         <div id="testMe-gridview" class="grid-view">
@@ -651,7 +670,9 @@ final class GridViewTest extends TestCase
     {
         GridView::counter(0);
 
-        $gridView = GridView::widget()->showHeader(false)->paginator($this->createOffsetPaginator());
+        $gridView = GridView::widget()
+            ->showHeader(false)
+            ->paginator($this->createOffsetPaginator());
 
         $html = <<<'HTML'
         <thead>
@@ -718,7 +739,9 @@ final class GridViewTest extends TestCase
         GridView::counter(0);
 
         $this->currentRoute->setRouteWithArguments(
-            Route::methods(['GET', 'POST'], '/admin/index')->action([TestDelete::class, 'run'])->name('admin'),
+            Route::methods(['GET', 'POST'], '/admin/index')
+                ->action([TestDelete::class, 'run'])
+                ->name('admin'),
             []
         );
 
@@ -761,7 +784,9 @@ final class GridViewTest extends TestCase
         GridView::counter(0);
 
         $this->currentRoute->setRouteWithArguments(
-            Route::methods(['GET', 'POST'], '/admin/index')->action([TestDelete::class, 'run'])->name('admin'),
+            Route::methods(['GET', 'POST'], '/admin/index')
+                ->action([TestDelete::class, 'run'])
+                ->name('admin'),
             []
         );
 
@@ -804,7 +829,9 @@ final class GridViewTest extends TestCase
         GridView::counter(0);
 
         $gridView = $this->createGridView(['id']);
-        $gridView = $gridView->paginator($this->createOffsetPaginator())->rowOptions(['class' => 'text-success']);
+        $gridView = $gridView
+            ->paginator($this->createOffsetPaginator())
+            ->rowOptions(['class' => 'text-success']);
 
         $html = <<<'HTML'
         <div id="w1-gridview" class="grid-view"><div>Showing <b>1-5</b> of <b>6</b> items</div>
@@ -838,7 +865,9 @@ final class GridViewTest extends TestCase
         GridView::counter(0);
 
         $gridView = $this->createGridView(['id']);
-        $gridView = $gridView->paginator($this->createOffsetPaginator())->showFooter();
+        $gridView = $gridView
+            ->paginator($this->createOffsetPaginator())
+            ->showFooter();
 
         $html = <<<'HTML'
         <div id="w1-gridview" class="grid-view"><div>Showing <b>1-5</b> of <b>6</b> items</div>
@@ -907,7 +936,9 @@ final class GridViewTest extends TestCase
         $dataReader = new IterableDataReader([]);
         $offsetPaginator = new OffsetPaginator($dataReader);
 
-        $gridView = GridView::widget()->paginator($offsetPaginator)->showOnEmpty(false);
+        $gridView = GridView::widget()
+            ->paginator($offsetPaginator)
+            ->showOnEmpty(false);
 
         $html = <<<'HTML'
         <div id="w1-gridview" class="grid-view"><div class="empty">No results found.</div></div>
@@ -920,9 +951,11 @@ final class GridViewTest extends TestCase
         GridView::counter(0);
 
         $gridView = $this->createGridView(['id']);
-        $gridView = $gridView->paginator($this->createOffsetPaginator())->tableOptions(
-            ['class' => 'table text-success']
-        );
+        $gridView = $gridView
+            ->paginator($this->createOffsetPaginator())
+            ->tableOptions(
+                ['class' => 'table text-success']
+            );
 
         $html = <<<'HTML'
         <div id="w1-gridview" class="grid-view"><div>Showing <b>1-5</b> of <b>6</b> items</div>

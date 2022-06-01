@@ -51,7 +51,9 @@ final class CheckboxColumnTest extends TestCase
         $gridView = $this->createGridView();
         $gridView = $gridView->paginator($this->createOffsetPaginator());
 
-        $column = $this->checkboxColumn->name($name)->grid($gridView);
+        $column = $this->checkboxColumn
+            ->name($name)
+            ->grid($gridView);
 
         $this->assertSame($html, $column->renderHeaderCell());
     }
@@ -72,7 +74,9 @@ final class CheckboxColumnTest extends TestCase
         $html = '<td><input type="checkbox" name="selection" value="[1,42]"></td>';
         $this->assertSame($html, $column->renderDataCell([], [1, 42], 0));
 
-        $column = $this->checkboxColumn->checkboxOptions(['value' => 42])->grid($gridView);
+        $column = $this->checkboxColumn
+            ->checkboxOptions(['value' => 42])
+            ->grid($gridView);
 
         $html = '<td><input type="checkbox" name="selection" value="42"></td>';
         $this->assertSame($html, $column->renderDataCell([], 1, 0));
@@ -125,7 +129,8 @@ final class CheckboxColumnTest extends TestCase
                 static function ($model, $key, $index, $column) {
                     return Html::checkBox('checkBoxInput')->render();
                 }
-            )->grid($gridView);
+            )
+            ->grid($gridView);
 
         $html = '<td>' . Html::checkBox('checkBoxInput')->render() . '</td>';
         $this->assertSame($html, $column->renderDataCell([], 1, 0));
@@ -149,7 +154,9 @@ final class CheckboxColumnTest extends TestCase
         $gridView = $this->createGridView();
         $gridView = $gridView->paginator($this->createOffsetPaginator());
 
-        $column = $this->checkboxColumn->checkboxCssClass('has-bg-link')->grid($gridView);
+        $column = $this->checkboxColumn
+            ->checkboxCssClass('has-bg-link')
+            ->grid($gridView);
 
         $html = <<<'HTML'
         <td><input type="checkbox" class="has-bg-link" name="selection" value="1"></td>
@@ -169,7 +176,9 @@ final class CheckboxColumnTest extends TestCase
         HTML;
         $this->assertSame($html, $column->renderHeaderCell());
 
-        $column = $this->checkboxColumn->multiple(false)->grid($gridView);
+        $column = $this->checkboxColumn
+            ->multiple(false)
+            ->grid($gridView);
         $this->assertSame('<th>&nbsp;</th>', $column->renderHeaderCell());
     }
 }

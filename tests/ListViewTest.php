@@ -210,7 +210,9 @@ final class ListViewTest extends TestCase
         HTML;
         $this->assertEqualsWithoutLE($html, $listView->render());
 
-        $listView = ListView::widget()->cssFramework(ListView::BULMA)->paginator($this->createOffsetPaginator());
+        $listView = ListView::widget()
+            ->cssFramework(ListView::BULMA)
+            ->paginator($this->createOffsetPaginator());
 
         $html = <<<'HTML'
         <div id="w2-listview" class="list-view"><div>Showing <b>1-6</b> of <b>6</b> items</div>
@@ -236,7 +238,9 @@ final class ListViewTest extends TestCase
     {
         ListView::counter(0);
 
-        $listView = ListView::widget()->paginator($this->createOffsetPaginator())->separator("\n");
+        $listView = ListView::widget()
+            ->paginator($this->createOffsetPaginator())
+            ->separator("\n");
 
         $html = <<<'HTML'
         <div id="w1-listview" class="list-view"><div>Showing <b>1-6</b> of <b>6</b> items</div>
@@ -282,7 +286,9 @@ final class ListViewTest extends TestCase
 
     public function testViewPath(): void
     {
-        $viewPath = ListView::widget()->ViewPath(__DIR__ . '/runtime')->getViewPath();
+        $viewPath = ListView::widget()
+            ->ViewPath(__DIR__ . '/runtime')
+            ->getViewPath();
         $this->assertEquals(__DIR__ . '/runtime', $viewPath);
     }
 }

@@ -96,7 +96,9 @@ final class DetailView extends Widget
             }
         }
 
-        return Html::tag($tag, "\n" . implode("\n", $rows) . "\n", $options)->encode(false)->render();
+        return Html::tag($tag, "\n" . implode("\n", $rows) . "\n", $options)
+            ->encode(false)
+            ->render();
     }
 
     /**

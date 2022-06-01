@@ -243,6 +243,8 @@ final class LinkSorter extends AbstractLinkWidget
             Html::addCssClass($this->options, ['link' => 'has-text-link']);
         }
 
-        return Html::a($label, $url, $this->options)->encode(false)->render();
+        return Html::a($label, $url, $this->options)
+            ->encode(false)
+            ->render();
     }
 }

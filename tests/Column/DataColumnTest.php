@@ -223,7 +223,9 @@ final class DataColumnTest extends TestCase
         ];
 
         $gridView = $this->createGridView($columns);
-        $gridView = $gridView->paginator($this->createOffsetPaginator())->filterModelName('testMe');
+        $gridView = $gridView
+            ->paginator($this->createOffsetPaginator())
+            ->filterModelName('testMe');
 
         $html = <<<'HTML'
         <div id="w1-gridview" class="grid-view"><div>Showing <b>1-5</b> of <b>6</b> items</div>
@@ -266,7 +268,9 @@ final class DataColumnTest extends TestCase
         ];
 
         $gridView = $this->createGridView($columns);
-        $gridView = $gridView->paginator($this->createOffsetPaginator())->filterModelName('testMe');
+        $gridView = $gridView
+            ->paginator($this->createOffsetPaginator())
+            ->filterModelName('testMe');
 
         $html = <<<'HTML'
         <div id="w1-gridview" class="grid-view"><div>Showing <b>1-5</b> of <b>6</b> items</div>
@@ -347,7 +351,9 @@ final class DataColumnTest extends TestCase
         ];
 
         $gridView = $this->createGridView($columns);
-        $gridView = $gridView->paginator($this->createOffsetPaginator())->filterModelName('testMe');
+        $gridView = $gridView
+            ->paginator($this->createOffsetPaginator())
+            ->filterModelName('testMe');
 
         $html = <<<'HTML'
         <div id="w1-gridview" class="grid-view"><div>Showing <b>1-5</b> of <b>6</b> items</div>
@@ -390,7 +396,9 @@ final class DataColumnTest extends TestCase
         ];
 
         $gridView = $this->createGridView($columns);
-        $gridView = $gridView->paginator($this->createOffsetPaginator())->filterModelName('testMe');
+        $gridView = $gridView
+            ->paginator($this->createOffsetPaginator())
+            ->filterModelName('testMe');
 
         $html = <<<'HTML'
         <div id="w1-gridview" class="grid-view"><div>Showing <b>1-5</b> of <b>6</b> items</div>
@@ -430,7 +438,9 @@ final class DataColumnTest extends TestCase
         ];
 
         $gridView = $this->createGridView($columns);
-        $gridView = $gridView->paginator($this->createOffsetPaginator())->showFooter();
+        $gridView = $gridView
+            ->paginator($this->createOffsetPaginator())
+            ->showFooter();
 
         $html = <<<'HTML'
         <div id="w1-gridview" class="grid-view"><div>Showing <b>1-5</b> of <b>6</b> items</div>
@@ -473,7 +483,9 @@ final class DataColumnTest extends TestCase
         ];
 
         $gridView = $this->createGridView($columns);
-        $gridView = $gridView->paginator($this->createOffsetPaginator())->showFooter();
+        $gridView = $gridView
+            ->paginator($this->createOffsetPaginator())
+            ->showFooter();
 
         $html = <<<'HTML'
         <div id="w1-gridview" class="grid-view"><div>Showing <b>1-5</b> of <b>6</b> items</div>
@@ -515,7 +527,9 @@ final class DataColumnTest extends TestCase
         ];
 
         $gridView = $this->createGridView($columns);
-        $gridView = $gridView->paginator($this->createOffsetPaginator())->showFooter();
+        $gridView = $gridView
+            ->paginator($this->createOffsetPaginator())
+            ->showFooter();
 
         $html = <<<'HTML'
         <tr><th>Id</th><th>User Name</th></tr>
@@ -656,7 +670,9 @@ final class DataColumnTest extends TestCase
         GridView::counter(0);
 
         $this->currentRoute->setRouteWithArguments(
-            Route::methods(['GET', 'POST'], '/admin/index')->action([TestDelete::class, 'run'])->name('admin'),
+            Route::methods(['GET', 'POST'], '/admin/index')
+                ->action([TestDelete::class, 'run'])
+                ->name('admin'),
             []
         );
 
@@ -724,7 +740,9 @@ final class DataColumnTest extends TestCase
         GridView::counter(0);
 
         $this->currentRoute->setRouteWithArguments(
-            Route::methods(['GET', 'POST'], '/admin/index')->action([TestDelete::class, 'run'])->name('admin'),
+            Route::methods(['GET', 'POST'], '/admin/index')
+                ->action([TestDelete::class, 'run'])
+                ->name('admin'),
             []
         );
 
@@ -769,7 +787,9 @@ final class DataColumnTest extends TestCase
         GridView::counter(0);
 
         $this->currentRoute->setRouteWithArguments(
-            Route::methods(['GET', 'POST'], '/admin/index')->action([TestDelete::class, 'run'])->name('admin'),
+            Route::methods(['GET', 'POST'], '/admin/index')
+                ->action([TestDelete::class, 'run'])
+                ->name('admin'),
             []
         );
 

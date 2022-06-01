@@ -542,7 +542,9 @@ final class LinkPager extends AbstractLinkWidget
         $links = $this->createLinks();
 
         foreach ($links as $rel => $href) {
-            $this->webView->registerLinkTag(Link::tag()->url($href)->rel($rel));
+            $this->webView->registerLinkTag(Link::tag()
+                ->url($href)
+                ->rel($rel));
         }
     }
 
@@ -596,14 +598,18 @@ final class LinkPager extends AbstractLinkWidget
         $tag = ArrayHelper::remove($this->ulAttributes, 'tag', 'ul');
 
         if ($tag) {
-            $tokens[self::PAGE_LIST] = Html::tag($tag, $this->listTemplate, $this->ulAttributes)->encode(false)->render();
+            $tokens[self::PAGE_LIST] = Html::tag($tag, $this->listTemplate, $this->ulAttributes)
+                ->encode(false)
+                ->render();
         } else {
             $tokens[self::PAGE_LIST] = $this->listTemplate;
         }
 
         $search = array_keys($tokens);
 
-        return Html::tag('nav', str_replace($search, $tokens, $this->template), $this->navAttributes)->encode(false)->render();
+        return Html::tag('nav', str_replace($search, $tokens, $this->template), $this->navAttributes)
+            ->encode(false)
+            ->render();
     }
 
     /**
@@ -654,13 +660,19 @@ final class LinkPager extends AbstractLinkWidget
         $encode = ArrayHelper::remove($buttonsAttributes, 'encode', !is_numeric($label));
 
         if ($tag) {
-            $link = Html::tag($tag, $label, $linkAttributes)->encode($encode)->render();
+            $link = Html::tag($tag, $label, $linkAttributes)
+                ->encode($encode)
+                ->render();
         } else {
-            $link = Html::a($label, $this->createUrl($page), $linkAttributes)->encode($encode)->render();
+            $link = Html::a($label, $this->createUrl($page), $linkAttributes)
+                ->encode($encode)
+                ->render();
         }
 
         if ($buttonTag) {
-            return Html::tag($buttonTag, $link, $buttonsAttributes)->encode(false)->render();
+            return Html::tag($buttonTag, $link, $buttonsAttributes)
+                ->encode(false)
+                ->render();
         }
 
         return $link;

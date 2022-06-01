@@ -26,7 +26,9 @@ final class ActionColumnTest extends TestCase
                         'custon',
                         $url,
                         ['class' => 'text-danger', 'title' => 'Custom'],
-                    )->encode(false)->render(),
+                    )
+                        ->encode(false)
+                        ->render(),
                 ]
             )
             ->grid($gridView)
@@ -71,7 +73,8 @@ final class ActionColumnTest extends TestCase
                 [
                     'admin/custom' => static fn ($url): string => Html::a($url)
                         ->attributes(['class' => 'text-danger', 'title' => 'Custom'])
-                        ->encode(false)->render(),
+                        ->encode(false)
+                        ->render(),
                 ]
             )
             ->template('{admin/custom}');
@@ -152,9 +155,9 @@ final class ActionColumnTest extends TestCase
     public function testWithHtmlA(): void
     {
         $actionColumn = $this->actionColumn
-                ->buttons([
-                    'admin/custom' => Html::a('Custom view'),
-                ]);
+            ->buttons([
+                'admin/custom' => Html::a('Custom view'),
+            ]);
 
         $html = <<<'HTML'
         <td><a href="/admin/custom/1">Custom view</a></td>
@@ -166,13 +169,14 @@ final class ActionColumnTest extends TestCase
     public function testQueryParams(): void
     {
         $actionColumn = $this->actionColumn
-                ->withIdInQueryString()
-                ->primaryKeyName('user_id')
-                ->queryParameters([
-                    'custom-param' => 1,
-                ])->buttons([
-                    'admin/custom' => Html::a('Custom view'),
-                ]);
+            ->withIdInQueryString()
+            ->primaryKeyName('user_id')
+            ->queryParameters([
+                'custom-param' => 1,
+            ])
+            ->buttons([
+                'admin/custom' => Html::a('Custom view'),
+            ]);
 
         $html = <<<'HTML'
         <td><a href="/admin/custom?custom-param=1&amp;user_id=1">Custom view</a></td>

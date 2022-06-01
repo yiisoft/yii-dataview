@@ -336,18 +336,20 @@ final class ListView extends BaseListView implements ViewContextInterface
         if ($this->itemView === '') {
             $content = (string) $key;
         } elseif (is_string($this->itemView)) {
-            $content = $this->webView->withContext($this)->render(
-                $this->itemView,
-                array_merge(
-                    [
-                        'model' => $model,
-                        'key' => $key,
-                        'index' => $index,
-                        'widget' => $this,
-                    ],
-                    $this->viewParams
-                )
-            );
+            $content = $this->webView
+                ->withContext($this)
+                ->render(
+                    $this->itemView,
+                    array_merge(
+                        [
+                            'model' => $model,
+                            'key' => $key,
+                            'index' => $index,
+                            'widget' => $this,
+                        ],
+                        $this->viewParams
+                    )
+                );
         } else {
             /** @var string */
             $content = call_user_func($this->itemView, $model, $key, $index, $this);
@@ -369,6 +371,9 @@ final class ListView extends BaseListView implements ViewContextInterface
             ) : (string)$key;
         }
 
-        return Html::tag($tag, $content)->attributes($options)->encode(false)->render();
+        return Html::tag($tag, $content)
+            ->attributes($options)
+            ->encode(false)
+            ->render();
     }
 }

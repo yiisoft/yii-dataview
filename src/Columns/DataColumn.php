@@ -294,7 +294,9 @@ final class DataColumn extends Column
         ) {
             return LinkSorter::widget()
                 ->attribute($this->attribute->getName())
-                ->currentPage($this->grid->getPaginator()->getCurrentPage())
+                ->currentPage($this->grid
+                    ->getPaginator()
+                    ->getCurrentPage())
                 ->cssFramework($this->grid->getCssFramework())
                 ->options(array_merge($this->sortLinkOptions, ['label' => $label]))
                 ->requestArguments($this->grid->getRequestArguments())
