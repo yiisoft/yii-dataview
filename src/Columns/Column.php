@@ -34,12 +34,16 @@ abstract class Column
 
     public function renderHeaderCell(): string
     {
-        return Html::tag('th', $this->renderHeaderCellContent(), $this->headerOptions)->encode(false)->render();
+        return Html::tag('th', $this->renderHeaderCellContent(), $this->headerOptions)
+            ->encode(false)
+            ->render();
     }
 
     public function renderFooterCell(): string
     {
-        return Html::tag('td', $this->renderFooterCellContent(), $this->footerOptions)->encode(false)->render();
+        return Html::tag('td', $this->renderFooterCellContent(), $this->footerOptions)
+            ->encode(false)
+            ->render();
     }
 
     /**
@@ -60,7 +64,9 @@ abstract class Column
             'td',
             $this->renderDataCellContent($model, $key, $index),
             $this->contentOptions
-        )->encode(false)->render();
+        )
+            ->encode(false)
+            ->render();
     }
 
     /**
@@ -68,7 +74,9 @@ abstract class Column
      */
     public function renderFilterCell(): string
     {
-        return Html::tag('td', $this->renderFilterCellContent(), $this->filterOptions)->encode(false)->render();
+        return Html::tag('td', $this->renderFilterCellContent(), $this->filterOptions)
+            ->encode(false)
+            ->render();
     }
 
     /**

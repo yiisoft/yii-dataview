@@ -204,7 +204,9 @@ final class RadioButtonColumnTest extends TestCase
         HTML;
         $this->assertSame($html, $column->renderDataCell([], [1,42], 0));
 
-        $column = $this->radioButtonColumn->radioOptions(['value' => 42])->grid($this->createGridView());
+        $column = $this->radioButtonColumn
+            ->radioOptions(['value' => 42])
+            ->grid($this->createGridView());
         $this->assertStringNotContainsString('value="1"', $column->renderDataCell([], 1, 0));
 
         $html = <<<'HTML'

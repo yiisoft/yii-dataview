@@ -33,7 +33,7 @@ abstract class BaseListView extends Widget
     protected OffsetPaginator $paginator;
     protected ?LinkSorter $sorter = null;
     protected string $summary = 'Showing <b>{begin, number}-{end, number}</b> of <b>{totalCount, number}</b> ' .
-        '{totalCount, plural, one{item} other{items}}';
+    '{totalCount, plural, one{item} other{items}}';
     protected array $summaryOptions = [];
     protected bool $showOnEmpty = false;
     protected string $emptyText = 'No results found.';
@@ -80,7 +80,10 @@ abstract class BaseListView extends Widget
         /** @psalm-var non-empty-string */
         $tag = ArrayHelper::remove($options, 'tag', 'div');
 
-        return Html::tag($tag, $content)->attributes($options)->encode(false)->render();
+        return Html::tag($tag, $content)
+            ->attributes($options)
+            ->encode(false)
+            ->render();
     }
 
     public function getPaginator(): OffsetPaginator
@@ -364,7 +367,9 @@ abstract class BaseListView extends Widget
         /** @psalm-var non-empty-string */
         $tag = ArrayHelper::remove($options, 'tag', 'div');
 
-        return Html::tag($tag, $this->emptyText)->attributes($options)->render();
+        return Html::tag($tag, $this->emptyText)
+            ->attributes($options)
+            ->render();
     }
 
     /**
@@ -409,9 +414,9 @@ abstract class BaseListView extends Widget
                 ],
             ),
         )
-        ->attributes($summaryOptions)
-        ->encode(false)
-        ->render();
+            ->attributes($summaryOptions)
+            ->encode(false)
+            ->render();
     }
 
     /**

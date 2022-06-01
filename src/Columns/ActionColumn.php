@@ -317,7 +317,9 @@ final class ActionColumn extends Column
                 $tokens[$token] = '';
             } elseif ($button instanceof A) {
                 $url = $this->createUrl($name, $model, $key, $index);
-                $tokens[$token] = $button->href($url)->render();
+                $tokens[$token] = $button
+                    ->href($url)
+                    ->render();
             } elseif ($button instanceof Closure) {
                 $url = $this->createUrl($name, $model, $key, $index);
                 $tokens[$token] = (string) $button($url, $model, $key);
@@ -418,9 +420,13 @@ final class ActionColumn extends Column
                     $this->buttonOptions
                 );
 
-                $icon = Html::tag('span', $iconName)->encode(false)->render();
+                $icon = Html::tag('span', $iconName)
+                    ->encode(false)
+                    ->render();
 
-                return Html::a($icon, $url, $options)->encode(false)->render();
+                return Html::a($icon, $url, $options)
+                    ->encode(false)
+                    ->render();
             };
         }
     }

@@ -200,15 +200,20 @@ class TestCase extends \PHPUnit\Framework\TestCase
                     ->addGroup(
                         Group::create(null)
                             ->routes(
-                                Route::methods(['GET', 'POST'], '/admin/index')->action([TestDelete::class, 'run'])
+                                Route::methods(['GET', 'POST'], '/admin/index')
+                                    ->action([TestDelete::class, 'run'])
                                     ->name('admin'),
-                                Route::methods(['GET', 'POST'], '/admin/delete[/{id}]')->action([TestDelete::class, 'run'])
+                                Route::methods(['GET', 'POST'], '/admin/delete[/{id}]')
+                                    ->action([TestDelete::class, 'run'])
                                     ->name('delete'),
-                                Route::methods(['GET', 'POST'], '/admin/update[/{id}]')->action([TestUpdate::class, 'run'])
+                                Route::methods(['GET', 'POST'], '/admin/update[/{id}]')
+                                    ->action([TestUpdate::class, 'run'])
                                     ->name('update'),
-                                Route::methods(['GET', 'POST'], '/admin/view[/{id}]')->action([TestView::class, 'run'])
+                                Route::methods(['GET', 'POST'], '/admin/view[/{id}]')
+                                    ->action([TestView::class, 'run'])
                                     ->name('view'),
-                                Route::methods(['GET', 'POST'], '/admin/custom[/{id}]')->action([TestCustom::class, 'run'])
+                                Route::methods(['GET', 'POST'], '/admin/custom[/{id}]')
+                                    ->action([TestCustom::class, 'run'])
                                     ->name('admin/custom'),
                             ),
                     );

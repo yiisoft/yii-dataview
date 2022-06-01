@@ -16,7 +16,9 @@ final class LinkPagerTest extends TestCase
 
         $linkPager = LinkPager::widget()
             ->activeButtonAttributes(['class' => 'test-active'])
-            ->paginator($this->createOffsetPaginator()->withPageSize(5));
+            ->paginator($this
+                ->createOffsetPaginator()
+                ->withPageSize(5));
 
         $html = <<<'HTML'
         <nav aria-label="Pagination">
@@ -35,7 +37,9 @@ final class LinkPagerTest extends TestCase
         $linkPager = LinkPager::widget()
             ->activeButtonAttributes(['data-active' => true])
             ->activePageCssClass('test-active')
-            ->paginator($this->createOffsetPaginator()->withPageSize(5));
+            ->paginator($this
+                ->createOffsetPaginator()
+                ->withPageSize(5));
 
         $html = <<<'HTML'
         <nav aria-label="Pagination">
@@ -56,7 +60,9 @@ final class LinkPagerTest extends TestCase
 
         $linkPager = LinkPager::widget()
             ->buttonsContainerAttributes(['class' => 'text-danger page-item'])
-            ->paginator($this->createOffsetPaginator()->withPageSize(5));
+            ->paginator($this
+                ->createOffsetPaginator()
+                ->withPageSize(5));
 
         $html = <<<'HTML'
         <nav aria-label="Pagination">
@@ -77,7 +83,9 @@ final class LinkPagerTest extends TestCase
 
         $linkPager = LinkPager::widget()
             ->disableCurrentPageButton()
-            ->paginator($this->createOffsetPaginator()->withPageSize(5));
+            ->paginator($this
+                ->createOffsetPaginator()
+                ->withPageSize(5));
 
         $html = <<<'HTML'
         <nav aria-label="Pagination">
@@ -98,7 +106,9 @@ final class LinkPagerTest extends TestCase
 
         $linkPager = LinkPager::widget()
             ->disabledButtonAttributes(['class' => 'test-disabled'])
-            ->paginator($this->createOffsetPaginator()->withPageSize(5));
+            ->paginator($this
+                ->createOffsetPaginator()
+                ->withPageSize(5));
 
 
         $html = <<<'HTML'
@@ -118,7 +128,9 @@ final class LinkPagerTest extends TestCase
         $linkPager = LinkPager::widget()
             ->disabledButtonAttributes(['data-disabled' => true])
             ->disabledPageCssClass('test-disabled')
-            ->paginator($this->createOffsetPaginator()->withPageSize(5));
+            ->paginator($this
+                ->createOffsetPaginator()
+                ->withPageSize(5));
 
         $html = <<<'HTML'
         <nav aria-label="Pagination">
@@ -141,8 +153,11 @@ final class LinkPagerTest extends TestCase
         $linkPager = LinkPager::widget()
             ->firstPageAttributes([
                 'class' => 'test-class',
-            ])->firstPageLabel('First')
-            ->paginator($this->createOffsetPaginator()->withPageSize(5));
+            ])
+            ->firstPageLabel('First')
+            ->paginator($this
+                ->createOffsetPaginator()
+                ->withPageSize(5));
 
         $html = <<<'HTML'
         <nav aria-label="Pagination">
@@ -171,7 +186,9 @@ final class LinkPagerTest extends TestCase
 
         $linkPager = LinkPager::widget()
             ->hideOnSinglePage()
-            ->paginator($this->createOffsetPaginator()->withPageSize(5));
+            ->paginator($this
+                ->createOffsetPaginator()
+                ->withPageSize(5));
         $this->assertEmpty($linkPager->render());
     }
 
@@ -182,8 +199,11 @@ final class LinkPagerTest extends TestCase
         $linkPager = LinkPager::widget()
             ->lastPageAttributes([
                 'class' => 'test-class',
-            ])->lastPageLabel('Last')
-            ->paginator($this->createOffsetPaginator()->withPageSize(5));
+            ])
+            ->lastPageLabel('Last')
+            ->paginator($this
+                ->createOffsetPaginator()
+                ->withPageSize(5));
 
         $html = <<<'HTML'
         <nav aria-label="Pagination">
@@ -205,7 +225,9 @@ final class LinkPagerTest extends TestCase
 
         $linkPager = LinkPager::widget()
             ->linkAttributes(['class' => 'test-class'])
-            ->paginator($this->createOffsetPaginator()->withPageSize(5));
+            ->paginator($this
+                ->createOffsetPaginator()
+                ->withPageSize(5));
 
         $html = <<<'HTML'
         <nav aria-label="Pagination">
@@ -226,7 +248,9 @@ final class LinkPagerTest extends TestCase
 
         $linkPager = LinkPager::widget()
             ->maxButtonCount(1)
-            ->paginator($this->createOffsetPaginator()->withPageSize(5));
+            ->paginator($this
+                ->createOffsetPaginator()
+                ->withPageSize(5));
 
         $html = <<<'HTML'
         <nav aria-label="Pagination">
@@ -247,7 +271,9 @@ final class LinkPagerTest extends TestCase
         $linkPager = LinkPager::widget()
             ->nextPageAttributes(['class' => 'test-class'])
             ->nextPageLabel('Next Page')
-            ->paginator($this->createOffsetPaginator()->withPageSize(5));
+            ->paginator($this
+                ->createOffsetPaginator()
+                ->withPageSize(5));
 
         $html = <<<'HTML'
         <nav aria-label="Pagination">
@@ -267,7 +293,9 @@ final class LinkPagerTest extends TestCase
             ->nextPageAttributes(['data-next' => true])
             ->nextPageCssClass('next')
             ->nextPageLabel('Next Page')
-            ->paginator($this->createOffsetPaginator()->withPageSize(5));
+            ->paginator($this
+                ->createOffsetPaginator()
+                ->withPageSize(5));
 
         $html = <<<'HTML'
         <nav aria-label="Pagination">
@@ -288,7 +316,9 @@ final class LinkPagerTest extends TestCase
 
         $linkPager = LinkPager::widget()
             ->navAttributes(['class' => 'test-class'])
-            ->paginator($this->createOffsetPaginator()->withPageSize(5));
+            ->paginator($this
+                ->createOffsetPaginator()
+                ->withPageSize(5));
 
         $html = <<<'HTML'
         <nav class="test-class">
@@ -309,7 +339,9 @@ final class LinkPagerTest extends TestCase
 
         $linkPager = LinkPager::widget()
             ->buttonsContainerAttributes(['class' => 'test-class'])
-            ->paginator($this->createOffsetPaginator()->withPageSize(5));
+            ->paginator($this
+                ->createOffsetPaginator()
+                ->withPageSize(5));
 
         $html = <<<'HTML'
         <nav aria-label="Pagination">
@@ -328,7 +360,9 @@ final class LinkPagerTest extends TestCase
         $linkPager = LinkPager::widget()
             ->buttonsContainerAttributes(['data-test' => true])
             ->pageCssClass('test-class')
-            ->paginator($this->createOffsetPaginator()->withPageSize(5));
+            ->paginator($this
+                ->createOffsetPaginator()
+                ->withPageSize(5));
 
         $html = <<<'HTML'
         <nav aria-label="Pagination">
@@ -350,7 +384,9 @@ final class LinkPagerTest extends TestCase
         $linkPager = LinkPager::widget()
             ->prevPageLabel('Previous')
             ->prevPageAttributes(['class' => 'test-class'])
-            ->paginator($this->createOffsetPaginator()->withPageSize(5));
+            ->paginator($this
+                ->createOffsetPaginator()
+                ->withPageSize(5));
 
         $html = <<<'HTML'
         <nav aria-label="Pagination">
@@ -370,7 +406,9 @@ final class LinkPagerTest extends TestCase
             ->prevPageLabel('Previous')
             ->prevPageAttributes(['data-prev' => true])
             ->prevPageCssClass('prev')
-            ->paginator($this->createOffsetPaginator()->withPageSize(5));
+            ->paginator($this
+                ->createOffsetPaginator()
+                ->withPageSize(5));
 
         $html = <<<'HTML'
         <nav aria-label="Pagination">
@@ -398,7 +436,9 @@ final class LinkPagerTest extends TestCase
 
         $linkPager = LinkPager::widget()
             ->ulAttributes(['class' => 'test-class'])
-            ->paginator($this->createOffsetPaginator()->withPageSize(5));
+            ->paginator($this
+                ->createOffsetPaginator()
+                ->withPageSize(5));
 
         $html = <<<'HTML'
         <nav aria-label="Pagination">
@@ -416,7 +456,9 @@ final class LinkPagerTest extends TestCase
     public function testEncode(): void
     {
         $linkPager = LinkPager::widget()
-            ->paginator($this->createOffsetPaginator()->withPageSize(5))
+            ->paginator($this
+                ->createOffsetPaginator()
+                ->withPageSize(5))
             ->prevPageLabel('<span aria-hidden="true">&laquo;</span>')
             ->nextPageLabel('<span aria-hidden="true">&raquo;</span>')
             ->prevPageAttributes([
@@ -449,7 +491,10 @@ final class LinkPagerTest extends TestCase
         $linkPager = LinkPager::widget()
             ->disabledLinkAttributes([
                 'tag' => 'span',
-            ])->paginator($this->createOffsetPaginator()->withPageSize(5));
+            ])
+            ->paginator($this
+                ->createOffsetPaginator()
+                ->withPageSize(5));
 
         $html = <<<'HTML'
         <nav aria-label="Pagination">
@@ -469,7 +514,10 @@ final class LinkPagerTest extends TestCase
         $linkPager = LinkPager::widget()
             ->activeLinkAttributes([
                 'tag' => 'span',
-            ])->paginator($this->createOffsetPaginator()->withPageSize(5));
+            ])
+            ->paginator($this
+                ->createOffsetPaginator()
+                ->withPageSize(5));
 
         $html = <<<'HTML'
         <nav aria-label="Pagination">
@@ -489,7 +537,9 @@ final class LinkPagerTest extends TestCase
         LinkPager::counter(0);
 
         $linkPager = LinkPager::widget()
-            ->paginator($this->createOffsetPaginator()->withPageSize(5))
+            ->paginator($this
+                ->createOffsetPaginator()
+                ->withPageSize(5))
             ->requestQueryParams([
                 'param1' => 'foo',
                 'param2' => 'bar',
@@ -518,41 +568,53 @@ final class LinkPagerTest extends TestCase
         LinkPager::counter(0);
 
         $avito = LinkPager::widget()
-            ->paginator($this->createOffsetPaginator()->withPageSize(5))
+            ->paginator($this
+                ->createOffsetPaginator()
+                ->withPageSize(5))
             ->navAttributes([
                 'class' => 'b-shop-pagination',
-            ])->ulAttributes([
+            ])
+            ->ulAttributes([
                 'tag' => 'div',
                 'class' => 'pagination js-pages',
-            ])->buttonsContainerAttributes([
+            ])
+            ->buttonsContainerAttributes([
                 'tag' => null,
-            ])->nextPageAttributes([
+            ])
+            ->nextPageAttributes([
                 'tag' => 'div',
                 'class' => 'pagination-nav clearfix',
-            ])->linkAttributes([
+            ])
+            ->linkAttributes([
                 'class' => 'pagination-page',
-            ])->lastPageAttributes([
+            ])
+            ->lastPageAttributes([
                 'tag' => null,
-            ])->listTemplate(
+            ])
+            ->listTemplate(
                 LinkPager::NEXT_PAGE_BUTTON .
                 '<div class="pagination-pages clearfix">' .
-                    LinkPager::PAGES .
-                    LinkPager::LAST_PAGE_BUTTON .
+                LinkPager::PAGES .
+                LinkPager::LAST_PAGE_BUTTON .
                 '</div>'
-            )->lastPageLabel('Last Page');
+            )
+            ->lastPageLabel('Last Page');
 
-        $avito2 = $avito->ulAttributes([
-            'tag' => 'div',
-            'class' => 'pagination-pages clearfix',
-        ])->template(
-            '<div class="pagination js-pages">' .
+        $avito2 = $avito
+            ->ulAttributes([
+                'tag' => 'div',
+                'class' => 'pagination-pages clearfix',
+            ])
+            ->template(
+                '<div class="pagination js-pages">' .
                 LinkPager::NEXT_PAGE_BUTTON .
                 LinkPager::PAGE_LIST .
-            '</div>'
-        )->listTemplate(
-            LinkPager::PAGES .
-            LinkPager::LAST_PAGE_BUTTON
-        );
+                '</div>'
+            )
+            ->listTemplate(
+                LinkPager::PAGES .
+                LinkPager::LAST_PAGE_BUTTON
+            );
 
         $html = <<<'HTML'
         <nav class="b-shop-pagination">
@@ -578,7 +640,9 @@ final class LinkPagerTest extends TestCase
         $linkPager = LinkPager::widget()
             ->pageParam('my-custom-page-param')
             ->activeButtonAttributes(['class' => 'test-active'])
-            ->paginator($this->createOffsetPaginator()->withPageSize(5));
+            ->paginator($this
+                ->createOffsetPaginator()
+                ->withPageSize(5));
 
         $html = <<<'HTML'
         <nav aria-label="Pagination">
@@ -600,7 +664,9 @@ final class LinkPagerTest extends TestCase
         $linkPager = LinkPager::widget()
             ->pageArgument(true)
             ->activeButtonAttributes(['class' => 'test-active'])
-            ->paginator($this->createOffsetPaginator()->withPageSize(5));
+            ->paginator($this
+                ->createOffsetPaginator()
+                ->withPageSize(5));
 
         $html = <<<'HTML'
         <nav aria-label="Pagination">
@@ -622,7 +688,9 @@ final class LinkPagerTest extends TestCase
         $linkPager = LinkPager::widget()
             ->hideFirstPageParameter()
             ->activeButtonAttributes(['class' => 'test-active'])
-            ->paginator($this->createOffsetPaginator()->withPageSize(5));
+            ->paginator($this
+                ->createOffsetPaginator()
+                ->withPageSize(5));
 
         $html = <<<'HTML'
         <nav aria-label="Pagination">
