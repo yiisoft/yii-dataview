@@ -243,11 +243,8 @@ class TestCase extends \PHPUnit\Framework\TestCase
                 MessageReaderInterface $messageReader,
                 MessageFormatterInterface $messageFormatter
             ) {
-                $translator = new Translator('en');
                 $categorySource = new CategorySource('app', $messageReader, $messageFormatter);
-                $translator->addCategorySource($categorySource);
-
-                return $translator;
+                return new Translator('en', null, [$categorySource]);
             },
         ];
     }
