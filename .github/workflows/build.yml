@@ -22,7 +22,7 @@ on:
 name: build
 
 jobs:
-  phpunit
+  phpunit:
     uses: yiisoft/actions/.github/workflows/phpunit.yml@master
     with:
       extensions: intl
