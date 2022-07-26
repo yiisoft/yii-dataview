@@ -372,7 +372,7 @@ final class ListView extends BaseListView implements ViewContextInterface
         }
 
         return Html::tag($tag, $content)
-            ->attributes($options)
+            ->addAttributes($options)
             ->encode(false)
             ->render();
     }

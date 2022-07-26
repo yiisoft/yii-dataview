@@ -114,7 +114,7 @@ final class RadioButtonColumn extends Column
         $checked = $options['checked'] ?? false;
 
         return Html::radio($this->name, $checked)
-            ->attributes($options)
+            ->addAttributes($options)
             ->render();
     }
 }

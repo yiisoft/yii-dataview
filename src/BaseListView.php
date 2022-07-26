@@ -81,7 +81,7 @@ abstract class BaseListView extends Widget
         $tag = ArrayHelper::remove($options, 'tag', 'div');
 
         return Html::tag($tag, $content)
-            ->attributes($options)
+            ->addAttributes($options)
             ->encode(false)
             ->render();
     }
@@ -368,7 +368,7 @@ abstract class BaseListView extends Widget
         $tag = ArrayHelper::remove($options, 'tag', 'div');
 
         return Html::tag($tag, $this->emptyText)
-            ->attributes($options)
+            ->addAttributes($options)
             ->render();
     }
 
@@ -414,7 +414,7 @@ abstract class BaseListView extends Widget
                 ],
             ),
         )
-            ->attributes($summaryOptions)
+            ->addAttributes($summaryOptions)
             ->encode(false)
             ->render();
     }
