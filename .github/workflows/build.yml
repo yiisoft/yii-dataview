@@ -22,10 +22,10 @@ on:
 name: build
 
 jobs:
-  phpunit:
-    extensions: intl
+  phpunit
     uses: yiisoft/actions/.github/workflows/phpunit.yml@master
     with:
+      extensions: intl
       os: >-
         ['ubuntu-latest', 'windows-latest']
       php: >-
