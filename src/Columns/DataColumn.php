@@ -323,7 +323,7 @@ final class DataColumn extends Column
 
             $name = $this->getInputName($this->grid->getFilterModelName(), $this->filterAttribute);
 
-            return (string) Html::textInput($name, $this->filterValueDefault)->attributes($this->filterInputOptions);
+            return (string) Html::textInput($name, $this->filterValueDefault)->addAttributes($this->filterInputOptions);
         }
 
         return parent::renderFilterCellContent();

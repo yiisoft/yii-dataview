@@ -143,7 +143,7 @@ final class CheckboxColumn extends Column
         $options['value'] = '1';
 
         return Html::checkbox($this->getHeaderCheckboxName($this->name), false)
-            ->attributes($options)
+            ->addAttributes($options)
             ->render();
     }
 
@@ -180,7 +180,7 @@ final class CheckboxColumn extends Column
         }
 
         return Html::checkbox($this->name)
-            ->attributes($options)
+            ->addAttributes($options)
             ->render();
     }
 
