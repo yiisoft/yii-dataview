@@ -139,7 +139,7 @@ final class DataAttribute
             $value = ArrayHelper::getValueByPath($model, $this->name);
         }
 
-        if (empty($value)) {
+        if (empty($value) && (int)$value !== 0) {
             return '';
         }
 
