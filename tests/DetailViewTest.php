@@ -354,20 +354,24 @@ final class DetailViewTest extends TestCase
         $html = <<<'HTML'
         <table id="w1-detailview" class="table table-striped table-bordered detail-view">
         <tr><th>Id</th><td>1</td></tr>
-        <tr><th>Total</th><td>10</td></tr>
-        </table>
-        HTML;
-
+        <tr><th>IsAdmin</th><td>False</td></tr>
+        <tr><th>Total</th><td>0</td></tr>
+        </table></div>
+        HTML;        
+        
         $detailView = DetailView::widget()
             ->emptyValue(null)
             ->attributes(
                 [
                     ['attribute' => 'id'],
                     ['attribute' => 'username'],
-                    ['attribute' => 'total'],
+                    ['attribute' => 'isAdmin', 'format' => static function($value) { return $value ? 'True' : 'False'; }],
+                    ['attribute' => 'total:number'],
                 ],
             )
-            ->model(['id' => 1, 'username' => '', 'total' => '10']);
+            ->model(['id' => 1, 'username' => '', 'isAdmin' => false, 'total' => 0]);        
+        
+        
         $this->assertEqualsWithoutLE($html, $detailView->render());
 
         DetailView::counter(0);
@@ -376,7 +380,7 @@ final class DetailViewTest extends TestCase
         <table id="w1-detailview" class="table table-striped table-bordered detail-view">
         <tr><th>Id</th><td>1</td></tr>
         <tr><th>Username</th><td> - </td></tr>
-        <tr><th>Total</th><td>10</td></tr>
+        <tr><th>Total</th><td>0</td></tr>
         </table>
         HTML;
 
@@ -386,10 +390,10 @@ final class DetailViewTest extends TestCase
                 [
                     ['attribute' => 'id'],
                     ['attribute' => 'username'],
-                    ['attribute' => 'total'],
+                    ['attribute' => 'total:number'],
                 ],
             )
-            ->model(['id' => 1, 'username' => '', 'total' => '10']);
+            ->model(['id' => 1, 'username' => '', 'total' => '0']);
         $this->assertEqualsWithoutLE($html, $detailView->render());
     }
 }
