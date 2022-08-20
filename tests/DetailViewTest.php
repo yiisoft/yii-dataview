@@ -356,7 +356,7 @@ final class DetailViewTest extends TestCase
         <tr><th>Id</th><td>1</td></tr>
         <tr><th>IsAdmin</th><td>False</td></tr>
         <tr><th>Total</th><td>0</td></tr>
-        </table></div>
+        </table>
         HTML;        
         
         $detailView = DetailView::widget()
