@@ -4,491 +4,562 @@ declare(strict_types=1);
 
 namespace Yiisoft\Yii\DataView;
 
-use JsonException;
-use Yiisoft\Arrays\ArrayHelper;
+use InvalidArgumentException;
+use ReflectionException;
 use Yiisoft\Data\Paginator\OffsetPaginator;
-use Yiisoft\Definitions\Exception\InvalidConfigException as InvalidDefinitionConfigException;
-use Yiisoft\Html\Html;
+use Yiisoft\Data\Paginator\PaginatorInterface;
+use Yiisoft\Html\Tag\Div;
+use Yiisoft\Html\Tag\Td;
+use Yiisoft\Router\UrlGeneratorInterface;
 use Yiisoft\Translator\TranslatorInterface;
-use Yiisoft\Yii\DataView\Exception\InvalidConfigException;
-use Yiisoft\Yii\DataView\Widget\LinkPager;
+use Yiisoft\Widget\Widget;
 use Yiisoft\Yii\DataView\Widget\LinkSorter;
 
-use function count;
-use function preg_replace_callback;
-
-/**
- * BaseListView is a base class for widgets displaying data from data provider such as ListView and GridView.
- *
- * It provides features like sorting, paging and also filtering the data.
- *
- * For more details and usage information on BaseListView:
- * see the [guide article on data widgets](guide:output-data-widgets).
- */
 abstract class BaseListView extends Widget
 {
-    public const BOOTSTRAP = 'bootstrap';
-    public const BULMA = 'bulma';
-    protected array $options = [];
-    protected OffsetPaginator $paginator;
-    protected ?LinkSorter $sorter = null;
-    protected string $summary = 'Showing <b>{begin, number}-{end, number}</b> of <b>{totalCount, number}</b> ' .
-    '{totalCount, plural, one{item} other{items}}';
-    protected array $summaryOptions = [];
-    protected bool $showOnEmpty = false;
+    private array $attributes = [];
+    private bool $container = true;
     protected string $emptyText = 'No results found.';
-    protected bool $showEmptyText = true;
-    protected array $emptyTextOptions = ['class' => 'empty'];
-    protected string $layout = "{summary}\n{items}\n{pager}";
-    protected string $cssFramework = self::BOOTSTRAP;
-    private const CSS_FRAMEWORKS = [
-        self::BOOTSTRAP,
-        self::BULMA,
-    ];
-    private int $pageSize = 0;
-    private int $currentPage = 1;
-    private ?bool $pageArgument = null;
-    private ?array $requestArguments = null;
-    private ?array $requestQueryParams = null;
-    private TranslatorInterface $translator;
-
-    public function __construct(TranslatorInterface $translator)
-    {
-        $this->translator = $translator;
-    }
+    private array $emptyTextAttributes = [];
+    private string $header = '';
+    private array $headerAttributes = [];
+    private string $layout = '{header}' . PHP_EOL . '{toolbar}';
+    private string $layoutGridTable = '{items}' . PHP_EOL . '{summary}' . PHP_EOL . '{pager}';
+    private string $pagination = '';
+    protected ?PaginatorInterface $paginator = null;
+    private array $sortLinkAttributes = [];
+    private string $summary = 'gridview.summary';
+    private array $summaryAttributes = [];
+    private TranslatorInterface|null $translator = null;
+    private string $toolbar = '';
+    protected array $urlArguments = [];
+    protected bool $urlEnabledArguments = true;
+    protected UrlGeneratorInterface|null $urlGenerator = null;
+    protected string $urlName = '';
+    protected array $urlQueryParameters = [];
 
     /**
-     * Renders the data models.
+     * Renders the data active record classes.
      *
      * @return string the rendering result.
      */
     abstract protected function renderItems(): string;
 
-    protected function run(): string
-    {
-        if ($this->showOnEmpty || ($this->paginator->getTotalItems() > 0)) {
-            $content = preg_replace_callback('/{\\w+}/', function (array $matches): string {
-                /** @var string[] $matches */
-                return $this->renderSection($matches[0]);
-            }, $this->layout);
-        } else {
-            $content = $this->renderEmpty();
-        }
-
-        $options = $this->options;
-
-        /** @psalm-var non-empty-string */
-        $tag = ArrayHelper::remove($options, 'tag', 'div');
-
-        return Html::tag($tag, $content)
-            ->addAttributes($options)
-            ->encode(false)
-            ->render();
-    }
-
-    public function getPaginator(): OffsetPaginator
-    {
-        return $this->paginator;
-    }
-
     /**
-     * @param int $currentPage set current page OffsetPaginator::class {@see OffsetPaginator::currentPage()}
+     * Returns a new instance with the HTML attributes. The following special options are recognized.
      *
-     * @return $this
+     * @param array $values Attribute values indexed by attribute names.
+     *
+     * @return static
      */
-    public function currentPage(int $currentPage): self
+    public function attributes(array $values): static
     {
         $new = clone $this;
-        $new->currentPage = $currentPage;
+        $new->attributes = $values;
 
         return $new;
     }
 
     /**
-     * @param string $emptyText the HTML content to be displayed when {@see} does not have any data.
+     * Returns a new instance whether container is enabled or not.
      *
-     * When this is set to `false` no extra HTML content will be generated.
+     * @param bool $value Whether container is enabled or not.
      *
-     * The default value is the text "No results found." which will be translated to the current
-     * application language.
-     *
-     * @return $this
-     *
-     * @see showOnEmpty
-     * @see emptyTextOptions
+     * @return static
      */
-    public function emptyText(string $emptyText): self
+    public function container(bool $value): static
     {
         $new = clone $this;
+        $new->container = $value;
 
+        return $new;
+    }
+
+    /**
+     * Return a new instance with the empty text.
+     *
+     * @param string $emptyText the HTML content to be displayed when {@see dataProvider} does not have any data.
+     *
+     * The default value is the text "No results found." which will be translated to the current application language.
+     *
+     * @return static
+     *
+     * {@see notShowOnEmpty()}
+     * {@see emptyTextAttributes()}
+     */
+    public function emptyText(string $emptyText): static
+    {
+        $new = clone $this;
         $new->emptyText = $emptyText;
 
         return $new;
     }
 
     /**
-     * @param array $emptyTextOptions the HTML attributes for the emptyText of the list view.
+     * Returns a new instance with the HTML attributes for the empty text.
      *
-     * The "tag" element specifies the tag name of the emptyText element and defaults to "div".
+     * @param array $values Attribute values indexed by attribute names.
      *
-     * @return $this
-     *
-     * {@see Html::renderTagAttributes()} for details on how attributes are being rendered.
+     * @return static
      */
-    public function emptyTextOptions(array $emptyTextOptions): self
+    public function emptyTextAttributes(array $values): static
     {
         $new = clone $this;
-        $new->emptyTextOptions = $emptyTextOptions;
+        $new->emptyTextAttributes = $values;
 
         return $new;
     }
 
-    public function cssFramework(string $cssFramework): self
+    public function getPaginator(): PaginatorInterface
     {
-        if (!in_array($cssFramework, self::CSS_FRAMEWORKS)) {
-            $cssFramework = implode('", "', self::CSS_FRAMEWORKS);
-            throw new InvalidConfigException("Invalid CSS framework. Valid values are: \"$cssFramework\".");
+        if ($this->paginator === null) {
+            throw new InvalidArgumentException('The paginator is not set.');
         }
 
-        $new = clone $this;
-        $new->cssFramework = $cssFramework;
-
-        return $new;
+        return $this->paginator;
     }
 
-    public function getRequestArguments(): ?array
+    public function getTranslator(): TranslatorInterface
     {
-        return $this->requestArguments;
+        if ($this->translator === null) {
+            throw new InvalidArgumentException('The translator is not set.');
+        }
+
+        return $this->translator;
     }
 
-    public function getRequestQueryParams(): ?array
+    public function getUrlGenerator(): UrlGeneratorInterface
     {
-        return $this->requestQueryParams;
+        if ($this->urlGenerator === null) {
+            throw new InvalidArgumentException('Url generator is not set.');
+        }
+
+        return $this->urlGenerator;
     }
 
     /**
-     * @param string $layout the layout that determines how different sections of the list view should be organized.
+     * Return new instance with the header for the grid.
      *
-     * The following tokens will be replaced with the corresponding section contents:
-     * - `{summary}`: the summary section. See {@see renderSummary()}.
-     * - `{items}`: the list items. See {@see renderItems()}.
-     * - `{sorter}`: the sorter. See {@see renderSorter()}.
-     * - `{pager}`: the pager. See {@see renderPager()}.
+     * @param string $value The header of the grid.
      *
-     * @return $this
+     * @return self
+     *
+     * {@see headerAttributes}
      */
-    public function layout(string $layout): self
+    public function header(string $value): self
     {
         $new = clone $this;
-        $new->layout = $layout;
+        $new->header = $value;
 
         return $new;
     }
 
     /**
-     * @param array $options the HTML attributes for the container tag of the list view.
+     * Return new instance with the HTML attributes for the header.
      *
-     * The "tag" element specifies the tag name of the container element and defaults to "div".
-     *
-     * @return $this
-     *
-     * {@see Html::renderTagAttributes()} for details on how attributes are being rendered.
-     */
-    public function options(array $options): self
-    {
-        $new = clone $this;
-        $new->options = ArrayHelper::merge($this->options, $options);
-
-        return $new;
-    }
-
-    /**
-     * @param int $pageSize set page size OffsetPaginator {@see OffsetPaginator::pageSize()}
-     * {@see KeysetPaginator::pageSize()}.
-     *
-     * @return $this
-     */
-    public function pageSize(int $pageSize): self
-    {
-        $new = clone $this;
-        $new->pageSize = $pageSize;
-
-        return $new;
-    }
-
-    /**
-     * @param OffsetPaginator $paginator set paginator {@see OffsetPaginator} {@see KeysetPaginator}.
-     *
-     * @return $this
-     */
-    public function paginator(OffsetPaginator $paginator): self
-    {
-        $new = clone $this;
-        $new->paginator = $paginator;
-
-        return $new;
-    }
-
-    public function requestArguments(?array $requestArguments): self
-    {
-        $new = clone $this;
-        $new->requestArguments = $requestArguments;
-
-        return $new;
-    }
-
-    public function requestQueryParams(?array $requestQueryParams): self
-    {
-        $new = clone $this;
-        $new->requestQueryParams = $requestQueryParams;
-
-        return $new;
-    }
-
-    /**
-     * Use route argument instead of $_GET param for page number, like /page-{pageParam:\d+}
-     *
-     * @param bool|null $value
+     * @param array $values Attribute values indexed by attribute names.
      *
      * @return self
      */
-    public function pageArgument(?bool $value = true): self
+    public function headerAttributes(array $values): self
     {
         $new = clone $this;
-        $new->pageArgument = $value;
+        $new->headerAttributes = $values;
 
         return $new;
     }
 
     /**
-     * @param bool $showOnEmpty whether to show an empty list view if {@see} returns no data.
+     * Returns a new instance with the id of the grid view, detail view, or list view.
      *
-     * The default value is false which displays an element according to the {@see $emptyText} and
-     * {@see $emptyTextOptions} properties.
+     * @param string $value The id of the grid view, detail view, or list view.
      *
-     * @return $this
+     * @return static
      */
-    public function showOnEmpty(bool $showOnEmpty): self
+    public function id(string $value): static
     {
         $new = clone $this;
-        $new->showOnEmpty = $showOnEmpty;
+        $new->attributes['id'] = $value;
 
         return $new;
     }
 
     /**
-     * @param string $summary the HTML content to be displayed as the summary of the list view.
+     * Returns a new instance with the layout of the grid view, and list view.
+     *
+     * @param string $value The template that determines how different sections of the grid view, list view. Should be
+     * organized.
+     *
+     * The following tokens will be replaced with the corresponding section contents:
+     *
+     * - `{header}`: The header section.
+     * - `{toolbar}`: The toolbar section.
+     *
+     * @return static
+     */
+    public function layout(string $value): static
+    {
+        $new = clone $this;
+        $new->layout = $value;
+
+        return $new;
+    }
+
+    /**
+     * Returns a new instance with the layout grid table.
+     *
+     * @param string $value The layout that determines how different sections of the grid view, list view. Should be
+     * organized.
+     *
+     * The following tokens will be replaced with the corresponding section contents:
+     *
+     * - `{items}`: The items section.
+     * - `{summary}`: The summary section.
+     * - `{pager}`: The pager section.
+     *
+     * @return static
+     */
+    public function layoutGridTable(string $value): static
+    {
+        $new = clone $this;
+        $new->layoutGridTable = $value;
+
+        return $new;
+    }
+
+    /**
+     * Returns a new instance with the pagination of the grid view, detail view, or list view.
+     *
+     * @param string $value The pagination of the grid view, detail view, or list view.
+     *
+     * @return static
+     */
+    public function pagination(string $value): static
+    {
+        $new = clone $this;
+        $new->pagination = $value;
+
+        return $new;
+    }
+
+    /**
+     * Returns a new instance with the paginator interface of the grid view, detail view, or list view.
+     *
+     * @param PaginatorInterface $value The paginator interface of the grid view, detail view, or list view.
+     *
+     * @return static
+     */
+    public function paginator(PaginatorInterface $value): static
+    {
+        $new = clone $this;
+        $new->paginator = $value;
+
+        return $new;
+    }
+
+    /**
+     * Return new instance with the HTML attributes for widget link sort.
+     *
+     * @param array $values Attribute values indexed by attribute names.
+     *
+     * @return static
+     */
+    public function sortLinkAttributes(array $values): static
+    {
+        $new = clone $this;
+        $new->sortLinkAttributes = $values;
+
+        return $new;
+    }
+
+    /**
+     * Returns a new instance with the summary of the grid view, detail view, and list view.
+     *
+     * @param string $value the HTML content to be displayed as the summary of the list view.
      *
      * If you do not want to show the summary, you may set it with an empty string.
      *
      * The following tokens will be replaced with the corresponding values:
-     * - `{begin}`: the starting row number (1-based) currently being displayed
-     * - `{end}`: the ending row number (1-based) currently being displayed
-     * - `{count}`: the number of rows currently being displayed
-     * - `{totalCount}`: the total number of rows available
-     * - `{page}`: the page number (1-based) current being displayed
-     * - `{pageCount}`: the number of pages available
      *
-     * @return $this
+     * - `{begin}`: the starting row number (1-based) currently being displayed.
+     * - `{end}`: the ending row number (1-based) currently being displayed.
+     * - `{count}`: the number of rows currently being displayed.
+     * - `{totalCount}`: the total number of rows available.
+     * - `{page}`: the page number (1-based) current being displayed.
+     * - `{pageCount}`: the number of pages available.
+     *
+     * @return static
      */
-    public function summary(string $summary): self
+    public function summary(string $value): static
     {
         $new = clone $this;
-        $new->summary = $summary;
+        $new->summary = $value;
 
         return $new;
     }
 
     /**
-     * @param array $summaryOptions the HTML attributes for the summary of the list view.
+     * Returns a new instance with the HTML attributes for summary of grid view, detail view, and list view.
      *
-     * The "tag" element specifies the tag name of the summary element and defaults to "div".
+     * @param array $values Attribute values indexed by attribute names.
      *
-     * @return $this
-     *
-     * {@see Html::renderTagAttributes()} for details on how attributes are being rendered.
+     * @return static
      */
-    public function summaryOptions(array $summaryOptions): self
+    public function summaryAttributes(array $values): static
     {
         $new = clone $this;
-        $new->summaryOptions = $summaryOptions;
+        $new->summaryAttributes = $values;
 
         return $new;
     }
 
-    public function showEmptyText(bool $value): self
+    /**
+     * Returns a new instance with the translator interface of the grid view, detail view, or list view.
+     *
+     * @param TranslatorInterface $value The translator interface of the grid view, detail view, or list view.
+     *
+     * @return static
+     */
+    public function translator(TranslatorInterface $value): static
     {
         $new = clone $this;
-        $new->showEmptyText = $value;
+        $new->translator = $value;
 
         return $new;
     }
 
-    public function getCssFramework(): string
+    /**
+     * Return new instance with toolbar content.
+     *
+     * @param string $value The toolbar content.
+     *
+     * @return self
+     *
+     * @psalm-param array<array-key,array> $toolbar
+     */
+    public function toolbar(string $value): self
     {
-        return $this->cssFramework;
+        $new = clone $this;
+        $new->toolbar = $value;
+
+        return $new;
+    }
+
+    /**
+     * Return a new instance with arguments of the route.
+     *
+     * @param array $value Arguments of the route.
+     *
+     * @return static
+     */
+    public function urlArguments(array $value): static
+    {
+        $new = clone $this;
+        $new->urlArguments = $value;
+
+        return $new;
+    }
+
+    /**
+     * Return a new instance with enabled arguments of the route.
+     *
+     * @param bool $value Enabled arguments of the route.
+     *
+     * @return static
+     */
+    public function urlEnabledArguments(bool $value): static
+    {
+        $new = clone $this;
+        $new->urlEnabledArguments = $value;
+
+        return $new;
+    }
+
+    /**
+     * Return a new instance with url generator interface for pagination.
+     *
+     * @param UrlGeneratorInterface $value The url generator interface for pagination.
+     *
+     * @return static
+     */
+    public function urlGenerator(UrlGeneratorInterface $value): static
+    {
+        $new = clone $this;
+        $new->urlGenerator = $value;
+
+        return $new;
+    }
+
+    /**
+     * Returns a new instance with the name of the route.
+     *
+     * @param string $value The name of the route.
+     *
+     * @return static
+     */
+    public function urlName(string $value): static
+    {
+        $new = clone $this;
+        $new->urlName = $value;
+
+        return $new;
+    }
+
+    /**
+     * Return a new instance with query parameters of the route.
+     *
+     * @param array $value The query parameters of the route.
+     *
+     * @return static
+     */
+    public function urlQueryParameters(array $value): static
+    {
+        $new = clone $this;
+        $new->urlQueryParameters = $value;
+
+        return $new;
     }
 
     protected function getDataReader(): array
     {
         $dataReader = [];
 
-        if ($this->pageSize > 0) {
-            $this->paginator = $this->paginator->withPageSize($this->pageSize);
-        }
-
-        $this->paginator = $this->paginator->withCurrentPage($this->currentPage);
-
         /** @var array */
-        foreach ($this->paginator->read() as $read) {
+        foreach ($this->getPaginator()->read() as $read) {
             $dataReader[] = $read;
         }
 
         return $dataReader;
     }
 
-    /**
-     * Renders the HTML content indicating that the list view has no data.
-     *
-     * @throws JsonException
-     *
-     * @return string the rendering result
-     *
-     * @see emptyText
-     */
-    protected function renderEmpty(): string
+    protected function renderEmpty(int $colspan): Td
     {
-        if (!$this->showEmptyText) {
-            return '';
-        }
+        $emptyTextAttributes = $this->emptyTextAttributes;
+        $emptyText = $this->getTranslator()->translate($this->emptyText, [], 'gridview');
+        $emptyTextAttributes['colspan'] =  $colspan;
 
-        $options = $this->emptyTextOptions;
-
-        /** @psalm-var non-empty-string */
-        $tag = ArrayHelper::remove($options, 'tag', 'div');
-
-        return Html::tag($tag, $this->emptyText)
-            ->addAttributes($options)
-            ->render();
+        return Td::tag()->addAttributes($emptyTextAttributes)->content($emptyText);
     }
 
     /**
-     * Renders the summary text.
+     * @throws ReflectionException
      */
+    protected function renderLinkSorter(string $attribute, string $label): string
+    {
+        $renderLinkSorter = '';
+        /** @var OffsetPaginator */
+        $paginator = $this->getPaginator();
+        $sort = $paginator->getSort();
+
+        if (null !== $sort) {
+            $renderLinkSorter = LinkSorter::widget()
+                ->attribute($attribute)
+                ->attributes($sort->getCriteria())
+                ->currentPage($paginator->getCurrentPage())
+                ->directions($sort->getOrder())
+                ->iconAscClass('bi bi-sort-alpha-up')
+                ->iconDescClass('bi bi-sort-alpha-down')
+                ->label($label)
+                ->linkAttributes($this->sortLinkAttributes)
+                ->pageSize($this->getPaginator()->getPageSize())
+                ->urlArguments($this->urlArguments)
+                ->urlGenerator($this->getUrlGenerator())
+                ->urlName($this->urlName)
+                ->urlQueryParameters($this->urlQueryParameters)
+                ->render();
+        }
+
+        return $renderLinkSorter;
+    }
+
+    protected function run(): string
+    {
+        if (!isset($this->paginator)) {
+            throw new InvalidArgumentException('The "paginator" property must be set.');
+        }
+
+        return $this->renderGrid();
+    }
+
+    private function renderPagination(): string
+    {
+        return match ($this->getPaginator()->isRequired()) {
+            true => $this->pagination,
+            false => '',
+        };
+    }
+
     private function renderSummary(): string
     {
-        $count = $this->paginator->getTotalItems();
+        $pageCount = count($this->getDataReader());
+        /** @var OffsetPaginator */
+        $paginator = $this->getPaginator();
 
-        if ($count < 1 || $this->summary === '') {
+        if ($pageCount <= 0) {
             return '';
         }
 
-        $summaryOptions = $this->summaryOptions;
-
-        /** @psalm-var non-empty-string */
-        $tag = ArrayHelper::remove($summaryOptions, 'tag', 'div');
-
-        $totalCount = count($this->getDataReader());
-
-        $begin = $this->paginator->getOffset() + 1;
-        $end = ($begin + $totalCount) - 1;
-
-        if ($begin > $end) {
-            $begin = $end;
-        }
-
-        $page = $this->paginator->getCurrentPage() + 1;
-        $pageCount = $this->paginator->getCurrentPageSize();
-
-        return Html::tag(
-            $tag,
-            $this->translator->translate(
-                $this->summary,
-                [
-                    'begin' => $begin,
-                    'end' => $end,
-                    'count' => $count,
-                    'totalCount' => empty($this->summary) ? $totalCount : $count,
-                    'page' => $page,
-                    'pageCount' => $pageCount,
-                ],
-            ),
-        )
-            ->addAttributes($summaryOptions)
+        return Div::tag()
+            ->addAttributes($this->summaryAttributes)
+            ->content(
+                $this->getTranslator()->translate(
+                    $this->summary,
+                    ['pageCount' => $pageCount, 'totalCount' => $paginator->getTotalItems()],
+                    'gridview',
+                )
+            )
             ->encode(false)
             ->render();
     }
 
-    /**
-     * Renders the pager.
-     *
-     * @throws InvalidConfigException
-     *
-     * @return string the rendering result
-     *
-     * @psalm-suppress MixedArgumentTypeCoercion
-     */
-    private function renderPager(): string
+    private function renderGrid(): string
     {
-        if ($this->paginator->getTotalItems() < 1) {
-            return '';
+        $attributes = $this->attributes;
+        $contentGrid = '';
+
+        if ($this->layout !== '') {
+            $contentGrid = trim(
+                strtr($this->layout, ['{header}' => $this->renderHeader(), '{toolbar}' => $this->toolbar])
+            );
         }
 
-        return LinkPager::widget()
-            ->paginator($this->paginator)
-            ->cssFramework($this->cssFramework)
-            ->pageArgument($this->pageArgument)
-            ->requestArguments($this->requestArguments)
-            ->requestQueryParams($this->requestQueryParams)
-            ->render();
+        return match ($this->container) {
+            true => trim(
+                $contentGrid . PHP_EOL . Div::tag()
+                    ->addAttributes($attributes)
+                    ->content(PHP_EOL . $this->renderGridTable() . PHP_EOL)
+                    ->encode(false)
+                    ->render()
+            ),
+            false => trim($contentGrid . PHP_EOL . $this->renderGridTable()),
+        };
     }
 
-    /**
-     * Renders a section of the specified name.
-     *
-     * If the named section is not supported, false will be returned.
-     *
-     * @param string $name the section name, e.g., `{summary}`, `{items}`.
-     *
-     * @throws InvalidConfigException|InvalidDefinitionConfigException
-     *
-     * @return string the rendering result of the section, or false if the named section is not supported.
-     */
-    private function renderSection(string $name): string
+    private function renderGridTable(): string
     {
-        switch ($name) {
-            case '{summary}':
-                return $this->renderSummary();
-            case '{items}':
-                return $this->renderItems();
-            case '{pager}':
-                return $this->renderPager();
-            case '{sorter}':
-                return $this->renderSorter();
-            default:
-                return '';
-        }
+        return trim(
+            strtr(
+                $this->layoutGridTable,
+                [
+                    '{header}' => $this->renderHeader(),
+                    '{toolbar}' => $this->toolbar,
+                    '{items}' => $this->renderItems(),
+                    '{summary}' => $this->renderSummary(),
+                    '{pager}' => $this->renderPagination(),
+                ],
+            )
+        );
     }
 
-    /**
-     * Renders the sorter.
-     *
-     * @throws InvalidDefinitionConfigException
-     *
-     * @return string the rendering result
-     */
-    private function renderSorter(): string
+    private function renderHeader(): string
     {
-        $sort = $this->paginator->getSort();
-
-        if ($sort === null || empty($sort->getCriteria()) || $this->paginator->getTotalItems() < 1) {
-            return '';
-        }
-
-        return LinkSorter::widget()
-            ->sort($sort)
-            ->pageArgument($this->pageArgument)
-            ->cssFramework($this->cssFramework)
-            ->render();
+        return match ($this->header) {
+            '' => '',
+            default => Div::tag()
+                ->addAttributes($this->headerAttributes)
+                ->content($this->header)
+                ->encode(false)
+                ->render(),
+        };
     }
 }
