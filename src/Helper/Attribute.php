@@ -6,8 +6,6 @@ namespace Yiisoft\Yii\DataView\Helper;
 
 use InvalidArgumentException;
 
-use function is_array;
-
 final class Attribute
 {
     /**

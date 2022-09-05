@@ -162,7 +162,7 @@ final class DataColumn extends Column
      * Return new instance with the filter input select prompt.
      *
      * @param string $prompt The prompt text for the filter input select.
-     * @param Stringable|null|string|int|bool|float $value The value for the prompt.
+     * @param bool|float|int|string|Stringable|null $value The value for the prompt.
      *
      * This property is used in combination with the {@see filter} property. When {@see filter} is not set or is an
      * array, this property will be used to render the HTML attributes for the generated filter input fields.
@@ -219,7 +219,7 @@ final class DataColumn extends Column
     /**
      * Return new instance with set filter value default text input field.
      *
-     * @param Stringable|null|string|int|bool|float $value The default value for the filter input field.
+     * @param bool|float|int|string|Stringable|null $value The default value for the filter input field.
      *
      * @return self
      */

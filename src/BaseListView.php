@@ -436,7 +436,7 @@ abstract class BaseListView extends Widget
     {
         $emptyTextAttributes = $this->emptyTextAttributes;
         $emptyText = $this->getTranslator()->translate($this->emptyText, [], 'gridview');
-        $emptyTextAttributes['colspan'] =  $colspan;
+        $emptyTextAttributes['colspan'] = $colspan;
 
         return Td::tag()->addAttributes($emptyTextAttributes)->content($emptyText);
     }
