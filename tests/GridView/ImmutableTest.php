@@ -21,6 +21,7 @@ final class ImmutableTest extends TestCase
     public function testBaseListView(): void
     {
         $baseListView = $this->createBaseListView();
+        $this->assertNotSame($baseListView, $baseListView->attributes([]));
         $this->assertNotSame($baseListView, $baseListView->container(false));
         $this->assertNotSame($baseListView, $baseListView->emptyText(''));
         $this->assertNotSame($baseListView, $baseListView->emptyTextAttributes([]));

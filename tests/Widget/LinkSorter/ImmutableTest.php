@@ -18,6 +18,7 @@ final class ImmutableTest extends TestCase
     {
         $linkSorter = LinkSorter::widget();
         $this->assertNotSame($linkSorter, $linkSorter->attribute(''));
+        $this->assertNotSame($linkSorter, $linkSorter->attributes([]));
         $this->assertNotSame($linkSorter, $linkSorter->currentPage(0));
         $this->assertNotSame($linkSorter, $linkSorter->directions([]));
         $this->assertNotSame($linkSorter, $linkSorter->iconAsc(''));
