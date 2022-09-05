@@ -221,7 +221,7 @@ final class ListView extends BaseListView
             $content = (string) call_user_func($this->itemView, $data, $key, $index, $this);
         }
 
-        return Div::tag()->addAttributes($this->itemViewAttributes)->content($content);
+        return Div::tag()->addAttributes($this->itemViewAttributes)->content($content)->render();
     }
 
     /**
