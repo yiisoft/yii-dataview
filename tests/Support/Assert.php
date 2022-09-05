@@ -46,9 +46,7 @@ final class Assert extends TestCase
         $property = $class->getProperty($propertyName);
         $property->setAccessible(true);
         /** @var mixed $result */
-        $result = $property->getValue($object);
-
-        return $result;
+        return $property->getValue($object);
     }
 
     /**

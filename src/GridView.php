@@ -521,7 +521,7 @@ final class GridView extends BaseListView
             }
         }
 
-        $content =  Html::tag('tr', PHP_EOL . implode('', $cells) . PHP_EOL, $footerRowAttributes)
+        $content = Html::tag('tr', PHP_EOL . implode('', $cells) . PHP_EOL, $footerRowAttributes)
             ->encode(false)
             ->render();
 
