@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Yiisoft\Yii\DataView\Tests\GridView;
 
-use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 use Yiisoft\Yii\DataView;
 use Yiisoft\Yii\DataView\Exception;

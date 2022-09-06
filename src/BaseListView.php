@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Yiisoft\Yii\DataView;
 
-use InvalidArgumentException;
 use ReflectionException;
 use Yiisoft\Data\Paginator\OffsetPaginator;
 use Yiisoft\Data\Paginator\PaginatorInterface;
