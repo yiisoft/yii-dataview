@@ -35,10 +35,10 @@ final class ActionColumnTest extends TestCase
             </thead>
             <tbody>
             <tr>
-            <td data-label="actions"><a class="text-decoration-none" href="/admin/view?id=1" title="View">&#128270;</a></td>
+            <td data-label="actions"><a class="text-decoration-none" href="/admin/view?id=1" title="View">🔎</a></td>
             </tr>
             <tr>
-            <td data-label="actions"><a class="text-decoration-none" href="/admin/view?id=2" title="View">&#128270;</a></td>
+            <td data-label="actions"><a class="text-decoration-none" href="/admin/view?id=2" title="View">🔎</a></td>
             </tr>
             </tbody>
             </table>
@@ -68,10 +68,10 @@ final class ActionColumnTest extends TestCase
             </thead>
             <tbody>
             <tr>
-            <td class="text-decoration-none test.class" data-label="actions"><a href="/admin/view?id=1" title="View">&#128270;</a></td>
+            <td class="text-decoration-none test.class" data-label="actions"><a href="/admin/view?id=1" title="View">🔎</a></td>
             </tr>
             <tr>
-            <td class="text-decoration-none test.class" data-label="actions"><a href="/admin/view?id=2" title="View">&#128270;</a></td>
+            <td class="text-decoration-none test.class" data-label="actions"><a href="/admin/view?id=2" title="View">🔎</a></td>
             </tr>
             </tbody>
             </table>
@@ -140,16 +140,16 @@ final class ActionColumnTest extends TestCase
             <tbody>
             <tr>
             <td data-label="test.label">
-            <a name="view" href="/admin/view?id=1" title="View" role="button" style="text-decoration: none!important;"><span>&#128270;</span></a>
-            <a name="update" href="/admin/update?id=1" title="Update" role="button" style="text-decoration: none!important;"><span>&#9998;</span></a>
-            <a name="delete" href="/admin/delete?id=1" title="Delete" role="button" style="text-decoration: none!important;"><span>&#10060;</span></a>
+            <a name="view" href="/admin/view?id=1" title="View" role="button" style="text-decoration: none!important;"><span>🔎</span></a>
+            <a name="update" href="/admin/update?id=1" title="Update" role="button" style="text-decoration: none!important;"><span>✎</span></a>
+            <a name="delete" href="/admin/delete?id=1" title="Delete" role="button" style="text-decoration: none!important;"><span>❌</span></a>
             </td>
             </tr>
             <tr>
             <td data-label="test.label">
-            <a name="view" href="/admin/view?id=2" title="View" role="button" style="text-decoration: none!important;"><span>&#128270;</span></a>
-            <a name="update" href="/admin/update?id=2" title="Update" role="button" style="text-decoration: none!important;"><span>&#9998;</span></a>
-            <a name="delete" href="/admin/delete?id=2" title="Delete" role="button" style="text-decoration: none!important;"><span>&#10060;</span></a>
+            <a name="view" href="/admin/view?id=2" title="View" role="button" style="text-decoration: none!important;"><span>🔎</span></a>
+            <a name="update" href="/admin/update?id=2" title="Update" role="button" style="text-decoration: none!important;"><span>✎</span></a>
+            <a name="delete" href="/admin/delete?id=2" title="Delete" role="button" style="text-decoration: none!important;"><span>❌</span></a>
             </td>
             </tr>
             </tbody>
@@ -187,16 +187,16 @@ final class ActionColumnTest extends TestCase
             <tbody>
             <tr>
             <td data-label="actions">
-            <a name="view" href="/admin/view?id=1" title="View" role="button" style="text-decoration: none!important;"><span>&#128270;</span></a>
-            <a name="update" href="/admin/update?id=1" title="Update" role="button" style="text-decoration: none!important;"><span>&#9998;</span></a>
-            <a name="delete" href="/admin/delete?id=1" title="Delete" role="button" style="text-decoration: none!important;"><span>&#10060;</span></a>
+            <a name="view" href="/admin/view?id=1" title="View" role="button" style="text-decoration: none!important;"><span>🔎</span></a>
+            <a name="update" href="/admin/update?id=1" title="Update" role="button" style="text-decoration: none!important;"><span>✎</span></a>
+            <a name="delete" href="/admin/delete?id=1" title="Delete" role="button" style="text-decoration: none!important;"><span>❌</span></a>
             </td>
             </tr>
             <tr>
             <td data-label="actions">
-            <a name="view" href="/admin/view?id=2" title="View" role="button" style="text-decoration: none!important;"><span>&#128270;</span></a>
-            <a name="update" href="/admin/update?id=2" title="Update" role="button" style="text-decoration: none!important;"><span>&#9998;</span></a>
-            <a name="delete" href="/admin/delete?id=2" title="Delete" role="button" style="text-decoration: none!important;"><span>&#10060;</span></a>
+            <a name="view" href="/admin/view?id=2" title="View" role="button" style="text-decoration: none!important;"><span>🔎</span></a>
+            <a name="update" href="/admin/update?id=2" title="Update" role="button" style="text-decoration: none!important;"><span>✎</span></a>
+            <a name="delete" href="/admin/delete?id=2" title="Delete" role="button" style="text-decoration: none!important;"><span>❌</span></a>
             </td>
             </tr>
             </tbody>
@@ -230,16 +230,16 @@ final class ActionColumnTest extends TestCase
             <tbody>
             <tr>
             <td data-label="test.label">
-            <a name="view" href="/admin/view?id=1" title="View" role="button" style="text-decoration: none!important;"><span>&#128270;</span></a>
-            <a name="update" href="/admin/update?id=1" title="Update" role="button" style="text-decoration: none!important;"><span>&#9998;</span></a>
-            <a name="delete" href="/admin/delete?id=1" title="Delete" role="button" style="text-decoration: none!important;"><span>&#10060;</span></a>
+            <a name="view" href="/admin/view?id=1" title="View" role="button" style="text-decoration: none!important;"><span>🔎</span></a>
+            <a name="update" href="/admin/update?id=1" title="Update" role="button" style="text-decoration: none!important;"><span>✎</span></a>
+            <a name="delete" href="/admin/delete?id=1" title="Delete" role="button" style="text-decoration: none!important;"><span>❌</span></a>
             </td>
             </tr>
             <tr>
             <td data-label="test.label">
-            <a name="view" href="/admin/view?id=2" title="View" role="button" style="text-decoration: none!important;"><span>&#128270;</span></a>
-            <a name="update" href="/admin/update?id=2" title="Update" role="button" style="text-decoration: none!important;"><span>&#9998;</span></a>
-            <a name="delete" href="/admin/delete?id=2" title="Delete" role="button" style="text-decoration: none!important;"><span>&#10060;</span></a>
+            <a name="view" href="/admin/view?id=2" title="View" role="button" style="text-decoration: none!important;"><span>🔎</span></a>
+            <a name="update" href="/admin/update?id=2" title="Update" role="button" style="text-decoration: none!important;"><span>✎</span></a>
+            <a name="delete" href="/admin/delete?id=2" title="Delete" role="button" style="text-decoration: none!important;"><span>❌</span></a>
             </td>
             </tr>
             </tbody>
@@ -249,6 +249,48 @@ final class ActionColumnTest extends TestCase
             HTML,
             GridView::widget()
                 ->columns($this->createColumnsWithLabel())
+                ->id('w1-grid')
+                ->paginator($this->createPaginator($this->data, 10, 1))
+                ->translator(Mock::translator('en'))
+                ->urlGenerator($this->createUrlGenerator())
+                ->urlName('admin')
+                ->render()
+        );
+    }
+
+    public function testLabelWithMbString(): void
+    {
+        Assert::equalsWithoutLE(
+            <<<HTML
+            <div id="w1-grid">
+            <table class="table">
+            <thead>
+            <tr>
+            <th>Ενέργειες</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+            <td data-label="ενέργειες">
+            <a name="view" href="/admin/view?id=1" title="View" role="button" style="text-decoration: none!important;"><span>🔎</span></a>
+            <a name="update" href="/admin/update?id=1" title="Update" role="button" style="text-decoration: none!important;"><span>✎</span></a>
+            <a name="delete" href="/admin/delete?id=1" title="Delete" role="button" style="text-decoration: none!important;"><span>❌</span></a>
+            </td>
+            </tr>
+            <tr>
+            <td data-label="ενέργειες">
+            <a name="view" href="/admin/view?id=2" title="View" role="button" style="text-decoration: none!important;"><span>🔎</span></a>
+            <a name="update" href="/admin/update?id=2" title="Update" role="button" style="text-decoration: none!important;"><span>✎</span></a>
+            <a name="delete" href="/admin/delete?id=2" title="Delete" role="button" style="text-decoration: none!important;"><span>❌</span></a>
+            </td>
+            </tr>
+            </tbody>
+            </table>
+            <div>gridview.summary</div>
+            </div>
+            HTML,
+            GridView::widget()
+                ->columns($this->createColumnsWithLabelMbString())
                 ->id('w1-grid')
                 ->paginator($this->createPaginator($this->data, 10, 1))
                 ->translator(Mock::translator('en'))
@@ -272,16 +314,16 @@ final class ActionColumnTest extends TestCase
             <tbody>
             <tr>
             <td data-label="test.label">
-            <a name="view" href="/admin/view?id=1" title="View" role="button" style="text-decoration: none!important;"><span>&#128270;</span></a>
-            <a name="update" href="/admin/update?id=1" title="Update" role="button" style="text-decoration: none!important;"><span>&#9998;</span></a>
-            <a name="delete" href="/admin/delete?id=1" title="Delete" role="button" style="text-decoration: none!important;"><span>&#10060;</span></a>
+            <a name="view" href="/admin/view?id=1" title="View" role="button" style="text-decoration: none!important;"><span>🔎</span></a>
+            <a name="update" href="/admin/update?id=1" title="Update" role="button" style="text-decoration: none!important;"><span>✎</span></a>
+            <a name="delete" href="/admin/delete?id=1" title="Delete" role="button" style="text-decoration: none!important;"><span>❌</span></a>
             </td>
             </tr>
             <tr>
             <td data-label="test.label">
-            <a name="view" href="/admin/view?id=2" title="View" role="button" style="text-decoration: none!important;"><span>&#128270;</span></a>
-            <a name="update" href="/admin/update?id=2" title="Update" role="button" style="text-decoration: none!important;"><span>&#9998;</span></a>
-            <a name="delete" href="/admin/delete?id=2" title="Delete" role="button" style="text-decoration: none!important;"><span>&#10060;</span></a>
+            <a name="view" href="/admin/view?id=2" title="View" role="button" style="text-decoration: none!important;"><span>🔎</span></a>
+            <a name="update" href="/admin/update?id=2" title="Update" role="button" style="text-decoration: none!important;"><span>✎</span></a>
+            <a name="delete" href="/admin/delete?id=2" title="Delete" role="button" style="text-decoration: none!important;"><span>❌</span></a>
             </td>
             </tr>
             </tbody>
@@ -314,16 +356,16 @@ final class ActionColumnTest extends TestCase
             <tbody>
             <tr>
             <td name="test.name" data-label="actions">
-            <a name="view" href="/admin/view?id=1" title="View" role="button" style="text-decoration: none!important;"><span>&#128270;</span></a>
-            <a name="update" href="/admin/update?id=1" title="Update" role="button" style="text-decoration: none!important;"><span>&#9998;</span></a>
-            <a name="delete" href="/admin/delete?id=1" title="Delete" role="button" style="text-decoration: none!important;"><span>&#10060;</span></a>
+            <a name="view" href="/admin/view?id=1" title="View" role="button" style="text-decoration: none!important;"><span>🔎</span></a>
+            <a name="update" href="/admin/update?id=1" title="Update" role="button" style="text-decoration: none!important;"><span>✎</span></a>
+            <a name="delete" href="/admin/delete?id=1" title="Delete" role="button" style="text-decoration: none!important;"><span>❌</span></a>
             </td>
             </tr>
             <tr>
             <td name="test.name" data-label="actions">
-            <a name="view" href="/admin/view?id=2" title="View" role="button" style="text-decoration: none!important;"><span>&#128270;</span></a>
-            <a name="update" href="/admin/update?id=2" title="Update" role="button" style="text-decoration: none!important;"><span>&#9998;</span></a>
-            <a name="delete" href="/admin/delete?id=2" title="Delete" role="button" style="text-decoration: none!important;"><span>&#10060;</span></a>
+            <a name="view" href="/admin/view?id=2" title="View" role="button" style="text-decoration: none!important;"><span>🔎</span></a>
+            <a name="update" href="/admin/update?id=2" title="Update" role="button" style="text-decoration: none!important;"><span>✎</span></a>
+            <a name="delete" href="/admin/delete?id=2" title="Delete" role="button" style="text-decoration: none!important;"><span>❌</span></a>
             </td>
             </tr>
             </tbody>
@@ -384,16 +426,16 @@ final class ActionColumnTest extends TestCase
             <tbody>
             <tr>
             <td data-label="actions">
-            <a name="view" href="/admin/view?identity_id=1" title="View" role="button" style="text-decoration: none!important;"><span>&#128270;</span></a>
-            <a name="update" href="/admin/update?identity_id=1" title="Update" role="button" style="text-decoration: none!important;"><span>&#9998;</span></a>
-            <a name="delete" href="/admin/delete?identity_id=1" title="Delete" role="button" style="text-decoration: none!important;"><span>&#10060;</span></a>
+            <a name="view" href="/admin/view?identity_id=1" title="View" role="button" style="text-decoration: none!important;"><span>🔎</span></a>
+            <a name="update" href="/admin/update?identity_id=1" title="Update" role="button" style="text-decoration: none!important;"><span>✎</span></a>
+            <a name="delete" href="/admin/delete?identity_id=1" title="Delete" role="button" style="text-decoration: none!important;"><span>❌</span></a>
             </td>
             </tr>
             <tr>
             <td data-label="actions">
-            <a name="view" href="/admin/view?identity_id=2" title="View" role="button" style="text-decoration: none!important;"><span>&#128270;</span></a>
-            <a name="update" href="/admin/update?identity_id=2" title="Update" role="button" style="text-decoration: none!important;"><span>&#9998;</span></a>
-            <a name="delete" href="/admin/delete?identity_id=2" title="Delete" role="button" style="text-decoration: none!important;"><span>&#10060;</span></a>
+            <a name="view" href="/admin/view?identity_id=2" title="View" role="button" style="text-decoration: none!important;"><span>🔎</span></a>
+            <a name="update" href="/admin/update?identity_id=2" title="Update" role="button" style="text-decoration: none!important;"><span>✎</span></a>
+            <a name="delete" href="/admin/delete?identity_id=2" title="Delete" role="button" style="text-decoration: none!important;"><span>❌</span></a>
             </td>
             </tr>
             </tbody>
@@ -439,18 +481,18 @@ final class ActionColumnTest extends TestCase
             <td data-label="id">1</td>
             <td data-label="name">John</td>
             <td data-label="actions">
-            <a name="view" href="/admin/view?id=1" title="View" role="button" style="text-decoration: none!important;"><span>&#128270;</span></a>
-            <a name="update" href="/admin/update?id=1" title="Update" role="button" style="text-decoration: none!important;"><span>&#9998;</span></a>
-            <a name="delete" href="/admin/delete?id=1" title="Delete" role="button" style="text-decoration: none!important;"><span>&#10060;</span></a>
+            <a name="view" href="/admin/view?id=1" title="View" role="button" style="text-decoration: none!important;"><span>🔎</span></a>
+            <a name="update" href="/admin/update?id=1" title="Update" role="button" style="text-decoration: none!important;"><span>✎</span></a>
+            <a name="delete" href="/admin/delete?id=1" title="Delete" role="button" style="text-decoration: none!important;"><span>❌</span></a>
             </td>
             </tr>
             <tr>
             <td data-label="id">2</td>
             <td data-label="name">Mary</td>
             <td data-label="actions">
-            <a name="view" href="/admin/view?id=2" title="View" role="button" style="text-decoration: none!important;"><span>&#128270;</span></a>
-            <a name="update" href="/admin/update?id=2" title="Update" role="button" style="text-decoration: none!important;"><span>&#9998;</span></a>
-            <a name="delete" href="/admin/delete?id=2" title="Delete" role="button" style="text-decoration: none!important;"><span>&#10060;</span></a>
+            <a name="view" href="/admin/view?id=2" title="View" role="button" style="text-decoration: none!important;"><span>🔎</span></a>
+            <a name="update" href="/admin/update?id=2" title="Update" role="button" style="text-decoration: none!important;"><span>✎</span></a>
+            <a name="delete" href="/admin/delete?id=2" title="Delete" role="button" style="text-decoration: none!important;"><span>❌</span></a>
             </td>
             </tr>
             </tbody>
@@ -483,16 +525,16 @@ final class ActionColumnTest extends TestCase
             <tbody>
             <tr>
             <td data-label="actions">
-            <a name="view" href="/admin/view?test-arguments=test.arguments&amp;id=1" title="View" role="button" style="text-decoration: none!important;"><span>&#128270;</span></a>
-            <a name="update" href="/admin/update?test-arguments=test.arguments&amp;id=1" title="Update" role="button" style="text-decoration: none!important;"><span>&#9998;</span></a>
-            <a name="delete" href="/admin/delete?test-arguments=test.arguments&amp;id=1" title="Delete" role="button" style="text-decoration: none!important;"><span>&#10060;</span></a>
+            <a name="view" href="/admin/view?test-arguments=test.arguments&amp;id=1" title="View" role="button" style="text-decoration: none!important;"><span>🔎</span></a>
+            <a name="update" href="/admin/update?test-arguments=test.arguments&amp;id=1" title="Update" role="button" style="text-decoration: none!important;"><span>✎</span></a>
+            <a name="delete" href="/admin/delete?test-arguments=test.arguments&amp;id=1" title="Delete" role="button" style="text-decoration: none!important;"><span>❌</span></a>
             </td>
             </tr>
             <tr>
             <td data-label="actions">
-            <a name="view" href="/admin/view?test-arguments=test.arguments&amp;id=2" title="View" role="button" style="text-decoration: none!important;"><span>&#128270;</span></a>
-            <a name="update" href="/admin/update?test-arguments=test.arguments&amp;id=2" title="Update" role="button" style="text-decoration: none!important;"><span>&#9998;</span></a>
-            <a name="delete" href="/admin/delete?test-arguments=test.arguments&amp;id=2" title="Delete" role="button" style="text-decoration: none!important;"><span>&#10060;</span></a>
+            <a name="view" href="/admin/view?test-arguments=test.arguments&amp;id=2" title="View" role="button" style="text-decoration: none!important;"><span>🔎</span></a>
+            <a name="update" href="/admin/update?test-arguments=test.arguments&amp;id=2" title="Update" role="button" style="text-decoration: none!important;"><span>✎</span></a>
+            <a name="delete" href="/admin/delete?test-arguments=test.arguments&amp;id=2" title="Delete" role="button" style="text-decoration: none!important;"><span>❌</span></a>
             </td>
             </tr>
             </tbody>
@@ -525,16 +567,16 @@ final class ActionColumnTest extends TestCase
             <tbody>
             <tr>
             <td data-label="actions">
-            <a name="view" href="https://test.com/view?id=1" title="View" role="button" style="text-decoration: none!important;"><span>&#128270;</span></a>
-            <a name="update" href="https://test.com/update?id=1" title="Update" role="button" style="text-decoration: none!important;"><span>&#9998;</span></a>
-            <a name="delete" href="https://test.com/delete?id=1" title="Delete" role="button" style="text-decoration: none!important;"><span>&#10060;</span></a>
+            <a name="view" href="https://test.com/view?id=1" title="View" role="button" style="text-decoration: none!important;"><span>🔎</span></a>
+            <a name="update" href="https://test.com/update?id=1" title="Update" role="button" style="text-decoration: none!important;"><span>✎</span></a>
+            <a name="delete" href="https://test.com/delete?id=1" title="Delete" role="button" style="text-decoration: none!important;"><span>❌</span></a>
             </td>
             </tr>
             <tr>
             <td data-label="actions">
-            <a name="view" href="https://test.com/view?id=2" title="View" role="button" style="text-decoration: none!important;"><span>&#128270;</span></a>
-            <a name="update" href="https://test.com/update?id=2" title="Update" role="button" style="text-decoration: none!important;"><span>&#9998;</span></a>
-            <a name="delete" href="https://test.com/delete?id=2" title="Delete" role="button" style="text-decoration: none!important;"><span>&#10060;</span></a>
+            <a name="view" href="https://test.com/view?id=2" title="View" role="button" style="text-decoration: none!important;"><span>🔎</span></a>
+            <a name="update" href="https://test.com/update?id=2" title="Update" role="button" style="text-decoration: none!important;"><span>✎</span></a>
+            <a name="delete" href="https://test.com/delete?id=2" title="Delete" role="button" style="text-decoration: none!important;"><span>❌</span></a>
             </td>
             </tr>
             </tbody>
@@ -567,16 +609,16 @@ final class ActionColumnTest extends TestCase
             <tbody>
             <tr>
             <td data-label="actions">
-            <a name="view" href="/admin/view?test-param=test.param&amp;id=1" title="View" role="button" style="text-decoration: none!important;"><span>&#128270;</span></a>
-            <a name="update" href="/admin/update?test-param=test.param&amp;id=1" title="Update" role="button" style="text-decoration: none!important;"><span>&#9998;</span></a>
-            <a name="delete" href="/admin/delete?test-param=test.param&amp;id=1" title="Delete" role="button" style="text-decoration: none!important;"><span>&#10060;</span></a>
+            <a name="view" href="/admin/view?test-param=test.param&amp;id=1" title="View" role="button" style="text-decoration: none!important;"><span>🔎</span></a>
+            <a name="update" href="/admin/update?test-param=test.param&amp;id=1" title="Update" role="button" style="text-decoration: none!important;"><span>✎</span></a>
+            <a name="delete" href="/admin/delete?test-param=test.param&amp;id=1" title="Delete" role="button" style="text-decoration: none!important;"><span>❌</span></a>
             </td>
             </tr>
             <tr>
             <td data-label="actions">
-            <a name="view" href="/admin/view?test-param=test.param&amp;id=2" title="View" role="button" style="text-decoration: none!important;"><span>&#128270;</span></a>
-            <a name="update" href="/admin/update?test-param=test.param&amp;id=2" title="Update" role="button" style="text-decoration: none!important;"><span>&#9998;</span></a>
-            <a name="delete" href="/admin/delete?test-param=test.param&amp;id=2" title="Delete" role="button" style="text-decoration: none!important;"><span>&#10060;</span></a>
+            <a name="view" href="/admin/view?test-param=test.param&amp;id=2" title="View" role="button" style="text-decoration: none!important;"><span>🔎</span></a>
+            <a name="update" href="/admin/update?test-param=test.param&amp;id=2" title="Update" role="button" style="text-decoration: none!important;"><span>✎</span></a>
+            <a name="delete" href="/admin/delete?test-param=test.param&amp;id=2" title="Delete" role="button" style="text-decoration: none!important;"><span>❌</span></a>
             </td>
             </tr>
             </tbody>
@@ -609,16 +651,16 @@ final class ActionColumnTest extends TestCase
             <tbody>
             <tr>
             <td data-label="actions">
-            <a name="view" href="/admin/view?test-param=test.param&amp;id=1" title="View" role="button" style="text-decoration: none!important;"><span>&#128270;</span></a>
-            <a name="update" href="/admin/update?test-param=test.param&amp;id=1" title="Update" role="button" style="text-decoration: none!important;"><span>&#9998;</span></a>
-            <a name="delete" href="/admin/delete?test-param=test.param&amp;id=1" title="Delete" role="button" style="text-decoration: none!important;"><span>&#10060;</span></a>
+            <a name="view" href="/admin/view?test-param=test.param&amp;id=1" title="View" role="button" style="text-decoration: none!important;"><span>🔎</span></a>
+            <a name="update" href="/admin/update?test-param=test.param&amp;id=1" title="Update" role="button" style="text-decoration: none!important;"><span>✎</span></a>
+            <a name="delete" href="/admin/delete?test-param=test.param&amp;id=1" title="Delete" role="button" style="text-decoration: none!important;"><span>❌</span></a>
             </td>
             </tr>
             <tr>
             <td data-label="actions">
-            <a name="view" href="/admin/view?test-param=test.param&amp;id=2" title="View" role="button" style="text-decoration: none!important;"><span>&#128270;</span></a>
-            <a name="update" href="/admin/update?test-param=test.param&amp;id=2" title="Update" role="button" style="text-decoration: none!important;"><span>&#9998;</span></a>
-            <a name="delete" href="/admin/delete?test-param=test.param&amp;id=2" title="Delete" role="button" style="text-decoration: none!important;"><span>&#10060;</span></a>
+            <a name="view" href="/admin/view?test-param=test.param&amp;id=2" title="View" role="button" style="text-decoration: none!important;"><span>🔎</span></a>
+            <a name="update" href="/admin/update?test-param=test.param&amp;id=2" title="Update" role="button" style="text-decoration: none!important;"><span>✎</span></a>
+            <a name="delete" href="/admin/delete?test-param=test.param&amp;id=2" title="Delete" role="button" style="text-decoration: none!important;"><span>❌</span></a>
             </td>
             </tr>
             </tbody>
@@ -651,12 +693,12 @@ final class ActionColumnTest extends TestCase
             <tbody>
             <tr>
             <td data-label="actions">
-            <a name="view" href="/admin/view?id=1" title="View" role="button" style="text-decoration: none!important;"><span>&#128270;</span></a>
+            <a name="view" href="/admin/view?id=1" title="View" role="button" style="text-decoration: none!important;"><span>🔎</span></a>
             </td>
             </tr>
             <tr>
             <td data-label="actions">
-            <a name="update" href="/admin/update?id=2" title="Update" role="button" style="text-decoration: none!important;"><span>&#9998;</span></a>
+            <a name="update" href="/admin/update?id=2" title="Update" role="button" style="text-decoration: none!important;"><span>✎</span></a>
             </td>
             </tr>
             </tbody>
@@ -710,7 +752,7 @@ final class ActionColumnTest extends TestCase
                 ->content(
                     static fn (array|object $data, mixed $key, int $index): string => A::tag()
                         ->addAttributes(['class' => 'text-decoration-none', 'title' => 'View'])
-                        ->content('&#128270;')
+                        ->content('🔎')
                         ->encode(false)
                         ->href('/admin/view?id=' . $data['id'])
                         ->render(),
@@ -725,7 +767,7 @@ final class ActionColumnTest extends TestCase
                 ->content(
                     static fn (array|object $data, mixed $key, int $index): string => A::tag()
                         ->addAttributes(['title' => 'View'])
-                        ->content('&#128270;')
+                        ->content('🔎')
                         ->encode(false)
                         ->href('/admin/view?id=' . $data['id'])
                         ->render(),
@@ -757,6 +799,13 @@ final class ActionColumnTest extends TestCase
         ];
     }
 
+    private function createColumnsWithLabelMbString(): array
+    {
+        return [
+            ActionColumn::create()->label('Ενέργειες'),
+        ];
+    }
+
     private function createColumnsWithLabelAttributes(): array
     {
         return [
@@ -774,7 +823,7 @@ final class ActionColumnTest extends TestCase
     private function createColumnsWithNotVisible(): array
     {
         return [
-            ActionColumn::create()->notVisible(),
+            ActionColumn::create()->visible(false),
         ];
     }
 
@@ -807,7 +856,6 @@ final class ActionColumnTest extends TestCase
     {
         return [
             ActionColumn::create()
-                ->urlEnabledArguments(false)
                 ->urlQueryParameters(['test-param' => 'test.param']),
         ];
     }

@@ -278,7 +278,6 @@ final class LinkSorterTest extends TestCase
                 ->directions(['id' => 'asc', 'username' => 'desc'])
                 ->iconAscClass('bi bi-sort-alpha-up')
                 ->pageSize(5)
-                ->urlEnabledArguments(false)
                 ->urlGenerator($urlGenerator)
                 ->urlName('admin/manage')
                 ->render(),
@@ -291,7 +290,7 @@ final class LinkSorterTest extends TestCase
 
         $this->assertSame(
             <<<HTML
-            <a class="asc" href="?test=test" data-sort="-id,-username">Id <i class="bi bi-sort-alpha-up"></i></a>
+            <a class="asc" href="?test=test&amp;page=1&amp;pagesize=5&amp;sort=-id%2C-username" data-sort="-id,-username">Id <i class="bi bi-sort-alpha-up"></i></a>
             HTML,
             LinkSorter::widget()
                 ->attribute('id', 'username')
@@ -321,7 +320,6 @@ final class LinkSorterTest extends TestCase
                 ->directions(['id' => 'asc', 'username' => 'desc'])
                 ->iconAscClass('bi bi-sort-alpha-up')
                 ->pageSize(5)
-                ->urlEnabledArguments(false)
                 ->urlQueryParameters(['test' => 'test'])
                 ->urlGenerator($urlGenerator)
                 ->urlName('admin/manage')

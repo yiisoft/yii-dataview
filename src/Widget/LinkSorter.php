@@ -34,8 +34,7 @@ final class LinkSorter extends Widget
     private string $pageName = 'page';
     private string $pageSizeName = 'pagesize';
     private UrlGeneratorInterface|null $urlGenerator = null;
-    private array $urlArguments = [];
-    private bool $urlEnabledArguments = true;
+    private array|null $urlArguments = null;
     private array $urlQueryParameters = [];
     private string|null $urlName = null;
 
@@ -267,24 +266,9 @@ final class LinkSorter extends Widget
     }
 
     /**
-     * Return a new instance with enabled arguments of the route.
+     * Return a new instance with URL generator interface for pagination.
      *
-     * @param bool $value Enabled arguments of the route.
-     *
-     * @return self
-     */
-    public function urlEnabledArguments(bool $value): self
-    {
-        $new = clone $this;
-        $new->urlEnabledArguments = $value;
-
-        return $new;
-    }
-
-    /**
-     * Return a new instance with url generator interface for pagination.
-     *
-     * @param UrlGeneratorInterface $value The url generator interface for pagination.
+     * @param UrlGeneratorInterface $value The URL generator interface for pagination.
      *
      * @return self
      */
@@ -393,24 +377,23 @@ final class LinkSorter extends Widget
         }
 
         $pageConfig = $this->pageConfig;
-        /** @psalm-var array<string,string> */
-        $urlArguments = $this->urlArguments;
         $urlQueryParameters = $this->urlQueryParameters;
 
-        if ([] === $pageConfig) {
+        if ($pageConfig === []) {
             $pageConfig = [$this->pageName => $this->currentPage, $this->pageSizeName => $this->pageSize];
         }
 
-        if ($this->urlEnabledArguments) {
+        if ($this->urlArguments !== null) {
             /** @psalm-var array<string,string> */
-            $urlArguments = array_merge($urlArguments, $pageConfig);
+            $urlArguments = array_merge($this->urlArguments, $pageConfig);
             $urlArguments['sort'] = $this->createSorterParam($attribute);
         } else {
+            $urlArguments = [];
             $urlQueryParameters = array_merge($urlQueryParameters, $pageConfig);
             $urlQueryParameters['sort'] = $this->createSorterParam($attribute);
         }
 
-        return match (null !== $this->urlName) {
+        return match ($this->urlName !== null) {
             true => $this->urlGenerator->generate($this->urlName, $urlArguments, $urlQueryParameters),
             false => $urlQueryParameters ? '?' . http_build_query($urlQueryParameters) : '',
         };

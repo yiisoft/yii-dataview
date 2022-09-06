@@ -37,7 +37,7 @@ final class SerialColumn extends Column
      */
     protected function renderDataCellContent(array|object $data, mixed $key, int $index): string
     {
-        return (string) ($this->offset + $index + 1);
+        return (string) ($index + 1);
     }
 
     protected function getLabel(): string

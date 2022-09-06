@@ -7,6 +7,7 @@ namespace Yiisoft\Yii\DataView;
 use Closure;
 use ReflectionException;
 use Yiisoft\Data\Paginator\OffsetPaginator;
+use Yiisoft\Data\Paginator\PaginatorInterface;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\Col;
 use Yiisoft\Html\Tag\Colgroup;
@@ -353,7 +354,6 @@ final class GridView extends BaseListView
     private function renderColumns(): array
     {
         $columns = $this->columns;
-        /** @var OffsetPaginator */
         $paginator = $this->getPaginator();
 
         if ($columns === []) {
@@ -380,7 +380,7 @@ final class GridView extends BaseListView
                     }
                 }
 
-                if ($column instanceof Column\SerialColumn) {
+                if ($column instanceof Column\SerialColumn && $paginator instanceof OffsetPaginator) {
                     $column = $column->offset($paginator->getOffset());
                 }
 

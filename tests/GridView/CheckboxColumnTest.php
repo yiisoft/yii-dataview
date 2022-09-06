@@ -178,6 +178,45 @@ final class CheckboxColumnTest extends TestCase
         );
     }
 
+    public function testLabelMbString(): void
+    {
+        Assert::equalsWithoutLE(
+            <<<HTML
+            <div id="w1-grid">
+            <table class="table">
+            <thead>
+            <tr>
+            <th>Id</th>
+            <th>Name</th>
+            <th>Πλαίσιο ελέγχου</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+            <td data-label="id">1</td>
+            <td data-label="name">John</td>
+            <td data-label="πλαίσιο ελέγχου"><input type="checkbox" name="checkbox-selection" value="0"></td>
+            </tr>
+            <tr>
+            <td data-label="id">2</td>
+            <td data-label="name">Mary</td>
+            <td data-label="πλαίσιο ελέγχου"><input type="checkbox" name="checkbox-selection" value="1"></td>
+            </tr>
+            </tbody>
+            </table>
+            <div>gridview.summary</div>
+            </div>
+            HTML,
+            GridView::widget()
+                ->columns($this->createColumnsWithLabelMbString())
+                ->id('w1-grid')
+                ->paginator($this->createPaginator($this->data, 10, 1))
+                ->translator(Mock::translator('en'))
+                ->urlGenerator(Mock::urlGenerator([Route::get('/admin/manage')->name('admin/manage')]))
+                ->render()
+        );
+    }
+
     public function testLabelAttributes(): void
     {
         Assert::equalsWithoutLE(
@@ -421,6 +460,15 @@ final class CheckboxColumnTest extends TestCase
         ];
     }
 
+    private function createColumnsWithLabelMbString(): array
+    {
+        return [
+            DataColumn::create()->attribute('id'),
+            DataColumn::create()->attribute('name'),
+            CheckboxColumn::create()->label('Πλαίσιο ελέγχου'),
+        ];
+    }
+
     private function createColumnsWithLabelAttributes(): array
     {
         return [
@@ -444,7 +492,7 @@ final class CheckboxColumnTest extends TestCase
         return [
             DataColumn::create()->attribute('id'),
             DataColumn::create()->attribute('name'),
-            CheckboxColumn::create()->notMultiple(),
+            CheckboxColumn::create()->multiple(false),
         ];
     }
 
@@ -453,7 +501,7 @@ final class CheckboxColumnTest extends TestCase
         return [
             DataColumn::create()->attribute('id'),
             DataColumn::create()->attribute('name'),
-            CheckboxColumn::create()->notVisible(),
+            CheckboxColumn::create()->visible(false),
         ];
     }
 }

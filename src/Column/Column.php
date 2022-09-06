@@ -9,7 +9,7 @@ use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\Td;
 use Yiisoft\Html\Tag\Th;
 
-use function strtolower;
+use function mb_strtolower;
 
 /**
  * Column is the base class of all {@see GridView} column classes.
@@ -220,19 +220,6 @@ abstract class Column
     }
 
     /**
-     * Return new instance specifying whether the column is not visible.
-     *
-     * @return static
-     */
-    public function notVisible(): static
-    {
-        $new = clone $this;
-        $new->visible = false;
-
-        return $new;
-    }
-
-    /**
      * Renders a data cell.
      *
      * @param array|object $data The data.
@@ -257,7 +244,7 @@ abstract class Column
         }
 
         if (!array_key_exists('data-label', $contentAttributes) && $this->getLabel() !== '') {
-            $contentAttributes['data-label'] = strtolower($this->getLabel());
+            $contentAttributes['data-label'] = mb_strtolower($this->getLabel(), 'UTF-8');
         }
 
         return Td::tag()
@@ -301,6 +288,21 @@ abstract class Column
             ->content($this->renderHeaderCellContent())
             ->encode(false)
             ->render();
+    }
+
+    /**
+     * Return new instance specifying whether the column is visible or not.
+     *
+     * @param bool $value Whether the column is visible or not.
+     *
+     * @return static
+     */
+    public function visible(bool $value): static
+    {
+        $new = clone $this;
+        $new->visible = $value;
+
+        return $new;
     }
 
     public static function create(): static

@@ -15,14 +15,16 @@ final class CheckboxColumn extends Column
     private bool $multiple = true;
 
     /**
-     * Return new instance with the multiple flag is set to false.
+     * Return new instance with the multiple flag, for default is `true`.
+     *
+     * @param bool $value The multiple flag value.
      *
      * @return self
      */
-    public function notMultiple(): self
+    public function multiple(bool $value): self
     {
         $new = clone $this;
-        $new->multiple = false;
+        $new->multiple = $value;
 
         return $new;
     }

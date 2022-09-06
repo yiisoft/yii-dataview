@@ -19,7 +19,6 @@ final class ImmutableTest extends TestCase
         $this->assertNotSame($actionColumn, $actionColumn->template('{view}'));
         $this->assertNotSame($actionColumn, $actionColumn->urlArguments([]));
         $this->assertNotSame($actionColumn, $actionColumn->urlCreator(static fn () => ''));
-        $this->assertNotSame($actionColumn, $actionColumn->urlEnabledArguments(false));
         $this->assertNotSame($actionColumn, $actionColumn->urlGenerator(Mock::urlGenerator([])));
         $this->assertNotSame($actionColumn, $actionColumn->urlName(''));
         $this->assertNotSame($actionColumn, $actionColumn->urlQueryParameters([]));
@@ -30,7 +29,7 @@ final class ImmutableTest extends TestCase
     public function testCheckboxColumn(): void
     {
         $checkboxColumn = Column\CheckboxColumn::create();
-        $this->assertNotSame($checkboxColumn, $checkboxColumn->notMultiple());
+        $this->assertNotSame($checkboxColumn, $checkboxColumn->multiple(false));
     }
 
     public function testColumn(): void
@@ -47,7 +46,7 @@ final class ImmutableTest extends TestCase
         $this->assertNotSame($column, $column->label(''));
         $this->assertNotSame($column, $column->labelAttributes([]));
         $this->assertNotSame($column, $column->name(''));
-        $this->assertNotSame($column, $column->notVisible());
+        $this->assertNotSame($column, $column->visible(false));
     }
 
     public function testDataColumn(): void
@@ -63,8 +62,8 @@ final class ImmutableTest extends TestCase
         $this->assertNotSame($column, $column->filterType('text'));
         $this->assertNotSame($column, $column->filterValueDefault(null));
         $this->assertNotSame($column, $column->linkSorter(''));
-        $this->assertNotSame($column, $column->notSorting());
         $this->assertNotSame($column, $column->value(null));
+        $this->assertNotSame($column, $column->withSorting(false));
     }
 
     public function testSerialColumn(): void

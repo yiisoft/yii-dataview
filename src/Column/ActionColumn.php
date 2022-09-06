@@ -20,9 +20,8 @@ final class ActionColumn extends Column
     private array $buttons = [];
     private string $primaryKey = 'id';
     private string $template = '{view}{update}{delete}';
-    private array $urlArguments = [];
+    private array|null $urlArguments = null;
     private Closure|null $urlCreator = null;
-    private bool $urlEnabledArguments = true;
     private UrlGeneratorInterface|null $urlGenerator = null;
     private array $urlParamsConfig = [];
     private string $urlName = '';
@@ -94,7 +93,7 @@ final class ActionColumn extends Column
                         'title' => 'View',
                     ],
                 )
-                ->content(Span::tag()->content('&#128270;')->encode(false))
+                ->content(Span::tag()->content('🔎'))
                 ->href($url)
                 ->render(),
             'update' => static fn (string $url): string => A::tag()
@@ -106,7 +105,7 @@ final class ActionColumn extends Column
                         'title' => 'Update',
                     ],
                 )
-                ->content(Span::tag()->content('&#9998;')->encode(false))
+                ->content(Span::tag()->content('✎'))
                 ->href($url)
                 ->render(),
             'delete' => static fn (string $url): string => A::tag()
@@ -118,7 +117,7 @@ final class ActionColumn extends Column
                         'title' => 'Delete',
                     ],
                 )
-                ->content(Span::tag()->content('&#10060;')->encode(false))
+                ->content(Span::tag()->content('❌'))
                 ->href($url)
                 ->render(),
         ];
@@ -243,24 +242,9 @@ final class ActionColumn extends Column
     }
 
     /**
-     * Return a new instance with enabled arguments of the route.
+     * Return a new instance with URL generator interface for pagination.
      *
-     * @param bool $value Enabled arguments of the route.
-     *
-     * @return static
-     */
-    public function urlEnabledArguments(bool $value): static
-    {
-        $new = clone $this;
-        $new->urlEnabledArguments = $value;
-
-        return $new;
-    }
-
-    /**
-     * Return a new instance with url generator interface for pagination.
-     *
-     * @param UrlGeneratorInterface $value The url generator interface for pagination.
+     * @param UrlGeneratorInterface $value The URL generator interface for pagination.
      *
      * @return static
      */
@@ -417,7 +401,6 @@ final class ActionColumn extends Column
         }
 
         $route = $this->urlName !== '' ? $this->urlName . '/' . $action : $action;
-        $urlArguments = [];
         $urlQueryParameters = [];
         $urlParamsConfig = is_array($key) ? $key : [$this->primaryKey => $key];
 
@@ -426,10 +409,11 @@ final class ActionColumn extends Column
             default => array_merge($this->urlParamsConfig, $urlParamsConfig),
         };
 
-        if ($this->urlEnabledArguments) {
+        if ($this->urlArguments !== null) {
             /** @psalm-var array<string,string> */
             $urlArguments = array_merge($this->urlArguments, $urlParamsConfig);
         } else {
+            $urlArguments = [];
             $urlQueryParameters = array_merge($this->urlQueryParameters, $urlParamsConfig);
         }
 

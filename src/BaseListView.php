@@ -18,13 +18,12 @@ use Yiisoft\Yii\DataView\Widget\LinkSorter;
 abstract class BaseListView extends Widget
 {
     private array $attributes = [];
-    private bool $container = true;
     protected string $emptyText = 'No results found.';
     private array $emptyTextAttributes = [];
     private string $header = '';
     private array $headerAttributes = [];
-    private string $layout = '{header}' . PHP_EOL . '{toolbar}';
-    private string $layoutGridTable = '{items}' . PHP_EOL . '{summary}' . PHP_EOL . '{pager}';
+    private string $layout = "{header}\n{toolbar}";
+    private string $layoutGridTable = "{items}\n{summary}\n{pager}";
     private string $pagination = '';
     protected ?PaginatorInterface $paginator = null;
     private array $sortLinkAttributes = [];
@@ -33,13 +32,13 @@ abstract class BaseListView extends Widget
     private TranslatorInterface|null $translator = null;
     private string $toolbar = '';
     protected array $urlArguments = [];
-    protected bool $urlEnabledArguments = true;
     protected UrlGeneratorInterface|null $urlGenerator = null;
     protected string $urlName = '';
     protected array $urlQueryParameters = [];
+    private bool $withContainer = true;
 
     /**
-     * Renders the data active record classes.
+     * Renders the data active records.
      *
      * @return string the rendering result.
      */
@@ -56,21 +55,6 @@ abstract class BaseListView extends Widget
     {
         $new = clone $this;
         $new->attributes = $values;
-
-        return $new;
-    }
-
-    /**
-     * Returns a new instance whether container is enabled or not.
-     *
-     * @param bool $value Whether container is enabled or not.
-     *
-     * @return static
-     */
-    public function container(bool $value): static
-    {
-        $new = clone $this;
-        $new->container = $value;
 
         return $new;
     }
@@ -113,7 +97,7 @@ abstract class BaseListView extends Widget
     public function getPaginator(): PaginatorInterface
     {
         if ($this->paginator === null) {
-            throw new InvalidArgumentException('The paginator is not set.');
+            throw new Exception\PaginatorNotSetException();
         }
 
         return $this->paginator;
@@ -122,7 +106,7 @@ abstract class BaseListView extends Widget
     public function getTranslator(): TranslatorInterface
     {
         if ($this->translator === null) {
-            throw new InvalidArgumentException('The translator is not set.');
+            throw new Exception\TranslatorNotSetException();
         }
 
         return $this->translator;
@@ -131,7 +115,7 @@ abstract class BaseListView extends Widget
     public function getUrlGenerator(): UrlGeneratorInterface
     {
         if ($this->urlGenerator === null) {
-            throw new InvalidArgumentException('Url generator is not set.');
+            throw new Exception\UrlGeneratorNotSetException();
         }
 
         return $this->urlGenerator;
@@ -361,24 +345,9 @@ abstract class BaseListView extends Widget
     }
 
     /**
-     * Return a new instance with enabled arguments of the route.
+     * Return a new instance with URL generator interface for pagination.
      *
-     * @param bool $value Enabled arguments of the route.
-     *
-     * @return static
-     */
-    public function urlEnabledArguments(bool $value): static
-    {
-        $new = clone $this;
-        $new->urlEnabledArguments = $value;
-
-        return $new;
-    }
-
-    /**
-     * Return a new instance with url generator interface for pagination.
-     *
-     * @param UrlGeneratorInterface $value The url generator interface for pagination.
+     * @param UrlGeneratorInterface $value The URL generator interface for pagination.
      *
      * @return static
      */
@@ -416,6 +385,21 @@ abstract class BaseListView extends Widget
     {
         $new = clone $this;
         $new->urlQueryParameters = $value;
+
+        return $new;
+    }
+
+    /**
+     * Returns a new instance whether container is enabled or not.
+     *
+     * @param bool $value Whether container is enabled or not.
+     *
+     * @return static
+     */
+    public function withContainer(bool $value = true): static
+    {
+        $new = clone $this;
+        $new->withContainer = $value;
 
         return $new;
     }
@@ -474,8 +458,8 @@ abstract class BaseListView extends Widget
 
     protected function run(): string
     {
-        if (!isset($this->paginator)) {
-            throw new InvalidArgumentException('The "paginator" property must be set.');
+        if ($this->paginator === null) {
+            throw new Exception\PaginatorNotSetException();
         }
 
         return $this->renderGrid();
@@ -523,7 +507,7 @@ abstract class BaseListView extends Widget
             );
         }
 
-        return match ($this->container) {
+        return match ($this->withContainer) {
             true => trim(
                 $contentGrid . PHP_EOL . Div::tag()
                     ->addAttributes($attributes)

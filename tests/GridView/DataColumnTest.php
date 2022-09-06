@@ -201,6 +201,42 @@ final class DataColumnTest extends TestCase
         );
     }
 
+    public function testLabelMbString(): void
+    {
+        Assert::equalsWithoutLE(
+            <<<HTML
+            <div id="w1-grid">
+            <table class="table">
+            <thead>
+            <tr>
+            <th>Id</th>
+            <th>Όνομα χρήστη</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+            <td data-label="id">1</td>
+            <td data-label="όνομα χρήστη">John</td>
+            </tr>
+            <tr>
+            <td data-label="id">2</td>
+            <td data-label="όνομα χρήστη">Mary</td>
+            </tr>
+            </tbody>
+            </table>
+            <div>gridview.summary</div>
+            </div>
+            HTML,
+            GridView::widget()
+                ->columns($this->createColumnsWithLabelMbString())
+                ->id('w1-grid')
+                ->paginator($this->createPaginator($this->data, 10, 1))
+                ->translator(Mock::translator('en'))
+                ->urlGenerator(Mock::urlGenerator([Route::get('/admin/manage')->name('admin/manage')]))
+                ->render()
+        );
+    }
+
     public function testLabelAttributes(): void
     {
         Assert::equalsWithoutLE(
@@ -568,6 +604,14 @@ final class DataColumnTest extends TestCase
         ];
     }
 
+    private function createColumnsWithLabelMbString(): array
+    {
+        return [
+            DataColumn::create()->attribute('id'),
+            DataColumn::create()->attribute('name')->label('Όνομα χρήστη'),
+        ];
+    }
+
     private function createColumnsWithLabelAttributes(): array
     {
         return [
@@ -591,7 +635,7 @@ final class DataColumnTest extends TestCase
     private function createColumnsWithNotSorting(): array
     {
         return [
-            DataColumn::create()->attribute('id')->notSorting(),
+            DataColumn::create()->attribute('id')->withSorting(false),
             DataColumn::create()->attribute('name')->value('test'),
         ];
     }
@@ -608,7 +652,7 @@ final class DataColumnTest extends TestCase
     {
         return [
             DataColumn::create()->attribute('id'),
-            DataColumn::create()->attribute('name')->notVisible(),
+            DataColumn::create()->attribute('name')->visible(false),
         ];
     }
 

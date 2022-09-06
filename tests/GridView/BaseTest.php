@@ -183,9 +183,9 @@ final class BaseTest extends TestCase
             <td data-label="name">John</td>
             <td data-label="age">20</td>
             <td data-label="actions">
-            <a name="view" href="/admin/view?id=1" title="View" role="button" style="text-decoration: none!important;"><span>&#128270;</span></a>
-            <a name="update" href="/admin/update?id=1" title="Update" role="button" style="text-decoration: none!important;"><span>&#9998;</span></a>
-            <a name="delete" href="/admin/delete?id=1" title="Delete" role="button" style="text-decoration: none!important;"><span>&#10060;</span></a>
+            <a name="view" href="/admin/view?id=1" title="View" role="button" style="text-decoration: none!important;"><span>🔎</span></a>
+            <a name="update" href="/admin/update?id=1" title="Update" role="button" style="text-decoration: none!important;"><span>✎</span></a>
+            <a name="delete" href="/admin/delete?id=1" title="Delete" role="button" style="text-decoration: none!important;"><span>❌</span></a>
             </td>
             </tr>
             <tr>
@@ -193,9 +193,9 @@ final class BaseTest extends TestCase
             <td data-label="name">Mary</td>
             <td data-label="age">21</td>
             <td data-label="actions">
-            <a name="view" href="/admin/view?id=2" title="View" role="button" style="text-decoration: none!important;"><span>&#128270;</span></a>
-            <a name="update" href="/admin/update?id=2" title="Update" role="button" style="text-decoration: none!important;"><span>&#9998;</span></a>
-            <a name="delete" href="/admin/delete?id=2" title="Delete" role="button" style="text-decoration: none!important;"><span>&#10060;</span></a>
+            <a name="view" href="/admin/view?id=2" title="View" role="button" style="text-decoration: none!important;"><span>🔎</span></a>
+            <a name="update" href="/admin/update?id=2" title="Update" role="button" style="text-decoration: none!important;"><span>✎</span></a>
+            <a name="delete" href="/admin/delete?id=2" title="Delete" role="button" style="text-decoration: none!important;"><span>❌</span></a>
             </td>
             </tr>
             </tbody>

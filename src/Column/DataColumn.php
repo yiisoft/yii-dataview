@@ -18,7 +18,7 @@ use function sprintf;
 /**
  * DataColumn is the default column type for the {@see GridView} widget.
  *
- * It is used to show data columns and allows {@see sortingEnabled|sorting} and {@see filter|filtering} them.
+ * It is used to show data columns and allows {@see withSorting|sorting} and {@see filter|filtering} them.
  *
  * A simple data column definition refers to an attribute in the data of the GridView's data provider.
  *
@@ -60,8 +60,8 @@ final class DataColumn extends Column
     ];
     private Stringable|null|string|int|bool|float $filterValueDefault = null;
     private string $linkSorter = '';
-    private bool $sortingEnabled = true;
     private mixed $value = null;
+    private bool $withSorting = true;
 
     /**
      * Return new instance with the attribute name.
@@ -267,19 +267,6 @@ final class DataColumn extends Column
     }
 
     /**
-     * Return new instance whether the column is not sortable.
-     *
-     * @return self
-     */
-    public function notSorting(): self
-    {
-        $new = clone $this;
-        $new->sortingEnabled = false;
-
-        return $new;
-    }
-
-    /**
      * Return new instance with the value of column.
      *
      * @param mixed $value An anonymous function or a string that is used to determine the value to
@@ -307,6 +294,21 @@ final class DataColumn extends Column
     {
         $new = clone $this;
         $new->value = $value;
+
+        return $new;
+    }
+
+    /**
+     * Return new instance whether the column is sortable or not.
+     *
+     * @param bool $value Whether the column is sortable or not.
+     *
+     * @return self
+     */
+    public function withSorting(bool $value): self
+    {
+        $new = clone $this;
+        $new->withSorting = $value;
 
         return $new;
     }
@@ -347,7 +349,7 @@ final class DataColumn extends Column
     {
         $label = Html::encode($this->getLabel());
 
-        if ($this->attribute !== '' && $this->sortingEnabled && $this->linkSorter !== '') {
+        if ($this->attribute !== '' && $this->withSorting && $this->linkSorter !== '') {
             $label = $this->linkSorter;
         }
 
