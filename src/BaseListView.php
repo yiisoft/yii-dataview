@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Yiisoft\Yii\DataView;
 
 use ReflectionException;
+use Yiisoft\Data\Paginator\KeysetPaginator;
 use Yiisoft\Data\Paginator\OffsetPaginator;
 use Yiisoft\Data\Paginator\PaginatorInterface;
 use Yiisoft\Html\Tag\Div;
@@ -430,15 +431,18 @@ abstract class BaseListView extends Widget
     protected function renderLinkSorter(string $attribute, string $label): string
     {
         $renderLinkSorter = '';
-        /** @var OffsetPaginator */
         $paginator = $this->getPaginator();
         $sort = $paginator->getSort();
+        $linkSorter = LinkSorter::widget();
 
-        if (null !== $sort) {
-            $renderLinkSorter = LinkSorter::widget()
+        if ($paginator instanceof OffsetPaginator) {
+            $linkSorter = $linkSorter->currentPage($paginator->getCurrentPage());
+        }
+
+        if ($sort !== null) {
+            $renderLinkSorter = $linkSorter
                 ->attribute($attribute)
                 ->attributes($sort->getCriteria())
-                ->currentPage($paginator->getCurrentPage())
                 ->directions($sort->getOrder())
                 ->iconAscClass('bi bi-sort-alpha-up')
                 ->iconDescClass('bi bi-sort-alpha-down')
@@ -475,12 +479,17 @@ abstract class BaseListView extends Widget
     private function renderSummary(): string
     {
         $pageCount = count($this->getDataReader());
-        /** @var OffsetPaginator */
-        $paginator = $this->getPaginator();
+
+        if ($this->getPaginator() instanceof KeysetPaginator) {
+            return '';
+        }
 
         if ($pageCount <= 0) {
             return '';
         }
+
+        /** @var OffsetPaginator $paginator */
+        $paginator = $this->getPaginator();
 
         return Div::tag()
             ->addAttributes($this->summaryAttributes)
