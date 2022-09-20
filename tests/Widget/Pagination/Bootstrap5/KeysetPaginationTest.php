@@ -45,7 +45,7 @@ final class KeysetPaginationTest extends TestCase
             KeysetPagination::widget()
                 ->currentPage(1)
                 ->menuClass('pagination justify-content-center')
-                ->paginator($this->createKeysetPaginator($this->data, 2, 1))
+                ->paginator($this->createKeysetPaginator($this->data, 2))
                 ->urlGenerator(Mock::urlGenerator([Route::get('/admin/manage')->name('admin/manage')]))
                 ->urlName('admin/manage')
                 ->render(),

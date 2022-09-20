@@ -294,7 +294,7 @@ abstract class BasePagination extends Widget
     {
         $new = clone $this;
         $new->iconPreviousPage = $value;
-        $new->labelPreviousPage('');
+        $new->labelPreviousPage = '';
 
         return $new;
     }

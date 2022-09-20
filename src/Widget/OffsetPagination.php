@@ -194,7 +194,13 @@ final class OffsetPagination extends BasePagination
     {
         $beginPage = max(1, $this->getCurrentPage() - (int) ($this->maxNavLinkCount / 2));
         $endPage = 0;
-        $paginator = $this->getPaginator()->withNextPageToken('1');
+        $paginator = $this->getPaginator();
+
+        if ($paginator->isOnLastPage()) {
+            return [0, 0];
+        }
+
+        $paginator = $paginator->withNextPageToken('1');
 
         do {
             $paginator = $paginator->withNextPageToken($paginator->getNextPageToken());
@@ -254,7 +260,7 @@ final class OffsetPagination extends BasePagination
             $iconContainerAttributes['aria-hidden'] = 'true';
         }
 
-        if ('' !== $this->labelFirtsPage || '' !== $this->iconFirtsPage || '' !== $this->iconClassFirtsPage) {
+        if ($this->labelFirtsPage !== '' || $this->iconFirtsPage !== '' || $this->iconClassFirtsPage !== '') {
             $items = [
                 'disabled' => $currentPage === 1 || $this->disabledFirtsPage,
                 'icon' => $this->iconFirtsPage,
@@ -272,20 +278,29 @@ final class OffsetPagination extends BasePagination
     private function renderPreviousPageNavLink(int $currentPage): array
     {
         $iconContainerAttributes = $this->getIconContainerAttributes();
+        $items = [];
 
         if (!array_key_exists('aria-hidden', $iconContainerAttributes)) {
             $iconContainerAttributes['aria-hidden'] = 'true';
         }
 
-        return [
-            'disabled' => $currentPage === 1 || $this->getDisabledPreviousPage(),
-            'icon' => $this->getIconPreviousPage(),
-            'iconAttributes' => $this->getIconAttributes(),
-            'iconClass' => $this->getIconClassPreviousPage(),
-            'iconContainerAttributes' => $iconContainerAttributes,
-            'label' => $this->getLabelPreviousPage(),
-            'link' => $this->createUrl(max($currentPage - 1, 1)),
-        ];
+        if (
+            $this->getLabelPreviousPage() !== '' ||
+            $this->getIconPreviousPage() !== '' ||
+            $this->getIconClassPreviousPage() !== ''
+        ) {
+            $items = [
+                'disabled' => $currentPage === 1 || $this->getDisabledPreviousPage(),
+                'icon' => $this->getIconPreviousPage(),
+                'iconAttributes' => $this->getIconAttributes(),
+                'iconClass' => $this->getIconClassPreviousPage(),
+                'iconContainerAttributes' => $iconContainerAttributes,
+                'label' => $this->getLabelPreviousPage(),
+                'link' => $this->createUrl(max($currentPage - 1, 1)),
+            ];
+        }
+
+        return $items;
     }
 
     private function renderPageNavLinks(int $currentPage, int $beginPage, int $endPage): array
@@ -307,20 +322,29 @@ final class OffsetPagination extends BasePagination
     private function renderNextPageNavLink(int $currentPage, int $pageCount): array
     {
         $iconContainerAttributes = $this->getIconContainerAttributes();
+        $items = [];
 
         if (!array_key_exists('aria-hidden', $iconContainerAttributes)) {
             $iconContainerAttributes['aria-hidden'] = 'true';
         }
 
-        return [
-            'disabled' => $currentPage === $pageCount || $this->getDisabledNextPage(),
-            'icon' => $this->getIconNextPage(),
-            'iconAttributes' => $this->getIconAttributes(),
-            'iconClass' => $this->getIconClassNextPage(),
-            'iconContainerAttributes' => $iconContainerAttributes,
-            'label' => $this->getLabelNextPage(),
-            'link' => $this->createUrl(min($currentPage + 1, $pageCount)),
-        ];
+        if (
+            $this->getLabelNextPage() !== '' ||
+            $this->getIconNextPage() !== '' ||
+            $this->getIconClassNextPage() !== ''
+        ) {
+            $items = [
+                'disabled' => $currentPage === $pageCount || $this->getDisabledNextPage(),
+                'icon' => $this->getIconNextPage(),
+                'iconAttributes' => $this->getIconAttributes(),
+                'iconClass' => $this->getIconClassNextPage(),
+                'iconContainerAttributes' => $iconContainerAttributes,
+                'label' => $this->getLabelNextPage(),
+                'link' => $this->createUrl(min($currentPage + 1, $pageCount)),
+            ];
+        }
+
+        return $items;
     }
 
     private function renderLastPageNavLink(int $currentPage, int $pageCount): array

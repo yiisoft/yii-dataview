@@ -778,7 +778,7 @@ final class Menu extends Widget
         }
 
         if ($icon !== '' || $iconClass !== '') {
-            $i = I::tag()->addAttributes($iconAttributes)->content($icon);
+            $i = I::tag()->addAttributes($iconAttributes)->content($icon)->encode(false)->render();
             $html = Span::tag()->addAttributes($iconContainerAttributes)->content($i)->encode(false)->render();
         }
 

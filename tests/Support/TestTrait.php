@@ -21,7 +21,6 @@ trait TestTrait
     private function createOffsetPaginator(
         array $data,
         int $pageSize,
-        int $currentPage,
         bool $sort = false
     ): OffSetPaginator {
         $data = $this->createIterableProvider($data);
@@ -33,7 +32,7 @@ trait TestTrait
         return (new OffsetPaginator($data))->withPageSize($pageSize);
     }
 
-    private function createKeysetPaginator(array $data, int $pageSize, int $currentPage): KeySetPaginator
+    private function createKeysetPaginator(array $data, int $pageSize): KeySetPaginator
     {
         $data = $this
             ->createIterableProvider($data)
