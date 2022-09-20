@@ -590,8 +590,12 @@ final class Menu extends Widget
     {
         $afterAttributes = $this->afterAttributes;
 
+        if ($this->afterTag === '') {
+            throw new InvalidArgumentException('Tag name must be a string and cannot be empty.');
+        }
+
         return PHP_EOL . CustomTag::name($this->afterTag)
-            ->addAtributes($afterAttributes)
+            ->addAttributes($afterAttributes)
             ->content($this->afterContent)
             ->encode(false)
             ->render();
@@ -600,6 +604,10 @@ final class Menu extends Widget
     private function renderBeforeContent(): string
     {
         $beforeAttributes = $this->beforeAttributes;
+
+        if ($this->beforeTag === '') {
+            throw new InvalidArgumentException('Tag name must be a string and cannot be empty.');
+        }
 
         return CustomTag::name($this->beforeTag)
             ->addAttributes($beforeAttributes)
@@ -643,7 +651,7 @@ final class Menu extends Widget
             $label = Html::encode($label);
         }
 
-        if (isset($item['link'])) {
+        if (isset($item['link']) && is_string($item['link'])) {
             $linkAttributes['href'] = $item['link'];
         }
 
@@ -660,6 +668,10 @@ final class Menu extends Widget
             $item['iconAttributes'],
             $item['iconContainerAttributes'],
         );
+
+        if ($this->linkTag === '') {
+            throw new InvalidArgumentException('Tag name must be a string and cannot be empty.');
+        }
 
         return match (isset($linkAttributes['href'])) {
             true => CustomTag::name($this->linkTag)
@@ -702,6 +714,10 @@ final class Menu extends Widget
                     Html::addCssClass($itemsContainerAttributes, $this->lastItemClass);
                 }
 
+                if ($this->itemsTag === '') {
+                    throw new InvalidArgumentException('Tag name must be a string and cannot be empty.');
+                }
+
                 $menu = $this->renderItem($item);
 
                 $lines[] = match ($this->itemsContainer) {
@@ -737,10 +753,14 @@ final class Menu extends Widget
             $afterContent = $this->renderAfterContent();
         }
 
+        if ($this->tagName === '') {
+            throw new InvalidArgumentException('Tag name must be a string and cannot be empty.');
+        }
+
         return match ($this->container) {
             false => $beforeContent . $content . $afterContent,
             default => $beforeContent .
-                CustomTag::name($this->tagName)->attributes($attributes)->content($content)->encode(false) .
+                CustomTag::name($this->tagName)->addAttributes($attributes)->content($content)->encode(false) .
                 $afterContent,
         };
     }
@@ -760,7 +780,7 @@ final class Menu extends Widget
         }
 
         if ($icon !== '' || $iconClass !== '') {
-            $i = I::tag()->addAtributes($iconAttributes)->content($icon);
+            $i = I::tag()->addAttributes($iconAttributes)->content($icon);
             $html = Span::tag()->addAttributes($iconContainerAttributes)->content($i)->encode(false)->render();
         }
 

@@ -368,21 +368,6 @@ abstract class BasePagination extends Widget
     }
 
     /**
-     * Return a new instance with class css for menu link tag `<a>`.
-     *
-     * @param string $value The class css for menu link tag `<a>`.
-     *
-     * @return static
-     */
-    public function menuLinkClass(string $value): static
-    {
-        $new = clone $this;
-        $new->menuLinkClass = $value;
-
-        return $new;
-    }
-
-    /**
      * Return a new instance with page config for arguments or query parameters in url.
      *
      * @param array $value The page config for arguments or query parameters in url.
