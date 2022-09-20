@@ -5,14 +5,9 @@ declare(strict_types=1);
 namespace Yiisoft\Yii\DataView\Widget;
 
 use Yiisoft\Html\Tag\Nav;
-use InvalidArgumentException;
 
 use function array_filter;
 use function array_key_exists;
-use function array_merge;
-use function http_build_query;
-use function max;
-use function min;
 
 final class KeysetPagination extends BasePagination
 {
@@ -94,7 +89,7 @@ final class KeysetPagination extends BasePagination
             $iconContainerAttributes['aria-hidden'] = 'true';
         }
 
-        $items = [
+        return [
             'disabled' => $paginator->getNextPageToken() === null,
             'icon' => $this->getIconNextPage(),
             'iconAttributes' => $this->getIconAttributes(),
@@ -103,7 +98,5 @@ final class KeysetPagination extends BasePagination
             'label' => $this->getLabelNextPage(),
             'link' => $this->createUrl((int) $paginator->getNextPageToken()),
         ];
-
-        return $items;
     }
 }

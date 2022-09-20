@@ -5,15 +5,11 @@ declare(strict_types=1);
 namespace Yiisoft\Yii\DataView\Widget;
 
 use InvalidArgumentException;
-use Yiisoft\Data\Paginator\OffsetPaginator;
 use Yiisoft\Html\Tag\Nav;
-use Yiisoft\Router\UrlGeneratorInterface;
-use Yiisoft\Yii\DataView\Exception\PaginatorNotSetException;
 
 use function array_filter;
 use function array_key_exists;
 use function array_merge;
-use function http_build_query;
 use function max;
 use function min;
 
@@ -281,7 +277,7 @@ final class OffsetPagination extends BasePagination
             $iconContainerAttributes['aria-hidden'] = 'true';
         }
 
-        $items = [
+        return [
             'disabled' => $currentPage === 1 || $this->getDisabledPreviousPage(),
             'icon' => $this->getIconPreviousPage(),
             'iconAttributes' => $this->getIconAttributes(),
@@ -290,8 +286,6 @@ final class OffsetPagination extends BasePagination
             'label' => $this->getLabelPreviousPage(),
             'link' => $this->createUrl(max($currentPage - 1, 1)),
         ];
-
-        return $items;
     }
 
     private function renderPageNavLinks(int $currentPage, int $beginPage, int $endPage): array
@@ -318,7 +312,7 @@ final class OffsetPagination extends BasePagination
             $iconContainerAttributes['aria-hidden'] = 'true';
         }
 
-        $items = [
+        return [
             'disabled' => $currentPage === $pageCount || $this->getDisabledNextPage(),
             'icon' => $this->getIconNextPage(),
             'iconAttributes' => $this->getIconAttributes(),
@@ -327,8 +321,6 @@ final class OffsetPagination extends BasePagination
             'label' => $this->getLabelNextPage(),
             'link' => $this->createUrl(min($currentPage + 1, $pageCount)),
         ];
-
-        return $items;
     }
 
     private function renderLastPageNavLink(int $currentPage, int $pageCount): array

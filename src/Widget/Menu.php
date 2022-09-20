@@ -16,7 +16,6 @@ use Yiisoft\Widget\Widget;
 use function array_merge;
 use function count;
 use function implode;
-use function strtr;
 
 /**
  * Menu displays a multi-level menu using nested HTML lists.
@@ -555,31 +554,30 @@ final class Menu extends Widget
 
                 if ($dropdown !== []) {
                     throw new InvalidArgumentException('Dropdown menu is not supported.');
-                } else {
-                    /** @var string */
-                    $link = $child['link'] ?? '/';
-                    /** @var bool */
-                    $active = $child['active'] ?? false;
-
-                    if ($active === false) {
-                        $items[$i]['active'] = $this->isItemActive($link, $currentPath, $activateItems);
-                    }
-
-                    /** @var bool */
-                    $items[$i]['disabled'] = $child['disabled'] ?? false;
-                    /** @var bool */
-                    $items[$i]['encodeLabel'] = $child['encodeLabel'] ?? true;
-                    /** @var string */
-                    $items[$i]['icon'] = $child['icon'] ?? '';
-                    /** @var array */
-                    $items[$i]['iconAttributes'] = $child['iconAttributes'] ?? [];
-                    /** @var string */
-                    $items[$i]['iconClass'] = $child['iconClass'] ?? '';
-                    /** @var array */
-                    $items[$i]['iconContainerAttributes'] = $child['iconContainerAttributes'] ?? [];
-                    /** @var bool */
-                    $items[$i]['visible'] = $child['visible'] ?? true;
                 }
+                /** @var string */
+                $link = $child['link'] ?? '/';
+                /** @var bool */
+                $active = $child['active'] ?? false;
+
+                if ($active === false) {
+                    $items[$i]['active'] = $this->isItemActive($link, $currentPath, $activateItems);
+                }
+
+                /** @var bool */
+                $items[$i]['disabled'] = $child['disabled'] ?? false;
+                /** @var bool */
+                $items[$i]['encodeLabel'] = $child['encodeLabel'] ?? true;
+                /** @var string */
+                $items[$i]['icon'] = $child['icon'] ?? '';
+                /** @var array */
+                $items[$i]['iconAttributes'] = $child['iconAttributes'] ?? [];
+                /** @var string */
+                $items[$i]['iconClass'] = $child['iconClass'] ?? '';
+                /** @var array */
+                $items[$i]['iconContainerAttributes'] = $child['iconContainerAttributes'] ?? [];
+                /** @var bool */
+                $items[$i]['visible'] = $child['visible'] ?? true;
             }
         }
 
