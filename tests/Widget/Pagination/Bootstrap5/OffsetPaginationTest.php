@@ -4,14 +4,7 @@ declare(strict_types=1);
 
 namespace Yiisoft\Yii\DataView\Tests\Widget\Bootstrap5\Pagination\Bootstrap5;
 
-use Yiisoft\Router\CurrentRoute;
-use Yiisoft\Router\FastRoute\UrlGenerator;
-use Yiisoft\Router\Group;
 use Yiisoft\Router\Route;
-use Yiisoft\Router\RouteCollection;
-use Yiisoft\Router\RouteCollectionInterface;
-use Yiisoft\Router\RouteCollector;
-use Yiisoft\Router\UrlGeneratorInterface;
 use Yiisoft\Yii\DataView\Tests\Support\Assert;
 use Yiisoft\Yii\DataView\Tests\Support\Mock;
 use Yiisoft\Yii\DataView\Tests\Support\TestTrait;

@@ -4,22 +4,14 @@ declare(strict_types=1);
 
 namespace Yiisoft\Yii\DataView\Widget;
 
-use Forge\Html\Widgets\Components\Nav;
-use Forge\Html\Widgets\Components\NavBar;
 use InvalidArgumentException;
-use Yiisoft\Data\Paginator\KeysetPaginator;
-use Yiisoft\Data\Paginator\OffsetPaginator;
 use Yiisoft\Data\Paginator\PaginatorInterface;
 use Yiisoft\Router\UrlGeneratorInterface;
 use Yiisoft\Widget\Widget;
 use Yiisoft\Yii\DataView\Exception\PaginatorNotSetException;
 
-use function array_filter;
-use function array_key_exists;
 use function array_merge;
 use function http_build_query;
-use function max;
-use function min;
 
 abstract class BasePagination extends Widget
 {

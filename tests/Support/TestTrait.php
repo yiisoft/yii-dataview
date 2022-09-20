@@ -21,7 +21,8 @@ trait TestTrait
     private function createOffsetPaginator(
         array $data,
         int $pageSize,
-        int $currentPage, bool $sort = false
+        int $currentPage,
+        bool $sort = false
     ): OffSetPaginator {
         $data = $this->createIterableProvider($data);
 
