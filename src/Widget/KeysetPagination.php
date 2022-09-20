@@ -1,0 +1,109 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Yiisoft\Yii\DataView\Widget;
+
+use Yiisoft\Html\Tag\Nav;
+use InvalidArgumentException;
+
+use function array_filter;
+use function array_key_exists;
+use function array_merge;
+use function http_build_query;
+use function max;
+use function min;
+
+final class KeysetPagination extends BasePagination
+{
+    protected function run(): string
+    {
+        return $this->renderPagination();
+    }
+
+    private function renderPagination(): string
+    {
+        $attributes = $this->getAttributes();
+        $items = [];
+
+        $items[] = $this->renderPreviousPageNavLink();
+        $items[] = $this->renderNextPageNavLink();
+
+        if (!array_key_exists('aria-label', $attributes)) {
+            $attributes['aria-label'] = 'Pagination';
+        }
+
+        return
+            Nav::tag()
+                ->addAttributes($attributes)
+                ->content(
+                    PHP_EOL .
+                    Menu::widget()
+                        ->class($this->getMenuClass())
+                        ->items(array_filter($items))
+                        ->itemsContainerClass($this->getMenuItemContainerClass())
+                        ->linkClass($this->getMenuItemLinkClass()) .
+                    PHP_EOL
+                )
+                ->encode(false)
+                ->render();
+    }
+
+    private function renderPreviousPageNavLink(): array
+    {
+        $items = [];
+
+        $iconContainerAttributes = $this->getIconContainerAttributes();
+
+        if (!array_key_exists('aria-hidden', $iconContainerAttributes)) {
+            $iconContainerAttributes['aria-hidden'] = 'true';
+        }
+
+        if (
+            $this->getLabelPreviousPage() !== '' ||
+            $this->getIconPreviousPage() !== '' ||
+            $this->getIconClassPreviousPage() !== ''
+        ) {
+            $paginator = $this->getPaginator();
+
+            if (($pageToken = (int) $paginator->getPreviousPageToken() - ($paginator->getPageSize() + 1)) < 0) {
+                $pageToken = 0;
+            }
+
+            $items = [
+                'disabled' => $paginator->getPreviousPageToken() === null,
+                'icon' => $this->getIconPreviousPage(),
+                'iconAttributes' => $this->getIconAttributes(),
+                'iconClass' => $this->getIconClassPreviousPage(),
+                'iconContainerAttributes' => $iconContainerAttributes,
+                'label' => $this->getLabelPreviousPage(),
+                'link' => $this->createUrl((int) $pageToken),
+            ];
+        }
+
+        return $items;
+    }
+
+    private function renderNextPageNavLink(): array
+    {
+        $paginator = $this->getPaginator();
+
+        $iconContainerAttributes = $this->getIconContainerAttributes();
+
+        if (!array_key_exists('aria-hidden', $iconContainerAttributes)) {
+            $iconContainerAttributes['aria-hidden'] = 'true';
+        }
+
+        $items = [
+            'disabled' => $paginator->getNextPageToken() === null,
+            'icon' => $this->getIconNextPage(),
+            'iconAttributes' => $this->getIconAttributes(),
+            'iconClass' => $this->getIconClassNextPage(),
+            'iconContainerAttributes' => $iconContainerAttributes,
+            'label' => $this->getLabelNextPage(),
+            'link' => $this->createUrl((int) $paginator->getNextPageToken()),
+        ];
+
+        return $items;
+    }
+}
