@@ -116,95 +116,6 @@ abstract class BasePagination extends Widget
         return $new;
     }
 
-    public function getAttributes(): array
-    {
-        return $this->attributes;
-    }
-
-    public function getCurrentPage(): int
-    {
-        return $this->currentPage;
-    }
-
-    public function getDisabledNextPage(): bool
-    {
-        return $this->disabledNextPage;
-    }
-
-    public function getDisabledPreviousPage(): bool
-    {
-        return $this->disabledPreviousPage;
-    }
-
-    public function getHideOnSinglePage(): bool
-    {
-        return $this->hideOnSinglePage;
-    }
-
-    public function getIconAttributes(): array
-    {
-        return $this->iconAttributes;
-    }
-
-    public function getIconClassNextPage(): string
-    {
-        return $this->iconClassNextPage;
-    }
-
-    public function getIconClassPreviousPage(): string
-    {
-        return $this->iconClassPreviousPage;
-    }
-
-    public function getIconContainerAttributes(): array
-    {
-        return $this->iconContainerAttributes;
-    }
-
-    public function getIconNextPage(): string
-    {
-        return $this->iconNextPage;
-    }
-
-    public function getIconPreviousPage(): string
-    {
-        return $this->iconPreviousPage;
-    }
-
-    public function getLabelPreviousPage(): string
-    {
-        return $this->labelPreviousPage;
-    }
-
-    public function getLabelNextPage(): string
-    {
-        return $this->labelNextPage;
-    }
-
-    public function getMenuClass(): string
-    {
-        return $this->menuClass;
-    }
-
-    public function getMenuItemContainerClass(): string
-    {
-        return $this->menuItemContainerClass;
-    }
-
-    public function getMenuItemLinkClass(): string
-    {
-        return $this->menuItemLinkClass;
-    }
-
-    public function getPaginator(): PaginatorInterface
-    {
-        if ($this->paginator === null) {
-            throw new PaginatorNotSetException();
-        }
-
-        return $this->paginator;
-    }
-
     /**
      * Returns a new instance with the HTML attributes for icon attributes `<i>`.
      *
@@ -515,5 +426,94 @@ abstract class BasePagination extends Widget
             true => $this->urlGenerator->generate($this->urlName, $urlArguments, $urlQueryParameters),
             false => $urlQueryParameters ? '?' . http_build_query($urlQueryParameters) : '',
         };
+    }
+
+    protected function getAttributes(): array
+    {
+        return $this->attributes;
+    }
+
+    protected function getCurrentPage(): int
+    {
+        return $this->currentPage;
+    }
+
+    protected function getDisabledNextPage(): bool
+    {
+        return $this->disabledNextPage;
+    }
+
+    protected function getDisabledPreviousPage(): bool
+    {
+        return $this->disabledPreviousPage;
+    }
+
+    protected function getHideOnSinglePage(): bool
+    {
+        return $this->hideOnSinglePage;
+    }
+
+    protected function getIconAttributes(): array
+    {
+        return $this->iconAttributes;
+    }
+
+    protected function getIconClassNextPage(): string
+    {
+        return $this->iconClassNextPage;
+    }
+
+    protected function getIconClassPreviousPage(): string
+    {
+        return $this->iconClassPreviousPage;
+    }
+
+    protected function getIconContainerAttributes(): array
+    {
+        return $this->iconContainerAttributes;
+    }
+
+    protected function getIconNextPage(): string
+    {
+        return $this->iconNextPage;
+    }
+
+    protected function getIconPreviousPage(): string
+    {
+        return $this->iconPreviousPage;
+    }
+
+    protected function getLabelPreviousPage(): string
+    {
+        return $this->labelPreviousPage;
+    }
+
+    protected function getLabelNextPage(): string
+    {
+        return $this->labelNextPage;
+    }
+
+    protected function getMenuClass(): string
+    {
+        return $this->menuClass;
+    }
+
+    protected function getMenuItemContainerClass(): string
+    {
+        return $this->menuItemContainerClass;
+    }
+
+    protected function getMenuItemLinkClass(): string
+    {
+        return $this->menuItemLinkClass;
+    }
+
+    protected function getPaginator(): PaginatorInterface
+    {
+        if ($this->paginator === null) {
+            throw new PaginatorNotSetException();
+        }
+
+        return $this->paginator;
     }
 }
