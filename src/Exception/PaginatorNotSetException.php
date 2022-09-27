@@ -24,10 +24,9 @@ final class PaginatorNotSetException extends RuntimeException implements Friendl
     public function getSolution(): ?string
     {
         return <<<SOLUTION
-            You can configure the `paginator` property in the widget configuration. You can use `OffSetPaginator::class`
-            or `KeySetPaginator::class` as paginator for more information see the documentation in the link below.
-
-            @link https://github.com/yiisoft/data
+            You can configure the `paginator` property in the widget configuration. Use either `OffSetPaginator::class`
+            or `KeySetPaginator::class` as paginator.
+            For more information [see the documentation](https://github.com/yiisoft/data).
         SOLUTION;
     }
 }

@@ -9,7 +9,7 @@ use Yiisoft\Translator\MessageFormatterInterface;
 
 return [
     'translator.gridview' => static function (Aliases $aliases, MessageFormatterInterface $messageFormatter) {
-        $messageReader = new MessageSource($aliases->get('@gridview/resources/message'));
+        $messageReader = new MessageSource($aliases->get('@gridview/resources/messages'));
 
         return new CategorySource('gridview', $messageReader, $messageFormatter);
     },
