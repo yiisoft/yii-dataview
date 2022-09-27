@@ -152,7 +152,7 @@ final class GridViewTest extends TestCase
                         'header()' => ['Operations'],
                         'buttons()' => [
                             [
-                                'delete' => static fn(string $url): string => Html::a(
+                                'delete' => static fn (string $url): string => Html::a(
                                     Html::tag('span', '&#128465;')
                                         ->encode(false)
                                         ->render(),

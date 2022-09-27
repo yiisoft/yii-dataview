@@ -239,8 +239,6 @@ final class DetailView extends Widget
 
     /**
      * Set value for empty string. Null for hide empty value
-     *
-     *
      */
     public function emptyValue(?string $value): self
     {
@@ -256,6 +254,7 @@ final class DetailView extends Widget
      * @param array $params the specification of the attribute to be rendered.
      *
      * @throws JsonException
+     *
      * @return string the rendering result
      */
     private function renderAttribute(DataAttribute $attribute, array $params): ?string
@@ -293,9 +292,7 @@ final class DetailView extends Widget
     }
 
     /**
-     *
      * @throws InvalidArgumentException
-     *
      */
     private function normalizeAttribute(mixed $params): ?DataAttribute
     {

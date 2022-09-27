@@ -65,7 +65,7 @@ abstract class BaseListView extends Widget
     protected function run(): string
     {
         if ($this->showOnEmpty || ($this->paginator->getTotalItems() > 0)) {
-            $content = preg_replace_callback('/{\\w+}/', fn(array $matches): string => /** @var string[] $matches */
+            $content = preg_replace_callback('/{\\w+}/', fn (array $matches): string => /** @var string[] $matches */
 $this->renderSection($matches[0]), $this->layout);
         } else {
             $content = $this->renderEmpty();
@@ -243,8 +243,6 @@ $this->renderSection($matches[0]), $this->layout);
 
     /**
      * Use route argument instead of $_GET param for page number, like /page-{pageParam:\d+}
-     *
-     *
      */
     public function pageArgument(?bool $value = true): self
     {

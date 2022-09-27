@@ -96,7 +96,7 @@ final class CheckboxColumnTest extends TestCase
 
         $column = $this->checkboxColumn
             ->checkboxOptions(
-                static fn($model, $key, $index, $column) => ['value' => 43]
+                static fn ($model, $key, $index, $column) => ['value' => 43]
             )
             ->grid($gridView);
 
@@ -111,7 +111,7 @@ final class CheckboxColumnTest extends TestCase
 
         $column = $this->checkboxColumn
             ->content(
-                static fn($model, $key, $index, $column) => ''
+                static fn ($model, $key, $index, $column) => ''
             )
             ->grid($gridView);
 
@@ -119,7 +119,7 @@ final class CheckboxColumnTest extends TestCase
 
         $column = $this->checkboxColumn
             ->content(
-                static fn($model, $key, $index, $column) => Html::checkBox('checkBoxInput')->render()
+                static fn ($model, $key, $index, $column) => Html::checkBox('checkBoxInput')->render()
             )
             ->grid($gridView);
 

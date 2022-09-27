@@ -16,7 +16,6 @@ abstract class Widget extends BaseWidget
     /**
      * Set the Id of the widget.
      *
-     *
      * @return static
      */
     public function id(string $value): self

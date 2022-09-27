@@ -77,7 +77,6 @@ abstract class AbstractLinkWidget extends Widget
     /**
      * Name of $_GET/Route argument page param using for pagination
      *
-     *
      * @return static
      */
     public function pageParam(string $value): self
@@ -90,7 +89,6 @@ abstract class AbstractLinkWidget extends Widget
 
     /**
      * Use route argument instead of $_GET param for page number, like /page-{pageParam:\d+}
-     *
      *
      * @return static
      */

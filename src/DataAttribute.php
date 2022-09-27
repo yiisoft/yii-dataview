@@ -105,10 +105,8 @@ final class DataAttribute
     }
 
     /**
-     *
      * @throws RuntimeException
      * @throws InvalidArgumentException
-     *
      */
     public function getValue(mixed $model): string
     {

@@ -140,8 +140,6 @@ final class DataColumn extends Column
 
     /**
      * Enable/Disabe encode value
-     *
-     *
      */
     public function encode(bool $encode = true): self
     {

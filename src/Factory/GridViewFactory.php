@@ -8,10 +8,6 @@ use RuntimeException;
 use Yiisoft\Yii\DataView\Columns\Column;
 use Yiisoft\Factory\Factory;
 
-use function get_class;
-use function gettype;
-use function is_object;
-
 final class GridViewFactory
 {
     public function __construct(private Factory $factory)

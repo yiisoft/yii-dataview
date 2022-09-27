@@ -69,7 +69,7 @@ final class RadioButtonColumn extends Column
      *
      * {@see Html::renderTagAttributes()} for details on how attributes are being rendered.
      */
-    public function radioOptions(array|\Closure $radioOptions): self
+    public function radioOptions(array|Closure $radioOptions): self
     {
         if ($radioOptions instanceof Closure) {
             $this->radioOptions = $radioOptions;

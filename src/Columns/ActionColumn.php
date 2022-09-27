@@ -130,8 +130,6 @@ final class ActionColumn extends Column
 
     /**
      * Set primary key name. By default it equals to primaryKey.
-     *
-     *
      */
     public function primaryKeyName(?string $primaryKeyName): self
     {
@@ -142,8 +140,6 @@ final class ActionColumn extends Column
 
     /**
      * Additional arguments for URL.
-     *
-     *
      */
     public function arguments(array $arguments): self
     {
@@ -154,8 +150,6 @@ final class ActionColumn extends Column
 
     /**
      * Query parameters for URL.
-     *
-     *
      */
     public function queryParameters(array $parameters): self
     {
@@ -166,8 +160,6 @@ final class ActionColumn extends Column
 
     /**
      * Enable/Disable url with ID in querystring instead of arguments
-     *
-     *
      */
     public function withIdInQueryString(bool $value = true): self
     {

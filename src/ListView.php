@@ -131,7 +131,6 @@ final class ListView extends BaseListView implements ViewContextInterface
      *
      * Note: If the function returns `null`, nothing will be rendered after the item.
      *
-     *
      * @see renderAfterItem
      */
     public function afterItem(?callable $afterItem): self
@@ -190,7 +189,7 @@ final class ListView extends BaseListView implements ViewContextInterface
      *
      * {@see Html::renderTagAttributes()} for details on how attributes are being rendered.
      */
-    public function itemOptions(array|\Closure $itemOptions): self
+    public function itemOptions(array|Closure $itemOptions): self
     {
         $new = clone $this;
 

@@ -132,9 +132,7 @@ final class LinkPager extends AbstractLinkWidget
     /**
      * Set option for widget
      *
-     *
      * @throws InvalidArgumentException
-     *
      */
     private function setOption(string $name, mixed $value): self
     {
@@ -151,10 +149,8 @@ final class LinkPager extends AbstractLinkWidget
     /**
      * Merge current widget option with new value
      *
-     *
      * @throws InvalidArgumentException
      * @throws RuntimeException
-     *
      */
     private function mergeOption(string $name, array $value): self
     {
@@ -173,8 +169,6 @@ final class LinkPager extends AbstractLinkWidget
 
     /**
      * Set template for all widget
-     *
-     *
      */
     public function template(string $template): self
     {
@@ -186,8 +180,6 @@ final class LinkPager extends AbstractLinkWidget
 
     /**
      * Set template for page list only
-     *
-     *
      */
     public function listTemplate(string $template): self
     {
@@ -343,8 +335,6 @@ final class LinkPager extends AbstractLinkWidget
 
     /**
      * Enable/Disable hidding pageParam on first page
-     *
-     *
      */
     public function hideFirstPageParameter(bool $value = true): self
     {
@@ -523,8 +513,6 @@ final class LinkPager extends AbstractLinkWidget
 
     /**
      * Merge default/main attributes for current attributes to active/disabled/etc status
-     *
-     *
      */
     private static function mergeAttributes(array $mainAttributes, array $additionalAttributes): array
     {

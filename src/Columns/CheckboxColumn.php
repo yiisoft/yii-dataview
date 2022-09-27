@@ -14,7 +14,6 @@ use function call_user_func;
 use function is_array;
 use function is_callable;
 use function substr;
-use function substr_compare;
 
 /**
  * CheckboxColumn displays a column of checkboxes in a grid view.
@@ -111,7 +110,6 @@ final class CheckboxColumn extends Column
     /**
      * Disable select multiple rows.
      *
-     *
      * @return $this
      */
     public function multiple(bool $multiple = true): self
@@ -186,7 +184,6 @@ final class CheckboxColumn extends Column
 
     /**
      * Returns header checkbox name.
-     *
      *
      * @return string header checkbox name
      */
