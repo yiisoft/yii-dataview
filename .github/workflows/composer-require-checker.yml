@@ -19,10 +19,10 @@ on:
       - 'infection.json.dist'
       - 'phpunit.xml.dist'
 
-name: static analysis
+name: composer require checker
 
 jobs:
-  psalm:
+  composer-require-checker:
     uses: yiisoft/actions/.github/workflows/composer-require-checker.yml@add-composer-require-checker
     with:
       os: >-
