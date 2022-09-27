@@ -6,6 +6,7 @@ namespace Yiisoft\Yii\DataView\Widget;
 
 use InvalidArgumentException;
 use Yiisoft\Html\Tag\Nav;
+use Yiisoft\Yii\Widgets\Menu;
 
 use function array_filter;
 use function array_key_exists;
