@@ -34,17 +34,14 @@ final class LinkSorter extends AbstractLinkWidget
     private int $currentPage = 1;
     private string $cssFramework = self::BOOTSTRAP;
     private array $options = [];
-    private Inflector $inflector;
     private Sort $sort;
 
     public function __construct(
         CurrentRoute $currentRoute,
-        Inflector $inflector,
+        private Inflector $inflector,
         UrlGeneratorInterface $urlGenerator
     ) {
         parent::__construct($currentRoute, $urlGenerator);
-
-        $this->inflector = $inflector;
     }
 
     /**

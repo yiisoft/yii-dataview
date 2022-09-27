@@ -152,22 +152,20 @@ final class GridViewTest extends TestCase
                         'header()' => ['Operations'],
                         'buttons()' => [
                             [
-                                'delete' => static function (string $url): string {
-                                    return Html::a(
-                                        Html::tag('span', '&#128465;')
-                                            ->encode(false)
-                                            ->render(),
-                                        $url,
-                                        [
-                                            'class' => 'text-danger',
-                                            'data-method' => 'POST',
-                                            'data-confirm' => 'Are you sure to delete this user?',
-                                            'title' => 'Delete',
-                                        ],
-                                    )
+                                'delete' => static fn(string $url): string => Html::a(
+                                    Html::tag('span', '&#128465;')
                                         ->encode(false)
-                                        ->render();
-                                },
+                                        ->render(),
+                                    $url,
+                                    [
+                                        'class' => 'text-danger',
+                                        'data-method' => 'POST',
+                                        'data-confirm' => 'Are you sure to delete this user?',
+                                        'title' => 'Delete',
+                                    ],
+                                )
+                                    ->encode(false)
+                                    ->render(),
                             ],
                         ],
                         'visibleButtons()' => [

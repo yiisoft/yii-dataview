@@ -20,13 +20,11 @@ final class DataAttribute
     /** @var Closure|string|null */
     private $format;
     private bool $encode = false;
-    private TranslatorInterface $translator ;
     /** @var Closure|string|Stringable|null */
     private $value;
 
-    public function __construct(TranslatorInterface $translator)
+    public function __construct(private TranslatorInterface $translator)
     {
-        $this->translator = $translator;
     }
 
     public function name(string $name): self
@@ -78,8 +76,6 @@ final class DataAttribute
      * @param Closure|string|null $format
      *
      * @throws InvalidArgumentException
-     *
-     * @return self
      */
     public function format($format): self
     {
@@ -96,8 +92,6 @@ final class DataAttribute
      * @param Closure|string|Stringable|null $value
      *
      * @throws InvalidArgumentException
-     *
-     * @return self
      */
     public function value($value): self
     {
@@ -111,14 +105,12 @@ final class DataAttribute
     }
 
     /**
-     * @param mixed $model
      *
      * @throws RuntimeException
      * @throws InvalidArgumentException
      *
-     * @return string
      */
-    public function getValue($model): string
+    public function getValue(mixed $model): string
     {
         if (!is_array($model) && !is_object($model)) {
             throw new InvalidArgumentException('Model must be type of "array" or "object"');

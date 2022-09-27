@@ -42,9 +42,6 @@ final class CheckboxColumnTest extends TestCase
 
     /**
      * @dataProvider inputName()
-     *
-     * @param string $name
-     * @param string $html
      */
     public function testCheckboxInputName(string $name, string $html): void
     {
@@ -99,9 +96,7 @@ final class CheckboxColumnTest extends TestCase
 
         $column = $this->checkboxColumn
             ->checkboxOptions(
-                static function ($model, $key, $index, $column) {
-                    return ['value' => 43];
-                }
+                static fn($model, $key, $index, $column) => ['value' => 43]
             )
             ->grid($gridView);
 
@@ -116,9 +111,7 @@ final class CheckboxColumnTest extends TestCase
 
         $column = $this->checkboxColumn
             ->content(
-                static function ($model, $key, $index, $column) {
-                    return '';
-                }
+                static fn($model, $key, $index, $column) => ''
             )
             ->grid($gridView);
 
@@ -126,9 +119,7 @@ final class CheckboxColumnTest extends TestCase
 
         $column = $this->checkboxColumn
             ->content(
-                static function ($model, $key, $index, $column) {
-                    return Html::checkBox('checkBoxInput')->render();
-                }
+                static fn($model, $key, $index, $column) => Html::checkBox('checkBoxInput')->render()
             )
             ->grid($gridView);
 

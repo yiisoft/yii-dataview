@@ -91,10 +91,6 @@ class TestCase extends \PHPUnit\Framework\TestCase
 
     /**
      * Test two strings as HTML content
-     *
-     * @param string $expected
-     * @param string $actual
-     * @param string $message
      */
     protected function assertEqualsHTML(string $expected, string $actual, string $message = ''): void
     {
@@ -106,10 +102,6 @@ class TestCase extends \PHPUnit\Framework\TestCase
 
     /**
      * Asserting two strings equality ignoring line endings.
-     *
-     * @param string $expected
-     * @param string $actual
-     * @param string $message
      */
     protected function assertEqualsWithoutLE(string $expected, string $actual, string $message = ''): void
     {

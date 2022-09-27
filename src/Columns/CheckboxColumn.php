@@ -101,7 +101,7 @@ final class CheckboxColumn extends Column
      *
      * {@see Html::renderTagAttributes()} for details on how attributes are being rendered.
      */
-    public function checkboxOptions($checkboxOptions): self
+    public function checkboxOptions(array|callable $checkboxOptions): self
     {
         $this->checkboxOptions = $checkboxOptions;
 
@@ -111,7 +111,6 @@ final class CheckboxColumn extends Column
     /**
      * Disable select multiple rows.
      *
-     * @param bool $multiple
      *
      * @return $this
      */
@@ -159,6 +158,7 @@ final class CheckboxColumn extends Column
      */
     protected function renderDataCellContent($model, $key, int $index): string
     {
+        $options = [];
         if (!empty($this->content)) {
             return parent::renderDataCellContent($model, $key, $index);
         }
@@ -187,16 +187,15 @@ final class CheckboxColumn extends Column
     /**
      * Returns header checkbox name.
      *
-     * @param string $name
      *
      * @return string header checkbox name
      */
     private function getHeaderCheckboxName(string $name): string
     {
-        if (substr_compare($name, '[]', -2, 2) === 0) {
+        if (str_ends_with($name, '[]')) {
             $name = substr($name, 0, -2);
         }
-        if (substr_compare($name, ']', -1, 1) === 0) {
+        if (str_ends_with($name, ']')) {
             $name = substr($name, 0, -1) . '_all]';
         } else {
             $name .= '_all';

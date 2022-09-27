@@ -14,15 +14,9 @@ abstract class AbstractLinkWidget extends Widget
     protected ?array $requestQueryParams = null;
     protected string $pageParam = 'page';
     protected ?bool $pageArgument = null;
-    protected CurrentRoute $currentRoute;
-    protected UrlGeneratorInterface $urlGenerator;
 
-    public function __construct(
-        CurrentRoute $currentRoute,
-        UrlGeneratorInterface $urlGenerator
-    ) {
-        $this->currentRoute = $currentRoute;
-        $this->urlGenerator = $urlGenerator;
+    public function __construct(protected CurrentRoute $currentRoute, protected UrlGeneratorInterface $urlGenerator)
+    {
     }
 
     protected function beforeRun(): bool
@@ -83,7 +77,6 @@ abstract class AbstractLinkWidget extends Widget
     /**
      * Name of $_GET/Route argument page param using for pagination
      *
-     * @param string $value
      *
      * @return static
      */
@@ -98,7 +91,6 @@ abstract class AbstractLinkWidget extends Widget
     /**
      * Use route argument instead of $_GET param for page number, like /page-{pageParam:\d+}
      *
-     * @param bool|null $value
      *
      * @return static
      */

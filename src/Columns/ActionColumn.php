@@ -61,16 +61,11 @@ final class ActionColumn extends Column
     private array $queryParameters = [];
     /** @var callable|null */
     private $urlCreator = null;
-    private UrlGeneratorInterface $urlGenerator;
 
-    public function __construct(UrlGeneratorInterface $urlGenerator)
+    public function __construct(private UrlGeneratorInterface $urlGenerator)
     {
-        $this->urlGenerator = $urlGenerator;
     }
 
-    /**
-     * @return array
-     */
     public function getButtons(): array
     {
         if ($this->buttons === []) {
@@ -113,8 +108,6 @@ final class ActionColumn extends Column
 
     /**
      * @param array $buttonOptions HTML options to be applied to the default button, see {@see initDefaultButton()}.
-     *
-     * @return self
      */
     public function buttonOptions(array $buttonOptions): self
     {
@@ -127,8 +120,6 @@ final class ActionColumn extends Column
      * Indicates which is the primaryKey of the data to be used to generate the url automatically.
      *
      * @param string $primaryKey by default the primaryKey is `id`.
-     *
-     * @return self
      */
     public function primaryKey(string $primaryKey): self
     {
@@ -140,9 +131,7 @@ final class ActionColumn extends Column
     /**
      * Set primary key name. By default it equals to primaryKey.
      *
-     * @param string|null $primaryKeyName
      *
-     * @return self
      */
     public function primaryKeyName(?string $primaryKeyName): self
     {
@@ -154,9 +143,7 @@ final class ActionColumn extends Column
     /**
      * Additional arguments for URL.
      *
-     * @param array $arguments
      *
-     * @return self
      */
     public function arguments(array $arguments): self
     {
@@ -168,9 +155,7 @@ final class ActionColumn extends Column
     /**
      * Query parameters for URL.
      *
-     * @param array $parameters
      *
-     * @return self
      */
     public function queryParameters(array $parameters): self
     {
@@ -182,9 +167,7 @@ final class ActionColumn extends Column
     /**
      * Enable/Disable url with ID in querystring instead of arguments
      *
-     * @param bool $value
      *
-     * @return self
      */
     public function withIdInQueryString(bool $value = true): self
     {
@@ -193,9 +176,6 @@ final class ActionColumn extends Column
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getTemplate(): string
     {
         if ($this->template === null) {
@@ -343,7 +323,7 @@ final class ActionColumn extends Column
      *
      * @return string the created URL
      */
-    private function createUrl(string $action, $model, $key, int $index): string
+    private function createUrl(string $action, $model, mixed $key, int $index): string
     {
         if (is_callable($this->urlCreator)) {
             return (string) call_user_func($this->urlCreator, $action, $model, $key, $index, $this);

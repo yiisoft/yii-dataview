@@ -16,7 +16,6 @@ abstract class Widget extends BaseWidget
     /**
      * Set the Id of the widget.
      *
-     * @param string $value
      *
      * @return static
      */
@@ -30,8 +29,6 @@ abstract class Widget extends BaseWidget
 
     /**
      * Counter used to generate {@see id} for widgets.
-     *
-     * @param int $value
      */
     public static function counter(int $value): void
     {
