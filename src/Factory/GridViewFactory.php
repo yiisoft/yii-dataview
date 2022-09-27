@@ -8,17 +8,10 @@ use RuntimeException;
 use Yiisoft\Yii\DataView\Columns\Column;
 use Yiisoft\Factory\Factory;
 
-use function get_class;
-use function gettype;
-use function is_object;
-
 final class GridViewFactory
 {
-    private Factory $factory;
-
-    public function __construct(Factory $factory)
+    public function __construct(private Factory $factory)
     {
-        $this->factory = $factory;
     }
 
     /**
@@ -27,8 +20,6 @@ final class GridViewFactory
      * @param array $config parameters for creating a widget.
      *
      * @throws RuntimeException
-     *
-     * @return Column
      */
     public function createColumnClass(array $config): Column
     {
@@ -38,7 +29,7 @@ final class GridViewFactory
             throw new RuntimeException(
                 sprintf(
                     'The "%s" is not an instance of the "%s".',
-                    is_object($columnClass) ? get_class($columnClass) : gettype($columnClass),
+                    get_debug_type($columnClass),
                     Column::class
                 )
             );

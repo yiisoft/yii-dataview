@@ -35,22 +35,17 @@ use function strtr;
  */
 final class DetailView extends Widget
 {
-    /** @var array|object|null */
-    private $model = null;
+    private null|array|object $model = null;
     private ?string $emptyValue = '';
     private array $attributes = [];
     private array $captionOptions = [];
     private array $contentOptions = [];
-    private Inflector $inflector;
-    private TranslatorInterface $translator;
     private array $rowOptions = [];
     private string $template = '<tr{rowOptions}><th{captionOptions}>{label}</th><td{contentOptions}>{value}</td></tr>';
     private array $options = ['class' => 'table table-striped table-bordered detail-view'];
 
-    public function __construct(Inflector $inflector, TranslatorInterface $translator)
+    public function __construct(private Inflector $inflector, private TranslatorInterface $translator)
     {
-        $this->inflector = $inflector;
-        $this->translator = $translator;
     }
 
     protected function beforeRun(): bool
@@ -129,8 +124,6 @@ final class DetailView extends Widget
      * Please refer to {@see Html::renderTagAttributes()} for the supported syntax.
      * - `captionOptions`: the HTML attributes to customize label tag. For example: `['class' => 'bg-red']`.
      * Please refer to {@see Html::renderTagAttributes()} for the supported syntax.
-     *
-     * @return DetailView
      */
     public function attributes(array $attributes): self
     {
@@ -182,8 +175,6 @@ final class DetailView extends Widget
      * properties.
      *
      * @psalm-suppress DocblockTypeContradiction
-     *
-     * @return self
      */
     public function model($model): self
     {
@@ -248,10 +239,6 @@ final class DetailView extends Widget
 
     /**
      * Set value for empty string. Null for hide empty value
-     *
-     * @param string|null $value
-     *
-     * @return self
      */
     public function emptyValue(?string $value): self
     {
@@ -264,7 +251,6 @@ final class DetailView extends Widget
     /**
      * Renders a single attribute.
      *
-     * @param DataAttribute $attribute
      * @param array $params the specification of the attribute to be rendered.
      *
      * @throws JsonException
@@ -306,13 +292,9 @@ final class DetailView extends Widget
     }
 
     /**
-     * @param mixed $params
-     *
      * @throws InvalidArgumentException
-     *
-     * @return DataAttribute|null
      */
-    private function normalizeAttribute($params): ?DataAttribute
+    private function normalizeAttribute(mixed $params): ?DataAttribute
     {
         if (is_string($params)) {
             return (new DataAttribute($this->translator))->name($params);

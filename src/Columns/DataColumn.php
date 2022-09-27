@@ -53,8 +53,7 @@ final class DataColumn extends Column
     private string $emptyValue = '';
     private array $filterInputOptions = [];
     public string $filterAttribute = '';
-    /** @var bool|float|int|string|null */
-    private $filterValueDefault = null;
+    private null|bool|float|int|string $filterValueDefault = null;
 
     public function __construct(TranslatorInterface $translator)
     {
@@ -141,10 +140,6 @@ final class DataColumn extends Column
 
     /**
      * Enable/Disabe encode value
-     *
-     * @param bool $encode
-     *
-     * @return self
      */
     public function encode(bool $encode = true): self
     {
@@ -163,7 +158,7 @@ final class DataColumn extends Column
      *
      * @return string the data cell value.
      */
-    public function getDataCellValue($model, $key, int $index): string
+    public function getDataCellValue($model, mixed $key, int $index): string
     {
         $value = $this->attribute->getValue($model, $key, $index, $this);
 
@@ -235,8 +230,6 @@ final class DataColumn extends Column
 
     /**
      * @param Closure|string|null $format
-     *
-     * @return self
      */
     public function format($format): self
     {

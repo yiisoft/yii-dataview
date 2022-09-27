@@ -93,16 +93,13 @@ final class LinkPager extends AbstractLinkWidget
     private string $template = self::PAGE_LIST;
     private string $listTemplate = self::FIRST_PAGE_BUTTON . self::PREV_PAGE_BUTTON . self::PAGES . self::NEXT_PAGE_BUTTON . self::LAST_PAGE_BUTTON;
     private OffsetPaginator $paginator;
-    private WebView $webView;
 
     public function __construct(
         CurrentRoute $currentRoute,
         UrlGeneratorInterface $urlGenerator,
-        WebView $webView
+        private WebView $webView
     ) {
         parent::__construct($currentRoute, $urlGenerator);
-
-        $this->webView = $webView;
     }
 
     protected function beforeRun(): bool
@@ -120,8 +117,6 @@ final class LinkPager extends AbstractLinkWidget
      * This overrides the parent implementation by displaying the generated page buttons.
      *
      * @throws InvalidConfigException|JsonException
-     *
-     * @return string
      */
     protected function run(): string
     {
@@ -137,14 +132,9 @@ final class LinkPager extends AbstractLinkWidget
     /**
      * Set option for widget
      *
-     * @param string $name
-     * @param mixed $value
-     *
      * @throws InvalidArgumentException
-     *
-     * @return self
      */
-    private function setOption(string $name, $value): self
+    private function setOption(string $name, mixed $value): self
     {
         if (!property_exists($this, $name)) {
             throw new InvalidArgumentException("Attribute {$name} is not defined.");
@@ -159,13 +149,8 @@ final class LinkPager extends AbstractLinkWidget
     /**
      * Merge current widget option with new value
      *
-     * @param string $name
-     * @param array $value
-     *
      * @throws InvalidArgumentException
      * @throws RuntimeException
-     *
-     * @return self
      */
     private function mergeOption(string $name, array $value): self
     {
@@ -184,10 +169,6 @@ final class LinkPager extends AbstractLinkWidget
 
     /**
      * Set template for all widget
-     *
-     * @param string $template
-     *
-     * @return self
      */
     public function template(string $template): self
     {
@@ -199,10 +180,6 @@ final class LinkPager extends AbstractLinkWidget
 
     /**
      * Set template for page list only
-     *
-     * @param string $template
-     *
-     * @return self
      */
     public function listTemplate(string $template): self
     {
@@ -224,8 +201,6 @@ final class LinkPager extends AbstractLinkWidget
 
     /**
      * @param array $attributes attributes for the active (currently selected) page button.
-     *
-     * @return self
      */
     public function activeButtonAttributes(array $attributes): self
     {
@@ -244,8 +219,6 @@ final class LinkPager extends AbstractLinkWidget
 
     /**
      * @param array $attributes HTML attributes for disabled link container
-     *
-     * @return self
      */
     public function disabledButtonAttributes(array $attributes): self
     {
@@ -324,8 +297,6 @@ final class LinkPager extends AbstractLinkWidget
 
     /**
      * @param string|null the text label for the "last" page button
-     *
-     * @return self
      */
     public function lastPageLabel(?string $label): self
     {
@@ -364,10 +335,6 @@ final class LinkPager extends AbstractLinkWidget
 
     /**
      * Enable/Disable hidding pageParam on first page
-     *
-     * @param bool $value
-     *
-     * @return self
      */
     public function hideFirstPageParameter(bool $value = true): self
     {
@@ -391,8 +358,6 @@ final class LinkPager extends AbstractLinkWidget
 
     /**
      * @param array $attributes HTML attributes for the active (currently selected) link.
-     *
-     * @return self
      */
     public function activeLinkAttributes(array $attributes): self
     {
@@ -401,8 +366,6 @@ final class LinkPager extends AbstractLinkWidget
 
     /**
      * @param array $attributes HTML attributes for the disabled link.
-     *
-     * @return self
      */
     public function disabledLinkAttributes(array $attributes): self
     {
@@ -550,11 +513,6 @@ final class LinkPager extends AbstractLinkWidget
 
     /**
      * Merge default/main attributes for current attributes to active/disabled/etc status
-     *
-     * @param array $mainAttributes
-     * @param array $additionalAttributes
-     *
-     * @return array
      */
     private static function mergeAttributes(array $mainAttributes, array $additionalAttributes): array
     {

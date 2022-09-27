@@ -75,12 +75,9 @@ final class GridView extends BaseListView
     private string $filterModelName = '';
     private string $filterPosition = self::FILTER_POS_BODY;
     private array $filterRowOptions = ['class' => 'filters'];
-    private GridViewFactory $gridViewFactory;
 
-    public function __construct(GridViewFactory $gridViewFactory, TranslatorInterface $translator)
+    public function __construct(private GridViewFactory $gridViewFactory, TranslatorInterface $translator)
     {
-        $this->gridViewFactory = $gridViewFactory;
-
         parent::__construct($translator);
     }
 
@@ -685,7 +682,7 @@ final class GridView extends BaseListView
      *
      * @return string the rendering result
      */
-    private function renderTableRow($model, $key, int $index): string
+    private function renderTableRow($model, mixed $key, int $index): string
     {
         $cells = [];
 

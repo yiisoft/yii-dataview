@@ -58,7 +58,7 @@ abstract class Column
      *
      * @return string the rendering result.
      */
-    public function renderDataCell($model, $key, int $index): string
+    public function renderDataCell($model, mixed $key, int $index): string
     {
         return Html::tag(
             'td',

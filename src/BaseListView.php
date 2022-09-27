@@ -50,11 +50,9 @@ abstract class BaseListView extends Widget
     private ?bool $pageArgument = null;
     private ?array $requestArguments = null;
     private ?array $requestQueryParams = null;
-    private TranslatorInterface $translator;
 
-    public function __construct(TranslatorInterface $translator)
+    public function __construct(private TranslatorInterface $translator)
     {
-        $this->translator = $translator;
     }
 
     /**
@@ -67,10 +65,8 @@ abstract class BaseListView extends Widget
     protected function run(): string
     {
         if ($this->showOnEmpty || ($this->paginator->getTotalItems() > 0)) {
-            $content = preg_replace_callback('/{\\w+}/', function (array $matches): string {
-                /** @var string[] $matches */
-                return $this->renderSection($matches[0]);
-            }, $this->layout);
+            $content = preg_replace_callback('/{\\w+}/', fn (array $matches): string => /** @var string[] $matches */
+$this->renderSection($matches[0]), $this->layout);
         } else {
             $content = $this->renderEmpty();
         }
@@ -247,10 +243,6 @@ abstract class BaseListView extends Widget
 
     /**
      * Use route argument instead of $_GET param for page number, like /page-{pageParam:\d+}
-     *
-     * @param bool|null $value
-     *
-     * @return self
      */
     public function pageArgument(?bool $value = true): self
     {
@@ -456,18 +448,13 @@ abstract class BaseListView extends Widget
      */
     private function renderSection(string $name): string
     {
-        switch ($name) {
-            case '{summary}':
-                return $this->renderSummary();
-            case '{items}':
-                return $this->renderItems();
-            case '{pager}':
-                return $this->renderPager();
-            case '{sorter}':
-                return $this->renderSorter();
-            default:
-                return '';
-        }
+        return match ($name) {
+            '{summary}' => $this->renderSummary(),
+            '{items}' => $this->renderItems(),
+            '{pager}' => $this->renderPager(),
+            '{sorter}' => $this->renderSorter(),
+            default => '',
+        };
     }
 
     /**

@@ -42,14 +42,9 @@ final class ListView extends BaseListView implements ViewContextInterface
     private $beforeItem;
     /** @var callable|null */
     private $afterItem;
-    private Aliases $aliases;
-    private WebView $webView;
 
-    public function __construct(Aliases $aliases, TranslatorInterface $translator, WebView $webView)
+    public function __construct(private Aliases $aliases, TranslatorInterface $translator, private WebView $webView)
     {
-        $this->aliases = $aliases;
-        $this->webView = $webView;
-
         parent::__construct($translator);
     }
 
@@ -80,7 +75,7 @@ final class ListView extends BaseListView implements ViewContextInterface
      *
      * @see beforeItem
      */
-    protected function renderBeforeItem($model, $key, $index): string
+    protected function renderBeforeItem(mixed $model, mixed $key, mixed $index): string
     {
         if ($this->beforeItem instanceof Closure) {
             return (string) call_user_func($this->beforeItem, $model, $key, $index, $this);
@@ -103,7 +98,7 @@ final class ListView extends BaseListView implements ViewContextInterface
      *
      * @see afterItem
      */
-    protected function renderAfterItem($model, $key, $index): string
+    protected function renderAfterItem(mixed $model, mixed $key, mixed $index): string
     {
         if ($this->afterItem instanceof Closure) {
             return (string) call_user_func($this->afterItem, $model, $key, $index, $this);
@@ -114,8 +109,6 @@ final class ListView extends BaseListView implements ViewContextInterface
 
     /**
      * Returns by default the base path configured in the view.
-     *
-     * @return string
      */
     public function getViewPath(): string
     {
@@ -137,8 +130,6 @@ final class ListView extends BaseListView implements ViewContextInterface
      * The return result of the function will be rendered directly.
      *
      * Note: If the function returns `null`, nothing will be rendered after the item.
-     *
-     * @return ListView
      *
      * @see renderAfterItem
      */
@@ -198,7 +189,7 @@ final class ListView extends BaseListView implements ViewContextInterface
      *
      * {@see Html::renderTagAttributes()} for details on how attributes are being rendered.
      */
-    public function itemOptions($itemOptions): self
+    public function itemOptions(array|Closure $itemOptions): self
     {
         $new = clone $this;
 
@@ -331,7 +322,7 @@ final class ListView extends BaseListView implements ViewContextInterface
      *
      * @return string the rendering result
      */
-    private function renderItem($model, $key, $index): string
+    private function renderItem(mixed $model, mixed $key, mixed $index): string
     {
         if ($this->itemView === '') {
             $content = (string) $key;
