@@ -60,8 +60,6 @@ final class ActionColumn extends Column
      *     ],
      * ],
      * ```
-     *
-     * @return static
      */
     public function buttons(array $value): static
     {
@@ -77,8 +75,6 @@ final class ActionColumn extends Column
      * @param string $name The button names as it's written in template.
      * @param string $icon The icon name.
      * @param array $attributes The HTML attributes in terms of name-value pairs.
-     *
-     * @return static
      */
     public function createDefaultButtons(): static
     {
@@ -151,8 +147,6 @@ final class ActionColumn extends Column
      * Return new instance specifying which is the primaryKey of the data to be used to generate the url automatically.
      *
      * @param string $value the primaryKey of the data to be used to generate the url automatically.
-     *
-     * @return static
      */
     public function primaryKey(string $value): static
     {
@@ -182,7 +176,6 @@ final class ActionColumn extends Column
      * ],
      * ```
      *
-     * @return static
      *
      * {@see buttons}
      */
@@ -205,8 +198,6 @@ final class ActionColumn extends Column
      * Return a new instance with arguments of the route.
      *
      * @param array $value Arguments of the route.
-     *
-     * @return static
      */
     public function urlArguments(array $value): static
     {
@@ -245,8 +236,6 @@ final class ActionColumn extends Column
      * Return a new instance with URL generator interface for pagination.
      *
      * @param UrlGeneratorInterface $value The URL generator interface for pagination.
-     *
-     * @return static
      */
     public function urlGenerator(UrlGeneratorInterface $value): static
     {
@@ -260,8 +249,6 @@ final class ActionColumn extends Column
      * Returns a new instance with the name of the route.
      *
      * @param string $value The name of the route.
-     *
-     * @return static
      */
     public function urlName(string $value): static
     {
@@ -275,8 +262,6 @@ final class ActionColumn extends Column
      * Return a new instance with query parameters of the route.
      *
      * @param array $value The query parameters of the route.
-     *
-     * @return static
      */
     public function urlQueryParameters(array $value): static
     {
@@ -290,8 +275,6 @@ final class ActionColumn extends Column
      * Return a new instance with config url parameters of the route.
      *
      * @param array $value The config url parameters of the route.
-     *
-     * @return static
      */
     public function urlParamsConfig(array $value): static
     {
@@ -331,8 +314,6 @@ final class ActionColumn extends Column
      *     ],
      * ],
      * ```
-     *
-     * @return static
      */
     public function visibleButtons(array $value): static
     {
@@ -349,8 +330,6 @@ final class ActionColumn extends Column
      * @param mixed $key The key associated with the data.
      * @param int $index The zero-based index of the data in the data provider.
      * {@see GridView::dataProvider}.
-     *
-     * @return string
      */
     protected function renderDataCellContent(array|object $data, mixed $key, int $index): string
     {
@@ -386,8 +365,6 @@ final class ActionColumn extends Column
      * @param array|object $data The data object.
      * @param mixed $key The key associated with the data.
      * @param int $index The current row index.
-     *
-     * @return string
      */
     private function createUrl(string $action, array|object $data, mixed $key, int $index): string
     {

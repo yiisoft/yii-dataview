@@ -38,7 +38,6 @@ final class ListView extends BaseListView
      *
      * Note: If the function returns `null`, nothing will be rendered after the item.
      *
-     * @return self
      *
      * {@see renderAfterItem}
      */
@@ -70,7 +69,6 @@ final class ListView extends BaseListView
      *
      * Note: If the function returns `null`, nothing will be rendered before the item.
      *
-     * @return self
      *
      * {@see renderBeforeItem}
      */
@@ -110,8 +108,6 @@ final class ListView extends BaseListView
      * ```php
      * function ($data, $key, $index, $widget)
      * ```
-     *
-     * @return self
      */
     public function itemView(string|Closure $value): self
     {
@@ -125,8 +121,6 @@ final class ListView extends BaseListView
      * return new instance with the HTML attributes for the container of item view.
      *
      * @param array $values Attribute values indexed by attribute names.
-     *
-     * @return self
      */
     public function itemViewAttributes(array $values): self
     {
@@ -140,8 +134,6 @@ final class ListView extends BaseListView
      * Return new instance with the separator between the items.
      *
      * @param string $value the HTML code to be displayed between any two consecutive items.
-     *
-     * @return self
      */
     public function separator(string $separator): self
     {
@@ -157,8 +149,6 @@ final class ListView extends BaseListView
      * @param array $viewParams additional parameters to be passed to {@see itemView} when it is being rendered.
      *
      * This property is used only when {@see itemView} is a string representing a view name.
-     *
-     * @return self
      */
     public function viewParams(array $viewParams): self
     {
@@ -172,8 +162,6 @@ final class ListView extends BaseListView
      * Return new instance with the WebView object.
      *
      * @param WebView $view the WebView object.
-     *
-     * @return self
      */
     public function webView(WebView $value): self
     {
@@ -191,8 +179,6 @@ final class ListView extends BaseListView
      * @param int $index The zero-based index of the data array.
      *
      * @throws Throwable|ViewNotFoundException
-     *
-     * @return string
      */
     protected function renderItem(array|object $data, mixed $key, int $index): string
     {
@@ -228,8 +214,6 @@ final class ListView extends BaseListView
      * Renders all data models.
      *
      * @throws Throwable|ViewNotFoundException
-     *
-     * @return string
      */
     protected function renderItems(): string
     {

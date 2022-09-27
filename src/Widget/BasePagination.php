@@ -45,8 +45,6 @@ abstract class BasePagination extends Widget
      * Returns a new instance with the HTML attributes. The following special options are recognized.
      *
      * @param array $values Attribute values indexed by attribute names.
-     *
-     * @return static
      */
     public function attributes(array $values): static
     {
@@ -60,8 +58,6 @@ abstract class BasePagination extends Widget
      * Return a new instance with current page of pagination.
      *
      * @param int $value Current page.
-     *
-     * @return self
      */
     public function currentPage(int $value): self
     {
@@ -74,9 +70,7 @@ abstract class BasePagination extends Widget
     /**
      * Return a new instance with disabled next page.
      *
-     * @param bool $value
      *
-     * @return static
      */
     public function disabledNextPage(bool $value): static
     {
@@ -89,9 +83,7 @@ abstract class BasePagination extends Widget
     /**
      * Return a new instance with disabled previous page.
      *
-     * @param bool $value
      *
-     * @return static
      */
     public function disabledPreviousPage(bool $value): static
     {
@@ -105,8 +97,6 @@ abstract class BasePagination extends Widget
      * Return a new instance with hide on single page.
      *
      * @param bool $value The value indicating whether to hide the widget when there is only one page.
-     *
-     * @return static
      */
     public function hideOnSinglePage(bool $value): static
     {
@@ -120,8 +110,6 @@ abstract class BasePagination extends Widget
      * Returns a new instance with the HTML attributes for icon attributes `<i>`.
      *
      * @param array $values Attribute values indexed by attribute names.
-     *
-     * @return static
      */
     public function iconAttributes(array $values): static
     {
@@ -135,8 +123,6 @@ abstract class BasePagination extends Widget
      * Returns a new instance with the icon class for icon attributes `<i>` for link next page.
      *
      * @param string $value The icon class.
-     *
-     * @return static
      */
     public function iconClassNextPage(string $value): static
     {
@@ -151,8 +137,6 @@ abstract class BasePagination extends Widget
      * Returns a new instance with the icon class for icon attributes `<i>` for link previous page.
      *
      * @param string $value The icon class.
-     *
-     * @return static
      */
     public function iconClassPreviousPage(string $value): static
     {
@@ -167,8 +151,6 @@ abstract class BasePagination extends Widget
      * Returns a new instance with the HTML attributes for icon container attributes `<span>`.
      *
      * @param array $values Attribute values indexed by attribute names.
-     *
-     * @return static
      */
     public function iconContainerAttributes(array $values): static
     {
@@ -182,8 +164,6 @@ abstract class BasePagination extends Widget
      * Return a new instance with icon next page.
      *
      * @param string $value The icon next page.
-     *
-     * @return static
      */
     public function iconNextPage(string $value): static
     {
@@ -198,8 +178,6 @@ abstract class BasePagination extends Widget
      * Return a new instance with icon previous page.
      *
      * @param string $value The icon previous page.
-     *
-     * @return static
      */
     public function iconPreviousPage(string $value): static
     {
@@ -214,8 +192,6 @@ abstract class BasePagination extends Widget
      * Return a new instance with label for next page.
      *
      * @param string $value The label for next page.
-     *
-     * @return static
      */
     public function labelNextPage(string $value = ''): static
     {
@@ -229,8 +205,6 @@ abstract class BasePagination extends Widget
      * Return a new instance with label for previous page.
      *
      * @param string $value The label for previous page.
-     *
-     * @return static
      */
     public function labelPreviousPage(string $value = ''): static
     {
@@ -244,8 +218,6 @@ abstract class BasePagination extends Widget
      * Return a new instance with class css for menu tag `<ul>`.
      *
      * @param string $value The class css for menu tag `<ul>`.
-     *
-     * @return static
      */
     public function menuClass(string $value): static
     {
@@ -259,8 +231,6 @@ abstract class BasePagination extends Widget
      * Return a new instance with class css for menu item tag `<li>`.
      *
      * @param string $value The class css for menu item tag `<li>`.
-     *
-     * @return static
      */
     public function menuItemContainerClass(string $value): static
     {
@@ -274,8 +244,6 @@ abstract class BasePagination extends Widget
      * Return a new instance with page config for arguments or query parameters in url.
      *
      * @param array $value The page config for arguments or query parameters in url.
-     *
-     * @return static
      */
     public function pageConfig(array $value): static
     {
@@ -289,8 +257,6 @@ abstract class BasePagination extends Widget
      * Return a new instance with name of argument or query parameter for page.
      *
      * @param string $value The name of argument or query parameter for page.
-     *
-     * @return static
      */
     public function pageName(string $value): static
     {
@@ -304,8 +270,6 @@ abstract class BasePagination extends Widget
      * Return a new instance with name of argument or query parameter for page size.
      *
      * @param string $value The name of argument or query parameter for page size.
-     *
-     * @return static
      */
     public function pageSizeName(string $value): static
     {
@@ -319,8 +283,6 @@ abstract class BasePagination extends Widget
      * Returns a new instance with the paginator interface of the grid view, detail view, or list view.
      *
      * @param PaginatorInterface $value The paginator interface of the grid view, detail view, or list view.
-     *
-     * @return static
      */
     public function paginator(PaginatorInterface $value): static
     {
@@ -334,8 +296,6 @@ abstract class BasePagination extends Widget
      * Return a new instance with arguments of the route.
      *
      * @param array $value Arguments of the route.
-     *
-     * @return static
      */
     public function urlArguments(array $value): static
     {
@@ -349,8 +309,6 @@ abstract class BasePagination extends Widget
      * Return a new instance with url generator interface for pagination.
      *
      * @param UrlGeneratorInterface $value The url generator interface for pagination.
-     *
-     * @return static
      */
     public function urlGenerator(UrlGeneratorInterface $value): static
     {
@@ -364,8 +322,6 @@ abstract class BasePagination extends Widget
      * Returns a new instance with the name of the route.
      *
      * @param string $value The name of the route.
-     *
-     * @return static
      */
     public function urlName(string $value): static
     {
@@ -379,8 +335,6 @@ abstract class BasePagination extends Widget
      * Return a new instance with query parameters of the route.
      *
      * @param array $value The query parameters of the route.
-     *
-     * @return static
      */
     public function urlQueryParameters(array $value): static
     {

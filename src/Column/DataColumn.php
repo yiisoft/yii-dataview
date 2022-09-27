@@ -70,8 +70,6 @@ final class DataColumn extends Column
      * is specified, the value of the specified attribute will be retrieved from each data and displayed.
      *
      * Also, if {@see label} is not specified, the label associated with the attribute will be displayed.
-     *
-     * @return self
      */
     public function attribute(string $value): self
     {
@@ -92,8 +90,6 @@ final class DataColumn extends Column
      * - If this property is an array, a dropdown list will be generated that uses this property value as the list
      *   options.
      * - If you don't want a filter for this data column, set this value to be false.
-     *
-     * @return self
      */
     public function filter(string $value): self
     {
@@ -108,8 +104,6 @@ final class DataColumn extends Column
      *
      * @param string $value The attribute name of the {@see filterModel} associated with this column. If not set, will
      * have the same value as {@see attribute}.
-     *
-     * @return self
      */
     public function filterAttribute(string $value): self
     {
@@ -129,8 +123,6 @@ final class DataColumn extends Column
      *
      * Empty `id` in the default value ensures that id would not be obtained from the data attribute thus
      * providing better performance.
-     *
-     * @return self
      */
     public function filterInputAttributes(array $values): self
     {
@@ -186,8 +178,6 @@ final class DataColumn extends Column
      * Note that in order to show an input field for filtering, a column must have its {@see DataColumn::attribute}
      * property set and the attribute should be active in the current scenario of $filterModelName or have
      * {@see DataColumn::filter} set as the HTML code for the input field.
-     *
-     * @return self
      */
     public function filterModelName(string $value): self
     {
@@ -201,8 +191,6 @@ final class DataColumn extends Column
      * Return new instance with the filter type.
      *
      * @param string $value The filter type.
-     *
-     * @return self
      */
     public function filterType(string $value): self
     {
@@ -220,8 +208,6 @@ final class DataColumn extends Column
      * Return new instance with set filter value default text input field.
      *
      * @param bool|float|int|string|Stringable|null $value The default value for the filter input field.
-     *
-     * @return self
      */
     public function filterValueDefault(Stringable|null|string|int|bool|float $value): self
     {
@@ -255,8 +241,6 @@ final class DataColumn extends Column
      * Return new instance with the link sorter.
      *
      * @param string $value The URL that will be used to sort the data in this column.
-     *
-     * @return self
      */
     public function linkSorter(string $value): self
     {
@@ -287,8 +271,6 @@ final class DataColumn extends Column
      *
      * If this is not set, `$data[$attribute]` will be used to obtain the value, where `$attribute` is the value of
      * {@see attribute}.
-     *
-     * @return self
      */
     public function value(mixed $value): self
     {
@@ -302,8 +284,6 @@ final class DataColumn extends Column
      * Return new instance whether the column is sortable or not.
      *
      * @param bool $value Whether the column is sortable or not.
-     *
-     * @return self
      */
     public function withSorting(bool $value): self
     {
@@ -319,8 +299,6 @@ final class DataColumn extends Column
      * @param array|object $data The data.
      * @param mixed $key The key associated with the data.
      * @param int $index The zero-based index of the data in the data provider.
-     *
-     * @return string
      */
     protected function renderDataCellContent(object|array $data, mixed $key, int $index): string
     {
@@ -362,8 +340,6 @@ final class DataColumn extends Column
      * @param array|object $data The data.
      * @param mixed $key The key associated with the data.
      * @param int $index The zero-based index of the data in the data provider.
-     *
-     * @return string
      */
     private function getDataCellValue(array|object $data, mixed $key, int $index): string
     {

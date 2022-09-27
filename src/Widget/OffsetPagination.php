@@ -30,9 +30,7 @@ final class OffsetPagination extends BasePagination
     /**
      * Return a new instance with disabled first page.
      *
-     * @param bool $value
      *
-     * @return self
      */
     public function disabledFirtsPage(bool $value): self
     {
@@ -45,9 +43,7 @@ final class OffsetPagination extends BasePagination
     /**
      * Return a new instance with disabled last page.
      *
-     * @param bool $value
      *
-     * @return self
      */
     public function disabledLastPage(bool $value): self
     {
@@ -61,8 +57,6 @@ final class OffsetPagination extends BasePagination
      * Return a new instance with disabled page nav link.
      *
      * @param bool $value Disabled page nav link.
-     *
-     * @return self
      */
     public function disabledPageNavLink(bool $value): self
     {
@@ -76,8 +70,6 @@ final class OffsetPagination extends BasePagination
      * Returns a new instance with the icon class for icon attributes `<i>` for link firts page.
      *
      * @param string $value The icon class.
-     *
-     * @return self
      */
     public function iconClassFirtsPage(string $value): self
     {
@@ -92,8 +84,6 @@ final class OffsetPagination extends BasePagination
      * Returns a new instance with the icon class for icon attributes `<i>` for link last page.
      *
      * @param string $value The icon class.
-     *
-     * @return self
      */
     public function iconClassLastPage(string $value): self
     {
@@ -108,8 +98,6 @@ final class OffsetPagination extends BasePagination
      * Return a new instance with icon firts page.
      *
      * @param string $value The icon firts page.
-     *
-     * @return self
      */
     public function iconFirtsPage(string $value): self
     {
@@ -124,8 +112,6 @@ final class OffsetPagination extends BasePagination
      * Return a new instance with icon last page.
      *
      * @param string $value The icon last page.
-     *
-     * @return self
      */
     public function iconLastPage(string $value): self
     {
@@ -140,8 +126,6 @@ final class OffsetPagination extends BasePagination
      * Return a new instance with label for first page.
      *
      * @param string $value The label for first page.
-     *
-     * @return self
      */
     public function labelFirtsPage(string $value = ''): self
     {
@@ -155,8 +139,6 @@ final class OffsetPagination extends BasePagination
      * Return a new instance with label for last page.
      *
      * @param string $value The label for last page.
-     *
-     * @return self
      */
     public function labelLastPage(string $value = ''): self
     {
@@ -170,8 +152,6 @@ final class OffsetPagination extends BasePagination
      * Return a new instance with max nav link count.
      *
      * @param int $value Max nav link count.
-     *
-     * @return self
      */
     public function maxNavLinkCount(int $value): self
     {

@@ -49,8 +49,6 @@ final class GridView extends BaseListView
      * Returns a new instance with anonymous function that is called once AFTER rendering each data.
      *
      * @param Closure|null $value The anonymous function that is called once AFTER rendering each data.
-     *
-     * @return self
      */
     public function afterRow(Closure|null $value): self
     {
@@ -64,8 +62,6 @@ final class GridView extends BaseListView
      * Return a new instance with anonymous function that is called once BEFORE rendering each data.
      *
      * @param Closure|null $value The anonymous function that is called once BEFORE rendering each data.
-     *
-     * @return self
      */
     public function beforeRow(Closure|null $value): self
     {
@@ -93,7 +89,6 @@ final class GridView extends BaseListView
      * ]
      * ```
      *
-     * @return self
      *
      * @psalm-param array<array-key,Column\Column|null> $values
      */
@@ -109,8 +104,6 @@ final class GridView extends BaseListView
      * Returns a new instance with the specified column group enabled.
      *
      * @param bool $value Whether to enable the column group.
-     *
-     * @return self
      */
     public function columnsGroupEnabled(bool $value): self
     {
@@ -125,8 +118,6 @@ final class GridView extends BaseListView
      *
      * @param string $value The HTML display when the content of a cell is empty. This property is used to render cells
      * that have no defined content, e.g. empty footer or filter cells.
-     *
-     * @return self
      */
     public function emptyCell(string $value): self
     {
@@ -146,8 +137,6 @@ final class GridView extends BaseListView
      * Note that in order to show an input field for filtering, a column must have its {@see DataColumn::attribute}
      * property set and the attribute should be active in the current scenario of $filterModelName or have
      * {@see DataColumn::filter} set as the HTML code for the input field.
-     *
-     * @return self
      */
     public function filterModelName(string $value): self
     {
@@ -165,8 +154,6 @@ final class GridView extends BaseListView
      * - {@see FILTER_POS_HEADER}: The filters will be displayed on top of each column's header cell.
      * - {@see FILTER_POS_BODY}: The filters will be displayed right below each column's header cell.
      * - {@see FILTER_POS_FOOTER}: The filters will be displayed below each column's footer cell.
-     *
-     * @return self
      */
     public function filterPosition(string $filterPosition): self
     {
@@ -180,8 +167,6 @@ final class GridView extends BaseListView
      * Returns a new instance with the HTML attributes for filter row.
      *
      * @param array $values Attribute values indexed by attribute names.
-     *
-     * @return self
      */
     public function filterRowAttributes(array $values): self
     {
@@ -195,8 +180,6 @@ final class GridView extends BaseListView
      * Return new instance whether to show the footer section of the grid.
      *
      * @param bool $value Whether to show the footer section of the grid.
-     *
-     * @return self
      */
     public function footerEnabled(bool $value): self
     {
@@ -210,8 +193,6 @@ final class GridView extends BaseListView
      * Returns a new instance with the HTML attributes for footer row.
      *
      * @param array $values Attribute values indexed by attribute names.
-     *
-     * @return self
      */
     public function footerRowAttributes(array $values): self
     {
@@ -225,8 +206,6 @@ final class GridView extends BaseListView
      * Return new instance whether to show the header table section of the grid.
      *
      * @param bool $value Whether to show the header table section of the grid.
-     *
-     * @return self
      */
     public function headerTableEnabled(bool $value): self
     {
@@ -240,8 +219,6 @@ final class GridView extends BaseListView
      * Return new instance with the HTML attributes for the header row.
      *
      * @param array $values Attribute values indexed by attribute names.
-     *
-     * @return self
      */
     public function headerRowAttributes(array $values): self
     {
@@ -257,8 +234,6 @@ final class GridView extends BaseListView
      * @param array $values Attribute values indexed by attribute names.
      *
      * This can be either an array specifying the common HTML attributes for all body rows.
-     *
-     * @return self
      */
     public function rowAttributes(array $values): self
     {
@@ -272,8 +247,6 @@ final class GridView extends BaseListView
      * Return new instance with the HTML attributes for the table.
      *
      * @param array $values Attribute values indexed by attribute names.
-     *
-     * @return self
      */
     public function tableAttributes(array $values): self
     {
@@ -287,8 +260,6 @@ final class GridView extends BaseListView
      * Renders the data active record classes for the grid view.
      *
      * @throws ReflectionException
-     *
-     * @return string
      */
     protected function renderItems(): string
     {
@@ -397,7 +368,6 @@ final class GridView extends BaseListView
      *
      * @param array $columns The columns of gridview.
      *
-     * @return string
      *
      * @psalm-param array<array-key,Column\Column|null> $columns
      */
@@ -453,7 +423,6 @@ final class GridView extends BaseListView
      *
      * @param array $columns The columns of gridview.
      *
-     * @return string
      *
      * @psalm-param array<array-key,Column\Column|null> $columns
      */
@@ -505,7 +474,6 @@ final class GridView extends BaseListView
      *
      * @param array $columns The columns of gridview.
      *
-     * @return string
      *
      * @psalm-param array<array-key,Column\Column|null> $columns
      */
@@ -536,7 +504,6 @@ final class GridView extends BaseListView
      *
      * @param array $columns The columns of gridview.
      *
-     * @return string
      *
      * @psalm-param array<array-key,Column\Column|null> $columns
      */
@@ -575,7 +542,6 @@ final class GridView extends BaseListView
      * @param mixed $key The key associated with the data.
      * @param int $index The zero-based index of the data in the data provider.
      *
-     * @return string
      *
      * @psalm-param array<array-key,Column\Column|null> $columns
      */

@@ -71,7 +71,7 @@ final class OffsetPaginationTest extends TestCase
      */
     public function testsDisabledAndActiveStates(): void
     {
-        $urlGenerator = $this->createUrlGenerator([Route::get('/admin/manage')->name('admin/manage')]);
+        $urlGenerator = $this->createUrlGenerator();
 
         Assert::equalsWithoutLE(
             <<<HTML
@@ -97,7 +97,7 @@ final class OffsetPaginationTest extends TestCase
 
     public function testRenderWithIconFirtsLastPage(): void
     {
-        $urlGenerator = $this->createUrlGenerator([Route::get('/admin/manage')->name('admin/manage')]);
+        $urlGenerator = $this->createUrlGenerator();
 
         Assert::equalsWithoutLE(
             <<<HTML
@@ -129,7 +129,7 @@ final class OffsetPaginationTest extends TestCase
 
     public function testRenderWithIconClassFirtsLastPage(): void
     {
-        $urlGenerator = $this->createUrlGenerator([Route::get('/admin/manage')->name('admin/manage')]);
+        $urlGenerator = $this->createUrlGenerator();
 
         Assert::equalsWithoutLE(
             <<<HTML
@@ -161,7 +161,7 @@ final class OffsetPaginationTest extends TestCase
 
     public function testRenderWithLabelFirtsLastPage(): void
     {
-        $urlGenerator = $this->createUrlGenerator([Route::get('/admin/manage')->name('admin/manage')]);
+        $urlGenerator = $this->createUrlGenerator();
 
         Assert::equalsWithoutLE(
             <<<HTML
@@ -193,7 +193,7 @@ final class OffsetPaginationTest extends TestCase
 
     public function testRenderWithUrlQueryParameters(): void
     {
-        $urlGenerator = $this->createUrlGenerator([Route::get('/admin/manage')->name('admin/manage')]);
+        $urlGenerator = $this->createUrlGenerator();
 
         Assert::equalsWithoutLE(
             <<<HTML
@@ -221,7 +221,7 @@ final class OffsetPaginationTest extends TestCase
 
     public function testRenderWithoutPagination(): void
     {
-        $urlGenerator = $this->createUrlGenerator([Route::get('/admin/manage')->name('admin/manage')]);
+        $urlGenerator = $this->createUrlGenerator();
 
         $this->assertEmpty(
             OffsetPagination::widget()
@@ -248,7 +248,7 @@ final class OffsetPaginationTest extends TestCase
      */
     public function testOverview(): void
     {
-        $urlGenerator = $this->createUrlGenerator([Route::get('/admin/manage')->name('admin/manage')]);
+        $urlGenerator = $this->createUrlGenerator();
 
         Assert::equalsWithoutLE(
             <<<HTML
@@ -281,7 +281,7 @@ final class OffsetPaginationTest extends TestCase
      */
     public function testsSizing(): void
     {
-        $urlGenerator = $this->createUrlGenerator([Route::get('/admin/manage')->name('admin/manage')]);
+        $urlGenerator = $this->createUrlGenerator();
 
         Assert::equalsWithoutLE(
             <<<HTML
@@ -340,7 +340,7 @@ final class OffsetPaginationTest extends TestCase
      */
     public function testWorkingWithIcons(): void
     {
-        $urlGenerator = $this->createUrlGenerator([Route::get('/admin/manage')->name('admin/manage')]);
+        $urlGenerator = $this->createUrlGenerator();
 
         Assert::equalsWithoutLE(
             <<<HTML

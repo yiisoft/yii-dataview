@@ -18,8 +18,6 @@ final class CheckboxColumn extends Column
      * Return new instance with the multiple flag, for default is `true`.
      *
      * @param bool $value The multiple flag value.
-     *
-     * @return self
      */
     public function multiple(bool $value): self
     {
@@ -37,8 +35,6 @@ final class CheckboxColumn extends Column
      * @param int $index The zero-based index of the data in the data provider.
      *
      * @throws JsonException
-     *
-     * @return string
      */
     protected function renderDataCellContent(array|object $data, mixed $key, int $index): string
     {
@@ -67,8 +63,6 @@ final class CheckboxColumn extends Column
      *
      * The default implementation simply renders {@see header}.
      * This method may be overridden to customize the rendering of the header cell.
-     *
-     * @return string
      */
     protected function renderHeaderCellContent(): string
     {

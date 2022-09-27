@@ -48,8 +48,6 @@ abstract class BaseListView extends Widget
      * Returns a new instance with the HTML attributes. The following special options are recognized.
      *
      * @param array $values Attribute values indexed by attribute names.
-     *
-     * @return static
      */
     public function attributes(array $values): static
     {
@@ -66,7 +64,6 @@ abstract class BaseListView extends Widget
      *
      * The default value is the text "No results found." which will be translated to the current application language.
      *
-     * @return static
      *
      * {@see notShowOnEmpty()}
      * {@see emptyTextAttributes()}
@@ -83,8 +80,6 @@ abstract class BaseListView extends Widget
      * Returns a new instance with the HTML attributes for the empty text.
      *
      * @param array $values Attribute values indexed by attribute names.
-     *
-     * @return static
      */
     public function emptyTextAttributes(array $values): static
     {
@@ -126,7 +121,6 @@ abstract class BaseListView extends Widget
      *
      * @param string $value The header of the grid.
      *
-     * @return self
      *
      * {@see headerAttributes}
      */
@@ -142,8 +136,6 @@ abstract class BaseListView extends Widget
      * Return new instance with the HTML attributes for the header.
      *
      * @param array $values Attribute values indexed by attribute names.
-     *
-     * @return self
      */
     public function headerAttributes(array $values): self
     {
@@ -157,8 +149,6 @@ abstract class BaseListView extends Widget
      * Returns a new instance with the id of the grid view, detail view, or list view.
      *
      * @param string $value The id of the grid view, detail view, or list view.
-     *
-     * @return static
      */
     public function id(string $value): static
     {
@@ -178,8 +168,6 @@ abstract class BaseListView extends Widget
      *
      * - `{header}`: The header section.
      * - `{toolbar}`: The toolbar section.
-     *
-     * @return static
      */
     public function layout(string $value): static
     {
@@ -200,8 +188,6 @@ abstract class BaseListView extends Widget
      * - `{items}`: The items section.
      * - `{summary}`: The summary section.
      * - `{pager}`: The pager section.
-     *
-     * @return static
      */
     public function layoutGridTable(string $value): static
     {
@@ -215,8 +201,6 @@ abstract class BaseListView extends Widget
      * Returns a new instance with the pagination of the grid view, detail view, or list view.
      *
      * @param string $value The pagination of the grid view, detail view, or list view.
-     *
-     * @return static
      */
     public function pagination(string $value): static
     {
@@ -230,8 +214,6 @@ abstract class BaseListView extends Widget
      * Returns a new instance with the paginator interface of the grid view, detail view, or list view.
      *
      * @param PaginatorInterface $value The paginator interface of the grid view, detail view, or list view.
-     *
-     * @return static
      */
     public function paginator(PaginatorInterface $value): static
     {
@@ -245,8 +227,6 @@ abstract class BaseListView extends Widget
      * Return new instance with the HTML attributes for widget link sort.
      *
      * @param array $values Attribute values indexed by attribute names.
-     *
-     * @return static
      */
     public function sortLinkAttributes(array $values): static
     {
@@ -271,8 +251,6 @@ abstract class BaseListView extends Widget
      * - `{totalCount}`: the total number of rows available.
      * - `{page}`: the page number (1-based) current being displayed.
      * - `{pageCount}`: the number of pages available.
-     *
-     * @return static
      */
     public function summary(string $value): static
     {
@@ -286,8 +264,6 @@ abstract class BaseListView extends Widget
      * Returns a new instance with the HTML attributes for summary of grid view, detail view, and list view.
      *
      * @param array $values Attribute values indexed by attribute names.
-     *
-     * @return static
      */
     public function summaryAttributes(array $values): static
     {
@@ -301,8 +277,6 @@ abstract class BaseListView extends Widget
      * Returns a new instance with the translator interface of the grid view, detail view, or list view.
      *
      * @param TranslatorInterface $value The translator interface of the grid view, detail view, or list view.
-     *
-     * @return static
      */
     public function translator(TranslatorInterface $value): static
     {
@@ -317,7 +291,6 @@ abstract class BaseListView extends Widget
      *
      * @param string $value The toolbar content.
      *
-     * @return self
      *
      * @psalm-param array<array-key,array> $toolbar
      */
@@ -333,8 +306,6 @@ abstract class BaseListView extends Widget
      * Return a new instance with arguments of the route.
      *
      * @param array $value Arguments of the route.
-     *
-     * @return static
      */
     public function urlArguments(array $value): static
     {
@@ -348,8 +319,6 @@ abstract class BaseListView extends Widget
      * Return a new instance with URL generator interface for pagination.
      *
      * @param UrlGeneratorInterface $value The URL generator interface for pagination.
-     *
-     * @return static
      */
     public function urlGenerator(UrlGeneratorInterface $value): static
     {
@@ -363,8 +332,6 @@ abstract class BaseListView extends Widget
      * Returns a new instance with the name of the route.
      *
      * @param string $value The name of the route.
-     *
-     * @return static
      */
     public function urlName(string $value): static
     {
@@ -378,8 +345,6 @@ abstract class BaseListView extends Widget
      * Return a new instance with query parameters of the route.
      *
      * @param array $value The query parameters of the route.
-     *
-     * @return static
      */
     public function urlQueryParameters(array $value): static
     {
@@ -393,8 +358,6 @@ abstract class BaseListView extends Widget
      * Returns a new instance whether container is enabled or not.
      *
      * @param bool $value Whether container is enabled or not.
-     *
-     * @return static
      */
     public function withContainer(bool $value = true): static
     {

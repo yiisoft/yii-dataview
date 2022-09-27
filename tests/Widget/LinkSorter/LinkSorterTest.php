@@ -250,7 +250,7 @@ final class LinkSorterTest extends TestCase
             <a class="asc" href="/admin/manage?test=test&amp;page=1&amp;pagesize=5&amp;sort=-id%2C-username" data-sort="-id,-username">Id <i class="bi bi-sort-alpha-up"></i></a>
             HTML,
             LinkSorter::widget()
-                ->attribute('id', 'username')
+                ->attribute('id')
                 ->attributes(['id' => SORT_DESC, 'username' => SORT_ASC])
                 ->currentPage(1)
                 ->directions(['id' => 'asc', 'username' => 'desc'])
@@ -272,7 +272,7 @@ final class LinkSorterTest extends TestCase
             <a class="asc" href="/admin/manage?page=1&amp;pagesize=5&amp;sort=-id%2C-username" data-sort="-id,-username">Id <i class="bi bi-sort-alpha-up"></i></a>
             HTML,
             LinkSorter::widget()
-                ->attribute('id', 'username')
+                ->attribute('id')
                 ->attributes(['id' => SORT_DESC, 'username' => SORT_ASC])
                 ->currentPage(1)
                 ->directions(['id' => 'asc', 'username' => 'desc'])
@@ -293,7 +293,7 @@ final class LinkSorterTest extends TestCase
             <a class="asc" href="?test=test&amp;page=1&amp;pagesize=5&amp;sort=-id%2C-username" data-sort="-id,-username">Id <i class="bi bi-sort-alpha-up"></i></a>
             HTML,
             LinkSorter::widget()
-                ->attribute('id', 'username')
+                ->attribute('id')
                 ->attributes(['id' => SORT_DESC, 'username' => SORT_ASC])
                 ->currentPage(1)
                 ->directions(['id' => 'asc', 'username' => 'desc'])
@@ -314,7 +314,7 @@ final class LinkSorterTest extends TestCase
             <a class="asc" href="/admin/manage?test=test&amp;page=1&amp;pagesize=5&amp;sort=-id%2C-username" data-sort="-id,-username">Id <i class="bi bi-sort-alpha-up"></i></a>
             HTML,
             LinkSorter::widget()
-                ->attribute('id', 'username')
+                ->attribute('id')
                 ->attributes(['id' => SORT_DESC, 'username' => SORT_ASC])
                 ->currentPage(1)
                 ->directions(['id' => 'asc', 'username' => 'desc'])

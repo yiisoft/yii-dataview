@@ -21,8 +21,6 @@ final class Attribute
      *
      * @throws InvalidArgumentException If the attribute name contains non-word characters or empty form name for
      * tabular inputs
-     *
-     * @return string
      */
     public static function getInputName(string $formName, string $attribute): string
     {
@@ -58,7 +56,6 @@ final class Attribute
      *
      * @throws InvalidArgumentException If the attribute name contains non-word characters.
      *
-     * @return array
      *
      * @psalm-return string[]
      */

@@ -15,8 +15,6 @@ final class SerialColumn extends Column
      * Return new instance with offset value of paginator.
      *
      * @param int $value Offset value of paginator.
-     *
-     * @return self
      */
     public function offset(int $value): self
     {

@@ -42,8 +42,6 @@ final class LinkSorter extends Widget
      * Returns a new instance with the attribute name for link sorting.
      *
      * @param array $values The value label for the link.
-     *
-     * @return self
      */
     public function attribute(string $value): self
     {
@@ -57,8 +55,6 @@ final class LinkSorter extends Widget
      * Returns a new instance with the attributes for the link sorting.
      *
      * @param array $values The attributes for the link sorting.
-     *
-     * @return self
      */
     public function attributes(array $values): self
     {
@@ -72,8 +68,6 @@ final class LinkSorter extends Widget
      * Return a new instance with current page of pagination.
      *
      * @param int $value Current page.
-     *
-     * @return self
      */
     public function currentPage(int $value): self
     {
@@ -87,8 +81,6 @@ final class LinkSorter extends Widget
      * Returns a new instance with the currently requested sort information.
      *
      * @param array $values The currently requested sort information.
-     *
-     * @return self
      */
     public function directions(array $values): self
     {
@@ -102,8 +94,6 @@ final class LinkSorter extends Widget
      * Returns a new instance with the icon text for the ascending sort direction.
      *
      * @param string $value The icon text for the ascending sort direction.
-     *
-     * @return self
      */
     public function iconAsc(string $value): self
     {
@@ -117,8 +107,6 @@ final class LinkSorter extends Widget
      * Returns a new instance with the icon text for the descending sort direction.
      *
      * @param string $value The icon text for the descending sort direction.
-     *
-     * @return self
      */
     public function iconDesc(string $value): self
     {
@@ -132,8 +120,6 @@ final class LinkSorter extends Widget
      * Returns a new instance with the CSS class for the ascending sort direction.
      *
      * @param string $value The CSS class for the ascending sort direction.
-     *
-     * @return self
      */
     public function iconAscClass(string $value): self
     {
@@ -148,8 +134,6 @@ final class LinkSorter extends Widget
      * Returns a new instance with the CSS class for the descending sort direction.
      *
      * @param string $value The CSS class for the descending sort direction.
-     *
-     * @return self
      */
     public function iconDescClass(string $value): self
     {
@@ -164,8 +148,6 @@ final class LinkSorter extends Widget
      * Returns a new instance with the label for attribute.
      *
      * @param string $value The label for attribute.
-     *
-     * @return self
      */
     public function label(string $value): self
     {
@@ -179,8 +161,6 @@ final class LinkSorter extends Widget
      * Returns a new instance with the HTML attributes for a tag `<a>`.
      *
      * @param array $values Attribute values indexed by attribute names.
-     *
-     * @return self
      */
     public function linkAttributes(array $values): self
     {
@@ -194,8 +174,6 @@ final class LinkSorter extends Widget
      * Return a new instance with page config for arguments or query parameters in url.
      *
      * @param array $value The page config for arguments or query parameters in url.
-     *
-     * @return self
      */
     public function pageConfig(array $value): self
     {
@@ -209,8 +187,6 @@ final class LinkSorter extends Widget
      * Return a new instance with name of argument or query parameter for page.
      *
      * @param string $value The name of argument or query parameter for page.
-     *
-     * @return self
      */
     public function pageName(string $value): self
     {
@@ -224,8 +200,6 @@ final class LinkSorter extends Widget
      * Return a new instance with page size of pagination.
      *
      * @param int $value The page size of pagination.
-     *
-     * @return self
      */
     public function pageSize(int $value): self
     {
@@ -239,8 +213,6 @@ final class LinkSorter extends Widget
      * Return a new instance with name of argument or query parameter for page size.
      *
      * @param string $value The name of argument or query parameter for page size.
-     *
-     * @return self
      */
     public function pageSizeName(string $value): self
     {
@@ -254,8 +226,6 @@ final class LinkSorter extends Widget
      * Return a new instance with arguments of the route.
      *
      * @param array $value Arguments of the route.
-     *
-     * @return self
      */
     public function urlArguments(array $value): self
     {
@@ -269,8 +239,6 @@ final class LinkSorter extends Widget
      * Return a new instance with URL generator interface for pagination.
      *
      * @param UrlGeneratorInterface $value The URL generator interface for pagination.
-     *
-     * @return self
      */
     public function urlGenerator(UrlGeneratorInterface $value): self
     {
@@ -284,8 +252,6 @@ final class LinkSorter extends Widget
      * Returns a new instance with the name of the route.
      *
      * @param string $value The name of the route.
-     *
-     * @return self
      */
     public function urlName(string $value): self
     {
@@ -299,8 +265,6 @@ final class LinkSorter extends Widget
      * Return a new instance with query parameters of the route.
      *
      * @param array $value The query parameters of the route.
-     *
-     * @return self
      */
     public function urlQueryParameters(array $value): self
     {
@@ -326,8 +290,6 @@ final class LinkSorter extends Widget
      * @param string $attribute the attribute name.
      *
      * @throws InvalidArgumentException if the specified attribute is not defined.
-     *
-     * @return string
      */
     private function createSorterParam(string $attribute): string
     {
@@ -367,8 +329,6 @@ final class LinkSorter extends Widget
      * @param string $attribute The attribute name.
      *
      * @throws InvalidArgumentException If the attribute is unknown.
-     *
-     * @return string
      */
     private function createUrl(string $attribute): string
     {
@@ -432,8 +392,6 @@ final class LinkSorter extends Widget
      * If no label is defined, the attribute name will be used.
      *
      * @throws InvalidArgumentException If the attribute is unknown.
-     *
-     * @return string
      */
     private function renderSorterlink(): string
     {

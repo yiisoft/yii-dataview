@@ -46,8 +46,6 @@ final class DetailView extends Widget
      * Returns a new instance with the HTML attributes. The following special options are recognized.
      *
      * @param array $values Attribute values indexed by attribute names.
-     *
-     * @return static
      */
     public function attributes(array $values): static
     {
@@ -67,8 +65,6 @@ final class DetailView extends Widget
      * [
      * ]
      * ```
-     *
-     * @return self
      */
     public function columns(array $values): self
     {
@@ -82,8 +78,6 @@ final class DetailView extends Widget
      * Returns a new instance whether to translate the grid column header.
      *
      * @param bool $value Whether to translate the grid column header.
-     *
-     * @return self
      */
     public function columnsTranslation(bool $value): self
     {
@@ -97,8 +91,6 @@ final class DetailView extends Widget
      * Returns a new instance with the HTML attributes for the container item.
      *
      * @param array $values Attribute values indexed by attribute names.
-     *
-     * @return static
      */
     public function containerItemAttributes(array $values): static
     {
@@ -112,8 +104,6 @@ final class DetailView extends Widget
      * Returns a new instance with the HTML attributes for the container items.
      *
      * @param array $values Attribute values indexed by attribute names.
-     *
-     * @return static
      */
     public function containerItemsAttributes(array $values): static
     {
@@ -143,8 +133,6 @@ final class DetailView extends Widget
      * Return new instance with the header.
      *
      * @param string $value The header.
-     *
-     * @return self
      */
     public function header(string $value): self
     {
@@ -158,8 +146,6 @@ final class DetailView extends Widget
      * Returns a new instance with the HTML attributes for the label.
      *
      * @param array $values Attribute values indexed by attribute names.
-     *
-     * @return static
      */
     public function labelAttributes(array $values): static
     {
@@ -173,8 +159,6 @@ final class DetailView extends Widget
      * Return new instance with the label tag.
      *
      * @param string $value The tag to use for the label.
-     *
-     * @return self
      */
     public function labelTag(string $value): self
     {
@@ -188,8 +172,6 @@ final class DetailView extends Widget
      * Returns a new instance with the HTML attributes for the value.
      *
      * @param array $values Attribute values indexed by attribute names.
-     *
-     * @return static
      */
     public function valueAttributes(array $values): static
     {
@@ -203,8 +185,6 @@ final class DetailView extends Widget
      * Return new instance with the value tag.
      *
      * @param string $value The tag to use for the value.
-     *
-     * @return self
      */
     public function valueTag(string $value): self
     {

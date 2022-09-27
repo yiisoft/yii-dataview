@@ -14,7 +14,7 @@ final class ImmutableTest extends TestCase
     {
         $actionColumn = Column\ActionColumn::create();
         $this->assertNotSame($actionColumn, $actionColumn->buttons([]));
-        $this->assertNotSame($actionColumn, $actionColumn->createDefaultButtons([]));
+        $this->assertNotSame($actionColumn, $actionColumn->createDefaultButtons());
         $this->assertNotSame($actionColumn, $actionColumn->primaryKey(''));
         $this->assertNotSame($actionColumn, $actionColumn->template('{view}'));
         $this->assertNotSame($actionColumn, $actionColumn->urlArguments([]));

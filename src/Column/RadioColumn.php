@@ -22,8 +22,6 @@ final class RadioColumn extends Column
      * @param int $index The zero-based index of the data in the data provider.
      *
      * @throws JsonException
-     *
-     * @return string
      */
     protected function renderDataCellContent(array|object $data, mixed $key, int $index): string
     {
