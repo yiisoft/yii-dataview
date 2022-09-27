@@ -176,7 +176,6 @@ final class ActionColumn extends Column
      * ],
      * ```
      *
-     *
      * {@see buttons}
      */
     public function template(string $value): static

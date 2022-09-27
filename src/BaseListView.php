@@ -64,7 +64,6 @@ abstract class BaseListView extends Widget
      *
      * The default value is the text "No results found." which will be translated to the current application language.
      *
-     *
      * {@see notShowOnEmpty()}
      * {@see emptyTextAttributes()}
      */
@@ -120,7 +119,6 @@ abstract class BaseListView extends Widget
      * Return new instance with the header for the grid.
      *
      * @param string $value The header of the grid.
-     *
      *
      * {@see headerAttributes}
      */
@@ -290,7 +288,6 @@ abstract class BaseListView extends Widget
      * Return new instance with toolbar content.
      *
      * @param string $value The toolbar content.
-     *
      *
      * @psalm-param array<array-key,array> $toolbar
      */

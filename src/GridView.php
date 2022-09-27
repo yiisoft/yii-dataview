@@ -89,7 +89,6 @@ final class GridView extends BaseListView
      * ]
      * ```
      *
-     *
      * @psalm-param array<array-key,Column\Column|null> $values
      */
     public function columns(array $values): self
@@ -368,7 +367,6 @@ final class GridView extends BaseListView
      *
      * @param array $columns The columns of gridview.
      *
-     *
      * @psalm-param array<array-key,Column\Column|null> $columns
      */
     private function renderColumnGroup(array $columns): string
@@ -423,7 +421,6 @@ final class GridView extends BaseListView
      *
      * @param array $columns The columns of gridview.
      *
-     *
      * @psalm-param array<array-key,Column\Column|null> $columns
      */
     private function renderTableBody(array $columns): string
@@ -474,7 +471,6 @@ final class GridView extends BaseListView
      *
      * @param array $columns The columns of gridview.
      *
-     *
      * @psalm-param array<array-key,Column\Column|null> $columns
      */
     private function renderTableFooter(array $columns): string
@@ -503,7 +499,6 @@ final class GridView extends BaseListView
      * Renders the table header.
      *
      * @param array $columns The columns of gridview.
-     *
      *
      * @psalm-param array<array-key,Column\Column|null> $columns
      */
@@ -541,7 +536,6 @@ final class GridView extends BaseListView
      * @param array|object $data The data.
      * @param mixed $key The key associated with the data.
      * @param int $index The zero-based index of the data in the data provider.
-     *
      *
      * @psalm-param array<array-key,Column\Column|null> $columns
      */

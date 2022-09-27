@@ -69,8 +69,6 @@ abstract class BasePagination extends Widget
 
     /**
      * Return a new instance with disabled next page.
-     *
-     *
      */
     public function disabledNextPage(bool $value): static
     {
@@ -82,8 +80,6 @@ abstract class BasePagination extends Widget
 
     /**
      * Return a new instance with disabled previous page.
-     *
-     *
      */
     public function disabledPreviousPage(bool $value): static
     {

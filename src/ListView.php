@@ -38,7 +38,6 @@ final class ListView extends BaseListView
      *
      * Note: If the function returns `null`, nothing will be rendered after the item.
      *
-     *
      * {@see renderAfterItem}
      */
     public function afterItem(Closure $value): self
@@ -68,7 +67,6 @@ final class ListView extends BaseListView
      * The return result of the function will be rendered directly.
      *
      * Note: If the function returns `null`, nothing will be rendered before the item.
-     *
      *
      * {@see renderBeforeItem}
      */

@@ -29,8 +29,6 @@ final class OffsetPagination extends BasePagination
 
     /**
      * Return a new instance with disabled first page.
-     *
-     *
      */
     public function disabledFirtsPage(bool $value): self
     {
@@ -42,8 +40,6 @@ final class OffsetPagination extends BasePagination
 
     /**
      * Return a new instance with disabled last page.
-     *
-     *
      */
     public function disabledLastPage(bool $value): self
     {

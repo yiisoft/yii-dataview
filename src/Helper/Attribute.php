@@ -56,7 +56,6 @@ final class Attribute
      *
      * @throws InvalidArgumentException If the attribute name contains non-word characters.
      *
-     *
      * @psalm-return string[]
      */
     private static function parseAttribute(string $attribute): array
