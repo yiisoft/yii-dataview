@@ -288,7 +288,7 @@ final class OffsetPagination extends BasePagination
             $items[] = [
                 'active' => $beginPage === $currentPage,
                 'disabled' => $this->disabledPageNavLink && $beginPage === $currentPage,
-                'label' => $beginPage,
+                'label' => (string) $beginPage,
                 'link' => $this->createUrl($beginPage),
             ];
         } while (++$beginPage <= $endPage);

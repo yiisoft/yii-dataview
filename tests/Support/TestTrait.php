@@ -40,17 +40,4 @@ trait TestTrait
 
         return (new KeysetPaginator($data))->withPageSize($pageSize);
     }
-
-    private function createUrlGenerator(): UrlGeneratorInterface
-    {
-        return Mock::urlGenerator(
-            [
-                Route::get('/admin/delete')->name('admin/delete'),
-                Route::get('/admin/manage')->name('admin/manage'),
-                Route::get('/admin/update')->name('admin/update'),
-                Route::get('/admin/view')->name('admin/resend-password'),
-                Route::get('/admin/view')->name('admin/view'),
-            ],
-        );
-    }
 }

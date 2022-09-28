@@ -37,7 +37,7 @@ final class ImmutableTest extends TestCase
         $this->assertNotSame($baseListView, $baseListView->toolbar(''));
         $this->assertNotSame($baseListView, $baseListView->translator(Mock::translator('en')));
         $this->assertNotSame($baseListView, $baseListView->urlArguments([]));
-        $this->assertNotSame($baseListView, $baseListView->urlGenerator(Mock::urlGenerator([])));
+        $this->assertNotSame($baseListView, $baseListView->urlGenerator(Mock::urlGenerator()));
         $this->assertNotSame($baseListView, $baseListView->urlName(''));
         $this->assertNotSame($baseListView, $baseListView->urlQueryParameters([]));
         $this->assertNotSame($baseListView, $baseListView->withContainer(false));

@@ -19,7 +19,7 @@ final class ImmutableTest extends TestCase
         $this->assertNotSame($actionColumn, $actionColumn->template('{view}'));
         $this->assertNotSame($actionColumn, $actionColumn->urlArguments([]));
         $this->assertNotSame($actionColumn, $actionColumn->urlCreator(static fn () => ''));
-        $this->assertNotSame($actionColumn, $actionColumn->urlGenerator(Mock::urlGenerator([])));
+        $this->assertNotSame($actionColumn, $actionColumn->urlGenerator(Mock::urlGenerator()));
         $this->assertNotSame($actionColumn, $actionColumn->urlName(''));
         $this->assertNotSame($actionColumn, $actionColumn->urlQueryParameters([]));
         $this->assertNotSame($actionColumn, $actionColumn->urlParamsConfig([]));

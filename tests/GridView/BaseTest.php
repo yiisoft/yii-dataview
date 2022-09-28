@@ -208,7 +208,7 @@ final class BaseTest extends TestCase
                 ->id('w1-grid')
                 ->paginator($this->createOffsetPaginator($this->data, 10))
                 ->translator(Mock::translator('en'))
-                ->urlGenerator($this->createUrlGenerator())
+                ->urlGenerator(Mock::urlGenerator())
                 ->urlName('admin')
                 ->render()
         );

@@ -50,7 +50,7 @@ final class ActionColumnTest extends TestCase
                 ->id('w1-grid')
                 ->paginator($this->createOffsetPaginator($this->data, 10))
                 ->translator(Mock::translator('en'))
-                ->urlGenerator($this->createUrlGenerator())
+                ->urlGenerator(Mock::urlGenerator())
                 ->render()
         );
     }
@@ -83,7 +83,7 @@ final class ActionColumnTest extends TestCase
                 ->id('w1-grid')
                 ->paginator($this->createOffsetPaginator($this->data, 10))
                 ->translator(Mock::translator('en'))
-                ->urlGenerator($this->createUrlGenerator())
+                ->urlGenerator(Mock::urlGenerator())
                 ->render()
         );
     }
@@ -120,7 +120,7 @@ final class ActionColumnTest extends TestCase
                 ->id('w1-grid')
                 ->paginator($this->createOffsetPaginator($this->data, 10))
                 ->translator(Mock::translator('en'))
-                ->urlGenerator($this->createUrlGenerator())
+                ->urlGenerator(Mock::urlGenerator())
                 ->urlName('admin')
                 ->render()
         );
@@ -162,7 +162,7 @@ final class ActionColumnTest extends TestCase
                 ->id('w1-grid')
                 ->paginator($this->createOffsetPaginator($this->data, 10))
                 ->translator(Mock::translator('en'))
-                ->urlGenerator($this->createUrlGenerator())
+                ->urlGenerator(Mock::urlGenerator())
                 ->urlName('admin')
                 ->render()
         );
@@ -210,7 +210,7 @@ final class ActionColumnTest extends TestCase
                 ->id('w1-grid')
                 ->paginator($this->createOffsetPaginator($this->data, 10))
                 ->translator(Mock::translator('en'))
-                ->urlGenerator($this->createUrlGenerator())
+                ->urlGenerator(Mock::urlGenerator())
                 ->urlName('admin')
                 ->render()
         );
@@ -252,7 +252,7 @@ final class ActionColumnTest extends TestCase
                 ->id('w1-grid')
                 ->paginator($this->createOffsetPaginator($this->data, 10))
                 ->translator(Mock::translator('en'))
-                ->urlGenerator($this->createUrlGenerator())
+                ->urlGenerator(Mock::urlGenerator())
                 ->urlName('admin')
                 ->render()
         );
@@ -294,7 +294,7 @@ final class ActionColumnTest extends TestCase
                 ->id('w1-grid')
                 ->paginator($this->createOffsetPaginator($this->data, 10))
                 ->translator(Mock::translator('en'))
-                ->urlGenerator($this->createUrlGenerator())
+                ->urlGenerator(Mock::urlGenerator())
                 ->urlName('admin')
                 ->render()
         );
@@ -336,7 +336,7 @@ final class ActionColumnTest extends TestCase
                 ->id('w1-grid')
                 ->paginator($this->createOffsetPaginator($this->data, 10))
                 ->translator(Mock::translator('en'))
-                ->urlGenerator($this->createUrlGenerator())
+                ->urlGenerator(Mock::urlGenerator())
                 ->urlName('admin')
                 ->render()
         );
@@ -378,7 +378,7 @@ final class ActionColumnTest extends TestCase
                 ->id('w1-grid')
                 ->paginator($this->createOffsetPaginator($this->data, 10))
                 ->translator(Mock::translator('en'))
-                ->urlGenerator($this->createUrlGenerator())
+                ->urlGenerator(Mock::urlGenerator())
                 ->urlName('admin')
                 ->render()
         );
@@ -406,7 +406,7 @@ final class ActionColumnTest extends TestCase
                 ->id('w1-grid')
                 ->paginator($this->createOffsetPaginator($this->data, 10))
                 ->translator(Mock::translator('en'))
-                ->urlGenerator($this->createUrlGenerator())
+                ->urlGenerator(Mock::urlGenerator())
                 ->urlName('admin')
                 ->render()
         );
@@ -456,7 +456,7 @@ final class ActionColumnTest extends TestCase
                     )
                 )
                 ->translator(Mock::translator('en'))
-                ->urlGenerator($this->createUrlGenerator())
+                ->urlGenerator(Mock::urlGenerator())
                 ->urlName('admin')
                 ->render()
         );
@@ -504,7 +504,7 @@ final class ActionColumnTest extends TestCase
                 ->id('w1-grid')
                 ->paginator($this->createOffsetPaginator($this->data, 10))
                 ->translator(Mock::translator('en'))
-                ->urlGenerator($this->createUrlGenerator())
+                ->urlGenerator(Mock::urlGenerator())
                 ->urlName('admin')
                 ->render()
         );
@@ -546,7 +546,7 @@ final class ActionColumnTest extends TestCase
                 ->id('w1-grid')
                 ->paginator($this->createOffsetPaginator($this->data, 10))
                 ->translator(Mock::translator('en'))
-                ->urlGenerator($this->createUrlGenerator())
+                ->urlGenerator(Mock::urlGenerator())
                 ->urlName('admin')
                 ->render()
         );
@@ -588,7 +588,7 @@ final class ActionColumnTest extends TestCase
                 ->id('w1-grid')
                 ->paginator($this->createOffsetPaginator($this->data, 10))
                 ->translator(Mock::translator('en'))
-                ->urlGenerator($this->createUrlGenerator())
+                ->urlGenerator(Mock::urlGenerator())
                 ->urlName('admin')
                 ->render()
         );
@@ -630,7 +630,7 @@ final class ActionColumnTest extends TestCase
                 ->id('w1-grid')
                 ->paginator($this->createOffsetPaginator($this->data, 10))
                 ->translator(Mock::translator('en'))
-                ->urlGenerator($this->createUrlGenerator())
+                ->urlGenerator(Mock::urlGenerator())
                 ->urlName('admin')
                 ->render()
         );
@@ -672,7 +672,7 @@ final class ActionColumnTest extends TestCase
                 ->id('w1-grid')
                 ->paginator($this->createOffsetPaginator($this->data, 10))
                 ->translator(Mock::translator('en'))
-                ->urlGenerator($this->createUrlGenerator())
+                ->urlGenerator(Mock::urlGenerator())
                 ->urlName('admin')
                 ->render()
         );
@@ -710,7 +710,7 @@ final class ActionColumnTest extends TestCase
                 ->id('w1-grid')
                 ->paginator($this->createOffsetPaginator($this->data, 10))
                 ->translator(Mock::translator('en'))
-                ->urlGenerator($this->createUrlGenerator())
+                ->urlGenerator(Mock::urlGenerator())
                 ->urlName('admin')
                 ->render()
         );
@@ -845,8 +845,7 @@ final class ActionColumnTest extends TestCase
         return [
             ActionColumn::create()
                 ->urlCreator(
-                    static fn (string $action, array|object $data, mixed $key, int $index): string => 'https://test.com/'
-                    . $action . '?id=' . $data['id'],
+                    static fn (string $action, array|object $data, mixed $key, int $index): string => 'https://test.com/' . $action . '?id=' . $data['id'],
                 ),
         ];
     }

@@ -45,10 +45,20 @@ final class Mock extends TestCase
      * @psalm-param array<Route> $routes
      */
     public static function urlGenerator(
-        array $routes,
+        array $routes = [],
         CurrentRoute $currentRoute = null,
         RouteParser $parser = null
     ): UrlGeneratorInterface {
+        if ($routes === []) {
+            $routes = [
+                Route::get('/admin/delete')->name('admin/delete'),
+                Route::get('/admin/manage')->name('admin/manage'),
+                Route::get('/admin/update')->name('admin/update'),
+                Route::get('/admin/view')->name('admin/resend-password'),
+                Route::get('/admin/view')->name('admin/view'),
+            ];
+        }
+
         $routeCollection = self::routeCollection($routes);
 
         return new UrlGenerator($routeCollection, $currentRoute, $parser);

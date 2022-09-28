@@ -52,7 +52,7 @@ final class DataColumnTest extends TestCase
                 ->id('w1-grid')
                 ->paginator($this->createOffsetPaginator($this->data, 10))
                 ->translator(Mock::translator('en'))
-                ->urlGenerator(Mock::urlGenerator([Route::get('/admin/manage')->name('admin/manage')]))
+                ->urlGenerator(Mock::urlGenerator())
                 ->render()
         );
     }
@@ -88,7 +88,7 @@ final class DataColumnTest extends TestCase
                 ->id('w1-grid')
                 ->paginator($this->createOffsetPaginator($this->data, 10))
                 ->translator(Mock::translator('en'))
-                ->urlGenerator(Mock::urlGenerator([Route::get('/admin/manage')->name('admin/manage')]))
+                ->urlGenerator(Mock::urlGenerator())
                 ->render()
         );
     }
@@ -124,7 +124,7 @@ final class DataColumnTest extends TestCase
                 ->id('w1-grid')
                 ->paginator($this->createOffsetPaginator($this->data, 10))
                 ->translator(Mock::translator('en'))
-                ->urlGenerator(Mock::urlGenerator([Route::get('/admin/manage')->name('admin/manage')]))
+                ->urlGenerator(Mock::urlGenerator())
                 ->render()
         );
     }
@@ -160,7 +160,7 @@ final class DataColumnTest extends TestCase
                 ->id('w1-grid')
                 ->paginator($this->createOffsetPaginator($this->data, 10))
                 ->translator(Mock::translator('en'))
-                ->urlGenerator(Mock::urlGenerator([Route::get('/admin/manage')->name('admin/manage')]))
+                ->urlGenerator(Mock::urlGenerator())
                 ->render()
         );
     }
@@ -196,7 +196,7 @@ final class DataColumnTest extends TestCase
                 ->id('w1-grid')
                 ->paginator($this->createOffsetPaginator($this->data, 10))
                 ->translator(Mock::translator('en'))
-                ->urlGenerator(Mock::urlGenerator([Route::get('/admin/manage')->name('admin/manage')]))
+                ->urlGenerator(Mock::urlGenerator())
                 ->render()
         );
     }
@@ -232,7 +232,7 @@ final class DataColumnTest extends TestCase
                 ->id('w1-grid')
                 ->paginator($this->createOffsetPaginator($this->data, 10))
                 ->translator(Mock::translator('en'))
-                ->urlGenerator(Mock::urlGenerator([Route::get('/admin/manage')->name('admin/manage')]))
+                ->urlGenerator(Mock::urlGenerator())
                 ->render()
         );
     }
@@ -268,7 +268,7 @@ final class DataColumnTest extends TestCase
                 ->id('w1-grid')
                 ->paginator($this->createOffsetPaginator($this->data, 10))
                 ->translator(Mock::translator('en'))
-                ->urlGenerator(Mock::urlGenerator([Route::get('/admin/manage')->name('admin/manage')]))
+                ->urlGenerator(Mock::urlGenerator())
                 ->render()
         );
     }
@@ -304,7 +304,7 @@ final class DataColumnTest extends TestCase
                 ->id('w1-grid')
                 ->paginator($this->createOffsetPaginator($this->data, 10))
                 ->translator(Mock::translator('en'))
-                ->urlGenerator(Mock::urlGenerator([Route::get('/admin/manage')->name('admin/manage')]))
+                ->urlGenerator(Mock::urlGenerator())
                 ->render()
         );
     }
@@ -340,7 +340,7 @@ final class DataColumnTest extends TestCase
                 ->id('w1-grid')
                 ->paginator($this->createOffsetPaginator($this->data, 10, true))
                 ->translator(Mock::translator('en'))
-                ->urlGenerator(Mock::urlGenerator([Route::get('/admin/manage')->name('admin/manage')]))
+                ->urlGenerator(Mock::urlGenerator())
                 ->urlName('admin/manage')
                 ->render()
         );
@@ -377,7 +377,7 @@ final class DataColumnTest extends TestCase
                 ->id('w1-grid')
                 ->paginator($this->createOffsetPaginator($this->data, 10, true))
                 ->translator(Mock::translator('en'))
-                ->urlGenerator(Mock::urlGenerator([Route::get('/admin/manage')->name('admin/manage')]))
+                ->urlGenerator(Mock::urlGenerator())
                 ->urlName('admin/manage')
                 ->render()
         );
@@ -411,7 +411,7 @@ final class DataColumnTest extends TestCase
                 ->id('w1-grid')
                 ->paginator($this->createOffsetPaginator($this->data, 10))
                 ->translator(Mock::translator('en'))
-                ->urlGenerator(Mock::urlGenerator([Route::get('/admin/manage')->name('admin/manage')]))
+                ->urlGenerator(Mock::urlGenerator())
                 ->urlName('admin/manage')
                 ->render()
         );
@@ -448,7 +448,7 @@ final class DataColumnTest extends TestCase
                 ->id('w1-grid')
                 ->paginator($this->createOffsetPaginator($this->data, 10, true))
                 ->translator(Mock::translator('en'))
-                ->urlGenerator(Mock::urlGenerator([Route::get('/admin/manage')->name('admin/manage')]))
+                ->urlGenerator(Mock::urlGenerator())
                 ->urlName('admin/manage')
                 ->render()
         );
@@ -485,7 +485,7 @@ final class DataColumnTest extends TestCase
                 ->id('w1-grid')
                 ->paginator($this->createOffsetPaginator($this->data, 10))
                 ->translator(Mock::translator('en'))
-                ->urlGenerator(Mock::urlGenerator([Route::get('/admin/manage')->name('admin/manage')]))
+                ->urlGenerator(Mock::urlGenerator())
                 ->render()
         );
     }
@@ -521,7 +521,7 @@ final class DataColumnTest extends TestCase
                 ->id('w1-grid')
                 ->paginator($this->createOffsetPaginator($this->data, 10))
                 ->translator(Mock::translator('en'))
-                ->urlGenerator(Mock::urlGenerator([Route::get('/admin/manage')->name('admin/manage')]))
+                ->urlGenerator(Mock::urlGenerator())
                 ->render()
         );
     }

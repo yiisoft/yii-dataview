@@ -53,7 +53,7 @@ final class OffsetPaginationTest extends TestCase
                 ->currentPage(1)
                 ->menuClass('pagination justify-content-center')
                 ->paginator($this->createOffsetPaginator($this->data, 2))
-                ->urlGenerator(Mock::urlGenerator([Route::get('/admin/manage')->name('admin/manage')]))
+                ->urlGenerator(Mock::urlGenerator())
                 ->urlName('admin/manage')
                 ->render(),
         );
@@ -71,8 +71,6 @@ final class OffsetPaginationTest extends TestCase
      */
     public function testsDisabledAndActiveStates(): void
     {
-        $urlGenerator = $this->createUrlGenerator();
-
         Assert::equalsWithoutLE(
             <<<HTML
             <nav aria-label="Pagination">
@@ -89,7 +87,7 @@ final class OffsetPaginationTest extends TestCase
                 ->currentPage(2)
                 ->disabledPreviousPage(true)
                 ->paginator($this->createOffsetPaginator($this->data, 2))
-                ->urlGenerator($urlGenerator)
+                ->urlGenerator(Mock::urlGenerator())
                 ->urlName('admin/manage')
                 ->render(),
         );
@@ -97,13 +95,11 @@ final class OffsetPaginationTest extends TestCase
 
     public function testRenderWithIconFirtsLastPage(): void
     {
-        $urlGenerator = $this->createUrlGenerator();
-
         Assert::equalsWithoutLE(
             <<<HTML
             <nav aria-label="Pagination">
             <ul class="pagination">
-            <li class="page-item"><a class="page-link disabled" href="/admin/manage?page=1&amp;pagesize=1"><span aria-hidden="true"><i>&laquo;</i></span></a></li>
+            <li class="page-item"><a class="page-link disabled" href="/admin/manage?page=1&amp;pagesize=1"><span aria-hidden="true"><i>«</i></span></a></li>
             <li class="page-item"><a class="page-link disabled" href="/admin/manage?page=1&amp;pagesize=1">Previous</a></li>
             <li class="page-item"><a class="page-link active" href="/admin/manage?page=1&amp;pagesize=1" aria-current="page">1</a></li>
             <li class="page-item"><a class="page-link" href="/admin/manage?page=2&amp;pagesize=1">2</a></li>
@@ -111,17 +107,17 @@ final class OffsetPaginationTest extends TestCase
             <li class="page-item"><a class="page-link" href="/admin/manage?page=4&amp;pagesize=1">4</a></li>
             <li class="page-item"><a class="page-link" href="/admin/manage?page=5&amp;pagesize=1">5</a></li>
             <li class="page-item"><a class="page-link" href="/admin/manage?page=2&amp;pagesize=1">Next Page</a></li>
-            <li class="page-item"><a class="page-link" href="/admin/manage?page=5&amp;pagesize=1"><span aria-hidden="true"><i>&raquo;</i></span></a></li>
+            <li class="page-item"><a class="page-link" href="/admin/manage?page=5&amp;pagesize=1"><span aria-hidden="true"><i>»</i></span></a></li>
             </ul>
             </nav>
             HTML,
             OffsetPagination::widget()
                 ->currentPage(1)
-                ->iconFirtsPage('&laquo;')
-                ->iconLastPage('&raquo;')
+                ->iconFirtsPage('«')
+                ->iconLastPage('»')
                 ->paginator($this->createOffsetPaginator($this->data, 1))
                 ->urlArguments([])
-                ->urlGenerator($urlGenerator)
+                ->urlGenerator(Mock::urlGenerator())
                 ->urlName('admin/manage')
                 ->render(),
         );
@@ -129,8 +125,6 @@ final class OffsetPaginationTest extends TestCase
 
     public function testRenderWithIconClassFirtsLastPage(): void
     {
-        $urlGenerator = $this->createUrlGenerator();
-
         Assert::equalsWithoutLE(
             <<<HTML
             <nav aria-label="Pagination">
@@ -153,7 +147,7 @@ final class OffsetPaginationTest extends TestCase
                 ->iconClassLastPage('bi bi-chevron-double-right p-1')
                 ->paginator($this->createOffsetPaginator($this->data, 1))
                 ->urlArguments([])
-                ->urlGenerator($urlGenerator)
+                ->urlGenerator(Mock::urlGenerator())
                 ->urlName('admin/manage')
                 ->render(),
         );
@@ -161,8 +155,6 @@ final class OffsetPaginationTest extends TestCase
 
     public function testRenderWithLabelFirtsLastPage(): void
     {
-        $urlGenerator = $this->createUrlGenerator();
-
         Assert::equalsWithoutLE(
             <<<HTML
             <nav aria-label="Pagination">
@@ -185,7 +177,7 @@ final class OffsetPaginationTest extends TestCase
                 ->labelLastPage('Last')
                 ->paginator($this->createOffsetPaginator($this->data, 1))
                 ->urlArguments([])
-                ->urlGenerator($urlGenerator)
+                ->urlGenerator(Mock::urlGenerator())
                 ->urlName('admin/manage')
                 ->render(),
         );
@@ -193,8 +185,6 @@ final class OffsetPaginationTest extends TestCase
 
     public function testRenderWithUrlQueryParameters(): void
     {
-        $urlGenerator = $this->createUrlGenerator();
-
         Assert::equalsWithoutLE(
             <<<HTML
             <nav aria-label="Pagination">
@@ -212,7 +202,7 @@ final class OffsetPaginationTest extends TestCase
             OffsetPagination::widget()
                 ->currentPage(1)
                 ->paginator($this->createOffsetPaginator($this->data, 1))
-                ->urlGenerator($urlGenerator)
+                ->urlGenerator(Mock::urlGenerator())
                 ->urlQueryParameters(['filter' => 'test'])
                 ->urlName('admin/manage')
                 ->render(),
@@ -221,14 +211,12 @@ final class OffsetPaginationTest extends TestCase
 
     public function testRenderWithoutPagination(): void
     {
-        $urlGenerator = $this->createUrlGenerator();
-
         $this->assertEmpty(
             OffsetPagination::widget()
                 ->currentPage(1)
                 ->paginator($this->createOffsetPaginator($this->data, 5))
                 ->urlArguments([])
-                ->urlGenerator($urlGenerator)
+                ->urlGenerator(Mock::urlGenerator())
                 ->urlName('admin/manage')
                 ->render(),
         );
@@ -248,8 +236,6 @@ final class OffsetPaginationTest extends TestCase
      */
     public function testOverview(): void
     {
-        $urlGenerator = $this->createUrlGenerator();
-
         Assert::equalsWithoutLE(
             <<<HTML
             <nav aria-label="Pagination">
@@ -268,7 +254,7 @@ final class OffsetPaginationTest extends TestCase
                 ->currentPage(1)
                 ->paginator($this->createOffsetPaginator($this->data, 1))
                 ->urlArguments([])
-                ->urlGenerator($urlGenerator)
+                ->urlGenerator(Mock::urlGenerator())
                 ->urlName('admin/manage')
                 ->render(),
         );
@@ -281,8 +267,6 @@ final class OffsetPaginationTest extends TestCase
      */
     public function testsSizing(): void
     {
-        $urlGenerator = $this->createUrlGenerator();
-
         Assert::equalsWithoutLE(
             <<<HTML
             <nav aria-label="Pagination">
@@ -302,7 +286,7 @@ final class OffsetPaginationTest extends TestCase
                 ->labelPreviousPage()
                 ->paginator($this->createOffsetPaginator($this->data, 1))
                 ->urlArguments([])
-                ->urlGenerator($urlGenerator)
+                ->urlGenerator(Mock::urlGenerator())
                 ->urlName('admin/manage')
                 ->render(),
         );
@@ -326,7 +310,7 @@ final class OffsetPaginationTest extends TestCase
                 ->labelPreviousPage()
                 ->paginator($this->createOffsetPaginator($this->data, 1))
                 ->urlArguments([])
-                ->urlGenerator($urlGenerator)
+                ->urlGenerator(Mock::urlGenerator())
                 ->urlName('admin/manage')
                 ->render(),
         );
@@ -340,29 +324,27 @@ final class OffsetPaginationTest extends TestCase
      */
     public function testWorkingWithIcons(): void
     {
-        $urlGenerator = $this->createUrlGenerator();
-
         Assert::equalsWithoutLE(
             <<<HTML
             <nav aria-label="Pagination">
             <ul class="pagination">
-            <li class="page-item"><a class="page-link disabled" href="/admin/manage?page=1&amp;pagesize=1"><span aria-hidden="true"><i>&laquo;</i></span></a></li>
+            <li class="page-item"><a class="page-link disabled" href="/admin/manage?page=1&amp;pagesize=1"><span aria-hidden="true"><i>«</i></span></a></li>
             <li class="page-item"><a class="page-link active" href="/admin/manage?page=1&amp;pagesize=1" aria-current="page">1</a></li>
             <li class="page-item"><a class="page-link" href="/admin/manage?page=2&amp;pagesize=1">2</a></li>
             <li class="page-item"><a class="page-link" href="/admin/manage?page=3&amp;pagesize=1">3</a></li>
             <li class="page-item"><a class="page-link" href="/admin/manage?page=4&amp;pagesize=1">4</a></li>
             <li class="page-item"><a class="page-link" href="/admin/manage?page=5&amp;pagesize=1">5</a></li>
-            <li class="page-item"><a class="page-link" href="/admin/manage?page=2&amp;pagesize=1"><span aria-hidden="true"><i>&raquo;</i></span></a></li>
+            <li class="page-item"><a class="page-link" href="/admin/manage?page=2&amp;pagesize=1"><span aria-hidden="true"><i>»</i></span></a></li>
             </ul>
             </nav>
             HTML,
             OffsetPagination::widget()
                 ->currentPage(1)
-                ->iconNextPage('&raquo;')
-                ->iconPreviousPage('&laquo;')
+                ->iconNextPage('»')
+                ->iconPreviousPage('«')
                 ->paginator($this->createOffsetPaginator($this->data, 1))
                 ->urlArguments([])
-                ->urlGenerator($urlGenerator)
+                ->urlGenerator(Mock::urlGenerator())
                 ->urlName('admin/manage')
                 ->render(),
         );
@@ -387,7 +369,7 @@ final class OffsetPaginationTest extends TestCase
                 ->iconClassPreviousPage('bi bi-chevron-double-left p-1')
                 ->paginator($this->createOffsetPaginator($this->data, 1))
                 ->urlArguments([])
-                ->urlGenerator($urlGenerator)
+                ->urlGenerator(Mock::urlGenerator())
                 ->urlName('admin/manage')
                 ->render(),
         );

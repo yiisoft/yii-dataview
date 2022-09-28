@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Yiisoft\Yii\DataView\Widget;
 
-use InvalidArgumentException;
 use Yiisoft\Data\Paginator\PaginatorInterface;
 use Yiisoft\Router\UrlGeneratorInterface;
 use Yiisoft\Widget\Widget;
 use Yiisoft\Yii\DataView\Exception\PaginatorNotSetException;
+use Yiisoft\Yii\Dataview\Exception\UrlGeneratorNotSetException;
 
 use function array_merge;
 use function http_build_query;
@@ -36,7 +36,7 @@ abstract class BasePagination extends Widget
     private string $pageSizeName = 'pagesize';
     private PaginatorInterface|null $paginator = null;
     private UrlGeneratorInterface|null $urlGenerator = null;
-    private ?array $urlArguments = [];
+    private ?array $urlArguments = null;
     private bool $urlEnabledArguments = true;
     private array $urlQueryParameters = [];
     private string|null $urlName = null;
@@ -351,7 +351,7 @@ abstract class BasePagination extends Widget
     protected function createUrl(int $page): string
     {
         if ($this->urlGenerator === null) {
-            throw new InvalidArgumentException('UrlGenerator must be configured.');
+            throw new UrlGeneratorNotSetException();
         }
 
         $pageConfig = $this->pageConfig;
@@ -366,10 +366,10 @@ abstract class BasePagination extends Widget
 
         if ($this->urlArguments !== null) {
             /** @psalm-var array<string,string> */
-            $urlArguments = array_merge($this->urlArguments, $pageConfig);
+            $urlArguments = array_merge($pageConfig, $this->urlArguments);
         } else {
             $urlArguments = [];
-            $urlQueryParameters = array_merge($this->urlQueryParameters, $pageConfig);
+            $urlQueryParameters = array_merge($pageConfig, $this->urlQueryParameters);
         }
 
         return match ($this->urlName !== null) {
