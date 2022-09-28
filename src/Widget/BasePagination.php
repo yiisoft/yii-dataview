@@ -7,8 +7,7 @@ namespace Yiisoft\Yii\DataView\Widget;
 use Yiisoft\Data\Paginator\PaginatorInterface;
 use Yiisoft\Router\UrlGeneratorInterface;
 use Yiisoft\Widget\Widget;
-use Yiisoft\Yii\DataView\Exception\PaginatorNotSetException;
-use Yiisoft\Yii\Dataview\Exception\UrlGeneratorNotSetException;
+use Yiisoft\Yii\DataView\Exception;
 
 use function array_merge;
 use function http_build_query;
@@ -351,7 +350,7 @@ abstract class BasePagination extends Widget
     protected function createUrl(int $page): string
     {
         if ($this->urlGenerator === null) {
-            throw new UrlGeneratorNotSetException();
+            throw new Exception\UrlGeneratorNotSetException();
         }
 
         $pageConfig = $this->pageConfig;
@@ -461,7 +460,7 @@ abstract class BasePagination extends Widget
     protected function getPaginator(): PaginatorInterface
     {
         if ($this->paginator === null) {
-            throw new PaginatorNotSetException();
+            throw new Exception\PaginatorNotSetException();
         }
 
         return $this->paginator;
