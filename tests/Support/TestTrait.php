@@ -8,8 +8,6 @@ use Yiisoft\Data\Paginator\KeysetPaginator;
 use Yiisoft\Data\Paginator\OffsetPaginator;
 use Yiisoft\Data\Reader\Iterable\IterableDataReader;
 use Yiisoft\Data\Reader\Sort;
-use Yiisoft\Router\Route;
-use Yiisoft\Router\UrlGeneratorInterface;
 
 trait TestTrait
 {
