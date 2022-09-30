@@ -38,7 +38,7 @@ abstract class BasePagination extends Widget
     private ?array $urlArguments = null;
     private bool $urlEnabledArguments = true;
     private array $urlQueryParameters = [];
-    private string|null $urlName = null;
+    private string $urlName = '';
 
     /**
      * Returns a new instance with the HTML attributes. The following special options are recognized.
@@ -358,8 +358,8 @@ abstract class BasePagination extends Widget
 
         if ($pageConfig === []) {
             $pageConfig = [
-                $this->pageName => (string) $page,
-                $this->pageSizeName => (string) $this->getPaginator()->getPageSize(),
+                $this->pageName => $page,
+                $this->pageSizeName => $this->getPaginator()->getPageSize(),
             ];
         }
 
@@ -371,7 +371,7 @@ abstract class BasePagination extends Widget
             $urlQueryParameters = array_merge($pageConfig, $this->urlQueryParameters);
         }
 
-        return match ($this->urlName !== null) {
+        return match ($this->urlName !== '') {
             true => $this->urlGenerator->generate($this->urlName, $urlArguments, $urlQueryParameters),
             false => $urlQueryParameters ? '?' . http_build_query($urlQueryParameters) : '',
         };

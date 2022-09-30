@@ -182,6 +182,32 @@ final class OffsetPaginationTest extends TestCase
         );
     }
 
+    public function testRenderWithUrlArguments(): void
+    {
+        Assert::equalsWithoutLE(
+            <<<HTML
+            <nav aria-label="Pagination">
+            <ul class="pagination">
+            <li class="page-item"><a class="page-link disabled" href="/admin/manage?page=1&amp;pagesize=1&amp;filter=test">Previous</a></li>
+            <li class="page-item"><a class="page-link active" href="/admin/manage?page=1&amp;pagesize=1&amp;filter=test" aria-current="page">1</a></li>
+            <li class="page-item"><a class="page-link" href="/admin/manage?page=2&amp;pagesize=1&amp;filter=test">2</a></li>
+            <li class="page-item"><a class="page-link" href="/admin/manage?page=3&amp;pagesize=1&amp;filter=test">3</a></li>
+            <li class="page-item"><a class="page-link" href="/admin/manage?page=4&amp;pagesize=1&amp;filter=test">4</a></li>
+            <li class="page-item"><a class="page-link" href="/admin/manage?page=5&amp;pagesize=1&amp;filter=test">5</a></li>
+            <li class="page-item"><a class="page-link" href="/admin/manage?page=2&amp;pagesize=1&amp;filter=test">Next Page</a></li>
+            </ul>
+            </nav>
+            HTML,
+            OffsetPagination::widget()
+                ->currentPage(1)
+                ->paginator($this->createOffsetPaginator($this->data, 1))
+                ->urlGenerator(Mock::urlGenerator())
+                ->urlArguments(['filter' => 'test'])
+                ->urlName('admin/manage')
+                ->render(),
+        );
+    }
+
     public function testRenderWithUrlQueryParameters(): void
     {
         Assert::equalsWithoutLE(
@@ -204,6 +230,31 @@ final class OffsetPaginationTest extends TestCase
                 ->urlGenerator(Mock::urlGenerator())
                 ->urlQueryParameters(['filter' => 'test'])
                 ->urlName('admin/manage')
+                ->render(),
+        );
+    }
+
+    public function testRenderWithUrlQueryParametersWithoutUrlName(): void
+    {
+        Assert::equalsWithoutLE(
+            <<<HTML
+            <nav aria-label="Pagination">
+            <ul class="pagination">
+            <li class="page-item"><a class="page-link disabled" href="?page=1&amp;pagesize=1&amp;filter=test">Previous</a></li>
+            <li class="page-item"><a class="page-link active" href="?page=1&amp;pagesize=1&amp;filter=test" aria-current="page">1</a></li>
+            <li class="page-item"><a class="page-link" href="?page=2&amp;pagesize=1&amp;filter=test">2</a></li>
+            <li class="page-item"><a class="page-link" href="?page=3&amp;pagesize=1&amp;filter=test">3</a></li>
+            <li class="page-item"><a class="page-link" href="?page=4&amp;pagesize=1&amp;filter=test">4</a></li>
+            <li class="page-item"><a class="page-link" href="?page=5&amp;pagesize=1&amp;filter=test">5</a></li>
+            <li class="page-item"><a class="page-link" href="?page=2&amp;pagesize=1&amp;filter=test">Next Page</a></li>
+            </ul>
+            </nav>
+            HTML,
+            OffsetPagination::widget()
+                ->currentPage(1)
+                ->paginator($this->createOffsetPaginator($this->data, 1))
+                ->urlGenerator(Mock::urlGenerator())
+                ->urlQueryParameters(['filter' => 'test'])
                 ->render(),
         );
     }

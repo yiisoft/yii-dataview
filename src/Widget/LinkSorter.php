@@ -36,7 +36,7 @@ final class LinkSorter extends Widget
     private UrlGeneratorInterface|null $urlGenerator = null;
     private array|null $urlArguments = null;
     private array $urlQueryParameters = [];
-    private string|null $urlName = null;
+    private string $urlName = '';
 
     /**
      * Returns a new instance with the attribute name for link sorting.
@@ -353,7 +353,7 @@ final class LinkSorter extends Widget
             $urlQueryParameters['sort'] = $this->createSorterParam($attribute);
         }
 
-        return match ($this->urlName !== null) {
+        return match ($this->urlName !== '') {
             true => $this->urlGenerator->generate($this->urlName, $urlArguments, $urlQueryParameters),
             false => $urlQueryParameters ? '?' . http_build_query($urlQueryParameters) : '',
         };

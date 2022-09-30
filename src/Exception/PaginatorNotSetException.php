@@ -5,15 +5,14 @@ declare(strict_types=1);
 namespace Yiisoft\Yii\DataView\Exception;
 
 use RuntimeException;
-use Throwable;
 use Yiisoft\FriendlyException\FriendlyExceptionInterface;
 
 final class PaginatorNotSetException extends RuntimeException implements FriendlyExceptionInterface
 {
-    public function __construct(string $message = '', int $code = 0, ?Throwable $previous = null)
+    public function __construct(string $message = '')
     {
         $message = $message === '' ? $this->getName() : $message;
-        parent::__construct($message, $code, $previous);
+        parent::__construct($message);
     }
 
     public function getName(): string
