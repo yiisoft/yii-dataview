@@ -30,9 +30,8 @@ final class ExceptionTest extends TestCase
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('Current page must be less than or equal to total pages.');
         OffsetPagination::widget()
-            ->currentPage(4)
             ->menuClass('pagination justify-content-center')
-            ->paginator($this->createOffsetPaginator($this->data, 2))
+            ->paginator($this->createOffsetPaginator($this->data, 2, 4))
             ->urlGenerator(Mock::urlGenerator())
             ->urlName('admin/manage')
             ->render();
@@ -57,7 +56,6 @@ final class ExceptionTest extends TestCase
         $this->expectException(Exception\UrlGeneratorNotSetException::class);
         $this->expectExceptionMessage('Failed to create widget because "urlgenerator" is not set.');
         OffsetPagination::widget()
-            ->currentPage(1)
             ->menuClass('pagination justify-content-center')
             ->paginator($this->createOffsetPaginator($this->data, 2))
             ->urlName('admin/manage')

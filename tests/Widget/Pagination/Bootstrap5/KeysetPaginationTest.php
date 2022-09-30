@@ -42,7 +42,6 @@ final class KeysetPaginationTest extends TestCase
             </nav>
             HTML,
             KeysetPagination::widget()
-                ->currentPage(1)
                 ->menuClass('pagination justify-content-center')
                 ->paginator($this->createKeysetPaginator($this->data, 2))
                 ->urlGenerator(Mock::urlGenerator())
@@ -73,7 +72,6 @@ final class KeysetPaginationTest extends TestCase
             </nav>
             HTML,
             KeysetPagination::widget()
-                ->currentPage(2)
                 ->disabledPreviousPage(true)
                 ->paginator($this->createKeysetPaginator($this->data, 2))
                 ->urlGenerator(Mock::urlGenerator())
@@ -94,7 +92,6 @@ final class KeysetPaginationTest extends TestCase
             </nav>
             HTML,
             KeysetPagination::widget()
-                ->currentPage(1)
                 ->paginator($this->createKeysetPaginator($this->data, 2))
                 ->urlGenerator(Mock::urlGenerator())
                 ->urlQueryParameters(['filter' => 'test'])
@@ -121,7 +118,6 @@ final class KeysetPaginationTest extends TestCase
             </nav>
             HTML,
             KeysetPagination::widget()
-                ->currentPage(1)
                 ->iconNextPage('»')
                 ->iconPreviousPage('«')
                 ->paginator($this->createKeysetPaginator($this->data, 2))
@@ -141,7 +137,6 @@ final class KeysetPaginationTest extends TestCase
             </nav>
             HTML,
             KeysetPagination::widget()
-                ->currentPage(1)
                 ->iconClassNextPage('bi bi-chevron-double-right p-1')
                 ->iconClassPreviousPage('bi bi-chevron-double-left p-1')
                 ->paginator($this->createKeysetPaginator($this->data, 2))

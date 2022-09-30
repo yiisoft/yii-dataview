@@ -49,7 +49,6 @@ final class OffsetPaginationTest extends TestCase
             </nav>
             HTML,
             OffsetPagination::widget()
-                ->currentPage(1)
                 ->menuClass('pagination justify-content-center')
                 ->paginator($this->createOffsetPaginator($this->data, 2))
                 ->urlGenerator(Mock::urlGenerator())
@@ -83,9 +82,8 @@ final class OffsetPaginationTest extends TestCase
             </nav>
             HTML,
             OffsetPagination::widget()
-                ->currentPage(2)
                 ->disabledPreviousPage(true)
-                ->paginator($this->createOffsetPaginator($this->data, 2))
+                ->paginator($this->createOffsetPaginator($this->data, 2, 2))
                 ->urlGenerator(Mock::urlGenerator())
                 ->urlName('admin/manage')
                 ->render(),
@@ -111,7 +109,6 @@ final class OffsetPaginationTest extends TestCase
             </nav>
             HTML,
             OffsetPagination::widget()
-                ->currentPage(1)
                 ->iconFirtsPage('«')
                 ->iconLastPage('»')
                 ->paginator($this->createOffsetPaginator($this->data, 1))
@@ -141,7 +138,6 @@ final class OffsetPaginationTest extends TestCase
             </nav>
             HTML,
             OffsetPagination::widget()
-                ->currentPage(1)
                 ->iconClassFirtsPage('bi bi-chevron-double-left p-1')
                 ->iconClassLastPage('bi bi-chevron-double-right p-1')
                 ->paginator($this->createOffsetPaginator($this->data, 1))
@@ -171,7 +167,6 @@ final class OffsetPaginationTest extends TestCase
             </nav>
             HTML,
             OffsetPagination::widget()
-                ->currentPage(1)
                 ->labelFirtsPage('First')
                 ->labelLastPage('Last')
                 ->paginator($this->createOffsetPaginator($this->data, 1))
@@ -199,7 +194,6 @@ final class OffsetPaginationTest extends TestCase
             </nav>
             HTML,
             OffsetPagination::widget()
-                ->currentPage(1)
                 ->paginator($this->createOffsetPaginator($this->data, 1))
                 ->urlGenerator(Mock::urlGenerator())
                 ->urlArguments(['filter' => 'test'])
@@ -225,7 +219,6 @@ final class OffsetPaginationTest extends TestCase
             </nav>
             HTML,
             OffsetPagination::widget()
-                ->currentPage(1)
                 ->paginator($this->createOffsetPaginator($this->data, 1))
                 ->urlGenerator(Mock::urlGenerator())
                 ->urlQueryParameters(['filter' => 'test'])
@@ -251,7 +244,6 @@ final class OffsetPaginationTest extends TestCase
             </nav>
             HTML,
             OffsetPagination::widget()
-                ->currentPage(1)
                 ->paginator($this->createOffsetPaginator($this->data, 1))
                 ->urlGenerator(Mock::urlGenerator())
                 ->urlQueryParameters(['filter' => 'test'])
@@ -263,7 +255,6 @@ final class OffsetPaginationTest extends TestCase
     {
         $this->assertEmpty(
             OffsetPagination::widget()
-                ->currentPage(1)
                 ->paginator($this->createOffsetPaginator($this->data, 5))
                 ->urlArguments([])
                 ->urlGenerator(Mock::urlGenerator())
@@ -301,7 +292,6 @@ final class OffsetPaginationTest extends TestCase
             </nav>
             HTML,
             OffsetPagination::widget()
-                ->currentPage(1)
                 ->paginator($this->createOffsetPaginator($this->data, 1))
                 ->urlArguments([])
                 ->urlGenerator(Mock::urlGenerator())
@@ -330,7 +320,6 @@ final class OffsetPaginationTest extends TestCase
             </nav>
             HTML,
             OffsetPagination::widget()
-                ->currentPage(1)
                 ->menuClass('pagination pagination-lg')
                 ->labelNextPage()
                 ->labelPreviousPage()
@@ -354,7 +343,6 @@ final class OffsetPaginationTest extends TestCase
             </nav>
             HTML,
             OffsetPagination::widget()
-                ->currentPage(1)
                 ->menuClass('pagination pagination-sm')
                 ->labelNextPage()
                 ->labelPreviousPage()
@@ -389,7 +377,6 @@ final class OffsetPaginationTest extends TestCase
             </nav>
             HTML,
             OffsetPagination::widget()
-                ->currentPage(1)
                 ->iconNextPage('»')
                 ->iconPreviousPage('«')
                 ->paginator($this->createOffsetPaginator($this->data, 1))
@@ -414,7 +401,6 @@ final class OffsetPaginationTest extends TestCase
             </nav>
             HTML,
             OffsetPagination::widget()
-                ->currentPage(1)
                 ->iconClassNextPage('bi bi-chevron-double-right p-1')
                 ->iconClassPreviousPage('bi bi-chevron-double-left p-1')
                 ->paginator($this->createOffsetPaginator($this->data, 1))

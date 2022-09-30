@@ -23,7 +23,6 @@ final class ImmutableTest extends TestCase
             }
         };
         $this->assertNotSame($basePagination, $basePagination->attributes([]));
-        $this->assertNotSame($basePagination, $basePagination->currentPage(1));
         $this->assertNotSame($basePagination, $basePagination->disabledNextPage(false));
         $this->assertNotSame($basePagination, $basePagination->disabledPreviousPage(false));
         $this->assertNotSame($basePagination, $basePagination->hideOnSinglePage(false));

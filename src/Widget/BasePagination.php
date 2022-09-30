@@ -15,7 +15,6 @@ use function http_build_query;
 abstract class BasePagination extends Widget
 {
     private array $attributes = [];
-    private int $currentPage = 0;
     private bool $disabledNextPage = false;
     private bool $disabledPreviousPage = false;
     private bool $hideOnSinglePage = true;
@@ -49,19 +48,6 @@ abstract class BasePagination extends Widget
     {
         $new = clone $this;
         $new->attributes = $values;
-
-        return $new;
-    }
-
-    /**
-     * Return a new instance with current page of pagination.
-     *
-     * @param int $value Current page.
-     */
-    public function currentPage(int $value): self
-    {
-        $new = clone $this;
-        $new->currentPage = $value;
 
         return $new;
     }
@@ -380,11 +366,6 @@ abstract class BasePagination extends Widget
     protected function getAttributes(): array
     {
         return $this->attributes;
-    }
-
-    protected function getCurrentPage(): int
-    {
-        return $this->currentPage;
     }
 
     protected function getDisabledNextPage(): bool

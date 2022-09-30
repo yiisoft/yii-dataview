@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Yiisoft\Yii\DataView\Widget;
 
 use InvalidArgumentException;
+use Yiisoft\Data\Paginator\OffsetPaginator;
 use Yiisoft\Html\Tag\Nav;
 use Yiisoft\Yii\Widgets\Menu;
 
@@ -163,34 +164,34 @@ final class OffsetPagination extends BasePagination
     }
 
     /**
-     * @return array The page range of pagination.
-     *
      * @psalm-return array<int, int>
      */
-    protected function getPageRange(): array
+    protected function getPageRange(int $currentPage, int $totalPages): array
     {
-        $beginPage = max(1, $this->getCurrentPage() - (int) ($this->maxNavLinkCount / 2));
-        $endPage = 0;
-        $paginator = $this->getPaginator();
-        $paginator = $paginator->withNextPageToken('1');
+        $beginPage = max(1, $currentPage - (int) ($this->maxNavLinkCount / 2));
 
-        while ($paginator->isOnLastPage() === false) {
-            $paginator = $paginator->withNextPageToken($paginator->getNextPageToken());
-            $endPage++;
+        if (($endPage = $beginPage + $this->maxNavLinkCount - 1) >= $totalPages) {
+            $endPage = $totalPages;
+            $beginPage = max(1, $endPage - $this->maxNavLinkCount + 1);
         }
 
-        if ($this->getCurrentPage() > $endPage + 1) {
+        if ($currentPage > $totalPages) {
             throw new InvalidArgumentException('Current page must be less than or equal to total pages.');
         }
 
-        return [$beginPage, $endPage + 1];
+        return [$beginPage, $endPage];
     }
 
     private function renderPagination(): string
     {
         $attributes = $this->getAttributes();
-        [$beginPage, $endPage] = $this->getPageRange();
-        $currentPage = $this->getCurrentPage();
+
+        /** @var OffsetPaginator */
+        $paginator = $this->getPaginator();
+        $currentPage = $paginator->getCurrentPage();
+        $totalPages = $paginator->getTotalPages();
+        [$beginPage, $endPage] = $this->getPageRange($currentPage, $totalPages);
+
         $items = [];
 
         if ($this->getHideOnSinglePage() && $endPage < 2) {
