@@ -196,7 +196,7 @@ final class DetailView extends Widget
 
     protected function run(): string
     {
-        return Div::tag()->addAttributes($this->attributes)->content($this->renderItems())->render();
+        return Div::tag()->addAttributes($this->attributes)->content($this->renderItems())->encode(false)->render();
     }
 
     private function has(string $attribute): bool
@@ -283,10 +283,14 @@ final class DetailView extends Widget
             /** @psalm-var non-empty-string $column['valueTag'] */
             $value = Html::tag($column['valueTag'], $column['value'], $column['valueAttributes'])->render();
 
-            $items .= Div::tag()->addAttributes($this->containerItemAttributes)->content($label . $value)->render();
+            $items .= Div::tag()
+                ->addAttributes($this->containerItemAttributes)
+                ->content($label . $value)
+                ->encode(false)
+                ->render();
         }
 
-        return  Div::tag()->addAttributes($this->containerItemsAttributes)->content($items)->render();
+        return  Div::tag()->addAttributes($this->containerItemsAttributes)->content($items)->encode(false)->render();
     }
 
     private function renderValue(string $attribute, mixed $value): mixed
