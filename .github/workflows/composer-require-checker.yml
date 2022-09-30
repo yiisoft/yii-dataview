@@ -23,7 +23,7 @@ name: composer require checker
 
 jobs:
   composer-require-checker:
-    uses: yiisoft/actions/.github/workflows/composer-require-checker.yml@add-composer-require-checker
+    uses: yiisoft/actions/.github/workflows/composer-require-checker.yml@master
     with:
       os: >-
         ['ubuntu-latest']
