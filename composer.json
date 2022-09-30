@@ -64,8 +64,8 @@
         },
         "config-plugin": {
             "params": "params.php",
-            "web": [
-                "web/*.php"
+            "common": [
+                "common/*.php"
             ]
         }
     },
