@@ -177,7 +177,7 @@ final class OffsetPagination extends BasePagination
         while ($paginator->isOnLastPage() === false) {
             $paginator = $paginator->withNextPageToken($paginator->getNextPageToken());
             $endPage++;
-        };
+        }
 
         if ($this->getCurrentPage() > $endPage + 1) {
             throw new InvalidArgumentException('Current page must be less than or equal to total pages.');
