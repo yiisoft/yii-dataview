@@ -172,17 +172,12 @@ final class OffsetPagination extends BasePagination
         $beginPage = max(1, $this->getCurrentPage() - (int) ($this->maxNavLinkCount / 2));
         $endPage = 0;
         $paginator = $this->getPaginator();
-
-        if ($paginator->isOnLastPage()) {
-            return [0, 0];
-        }
-
         $paginator = $paginator->withNextPageToken('1');
 
-        do {
+        while ($paginator->isOnLastPage() === false) {
             $paginator = $paginator->withNextPageToken($paginator->getNextPageToken());
             $endPage++;
-        } while ($paginator->isOnLastPage() === false);
+        };
 
         if ($this->getCurrentPage() > $endPage + 1) {
             throw new InvalidArgumentException('Current page must be less than or equal to total pages.');
@@ -198,7 +193,7 @@ final class OffsetPagination extends BasePagination
         $currentPage = $this->getCurrentPage();
         $items = [];
 
-        if ($this->getHideOnSinglePage() && $beginPage === $endPage) {
+        if ($this->getHideOnSinglePage() && $endPage < 2) {
             return '';
         }
 

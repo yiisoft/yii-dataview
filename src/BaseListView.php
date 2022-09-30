@@ -456,7 +456,10 @@ abstract class BaseListView extends Widget
             ->content(
                 $this->getTranslator()->translate(
                     $this->summary,
-                    ['pageCount' => $pageCount, 'totalCount' => $paginator->getTotalItems()],
+                    [
+                        'currentPage' => $paginator->getCurrentPage(),
+                        'totalPages' => $paginator->getTotalPages()
+                    ],
                     'gridview',
                 )
             )

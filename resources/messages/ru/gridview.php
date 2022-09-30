@@ -3,5 +3,5 @@
 declare(strict_types=1);
 
 return [
-    'gridview.summary' => 'Показано <b>{pageCount}</b> из <b>{totalCount}</b>',
+    'gridview.summary' => 'Страница <b>{currentPage}</b> из <b>{totalPages}</b>',
 ];
