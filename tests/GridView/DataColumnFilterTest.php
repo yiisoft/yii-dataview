@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace Yiisoft\Yii\DataView\Tests\GridView;
 
+use PHPUnit\Framework\TestCase;
 use Yiisoft\Yii\DataView\Column\DataColumn;
 use Yiisoft\Yii\DataView\GridView;
 use Yiisoft\Yii\DataView\Tests\Support\Assert;
 use Yiisoft\Yii\DataView\Tests\Support\Mock;
 use Yiisoft\Yii\DataView\Tests\Support\TestTrait;
-use Yiisoft\Yii\DataView\Tests\TestCase;
 
 final class DataColumnFilterTest extends TestCase
 {

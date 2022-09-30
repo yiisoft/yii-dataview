@@ -5,12 +5,15 @@ declare(strict_types=1);
 namespace Yiisoft\Yii\DataView\Tests\Widget\LinkSorter;
 
 use InvalidArgumentException;
+use PHPUnit\Framework\TestCase;
 use ReflectionException;
-use Yiisoft\Yii\DataView\Tests\TestCase;
+use Yiisoft\Yii\DataView\Tests\Support\TestTrait;
 use Yiisoft\Yii\DataView\Widget\LinkSorter;
 
 final class ExceptionTest extends TestCase
 {
+    use TestTrait;
+
     /**
      * @throws ReflectionException
      */

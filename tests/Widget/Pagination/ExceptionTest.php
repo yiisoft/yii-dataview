@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace Yiisoft\Yii\DataView\Tests\Widget\Pagination;
 
 use InvalidArgumentException;
+use PHPUnit\Framework\TestCase;
 use Yiisoft\Yii\DataView\Exception;
 use Yiisoft\Yii\DataView\Tests\Support\Assert;
 use Yiisoft\Yii\DataView\Tests\Support\Mock;
 use Yiisoft\Yii\DataView\Tests\Support\TestTrait;
-use Yiisoft\Yii\DataView\Tests\TestCase;
 use Yiisoft\Yii\DataView\Widget\BasePagination;
 use Yiisoft\Yii\DataView\Widget\OffsetPagination;
 

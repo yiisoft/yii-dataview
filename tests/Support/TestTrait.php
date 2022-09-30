@@ -8,9 +8,18 @@ use Yiisoft\Data\Paginator\KeysetPaginator;
 use Yiisoft\Data\Paginator\OffsetPaginator;
 use Yiisoft\Data\Reader\Iterable\IterableDataReader;
 use Yiisoft\Data\Reader\Sort;
+use Yiisoft\Di\Container;
+use Yiisoft\Di\ContainerConfig;
+use Yiisoft\Widget\WidgetFactory;
 
 trait TestTrait
 {
+    protected function setUp(): void
+    {
+        $container = new Container(ContainerConfig::create());
+        WidgetFactory::initialize($container, []);
+    }
+
     private function createIterableProvider(array $data): IterableDataReader
     {
         return new IterableDataReader($data);

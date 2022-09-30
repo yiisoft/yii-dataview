@@ -4,13 +4,16 @@ declare(strict_types=1);
 
 namespace Yiisoft\Yii\DataView\Tests\Widget\LinkSorter;
 
-use Yiisoft\Yii\DataView\Widget\LinkSorter;
-use Yiisoft\Yii\DataView\Tests\TestCase;
+use PHPUnit\Framework\TestCase;
 use Yiisoft\Router\Route;
 use Yiisoft\Yii\DataView\Tests\Support\Mock;
+use Yiisoft\Yii\DataView\Tests\Support\TestTrait;
+use Yiisoft\Yii\DataView\Widget\LinkSorter;
 
 final class LinkSorterTest extends TestCase
 {
+    use TestTrait;
+
     public function testAttribute(): void
     {
         $urlGenerator = Mock::UrlGenerator([Route::get('/admin/manage')->name('admin/manage')]);

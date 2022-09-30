@@ -7,9 +7,12 @@ namespace Yiisoft\Yii\DataView\Tests\GridView;
 use PHPUnit\Framework\TestCase;
 use Yiisoft\Yii\DataView;
 use Yiisoft\Yii\DataView\Exception;
+use Yiisoft\Yii\DataView\Tests\Support\TestTrait;
 
 final class ExceptionTest extends TestCase
 {
+    use TestTrait;
+
     public function testGetPaginator(): void
     {
         $this->expectException(Exception\PaginatorNotSetException::class);
