@@ -8,12 +8,21 @@ on:
       - '.gitattributes'
       - 'infection.json.dist'
       - 'psalm.xml'
+  push:
+    paths-ignore:
+      - 'docs/**'
+      - 'README.md'
+      - 'CHANGELOG.md'
+      - '.gitignore'
+      - '.gitattributes'
+      - 'infection.json.dist'
+      - 'psalm.xml'
 
 name: rector
 
 jobs:
   rector:
-    uses: yiisoft/actions/.github/workflows/rector.yml@master
+    uses: yiisoft/actions/.github/workflows/rector.yml@fix-rector-actions
     with:
       os: >-
         ['ubuntu-latest']
