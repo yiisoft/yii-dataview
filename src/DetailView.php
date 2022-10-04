@@ -32,15 +32,20 @@ final class DetailView extends Widget
 {
     private array $attributes = [];
     private array $columns = [];
-    private bool $columnsTranslation = true;
-    private array $containerItemAttributes = [];
-    private array $containerItemsAttributes = [];
+    private array $containerAttributes = [];
+    private array|object $data = [];
+    private array $dataAttributes = [];
+    private string $header = '';
+    private string $itemTemplate = "<div{dataAttributes}>\n{label}\n{value}\n</div>";
     private array|Closure $labelAttributes = [];
     private string $labelTag = 'span';
-    private array|object $data = [];
-    private string $header = '';
+    private string $labelTemplate = '<{labelTag}{labelAttributes}>{label}</{labelTag}>';
+    private string $template = "<div{attributes}>\n<div{containerAttributes}>\n{header}\n{items}\n</div>\n</div>";
     private array|Closure $valueAttributes = [];
+    private string $valueFalse = 'false';
     private string $valueTag = 'div';
+    private string $valueTemplate = '<{valueTag}{valueAttributes}>{value}</{valueTag}>';
+    private string $valueTrue = 'true';
 
     /**
      * Returns a new instance with the HTML attributes. The following special options are recognized.
@@ -75,40 +80,14 @@ final class DetailView extends Widget
     }
 
     /**
-     * Returns a new instance whether to translate the grid column header.
-     *
-     * @param bool $value Whether to translate the grid column header.
-     */
-    public function columnsTranslation(bool $value): self
-    {
-        $new = clone $this;
-        $new->columnsTranslation = $value;
-
-        return $new;
-    }
-
-    /**
-     * Returns a new instance with the HTML attributes for the container item.
-     *
-     * @param array $values Attribute values indexed by attribute names.
-     */
-    public function containerItemAttributes(array $values): static
-    {
-        $new = clone $this;
-        $new->containerItemAttributes = $values;
-
-        return $new;
-    }
-
-    /**
      * Returns a new instance with the HTML attributes for the container items.
      *
      * @param array $values Attribute values indexed by attribute names.
      */
-    public function containerItemsAttributes(array $values): static
+    public function containerAttributes(array $values): static
     {
         $new = clone $this;
-        $new->containerItemsAttributes = $values;
+        $new->containerAttributes = $values;
 
         return $new;
     }
@@ -121,10 +100,23 @@ final class DetailView extends Widget
      *
      * @return $this
      */
-    public function data($data): self
+    public function data(array|object $data): self
     {
         $new = clone $this;
         $new->data = $data;
+
+        return $new;
+    }
+
+    /**
+     * Returns a new instance with the HTML attributes for the container item.
+     *
+     * @param array $values Attribute values indexed by attribute names.
+     */
+    public function dataAttributes(array $values): static
+    {
+        $new = clone $this;
+        $new->dataAttributes = $values;
 
         return $new;
     }
@@ -138,6 +130,19 @@ final class DetailView extends Widget
     {
         $new = clone $this;
         $new->header = $value;
+
+        return $new;
+    }
+
+    /**
+     * Return new instance with the item template.
+     *
+     * @param string $value The item template.
+     */
+    public function itemTemplate(string $value): self
+    {
+        $new = clone $this;
+        $new->itemTemplate = $value;
 
         return $new;
     }
@@ -169,6 +174,32 @@ final class DetailView extends Widget
     }
 
     /**
+     * Return new instance with the label template.
+     *
+     * @param string $value The label template.
+     */
+    public function labelTemplate(string $value): self
+    {
+        $new = clone $this;
+        $new->labelTemplate = $value;
+
+        return $new;
+    }
+
+    /**
+     * Return new instance with the template.
+     *
+     * @param string $value The template.
+     */
+    public function template(string $value): self
+    {
+        $new = clone $this;
+        $new->template = $value;
+
+        return $new;
+    }
+
+    /**
      * Returns a new instance with the HTML attributes for the value.
      *
      * @param array $values Attribute values indexed by attribute names.
@@ -177,6 +208,19 @@ final class DetailView extends Widget
     {
         $new = clone $this;
         $new->valueAttributes = $values;
+
+        return $new;
+    }
+
+    /**
+     * Return new instance when the value is false.
+     *
+     * @param string $value The value when is false.
+     */
+    public function valueFalse(string $value): self
+    {
+        $new = clone $this;
+        $new->valueFalse = $value;
 
         return $new;
     }
@@ -194,9 +238,50 @@ final class DetailView extends Widget
         return $new;
     }
 
+    /**
+     * Return new instance with the value template.
+     *
+     * @param string $value The value template.
+     */
+    public function valueTemplate(string $value): self
+    {
+        $new = clone $this;
+        $new->valueTemplate = $value;
+
+        return $new;
+    }
+
+    /**
+     * Return new instance when the value is true.
+     *
+     * @param string $value The value when is true.
+     */
+    public function valueTrue(string $value): self
+    {
+        $new = clone $this;
+        $new->valueTrue = $value;
+
+        return $new;
+    }
+
     protected function run(): string
     {
-        return Div::tag()->addAttributes($this->attributes)->content($this->renderItems())->encode(false)->render();
+        if ($this->renderItems() === '') {
+            return '';
+        }
+
+        return $this->removeDoubleLinesBreaks(
+            strtr(
+                $this->template,
+                [
+                    '{attributes}' => Html::renderTagAttributes($this->attributes),
+                    '{containerAttributes}' => Html::renderTagAttributes($this->containerAttributes),
+                    '{dataAttributes}' => Html::renderTagAttributes($this->dataAttributes),
+                    '{header}' => $this->header,
+                    '{items}' => $this->renderItems(),
+                ]
+            )
+        );
     }
 
     private function has(string $attribute): bool
@@ -222,8 +307,8 @@ final class DetailView extends Widget
 
         /** @psalm-var array[] $columns */
         foreach ($columns as $value) {
-            if (!isset($value['attribute']) && !isset($value['label'])) {
-                throw new InvalidArgumentException('The "attribute" or "label" must be set.');
+            if (!isset($value['attribute'])) {
+                throw new InvalidArgumentException('The "attribute" must be set.');
             }
 
             if (isset($value['attribute']) && !is_string($value['attribute'])) {
@@ -275,32 +360,54 @@ final class DetailView extends Widget
     private function renderItems(): string
     {
         $columns = $this->normalizeColumns($this->columns);
-        $items = $this->header;
 
-        foreach ($columns as $column) {
-            /** @psalm-var non-empty-string $column['labelTag'] */
-            $label = Html::tag($column['labelTag'], $column['label'], $column['labelAttributes'])->render();
-            /** @psalm-var non-empty-string $column['valueTag'] */
-            $value = Html::tag($column['valueTag'], $column['value'], $column['valueAttributes'])->render();
-
-            $items .= Div::tag()
-                ->addAttributes($this->containerItemAttributes)
-                ->content($label . $value)
-                ->encode(false)
-                ->render();
+        if ($columns === []) {
+            return '';
         }
 
-        return  Div::tag()->addAttributes($this->containerItemsAttributes)->content($items)->encode(false)->render();
+        $rows = [];
+
+        foreach ($columns as $column) {
+            $label = strtr($this->labelTemplate, [
+                '{label}' => $column['label'],
+                '{labelTag}' => $column['labelTag'],
+                '{labelAttributes}' => Html::renderTagAttributes($column['labelAttributes']),
+            ]);
+
+            $value = strtr($this->valueTemplate, [
+                '{value}' => $column['value'],
+                '{valueTag}' => $column['valueTag'],
+                '{valueAttributes}' => Html::renderTagAttributes($column['valueAttributes']),
+            ]);
+
+            $rows[] = strtr($this->itemTemplate, [
+                '{dataAttributes}' => Html::renderTagAttributes($this->dataAttributes),
+                '{label}' => $label,
+                '{value}' => $value,
+            ]);
+        }
+
+        return implode(PHP_EOL, $rows);
     }
 
     private function renderValue(string $attribute, mixed $value): mixed
     {
+        if ($this->data === []) {
+            throw new InvalidArgumentException('The "data" must be set.');
+        }
+
         if ($value === null && is_array($this->data) && $this->has($attribute)) {
-            return $this->data[$attribute];
+            return match (is_bool($this->data[$attribute])) {
+                true => $this->data[$attribute] ? $this->valueTrue : $this->valueFalse,
+                default => $this->data[$attribute],
+            };
         }
 
         if ($value === null && is_object($this->data) && $this->has($attribute)) {
-            return $this->data->{$attribute};
+            return match (is_bool($this->data->{$attribute})) {
+                true => $this->data->{$attribute} ? $this->valueTrue : $this->valueFalse,
+                default => $this->data->{$attribute},
+            };
         }
 
         if ($value instanceof Closure) {
@@ -308,5 +415,17 @@ final class DetailView extends Widget
         }
 
         return $value;
+    }
+
+    /**
+     * Remove double spaces from string.
+     *
+     * @param string $string String to remove double spaces from.
+     *
+     * @return string
+     */
+    private function removeDoubleLinesBreaks(string $string): string
+    {
+        return preg_replace("/([\r\n]{4,}|[\n]{2,}|[\r]{2,})/", PHP_EOL, $string);
     }
 }
