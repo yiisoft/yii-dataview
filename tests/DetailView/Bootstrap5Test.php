@@ -64,7 +64,7 @@ final class Bootstrap5Test extends TestCase
                 )
                 ->dataAttributes(['class' => 'col-xl-5'])
                 ->header(
-                    H2::tag()->class('text-center')->content("<strong>Bootstrap 5</strong>")->encode(false)->render()
+                    H2::tag()->class('text-center')->content('<strong>Bootstrap 5</strong>')->encode(false)->render()
                 )
                 ->labelAttributes(['class' => 'fw-bold'])
                 ->valueAttributes(['class' => 'alert alert-info'])

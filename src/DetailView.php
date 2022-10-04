@@ -7,7 +7,6 @@ namespace Yiisoft\Yii\DataView;
 use Closure;
 use InvalidArgumentException;
 use Yiisoft\Html\Html;
-use Yiisoft\Html\Tag\Div;
 use Yiisoft\Widget\Widget;
 use Yiisoft\Yii\DataView\Column\Column;
 

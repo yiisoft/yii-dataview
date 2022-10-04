@@ -457,7 +457,7 @@ final class BaseTest extends TestCase
                         ['attribute' => 'username'],
                         [
                             'attribute' => 'status',
-                            'value' => static fn (array $data): string => $data['status'] ? 'yes' : 'no'
+                            'value' => static fn (array $data): string => $data['status'] ? 'yes' : 'no',
                         ],
                     ],
                 )
@@ -612,7 +612,7 @@ final class BaseTest extends TestCase
                         ['attribute' => 'username'],
                         [
                             'attribute' => 'status',
-                            'value' => static fn (object $data): string => $data->status ? 'yes' : 'no'
+                            'value' => static fn (object $data): string => $data->status ? 'yes' : 'no',
                         ],
                     ],
                 )
