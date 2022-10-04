@@ -40,7 +40,7 @@
         "yiisoft/translator": "^1.0",
         "yiisoft/view": "^5.0|^6.0",
         "yiisoft/widget": "^1.0",
-        "yiisoft/yii-widgets": "dev-big-refactoring"
+        "yiisoft/yii-widgets": "^3.0@dev"
     },
     "require-dev": {
         "maglnet/composer-require-checker": "^3.2",
