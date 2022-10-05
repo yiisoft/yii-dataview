@@ -71,4 +71,62 @@ final class Bootstrap5Test extends TestCase
                 ->render(),
         );
     }
+
+    public function testRenderWithTable(): void
+    {
+        Assert::equalsWithoutLE(
+            <<<HTML
+            <table class="table table-success table-striped">
+            <h2 class="text-center"><strong>Bootstrap 5</strong></h2>
+            <tr>
+            <th class="fw-bold">Id</th>
+            <td>1</td>
+            </tr>
+            <tr>
+            <th class="fw-bold">login</th>
+            <td>test</td>
+            </tr>
+            <tr>
+            <th class="fw-bold">Created At</th>
+            <td>2020-01-01</td>
+            </tr>
+            </table>
+            HTML,
+            DetailView::widget()
+                ->attributes(['class' => 'table table-success table-striped'])
+                ->columns(
+                    [
+                        [
+                            'attribute' => 'id',
+                            'label' => 'Id',
+                        ],
+                        [
+                            'attribute' => 'login',
+                            'label' => 'login',
+                        ],
+                        [
+                            'attribute' => 'created_at',
+                            'label' => 'Created At',
+                        ],
+                    ],
+                )
+                ->data(
+                    [
+                        'id' => 1,
+                        'login' => 'test',
+                        'created_at' => '2020-01-01',
+                    ],
+                )
+                ->dataAttributes(['class' => 'col-xl-5'])
+                ->header(
+                    H2::tag()->class('text-center')->content('<strong>Bootstrap 5</strong>')->encode(false)->render()
+                )
+                ->labelAttributes(['class' => 'fw-bold'])
+                ->labelTemplate("<th{labelAttributes}>{label}</th>")
+                ->itemTemplate("<tr>\n{label}\n{value}\n</tr>")
+                ->template("<table{attributes}>\n{header}\n{items}\n</table>")
+                ->valueTemplate("<td{valueAttributes}>{value}</td>")
+                ->render(),
+        );
+    }
 }
