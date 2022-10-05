@@ -122,10 +122,10 @@ final class Bootstrap5Test extends TestCase
                     H2::tag()->class('text-center')->content('<strong>Bootstrap 5</strong>')->encode(false)->render()
                 )
                 ->labelAttributes(['class' => 'fw-bold'])
-                ->labelTemplate("<th{labelAttributes}>{label}</th>")
+                ->labelTemplate('<th{labelAttributes}>{label}</th>')
                 ->itemTemplate("<tr>\n{label}\n{value}\n</tr>")
                 ->template("<table{attributes}>\n{header}\n{items}\n</table>")
-                ->valueTemplate("<td{valueAttributes}>{value}</td>")
+                ->valueTemplate('<td{valueAttributes}>{value}</td>')
                 ->render(),
         );
     }
