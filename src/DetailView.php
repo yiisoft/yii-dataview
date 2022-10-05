@@ -420,8 +420,6 @@ final class DetailView extends Widget
      * Remove double spaces from string.
      *
      * @param string $string String to remove double spaces from.
-     *
-     * @return string
      */
     private function removeDoubleLinesBreaks(string $string): string
     {
