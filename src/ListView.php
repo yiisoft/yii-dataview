@@ -10,6 +10,7 @@ use Throwable;
 use Yiisoft\Html\Tag\Div;
 use Yiisoft\View\Exception\ViewNotFoundException;
 use Yiisoft\View\WebView;
+use Yiisoft\Yii\DataView\Exception\WebViewNotSetException;
 
 /**
  * The ListView widget is used to display data from data provider. Each data model is rendered using the view specified.
@@ -81,7 +82,7 @@ final class ListView extends BaseListView
     public function getWebView(): WebView
     {
         if ($this->webView === null) {
-            throw new InvalidArgumentException('The "webView" property must be set.');
+            throw new WebViewNotSetException();
         }
 
         return $this->webView;
@@ -183,7 +184,7 @@ final class ListView extends BaseListView
         $content = '';
 
         if ($this->itemView === null) {
-            $content = (string) $key;
+            throw new InvalidArgumentException('The "itemView" property must be set.');
         }
 
         if (is_string($this->itemView)) {
@@ -205,7 +206,11 @@ final class ListView extends BaseListView
             $content = (string) call_user_func($this->itemView, $data, $key, $index, $this);
         }
 
-        return Div::tag()->addAttributes($this->itemViewAttributes)->content($content)->render();
+        return Div::tag()
+            ->addAttributes($this->itemViewAttributes)
+            ->content(PHP_EOL . $content)
+            ->encode(false)
+            ->render();
     }
 
     /**
