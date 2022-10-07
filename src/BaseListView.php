@@ -4,10 +4,13 @@ declare(strict_types=1);
 
 namespace Yiisoft\Yii\DataView;
 
-use ReflectionException;
 use Yiisoft\Data\Paginator\KeysetPaginator;
 use Yiisoft\Data\Paginator\OffsetPaginator;
 use Yiisoft\Data\Paginator\PaginatorInterface;
+use Yiisoft\Definitions\Exception\CircularReferenceException;
+use Yiisoft\Definitions\Exception\InvalidConfigException;
+use Yiisoft\Definitions\Exception\NotInstantiableException;
+use Yiisoft\Factory\NotFoundException;
 use Yiisoft\Html\Tag\Div;
 use Yiisoft\Html\Tag\Td;
 use Yiisoft\Router\UrlGeneratorInterface;
@@ -386,7 +389,10 @@ abstract class BaseListView extends Widget
     }
 
     /**
-     * @throws ReflectionException
+     * @throws InvalidConfigException
+     * @throws NotFoundException
+     * @throws NotInstantiableException
+     * @throws CircularReferenceException
      */
     protected function renderLinkSorter(string $attribute, string $label): string
     {

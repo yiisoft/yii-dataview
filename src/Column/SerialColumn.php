@@ -9,19 +9,9 @@ namespace Yiisoft\Yii\DataView\Column;
  */
 final class SerialColumn extends Column
 {
-    private int $offset = 0;
-
-    /**
-     * Return new instance with offset value of paginator.
-     *
-     * @param int $value Offset value of paginator.
-     */
-    public function offset(int $value): self
+    protected function getLabel(): string
     {
-        $new = clone $this;
-        $new->offset = $value;
-
-        return $new;
+        return parent::getLabel() !== '' ? parent::getLabel() : '#';
     }
 
     /**
@@ -30,16 +20,9 @@ final class SerialColumn extends Column
      * @param array|object $data The data.
      * @param mixed $key The key associated with the data.
      * @param int $index The zero-based index of the data in the data provider. {@see GridView::dataProvider}.
-     *
-     * @return string the rendering result.
      */
     protected function renderDataCellContent(array|object $data, mixed $key, int $index): string
     {
         return (string) ($index + 1);
-    }
-
-    protected function getLabel(): string
-    {
-        return parent::getLabel() !== '' ? parent::getLabel() : '#';
     }
 }

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Yiisoft\Yii\DataView\Column;
 
-use JsonException;
 use Yiisoft\Html\Tag\Input;
 
 use function json_encode;
@@ -20,8 +19,6 @@ final class RadioColumn extends Column
      * @param array|object $data The data.
      * @param mixed $key The key associated with the data.
      * @param int $index The zero-based index of the data in the data provider.
-     *
-     * @throws JsonException
      */
     protected function renderDataCellContent(array|object $data, mixed $key, int $index): string
     {

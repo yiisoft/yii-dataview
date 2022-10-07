@@ -5,8 +5,6 @@ declare(strict_types=1);
 namespace Yiisoft\Yii\DataView;
 
 use Closure;
-use ReflectionException;
-use Yiisoft\Data\Paginator\OffsetPaginator;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\Col;
 use Yiisoft\Html\Tag\Colgroup;
@@ -257,8 +255,6 @@ final class GridView extends BaseListView
 
     /**
      * Renders the data active record classes for the grid view.
-     *
-     * @throws ReflectionException
      */
     protected function renderItems(): string
     {
@@ -274,11 +270,6 @@ final class GridView extends BaseListView
         return Html::tag('table', PHP_EOL . implode(PHP_EOL, $content) . PHP_EOL, $this->tableAttributes)
             ->encode(false)
             ->render();
-    }
-
-    protected function run(): string
-    {
-        return parent::run();
     }
 
     /**
@@ -316,14 +307,11 @@ final class GridView extends BaseListView
     /**
      * Creates column objects and initializes them.
      *
-     * @throws ReflectionException
-     *
      * @psalm-return array<array-key,Column\Column|null>
      */
     private function renderColumns(): array
     {
         $columns = $this->columns;
-        $paginator = $this->getPaginator();
 
         if ($columns === []) {
             $columns = $this->guessColumns();
@@ -347,10 +335,6 @@ final class GridView extends BaseListView
                     if ($linkSorter !== '') {
                         $column = $column->linkSorter($linkSorter);
                     }
-                }
-
-                if ($column instanceof Column\SerialColumn && $paginator instanceof OffsetPaginator) {
-                    $column = $column->offset($paginator->getOffset());
                 }
 
                 $columns[$i] = $column;

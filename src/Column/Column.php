@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Yiisoft\Yii\DataView\Column;
 
 use Closure;
-use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\Td;
 use Yiisoft\Html\Tag\Th;
 
@@ -37,8 +36,6 @@ abstract class Column
      * Return new instance with the HTML attributes of column.
      *
      * @param array $values Attribute values indexed by attribute names.
-     *
-     * @return static
      */
     public function attributes(array $values): static
     {
@@ -57,8 +54,6 @@ abstract class Column
      *
      * Where `$data`, `$key`, and `$index` refer to the data, key and index of the row currently being rendered
      * and `$column` is a reference to the {@see Column} object.
-     *
-     * @return static
      */
     public function content(Closure $value): static
     {
@@ -72,8 +67,6 @@ abstract class Column
      * Return new instance with the HTML attributes for the column content.
      *
      * @param array $values Attribute values indexed by attribute names.
-     *
-     * @return static
      */
     public function contentAttributes(array $values): static
     {
@@ -87,8 +80,6 @@ abstract class Column
      * Return new instance with the data label for the column content.
      *
      * @param string $value The data label for the column content.
-     *
-     * @return static
      */
     public function dataLabel(string $value): static
     {
@@ -103,8 +94,6 @@ abstract class Column
      *
      * @param string $value The HTML display when the content of a cell is empty. This property is used to render cells
      * that have no defined content, e.g. empty footer or filter cells.
-     *
-     * @return static
      */
     public function emptyCell(string $value): static
     {
@@ -118,8 +107,6 @@ abstract class Column
      * Return new instance with the HTML attributes for the filter cell.
      *
      * @param array $values Attribute values indexed by attribute names.
-     *
-     * @return static
      */
     public function filterAttributes(array $values): static
     {
@@ -133,8 +120,6 @@ abstract class Column
      * Return new instance with the footer content.
      *
      * @param string $value The footer content.
-     *
-     * @return static
      */
     public function footer(string $value): static
     {
@@ -148,8 +133,6 @@ abstract class Column
      * Return new instance with the HTML attributes for the footer cell.
      *
      * @param array $value Attribute values indexed by attribute names.
-     *
-     * @return static
      */
     public function footerAttributes(array $value): static
     {
@@ -178,8 +161,6 @@ abstract class Column
      * If it is not set and the active record classes provided by the GridViews data provider are instances of the
      * object data, the label will be determined using Otherwise {@see Inflector::toHumanReadable()} will be used to
      * get a label.
-     *
-     * @return static
      */
     public function label(string $value): static
     {
@@ -193,8 +174,6 @@ abstract class Column
      * Return new instance with the HTML attributes for the header cell.
      *
      * @param array $value Attribute values indexed by attribute names.
-     *
-     * @return static
      */
     public function labelAttributes(array $value): static
     {
@@ -208,8 +187,6 @@ abstract class Column
      * Return new instance with the name of the column.
      *
      * @param string $value The name of the column.
-     *
-     * @return static
      */
     public function name(string $value): static
     {
@@ -225,8 +202,6 @@ abstract class Column
      * @param array|object $data The data.
      * @param mixed $key The key associated with the data.
      * @param int $index The zero-based index of the data in the data provider.
-     *
-     * @return string
      */
     public function renderDataCell(array|object $data, mixed $key, int $index): string
     {
@@ -294,8 +269,6 @@ abstract class Column
      * Return new instance specifying whether the column is visible or not.
      *
      * @param bool $value Whether the column is visible or not.
-     *
-     * @return static
      */
     public function visible(bool $value): static
     {
@@ -336,8 +309,6 @@ abstract class Column
      * @param array|object $data The data.
      * @param mixed $key The key associated with the data.
      * @param int $index The zero-based index of the data in the data provider.
-     *
-     * @return string
      */
     protected function renderDataCellContent(array|object $data, mixed $key, int $index): string
     {
@@ -355,8 +326,6 @@ abstract class Column
      *
      * The default implementation simply renders a space.
      * This method may be overridden to customize the rendering of the filter cell (if any).
-     *
-     * @return string
      */
     protected function renderFilterCellContent(): string
     {
@@ -368,8 +337,6 @@ abstract class Column
      *
      * The default implementation simply renders {@see header}.
      * This method may be overridden to customize the rendering of the header cell.
-     *
-     * @return string
      */
     protected function renderHeaderCellContent(): string
     {
@@ -381,8 +348,6 @@ abstract class Column
      *
      * The default implementation simply renders {@see footer}.
      * This method may be overridden to customize the rendering of the footer cell.
-     *
-     * @return string
      */
     private function renderFooterCellContent(): string
     {

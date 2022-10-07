@@ -61,7 +61,7 @@ final class ActionColumn extends Column
      * ],
      * ```
      */
-    public function buttons(array $value): static
+    public function buttons(array $value): self
     {
         $new = clone $this;
         $new->buttons = $value;
@@ -71,12 +71,8 @@ final class ActionColumn extends Column
 
     /**
      * Initializes the default button rendering callback for single button.
-     *
-     * @param string $name The button names as it's written in template.
-     * @param string $icon The icon name.
-     * @param array $attributes The HTML attributes in terms of name-value pairs.
      */
-    public function createDefaultButtons(): static
+    public function createDefaultButtons(): self
     {
         /** @psalm-var array<string,Closure> */
         $defaultButtons = [
@@ -148,7 +144,7 @@ final class ActionColumn extends Column
      *
      * @param string $value the primaryKey of the data to be used to generate the url automatically.
      */
-    public function primaryKey(string $value): static
+    public function primaryKey(string $value): self
     {
         $new = clone $this;
         $new->primaryKey = $value;
@@ -178,7 +174,7 @@ final class ActionColumn extends Column
      *
      * {@see buttons}
      */
-    public function template(string $value): static
+    public function template(string $value): self
     {
         $new = clone $this;
 
@@ -198,7 +194,7 @@ final class ActionColumn extends Column
      *
      * @param array $value Arguments of the route.
      */
-    public function urlArguments(array $value): static
+    public function urlArguments(array $value): self
     {
         $new = clone $this;
         $new->urlArguments = $value;
@@ -220,10 +216,8 @@ final class ActionColumn extends Column
      * ```
      *
      * If this property is not set, button URLs will be created using {@see createUrl()}.
-     *
-     * @return $this
      */
-    public function urlCreator(Closure $value): static
+    public function urlCreator(Closure $value): self
     {
         $new = clone $this;
         $new->urlCreator = $value;
@@ -236,7 +230,7 @@ final class ActionColumn extends Column
      *
      * @param UrlGeneratorInterface $value The URL generator interface for pagination.
      */
-    public function urlGenerator(UrlGeneratorInterface $value): static
+    public function urlGenerator(UrlGeneratorInterface $value): self
     {
         $new = clone $this;
         $new->urlGenerator = $value;
@@ -249,7 +243,7 @@ final class ActionColumn extends Column
      *
      * @param string $value The name of the route.
      */
-    public function urlName(string $value): static
+    public function urlName(string $value): self
     {
         $new = clone $this;
         $new->urlName = $value;
@@ -262,7 +256,7 @@ final class ActionColumn extends Column
      *
      * @param array $value The query parameters of the route.
      */
-    public function urlQueryParameters(array $value): static
+    public function urlQueryParameters(array $value): self
     {
         $new = clone $this;
         $new->urlQueryParameters = $value;
@@ -275,7 +269,7 @@ final class ActionColumn extends Column
      *
      * @param array $value The config url parameters of the route.
      */
-    public function urlParamsConfig(array $value): static
+    public function urlParamsConfig(array $value): self
     {
         $new = clone $this;
         $new->urlParamsConfig = $value;
@@ -314,7 +308,7 @@ final class ActionColumn extends Column
      * ],
      * ```
      */
-    public function visibleButtons(array $value): static
+    public function visibleButtons(array $value): self
     {
         $new = clone $this;
         $new->visibleButtons = $value;

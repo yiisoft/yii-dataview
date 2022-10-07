@@ -41,7 +41,7 @@ final class LinkSorter extends Widget
     /**
      * Returns a new instance with the attribute name for link sorting.
      *
-     * @param array $values The value label for the link.
+     * @param string $value The value label for the link.
      */
     public function attribute(string $value): self
     {
@@ -393,7 +393,7 @@ final class LinkSorter extends Widget
      *
      * @throws InvalidArgumentException If the attribute is unknown.
      */
-    private function renderSorterlink(): string
+    private function renderSorterLink(): string
     {
         $icon = '';
         $iconClass = '';

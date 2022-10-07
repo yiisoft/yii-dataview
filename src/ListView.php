@@ -132,7 +132,7 @@ final class ListView extends BaseListView
     /**
      * Return new instance with the separator between the items.
      *
-     * @param string $value the HTML code to be displayed between any two consecutive items.
+     * @param string $separator the HTML code to be displayed between any two consecutive items.
      */
     public function separator(string $separator): self
     {
@@ -160,7 +160,7 @@ final class ListView extends BaseListView
     /**
      * Return new instance with the WebView object.
      *
-     * @param WebView $view the WebView object.
+     * @param WebView $value the WebView object.
      */
     public function webView(WebView $value): self
     {

@@ -6,6 +6,10 @@ namespace Yiisoft\Yii\DataView\Widget;
 
 use InvalidArgumentException;
 use Yiisoft\Data\Paginator\OffsetPaginator;
+use Yiisoft\Definitions\Exception\CircularReferenceException;
+use Yiisoft\Definitions\Exception\InvalidConfigException;
+use Yiisoft\Definitions\Exception\NotInstantiableException;
+use Yiisoft\Factory\NotFoundException;
 use Yiisoft\Html\Tag\Nav;
 use Yiisoft\Yii\Widgets\Menu;
 
@@ -182,6 +186,12 @@ final class OffsetPagination extends BasePagination
         return [$beginPage, $endPage];
     }
 
+    /**
+     * @throws InvalidConfigException
+     * @throws NotFoundException
+     * @throws NotInstantiableException
+     * @throws CircularReferenceException
+     */
     private function renderPagination(): string
     {
         $attributes = $this->getAttributes();

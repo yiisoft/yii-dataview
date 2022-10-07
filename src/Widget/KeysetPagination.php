@@ -4,6 +4,10 @@ declare(strict_types=1);
 
 namespace Yiisoft\Yii\DataView\Widget;
 
+use Yiisoft\Definitions\Exception\CircularReferenceException;
+use Yiisoft\Definitions\Exception\InvalidConfigException;
+use Yiisoft\Definitions\Exception\NotInstantiableException;
+use Yiisoft\Factory\NotFoundException;
 use Yiisoft\Html\Tag\Nav;
 use Yiisoft\Yii\Widgets\Menu;
 
@@ -12,11 +16,23 @@ use function array_key_exists;
 
 final class KeysetPagination extends BasePagination
 {
+    /**
+     * @throws InvalidConfigException
+     * @throws NotFoundException
+     * @throws NotInstantiableException
+     * @throws CircularReferenceException
+     */
     protected function run(): string
     {
         return $this->renderPagination();
     }
 
+    /**
+     * @throws InvalidConfigException
+     * @throws NotFoundException
+     * @throws NotInstantiableException
+     * @throws CircularReferenceException
+     */
     private function renderPagination(): string
     {
         $attributes = $this->getAttributes();
@@ -73,7 +89,7 @@ final class KeysetPagination extends BasePagination
                 'iconClass' => $this->getIconClassPreviousPage(),
                 'iconContainerAttributes' => $iconContainerAttributes,
                 'label' => $this->getLabelPreviousPage(),
-                'link' => $this->createUrl((int) $pageToken),
+                'link' => $this->createUrl($pageToken),
             ];
         }
 

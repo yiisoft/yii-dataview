@@ -6,9 +6,9 @@ namespace Yiisoft\Yii\DataView;
 
 use Closure;
 use InvalidArgumentException;
+use JsonException;
 use Yiisoft\Html\Html;
 use Yiisoft\Widget\Widget;
-use Yiisoft\Yii\DataView\Column\Column;
 
 /**
  * DetailView displays the detail of a single data.
@@ -51,7 +51,7 @@ final class DetailView extends Widget
      *
      * @param array $values Attribute values indexed by attribute names.
      */
-    public function attributes(array $values): static
+    public function attributes(array $values): self
     {
         $new = clone $this;
         $new->attributes = $values;
@@ -83,7 +83,7 @@ final class DetailView extends Widget
      *
      * @param array $values Attribute values indexed by attribute names.
      */
-    public function containerAttributes(array $values): static
+    public function containerAttributes(array $values): self
     {
         $new = clone $this;
         $new->containerAttributes = $values;
@@ -94,10 +94,8 @@ final class DetailView extends Widget
     /**
      * Return new instance with the data.
      *
-     * @param array|object $data the data model whose details are to be displayed. This can be a instance, an
+     * @param array|object $data the data model whose details are to be displayed. This can be an instance, an
      * associative array, an object.
-     *
-     * @return $this
      */
     public function data(array|object $data): self
     {
@@ -112,7 +110,7 @@ final class DetailView extends Widget
      *
      * @param array $values Attribute values indexed by attribute names.
      */
-    public function dataAttributes(array $values): static
+    public function dataAttributes(array $values): self
     {
         $new = clone $this;
         $new->dataAttributes = $values;
@@ -151,7 +149,7 @@ final class DetailView extends Widget
      *
      * @param array $values Attribute values indexed by attribute names.
      */
-    public function labelAttributes(array $values): static
+    public function labelAttributes(array $values): self
     {
         $new = clone $this;
         $new->labelAttributes = $values;
@@ -203,7 +201,7 @@ final class DetailView extends Widget
      *
      * @param array $values Attribute values indexed by attribute names.
      */
-    public function valueAttributes(array $values): static
+    public function valueAttributes(array $values): self
     {
         $new = clone $this;
         $new->valueAttributes = $values;
@@ -263,6 +261,9 @@ final class DetailView extends Widget
         return $new;
     }
 
+    /**
+     * @throws JsonException
+     */
     protected function run(): string
     {
         if ($this->renderItems() === '') {
@@ -310,7 +311,7 @@ final class DetailView extends Widget
                 throw new InvalidArgumentException('The "attribute" must be set.');
             }
 
-            if (isset($value['attribute']) && !is_string($value['attribute'])) {
+            if (!is_string($value['attribute'])) {
                 throw new InvalidArgumentException('The "attribute" must be a string.');
             }
 
@@ -356,6 +357,9 @@ final class DetailView extends Widget
         return $attributes;
     }
 
+    /**
+     * @throws JsonException
+     */
     private function renderItems(): string
     {
         $columns = $this->normalizeColumns($this->columns);

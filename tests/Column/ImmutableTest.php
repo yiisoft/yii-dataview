@@ -69,12 +69,6 @@ final class ImmutableTest extends TestCase
         $this->assertNotSame($column, $column->withSorting(false));
     }
 
-    public function testSerialColumn(): void
-    {
-        $column = Column\SerialColumn::create();
-        $this->assertNotSame($column, $column->offset(0));
-    }
-
     private function createColumn(): Column\Column
     {
         return new class () extends Column\Column {

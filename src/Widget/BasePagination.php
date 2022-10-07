@@ -35,7 +35,6 @@ abstract class BasePagination extends Widget
     private PaginatorInterface|null $paginator = null;
     private UrlGeneratorInterface|null $urlGenerator = null;
     private ?array $urlArguments = null;
-    private bool $urlEnabledArguments = true;
     private array $urlQueryParameters = [];
     private string $urlName = '';
 
@@ -54,6 +53,8 @@ abstract class BasePagination extends Widget
 
     /**
      * Return a new instance with disabled next page.
+     *
+     * @param bool $value Whether to disable next page.
      */
     public function disabledNextPage(bool $value): static
     {
@@ -65,6 +66,8 @@ abstract class BasePagination extends Widget
 
     /**
      * Return a new instance with disabled previous page.
+     *
+     * @param bool $value Whether to disable previous page.
      */
     public function disabledPreviousPage(bool $value): static
     {
@@ -330,8 +333,6 @@ abstract class BasePagination extends Widget
      * when creating URLs used to perform pagination.
      *
      * @param int $page the zero-based page number that the URL should point to.
-     *
-     * @return string the created URL.
      */
     protected function createUrl(int $page): string
     {
