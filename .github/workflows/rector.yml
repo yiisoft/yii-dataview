@@ -22,7 +22,7 @@ name: rector
 
 jobs:
   rector:
-    uses: yiisoft/actions/.github/workflows/rector.yml
+    uses: yiisoft/actions/.github/workflows/rector.yml@master
     with:
       os: >-
         ['ubuntu-latest']
