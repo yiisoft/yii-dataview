@@ -2,10 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Yiisoft\Yii\DataView\Tests\Widget\DetailView;
+namespace Yiisoft\Yii\DataView\Tests\DetailView;
 
 use StdClass;
 use PHPUnit\Framework\TestCase;
+use Yiisoft\Definitions\Exception\CircularReferenceException;
+use Yiisoft\Definitions\Exception\InvalidConfigException;
+use Yiisoft\Definitions\Exception\NotInstantiableException;
+use Yiisoft\Factory\NotFoundException;
 use Yiisoft\Yii\DataView\DetailView;
 use Yiisoft\Yii\DataView\Tests\Support\Assert;
 use Yiisoft\Yii\DataView\Tests\Support\TestTrait;
@@ -14,6 +18,12 @@ final class BaseTest extends TestCase
 {
     use TestTrait;
 
+    /**
+     * @throws InvalidConfigException
+     * @throws NotFoundException
+     * @throws NotInstantiableException
+     * @throws CircularReferenceException
+     */
     public function testAttributes(): void
     {
         Assert::equalsWithoutLE(
@@ -49,6 +59,12 @@ final class BaseTest extends TestCase
         );
     }
 
+    /**
+     * @throws InvalidConfigException
+     * @throws NotFoundException
+     * @throws NotInstantiableException
+     * @throws CircularReferenceException
+     */
     public function testContainerAttributes(): void
     {
         Assert::equalsWithoutLE(
@@ -84,6 +100,12 @@ final class BaseTest extends TestCase
         );
     }
 
+    /**
+     * @throws InvalidConfigException
+     * @throws NotFoundException
+     * @throws NotInstantiableException
+     * @throws CircularReferenceException
+     */
     public function testDataAttributes(): void
     {
         Assert::equalsWithoutLE(
@@ -119,6 +141,12 @@ final class BaseTest extends TestCase
         );
     }
 
+    /**
+     * @throws InvalidConfigException
+     * @throws NotFoundException
+     * @throws NotInstantiableException
+     * @throws CircularReferenceException
+     */
     public function testHeader(): void
     {
         Assert::equalsWithoutLE(
@@ -155,6 +183,12 @@ final class BaseTest extends TestCase
         );
     }
 
+    /**
+     * @throws InvalidConfigException
+     * @throws NotFoundException
+     * @throws NotInstantiableException
+     * @throws CircularReferenceException
+     */
     public function testLabelAttributes(): void
     {
         Assert::equalsWithoutLE(
@@ -190,6 +224,12 @@ final class BaseTest extends TestCase
         );
     }
 
+    /**
+     * @throws InvalidConfigException
+     * @throws NotFoundException
+     * @throws NotInstantiableException
+     * @throws CircularReferenceException
+     */
     public function testLabelTag(): void
     {
         Assert::equalsWithoutLE(
@@ -225,11 +265,23 @@ final class BaseTest extends TestCase
         );
     }
 
+    /**
+     * @throws InvalidConfigException
+     * @throws NotFoundException
+     * @throws NotInstantiableException
+     * @throws CircularReferenceException
+     */
     public function testRender(): void
     {
         $this->assertEmpty(DetailView::widget()->columns([])->render());
     }
 
+    /**
+     * @throws InvalidConfigException
+     * @throws NotFoundException
+     * @throws NotInstantiableException
+     * @throws CircularReferenceException
+     */
     public function testValueAttributes(): void
     {
         Assert::equalsWithoutLE(
@@ -265,6 +317,12 @@ final class BaseTest extends TestCase
         );
     }
 
+    /**
+     * @throws InvalidConfigException
+     * @throws NotFoundException
+     * @throws NotInstantiableException
+     * @throws CircularReferenceException
+     */
     public function testValueFalse(): void
     {
         Assert::equalsWithoutLE(
@@ -300,6 +358,12 @@ final class BaseTest extends TestCase
         );
     }
 
+    /**
+     * @throws InvalidConfigException
+     * @throws NotFoundException
+     * @throws NotInstantiableException
+     * @throws CircularReferenceException
+     */
     public function testValueTrue(): void
     {
         Assert::equalsWithoutLE(
@@ -335,6 +399,12 @@ final class BaseTest extends TestCase
         );
     }
 
+    /**
+     * @throws InvalidConfigException
+     * @throws CircularReferenceException
+     * @throws NotFoundException
+     * @throws NotInstantiableException
+     */
     public function testValueWithDataArray(): void
     {
         Assert::equalsWithoutLE(
@@ -466,6 +536,12 @@ final class BaseTest extends TestCase
         );
     }
 
+    /**
+     * @throws InvalidConfigException
+     * @throws CircularReferenceException
+     * @throws NotFoundException
+     * @throws NotInstantiableException
+     */
     public function testValueWithDataObject(): void
     {
         $dataObject = new StdClass();

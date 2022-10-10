@@ -2,10 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Yiisoft\Yii\DataView\Tests\Widget\ListView;
+namespace Yiisoft\Yii\DataView\Tests\ListView;
 
 use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
+use Yiisoft\Definitions\Exception\CircularReferenceException;
+use Yiisoft\Definitions\Exception\InvalidConfigException;
+use Yiisoft\Definitions\Exception\NotInstantiableException;
+use Yiisoft\Factory\NotFoundException;
 use Yiisoft\Yii\DataView\Exception;
 use Yiisoft\Yii\DataView\ListView;
 use Yiisoft\Yii\DataView\Tests\Support\Mock;
@@ -20,6 +24,12 @@ final class ExceptionTest extends TestCase
         ['id' => 2, 'name' => 'Mary', 'age' => 21],
     ];
 
+    /**
+     * @throws InvalidConfigException
+     * @throws NotFoundException
+     * @throws NotInstantiableException
+     * @throws CircularReferenceException
+     */
     public function testGetPaginator(): void
     {
         $this->expectException(Exception\PaginatorNotSetException::class);
@@ -30,6 +40,12 @@ final class ExceptionTest extends TestCase
             ->render();
     }
 
+    /**
+     * @throws InvalidConfigException
+     * @throws NotFoundException
+     * @throws NotInstantiableException
+     * @throws CircularReferenceException
+     */
     public function testGetTranslator(): void
     {
         $this->expectException(Exception\TranslatorNotSetException::class);
@@ -41,6 +57,12 @@ final class ExceptionTest extends TestCase
             ->render();
     }
 
+    /**
+     * @throws InvalidConfigException
+     * @throws NotFoundException
+     * @throws NotInstantiableException
+     * @throws CircularReferenceException
+     */
     public function testGetWebView(): void
     {
         $this->expectException(Exception\WebViewNotSetException::class);

@@ -5,6 +5,10 @@ declare(strict_types=1);
 namespace Yiisoft\Yii\DataView\Tests\GridView;
 
 use PHPUnit\Framework\TestCase;
+use Yiisoft\Definitions\Exception\CircularReferenceException;
+use Yiisoft\Definitions\Exception\InvalidConfigException;
+use Yiisoft\Definitions\Exception\NotInstantiableException;
+use Yiisoft\Factory\NotFoundException;
 use Yiisoft\Html\Tag\A;
 use Yiisoft\Yii\DataView\Column\ActionColumn;
 use Yiisoft\Yii\DataView\Column\DataColumn;
@@ -22,6 +26,12 @@ final class ActionColumnTest extends TestCase
         ['id' => 2, 'name' => 'Mary', 'age' => 21],
     ];
 
+    /**
+     * @throws InvalidConfigException
+     * @throws NotFoundException
+     * @throws NotInstantiableException
+     * @throws CircularReferenceException
+     */
     public function testContent(): void
     {
         Assert::equalsWithoutLE(
@@ -55,6 +65,12 @@ final class ActionColumnTest extends TestCase
         );
     }
 
+    /**
+     * @throws InvalidConfigException
+     * @throws NotFoundException
+     * @throws NotInstantiableException
+     * @throws CircularReferenceException
+     */
     public function testContentAttributes(): void
     {
         Assert::equalsWithoutLE(
@@ -88,6 +104,12 @@ final class ActionColumnTest extends TestCase
         );
     }
 
+    /**
+     * @throws InvalidConfigException
+     * @throws NotFoundException
+     * @throws NotInstantiableException
+     * @throws CircularReferenceException
+     */
     public function testCustomButton(): void
     {
         Assert::equalsWithoutLE(
@@ -126,6 +148,12 @@ final class ActionColumnTest extends TestCase
         );
     }
 
+    /**
+     * @throws InvalidConfigException
+     * @throws NotFoundException
+     * @throws NotInstantiableException
+     * @throws CircularReferenceException
+     */
     public function testDataLabel(): void
     {
         Assert::equalsWithoutLE(
@@ -168,6 +196,12 @@ final class ActionColumnTest extends TestCase
         );
     }
 
+    /**
+     * @throws InvalidConfigException
+     * @throws NotFoundException
+     * @throws NotInstantiableException
+     * @throws CircularReferenceException
+     */
     public function testFooterAttributes(): void
     {
         Assert::equalsWithoutLE(
@@ -216,6 +250,12 @@ final class ActionColumnTest extends TestCase
         );
     }
 
+    /**
+     * @throws InvalidConfigException
+     * @throws NotFoundException
+     * @throws NotInstantiableException
+     * @throws CircularReferenceException
+     */
     public function testLabel(): void
     {
         Assert::equalsWithoutLE(
@@ -258,6 +298,12 @@ final class ActionColumnTest extends TestCase
         );
     }
 
+    /**
+     * @throws InvalidConfigException
+     * @throws NotFoundException
+     * @throws NotInstantiableException
+     * @throws CircularReferenceException
+     */
     public function testLabelWithMbString(): void
     {
         Assert::equalsWithoutLE(
@@ -300,6 +346,12 @@ final class ActionColumnTest extends TestCase
         );
     }
 
+    /**
+     * @throws InvalidConfigException
+     * @throws NotFoundException
+     * @throws NotInstantiableException
+     * @throws CircularReferenceException
+     */
     public function testLabelAttributes(): void
     {
         Assert::equalsWithoutLE(
@@ -342,6 +394,12 @@ final class ActionColumnTest extends TestCase
         );
     }
 
+    /**
+     * @throws InvalidConfigException
+     * @throws NotFoundException
+     * @throws NotInstantiableException
+     * @throws CircularReferenceException
+     */
     public function testName(): void
     {
         Assert::equalsWithoutLE(
@@ -384,6 +442,12 @@ final class ActionColumnTest extends TestCase
         );
     }
 
+    /**
+     * @throws InvalidConfigException
+     * @throws NotFoundException
+     * @throws NotInstantiableException
+     * @throws CircularReferenceException
+     */
     public function testNotVisible(): void
     {
         Assert::equalsWithoutLE(
@@ -412,6 +476,12 @@ final class ActionColumnTest extends TestCase
         );
     }
 
+    /**
+     * @throws InvalidConfigException
+     * @throws NotFoundException
+     * @throws NotInstantiableException
+     * @throws CircularReferenceException
+     */
     public function testPrimaryKey(): void
     {
         Assert::equalsWithoutLE(
@@ -462,6 +532,12 @@ final class ActionColumnTest extends TestCase
         );
     }
 
+    /**
+     * @throws InvalidConfigException
+     * @throws NotFoundException
+     * @throws NotInstantiableException
+     * @throws CircularReferenceException
+     */
     public function testRender(): void
     {
         Assert::equalsWithoutLE(
@@ -510,6 +586,12 @@ final class ActionColumnTest extends TestCase
         );
     }
 
+    /**
+     * @throws InvalidConfigException
+     * @throws NotFoundException
+     * @throws NotInstantiableException
+     * @throws CircularReferenceException
+     */
     public function testUrlArguments(): void
     {
         Assert::equalsWithoutLE(
@@ -552,6 +634,12 @@ final class ActionColumnTest extends TestCase
         );
     }
 
+    /**
+     * @throws InvalidConfigException
+     * @throws NotFoundException
+     * @throws NotInstantiableException
+     * @throws CircularReferenceException
+     */
     public function testUrlCreator(): void
     {
         Assert::equalsWithoutLE(
@@ -594,6 +682,12 @@ final class ActionColumnTest extends TestCase
         );
     }
 
+    /**
+     * @throws InvalidConfigException
+     * @throws NotFoundException
+     * @throws NotInstantiableException
+     * @throws CircularReferenceException
+     */
     public function testUrlQueryParameters(): void
     {
         Assert::equalsWithoutLE(
@@ -636,6 +730,12 @@ final class ActionColumnTest extends TestCase
         );
     }
 
+    /**
+     * @throws InvalidConfigException
+     * @throws NotFoundException
+     * @throws NotInstantiableException
+     * @throws CircularReferenceException
+     */
     public function testUrlParamsConfig(): void
     {
         Assert::equalsWithoutLE(
@@ -678,6 +778,12 @@ final class ActionColumnTest extends TestCase
         );
     }
 
+    /**
+     * @throws InvalidConfigException
+     * @throws NotFoundException
+     * @throws NotInstantiableException
+     * @throws CircularReferenceException
+     */
     public function testVisibleButtonsClosure(): void
     {
         Assert::equalsWithoutLE(
@@ -716,6 +822,9 @@ final class ActionColumnTest extends TestCase
         );
     }
 
+    /**
+     * @psalm-return array<ActionColumn|DataColumn>
+     */
     private function createColumns(): array
     {
         return [
@@ -725,6 +834,9 @@ final class ActionColumnTest extends TestCase
         ];
     }
 
+    /**
+     * @psalm-return array<ActionColumn>
+     */
     private function createColumnsWithButtonCustom(): array
     {
         return [
@@ -744,12 +856,15 @@ final class ActionColumnTest extends TestCase
         ];
     }
 
+    /**
+     * @psalm-return array<ActionColumn>
+     */
     private function createColumnsWithContent(): array
     {
         return [
             ActionColumn::create()
                 ->content(
-                    static fn (array|object $data, mixed $key, int $index): string => A::tag()
+                    static fn (array $data): string => A::tag()
                         ->addAttributes(['class' => 'text-decoration-none', 'title' => 'View'])
                         ->content('🔎')
                         ->encode(false)
@@ -759,12 +874,15 @@ final class ActionColumnTest extends TestCase
         ];
     }
 
+    /**
+     * @psalm-return array<ActionColumn>
+     */
     private function createColumnsWithContentAttributes(): array
     {
         return [
             ActionColumn::create()
                 ->content(
-                    static fn (array|object $data, mixed $key, int $index): string => A::tag()
+                    static fn (array $data): string => A::tag()
                         ->addAttributes(['title' => 'View'])
                         ->content('🔎')
                         ->encode(false)
@@ -775,6 +893,9 @@ final class ActionColumnTest extends TestCase
         ];
     }
 
+    /**
+     * @psalm-return array<ActionColumn>
+     */
     private function createColumnsWithDataLabel(): array
     {
         return [
@@ -782,6 +903,9 @@ final class ActionColumnTest extends TestCase
         ];
     }
 
+    /**
+     * @psalm-return array<ActionColumn>
+     */
     private function createColumnsWithFooterAttributes(): array
     {
         return [
@@ -791,6 +915,9 @@ final class ActionColumnTest extends TestCase
         ];
     }
 
+    /**
+     * @psalm-return array<ActionColumn>
+     */
     private function createColumnsWithLabel(): array
     {
         return [
@@ -798,6 +925,9 @@ final class ActionColumnTest extends TestCase
         ];
     }
 
+    /**
+     * @psalm-return array<ActionColumn>
+     */
     private function createColumnsWithLabelMbString(): array
     {
         return [
@@ -805,6 +935,9 @@ final class ActionColumnTest extends TestCase
         ];
     }
 
+    /**
+     * @psalm-return array<ActionColumn>
+     */
     private function createColumnsWithLabelAttributes(): array
     {
         return [
@@ -812,6 +945,9 @@ final class ActionColumnTest extends TestCase
         ];
     }
 
+    /**
+     * @psalm-return array<ActionColumn>
+     */
     private function createColumnsWithName(): array
     {
         return [
@@ -819,6 +955,9 @@ final class ActionColumnTest extends TestCase
         ];
     }
 
+    /**
+     * @psalm-return array<ActionColumn>
+     */
     private function createColumnsWithNotVisible(): array
     {
         return [
@@ -826,6 +965,9 @@ final class ActionColumnTest extends TestCase
         ];
     }
 
+    /**
+     * @psalm-return array<ActionColumn>
+     */
     private function createColumnsWithPrimaryKey(): array
     {
         return [
@@ -833,6 +975,9 @@ final class ActionColumnTest extends TestCase
         ];
     }
 
+    /**
+     * @psalm-return array<ActionColumn>
+     */
     private function createColumnsWithUrlArguments(): array
     {
         return [
@@ -840,16 +985,22 @@ final class ActionColumnTest extends TestCase
         ];
     }
 
+    /**
+     * @psalm-return array<ActionColumn>
+     */
     private function createColumnsWithUrlCreator(): array
     {
         return [
             ActionColumn::create()
                 ->urlCreator(
-                    static fn (string $action, array|object $data, mixed $key, int $index): string => 'https://test.com/' . $action . '?id=' . $data['id'],
+                    static fn (string $action, array $data): string => 'https://test.com/' . $action . '?id=' . $data['id'],
                 ),
         ];
     }
 
+    /**
+     * @psalm-return array<ActionColumn>
+     */
     private function createColumnsWithUrlQueryParameters(): array
     {
         return [
@@ -858,6 +1009,9 @@ final class ActionColumnTest extends TestCase
         ];
     }
 
+    /**
+     * @psalm-return array<ActionColumn>
+     */
     private function createColumnsWithUrlParamsConfig(): array
     {
         return [
@@ -865,15 +1019,16 @@ final class ActionColumnTest extends TestCase
         ];
     }
 
+    /**
+     * @psalm-return array<ActionColumn>
+     */
     private function createColumnsWithVisibleButtonsClosure(): array
     {
         return [
             ActionColumn::create()->visibleButtons(
                 [
-                    'view' => static fn (array|object $data, mixed $key, int $index): bool => $data['id'] === 1
-                        ? true : false,
-                    'update' => static fn (array|object $data, mixed $key, int $index): bool => $data['id'] === 1
-                        ? false : true,
+                    'view' => static fn (array $data): bool => $data['id'] === 1,
+                    'update' => static fn (array $data): bool => $data['id'] !== 1,
                 ],
             ),
         ];

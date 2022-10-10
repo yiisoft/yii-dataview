@@ -2,9 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Yiisoft\Yii\DataView\Tests\Widget\Bootstrap5\Pagination\Bootstrap5;
+namespace Yiisoft\Yii\DataView\Tests\Widget\Pagination\Bootstrap5;
 
 use PHPUnit\Framework\TestCase;
+use Yiisoft\Definitions\Exception\CircularReferenceException;
+use Yiisoft\Definitions\Exception\InvalidConfigException;
+use Yiisoft\Definitions\Exception\NotInstantiableException;
+use Yiisoft\Factory\NotFoundException;
 use Yiisoft\Yii\DataView\Tests\Support\Assert;
 use Yiisoft\Yii\DataView\Tests\Support\Mock;
 use Yiisoft\Yii\DataView\Tests\Support\TestTrait;
@@ -29,6 +33,11 @@ final class KeysetPaginationTest extends TestCase
     /**
      * Change the alignment of pagination components with flexbox utilities. For example, with
      * `.justify-content-center`.
+     *
+     * @throws InvalidConfigException
+     * @throws NotFoundException
+     * @throws NotInstantiableException
+     * @throws CircularReferenceException
      */
     public function testAlignment(): void
     {
@@ -59,6 +68,11 @@ final class KeysetPaginationTest extends TestCase
      * `tabindex="-1"` on disabled links and use custom JavaScript to fully disable their functionality.
      *
      * @link https://getbootstrap.com/docs/5.2/components/pagination/#disabled-and-active-states
+     *
+     * @throws InvalidConfigException
+     * @throws NotFoundException
+     * @throws NotInstantiableException
+     * @throws CircularReferenceException
      */
     public function testsDisabledAndActiveStates(): void
     {
@@ -80,6 +94,13 @@ final class KeysetPaginationTest extends TestCase
         );
     }
 
+
+    /**
+     * @throws InvalidConfigException
+     * @throws NotFoundException
+     * @throws NotInstantiableException
+     * @throws CircularReferenceException
+     */
     public function testRenderWithUrlQueryParameters(): void
     {
         Assert::equalsWithoutLE(
@@ -105,6 +126,11 @@ final class KeysetPaginationTest extends TestCase
      * reader support with aria attributes.
      *
      * @link https://getbootstrap.com/docs/5.2/components/pagination/#working-with-icons
+     *
+     * @throws InvalidConfigException
+     * @throws NotFoundException
+     * @throws NotInstantiableException
+     * @throws CircularReferenceException
      */
     public function testWorkingWithIcons(): void
     {

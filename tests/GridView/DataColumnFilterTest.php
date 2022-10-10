@@ -5,6 +5,10 @@ declare(strict_types=1);
 namespace Yiisoft\Yii\DataView\Tests\GridView;
 
 use PHPUnit\Framework\TestCase;
+use Yiisoft\Definitions\Exception\CircularReferenceException;
+use Yiisoft\Definitions\Exception\InvalidConfigException;
+use Yiisoft\Definitions\Exception\NotInstantiableException;
+use Yiisoft\Factory\NotFoundException;
 use Yiisoft\Yii\DataView\Column\DataColumn;
 use Yiisoft\Yii\DataView\GridView;
 use Yiisoft\Yii\DataView\Tests\Support\Assert;
@@ -60,6 +64,12 @@ final class DataColumnFilterTest extends TestCase
         ['id' => 2, 'name' => 'Mary', 'age' => 21, 'week' => '2000-W02'],
     ];
 
+    /**
+     * @throws InvalidConfigException
+     * @throws NotFoundException
+     * @throws NotInstantiableException
+     * @throws CircularReferenceException
+     */
     public function testFilter(): void
     {
         Assert::equalsWithoutLE(
@@ -100,6 +110,12 @@ final class DataColumnFilterTest extends TestCase
         );
     }
 
+    /**
+     * @throws InvalidConfigException
+     * @throws NotFoundException
+     * @throws NotInstantiableException
+     * @throws CircularReferenceException
+     */
     public function testFilterDate(): void
     {
         Assert::equalsWithoutLE(
@@ -144,6 +160,12 @@ final class DataColumnFilterTest extends TestCase
         );
     }
 
+    /**
+     * @throws InvalidConfigException
+     * @throws NotFoundException
+     * @throws NotInstantiableException
+     * @throws CircularReferenceException
+     */
     public function testFilterDateTime(): void
     {
         Assert::equalsWithoutLE(
@@ -188,6 +210,12 @@ final class DataColumnFilterTest extends TestCase
         );
     }
 
+    /**
+     * @throws InvalidConfigException
+     * @throws NotFoundException
+     * @throws NotInstantiableException
+     * @throws CircularReferenceException
+     */
     public function testFilterEmail(): void
     {
         Assert::equalsWithoutLE(
@@ -232,6 +260,12 @@ final class DataColumnFilterTest extends TestCase
         );
     }
 
+    /**
+     * @throws InvalidConfigException
+     * @throws NotFoundException
+     * @throws NotInstantiableException
+     * @throws CircularReferenceException
+     */
     public function testFilterInputAttributes(): void
     {
         Assert::equalsWithoutLE(
@@ -273,6 +307,12 @@ final class DataColumnFilterTest extends TestCase
         );
     }
 
+    /**
+     * @throws InvalidConfigException
+     * @throws NotFoundException
+     * @throws NotInstantiableException
+     * @throws CircularReferenceException
+     */
     public function testFilterMonth(): void
     {
         Assert::equalsWithoutLE(
@@ -317,6 +357,12 @@ final class DataColumnFilterTest extends TestCase
         );
     }
 
+    /**
+     * @throws InvalidConfigException
+     * @throws NotFoundException
+     * @throws NotInstantiableException
+     * @throws CircularReferenceException
+     */
     public function testFilterNumber(): void
     {
         Assert::equalsWithoutLE(
@@ -357,6 +403,12 @@ final class DataColumnFilterTest extends TestCase
         );
     }
 
+    /**
+     * @throws InvalidConfigException
+     * @throws NotFoundException
+     * @throws NotInstantiableException
+     * @throws CircularReferenceException
+     */
     public function testFilterPositionFooter(): void
     {
         Assert::equalsWithoutLE(
@@ -374,8 +426,8 @@ final class DataColumnFilterTest extends TestCase
             <td>&nbsp;</td><td>&nbsp;</td>
             </tr>
             <tr class="filters">
-            <th class="text-center" maxlength="5" style="width:60px"><input type="text" name="searchModel[id]" value="0"></th>
-            <th class="text-center" maxlength="5" style="width:60px"><input type="text" name="searchModel[name]"></th>
+            <th class="text-center" style="width:60px"><input type="text" name="searchModel[id]" value="0" maxlength="5"></th>
+            <th class="text-center" style="width:60px"><input type="text" name="searchModel[name]" maxlength="5"></th>
             </tr>
             </tfoot>
             <tbody>
@@ -405,6 +457,12 @@ final class DataColumnFilterTest extends TestCase
         );
     }
 
+    /**
+     * @throws InvalidConfigException
+     * @throws NotFoundException
+     * @throws NotInstantiableException
+     * @throws CircularReferenceException
+     */
     public function testFilterPositionHeader(): void
     {
         Assert::equalsWithoutLE(
@@ -413,8 +471,8 @@ final class DataColumnFilterTest extends TestCase
             <table class="table">
             <thead>
             <tr class="filters">
-            <th class="text-center" maxlength="5" style="width:60px"><input type="text" name="searchModel[id]" value="0"></th>
-            <th class="text-center" maxlength="5" style="width:60px"><input type="text" name="searchModel[name]"></th>
+            <th class="text-center" style="width:60px"><input type="text" name="searchModel[id]" value="0" maxlength="5"></th>
+            <th class="text-center" style="width:60px"><input type="text" name="searchModel[name]" maxlength="5"></th>
             </tr>
             <tr>
             <th>Id</th>
@@ -447,6 +505,12 @@ final class DataColumnFilterTest extends TestCase
         );
     }
 
+    /**
+     * @throws InvalidConfigException
+     * @throws NotFoundException
+     * @throws NotInstantiableException
+     * @throws CircularReferenceException
+     */
     public function testFilterRange(): void
     {
         Assert::equalsWithoutLE(
@@ -487,6 +551,12 @@ final class DataColumnFilterTest extends TestCase
         );
     }
 
+    /**
+     * @throws InvalidConfigException
+     * @throws NotFoundException
+     * @throws NotInstantiableException
+     * @throws CircularReferenceException
+     */
     public function testFilterRowAttributes(): void
     {
         Assert::equalsWithoutLE(
@@ -499,8 +569,8 @@ final class DataColumnFilterTest extends TestCase
             <th>Name</th>
             </tr>
             <tr class="text-center filters">
-            <th class="text-center" maxlength="5" style="width:60px"><input type="text" name="searchModel[id]" value="0"></th>
-            <th class="text-center" maxlength="5" style="width:60px"><input type="text" name="searchModel[name]"></th>
+            <th class="text-center" style="width:60px"><input type="text" name="searchModel[id]" value="0" maxlength="5"></th>
+            <th class="text-center" style="width:60px"><input type="text" name="searchModel[name]" maxlength="5"></th>
             </tr>
             </thead>
             <tbody>
@@ -529,6 +599,12 @@ final class DataColumnFilterTest extends TestCase
         );
     }
 
+    /**
+     * @throws InvalidConfigException
+     * @throws NotFoundException
+     * @throws NotInstantiableException
+     * @throws CircularReferenceException
+     */
     public function testFilterSearch(): void
     {
         Assert::equalsWithoutLE(
@@ -569,6 +645,12 @@ final class DataColumnFilterTest extends TestCase
         );
     }
 
+    /**
+     * @throws InvalidConfigException
+     * @throws NotFoundException
+     * @throws NotInstantiableException
+     * @throws CircularReferenceException
+     */
     public function testFilterSelect(): void
     {
         Assert::equalsWithoutLE(
@@ -615,6 +697,12 @@ final class DataColumnFilterTest extends TestCase
         );
     }
 
+    /**
+     * @throws InvalidConfigException
+     * @throws NotFoundException
+     * @throws NotInstantiableException
+     * @throws CircularReferenceException
+     */
     public function testFilterTelephone(): void
     {
         Assert::equalsWithoutLE(
@@ -661,6 +749,12 @@ final class DataColumnFilterTest extends TestCase
         );
     }
 
+    /**
+     * @throws InvalidConfigException
+     * @throws NotFoundException
+     * @throws NotInstantiableException
+     * @throws CircularReferenceException
+     */
     public function testFilterTime(): void
     {
         Assert::equalsWithoutLE(
@@ -707,6 +801,12 @@ final class DataColumnFilterTest extends TestCase
         );
     }
 
+    /**
+     * @throws InvalidConfigException
+     * @throws NotFoundException
+     * @throws NotInstantiableException
+     * @throws CircularReferenceException
+     */
     public function testFilterUrl(): void
     {
         Assert::equalsWithoutLE(
@@ -753,6 +853,12 @@ final class DataColumnFilterTest extends TestCase
         );
     }
 
+    /**
+     * @throws InvalidConfigException
+     * @throws NotFoundException
+     * @throws NotInstantiableException
+     * @throws CircularReferenceException
+     */
     public function testFilterWeek(): void
     {
         Assert::equalsWithoutLE(
@@ -799,6 +905,12 @@ final class DataColumnFilterTest extends TestCase
         );
     }
 
+    /**
+     * @throws InvalidConfigException
+     * @throws NotFoundException
+     * @throws NotInstantiableException
+     * @throws CircularReferenceException
+     */
     public function testFilters(): void
     {
         Assert::equalsWithoutLE(
@@ -811,8 +923,8 @@ final class DataColumnFilterTest extends TestCase
             <th>Name</th>
             </tr>
             <tr class="filters">
-            <th class="text-center" maxlength="5" style="width:60px"><input type="text" name="searchModel[id]" value="0"></th>
-            <th class="text-center" maxlength="5" style="width:60px"><input type="text" name="searchModel[name]"></th>
+            <th class="text-center" style="width:60px"><input type="text" name="searchModel[id]" value="0" maxlength="5"></th>
+            <th class="text-center" style="width:60px"><input type="text" name="searchModel[name]" maxlength="5"></th>
             </tr>
             </thead>
             <tbody>
@@ -840,6 +952,9 @@ final class DataColumnFilterTest extends TestCase
         );
     }
 
+    /**
+     * @psalm-return array<DataColumn>
+     */
     private function createDataColumnsWithFilter(): array
     {
         return [
@@ -852,6 +967,9 @@ final class DataColumnFilterTest extends TestCase
         ];
     }
 
+    /**
+     * @psalm-return array<DataColumn>
+     */
     private function createDataColumnsWithFilterDate(): array
     {
         return [
@@ -866,6 +984,9 @@ final class DataColumnFilterTest extends TestCase
         ];
     }
 
+    /**
+     * @psalm-return array<DataColumn>
+     */
     private function createDataColumnsWithFilterDateTime(): array
     {
         return [
@@ -880,6 +1001,9 @@ final class DataColumnFilterTest extends TestCase
         ];
     }
 
+    /**
+     * @psalm-return array<DataColumn>
+     */
     private function createDataColumnsWithFilterEmail(): array
     {
         return [
@@ -894,6 +1018,9 @@ final class DataColumnFilterTest extends TestCase
         ];
     }
 
+    /**
+     * @psalm-return array<DataColumn>
+     */
     private function createDataColumnsWithFilterInputAttributes(): array
     {
         return [
@@ -910,6 +1037,9 @@ final class DataColumnFilterTest extends TestCase
         ];
     }
 
+    /**
+     * @psalm-return array<DataColumn>
+     */
     private function createDataColumnsWithFilterMonth(): array
     {
         return [
@@ -924,6 +1054,9 @@ final class DataColumnFilterTest extends TestCase
         ];
     }
 
+    /**
+     * @psalm-return array<DataColumn>
+     */
     private function createDataColumnsWithFilterNumber(): array
     {
         return [
@@ -936,6 +1069,9 @@ final class DataColumnFilterTest extends TestCase
         ];
     }
 
+    /**
+     * @psalm-return array<DataColumn>
+     */
     private function createDataColumnsWithFilterRange(): array
     {
         return [
@@ -949,6 +1085,9 @@ final class DataColumnFilterTest extends TestCase
         ];
     }
 
+    /**
+     * @psalm-return array<DataColumn>
+     */
     private function createDataColumnsWithFilterSearch(): array
     {
         return [
@@ -961,6 +1100,9 @@ final class DataColumnFilterTest extends TestCase
         ];
     }
 
+    /**
+     * @psalm-return array<DataColumn>
+     */
     private function createDataColumnsWithFilterSelect(): array
     {
         return [
@@ -975,6 +1117,9 @@ final class DataColumnFilterTest extends TestCase
         ];
     }
 
+    /**
+     * @psalm-return array<DataColumn>
+     */
     private function createDataColumnsWithFilterTelephone(): array
     {
         return [
@@ -989,6 +1134,9 @@ final class DataColumnFilterTest extends TestCase
         ];
     }
 
+    /**
+     * @psalm-return array<DataColumn>
+     */
     private function createDataColumnsWithFilterTime(): array
     {
         return [
@@ -1003,6 +1151,9 @@ final class DataColumnFilterTest extends TestCase
         ];
     }
 
+    /**
+     * @psalm-return array<DataColumn>
+     */
     private function createDataColumnsWithFilterUrl(): array
     {
         return [
@@ -1017,6 +1168,9 @@ final class DataColumnFilterTest extends TestCase
         ];
     }
 
+    /**
+     * @psalm-return array<DataColumn>
+     */
     private function createDataColumnsWithFilterWeek(): array
     {
         return [
@@ -1031,6 +1185,9 @@ final class DataColumnFilterTest extends TestCase
         ];
     }
 
+    /**
+     * @psalm-return array<DataColumn>
+     */
     private function createDataColumnsWithFilters(): array
     {
         return [
@@ -1038,24 +1195,14 @@ final class DataColumnFilterTest extends TestCase
                 ->attribute('id')
                 ->filterAttribute('id')
                 ->filterValueDefault(0)
-                ->filterAttributes(
-                    [
-                        'class' => 'text-center',
-                        'maxlength' => '5',
-                        'style' => 'width:60px',
-                    ]
-                ),
+                ->filterAttributes(['class' => 'text-center', 'style' => 'width:60px'])
+                ->filterInputAttributes(['maxlength' => '5']),
             DataColumn::create()
                 ->attribute('name')
                 ->filterAttribute('name')
                 ->filterValueDefault('')
-                ->filterAttributes(
-                    [
-                        'class' => 'text-center',
-                        'maxlength' => '5',
-                        'style' => 'width:60px',
-                    ]
-                ),
+                ->filterAttributes(['class' => 'text-center', 'style' => 'width:60px'])
+                ->filterInputAttributes(['maxlength' => '5']),
         ];
     }
 }

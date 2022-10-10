@@ -5,6 +5,10 @@ declare(strict_types=1);
 namespace Yiisoft\Yii\DataView\Tests\GridView;
 
 use PHPUnit\Framework\TestCase;
+use Yiisoft\Definitions\Exception\CircularReferenceException;
+use Yiisoft\Definitions\Exception\InvalidConfigException;
+use Yiisoft\Definitions\Exception\NotInstantiableException;
+use Yiisoft\Factory\NotFoundException;
 use Yiisoft\Yii\DataView\Column\DataColumn;
 use Yiisoft\Yii\DataView\GridView;
 use Yiisoft\Yii\DataView\Tests\Support\Assert;
@@ -20,6 +24,12 @@ final class DataColumnTest extends TestCase
         ['id' => 2, 'name' => 'Mary', 'age' => 21],
     ];
 
+    /**
+     * @throws InvalidConfigException
+     * @throws NotFoundException
+     * @throws NotInstantiableException
+     * @throws CircularReferenceException
+     */
     public function testContent(): void
     {
         Assert::equalsWithoutLE(
@@ -56,6 +66,12 @@ final class DataColumnTest extends TestCase
         );
     }
 
+    /**
+     * @throws InvalidConfigException
+     * @throws NotFoundException
+     * @throws NotInstantiableException
+     * @throws CircularReferenceException
+     */
     public function testContentAttributes(): void
     {
         Assert::equalsWithoutLE(
@@ -92,6 +108,12 @@ final class DataColumnTest extends TestCase
         );
     }
 
+    /**
+     * @throws InvalidConfigException
+     * @throws NotFoundException
+     * @throws NotInstantiableException
+     * @throws CircularReferenceException
+     */
     public function testContentAttributesClosure(): void
     {
         Assert::equalsWithoutLE(
@@ -128,6 +150,12 @@ final class DataColumnTest extends TestCase
         );
     }
 
+    /**
+     * @throws InvalidConfigException
+     * @throws NotFoundException
+     * @throws NotInstantiableException
+     * @throws CircularReferenceException
+     */
     public function testDataLabel(): void
     {
         Assert::equalsWithoutLE(
@@ -164,6 +192,12 @@ final class DataColumnTest extends TestCase
         );
     }
 
+    /**
+     * @throws InvalidConfigException
+     * @throws NotFoundException
+     * @throws NotInstantiableException
+     * @throws CircularReferenceException
+     */
     public function testLabel(): void
     {
         Assert::equalsWithoutLE(
@@ -200,6 +234,12 @@ final class DataColumnTest extends TestCase
         );
     }
 
+    /**
+     * @throws InvalidConfigException
+     * @throws NotFoundException
+     * @throws NotInstantiableException
+     * @throws CircularReferenceException
+     */
     public function testLabelMbString(): void
     {
         Assert::equalsWithoutLE(
@@ -236,6 +276,12 @@ final class DataColumnTest extends TestCase
         );
     }
 
+    /**
+     * @throws InvalidConfigException
+     * @throws NotFoundException
+     * @throws NotInstantiableException
+     * @throws CircularReferenceException
+     */
     public function testLabelAttributes(): void
     {
         Assert::equalsWithoutLE(
@@ -272,6 +318,12 @@ final class DataColumnTest extends TestCase
         );
     }
 
+    /**
+     * @throws InvalidConfigException
+     * @throws NotFoundException
+     * @throws NotInstantiableException
+     * @throws CircularReferenceException
+     */
     public function testLinkSorter(): void
     {
         Assert::equalsWithoutLE(
@@ -308,6 +360,12 @@ final class DataColumnTest extends TestCase
         );
     }
 
+    /**
+     * @throws InvalidConfigException
+     * @throws NotFoundException
+     * @throws NotInstantiableException
+     * @throws CircularReferenceException
+     */
     public function testName(): void
     {
         Assert::equalsWithoutLE(
@@ -345,6 +403,12 @@ final class DataColumnTest extends TestCase
         );
     }
 
+    /**
+     * @throws InvalidConfigException
+     * @throws NotFoundException
+     * @throws NotInstantiableException
+     * @throws CircularReferenceException
+     */
     public function testNotSorting(): void
     {
         Assert::equalsWithoutLE(
@@ -382,6 +446,12 @@ final class DataColumnTest extends TestCase
         );
     }
 
+    /**
+     * @throws InvalidConfigException
+     * @throws NotFoundException
+     * @throws NotInstantiableException
+     * @throws CircularReferenceException
+     */
     public function testNotVisible(): void
     {
         Assert::equalsWithoutLE(
@@ -416,6 +486,12 @@ final class DataColumnTest extends TestCase
         );
     }
 
+    /**
+     * @throws InvalidConfigException
+     * @throws NotFoundException
+     * @throws NotInstantiableException
+     * @throws CircularReferenceException
+     */
     public function testSort(): void
     {
         Assert::equalsWithoutLE(
@@ -453,6 +529,12 @@ final class DataColumnTest extends TestCase
         );
     }
 
+    /**
+     * @throws InvalidConfigException
+     * @throws NotFoundException
+     * @throws NotInstantiableException
+     * @throws CircularReferenceException
+     */
     public function testValue(): void
     {
         Assert::equalsWithoutLE(
@@ -489,6 +571,12 @@ final class DataColumnTest extends TestCase
         );
     }
 
+    /**
+     * @throws InvalidConfigException
+     * @throws NotFoundException
+     * @throws NotInstantiableException
+     * @throws CircularReferenceException
+     */
     public function testValueClosure(): void
     {
         Assert::equalsWithoutLE(
@@ -525,6 +613,9 @@ final class DataColumnTest extends TestCase
         );
     }
 
+    /**
+     * @psalm-return array<DataColumn>
+     */
     private function createColumns(): array
     {
         return [
@@ -533,60 +624,56 @@ final class DataColumnTest extends TestCase
         ];
     }
 
+    /**
+     * @psalm-return array<DataColumn>
+     */
     private function createColumnsWithContent(): array
     {
         return [
             DataColumn::create()
                 ->attribute('id')
-                ->content(
-                    static fn (array|object $data, mixed $key, int $index): int => $data['id']
-                ),
+                ->content(static fn (array $data): int => $data['id']),
             DataColumn::create()
                 ->attribute('name')
-                ->content(
-                    static fn (array|object $data, mixed $key, int $index): string => $data['name']
-                ),
+                ->content(static fn (array $data): string => $data['name']),
         ];
     }
 
+    /**
+     * @psalm-return array<DataColumn>
+     */
     private function createColumnsWithContentAttributes(): array
     {
         return [
             DataColumn::create()
                 ->attribute('id')
-                ->content(
-                    static fn (array|object $data, mixed $key, int $index): int => $data['id']
-                )
+                ->content(static fn (array $data): int => $data['id'])
                 ->contentAttributes(['class' => 'test.class']),
             DataColumn::create()
                 ->attribute('name')
-                ->content(
-                    static fn (array|object $data, mixed $key, int $index): string => $data['name']
-                )
+                ->content(static fn (array $data): string => $data['name'])
                 ->contentAttributes(['class' => 'test.class']),
         ];
     }
 
+    /**
+     * @psalm-return array<DataColumn>
+     */
     private function createColumnsWithContentAttributesClosure(): array
     {
         return [
             DataColumn::create()
                 ->attribute('id')
-                ->contentAttributes(
-                    [
-                        'class' => static fn (array|object $data, mixed $key, int $index): string => 'test.class',
-                    ],
-                ),
+                ->contentAttributes(['class' => static fn (): string => 'test.class']),
             DataColumn::create()
                 ->attribute('name')
-                ->contentAttributes(
-                    [
-                        'class' => static fn (array|object $data, mixed $key, int $index): string => 'test.class',
-                    ],
-                ),
+                ->contentAttributes(['class' => static fn (): string => 'test.class']),
         ];
     }
 
+    /**
+     * @psalm-return array<DataColumn>
+     */
     private function createColumnsWithDataLabel(): array
     {
         return [
@@ -595,6 +682,9 @@ final class DataColumnTest extends TestCase
         ];
     }
 
+    /**
+     * @psalm-return array<DataColumn>
+     */
     private function createColumnsWithLabel(): array
     {
         return [
@@ -603,6 +693,9 @@ final class DataColumnTest extends TestCase
         ];
     }
 
+    /**
+     * @psalm-return array<DataColumn>
+     */
     private function createColumnsWithLabelMbString(): array
     {
         return [
@@ -611,6 +704,9 @@ final class DataColumnTest extends TestCase
         ];
     }
 
+    /**
+     * @psalm-return array<DataColumn>
+     */
     private function createColumnsWithLabelAttributes(): array
     {
         return [
@@ -619,6 +715,9 @@ final class DataColumnTest extends TestCase
         ];
     }
 
+    /**
+     * @psalm-return array<DataColumn>
+     */
     private function createColumnsWithLinkSorter(): array
     {
         return [
@@ -631,6 +730,9 @@ final class DataColumnTest extends TestCase
         ];
     }
 
+    /**
+     * @psalm-return array<DataColumn>
+     */
     private function createColumnsWithNotSorting(): array
     {
         return [
@@ -639,6 +741,9 @@ final class DataColumnTest extends TestCase
         ];
     }
 
+    /**
+     * @psalm-return array<DataColumn>
+     */
     private function createColumnsWithName(): array
     {
         return [
@@ -647,6 +752,9 @@ final class DataColumnTest extends TestCase
         ];
     }
 
+    /**
+     * @psalm-return array<DataColumn>
+     */
     private function createColumnsWithNotVisible(): array
     {
         return [
@@ -655,6 +763,9 @@ final class DataColumnTest extends TestCase
         ];
     }
 
+    /**
+     * @psalm-return array<DataColumn>
+     */
     private function createColumnsWithValue(): array
     {
         return [
@@ -663,15 +774,18 @@ final class DataColumnTest extends TestCase
         ];
     }
 
+    /**
+     * @psalm-return array<DataColumn>
+     */
     private function createColumnsWithValueClosure(): array
     {
         return [
             DataColumn::create()
                 ->attribute('id')
-                ->value(static fn (array|object $data): int => $data['id']),
+                ->value(static fn (array $data): int => $data['id']),
             DataColumn::create()
                 ->attribute('name')
-                ->value(static fn (array|object $data): string => $data['name']),
+                ->value(static fn (array $data): string => $data['name']),
         ];
     }
 }

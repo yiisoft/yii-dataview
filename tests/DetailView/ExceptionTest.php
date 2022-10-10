@@ -2,10 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Yiisoft\Yii\DataView\Tests\Widget\DetailView;
+namespace Yiisoft\Yii\DataView\Tests\DetailView;
 
 use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
+use Yiisoft\Definitions\Exception\CircularReferenceException;
+use Yiisoft\Definitions\Exception\InvalidConfigException;
+use Yiisoft\Definitions\Exception\NotInstantiableException;
+use Yiisoft\Factory\NotFoundException;
 use Yiisoft\Yii\DataView\DetailView;
 use Yiisoft\Yii\DataView\Tests\Support\TestTrait;
 
@@ -13,6 +17,12 @@ final class ExceptionTest extends TestCase
 {
     use TestTrait;
 
+    /**
+     * @throws InvalidConfigException
+     * @throws NotFoundException
+     * @throws NotInstantiableException
+     * @throws CircularReferenceException
+     */
     public function testColumnsWithoutAttributes(): void
     {
         $this->expectException(InvalidArgumentException::class);
@@ -23,6 +33,12 @@ final class ExceptionTest extends TestCase
             ->render();
     }
 
+    /**
+     * @throws InvalidConfigException
+     * @throws NotFoundException
+     * @throws NotInstantiableException
+     * @throws CircularReferenceException
+     */
     public function testColumnsWithAttributesNotString(): void
     {
         $this->expectException(InvalidArgumentException::class);
@@ -33,6 +49,12 @@ final class ExceptionTest extends TestCase
             ->render();
     }
 
+    /**
+     * @throws InvalidConfigException
+     * @throws NotFoundException
+     * @throws NotInstantiableException
+     * @throws CircularReferenceException
+     */
     public function testColumnsWithLabelNotString(): void
     {
         $this->expectException(InvalidArgumentException::class);
@@ -43,6 +65,12 @@ final class ExceptionTest extends TestCase
             ->render();
     }
 
+    /**
+     * @throws InvalidConfigException
+     * @throws NotFoundException
+     * @throws NotInstantiableException
+     * @throws CircularReferenceException
+     */
     public function testDataEmpty(): void
     {
         $this->expectException(InvalidArgumentException::class);

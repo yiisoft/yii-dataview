@@ -2,9 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Yiisoft\Yii\DataView\Tests\Widget\DetailView;
+namespace Yiisoft\Yii\DataView\Tests\DetailView;
 
 use PHPUnit\Framework\TestCase;
+use Yiisoft\Definitions\Exception\CircularReferenceException;
+use Yiisoft\Definitions\Exception\InvalidConfigException;
+use Yiisoft\Definitions\Exception\NotInstantiableException;
+use Yiisoft\Factory\NotFoundException;
 use Yiisoft\Yii\DataView\DetailView;
 use Yiisoft\Yii\DataView\Tests\Support\TestTrait;
 
@@ -12,6 +16,12 @@ final class ImmutableTest extends TestCase
 {
     use TestTrait;
 
+    /**
+     * @throws InvalidConfigException
+     * @throws NotFoundException
+     * @throws NotInstantiableException
+     * @throws CircularReferenceException
+     */
     public function testInmutable(): void
     {
         $detailView = DetailView::widget();

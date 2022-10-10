@@ -5,6 +5,10 @@ declare(strict_types=1);
 namespace Yiisoft\Yii\DataView\Tests\Widget\LinkSorter;
 
 use PHPUnit\Framework\TestCase;
+use Yiisoft\Definitions\Exception\CircularReferenceException;
+use Yiisoft\Definitions\Exception\InvalidConfigException;
+use Yiisoft\Definitions\Exception\NotInstantiableException;
+use Yiisoft\Factory\NotFoundException;
 use Yiisoft\Router\Route;
 use Yiisoft\Yii\DataView\Tests\Support\Mock;
 use Yiisoft\Yii\DataView\Tests\Support\TestTrait;
@@ -14,6 +18,12 @@ final class LinkSorterTest extends TestCase
 {
     use TestTrait;
 
+    /**
+     * @throws InvalidConfigException
+     * @throws NotFoundException
+     * @throws NotInstantiableException
+     * @throws CircularReferenceException
+     */
     public function testAttribute(): void
     {
         $urlGenerator = Mock::UrlGenerator([Route::get('/admin/manage')->name('admin/manage')]);
@@ -33,6 +43,12 @@ final class LinkSorterTest extends TestCase
         );
     }
 
+    /**
+     * @throws InvalidConfigException
+     * @throws NotFoundException
+     * @throws NotInstantiableException
+     * @throws CircularReferenceException
+     */
     public function testAttributeNoExist(): void
     {
         $urlGenerator = Mock::UrlGenerator([Route::get('/admin/manage')->name('admin/manage')]);
@@ -49,6 +65,12 @@ final class LinkSorterTest extends TestCase
         );
     }
 
+    /**
+     * @throws InvalidConfigException
+     * @throws NotFoundException
+     * @throws NotInstantiableException
+     * @throws CircularReferenceException
+     */
     public function testDirectionAsc(): void
     {
         $urlGenerator = Mock::UrlGenerator([Route::get('/admin/manage')->name('admin/manage')]);
@@ -69,6 +91,12 @@ final class LinkSorterTest extends TestCase
         );
     }
 
+    /**
+     * @throws InvalidConfigException
+     * @throws NotFoundException
+     * @throws NotInstantiableException
+     * @throws CircularReferenceException
+     */
     public function testDirectionDesc(): void
     {
         $urlGenerator = Mock::UrlGenerator([Route::get('/admin/manage')->name('admin/manage')]);
@@ -89,6 +117,12 @@ final class LinkSorterTest extends TestCase
         );
     }
 
+    /**
+     * @throws InvalidConfigException
+     * @throws NotFoundException
+     * @throws NotInstantiableException
+     * @throws CircularReferenceException
+     */
     public function testDirectionIconClassAsc(): void
     {
         $urlGenerator = Mock::UrlGenerator([Route::get('/admin/manage')->name('admin/manage')]);
@@ -110,6 +144,12 @@ final class LinkSorterTest extends TestCase
         );
     }
 
+    /**
+     * @throws InvalidConfigException
+     * @throws NotFoundException
+     * @throws NotInstantiableException
+     * @throws CircularReferenceException
+     */
     public function testDirectionIconClassDesc(): void
     {
         $urlGenerator = Mock::UrlGenerator([Route::get('/admin/manage')->name('admin/manage')]);
@@ -131,6 +171,12 @@ final class LinkSorterTest extends TestCase
         );
     }
 
+    /**
+     * @throws InvalidConfigException
+     * @throws NotFoundException
+     * @throws NotInstantiableException
+     * @throws CircularReferenceException
+     */
     public function testMultisort(): void
     {
         $urlGenerator = Mock::UrlGenerator([Route::get('/admin/manage')->name('admin/manage')]);
@@ -151,6 +197,12 @@ final class LinkSorterTest extends TestCase
         );
     }
 
+    /**
+     * @throws InvalidConfigException
+     * @throws NotFoundException
+     * @throws NotInstantiableException
+     * @throws CircularReferenceException
+     */
     public function testLabel(): void
     {
         $urlGenerator = Mock::UrlGenerator([Route::get('/admin/manage')->name('admin/manage')]);
@@ -172,6 +224,12 @@ final class LinkSorterTest extends TestCase
         );
     }
 
+    /**
+     * @throws InvalidConfigException
+     * @throws NotFoundException
+     * @throws NotInstantiableException
+     * @throws CircularReferenceException
+     */
     public function testLinkAttributes(): void
     {
         $urlGenerator = Mock::UrlGenerator([Route::get('/admin/manage')->name('admin/manage')]);
@@ -193,6 +251,12 @@ final class LinkSorterTest extends TestCase
         );
     }
 
+    /**
+     * @throws InvalidConfigException
+     * @throws NotFoundException
+     * @throws NotInstantiableException
+     * @throws CircularReferenceException
+     */
     public function testPageConfig(): void
     {
         $urlGenerator = Mock::UrlGenerator([Route::get('/admin/manage')->name('admin/manage')]);
@@ -219,6 +283,12 @@ final class LinkSorterTest extends TestCase
         );
     }
 
+    /**
+     * @throws InvalidConfigException
+     * @throws NotFoundException
+     * @throws NotInstantiableException
+     * @throws CircularReferenceException
+     */
     public function testRender(): void
     {
         $urlGenerator = Mock::UrlGenerator([Route::get('/admin/manage')->name('admin/manage')]);
@@ -244,6 +314,12 @@ final class LinkSorterTest extends TestCase
         );
     }
 
+    /**
+     * @throws InvalidConfigException
+     * @throws NotFoundException
+     * @throws NotInstantiableException
+     * @throws CircularReferenceException
+     */
     public function testUrlArguments(): void
     {
         $urlGenerator = Mock::UrlGenerator([Route::get('/admin/manage')->name('admin/manage')]);
@@ -266,6 +342,12 @@ final class LinkSorterTest extends TestCase
         );
     }
 
+    /**
+     * @throws InvalidConfigException
+     * @throws NotFoundException
+     * @throws NotInstantiableException
+     * @throws CircularReferenceException
+     */
     public function testUrlEnabledArgumentsWithFalse(): void
     {
         $urlGenerator = Mock::UrlGenerator([Route::get('/admin/manage')->name('admin/manage')]);
@@ -287,6 +369,12 @@ final class LinkSorterTest extends TestCase
         );
     }
 
+    /**
+     * @throws InvalidConfigException
+     * @throws NotFoundException
+     * @throws NotInstantiableException
+     * @throws CircularReferenceException
+     */
     public function testUrlNameWithNull(): void
     {
         $urlGenerator = Mock::UrlGenerator([Route::get('/admin/manage')->name('admin/manage')]);
@@ -308,6 +396,12 @@ final class LinkSorterTest extends TestCase
         );
     }
 
+    /**
+     * @throws InvalidConfigException
+     * @throws NotFoundException
+     * @throws NotInstantiableException
+     * @throws CircularReferenceException
+     */
     public function testUrlQueryParametersWithUrlArgumentsFalse(): void
     {
         $urlGenerator = Mock::UrlGenerator([Route::get('/admin/manage')->name('admin/manage')]);

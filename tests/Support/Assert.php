@@ -36,6 +36,8 @@ final class Assert extends TestCase
      *
      * @param object $object The object to get the property from.
      * @param string $propertyName The name of the property to get.
+     *
+     * @throws ReflectionException
      */
     public static function inaccessibleProperty(object $object, string $propertyName): mixed
     {

@@ -5,6 +5,10 @@ declare(strict_types=1);
 namespace Yiisoft\Yii\DataView\Tests\GridView;
 
 use PHPUnit\Framework\TestCase;
+use Yiisoft\Definitions\Exception\CircularReferenceException;
+use Yiisoft\Definitions\Exception\InvalidConfigException;
+use Yiisoft\Definitions\Exception\NotInstantiableException;
+use Yiisoft\Factory\NotFoundException;
 use Yiisoft\Yii\DataView\Column\DataColumn;
 use Yiisoft\Yii\DataView\Column\RadioColumn;
 use Yiisoft\Yii\DataView\GridView;
@@ -21,6 +25,12 @@ final class RadioColumnTest extends TestCase
         ['id' => 2, 'name' => 'Mary', 'age' => 21],
     ];
 
+    /**
+     * @throws InvalidConfigException
+     * @throws NotFoundException
+     * @throws NotInstantiableException
+     * @throws CircularReferenceException
+     */
     public function testContent(): void
     {
         Assert::equalsWithoutLE(
@@ -60,6 +70,12 @@ final class RadioColumnTest extends TestCase
         );
     }
 
+    /**
+     * @throws InvalidConfigException
+     * @throws NotFoundException
+     * @throws NotInstantiableException
+     * @throws CircularReferenceException
+     */
     public function testContentAttributes(): void
     {
         Assert::equalsWithoutLE(
@@ -99,6 +115,12 @@ final class RadioColumnTest extends TestCase
         );
     }
 
+    /**
+     * @throws InvalidConfigException
+     * @throws NotFoundException
+     * @throws NotInstantiableException
+     * @throws CircularReferenceException
+     */
     public function testDataLabel(): void
     {
         Assert::equalsWithoutLE(
@@ -138,6 +160,12 @@ final class RadioColumnTest extends TestCase
         );
     }
 
+    /**
+     * @throws InvalidConfigException
+     * @throws NotFoundException
+     * @throws NotInstantiableException
+     * @throws CircularReferenceException
+     */
     public function testLabel(): void
     {
         Assert::equalsWithoutLE(
@@ -177,6 +205,12 @@ final class RadioColumnTest extends TestCase
         );
     }
 
+    /**
+     * @throws InvalidConfigException
+     * @throws NotFoundException
+     * @throws NotInstantiableException
+     * @throws CircularReferenceException
+     */
     public function testLabelMbString(): void
     {
         Assert::equalsWithoutLE(
@@ -216,6 +250,12 @@ final class RadioColumnTest extends TestCase
         );
     }
 
+    /**
+     * @throws InvalidConfigException
+     * @throws NotFoundException
+     * @throws NotInstantiableException
+     * @throws CircularReferenceException
+     */
     public function testLabelAttributes(): void
     {
         Assert::equalsWithoutLE(
@@ -255,6 +295,12 @@ final class RadioColumnTest extends TestCase
         );
     }
 
+    /**
+     * @throws InvalidConfigException
+     * @throws NotFoundException
+     * @throws NotInstantiableException
+     * @throws CircularReferenceException
+     */
     public function testName(): void
     {
         Assert::equalsWithoutLE(
@@ -294,6 +340,12 @@ final class RadioColumnTest extends TestCase
         );
     }
 
+    /**
+     * @throws InvalidConfigException
+     * @throws NotFoundException
+     * @throws NotInstantiableException
+     * @throws CircularReferenceException
+     */
     public function testNotVisible(): void
     {
         Assert::equalsWithoutLE(
@@ -330,6 +382,12 @@ final class RadioColumnTest extends TestCase
         );
     }
 
+    /**
+     * @throws InvalidConfigException
+     * @throws NotFoundException
+     * @throws NotInstantiableException
+     * @throws CircularReferenceException
+     */
     public function testRender(): void
     {
         Assert::equalsWithoutLE(
@@ -369,6 +427,9 @@ final class RadioColumnTest extends TestCase
         );
     }
 
+    /**
+     * @psalm-return array<DataColumn|RadioColumn>
+     */
     private function createColumns(): array
     {
         return [
@@ -378,17 +439,23 @@ final class RadioColumnTest extends TestCase
         ];
     }
 
+    /**
+     * @psalm-return array<DataColumn|RadioColumn>
+     */
     private function createColumnsWithContent(): array
     {
         return [
             DataColumn::create()->attribute('id'),
             DataColumn::create()->attribute('name'),
             RadioColumn::create()->content(
-                static fn (array|object $data, mixed $key, int $index): string => '<input name="radio-selection" type="radio" value="' . $index . '">'
+                static fn (array $data, mixed $key, int $index): string => '<input name="radio-selection" type="radio" value="' . $index . '">'
             ),
         ];
     }
 
+    /**
+     * @psalm-return array<DataColumn|RadioColumn>
+     */
     private function createColumnsWithContentAttributes(): array
     {
         return [
@@ -396,12 +463,15 @@ final class RadioColumnTest extends TestCase
             DataColumn::create()->attribute('name'),
             RadioColumn::create()
                 ->content(
-                    static fn (array|object $data, mixed $key, int $index): string => '<input name="radio-selection" type="radio" value="' . $index . '">'
+                    static fn (array $data, mixed $key, int $index): string => '<input name="radio-selection" type="radio" value="' . $index . '">'
                 )
                 ->contentAttributes(['class' => 'test-class']),
         ];
     }
 
+    /**
+     * @psalm-return array<DataColumn|RadioColumn>
+     */
     private function createColumnsWithDataLabel(): array
     {
         return [
@@ -411,6 +481,9 @@ final class RadioColumnTest extends TestCase
         ];
     }
 
+    /**
+     * @psalm-return array<DataColumn|RadioColumn>
+     */
     private function createColumnsWithLabel(): array
     {
         return [
@@ -420,6 +493,9 @@ final class RadioColumnTest extends TestCase
         ];
     }
 
+    /**
+     * @psalm-return array<DataColumn|RadioColumn>
+     */
     private function createColumnsWithLabelMbString(): array
     {
         return [
@@ -429,6 +505,9 @@ final class RadioColumnTest extends TestCase
         ];
     }
 
+    /**
+     * @psalm-return array<DataColumn|RadioColumn>
+     */
     private function createColumnsWithLabelAttributes(): array
     {
         return [
@@ -438,6 +517,9 @@ final class RadioColumnTest extends TestCase
         ];
     }
 
+    /**
+     * @psalm-return array<DataColumn|RadioColumn>
+     */
     private function createColumnsWithName(): array
     {
         return [
@@ -447,6 +529,9 @@ final class RadioColumnTest extends TestCase
         ];
     }
 
+    /**
+     * @psalm-return array<DataColumn|RadioColumn>
+     */
     private function createColumnsWithNotVisible(): array
     {
         return [

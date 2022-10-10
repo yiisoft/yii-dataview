@@ -8,12 +8,16 @@ use Yiisoft\Data\Paginator\KeysetPaginator;
 use Yiisoft\Data\Paginator\OffsetPaginator;
 use Yiisoft\Data\Reader\Iterable\IterableDataReader;
 use Yiisoft\Data\Reader\Sort;
+use Yiisoft\Definitions\Exception\InvalidConfigException;
 use Yiisoft\Di\Container;
 use Yiisoft\Di\ContainerConfig;
 use Yiisoft\Widget\WidgetFactory;
 
 trait TestTrait
 {
+    /**
+     * @throws InvalidConfigException
+     */
     protected function setUp(): void
     {
         $container = new Container(ContainerConfig::create());

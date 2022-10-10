@@ -5,6 +5,10 @@ declare(strict_types=1);
 namespace Yiisoft\Yii\DataView\Tests\Widget\Pagination;
 
 use PHPUnit\Framework\TestCase;
+use Yiisoft\Definitions\Exception\CircularReferenceException;
+use Yiisoft\Definitions\Exception\InvalidConfigException;
+use Yiisoft\Definitions\Exception\NotInstantiableException;
+use Yiisoft\Factory\NotFoundException;
 use Yiisoft\Yii\DataView\Tests\Support\Mock;
 use Yiisoft\Yii\DataView\Tests\Support\TestTrait;
 use Yiisoft\Yii\DataView\Widget\BasePagination;
@@ -32,8 +36,8 @@ final class ImmutableTest extends TestCase
         $this->assertNotSame($basePagination, $basePagination->iconContainerAttributes([]));
         $this->assertNotSame($basePagination, $basePagination->iconNextPage(''));
         $this->assertNotSame($basePagination, $basePagination->iconPreviousPage(''));
-        $this->assertNotSame($basePagination, $basePagination->labelNextPage(''));
-        $this->assertNotSame($basePagination, $basePagination->labelPreviousPage(''));
+        $this->assertNotSame($basePagination, $basePagination->labelNextPage());
+        $this->assertNotSame($basePagination, $basePagination->labelPreviousPage());
         $this->assertNotSame($basePagination, $basePagination->menuClass(''));
         $this->assertNotSame($basePagination, $basePagination->menuItemContainerClass(''));
         $this->assertNotSame($basePagination, $basePagination->pageConfig([]));
@@ -49,6 +53,12 @@ final class ImmutableTest extends TestCase
         $this->assertNotSame($basePagination, $basePagination->urlQueryParameters([]));
     }
 
+    /**
+     * @throws InvalidConfigException
+     * @throws NotFoundException
+     * @throws NotInstantiableException
+     * @throws CircularReferenceException
+     */
     public function testOffsetPagination(): void
     {
         $offsetPagination = OffsetPagination::widget();
@@ -59,8 +69,8 @@ final class ImmutableTest extends TestCase
         $this->assertNotSame($offsetPagination, $offsetPagination->iconClassLastPage(''));
         $this->assertNotSame($offsetPagination, $offsetPagination->iconFirtsPage(''));
         $this->assertNotSame($offsetPagination, $offsetPagination->iconLastPage(''));
-        $this->assertNotSame($offsetPagination, $offsetPagination->labelFirtsPage(''));
-        $this->assertNotSame($offsetPagination, $offsetPagination->labelLastPage(''));
+        $this->assertNotSame($offsetPagination, $offsetPagination->labelFirtsPage());
+        $this->assertNotSame($offsetPagination, $offsetPagination->labelLastPage());
         $this->assertNotSame($offsetPagination, $offsetPagination->maxNavLinkCount(10));
     }
 }

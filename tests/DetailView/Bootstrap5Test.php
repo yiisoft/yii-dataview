@@ -2,9 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Yiisoft\Yii\DataView\Tests\Widget\DetailView;
+namespace Yiisoft\Yii\DataView\Tests\DetailView;
 
 use PHPUnit\Framework\TestCase;
+use Yiisoft\Definitions\Exception\CircularReferenceException;
+use Yiisoft\Definitions\Exception\InvalidConfigException;
+use Yiisoft\Definitions\Exception\NotInstantiableException;
+use Yiisoft\Factory\NotFoundException;
 use Yiisoft\Html\Tag\H2;
 use Yiisoft\Yii\DataView\DetailView;
 use Yiisoft\Yii\DataView\Tests\Support\Assert;
@@ -14,6 +18,12 @@ final class Bootstrap5Test extends TestCase
 {
     use TestTrait;
 
+    /**
+     * @throws InvalidConfigException
+     * @throws NotFoundException
+     * @throws NotInstantiableException
+     * @throws CircularReferenceException
+     */
     public function testRender(): void
     {
         Assert::equalsWithoutLE(
@@ -64,7 +74,7 @@ final class Bootstrap5Test extends TestCase
                 )
                 ->dataAttributes(['class' => 'col-xl-5'])
                 ->header(
-                    H2::tag()->class('text-center')->content('<strong>Bootstrap 5</strong>')->encode(false)->render()
+                    H2::tag()->addClass('text-center')->content('<strong>Bootstrap 5</strong>')->encode(false)->render()
                 )
                 ->labelAttributes(['class' => 'fw-bold'])
                 ->valueAttributes(['class' => 'alert alert-info'])
@@ -72,6 +82,12 @@ final class Bootstrap5Test extends TestCase
         );
     }
 
+    /**
+     * @throws InvalidConfigException
+     * @throws NotFoundException
+     * @throws NotInstantiableException
+     * @throws CircularReferenceException
+     */
     public function testRenderWithTable(): void
     {
         Assert::equalsWithoutLE(
@@ -119,7 +135,7 @@ final class Bootstrap5Test extends TestCase
                 )
                 ->dataAttributes(['class' => 'col-xl-5'])
                 ->header(
-                    H2::tag()->class('text-center')->content('<strong>Bootstrap 5</strong>')->encode(false)->render()
+                    H2::tag()->addClass('text-center')->content('<strong>Bootstrap 5</strong>')->encode(false)->render()
                 )
                 ->labelAttributes(['class' => 'fw-bold'])
                 ->labelTemplate('<th{labelAttributes}>{label}</th>')

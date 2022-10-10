@@ -2,9 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Yiisoft\Yii\DataView\Tests\Widget\Bootstrap5\Pagination\Bootstrap5;
+namespace Yiisoft\Yii\DataView\Tests\Widget\Pagination\Bootstrap5;
 
 use PHPUnit\Framework\TestCase;
+use Yiisoft\Definitions\Exception\CircularReferenceException;
+use Yiisoft\Definitions\Exception\InvalidConfigException;
+use Yiisoft\Definitions\Exception\NotInstantiableException;
+use Yiisoft\Factory\NotFoundException;
 use Yiisoft\Yii\DataView\Tests\Support\Assert;
 use Yiisoft\Yii\DataView\Tests\Support\Mock;
 use Yiisoft\Yii\DataView\Tests\Support\TestTrait;
@@ -33,6 +37,11 @@ final class OffsetPaginationTest extends TestCase
      * `.justify-content-center`.
      *
      * @link https://getbootstrap.com/docs/5.2/components/pagination/#alignment
+     *
+     * @throws InvalidConfigException
+     * @throws NotFoundException
+     * @throws NotInstantiableException
+     * @throws CircularReferenceException
      */
     public function testAlignment(): void
     {
@@ -65,6 +74,11 @@ final class OffsetPaginationTest extends TestCase
      * property is not yet standardized and doesn’t account for keyboard navigation. As such, you should always add
      * `tabindex="-1"` on disabled links and use custom JavaScript to fully disable their functionality.
      *
+     * @throws InvalidConfigException
+     * @throws NotFoundException
+     * @throws NotInstantiableException
+     * @throws CircularReferenceException
+     *
      * @link https://getbootstrap.com/docs/5.2/components/pagination/#disabled-and-active-states
      */
     public function testsDisabledAndActiveStates(): void
@@ -90,6 +104,12 @@ final class OffsetPaginationTest extends TestCase
         );
     }
 
+    /**
+     * @throws InvalidConfigException
+     * @throws NotFoundException
+     * @throws NotInstantiableException
+     * @throws CircularReferenceException
+     */
     public function testRenderWithIconFirtsLastPage(): void
     {
         Assert::equalsWithoutLE(
@@ -119,6 +139,12 @@ final class OffsetPaginationTest extends TestCase
         );
     }
 
+    /**
+     * @throws InvalidConfigException
+     * @throws NotFoundException
+     * @throws NotInstantiableException
+     * @throws CircularReferenceException
+     */
     public function testRenderWithIconClassFirtsLastPage(): void
     {
         Assert::equalsWithoutLE(
@@ -148,6 +174,12 @@ final class OffsetPaginationTest extends TestCase
         );
     }
 
+    /**
+     * @throws InvalidConfigException
+     * @throws NotFoundException
+     * @throws NotInstantiableException
+     * @throws CircularReferenceException
+     */
     public function testRenderWithLabelFirtsLastPage(): void
     {
         Assert::equalsWithoutLE(
@@ -177,6 +209,12 @@ final class OffsetPaginationTest extends TestCase
         );
     }
 
+    /**
+     * @throws InvalidConfigException
+     * @throws NotFoundException
+     * @throws NotInstantiableException
+     * @throws CircularReferenceException
+     */
     public function testRenderWithUrlArguments(): void
     {
         Assert::equalsWithoutLE(
@@ -202,6 +240,12 @@ final class OffsetPaginationTest extends TestCase
         );
     }
 
+    /**
+     * @throws InvalidConfigException
+     * @throws NotFoundException
+     * @throws NotInstantiableException
+     * @throws CircularReferenceException
+     */
     public function testRenderWithUrlQueryParameters(): void
     {
         Assert::equalsWithoutLE(
@@ -227,6 +271,12 @@ final class OffsetPaginationTest extends TestCase
         );
     }
 
+    /**
+     * @throws InvalidConfigException
+     * @throws NotFoundException
+     * @throws NotInstantiableException
+     * @throws CircularReferenceException
+     */
     public function testRenderWithUrlQueryParametersWithoutUrlName(): void
     {
         Assert::equalsWithoutLE(
@@ -251,6 +301,12 @@ final class OffsetPaginationTest extends TestCase
         );
     }
 
+    /**
+     * @throws InvalidConfigException
+     * @throws NotFoundException
+     * @throws NotInstantiableException
+     * @throws CircularReferenceException
+     */
     public function testRenderWithoutPagination(): void
     {
         $this->assertEmpty(
@@ -272,6 +328,11 @@ final class OffsetPaginationTest extends TestCase
      * In addition, as pages likely have more than one such navigation section, it’s advisable to provide a descriptive
      * aria-label for the <nav> to reflect its purpose. For example, if the pagination component is used to navigate
      * between a set of search results, an appropriate label could be aria-label="Search results pages".
+     *
+     * @throws InvalidConfigException
+     * @throws NotFoundException
+     * @throws NotInstantiableException
+     * @throws CircularReferenceException
      *
      * @link https://getbootstrap.com/docs/5.2/components/pagination/#overview
      */
@@ -302,6 +363,11 @@ final class OffsetPaginationTest extends TestCase
 
     /**
      * Fancy larger or smaller pagination? Add `.pagination-lg` or `.pagination-sm` for additional sizes.
+     *
+     * @throws InvalidConfigException
+     * @throws NotFoundException
+     * @throws NotInstantiableException
+     * @throws CircularReferenceException
      *
      * @link https://getbootstrap.com/docs/5.2/components/pagination/#sizing
      */
@@ -357,6 +423,11 @@ final class OffsetPaginationTest extends TestCase
     /**
      * Looking to use an icon or symbol in place of text for some pagination links? Be sure to provide proper screen
      * reader support with aria attributes.
+     *
+     * @throws InvalidConfigException
+     * @throws NotFoundException
+     * @throws NotInstantiableException
+     * @throws CircularReferenceException
      *
      * @link https://getbootstrap.com/docs/5.2/components/pagination/#working-with-icons
      */

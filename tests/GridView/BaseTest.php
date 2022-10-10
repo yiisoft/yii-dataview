@@ -5,6 +5,10 @@ declare(strict_types=1);
 namespace Yiisoft\Yii\DataView\Tests\GridView;
 
 use PHPUnit\Framework\TestCase;
+use Yiisoft\Definitions\Exception\CircularReferenceException;
+use Yiisoft\Definitions\Exception\InvalidConfigException;
+use Yiisoft\Definitions\Exception\NotInstantiableException;
+use Yiisoft\Factory\NotFoundException;
 use Yiisoft\Router\Route;
 use Yiisoft\Yii\DataView\Column;
 use Yiisoft\Yii\DataView\GridView;
@@ -21,6 +25,12 @@ final class BaseTest extends TestCase
         ['id' => 2, 'name' => 'Mary', 'age' => 21],
     ];
 
+    /**
+     * @throws InvalidConfigException
+     * @throws NotFoundException
+     * @throws NotInstantiableException
+     * @throws CircularReferenceException
+     */
     public function testAfterItemBeforeItem(): void
     {
         Assert::equalsWithoutLE(
@@ -69,6 +79,12 @@ final class BaseTest extends TestCase
         );
     }
 
+    /**
+     * @throws InvalidConfigException
+     * @throws NotFoundException
+     * @throws NotInstantiableException
+     * @throws CircularReferenceException
+     */
     public function testColumnGroupEnabled(): void
     {
         Assert::equalsWithoutLE(
@@ -114,6 +130,12 @@ final class BaseTest extends TestCase
         );
     }
 
+    /**
+     * @throws InvalidConfigException
+     * @throws NotFoundException
+     * @throws NotInstantiableException
+     * @throws CircularReferenceException
+     */
     public function testColumnGroupEnabledEmpty(): void
     {
         Assert::equalsWithoutLE(
@@ -163,6 +185,12 @@ final class BaseTest extends TestCase
         );
     }
 
+    /**
+     * @throws InvalidConfigException
+     * @throws NotFoundException
+     * @throws NotInstantiableException
+     * @throws CircularReferenceException
+     */
     public function testColumnGuess(): void
     {
         Assert::equalsWithoutLE(
@@ -214,6 +242,12 @@ final class BaseTest extends TestCase
         );
     }
 
+    /**
+     * @throws InvalidConfigException
+     * @throws NotFoundException
+     * @throws NotInstantiableException
+     * @throws CircularReferenceException
+     */
     public function testEmptyCell(): void
     {
         Assert::equalsWithoutLE(
@@ -245,6 +279,12 @@ final class BaseTest extends TestCase
         );
     }
 
+    /**
+     * @throws InvalidConfigException
+     * @throws NotFoundException
+     * @throws NotInstantiableException
+     * @throws CircularReferenceException
+     */
     public function testEmptyText(): void
     {
         Assert::equalsWithoutLE(
@@ -278,6 +318,12 @@ final class BaseTest extends TestCase
         );
     }
 
+    /**
+     * @throws InvalidConfigException
+     * @throws NotFoundException
+     * @throws NotInstantiableException
+     * @throws CircularReferenceException
+     */
     public function testFooterRowAttributes(): void
     {
         Assert::equalsWithoutLE(
@@ -324,6 +370,12 @@ final class BaseTest extends TestCase
         );
     }
 
+    /**
+     * @throws InvalidConfigException
+     * @throws NotFoundException
+     * @throws NotInstantiableException
+     * @throws CircularReferenceException
+     */
     public function testHeader(): void
     {
         Assert::equalsWithoutLE(
@@ -368,6 +420,12 @@ final class BaseTest extends TestCase
         );
     }
 
+    /**
+     * @throws InvalidConfigException
+     * @throws NotFoundException
+     * @throws NotInstantiableException
+     * @throws CircularReferenceException
+     */
     public function testHeaderIntoGrid(): void
     {
         Assert::equalsWithoutLE(
@@ -414,6 +472,12 @@ final class BaseTest extends TestCase
         );
     }
 
+    /**
+     * @throws InvalidConfigException
+     * @throws NotFoundException
+     * @throws NotInstantiableException
+     * @throws CircularReferenceException
+     */
     public function testHeaderRowAttributes(): void
     {
         Assert::equalsWithoutLE(
@@ -457,6 +521,12 @@ final class BaseTest extends TestCase
         );
     }
 
+    /**
+     * @throws InvalidConfigException
+     * @throws NotFoundException
+     * @throws NotInstantiableException
+     * @throws CircularReferenceException
+     */
     public function testHeaderTableEnabledFalse(): void
     {
         Assert::equalsWithoutLE(
@@ -492,6 +562,12 @@ final class BaseTest extends TestCase
         );
     }
 
+    /**
+     * @throws InvalidConfigException
+     * @throws NotFoundException
+     * @throws NotInstantiableException
+     * @throws CircularReferenceException
+     */
     public function testRenderEmptyData(): void
     {
         Assert::equalsWithoutLE(
@@ -524,6 +600,12 @@ final class BaseTest extends TestCase
         );
     }
 
+    /**
+     * @throws InvalidConfigException
+     * @throws NotFoundException
+     * @throws NotInstantiableException
+     * @throws CircularReferenceException
+     */
     public function testRowAttributes(): void
     {
         Assert::equalsWithoutLE(
@@ -607,6 +689,12 @@ final class BaseTest extends TestCase
         );
     }
 
+    /**
+     * @throws InvalidConfigException
+     * @throws NotFoundException
+     * @throws NotInstantiableException
+     * @throws CircularReferenceException
+     */
     public function testTableAttributes(): void
     {
         Assert::equalsWithoutLE(
@@ -650,6 +738,9 @@ final class BaseTest extends TestCase
         );
     }
 
+    /**
+     * @psalm-return array<Column\SerialColumn|Column\DataColumn>
+     */
     private function createColumns(): array
     {
         return [
@@ -660,6 +751,9 @@ final class BaseTest extends TestCase
         ];
     }
 
+    /**
+     * @psalm-return array<Column\SerialColumn|Column\DataColumn>
+     */
     private function createColumnsWithAttributes(): array
     {
         return [
@@ -669,22 +763,15 @@ final class BaseTest extends TestCase
         ];
     }
 
+    /**
+     * @psalm-return array<Column\SerialColumn|Column\DataColumn>
+     */
     private function createColumnsWithFooter(): array
     {
         return [
             Column\SerialColumn::create()->footer('Total:'),
             Column\DataColumn::create()->attribute('id')->footer('2'),
             Column\DataColumn::create()->attribute('name')->footer('2'),
-        ];
-    }
-
-    private function createColumnsWithTranslations(): array
-    {
-        return [
-            Column\SerialColumn::create(),
-            Column\DataColumn::create()->attribute('id'),
-            Column\DataColumn::create()->attribute('name'),
-            Column\ActionColumn::create(),
         ];
     }
 }

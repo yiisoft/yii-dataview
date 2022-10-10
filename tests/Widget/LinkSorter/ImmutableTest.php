@@ -5,7 +5,10 @@ declare(strict_types=1);
 namespace Yiisoft\Yii\DataView\Tests\Widget\LinkSorter;
 
 use PHPUnit\Framework\TestCase;
-use ReflectionException;
+use Yiisoft\Definitions\Exception\CircularReferenceException;
+use Yiisoft\Definitions\Exception\InvalidConfigException;
+use Yiisoft\Definitions\Exception\NotInstantiableException;
+use Yiisoft\Factory\NotFoundException;
 use Yiisoft\Yii\DataView\Tests\Support\Mock;
 use Yiisoft\Yii\DataView\Tests\Support\TestTrait;
 use Yiisoft\Yii\DataView\Widget\LinkSorter;
@@ -15,7 +18,10 @@ final class ImmutableTest extends TestCase
     use TestTrait;
 
     /**
-     * @throws ReflectionException
+     * @throws InvalidConfigException
+     * @throws NotFoundException
+     * @throws NotInstantiableException
+     * @throws CircularReferenceException
      */
     public function testImmutable(): void
     {

@@ -5,6 +5,10 @@ declare(strict_types=1);
 namespace Yiisoft\Yii\DataView\Tests\GridView;
 
 use PHPUnit\Framework\TestCase;
+use Yiisoft\Definitions\Exception\CircularReferenceException;
+use Yiisoft\Definitions\Exception\InvalidConfigException;
+use Yiisoft\Definitions\Exception\NotInstantiableException;
+use Yiisoft\Factory\NotFoundException;
 use Yiisoft\Yii\DataView\Column\CheckboxColumn;
 use Yiisoft\Yii\DataView\Column\DataColumn;
 use Yiisoft\Yii\DataView\GridView;
@@ -21,6 +25,12 @@ final class CheckboxColumnTest extends TestCase
         ['id' => 2, 'name' => 'Mary', 'age' => 21],
     ];
 
+    /**
+     * @throws InvalidConfigException
+     * @throws NotFoundException
+     * @throws NotInstantiableException
+     * @throws CircularReferenceException
+     */
     public function testContent(): void
     {
         Assert::equalsWithoutLE(
@@ -60,6 +70,12 @@ final class CheckboxColumnTest extends TestCase
         );
     }
 
+    /**
+     * @throws InvalidConfigException
+     * @throws NotFoundException
+     * @throws NotInstantiableException
+     * @throws CircularReferenceException
+     */
     public function testContentAttributes(): void
     {
         Assert::equalsWithoutLE(
@@ -99,6 +115,12 @@ final class CheckboxColumnTest extends TestCase
         );
     }
 
+    /**
+     * @throws InvalidConfigException
+     * @throws NotFoundException
+     * @throws NotInstantiableException
+     * @throws CircularReferenceException
+     */
     public function testDataLabel(): void
     {
         Assert::equalsWithoutLE(
@@ -138,6 +160,12 @@ final class CheckboxColumnTest extends TestCase
         );
     }
 
+    /**
+     * @throws InvalidConfigException
+     * @throws NotFoundException
+     * @throws NotInstantiableException
+     * @throws CircularReferenceException
+     */
     public function testLabel(): void
     {
         Assert::equalsWithoutLE(
@@ -177,6 +205,12 @@ final class CheckboxColumnTest extends TestCase
         );
     }
 
+    /**
+     * @throws InvalidConfigException
+     * @throws NotFoundException
+     * @throws NotInstantiableException
+     * @throws CircularReferenceException
+     */
     public function testLabelMbString(): void
     {
         Assert::equalsWithoutLE(
@@ -216,6 +250,12 @@ final class CheckboxColumnTest extends TestCase
         );
     }
 
+    /**
+     * @throws InvalidConfigException
+     * @throws NotFoundException
+     * @throws NotInstantiableException
+     * @throws CircularReferenceException
+     */
     public function testLabelAttributes(): void
     {
         Assert::equalsWithoutLE(
@@ -255,6 +295,12 @@ final class CheckboxColumnTest extends TestCase
         );
     }
 
+    /**
+     * @throws InvalidConfigException
+     * @throws NotFoundException
+     * @throws NotInstantiableException
+     * @throws CircularReferenceException
+     */
     public function testName(): void
     {
         Assert::equalsWithoutLE(
@@ -294,6 +340,12 @@ final class CheckboxColumnTest extends TestCase
         );
     }
 
+    /**
+     * @throws InvalidConfigException
+     * @throws NotFoundException
+     * @throws NotInstantiableException
+     * @throws CircularReferenceException
+     */
     public function testNotMultiple(): void
     {
         Assert::equalsWithoutLE(
@@ -333,6 +385,12 @@ final class CheckboxColumnTest extends TestCase
         );
     }
 
+    /**
+     * @throws InvalidConfigException
+     * @throws NotFoundException
+     * @throws NotInstantiableException
+     * @throws CircularReferenceException
+     */
     public function testNotVisible(): void
     {
         Assert::equalsWithoutLE(
@@ -369,6 +427,12 @@ final class CheckboxColumnTest extends TestCase
         );
     }
 
+    /**
+     * @throws InvalidConfigException
+     * @throws NotFoundException
+     * @throws NotInstantiableException
+     * @throws CircularReferenceException
+     */
     public function testRender(): void
     {
         Assert::equalsWithoutLE(
@@ -408,6 +472,9 @@ final class CheckboxColumnTest extends TestCase
         );
     }
 
+    /**
+     * @psalm-return array<DataColumn|CheckboxColumn>
+     */
     private function createColumns(): array
     {
         return [
@@ -417,6 +484,9 @@ final class CheckboxColumnTest extends TestCase
         ];
     }
 
+    /**
+     * @psalm-return array<DataColumn|CheckboxColumn>
+     */
     private function createColumnsWithContent(): array
     {
         return [
@@ -428,6 +498,9 @@ final class CheckboxColumnTest extends TestCase
         ];
     }
 
+    /**
+     * @psalm-return array<DataColumn|CheckboxColumn>
+     */
     private function createColumnsWithContentAttributes(): array
     {
         return [
@@ -441,6 +514,9 @@ final class CheckboxColumnTest extends TestCase
         ];
     }
 
+    /**
+     * @psalm-return array<DataColumn|CheckboxColumn>
+     */
     private function createColumnsWithDataLabel(): array
     {
         return [
@@ -450,6 +526,9 @@ final class CheckboxColumnTest extends TestCase
         ];
     }
 
+    /**
+     * @psalm-return array<DataColumn|CheckboxColumn>
+     */
     private function createColumnsWithLabel(): array
     {
         return [
@@ -459,6 +538,9 @@ final class CheckboxColumnTest extends TestCase
         ];
     }
 
+    /**
+     * @psalm-return array<DataColumn|CheckboxColumn>
+     */
     private function createColumnsWithLabelMbString(): array
     {
         return [
@@ -468,6 +550,9 @@ final class CheckboxColumnTest extends TestCase
         ];
     }
 
+    /**
+     * @psalm-return array<DataColumn|CheckboxColumn>
+     */
     private function createColumnsWithLabelAttributes(): array
     {
         return [
@@ -477,6 +562,9 @@ final class CheckboxColumnTest extends TestCase
         ];
     }
 
+    /**
+     * @psalm-return array<DataColumn|CheckboxColumn>
+     */
     private function createColumnsWithName(): array
     {
         return [
@@ -486,6 +574,9 @@ final class CheckboxColumnTest extends TestCase
         ];
     }
 
+    /**
+     * @psalm-return array<DataColumn|CheckboxColumn>
+     */
     private function createColumnsWithNotMultiple(): array
     {
         return [
@@ -495,6 +586,9 @@ final class CheckboxColumnTest extends TestCase
         ];
     }
 
+    /**
+     * @psalm-return array<DataColumn|CheckboxColumn>
+     */
     private function createColumnsWithNotVisible(): array
     {
         return [

@@ -5,6 +5,10 @@ declare(strict_types=1);
 namespace Yiisoft\Yii\DataView\Tests\GridView;
 
 use PHPUnit\Framework\TestCase;
+use Yiisoft\Definitions\Exception\CircularReferenceException;
+use Yiisoft\Definitions\Exception\InvalidConfigException;
+use Yiisoft\Definitions\Exception\NotInstantiableException;
+use Yiisoft\Factory\NotFoundException;
 use Yiisoft\Yii\DataView;
 use Yiisoft\Yii\DataView\Exception;
 use Yiisoft\Yii\DataView\Tests\Support\TestTrait;
@@ -13,6 +17,12 @@ final class ExceptionTest extends TestCase
 {
     use TestTrait;
 
+    /**
+     * @throws InvalidConfigException
+     * @throws NotFoundException
+     * @throws NotInstantiableException
+     * @throws CircularReferenceException
+     */
     public function testGetPaginator(): void
     {
         $this->expectException(Exception\PaginatorNotSetException::class);
@@ -20,6 +30,12 @@ final class ExceptionTest extends TestCase
         DataView\GridView::widget()->getPaginator();
     }
 
+    /**
+     * @throws InvalidConfigException
+     * @throws NotFoundException
+     * @throws NotInstantiableException
+     * @throws CircularReferenceException
+     */
     public function testGetTranslator(): void
     {
         $this->expectException(Exception\TranslatorNotSetException::class);
@@ -27,6 +43,12 @@ final class ExceptionTest extends TestCase
         DataView\GridView::widget()->getTranslator();
     }
 
+    /**
+     * @throws InvalidConfigException
+     * @throws NotFoundException
+     * @throws NotInstantiableException
+     * @throws CircularReferenceException
+     */
     public function testGetUrlGenerator(): void
     {
         $this->expectException(Exception\UrlGeneratorNotSetException::class);
@@ -34,20 +56,16 @@ final class ExceptionTest extends TestCase
         DataView\GridView::widget()->getUrlGenerator();
     }
 
+    /**
+     * @throws InvalidConfigException
+     * @throws NotFoundException
+     * @throws NotInstantiableException
+     * @throws CircularReferenceException
+     */
     public function testPaginator(): void
     {
         $this->expectException(Exception\PaginatorNotSetException::class);
         $this->expectExceptionMessage('Failed to create widget because "paginator" is not set.');
         DataView\GridView::widget()->render();
-    }
-
-    private function widgetBaseListView(): DataView\BaseListView
-    {
-        return new class () extends DataView\BaseListView {
-            public function renderItems(): string
-            {
-                return '';
-            }
-        };
     }
 }
