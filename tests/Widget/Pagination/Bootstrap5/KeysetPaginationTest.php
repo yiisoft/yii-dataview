@@ -94,7 +94,6 @@ final class KeysetPaginationTest extends TestCase
         );
     }
 
-
     /**
      * @throws InvalidConfigException
      * @throws NotFoundException
