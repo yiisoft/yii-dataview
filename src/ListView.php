@@ -5,132 +5,33 @@ declare(strict_types=1);
 namespace Yiisoft\Yii\DataView;
 
 use Closure;
+use InvalidArgumentException;
 use Throwable;
-use Yiisoft\Aliases\Aliases;
-use Yiisoft\Arrays\ArrayHelper;
-use Yiisoft\Html\Html;
-use Yiisoft\Translator\TranslatorInterface;
-use Yiisoft\View\ViewContextInterface;
+use Yiisoft\Html\Tag\Div;
+use Yiisoft\View\Exception\ViewNotFoundException;
 use Yiisoft\View\WebView;
-use Yiisoft\Yii\DataView\Exception\InvalidConfigException;
-
-use function array_keys;
-use function array_merge;
-use function array_values;
-use function call_user_func;
-use function is_array;
-use function is_callable;
-use function is_string;
+use Yiisoft\Yii\DataView\Exception\WebViewNotSetException;
 
 /**
  * The ListView widget is used to display data from data provider. Each data model is rendered using the view specified.
  *
- * For more details and usage information on ListView:
- * see the [guide article on data widgets](guide:output-data-widgets).
+ * @psalm-suppress PropertyNotSetInConstructor
  */
-final class ListView extends BaseListView implements ViewContextInterface
+final class ListView extends BaseListView
 {
-    protected array $options = ['class' => 'list-view'];
-    /** @var array|Closure */
-    private $itemOptions = [];
-    /** @var callable|string */
-    private $itemView = '';
-    private string $viewPath = '';
-    private array $viewParams = [];
+    private Closure $afterItem;
+    private Closure $beforeItem;
+    /** @var callable|string|null */
+    private $itemView = null;
+    private array $itemViewAttributes = [];
     private string $separator = "\n";
-    /** @var callable|null */
-    private $beforeItem;
-    /** @var callable|null */
-    private $afterItem;
-    private Aliases $aliases;
-    private WebView $webView;
-
-    public function __construct(Aliases $aliases, TranslatorInterface $translator, WebView $webView)
-    {
-        $this->aliases = $aliases;
-        $this->webView = $webView;
-
-        parent::__construct($translator);
-    }
-
-    protected function run(): string
-    {
-        if (!isset($this->paginator)) {
-            throw new InvalidConfigException('The "paginator" property must be set.');
-        }
-
-        if (!isset($this->options['id'])) {
-            $this->options['id'] = $this->getId() . '-listview';
-        }
-
-        return parent::run();
-    }
+    private array $viewParams = [];
+    private WebView|null $webView = null;
 
     /**
-     * Calls {@see beforeItem} closure, returns execution result.
+     * Return new instance with afterItem closure.
      *
-     * If {@see beforeItem} is not a closure, `null` will be returned.
-     *
-     * @param mixed $model the data model to be rendered
-     * @param mixed $key the key value associated with the data model
-     * @param mixed $index the zero-based index of the data model in the model array returned by
-     * {@see PaginatorInterface}.
-     *
-     * @return string {@see beforeItem} call result or `null` when {@see beforeItem} is not a closure.
-     *
-     * @see beforeItem
-     */
-    protected function renderBeforeItem($model, $key, $index): string
-    {
-        if ($this->beforeItem instanceof Closure) {
-            return (string) call_user_func($this->beforeItem, $model, $key, $index, $this);
-        }
-
-        return '';
-    }
-
-    /**
-     * Calls {@see afterItem} closure, returns execution result.
-     *
-     * If {@see afterItem} is not a closure, `null` will be returned.
-     *
-     * @param mixed $model the data model to be rendered.
-     * @param mixed $key the key value associated with the data model.
-     * @param mixed $index the zero-based index of the data model in the model array returned by
-     * {@see PaginatorInterface}.
-     *
-     * @return string {@see afterItem} call result or `null` when {@see afterItem} is not a closure
-     *
-     * @see afterItem
-     */
-    protected function renderAfterItem($model, $key, $index): string
-    {
-        if ($this->afterItem instanceof Closure) {
-            return (string) call_user_func($this->afterItem, $model, $key, $index, $this);
-        }
-
-        return '';
-    }
-
-    /**
-     * Returns by default the base path configured in the view.
-     *
-     * @return string
-     */
-    public function getViewPath(): string
-    {
-        $path = $this->webView->getBasePath();
-
-        if ($this->viewPath !== '') {
-            $path = $this->viewPath;
-        }
-
-        return $this->aliases->get($path);
-    }
-
-    /**
-     * @param callable|null $afterItem Closure an anonymous function that is called once AFTER rendering each data
-     * model.
+     * @param Closure $value an anonymous function that is called once after rendering each data.
      *
      * It should have the same signature as {@see beforeItem}.
      *
@@ -138,120 +39,100 @@ final class ListView extends BaseListView implements ViewContextInterface
      *
      * Note: If the function returns `null`, nothing will be rendered after the item.
      *
-     * @return ListView
-     *
-     * @see renderAfterItem
+     * {@see renderAfterItem}
      */
-    public function afterItem(?callable $afterItem): self
+    public function afterItem(Closure $value): self
     {
         $new = clone $this;
-        $new->afterItem = $afterItem;
+        $new->afterItem = $value;
 
         return $new;
     }
 
     /**
-     * @param callable|null ?Closure an anonymous function that is called once BEFORE rendering each data model.
+     * Return new instance with beforeItem closure.
+     *
+     * @param Closure $value an anonymous function that is called once before rendering each data.
      *
      * It should have the following signature:
      *
      * ```php
-     * function ($model, $key, $index, $widget)
+     * function ($data, $key, $index, $widget)
      * ```
      *
-     * - `$model`: the current data model being rendered
-     * - `$key`: the key value associated with the current data model
-     * - `$index`: the zero-based index of the data model in the model array returned by {@see PaginatorInterface}
-     * - `$widget`: the ListView object
+     * - `$data`: The current data being rendered.
+     * - `$key`: The key value associated with the current data.
+     * - `$index`: The zero-based index of the data in the array.
+     * - `$widget`: The list view object.
      *
      * The return result of the function will be rendered directly.
      *
      * Note: If the function returns `null`, nothing will be rendered before the item.
      *
-     * @return $this
-     *
-     * @see renderBeforeItem
+     * {@see renderBeforeItem}
      */
-    public function beforeItem(?callable $beforeItem): self
+    public function beforeItem(Closure $value): self
     {
         $new = clone $this;
-        $new->beforeItem = $beforeItem;
+        $new->beforeItem = $value;
 
         return $new;
     }
 
-    /**
-     * @param array|Closure $itemOptions the HTML attributes for the container of the rendering result of each data
-     * model.
-     *
-     * This can be either an array specifying the common HTML attributes for rendering each data item, or an anonymous
-     * function that returns an array of the HTML attributes. The anonymous function will be called once for every data
-     * model returned by {@see PaginatorInterface]]. The "tag" element specifies the tag name of the container element
-     * and defaults to "div". If "tag" is false, it means no container element will be rendered. If this property is
-     * specified as an anonymous function, it should have the following signature:
-     *
-     * ```php
-     * function ($model, $key, $index, $widget)
-     * ```
-     *
-     * @return $this
-     *
-     * {@see Html::renderTagAttributes()} for details on how attributes are being rendered.
-     */
-    public function itemOptions($itemOptions): self
+    public function getWebView(): WebView
     {
-        $new = clone $this;
-
-        if (!is_array($itemOptions) && !is_callable($itemOptions)) {
-            throw new InvalidConfigException('itemOptions property must be either array or callable.');
+        if ($this->webView === null) {
+            throw new WebViewNotSetException();
         }
 
-        if (is_array($itemOptions) && is_array($this->itemOptions)) {
-            $new->itemOptions = ArrayHelper::merge($this->itemOptions, $itemOptions);
-        } else {
-            $new->itemOptions = $itemOptions;
-        }
-
-        return $new;
+        return $this->webView;
     }
 
     /**
-     * @param callable|string|null $itemView the name of the view for rendering each data item, or a callback (e.g. an
-     * anonymous function) for rendering each data item. If it specifies a view name, the following variables will be
-     * available in the view:
+     * Return new instance with itemView closure.
      *
-     * - `$model`: mixed, the data model.
-     * - `$key`: mixed, the key value associated with the data item.
-     * - `$index`: integer, the zero-based index of the data item in the items array returned by
-     * {@see PaginatorInterface}.
-     * - `$widget`: ListView, this widget instance.
+     * @param Closure|string $value the name of the view for rendering each data item, or a callback (e.g. an anonymous
+     * function) for rendering each data item. If it specifies a view name, the following variables will be available in
+     * the view:
+     *
+     * - `$data`: The data model.
+     * - `$key`: The key value associated with the data item.
+     * - `$index`: The zero-based index of the data item in the items array.
+     * - `$widget`: The list view widget instance.
      *
      * Note that the view name is resolved into the view file by the current context of the {@see view} object.
      *
      * If this property is specified as a callback, it should have the following signature:
-     * ```php
-     * function ($model, $key, $index, $widget)
-     * ```
      *
-     * @return $this
+     * ```php
+     * function ($data, $key, $index, $widget)
+     * ```
      */
-    public function itemView($itemView): self
+    public function itemView(string|Closure $value): self
     {
         $new = clone $this;
-
-        if (!is_string($itemView) && !is_callable($itemView)) {
-            throw new InvalidConfigException('itemView property should be string or callable.');
-        }
-
-        $new->itemView = $itemView;
+        $new->itemView = $value;
 
         return $new;
     }
 
     /**
-     * @param string $separator the HTML code to be displayed between any two consecutive items.
+     * return new instance with the HTML attributes for the container of item view.
      *
-     * @return $this
+     * @param array $values Attribute values indexed by attribute names.
+     */
+    public function itemViewAttributes(array $values): self
+    {
+        $new = clone $this;
+        $new->itemViewAttributes = $values;
+
+        return $new;
+    }
+
+    /**
+     * Return new instance with the separator between the items.
+     *
+     * @param string $separator the HTML code to be displayed between any two consecutive items.
      */
     public function separator(string $separator): self
     {
@@ -262,24 +143,11 @@ final class ListView extends BaseListView implements ViewContextInterface
     }
 
     /**
-     * @param string $viewPath set view path for {@see ListView}.
+     * Return new instance with the parameters for the view.
      *
-     * @return $this
-     */
-    public function viewPath(string $viewPath): self
-    {
-        $new = clone $this;
-        $new->viewPath = $viewPath;
-
-        return $new;
-    }
-
-    /**
      * @param array $viewParams additional parameters to be passed to {@see itemView} when it is being rendered.
      *
      * This property is used only when {@see itemView} is a string representing a view name.
-     *
-     * @return $this
      */
     public function viewParams(array $viewParams): self
     {
@@ -290,28 +158,83 @@ final class ListView extends BaseListView implements ViewContextInterface
     }
 
     /**
+     * Return new instance with the WebView object.
+     *
+     * @param WebView $value the WebView object.
+     */
+    public function webView(WebView $value): self
+    {
+        $new = clone $this;
+        $new->webView = $value;
+
+        return $new;
+    }
+
+    /**
+     * Renders a single data model.
+     *
+     * @param array|object $data The data to be rendered.
+     * @param mixed $key The key value associated with the data.
+     * @param int $index The zero-based index of the data array.
+     *
+     * @throws Throwable|ViewNotFoundException
+     */
+    protected function renderItem(array|object $data, mixed $key, int $index): string
+    {
+        $content = '';
+
+        if ($this->itemView === null) {
+            throw new InvalidArgumentException('The "itemView" property must be set.');
+        }
+
+        if (is_string($this->itemView)) {
+            $content = $this->getWebView()->render(
+                $this->itemView,
+                array_merge(
+                    [
+                        'data' => $data,
+                        'index' => $index,
+                        'key' => $key,
+                        'widget' => $this,
+                    ],
+                    $this->viewParams
+                )
+            );
+        }
+
+        if ($this->itemView instanceof Closure) {
+            $content = (string) call_user_func($this->itemView, $data, $key, $index, $this);
+        }
+
+        return Div::tag()
+            ->addAttributes($this->itemViewAttributes)
+            ->content(PHP_EOL . $content)
+            ->encode(false)
+            ->render();
+    }
+
+    /**
      * Renders all data models.
      *
-     * @throws Throwable
-     *
-     * @return string the rendering result
+     * @throws Throwable|ViewNotFoundException
      */
     protected function renderItems(): string
     {
-        $models = $this->getDataReader();
-        $keys = array_keys($models);
+        $data = $this->getDataReader();
+        $keys = array_keys($data);
         $rows = [];
 
-        /** @var array<array-key, array|object> $models */
-        foreach (array_values($models) as $index => $model) {
+        /** @psalm-var array<array-key,array|object> $data */
+        foreach (array_values($data) as $index => $value) {
             $key = $keys[$index];
-            if (($before = $this->renderBeforeItem($model, $key, $index)) !== '') {
+
+            if ('' !== ($before = $this->renderBeforeItem($value, $key, $index))) {
                 $rows[] = $before;
             }
 
-            $rows[] = $this->renderItem($model, $key, $index);
+            $rows[] = $this->renderItem($value, $key, $index);
 
-            if (($after = $this->renderAfterItem($model, $key, $index)) !== '') {
+            if ('' !== ($after = $this->renderAfterItem($value, $key, $index))) {
                 $rows[] = $after;
             }
         }
@@ -320,60 +243,50 @@ final class ListView extends BaseListView implements ViewContextInterface
     }
 
     /**
-     * Renders a single data model.
+     * Calls {@see afterItem} closure, returns execution result.
      *
-     * @param mixed $model the data model to be rendered
-     * @param mixed $key the key value associated with the data model
-     * @param mixed $index the zero-based index of the data model in the model array returned by
-     * {@see PaginatorInterface}.
+     * If {@see afterItem} is not a closure, `null` will be returned.
      *
-     * @throws Throwable
+     * @param array|object $data The data to be rendered.
+     * @param mixed $key The key value associated with the data.
+     * @param int $index The zero-based index of the data.
      *
-     * @return string the rendering result
+     * @return string {@see afterItem} call result when {@see afterItem} is not a closure.
+     *
+     * {@see afterItem}
      */
-    private function renderItem($model, $key, $index): string
+    private function renderAfterItem(array|object $data, mixed $key, int $index): string
     {
-        if ($this->itemView === '') {
-            $content = (string) $key;
-        } elseif (is_string($this->itemView)) {
-            $content = $this->webView
-                ->withContext($this)
-                ->render(
-                    $this->itemView,
-                    array_merge(
-                        [
-                            'model' => $model,
-                            'key' => $key,
-                            'index' => $index,
-                            'widget' => $this,
-                        ],
-                        $this->viewParams
-                    )
-                );
-        } else {
-            /** @var string */
-            $content = call_user_func($this->itemView, $model, $key, $index, $this);
+        $result = '';
+
+        if (!empty($this->afterItem)) {
+            $result = (string) call_user_func($this->afterItem, $data, $key, $index, $this);
         }
 
-        if ($this->itemOptions instanceof Closure) {
-            /** @var array */
-            $options = call_user_func($this->itemOptions, $model, $key, $index, $this);
-        } else {
-            $options = $this->itemOptions;
+        return $result;
+    }
+
+    /**
+     * Calls {@see beforeItem} closure, returns execution result.
+     *
+     * If {@see beforeItem} is not a closure, `null` will be returned.
+     *
+     * @param array|object $data The data to be rendered.
+     * @param mixed $key The key value associated with the data.
+     * @param int $index The zero-based index of the data.
+     *
+     * @return string {@see beforeItem} call result or `null` when {@see beforeItem} is not a closure.
+     *
+     * {@see beforeItem}
+     */
+    private function renderBeforeItem(array|object $data, mixed $key, int $index): string
+    {
+        $result = '';
+
+        if (!empty($this->beforeItem)) {
+            $result = (string) call_user_func($this->beforeItem, $data, $key, $index, $this);
         }
 
-        /** @psalm-var non-empty-string */
-        $tag = ArrayHelper::remove($options, 'tag', 'div');
-        if ($content !== '' && $this->cssFramework === self::BULMA) {
-            $options['data-key'] = is_array($key) ? json_encode(
-                $key,
-                JSON_THROW_ON_ERROR | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE
-            ) : (string)$key;
-        }
-
-        return Html::tag($tag, $content)
-            ->addAttributes($options)
-            ->encode(false)
-            ->render();
+        return $result;
     }
 }

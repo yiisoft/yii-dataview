@@ -19,13 +19,13 @@ on:
       - 'infection.json.dist'
       - 'phpunit.xml.dist'
 
-name: static analysis
+name: composer require checker
 
 jobs:
-  psalm:
-    uses: yiisoft/actions/.github/workflows/psalm.yml@master
+  composer-require-checker:
+    uses: yiisoft/actions/.github/workflows/composer-require-checker.yml@master
     with:
       os: >-
         ['ubuntu-latest']
       php: >-
-        ['8.0', '8.1']
+        ['8.0']

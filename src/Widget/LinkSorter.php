@@ -4,113 +4,282 @@ declare(strict_types=1);
 
 namespace Yiisoft\Yii\DataView\Widget;
 
-use Stringable;
-use JsonException;
-use Yiisoft\Data\Reader\Sort;
+use InvalidArgumentException;
 use Yiisoft\Html\Html;
-use Yiisoft\Router\CurrentRoute;
+use Yiisoft\Html\Tag\A;
+use Yiisoft\Html\Tag\I;
 use Yiisoft\Router\UrlGeneratorInterface;
-use Yiisoft\Strings\Inflector;
-use Yiisoft\Yii\DataView\Exception\InvalidConfigException;
+use Yiisoft\Widget\Widget;
 
+use function array_merge;
+use function http_build_query;
 use function implode;
+use function ucfirst;
 
-/**
- * LinkSorter renders a list of sort links for the given sort definition.
- *
- * LinkSorter will generate a hyperlink for every attribute declared in {@see sort}.
- *
- * For more details and usage information on LinkSorter, see the [guide article on sorting](guide:output-sorting).
- */
-final class LinkSorter extends AbstractLinkWidget
+final class LinkSorter extends Widget
 {
-    private const BOOTSTRAP = 'bootstrap';
-    private const BULMA = 'bulma';
-    private const CSS_FRAMEWORKS = [
-        self::BOOTSTRAP,
-        self::BULMA,
-    ];
     private string $attribute = '';
-    private int $currentPage = 1;
-    private string $cssFramework = self::BOOTSTRAP;
-    private array $options = [];
-    private Inflector $inflector;
-    private Sort $sort;
+    private array $attributes = [];
+    private int $currentPage = 0;
+    private array $directions = [];
+    private array $iconAttributes = [];
+    private string $iconAsc = '&#x2191;';
+    private string $iconAscClass = '';
+    private string $iconDesc = '&#x2193;';
+    private string $iconDescClass = '';
+    private string $label = '';
+    private array $linkAttributes = [];
+    private array $pageConfig = [];
+    private int $pageSize = 0;
+    private string $pageName = 'page';
+    private string $pageSizeName = 'pagesize';
+    private UrlGeneratorInterface|null $urlGenerator = null;
+    private array|null $urlArguments = null;
+    private array $urlQueryParameters = [];
+    private string $urlName = '';
 
-    public function __construct(
-        CurrentRoute $currentRoute,
-        Inflector $inflector,
-        UrlGeneratorInterface $urlGenerator
-    ) {
-        parent::__construct($currentRoute, $urlGenerator);
+    /**
+     * Returns a new instance with the attribute name for link sorting.
+     *
+     * @param string $value The value label for the link.
+     */
+    public function attribute(string $value): self
+    {
+        $new = clone $this;
+        $new->attribute = $value;
 
-        $this->inflector = $inflector;
+        return $new;
     }
 
     /**
-     * Executes the widget.
+     * Returns a new instance with the attributes for the link sorting.
      *
-     * This method renders the sort links.
+     * @param array $values The attributes for the link sorting.
      */
+    public function attributes(array $values): self
+    {
+        $new = clone $this;
+        $new->attributes = $values;
+
+        return $new;
+    }
+
+    /**
+     * Return a new instance with current page of pagination.
+     *
+     * @param int $value Current page.
+     */
+    public function currentPage(int $value): self
+    {
+        $new = clone $this;
+        $new->currentPage = $value;
+
+        return $new;
+    }
+
+    /**
+     * Returns a new instance with the currently requested sort information.
+     *
+     * @param array $values The currently requested sort information.
+     */
+    public function directions(array $values): self
+    {
+        $new = clone $this;
+        $new->directions = $values;
+
+        return $new;
+    }
+
+    /**
+     * Returns a new instance with the icon text for the ascending sort direction.
+     *
+     * @param string $value The icon text for the ascending sort direction.
+     */
+    public function iconAsc(string $value): self
+    {
+        $new = clone $this;
+        $new->iconAsc = $value;
+
+        return $new;
+    }
+
+    /**
+     * Returns a new instance with the icon text for the descending sort direction.
+     *
+     * @param string $value The icon text for the descending sort direction.
+     */
+    public function iconDesc(string $value): self
+    {
+        $new = clone $this;
+        $new->iconDesc = $value;
+
+        return $new;
+    }
+
+    /**
+     * Returns a new instance with the CSS class for the ascending sort direction.
+     *
+     * @param string $value The CSS class for the ascending sort direction.
+     */
+    public function iconAscClass(string $value): self
+    {
+        $new = clone $this;
+        $new->iconAsc = '';
+        $new->iconAscClass = $value;
+
+        return $new;
+    }
+
+    /**
+     * Returns a new instance with the CSS class for the descending sort direction.
+     *
+     * @param string $value The CSS class for the descending sort direction.
+     */
+    public function iconDescClass(string $value): self
+    {
+        $new = clone $this;
+        $new->iconDesc = '';
+        $new->iconDescClass = $value;
+
+        return $new;
+    }
+
+    /**
+     * Returns a new instance with the label for attribute.
+     *
+     * @param string $value The label for attribute.
+     */
+    public function label(string $value): self
+    {
+        $new = clone $this;
+        $new->label = $value;
+
+        return $new;
+    }
+
+    /**
+     * Returns a new instance with the HTML attributes for a tag `<a>`.
+     *
+     * @param array $values Attribute values indexed by attribute names.
+     */
+    public function linkAttributes(array $values): self
+    {
+        $new = clone $this;
+        $new->linkAttributes = $values;
+
+        return $new;
+    }
+
+    /**
+     * Return a new instance with page config for arguments or query parameters in url.
+     *
+     * @param array $value The page config for arguments or query parameters in url.
+     */
+    public function pageConfig(array $value): self
+    {
+        $new = clone $this;
+        $new->pageConfig = $value;
+
+        return $new;
+    }
+
+    /**
+     * Return a new instance with name of argument or query parameter for page.
+     *
+     * @param string $value The name of argument or query parameter for page.
+     */
+    public function pageName(string $value): self
+    {
+        $new = clone $this;
+        $new->pageName = $value;
+
+        return $new;
+    }
+
+    /**
+     * Return a new instance with page size of pagination.
+     *
+     * @param int $value The page size of pagination.
+     */
+    public function pageSize(int $value): self
+    {
+        $new = clone $this;
+        $new->pageSize = $value;
+
+        return $new;
+    }
+
+    /**
+     * Return a new instance with name of argument or query parameter for page size.
+     *
+     * @param string $value The name of argument or query parameter for page size.
+     */
+    public function pageSizeName(string $value): self
+    {
+        $new = clone $this;
+        $new->pageSizeName = $value;
+
+        return $new;
+    }
+
+    /**
+     * Return a new instance with arguments of the route.
+     *
+     * @param array $value Arguments of the route.
+     */
+    public function urlArguments(array $value): self
+    {
+        $new = clone $this;
+        $new->urlArguments = $value;
+
+        return $new;
+    }
+
+    /**
+     * Return a new instance with URL generator interface for pagination.
+     *
+     * @param UrlGeneratorInterface $value The URL generator interface for pagination.
+     */
+    public function urlGenerator(UrlGeneratorInterface $value): self
+    {
+        $new = clone $this;
+        $new->urlGenerator = $value;
+
+        return $new;
+    }
+
+    /**
+     * Returns a new instance with the name of the route.
+     *
+     * @param string $value The name of the route.
+     */
+    public function urlName(string $value): self
+    {
+        $new = clone $this;
+        $new->urlName = $value;
+
+        return $new;
+    }
+
+    /**
+     * Return a new instance with query parameters of the route.
+     *
+     * @param array $value The query parameters of the route.
+     */
+    public function urlQueryParameters(array $value): self
+    {
+        $new = clone $this;
+        $new->urlQueryParameters = $value;
+
+        return $new;
+    }
+
     protected function run(): string
     {
-        return $this->renderSorterLink();
-    }
-
-    /**
-     * @param string $attribute the attributes that support sorting. If not set, it will be determined using
-     *
-     * @return $this
-     */
-    public function attribute(string $attribute): self
-    {
-        $new = clone $this;
-        $new->attribute = $attribute;
-
-        return $new;
-    }
-
-    public function currentPage(int $currentPage): self
-    {
-        $new = clone $this;
-        $new->currentPage = $currentPage;
-
-        return $new;
-    }
-
-    public function cssFramework(string $cssFramework): self
-    {
-        if (!in_array($cssFramework, self::CSS_FRAMEWORKS)) {
-            $cssFramework = implode('", "', self::CSS_FRAMEWORKS);
-            throw new InvalidConfigException("Invalid CSS framework. Valid values are: \"$cssFramework\".");
-        }
-
-        $new = clone $this;
-        $new->cssFramework = $cssFramework;
-
-        return $new;
-    }
-
-    /**
-     * @param array $options HTML attributes for the sorter container tag.
-     *
-     * {@see Html::ul()} for special attributes.
-     * {@see Html::renderTagAttributes()} for details on how attributes are being rendered.
-     */
-    public function options(array $options): self
-    {
-        $new = clone $this;
-        $new->options = $options;
-
-        return $new;
-    }
-
-    public function sort(Sort $sort): self
-    {
-        $new = clone $this;
-        $new->sort = $sort;
-
-        return $new;
+        return match (isset($this->attributes[$this->attribute])) {
+            true => $this->renderSorterLink(),
+            false => '',
+        };
     }
 
     /**
@@ -120,38 +289,30 @@ final class LinkSorter extends AbstractLinkWidget
      *
      * @param string $attribute the attribute name.
      *
-     * @throws InvalidConfigException if the specified attribute is not defined in {@see attributes}
-     *
-     * @return string the value of the sort variable.
+     * @throws InvalidArgumentException if the specified attribute is not defined.
      */
     private function createSorterParam(string $attribute): string
     {
-        $attributes = $this->sort->getCriteria();
+        $attributes = $this->attributes;
+        $directions = $this->directions;
+        $direction = 'asc';
 
-        if (!isset($attributes[$attribute])) {
-            throw new InvalidConfigException("Unknown attribute: $attribute");
+        if (isset($attributes['default'])) {
+            /** @var string */
+            $direction = $attributes['default'];
         }
-
-        /** @var array */
-        $definition = $attributes[$attribute];
-
-        $directions = $this->sort->getCriteria();
 
         if (isset($directions[$attribute])) {
-            $direction = $directions[$attribute] === SORT_DESC ? SORT_ASC : SORT_DESC;
+            $direction = $directions[$attribute] === 'desc' ? 'asc' : 'desc';
             unset($directions[$attribute]);
-        } else {
-            /** @var int */
-            $direction = $definition['default'] ?? SORT_ASC;
         }
 
-        $directions = [$attribute => $direction];
-
+        $directions = array_merge([$attribute => $direction], $directions);
         $sorts = [];
 
-        /** @var array<string, int> $directions */
-        foreach ($directions as $key => $direction) {
-            $sorts[] = $direction === SORT_DESC ? '-' . $key : $key;
+        /** @psalm-var array<string,string> $directions */
+        foreach ($directions as $attribute => $direction) {
+            $sorts[] = $direction === 'desc' ? '-' . $attribute : $attribute;
         }
 
         return implode(',', $sorts);
@@ -160,91 +321,107 @@ final class LinkSorter extends AbstractLinkWidget
     /**
      * Creates a URL for sorting the data by the specified attribute.
      *
-     * This method will consider the current sorting status given by {@see attributeOrders}.
+     * This method will consider the current sorting status.
      *
-     * For example, if the current page already sorts the data by the specified attribute in ascending order,
-     * then the URL created will lead to a page that sorts the data by the specified attribute in descending order.
+     * For example, if the current page already sorts the data by the specified attribute in ascending order, then the
+     * URL created will lead to a page that sorts the data by the specified attribute in descending order.
      *
-     * @param string $attribute the attribute name
-     * @param bool $absolute whether to create an absolute URL. Defaults to `false`.
+     * @param string $attribute The attribute name.
      *
-     * @throws InvalidConfigException if the attribute is unknown
-     *
-     * @return string the URL for sorting. False if the attribute is invalid.
-     *
-     * {@see attributeOrders}
-     * {@see params}
+     * @throws InvalidArgumentException If the attribute is unknown.
      */
     private function createUrl(string $attribute): string
     {
-        $requestArguments = $this->requestArguments ?? [];
-        $queryParams = $this->requestQueryParams ?? [];
+        if (null === $this->urlGenerator) {
+            throw new InvalidArgumentException('UrlGenerator must be configured.');
+        }
 
-        if ($this->pageArgument) {
-            $requestArguments[$this->pageParam] = $this->currentPage;
+        $pageConfig = $this->pageConfig;
+        $urlQueryParameters = $this->urlQueryParameters;
+
+        if ($pageConfig === []) {
+            $pageConfig = [$this->pageName => $this->currentPage, $this->pageSizeName => $this->pageSize];
+        }
+
+        if ($this->urlArguments !== null) {
+            /** @psalm-var array<string,string> */
+            $urlArguments = array_merge($this->urlArguments, $pageConfig);
+            $urlArguments['sort'] = $this->createSorterParam($attribute);
         } else {
-            $queryParams[$this->pageParam] = $this->currentPage;
+            $urlArguments = [];
+            $urlQueryParameters = array_merge($urlQueryParameters, $pageConfig);
+            $urlQueryParameters['sort'] = $this->createSorterParam($attribute);
         }
 
-        $queryParams['sort'] = $this->createSorterParam($attribute);
+        return match ($this->urlName !== '') {
+            true => $this->urlGenerator->generate($this->urlName, $urlArguments, $urlQueryParameters),
+            false => $urlQueryParameters ? '?' . http_build_query($urlQueryParameters) : '',
+        };
+    }
 
-        if ($name = $this->currentRoute->getName()) {
-            /** @var array<string, scalar|Stringable|null> $requestArguments */
-            return $this->urlGenerator->generate($name, $requestArguments, $queryParams);
+    private function renderLabel(
+        string $label,
+        string $icon,
+        string $iconClass,
+        array $iconAttributes = []
+    ): string {
+        $html = '';
+
+        if ($iconClass !== '') {
+            Html::addCssClass($iconAttributes, $iconClass);
         }
 
-        return '?' . http_build_query($queryParams);
+        if ($label !== '') {
+            $html = Html::encode($label);
+        }
+
+        if ($icon !== '' || $iconClass !== '') {
+            $html .= ' ' . I::tag()->addAttributes($iconAttributes)->content($icon)->encode(false)->render();
+        }
+
+        return $html;
     }
 
     /**
-     * Generates a hyperlink that links to the sort action to sort by the specified attribute.
+     * Generates a hyperlink that links to the sort urlName to sort by the specified attribute.
      *
      * Based on the sort direction, the CSS class of the generated hyperlink will be appended with "asc" or "desc".
      *
      * There is one special attribute `label` which will be used as the label of the hyperlink.
      *
-     * If this is not set, the label defined in {@see attributes} will be used.
+     * If no label is defined, the attribute name will be used.
      *
-     * If no label is defined, {@see Inflector::pascalCaseToId} will be called to get a label.
-     *
-     * Note that it will not be HTML-encoded.
-     *
-     * @throws InvalidConfigException|JsonException if the attribute is unknown.
-     *
-     * @return string the generated hyperlink
+     * @throws InvalidArgumentException If the attribute is unknown.
      */
     private function renderSorterLink(): string
     {
-        $orderCriteria = $this->sort->getCriteria();
-        /** @var int|null */
-        $direction = $orderCriteria[$this->attribute] ?? null;
+        $icon = '';
+        $iconClass = '';
+        $linkAttributes = $this->linkAttributes;
+        $sorterClass = '';
 
-        if ($direction !== null) {
-            $sorterClass = $direction === SORT_DESC ? 'desc' : 'asc';
-            if (isset($this->options['class']) && is_string($this->options['class'])) {
-                $this->options['class'] .= ' ' . $sorterClass;
-            } else {
-                $this->options['class'] = $sorterClass;
-            }
+        if (isset($this->directions[$this->attribute]) && $this->directions[$this->attribute] === 'desc') {
+            $icon = $this->iconDesc;
+            $iconClass = $this->iconDescClass;
+            $sorterClass = 'desc';
+        } elseif (isset($this->directions[$this->attribute])) {
+            $icon = $this->iconAsc;
+            $iconClass = $this->iconAscClass;
+            $sorterClass = 'asc';
         }
 
-        $url = $this->createUrl($this->attribute);
-
-        $this->options['data-sort'] = $this->createSorterParam($this->attribute);
-
-        if (isset($this->options['label'])) {
-            $label = $this->inflector->toHumanReadable((string) $this->options['label']);
-            unset($this->options['label']);
-        } else {
-            $label = $this->inflector->toHumanReadable($this->attribute);
+        if ($sorterClass !== '') {
+            Html::addCssClass($linkAttributes, $sorterClass);
         }
 
-        if ($this->cssFramework === self::BULMA) {
-            Html::addCssClass($this->options, ['link' => 'has-text-link']);
-        }
+        $linkAttributes['data-sort'] = $this->createSorterParam($this->attribute);
+        $label = $this->label !== '' ? $this->label : ucfirst($this->attribute);
 
-        return Html::a($label, $url, $this->options)
+        return A::tag()
+            ->addAttributes($linkAttributes)
+            ->content($this->renderLabel($label, $icon, $iconClass, $this->iconAttributes))
             ->encode(false)
+            ->href($this->createUrl($this->attribute))
             ->render();
     }
 }

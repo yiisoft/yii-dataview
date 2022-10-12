@@ -5,281 +5,152 @@ declare(strict_types=1);
 namespace Yiisoft\Yii\DataView;
 
 use Closure;
-use JsonException;
-use Yiisoft\Arrays\ArrayHelper;
 use Yiisoft\Html\Html;
-use Yiisoft\Json\Json;
-use Yiisoft\Translator\TranslatorInterface;
-use Yiisoft\Yii\DataView\Columns\Column;
-use Yiisoft\Yii\DataView\Columns\DataColumn;
-use Yiisoft\Yii\DataView\Exception\InvalidConfigException;
-use Yiisoft\Yii\DataView\Factory\GridViewFactory;
-
-use function array_filter;
-use function array_keys;
-use function array_merge;
-use function call_user_func;
-use function count;
-use function implode;
-use function is_array;
-use function is_callable;
-use function is_scalar;
-use function is_string;
-use function reset;
+use Yiisoft\Html\Tag\Col;
+use Yiisoft\Html\Tag\Colgroup;
+use Yiisoft\Html\Tag\Tbody;
+use Yiisoft\Html\Tag\Td;
+use Yiisoft\Html\Tag\Tr;
 
 /**
  * The GridView widget is used to display data in a grid.
  *
- * It provides features like {@see sorter|sorting}, {@see pager|paging} and also {@see filterModelName|filtering}
- * the data.
- *
- * A basic usage looks like the following:
- * ```php
- * <?= GridView::widget()
- *     ->columns($columns)
- *     ->linkPagerClass(LinkPager::class)
- *     ->run()
- * ?>
- * ```
+ * It provides features like {@see sorter|sorting}, and {@see filterModel|filtering} the data.
  *
  * The columns of the grid table are configured in terms of {@see Column} classes, which are configured via
  * {@see columns}.
  *
  * The look and feel of a grid view can be customized using the large amount of properties.
- *
- * For more details and usage information on GridView:
- * see the [guide article on data widgets](guide:output-data-widgets).
  */
 final class GridView extends BaseListView
 {
     public const FILTER_POS_HEADER = 'header';
     public const FILTER_POS_FOOTER = 'footer';
     public const FILTER_POS_BODY = 'body';
-    protected array $options = ['class' => 'grid-view'];
-    protected bool $showOnEmpty = true;
-    private string $dataColumnClass = DataColumn::class;
-    private string $caption = '';
-    private array $captionOptions = [];
-    private array $tableOptions = ['class' => 'table table-striped table-bordered'];
-    private array $headOptions = [];
-    private array $headerRowOptions = [];
-    private array $footerRowOptions = [];
-    private array $rowOptions = [];
-    private ?Closure $beforeRow = null;
-    private ?Closure $afterRow = null;
-    private bool $showHeader = true;
-    private bool $showFooter = false;
-    /** @var array<array-key,array<array-key,Column>|callable|Closure|Column|string> */
+    private Closure|null $afterRow = null;
+    private Closure|null $beforeRow = null;
+    /** @psalm-var array<array-key,Column\Column|null> */
     private array $columns = [];
+    private bool $columnsGroupEnabled = false;
     private string $emptyCell = '&nbsp;';
     private string $filterModelName = '';
     private string $filterPosition = self::FILTER_POS_BODY;
-    private array $filterRowOptions = ['class' => 'filters'];
-    private GridViewFactory $gridViewFactory;
-
-    public function __construct(GridViewFactory $gridViewFactory, TranslatorInterface $translator)
-    {
-        $this->gridViewFactory = $gridViewFactory;
-
-        parent::__construct($translator);
-    }
-
-    protected function run(): string
-    {
-        if (!isset($this->paginator)) {
-            throw new InvalidConfigException('The "paginator" property must be set.');
-        }
-
-        if (!isset($this->options['id'])) {
-            $this->options['id'] = $this->getId() . '-gridview';
-        }
-
-        $this->initColumns();
-
-        if (!isset($this->filterRowOptions['id'])) {
-            $this->filterRowOptions['id'] = $this->getId() . '-filters';
-        }
-
-        return parent::run();
-    }
-
-    public function getEmptyCell(): string
-    {
-        return $this->emptyCell;
-    }
-
-    public function getFilterModelName(): string
-    {
-        return $this->filterModelName;
-    }
+    private array $filterRowAttributes = [];
+    private bool $footerEnabled = false;
+    private array $footerRowAttributes = [];
+    private bool $headerTableEnabled = true;
+    private array $headerRowAttributes = [];
+    private array $rowAttributes = [];
+    private array $tableAttributes = ['class' => 'table'];
 
     /**
-     * @param Closure|null $afterRow an anonymous function that is called once AFTER rendering each data model.
+     * Returns a new instance with anonymous function that is called once AFTER rendering each data.
      *
-     * It should have the similar signature as {@see rowOptions}. The return result of the function will be rendered
-     * directly.
-     *
-     * @return $this
+     * @param Closure|null $value The anonymous function that is called once AFTER rendering each data.
      */
-    public function afterRow(?Closure $afterRow): self
+    public function afterRow(Closure|null $value): self
     {
         $new = clone $this;
-        $new->afterRow = $afterRow;
+        $new->afterRow = $value;
 
         return $new;
     }
 
     /**
-     * @param Closure|null $beforeRow an anonymous function that is called once BEFORE rendering each data model.
+     * Return a new instance with anonymous function that is called once BEFORE rendering each data.
      *
-     * It should have the similar signature as {@see rowOptions}. The return result of the function will be rendered
-     * directly.
-     *
-     * @return $this
+     * @param Closure|null $value The anonymous function that is called once BEFORE rendering each data.
      */
-    public function beforeRow(?Closure $beforeRow): self
+    public function beforeRow(Closure|null $value): self
     {
         $new = clone $this;
-        $new->beforeRow = $beforeRow;
+        $new->beforeRow = $value;
 
         return $new;
     }
 
     /**
-     * @param string $caption the caption of the grid table
+     * Return a new instance the specified columns.
      *
-     * @return $this
-     *
-     * @see captionOptions
-     */
-    public function caption(string $caption): self
-    {
-        $new = clone $this;
-        $new->caption = $caption;
-
-        return $new;
-    }
-
-    /**
-     * @param array $captionOptions the HTML attributes for the caption element {@see caption}.
-     *
-     * @return $this
-     *
-     * {@see Html::renderTagAttributes()} for details on how attributes are being rendered.
-     */
-    public function captionOptions(array $captionOptions): self
-    {
-        $new = clone $this;
-        $new->captionOptions = $captionOptions;
-
-        return $new;
-    }
-
-    /**
-     * @param array $columns grid column configuration. Each array element represents the configuration for one
+     * @param array $values The grid column configuration. Each array element represents the configuration for one
      * particular grid column. For example,
      *
      * ```php
      * [
-     *     ['class' => SerialColumn::class],
-     *     [
-     *         'class' => DataColumn::class, // this line is optional
-     *         'attribute()' => ['name'],
-     *         'format()' => ['text'],
-     *         'label()' => ['Name'],
-     *     ],
-     *     ['class' => CheckboxColumn::class],
+     *     SerialColumn::create(),
+     *     DataColumn::create()
+     *         ->attribute('identity_id')
+     *         ->filterAttribute('identity_id')
+     *         ->filterValueDefault(0)
+     *         ->filterAttributes(['class' => 'text-center', 'maxlength' => '5', 'style' => 'width:60px']),
+     *     ActionColumn::create()->primaryKey('identity_id')->visibleButtons(['view' => true]),
      * ]
      * ```
      *
-     * If a column is of class {@see DataColumn}, the "class" element can be omitted.
-     *
-     * As a shortcut format, a string may be used to specify the configuration of a data column which only contains
-     * {@see DataColumn::attribute|attribute}, {@see DataColumn::format|format}, and/or {@see DataColumn::label|label}
-     * options: `"attribute:format:label"`.
-     *
-     * For example, the above "name" column can also be specified as: `"name:text:Name"`.
-     *
-     * Both "format" and "label" are optional. They will take default values if absent.
-     *
-     * Using the shortcut format the configuration for columns in simple cases would look like this:
-     *
-     * ```php
-     * [
-     *     'id',
-     *     'amount:currency:Total Amount',
-     *     'created_at:datetime',
-     * ]
-     * ```
-     *
-     * @psalm-param array<array-key,array<array-key,Column>|Column|string> $columns
-     *
-     * @return $this
+     * @psalm-param array<array-key,Column\Column|null> $values
      */
-    public function columns(array $columns): self
+    public function columns(array $values): self
     {
         $new = clone $this;
-        $new->columns = $columns;
+        $new->columns = $values;
 
         return $new;
     }
 
     /**
-     * @param string $dataColumnClass the default data column class if the class name is not explicitly specified when
-     * configuring a data column. Defaults to 'DataColumn::class'.
+     * Returns a new instance with the specified column group enabled.
      *
-     * @return $this
+     * @param bool $value Whether to enable the column group.
      */
-    public function dataColumnClass(string $dataColumnClass): self
+    public function columnsGroupEnabled(bool $value): self
     {
         $new = clone $this;
-        $new->dataColumnClass = $dataColumnClass;
+        $new->columnsGroupEnabled = $value;
 
         return $new;
     }
 
     /**
-     * @param string $emptyCell the HTML display when the content of a cell is empty. This property is used to render
-     * cells that have no defined content, e.g. empty footer or filter cells.
+     * Return new instance with the HTML display when the content is empty.
      *
-     * Note that this is not used by the {@see DataColumn} if a data item is `null`.
-     *
-     * @return $this
+     * @param string $value The HTML display when the content of a cell is empty. This property is used to render cells
+     * that have no defined content, e.g. empty footer or filter cells.
      */
-    public function emptyCell(string $emptyCell): self
+    public function emptyCell(string $value): self
     {
         $new = clone $this;
-        $new->emptyCell = $emptyCell;
+        $new->emptyCell = $value;
 
         return $new;
     }
 
     /**
-     * @param string the form model name that keeps the user-entered filter data. When this property is set, the grid
-     * view will enable column-based filtering. Each data column by default will display a text field at the top that
-     * users can fill in to filter the data.
+     * Return new instance with the filter model name.
+     *
+     * @param string $value The form model name that keeps the user-entered filter data. When this property is set, the
+     * grid view will enable column-based filtering. Each data column by default will display a text field at the top
+     * that users can fill in to filter the data.
      *
      * Note that in order to show an input field for filtering, a column must have its {@see DataColumn::attribute}
      * property set and the attribute should be active in the current scenario of $filterModelName or have
      * {@see DataColumn::filter} set as the HTML code for the input field.
      */
-    public function filterModelName(string $filterModelName): self
+    public function filterModelName(string $value): self
     {
         $new = clone $this;
-        $new->filterModelName = $filterModelName;
+        $new->filterModelName = $value;
 
         return $new;
     }
 
     /**
-     * @param string $filterPosition whether the filters should be displayed in the grid view.
+     * Return new instance with the filter position.
      *
-     * Valid values include:
-     * - {@see FILTER_POS_HEADER}: the filters will be displayed on top of each column's header cell.
-     * - {@see FILTER_POS_BODY}: the filters will be displayed right below each column's header cell.
-     * - {@see FILTER_POS_FOOTER}: the filters will be displayed below each column's footer cell.
+     * @param string $filterPosition Whether the filters should be displayed in the grid view. Valid values include:
      *
-     * @return $this
+     * - {@see FILTER_POS_HEADER}: The filters will be displayed on top of each column's header cell.
+     * - {@see FILTER_POS_BODY}: The filters will be displayed right below each column's header cell.
+     * - {@see FILTER_POS_FOOTER}: The filters will be displayed below each column's footer cell.
      */
     public function filterPosition(string $filterPosition): self
     {
@@ -290,153 +161,113 @@ final class GridView extends BaseListView
     }
 
     /**
-     * @param array $filterRowOptions the HTML attributes for the filter row element.
+     * Returns a new instance with the HTML attributes for filter row.
      *
-     * @return $this
-     *
-     * {@see Html::renderTagAttributes()} for details on how attributes are being rendered.
+     * @param array $values Attribute values indexed by attribute names.
      */
-    public function filterRowOptions(array $filterRowOptions): self
+    public function filterRowAttributes(array $values): self
     {
         $new = clone $this;
-        $new->filterRowOptions = $filterRowOptions;
+        $new->filterRowAttributes = $values;
 
         return $new;
     }
 
     /**
-     * @param array the HTML attributes for the table footer row.
+     * Return new instance whether to show the footer section of the grid.
      *
-     * @return $this
-     *
-     * {@see Html::renderTagAttributes()} for details on how attributes are being rendered.
+     * @param bool $value Whether to show the footer section of the grid.
      */
-    public function footerRowOptions(array $footerRowOptions): self
+    public function footerEnabled(bool $value): self
     {
         $new = clone $this;
-        $new->footerRowOptions = $footerRowOptions;
+        $new->footerEnabled = $value;
 
         return $new;
     }
 
     /**
-     * @param array the HTML attributes for the grid thead element.
+     * Returns a new instance with the HTML attributes for footer row.
      *
-     * @return $this
-     *
-     * {@see Html::renderTagAttributes()} for details on how attributes are being rendered.
+     * @param array $values Attribute values indexed by attribute names.
      */
-    public function headOptions(array $headOptions): self
+    public function footerRowAttributes(array $values): self
     {
         $new = clone $this;
-        $new->headOptions = $headOptions;
+        $new->footerRowAttributes = $values;
 
         return $new;
     }
 
     /**
-     * @param array $headerRowOptions the HTML attributes for the table header row.
+     * Return new instance whether to show the header table section of the grid.
      *
-     * @return $this
-     *
-     * {@see Html::renderTagAttributes()} for details on how attributes are being rendered.
+     * @param bool $value Whether to show the header table section of the grid.
      */
-    public function headerRowOptions(array $headerRowOptions): self
+    public function headerTableEnabled(bool $value): self
     {
         $new = clone $this;
-        $new->headerRowOptions = $headerRowOptions;
+        $new->headerTableEnabled = $value;
 
         return $new;
     }
 
     /**
-     * @param array $rowOptions the HTML attributes for the table body rows. This can be either an array specifying the
-     * common HTML attributes for all body rows.
+     * Return new instance with the HTML attributes for the header row.
      *
-     * @return $this
-     *
-     * {@see Html::renderTagAttributes()} for details on how attributes are being rendered.
+     * @param array $values Attribute values indexed by attribute names.
      */
-    public function rowOptions($rowOptions): self
+    public function headerRowAttributes(array $values): self
     {
         $new = clone $this;
-        $new->rowOptions = $rowOptions;
+        $new->headerRowAttributes = $values;
 
         return $new;
     }
 
     /**
-     * @param bool $showFooter whether to show the footer section of the grid table.
+     * Return new instance with the HTML attributes for row of the grid.
      *
-     * @return $this
+     * @param array $values Attribute values indexed by attribute names.
+     *
+     * This can be either an array specifying the common HTML attributes for all body rows.
      */
-    public function showFooter(): self
+    public function rowAttributes(array $values): self
     {
         $new = clone $this;
-        $new->showFooter = true;
+        $new->rowAttributes = $values;
 
         return $new;
     }
 
     /**
-     * @param bool $showHeader whether to show the header section of the grid table.
+     * Return new instance with the HTML attributes for the table.
      *
-     * @return $this
+     * @param array $values Attribute values indexed by attribute names.
      */
-    public function showHeader(bool $showHeader): self
+    public function tableAttributes(array $values): self
     {
         $new = clone $this;
-        $new->showHeader = $showHeader;
+        $new->tableAttributes = $values;
 
         return $new;
     }
 
     /**
-     * @param array $tableOptions the HTML attributes for the grid table element.
-     *
-     * @return $this
-     *
-     * {@see Html::renderTagAttributes()} for details on how attributes are being rendered.
-     */
-    public function tableOptions(array $tableOptions): self
-    {
-        $new = clone $this;
-        $new->tableOptions = ArrayHelper::merge($this->tableOptions, $tableOptions);
-
-        return $new;
-    }
-
-    /**
-     * Renders the data models for the grid view.
-     *
-     * @throws JsonException
-     *
-     * @return string the HTML code of table
+     * Renders the data active record classes for the grid view.
      */
     protected function renderItems(): string
     {
-        $caption = $this->renderCaption();
-        $columnGroup = $this->renderColumnGroup();
-        $tableHeader = $this->showHeader ? $this->renderTableHeader() : false;
-        $tableBody = $this->renderTableBody();
+        $columns = $this->renderColumns();
 
-        $tableFooter = false;
+        $content = array_filter([
+            $this->columnsGroupEnabled ? $this->renderColumnGroup($columns) : false,
+            $this->headerTableEnabled ? $this->renderTableHeader($columns) : false,
+            $this->footerEnabled ? $this->renderTableFooter($columns) : false,
+            $this->renderTableBody($columns),
+        ]);
 
-        if ($this->showFooter) {
-            $tableFooter = $this->renderTableFooter();
-        }
-
-        $content = array_filter(
-            [
-                $caption,
-                $columnGroup,
-                $tableHeader,
-                $tableFooter,
-                $tableBody,
-            ]
-        );
-
-        return Html::tag('table', implode("\n", $content), $this->tableOptions)
+        return Html::tag('table', PHP_EOL . implode(PHP_EOL, $content) . PHP_EOL, $this->tableAttributes)
             ->encode(false)
             ->render();
     }
@@ -444,263 +275,269 @@ final class GridView extends BaseListView
     /**
      * This function tries to guess the columns to show from the given data if {@see columns} are not explicitly
      * specified.
+     *
+     * @psalm-return non-empty-list<Column\ActionColumn|Column\DataColumn>
      */
-    private function guessColumns(): void
+    private function guessColumns(): array
     {
-        $models = $this->getDataReader();
+        $columns = [];
 
-        reset($models);
+        /** @psalm-var array[] */
+        $dataReader = $this->getDataReader();
+        reset($dataReader);
 
-        /** @var array<array-key,bool|int|object|string|null> $models */
-        foreach ($models as $name => $value) {
-            if ($value === null || is_scalar($value) || is_callable([$value, '__toString'])) {
-                $this->columns[] = (string) $name;
+        foreach ($dataReader as $data) {
+            /**
+             * @var string $name
+             * @var mixed $value
+             */
+            foreach ($data as $name => $value) {
+                if ($value === null || is_scalar($value) || is_callable([$value, '__toString'])) {
+                    $columns[] = Column\DataColumn::create()->attribute($name);
+                }
             }
+            break;
         }
+
+        $columns[] = Column\ActionColumn::create();
+
+        return $columns;
     }
 
     /**
      * Creates column objects and initializes them.
      *
-     * @throws InvalidConfigException
+     * @psalm-return array<array-key,Column\Column|null>
      */
-    private function initColumns(): void
+    private function renderColumns(): array
     {
-        if (empty($this->columns)) {
-            $this->guessColumns();
+        $columns = $this->columns;
+
+        if ($columns === []) {
+            $columns = $this->guessColumns();
         }
 
-        foreach ($this->columns as $i => $column) {
-            if (is_string($column)) {
-                $column = [
-                    'attribute()' => [$column],
-                ];
-            }
+        foreach ($columns as $i => $column) {
+            if ($column instanceof Column\Column && $column->isVisible()) {
+                $column = $column->emptyCell($this->emptyCell);
 
-            if (is_array($column)) {
-                $config = array_merge(
-                    [
-                        'class' => $this->dataColumnClass,
-                        'grid()' => [$this],
-                    ],
-                    $column,
-                );
+                if ($column instanceof Column\ActionColumn) {
+                    $column = $column
+                        ->createDefaultButtons()
+                        ->urlGenerator($this->getUrlGenerator())
+                        ->urlName($this->urlName);
+                }
 
-                $column = $this->gridViewFactory->createColumnClass($config);
-            }
+                if ($column instanceof Column\DataColumn) {
+                    $linkSorter = $this->renderLinkSorter($column->getAttribute(), $column->getLabel());
+                    $column = $column->filterModelName($this->filterModelName);
 
-            if ($column instanceof Column && !$column->isVisible()) {
-                unset($this->columns[$i]);
-                continue;
-            }
-
-            $this->columns[$i] = $column;
-        }
-    }
-
-    /**
-     * Renders the caption element.
-     *
-     * @throws JsonException
-     *
-     * @return string|null ?string the rendered caption element or `false` if no caption element should be rendered.
-     */
-    private function renderCaption(): ?string
-    {
-        if (!empty($this->caption)) {
-            return Html::tag('caption', $this->caption, $this->captionOptions)->render();
-        }
-
-        return null;
-    }
-
-    /**
-     * Renders the column group HTML.
-     *
-     * @throws JsonException
-     *
-     * @return string|null the column group HTML or `false` if no column group should be rendered.
-     */
-    private function renderColumnGroup()
-    {
-        foreach ($this->columns as $column) {
-            if ($column instanceof Column && !empty($column->getOptions())) {
-                $cols = [];
-                foreach ($this->columns as $col) {
-                    if ($col instanceof Column) {
-                        $cols[] = Html::tag('col', '', $col->getOptions())->render();
+                    if ($linkSorter !== '') {
+                        $column = $column->linkSorter($linkSorter);
                     }
                 }
 
-                return Html::tag('colgroup', implode("\n", $cols))
-                    ->encode(false)
-                    ->render();
+                $columns[$i] = $column;
+            } else {
+                unset($columns[$i]);
             }
         }
 
-        return null;
+        return $columns;
+    }
+
+    /**
+     * Renders the column group.
+     *
+     * @param array $columns The columns of gridview.
+     *
+     * @psalm-param array<array-key,Column\Column|null> $columns
+     */
+    private function renderColumnGroup(array $columns): string
+    {
+        $cols = [];
+
+        foreach ($columns as $column) {
+            if ($column instanceof Column\Column) {
+                $cols[] = Col::tag()->addAttributes($column->getAttributes());
+            }
+        }
+
+        return Colgroup::tag()->columns(...$cols)->render();
     }
 
     /**
      * Renders the filter.
      *
-     * @throws JsonException
+     * @param array $columns The columns of gridview.
      *
-     * @return string the rendering result.
+     * @return string The rendering result.
+     *
+     * @psalm-param array<array-key,Column\Column|null> $columns
      */
-    private function renderFilters(): string
+    private function renderFilters(array $columns): string
     {
-        if ($this->getFilterModelName() !== '') {
-            $cells = [];
+        $cells = [];
+        $countFilter = 0;
+        $filterRowAttributes = $this->filterRowAttributes;
 
-            foreach ($this->columns as $column) {
-                if ($column instanceof Column) {
-                    $cells[] = $column->renderFilterCell();
-                }
+        Html::addCssClass($filterRowAttributes, 'filters');
+
+        foreach ($columns as $column) {
+            if ($column instanceof Column\DataColumn && ($column->getFilter() !== '' || $column->getFilterAttribute() !== '')) {
+                $cells[] = $column->renderFilterCell();
+                $countFilter++;
+            } else {
+                $cells[] = Td::tag()->content('&nbsp;')->encode(false)->render();
             }
-
-            return Html::tag('tr', implode('', $cells), $this->filterRowOptions)
-                ->encode(false)
-                ->render();
         }
 
-        return '';
+        return match ($countFilter > 0) {
+            false => '',
+            default => Html::tag('tr', PHP_EOL . implode(PHP_EOL, $cells) . PHP_EOL, $filterRowAttributes)
+                ->encode(false)
+                ->render(),
+        };
     }
 
     /**
      * Renders the table body.
      *
-     * @throws JsonException
+     * @param array $columns The columns of gridview.
      *
-     * @return string the rendering result.
-     *
-     * @psalm-suppress InvalidArgument
+     * @psalm-param array<array-key,Column\Column|null> $columns
      */
-    private function renderTableBody(): string
+    private function renderTableBody(array $columns): string
     {
-        $models = $this->getDataReader();
-        $keys = array_keys($models);
+        $data = $this->getDataReader();
+        $keys = array_keys($data);
         $rows = [];
 
-        /** @var array<int,array> $models */
-        foreach ($models as $index => $model) {
+        /** @psalm-var array<int,array> $data */
+        foreach ($data as $index => $value) {
             $key = $keys[$index];
 
             if ($this->beforeRow !== null) {
                 /** @var array */
-                $row = call_user_func($this->beforeRow, $model, $key, $index, $this);
+                $row = call_user_func($this->beforeRow, $value, $key, $index, $this);
 
                 if (!empty($row)) {
                     $rows[] = $row;
                 }
             }
 
-            $rows[] = $this->renderTableRow($model, $key, $index);
+            $rows[] = $this->renderTableRow($columns, $value, $key, $index);
 
             if ($this->afterRow !== null) {
-                /** @var array<array-key, string> */
-                $row = call_user_func($this->afterRow, $model, $key, $index, $this);
-                if (!empty($row)) {
+                /** @psalm-var array<array-key,string> */
+                $row = call_user_func($this->afterRow, $value, $key, $index, $this);
+
+                if ($row !== []) {
                     $rows[] = $row;
                 }
             }
         }
 
-        if (empty($rows) && $this->emptyText !== '') {
-            $colspan = count($this->columns);
-            return "<tbody>\n<tr><td colspan=\"$colspan\">" . $this->renderEmpty() . "</td></tr>\n</tbody>\n";
+        if ($rows === [] && $this->emptyText !== '') {
+            $colspan = count($columns);
+
+            return Tbody::tag()
+                ->rows(Tr::tag()->cells($this->renderEmpty($colspan)))
+                ->render();
         }
 
-        return "<tbody>\n" . implode("\n", $rows) . "\n</tbody>\n";
+        /** @psalm-var array<array-key,string> $rows */
+        return Html::tag('tbody', PHP_EOL . implode(PHP_EOL, $rows) . PHP_EOL)->encode(false)->render();
     }
 
     /**
      * Renders the table footer.
      *
-     * @throws JsonException
+     * @param array $columns The columns of gridview.
      *
-     * @return string the rendering result.
+     * @psalm-param array<array-key,Column\Column|null> $columns
      */
-    private function renderTableFooter(): string
+    private function renderTableFooter(array $columns): string
     {
         $cells = [];
+        $footerRowAttributes = $this->footerRowAttributes;
 
-        foreach ($this->columns as $column) {
-            if ($column instanceof Column) {
+        foreach ($columns as $column) {
+            if ($column instanceof Column\Column) {
                 $cells[] = $column->renderFooterCell();
             }
         }
 
-        $content = Html::tag('tr', implode('', $cells), $this->footerRowOptions)
+        $content = Html::tag('tr', PHP_EOL . implode('', $cells) . PHP_EOL, $footerRowAttributes)
             ->encode(false)
             ->render();
 
         if ($this->filterPosition === self::FILTER_POS_FOOTER) {
-            $content .= $this->renderFilters();
+            $content .= PHP_EOL . $this->renderFilters($columns);
         }
 
-        return "<tfoot>\n" . $content . "\n</tfoot>";
+        return Html::tag('tfoot', PHP_EOL . $content . PHP_EOL)->encode(false)->render();
     }
 
     /**
      * Renders the table header.
      *
-     * @throws JsonException
+     * @param array $columns The columns of gridview.
      *
-     * @return string the rendering result.
+     * @psalm-param array<array-key,Column\Column|null> $columns
      */
-    private function renderTableHeader(): string
+    private function renderTableHeader(array $columns): string
     {
-        $cells = [];
+        $cell = [];
+        $cells = '';
 
-        foreach ($this->columns as $column) {
-            if ($column instanceof Column) {
-                $cells[] = $column->renderHeaderCell();
+        foreach ($columns as $column) {
+            if ($column instanceof Column\Column) {
+                $cell[] = $column->renderHeaderCell();
             }
         }
 
-        $content = Html::tag('tr', implode('', $cells), $this->headerRowOptions)
-            ->encode(false)
-            ->render();
-
-        if ($this->filterPosition === self::FILTER_POS_HEADER) {
-            $content = $this->renderFilters() . $content;
-        } elseif ($this->filterPosition === self::FILTER_POS_BODY) {
-            $content .= $this->renderFilters();
+        if ($cell !== []) {
+            $cells = PHP_EOL . implode(PHP_EOL, $cell) . PHP_EOL;
         }
 
-        return "\n" . Html::tag('thead', "\n$content\n", $this->headOptions)
-                ->encode(false)
-                ->render();
+        $content = Html::tag('tr', $cells, $this->headerRowAttributes)->encode(false)->render();
+        $renderFilters = PHP_EOL . $this->renderFilters($columns);
+
+        if ($this->filterPosition === self::FILTER_POS_HEADER) {
+            $content = $renderFilters . PHP_EOL . $content;
+        } elseif (self::FILTER_POS_BODY === $this->filterPosition) {
+            $content .= $renderFilters;
+        }
+
+        return Html::tag('thead', PHP_EOL . trim($content) . PHP_EOL)->encode(false)->render();
     }
 
     /**
-     * Renders a table row with the given data model and key.
+     * Renders a table row with the given data and key.
      *
-     * @param array|object $model the data model to be rendered
-     * @param mixed $key the key associated with the data model
-     * @param int $index the zero-based index of the data model among the model array returned by {@see dataReader}.
+     * @param array $columns The columns of gridview.
+     * @param array|object $data The data.
+     * @param mixed $key The key associated with the data.
+     * @param int $index The zero-based index of the data in the data provider.
      *
-     * @throws JsonException
-     *
-     * @return string the rendering result
+     * @psalm-param array<array-key,Column\Column|null> $columns
      */
-    private function renderTableRow($model, $key, int $index): string
+    private function renderTableRow(array $columns, array|object $data, mixed $key, int $index): string
     {
         $cells = [];
+        $content = '';
 
-        foreach ($this->columns as $column) {
-            if ($column instanceof Column) {
-                $cells[] = $column->renderDataCell($model, $key, $index);
+        foreach ($columns as $column) {
+            if ($column instanceof Column\Column) {
+                $cells[] = $column->renderDataCell($data, $key, $index);
             }
         }
 
-        if ($cells !== [] && $this->cssFramework === self::BULMA) {
-            $this->rowOptions['data-key'] = is_array($key) ? Json::encode($key) : (string)$key;
+        if ($cells !== []) {
+            $content = PHP_EOL . implode(PHP_EOL, $cells) . PHP_EOL;
         }
 
-        return Html::tag('tr', implode('', $cells), $this->rowOptions)
-            ->encode(false)
-            ->render();
+        return Html::tag('tr', $content, $this->rowAttributes)->encode(false)->render();
     }
 }
