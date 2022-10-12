@@ -41,7 +41,7 @@ abstract class BaseListView extends Widget
     private bool $withContainer = true;
 
     /**
-     * Renders the data active records.
+     * Renders the data models.
      *
      * @return string the rendering result.
      */
