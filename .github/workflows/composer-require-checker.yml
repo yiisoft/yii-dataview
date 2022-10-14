@@ -8,6 +8,7 @@ on:
       - '.gitattributes'
       - 'infection.json.dist'
       - 'phpunit.xml.dist'
+      - 'psalm.xml'
 
   push:
     paths-ignore:
@@ -18,8 +19,9 @@ on:
       - '.gitattributes'
       - 'infection.json.dist'
       - 'phpunit.xml.dist'
+      - 'psalm.xml'
 
-name: composer require checker
+name: Composer require checker
 
 jobs:
   composer-require-checker:
@@ -28,4 +30,4 @@ jobs:
       os: >-
         ['ubuntu-latest']
       php: >-
-        ['8.0']
+        ['8.0', '8.1']
