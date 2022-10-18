@@ -179,7 +179,7 @@ final class OffsetPagination extends BasePagination
             $beginPage = max(1, $endPage - $this->maxNavLinkCount + 1);
         }
 
-        if ($currentPage > $totalPages) {
+        if ($totalPages !== 0 && $currentPage > $totalPages) {
             throw new InvalidArgumentException('Current page must be less than or equal to total pages.');
         }
 
