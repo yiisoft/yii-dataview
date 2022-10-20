@@ -25,7 +25,7 @@ final class KeysetPaginationBaseTest extends TestCase
      */
     public function testRenderPaginatorEmptyData(): void
     {
-        $keysetPaginator = $this->createKeysetPaginator([], 10, 1, true);
+        $keysetPaginator = $this->createKeysetPaginator([], 10);
 
         Assert::equalsWithoutLE(
             <<<HTML
