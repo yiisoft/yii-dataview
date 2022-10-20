@@ -403,7 +403,6 @@ final class BaseTest extends TestCase
         );
     }
 
-
     /**
      * @throws InvalidConfigException
      * @throws NotFoundException
