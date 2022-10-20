@@ -80,7 +80,7 @@ final class KeysetPagination extends BasePagination
 
             $disabled = $token === 0;
 
-            if ($token !== 0) {
+            if ($token > 0) {
                 $paginator = $paginator->withPreviousPageToken((string) ($token - 1));
             }
 
