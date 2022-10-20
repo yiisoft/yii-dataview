@@ -64,7 +64,6 @@ final class KeysetPagination extends BasePagination
     private function renderPreviousPageNavLink(): array
     {
         $items = [];
-
         $iconContainerAttributes = $this->getIconContainerAttributes();
 
         if (!array_key_exists('aria-hidden', $iconContainerAttributes)) {
@@ -77,11 +76,11 @@ final class KeysetPagination extends BasePagination
             $this->getIconClassPreviousPage() !== ''
         ) {
             $paginator = $this->getPaginator();
-            $token = $paginator->getPreviousPageToken();
+            $token = (int) $paginator->getPreviousPageToken();
 
-            $disabled = $paginator->getPreviousPageToken() === null;
+            $disabled = $token === 0;
 
-            if ($token !== null) {
+            if ($token !== 0) {
                 $paginator = $paginator->withPreviousPageToken((string) ($token - 1));
             }
 

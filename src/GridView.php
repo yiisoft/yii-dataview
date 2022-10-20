@@ -276,7 +276,7 @@ final class GridView extends BaseListView
      * This function tries to guess the columns to show from the given data if {@see columns} are not explicitly
      * specified.
      *
-     * @psalm-return non-empty-list<Column\ActionColumn|Column\DataColumn>
+     * @psalm-return list<Column\ActionColumn|Column\DataColumn>
      */
     private function guessColumns(): array
     {
