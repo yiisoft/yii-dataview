@@ -77,19 +77,22 @@ final class KeysetPagination extends BasePagination
             $this->getIconClassPreviousPage() !== ''
         ) {
             $paginator = $this->getPaginator();
+            $token = $paginator->getPreviousPageToken();
 
-            if (($pageToken = (int) $paginator->getPreviousPageToken() - ($paginator->getPageSize() + 1)) < 0) {
-                $pageToken = 0;
+            $disabled = $paginator->getPreviousPageToken() === null;
+
+            if ($token !== null) {
+                $paginator = $paginator->withPreviousPageToken((string) ($token - 1));
             }
 
             $items = [
-                'disabled' => $paginator->getPreviousPageToken() === null,
+                'disabled' => $disabled,
                 'icon' => $this->getIconPreviousPage(),
                 'iconAttributes' => $this->getIconAttributes(),
                 'iconClass' => $this->getIconClassPreviousPage(),
                 'iconContainerAttributes' => $iconContainerAttributes,
                 'label' => $this->getLabelPreviousPage(),
-                'link' => $this->createUrl($pageToken),
+                'link' => $this->createUrl((int) $paginator->getPreviousPageToken()),
             ];
         }
 

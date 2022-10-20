@@ -299,7 +299,9 @@ final class GridView extends BaseListView
             break;
         }
 
-        $columns[] = Column\ActionColumn::create();
+        if ($dataReader !== []) {
+            $columns[] = Column\ActionColumn::create();
+        }
 
         return $columns;
     }
