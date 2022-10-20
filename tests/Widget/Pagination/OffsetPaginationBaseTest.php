@@ -7,6 +7,7 @@ namespace Yiisoft\Yii\DataView\Tests\Widget\Pagination;
 use PHPUnit\Framework\TestCase;
 use Yiisoft\Definitions\Exception\CircularReferenceException;
 use Yiisoft\Definitions\Exception\InvalidConfigException;
+use Yiisoft\Definitions\Exception\NotInstantiableException;
 use Yiisoft\Factory\NotFoundException;
 use Yiisoft\Yii\DataView\GridView;
 use Yiisoft\Yii\DataView\Tests\Support\Assert;
