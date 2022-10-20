@@ -417,5 +417,4 @@ final class KeysetPaginationBaseTest extends TestCase
             DataColumn::create()->attribute('description'),
         ];
     }
-
 }
