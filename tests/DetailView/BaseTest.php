@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Yiisoft\Yii\DataView\Tests\DetailView;
 
-use StdClass;
 use PHPUnit\Framework\TestCase;
+use StdClass;
 use Yiisoft\Definitions\Exception\CircularReferenceException;
 use Yiisoft\Definitions\Exception\InvalidConfigException;
 use Yiisoft\Definitions\Exception\NotInstantiableException;
@@ -313,6 +313,92 @@ final class BaseTest extends TestCase
                 )
                 ->data(['id' => 1, 'username' => 'tests 1', 'total' => '10'])
                 ->valueAttributes(['class' => 'test-value'])
+                ->render(),
+        );
+    }
+
+    /**
+     * @throws InvalidConfigException
+     * @throws NotFoundException
+     * @throws NotInstantiableException
+     * @throws CircularReferenceException
+     */
+    public function testValueAttributeClosure(): void
+    {
+        Assert::equalsWithoutLE(
+            <<<HTML
+            <div>
+            <div>
+            <div>
+            <span>id</span>
+            <div class="test-value">1</div>
+            </div>
+            <div>
+            <span>username</span>
+            <div class="test-value">tests 1</div>
+            </div>
+            <div>
+            <span>total</span>
+            <div class="text-success">10</div>
+            </div>
+            </div>
+            </div>
+            HTML,
+            DetailView::widget()
+                ->columns(
+                    [
+                        ['attribute' => 'id'],
+                        ['attribute' => 'username'],
+                        [
+                            'attribute' => 'total',
+                            'valueAttributes' => fn ($data) => $data['total'] > 10
+                                ? ['class' => 'text-danger'] : ['class' => 'text-success'],
+                        ],
+                    ],
+                )
+                ->data(['id' => 1, 'username' => 'tests 1', 'total' => '10'])
+                ->valueAttributes(['class' => 'test-value'])
+                ->render(),
+        );
+    }
+
+    /**
+     * @throws InvalidConfigException
+     * @throws NotFoundException
+     * @throws NotInstantiableException
+     * @throws CircularReferenceException
+     */
+    public function testValueInt(): void
+    {
+        Assert::equalsWithoutLE(
+            <<<HTML
+            <div>
+            <div>
+            <div>
+            <span>id</span>
+            <div>1</div>
+            </div>
+            <div>
+            <span>username</span>
+            <div>guess</div>
+            </div>
+            <div>
+            <span>isAdmin</span>
+            <div>1</div>
+            </div>
+            </div>
+            </div>
+            HTML,
+            DetailView::widget()
+                ->columns(
+                    [
+                        ['attribute' => 'id'],
+                        ['attribute' => 'username'],
+                        ['attribute' => 'isAdmin', 'value' => 1],
+                    ],
+                )
+                ->data(['id' => 1, 'username' => 'guess', 'isAdmin' => false])
+                ->valueFalse('no')
                 ->render(),
         );
     }
