@@ -74,7 +74,6 @@ final class BaseTest extends TestCase
                 ->id('w1-grid')
                 ->paginator($this->createOffsetPaginator($this->data, 10))
                 ->translator(Mock::translator('en'))
-                ->urlGenerator(Mock::urlGenerator([Route::get('/admin/manage')->name('admin/manage')]))
                 ->render()
         );
     }
@@ -125,7 +124,6 @@ final class BaseTest extends TestCase
                 ->id('w1-grid')
                 ->paginator($this->createOffsetPaginator($this->data, 10))
                 ->translator(Mock::translator('en'))
-                ->urlGenerator(Mock::urlGenerator([Route::get('/admin/manage')->name('admin/manage')]))
                 ->render()
         );
     }
@@ -180,7 +178,6 @@ final class BaseTest extends TestCase
                 ->id('w1-grid')
                 ->paginator($this->createOffsetPaginator($this->data, 10))
                 ->translator(Mock::translator('en'))
-                ->urlGenerator(Mock::urlGenerator([Route::get('/admin/manage')->name('admin/manage')]))
                 ->render()
         );
     }
@@ -236,7 +233,6 @@ final class BaseTest extends TestCase
                 ->id('w1-grid')
                 ->paginator($this->createOffsetPaginator($this->data, 10))
                 ->translator(Mock::translator('en'))
-                ->urlGenerator(Mock::urlGenerator())
                 ->urlName('admin')
                 ->render()
         );
@@ -274,7 +270,6 @@ final class BaseTest extends TestCase
                 ->id('w1-grid')
                 ->paginator($this->createOffsetPaginator([['id' => '']], 10))
                 ->translator(Mock::translator('en'))
-                ->urlGenerator(Mock::urlGenerator([Route::get('/admin/manage')->name('admin/manage')]))
                 ->render()
         );
     }
@@ -313,7 +308,6 @@ final class BaseTest extends TestCase
                 ->id('w1-grid')
                 ->paginator($this->createOffsetPaginator([], 10))
                 ->translator(Mock::translator('en'))
-                ->urlGenerator(Mock::urlGenerator([Route::get('/admin/manage')->name('admin/manage')]))
                 ->render()
         );
     }
@@ -365,7 +359,6 @@ final class BaseTest extends TestCase
                 ->id('w1-grid')
                 ->paginator($this->createOffsetPaginator($this->data, 10))
                 ->translator(Mock::translator('en'))
-                ->urlGenerator(Mock::urlGenerator([Route::get('/admin/manage')->name('admin/manage')]))
                 ->render()
         );
     }
@@ -415,7 +408,6 @@ final class BaseTest extends TestCase
                 ->id('w1-grid')
                 ->paginator($this->createOffsetPaginator($this->data, 10))
                 ->translator(Mock::translator('en'))
-                ->urlGenerator(Mock::urlGenerator([Route::get('/admin/manage')->name('admin/manage')]))
                 ->render()
         );
     }
@@ -467,7 +459,6 @@ final class BaseTest extends TestCase
                 ->layout('')
                 ->layoutGridTable("{header}\n{items}\n{summary}")
                 ->translator(Mock::translator('en'))
-                ->urlGenerator(Mock::urlGenerator([Route::get('/admin/manage')->name('admin/manage')]))
                 ->render()
         );
     }
@@ -516,7 +507,6 @@ final class BaseTest extends TestCase
                 ->id('w1-grid')
                 ->paginator($this->createOffsetPaginator($this->data, 10))
                 ->translator(Mock::translator('en'))
-                ->urlGenerator(Mock::urlGenerator([Route::get('/admin/manage')->name('admin/manage')]))
                 ->render()
         );
     }
@@ -557,7 +547,6 @@ final class BaseTest extends TestCase
                 ->id('w1-grid')
                 ->paginator($this->createOffsetPaginator($this->data, 10))
                 ->translator(Mock::translator('en'))
-                ->urlGenerator(Mock::urlGenerator([Route::get('/admin/manage')->name('admin/manage')]))
                 ->render()
         );
     }
@@ -595,7 +584,6 @@ final class BaseTest extends TestCase
                 ->id('w1-grid')
                 ->paginator($this->createOffsetPaginator([], 10))
                 ->translator(Mock::translator('en'))
-                ->urlGenerator(Mock::urlGenerator([Route::get('/admin/manage')->name('admin/manage')]))
                 ->render()
         );
     }
@@ -644,7 +632,6 @@ final class BaseTest extends TestCase
                 ->paginator($this->createOffsetPaginator($this->data, 10))
                 ->rowAttributes(['class' => 'text-primary'])
                 ->translator(Mock::translator('en'))
-                ->urlGenerator(Mock::urlGenerator([Route::get('/admin/manage')->name('admin/manage')]))
                 ->render()
         );
 
@@ -684,7 +671,6 @@ final class BaseTest extends TestCase
                 ->paginator($this->createOffsetPaginator($this->data, 10))
                 ->rowAttributes(['class' => 'text-primary'])
                 ->translator(Mock::translator('en'))
-                ->urlGenerator(Mock::urlGenerator([Route::get('/admin/manage')->name('admin/manage')]))
                 ->render()
         );
     }
@@ -733,7 +719,6 @@ final class BaseTest extends TestCase
                 ->paginator($this->createOffsetPaginator($this->data, 10))
                 ->tableAttributes(['class' => 'table table-striped table-bordered'])
                 ->translator(Mock::translator('en'))
-                ->urlGenerator(Mock::urlGenerator([Route::get('/admin/manage')->name('admin/manage')]))
                 ->render()
         );
     }

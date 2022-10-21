@@ -45,7 +45,6 @@ final class KeysetPaginationBaseTest extends TestCase
     public function testRenderPaginatorEmptyData(): void
     {
         $keysetPaginator = $this->createKeysetPaginator([], 10);
-        $urlGenerator = Mock::urlGenerator([Route::get('/admin/manage')->name('admin/manage')]);
 
         Assert::equalsWithoutLE(
             <<<HTML
@@ -66,14 +65,8 @@ final class KeysetPaginationBaseTest extends TestCase
                 ->columns([])
                 ->id('w1-grid')
                 ->paginator($keysetPaginator)
-                ->pagination(
-                    KeysetPagination::widget()
-                        ->paginator($keysetPaginator)
-                        ->urlGenerator($urlGenerator)
-                        ->render()
-                )
+                ->pagination(KeysetPagination::widget()->paginator($keysetPaginator)->render())
                 ->translator(Mock::translator('en'))
-                ->urlGenerator($urlGenerator)
                 ->render(),
         );
     }
@@ -87,7 +80,6 @@ final class KeysetPaginationBaseTest extends TestCase
     public function testRenderPaginationLinks(): void
     {
         $keysetPaginator = $this->createKeysetPaginator($this->data, 5);
-        $urlGenerator = Mock::urlGenerator([Route::get('/admin/manage')->name('admin/manage')]);
 
         Assert::equalsWithoutLE(
             <<<HTML
@@ -143,14 +135,12 @@ final class KeysetPaginationBaseTest extends TestCase
                 ->pagination(
                     KeysetPagination::widget()
                         ->paginator($keysetPaginator)
-                        ->urlGenerator($urlGenerator)
                         ->urlArguments([])
                         ->urlName('admin/manage')
                         ->render(),
                 )
                 ->layoutGridTable('{items}' . PHP_EOL . '{pager}')
                 ->translator(Mock::translator('en'))
-                ->urlGenerator($urlGenerator)
                 ->render(),
         );
 
@@ -210,14 +200,12 @@ final class KeysetPaginationBaseTest extends TestCase
                 ->pagination(
                     KeysetPagination::widget()
                         ->paginator($keysetPaginator)
-                        ->urlGenerator($urlGenerator)
                         ->urlArguments([])
                         ->urlName('admin/manage')
                         ->render(),
                 )
                 ->layoutGridTable('{items}' . PHP_EOL . '{pager}')
                 ->translator(Mock::translator('en'))
-                ->urlGenerator($urlGenerator)
                 ->render(),
         );
 
@@ -262,14 +250,12 @@ final class KeysetPaginationBaseTest extends TestCase
                 ->pagination(
                     KeysetPagination::widget()
                         ->paginator($keysetPaginator)
-                        ->urlGenerator($urlGenerator)
                         ->urlArguments([])
                         ->urlName('admin/manage')
                         ->render(),
                 )
                 ->layoutGridTable('{items}' . PHP_EOL . '{pager}')
                 ->translator(Mock::translator('en'))
-                ->urlGenerator($urlGenerator)
                 ->render(),
         );
 
@@ -329,14 +315,12 @@ final class KeysetPaginationBaseTest extends TestCase
                 ->pagination(
                     KeysetPagination::widget()
                         ->paginator($keysetPaginator)
-                        ->urlGenerator($urlGenerator)
                         ->urlArguments([])
                         ->urlName('admin/manage')
                         ->render(),
                 )
                 ->layoutGridTable('{items}' . PHP_EOL . '{pager}')
                 ->translator(Mock::translator('en'))
-                ->urlGenerator($urlGenerator)
                 ->render(),
         );
 
@@ -396,14 +380,12 @@ final class KeysetPaginationBaseTest extends TestCase
                 ->pagination(
                     KeysetPagination::widget()
                         ->paginator($keysetPaginator)
-                        ->urlGenerator($urlGenerator)
                         ->urlArguments([])
                         ->urlName('admin/manage')
                         ->render(),
                 )
                 ->layoutGridTable('{items}' . PHP_EOL . '{pager}')
                 ->translator(Mock::translator('en'))
-                ->urlGenerator($urlGenerator)
                 ->render(),
         );
     }

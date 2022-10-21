@@ -60,7 +60,6 @@ final class OffsetPaginationTest extends TestCase
             OffsetPagination::widget()
                 ->menuClass('pagination justify-content-center')
                 ->paginator($this->createOffsetPaginator($this->data, 2))
-                ->urlGenerator(Mock::urlGenerator())
                 ->urlName('admin/manage')
                 ->render(),
         );
@@ -98,7 +97,6 @@ final class OffsetPaginationTest extends TestCase
             OffsetPagination::widget()
                 ->disabledPreviousPage(true)
                 ->paginator($this->createOffsetPaginator($this->data, 2, 2))
-                ->urlGenerator(Mock::urlGenerator())
                 ->urlName('admin/manage')
                 ->render(),
         );
@@ -133,7 +131,6 @@ final class OffsetPaginationTest extends TestCase
                 ->iconLastPage('»')
                 ->paginator($this->createOffsetPaginator($this->data, 1))
                 ->urlArguments([])
-                ->urlGenerator(Mock::urlGenerator())
                 ->urlName('admin/manage')
                 ->render(),
         );
@@ -168,7 +165,6 @@ final class OffsetPaginationTest extends TestCase
                 ->iconClassLastPage('bi bi-chevron-double-right p-1')
                 ->paginator($this->createOffsetPaginator($this->data, 1))
                 ->urlArguments([])
-                ->urlGenerator(Mock::urlGenerator())
                 ->urlName('admin/manage')
                 ->render(),
         );
@@ -203,7 +199,6 @@ final class OffsetPaginationTest extends TestCase
                 ->labelLastPage('Last')
                 ->paginator($this->createOffsetPaginator($this->data, 1))
                 ->urlArguments([])
-                ->urlGenerator(Mock::urlGenerator())
                 ->urlName('admin/manage')
                 ->render(),
         );
@@ -233,7 +228,6 @@ final class OffsetPaginationTest extends TestCase
             HTML,
             OffsetPagination::widget()
                 ->paginator($this->createOffsetPaginator($this->data, 1))
-                ->urlGenerator(Mock::urlGenerator())
                 ->urlArguments(['filter' => 'test'])
                 ->urlName('admin/manage')
                 ->render(),
@@ -264,7 +258,6 @@ final class OffsetPaginationTest extends TestCase
             HTML,
             OffsetPagination::widget()
                 ->paginator($this->createOffsetPaginator($this->data, 1))
-                ->urlGenerator(Mock::urlGenerator())
                 ->urlQueryParameters(['filter' => 'test'])
                 ->urlName('admin/manage')
                 ->render(),
@@ -295,7 +288,6 @@ final class OffsetPaginationTest extends TestCase
             HTML,
             OffsetPagination::widget()
                 ->paginator($this->createOffsetPaginator($this->data, 1))
-                ->urlGenerator(Mock::urlGenerator())
                 ->urlQueryParameters(['filter' => 'test'])
                 ->render(),
         );
@@ -313,7 +305,6 @@ final class OffsetPaginationTest extends TestCase
             OffsetPagination::widget()
                 ->paginator($this->createOffsetPaginator($this->data, 5))
                 ->urlArguments([])
-                ->urlGenerator(Mock::urlGenerator())
                 ->urlName('admin/manage')
                 ->render(),
         );
@@ -355,7 +346,6 @@ final class OffsetPaginationTest extends TestCase
             OffsetPagination::widget()
                 ->paginator($this->createOffsetPaginator($this->data, 1))
                 ->urlArguments([])
-                ->urlGenerator(Mock::urlGenerator())
                 ->urlName('admin/manage')
                 ->render(),
         );
@@ -391,7 +381,6 @@ final class OffsetPaginationTest extends TestCase
                 ->labelPreviousPage()
                 ->paginator($this->createOffsetPaginator($this->data, 1))
                 ->urlArguments([])
-                ->urlGenerator(Mock::urlGenerator())
                 ->urlName('admin/manage')
                 ->render(),
         );
@@ -414,7 +403,6 @@ final class OffsetPaginationTest extends TestCase
                 ->labelPreviousPage()
                 ->paginator($this->createOffsetPaginator($this->data, 1))
                 ->urlArguments([])
-                ->urlGenerator(Mock::urlGenerator())
                 ->urlName('admin/manage')
                 ->render(),
         );
@@ -452,7 +440,6 @@ final class OffsetPaginationTest extends TestCase
                 ->iconPreviousPage('«')
                 ->paginator($this->createOffsetPaginator($this->data, 1))
                 ->urlArguments([])
-                ->urlGenerator(Mock::urlGenerator())
                 ->urlName('admin/manage')
                 ->render(),
         );
@@ -476,7 +463,6 @@ final class OffsetPaginationTest extends TestCase
                 ->iconClassPreviousPage('bi bi-chevron-double-left p-1')
                 ->paginator($this->createOffsetPaginator($this->data, 1))
                 ->urlArguments([])
-                ->urlGenerator(Mock::urlGenerator())
                 ->urlName('admin/manage')
                 ->render(),
         );

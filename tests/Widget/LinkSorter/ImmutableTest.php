@@ -41,7 +41,6 @@ final class ImmutableTest extends TestCase
         $this->assertNotSame($linkSorter, $linkSorter->pageSize(0));
         $this->assertNotSame($linkSorter, $linkSorter->pageSizeName(''));
         $this->assertNotSame($linkSorter, $linkSorter->urlArguments([]));
-        $this->assertNotSame($linkSorter, $linkSorter->urlGenerator(Mock::UrlGenerator([])));
         $this->assertNotSame($linkSorter, $linkSorter->urlName(''));
         $this->assertNotSame($linkSorter, $linkSorter->urlQueryParameters([]));
     }

@@ -51,11 +51,9 @@ final class OffsetPaginationBaseTest extends TestCase
                 ->pagination(
                     OffsetPagination::widget()
                         ->paginator($offsetPaginator)
-                        ->urlGenerator(Mock::urlGenerator())
                         ->render()
                 )
                 ->translator(Mock::translator('en'))
-                ->urlGenerator(Mock::urlGenerator())
                 ->render(),
         );
     }
