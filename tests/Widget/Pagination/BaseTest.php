@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Yiisoft\Yii\DataView\Tests\Widget\Pagination;
 
 use PHPUnit\Framework\TestCase;
-use ReflectionException;
 use Yiisoft\Definitions\Exception\CircularReferenceException;
 use Yiisoft\Definitions\Exception\InvalidConfigException;
 use Yiisoft\Definitions\Exception\NotInstantiableException;
@@ -39,7 +38,7 @@ final class BaseTest extends TestCase
         parent::setUp();
 
         $container = new Container(ContainerConfig::create());
-        WidgetFactory::initialize($container, [UrlGeneratorInterface::class =>  Mock::urlGenerator()]);
+        WidgetFactory::initialize($container, [UrlGeneratorInterface::class => Mock::urlGenerator()]);
     }
 
     /**

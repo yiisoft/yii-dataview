@@ -29,7 +29,7 @@ final class BaseTest extends TestCase
         parent::setUp();
 
         $container = new Container(ContainerConfig::create());
-        WidgetFactory::initialize($container, [UrlGeneratorInterface::class =>  Mock::urlGenerator()]);
+        WidgetFactory::initialize($container, [UrlGeneratorInterface::class => Mock::urlGenerator()]);
     }
 
     /**

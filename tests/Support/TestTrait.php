@@ -63,7 +63,7 @@ trait TestTrait
 
         return [
             CurrentRoute::class => $currentRoute,
-            UrlGeneratorInterface::class =>  Mock::urlGenerator([], $currentRoute),
+            UrlGeneratorInterface::class => Mock::urlGenerator([], $currentRoute),
         ];
     }
 }
