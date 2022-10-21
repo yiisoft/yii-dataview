@@ -33,10 +33,13 @@ final class LinkSorter extends Widget
     private int $pageSize = 0;
     private string $pageName = 'page';
     private string $pageSizeName = 'pagesize';
-    private UrlGeneratorInterface|null $urlGenerator = null;
     private array|null $urlArguments = null;
     private array $urlQueryParameters = [];
     private string $urlName = '';
+
+    public function __construct(private UrlGeneratorInterface|null $urlGenerator = null)
+    {
+    }
 
     /**
      * Returns a new instance with the attribute name for link sorting.
@@ -231,19 +234,6 @@ final class LinkSorter extends Widget
     {
         $new = clone $this;
         $new->urlArguments = $value;
-
-        return $new;
-    }
-
-    /**
-     * Return a new instance with URL generator interface for pagination.
-     *
-     * @param UrlGeneratorInterface $value The URL generator interface for pagination.
-     */
-    public function urlGenerator(UrlGeneratorInterface $value): self
-    {
-        $new = clone $this;
-        $new->urlGenerator = $value;
 
         return $new;
     }

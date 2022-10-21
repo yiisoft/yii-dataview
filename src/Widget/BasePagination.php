@@ -33,10 +33,13 @@ abstract class BasePagination extends Widget
     private string $pageName = 'page';
     private string $pageSizeName = 'pagesize';
     private PaginatorInterface|null $paginator = null;
-    private UrlGeneratorInterface|null $urlGenerator = null;
     private ?array $urlArguments = null;
     private array $urlQueryParameters = [];
     private string $urlName = '';
+
+    public function __construct(private UrlGeneratorInterface|null $urlGenerator = null)
+    {
+    }
 
     /**
      * Returns a new instance with the HTML attributes. The following special options are recognized.
@@ -285,19 +288,6 @@ abstract class BasePagination extends Widget
     {
         $new = clone $this;
         $new->urlArguments = $value;
-
-        return $new;
-    }
-
-    /**
-     * Return a new instance with url generator interface for pagination.
-     *
-     * @param UrlGeneratorInterface $value The url generator interface for pagination.
-     */
-    public function urlGenerator(UrlGeneratorInterface $value): static
-    {
-        $new = clone $this;
-        $new->urlGenerator = $value;
 
         return $new;
     }

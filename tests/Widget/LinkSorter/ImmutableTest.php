@@ -9,7 +9,6 @@ use Yiisoft\Definitions\Exception\CircularReferenceException;
 use Yiisoft\Definitions\Exception\InvalidConfigException;
 use Yiisoft\Definitions\Exception\NotInstantiableException;
 use Yiisoft\Factory\NotFoundException;
-use Yiisoft\Yii\DataView\Tests\Support\Mock;
 use Yiisoft\Yii\DataView\Tests\Support\TestTrait;
 use Yiisoft\Yii\DataView\Widget\LinkSorter;
 
@@ -41,7 +40,6 @@ final class ImmutableTest extends TestCase
         $this->assertNotSame($linkSorter, $linkSorter->pageSize(0));
         $this->assertNotSame($linkSorter, $linkSorter->pageSizeName(''));
         $this->assertNotSame($linkSorter, $linkSorter->urlArguments([]));
-        $this->assertNotSame($linkSorter, $linkSorter->urlGenerator(Mock::UrlGenerator([])));
         $this->assertNotSame($linkSorter, $linkSorter->urlName(''));
         $this->assertNotSame($linkSorter, $linkSorter->urlQueryParameters([]));
     }

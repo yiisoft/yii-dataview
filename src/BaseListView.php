@@ -35,10 +35,13 @@ abstract class BaseListView extends Widget
     private TranslatorInterface|null $translator = null;
     private string $toolbar = '';
     protected array $urlArguments = [];
-    protected UrlGeneratorInterface|null $urlGenerator = null;
     protected string $urlName = '';
     protected array $urlQueryParameters = [];
     private bool $withContainer = true;
+
+    public function __construct(private UrlGeneratorInterface|null $urlGenerator = null)
+    {
+    }
 
     /**
      * Renders the data models.
@@ -316,19 +319,6 @@ abstract class BaseListView extends Widget
     }
 
     /**
-     * Return a new instance with URL generator interface for pagination.
-     *
-     * @param UrlGeneratorInterface $value The URL generator interface for pagination.
-     */
-    public function urlGenerator(UrlGeneratorInterface $value): static
-    {
-        $new = clone $this;
-        $new->urlGenerator = $value;
-
-        return $new;
-    }
-
-    /**
      * Returns a new instance with the name of the route.
      *
      * @param string $value The name of the route.
@@ -416,7 +406,6 @@ abstract class BaseListView extends Widget
                 ->linkAttributes($this->sortLinkAttributes)
                 ->pageSize($this->getPaginator()->getPageSize())
                 ->urlArguments($this->urlArguments)
-                ->urlGenerator($this->getUrlGenerator())
                 ->urlName($this->urlName)
                 ->urlQueryParameters($this->urlQueryParameters)
                 ->render();

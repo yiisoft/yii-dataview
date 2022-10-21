@@ -9,13 +9,22 @@ use PHPUnit\Framework\TestCase;
 use Yiisoft\Definitions\Exception\CircularReferenceException;
 use Yiisoft\Definitions\Exception\InvalidConfigException;
 use Yiisoft\Definitions\Exception\NotInstantiableException;
+use Yiisoft\Di\Container;
+use Yiisoft\Di\ContainerConfig;
 use Yiisoft\Factory\NotFoundException;
-use Yiisoft\Yii\DataView\Tests\Support\TestTrait;
+use Yiisoft\Widget\WidgetFactory;
 use Yiisoft\Yii\DataView\Widget\LinkSorter;
 
 final class ExceptionTest extends TestCase
 {
-    use TestTrait;
+    /**
+     * @throws InvalidConfigException
+     */
+    protected function setUp(): void
+    {
+        $container = new Container(ContainerConfig::create());
+        WidgetFactory::initialize($container, []);
+    }
 
     /**
      * @throws InvalidConfigException

@@ -10,10 +10,12 @@ use ReflectionException;
 use Yiisoft\Definitions\Exception\CircularReferenceException;
 use Yiisoft\Definitions\Exception\InvalidConfigException;
 use Yiisoft\Definitions\Exception\NotInstantiableException;
+use Yiisoft\Di\Container;
+use Yiisoft\Di\ContainerConfig;
 use Yiisoft\Factory\NotFoundException;
+use Yiisoft\Widget\WidgetFactory;
 use Yiisoft\Yii\DataView\Exception;
 use Yiisoft\Yii\DataView\Tests\Support\Assert;
-use Yiisoft\Yii\DataView\Tests\Support\Mock;
 use Yiisoft\Yii\DataView\Tests\Support\TestTrait;
 use Yiisoft\Yii\DataView\Widget\BasePagination;
 use Yiisoft\Yii\DataView\Widget\OffsetPagination;
@@ -21,6 +23,15 @@ use Yiisoft\Yii\DataView\Widget\OffsetPagination;
 final class ExceptionTest extends TestCase
 {
     use TestTrait;
+
+    /**
+     * @throws InvalidConfigException
+     */
+    protected function setUp(): void
+    {
+        $container = new Container(ContainerConfig::create());
+        WidgetFactory::initialize($container, []);
+    }
 
     private array $data = [
         ['id' => 1, 'name' => 'John', 'age' => 20],
@@ -43,7 +54,6 @@ final class ExceptionTest extends TestCase
         OffsetPagination::widget()
             ->menuClass('pagination justify-content-center')
             ->paginator($this->createOffsetPaginator($this->data, 2, 4))
-            ->urlGenerator(Mock::urlGenerator())
             ->urlName('admin/manage')
             ->render();
     }
