@@ -8,8 +8,10 @@ use InvalidArgumentException;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\A;
 use Yiisoft\Html\Tag\I;
+use Yiisoft\Router\CurrentRoute;
 use Yiisoft\Router\UrlGeneratorInterface;
 use Yiisoft\Widget\Widget;
+use Yiisoft\Yii\DataView\Exception;
 
 use function array_merge;
 use function http_build_query;
@@ -35,10 +37,11 @@ final class LinkSorter extends Widget
     private string $pageSizeName = 'pagesize';
     private array|null $urlArguments = null;
     private array $urlQueryParameters = [];
-    private string $urlName = '';
 
-    public function __construct(private UrlGeneratorInterface|null $urlGenerator = null)
-    {
+    public function __construct(
+        private CurrentRoute $currentRoute,
+        private UrlGeneratorInterface|null $urlGenerator = null
+    ) {
     }
 
     /**
@@ -239,19 +242,6 @@ final class LinkSorter extends Widget
     }
 
     /**
-     * Returns a new instance with the name of the route.
-     *
-     * @param string $value The name of the route.
-     */
-    public function urlName(string $value): self
-    {
-        $new = clone $this;
-        $new->urlName = $value;
-
-        return $new;
-    }
-
-    /**
      * Return a new instance with query parameters of the route.
      *
      * @param array $value The query parameters of the route.
@@ -322,8 +312,8 @@ final class LinkSorter extends Widget
      */
     private function createUrl(string $attribute): string
     {
-        if (null === $this->urlGenerator) {
-            throw new InvalidArgumentException('UrlGenerator must be configured.');
+        if ($this->urlGenerator === null) {
+            throw new Exception\UrlGeneratorNotSetException();
         }
 
         $pageConfig = $this->pageConfig;
@@ -343,8 +333,10 @@ final class LinkSorter extends Widget
             $urlQueryParameters['sort'] = $this->createSorterParam($attribute);
         }
 
-        return match ($this->urlName !== '') {
-            true => $this->urlGenerator->generate($this->urlName, $urlArguments, $urlQueryParameters),
+        $urlName = $this->currentRoute->getName();
+
+        return match ($urlName !== null) {
+            true => $this->urlGenerator->generate($urlName, $urlArguments, $urlQueryParameters),
             false => $urlQueryParameters ? '?' . http_build_query($urlQueryParameters) : '',
         };
     }

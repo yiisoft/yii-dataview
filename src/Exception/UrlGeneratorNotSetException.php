@@ -23,7 +23,7 @@ final class UrlGeneratorNotSetException extends RuntimeException implements Frie
     public function getSolution(): ?string
     {
         return <<<SOLUTION
-            You can configure the `urlGenerator` property in the widget configuration. Use
+            You can configure the `urlGenerator` property in the widget constructor. Use
             `UrlGeneratorInterface::class`.
             For more information [see the router documentation](https://github.com/yiisoft/router).
         SOLUTION;

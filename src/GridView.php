@@ -11,6 +11,8 @@ use Yiisoft\Html\Tag\Colgroup;
 use Yiisoft\Html\Tag\Tbody;
 use Yiisoft\Html\Tag\Td;
 use Yiisoft\Html\Tag\Tr;
+use Yiisoft\Router\CurrentRoute;
+use Yiisoft\Router\UrlGeneratorInterface;
 
 /**
  * The GridView widget is used to display data in a grid.
@@ -42,6 +44,13 @@ final class GridView extends BaseListView
     private array $headerRowAttributes = [];
     private array $rowAttributes = [];
     private array $tableAttributes = ['class' => 'table'];
+
+    public function __construct(
+        private CurrentRoute $currentRoute,
+        UrlGeneratorInterface|null $urlGenerator = null
+    ) {
+        parent::__construct($urlGenerator);
+    }
 
     /**
      * Returns a new instance with anonymous function that is called once AFTER rendering each data.
@@ -327,7 +336,7 @@ final class GridView extends BaseListView
                     $column = $column
                         ->createDefaultButtons()
                         ->urlGenerator($this->getUrlGenerator())
-                        ->urlName($this->urlName);
+                        ->urlName($this->currentRoute->getName() ?? '');
                 }
 
                 if ($column instanceof Column\DataColumn) {

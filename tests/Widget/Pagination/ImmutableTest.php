@@ -9,6 +9,8 @@ use Yiisoft\Definitions\Exception\CircularReferenceException;
 use Yiisoft\Definitions\Exception\InvalidConfigException;
 use Yiisoft\Definitions\Exception\NotInstantiableException;
 use Yiisoft\Factory\NotFoundException;
+use Yiisoft\Router\CurrentRoute;
+use Yiisoft\Yii\DataView\Tests\Support\Mock;
 use Yiisoft\Yii\DataView\Tests\Support\TestTrait;
 use Yiisoft\Yii\DataView\Widget\BasePagination;
 use Yiisoft\Yii\DataView\Widget\OffsetPagination;
@@ -19,7 +21,7 @@ final class ImmutableTest extends TestCase
 
     public function testBasePagination(): void
     {
-        $basePagination = new class () extends BasePagination {
+        $basePagination = new class (new CurrentRoute(), Mock::urlGenerator()) extends BasePagination {
             protected function run(): string
             {
                 return '';
@@ -47,7 +49,6 @@ final class ImmutableTest extends TestCase
             $basePagination->paginator($this->createOffsetPaginator([], 10))
         );
         $this->assertNotSame($basePagination, $basePagination->urlArguments([]));
-        $this->assertNotSame($basePagination, $basePagination->urlName(''));
         $this->assertNotSame($basePagination, $basePagination->urlQueryParameters([]));
     }
 

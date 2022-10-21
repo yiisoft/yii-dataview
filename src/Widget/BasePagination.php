@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Yiisoft\Yii\DataView\Widget;
 
 use Yiisoft\Data\Paginator\PaginatorInterface;
+use Yiisoft\Router\CurrentRoute;
 use Yiisoft\Router\UrlGeneratorInterface;
 use Yiisoft\Widget\Widget;
 use Yiisoft\Yii\DataView\Exception;
@@ -35,10 +36,11 @@ abstract class BasePagination extends Widget
     private PaginatorInterface|null $paginator = null;
     private ?array $urlArguments = null;
     private array $urlQueryParameters = [];
-    private string $urlName = '';
 
-    public function __construct(private UrlGeneratorInterface|null $urlGenerator = null)
-    {
+    public function __construct(
+        private CurrentRoute $currentRoute,
+        private UrlGeneratorInterface|null $urlGenerator = null
+    ) {
     }
 
     /**
@@ -293,19 +295,6 @@ abstract class BasePagination extends Widget
     }
 
     /**
-     * Returns a new instance with the name of the route.
-     *
-     * @param string $value The name of the route.
-     */
-    public function urlName(string $value): static
-    {
-        $new = clone $this;
-        $new->urlName = $value;
-
-        return $new;
-    }
-
-    /**
      * Return a new instance with query parameters of the route.
      *
      * @param array $value The query parameters of the route.
@@ -348,8 +337,10 @@ abstract class BasePagination extends Widget
             $urlQueryParameters = array_merge($pageConfig, $this->urlQueryParameters);
         }
 
-        return match ($this->urlName !== '') {
-            true => $this->urlGenerator->generate($this->urlName, $urlArguments, $urlQueryParameters),
+        $urlName = $this->currentRoute->getName();
+
+        return match ($urlName !== null) {
+            true => $this->urlGenerator->generate($urlName, $urlArguments, $urlQueryParameters),
             false => $urlQueryParameters ? '?' . http_build_query($urlQueryParameters) : '',
         };
     }

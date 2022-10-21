@@ -59,7 +59,6 @@ final class OffsetPaginationTest extends TestCase
             OffsetPagination::widget()
                 ->menuClass('pagination justify-content-center')
                 ->paginator($this->createOffsetPaginator($this->data, 2))
-                ->urlName('admin/manage')
                 ->render(),
         );
     }
@@ -96,7 +95,6 @@ final class OffsetPaginationTest extends TestCase
             OffsetPagination::widget()
                 ->disabledPreviousPage(true)
                 ->paginator($this->createOffsetPaginator($this->data, 2, 2))
-                ->urlName('admin/manage')
                 ->render(),
         );
     }
@@ -130,7 +128,6 @@ final class OffsetPaginationTest extends TestCase
                 ->iconLastPage('»')
                 ->paginator($this->createOffsetPaginator($this->data, 1))
                 ->urlArguments([])
-                ->urlName('admin/manage')
                 ->render(),
         );
     }
@@ -164,7 +161,6 @@ final class OffsetPaginationTest extends TestCase
                 ->iconClassLastPage('bi bi-chevron-double-right p-1')
                 ->paginator($this->createOffsetPaginator($this->data, 1))
                 ->urlArguments([])
-                ->urlName('admin/manage')
                 ->render(),
         );
     }
@@ -198,7 +194,6 @@ final class OffsetPaginationTest extends TestCase
                 ->labelLastPage('Last')
                 ->paginator($this->createOffsetPaginator($this->data, 1))
                 ->urlArguments([])
-                ->urlName('admin/manage')
                 ->render(),
         );
     }
@@ -228,7 +223,6 @@ final class OffsetPaginationTest extends TestCase
             OffsetPagination::widget()
                 ->paginator($this->createOffsetPaginator($this->data, 1))
                 ->urlArguments(['filter' => 'test'])
-                ->urlName('admin/manage')
                 ->render(),
         );
     }
@@ -258,36 +252,6 @@ final class OffsetPaginationTest extends TestCase
             OffsetPagination::widget()
                 ->paginator($this->createOffsetPaginator($this->data, 1))
                 ->urlQueryParameters(['filter' => 'test'])
-                ->urlName('admin/manage')
-                ->render(),
-        );
-    }
-
-    /**
-     * @throws InvalidConfigException
-     * @throws NotFoundException
-     * @throws NotInstantiableException
-     * @throws CircularReferenceException
-     */
-    public function testRenderWithUrlQueryParametersWithoutUrlName(): void
-    {
-        Assert::equalsWithoutLE(
-            <<<HTML
-            <nav aria-label="Pagination">
-            <ul class="pagination">
-            <li class="page-item"><a class="page-link disabled" href="?page=1&amp;pagesize=1&amp;filter=test">Previous</a></li>
-            <li class="page-item"><a class="page-link active" href="?page=1&amp;pagesize=1&amp;filter=test" aria-current="page">1</a></li>
-            <li class="page-item"><a class="page-link" href="?page=2&amp;pagesize=1&amp;filter=test">2</a></li>
-            <li class="page-item"><a class="page-link" href="?page=3&amp;pagesize=1&amp;filter=test">3</a></li>
-            <li class="page-item"><a class="page-link" href="?page=4&amp;pagesize=1&amp;filter=test">4</a></li>
-            <li class="page-item"><a class="page-link" href="?page=5&amp;pagesize=1&amp;filter=test">5</a></li>
-            <li class="page-item"><a class="page-link" href="?page=2&amp;pagesize=1&amp;filter=test">Next Page</a></li>
-            </ul>
-            </nav>
-            HTML,
-            OffsetPagination::widget()
-                ->paginator($this->createOffsetPaginator($this->data, 1))
-                ->urlQueryParameters(['filter' => 'test'])
                 ->render(),
         );
     }
@@ -304,7 +268,6 @@ final class OffsetPaginationTest extends TestCase
             OffsetPagination::widget()
                 ->paginator($this->createOffsetPaginator($this->data, 5))
                 ->urlArguments([])
-                ->urlName('admin/manage')
                 ->render(),
         );
     }
@@ -345,7 +308,6 @@ final class OffsetPaginationTest extends TestCase
             OffsetPagination::widget()
                 ->paginator($this->createOffsetPaginator($this->data, 1))
                 ->urlArguments([])
-                ->urlName('admin/manage')
                 ->render(),
         );
     }
@@ -380,7 +342,6 @@ final class OffsetPaginationTest extends TestCase
                 ->labelPreviousPage()
                 ->paginator($this->createOffsetPaginator($this->data, 1))
                 ->urlArguments([])
-                ->urlName('admin/manage')
                 ->render(),
         );
 
@@ -402,7 +363,6 @@ final class OffsetPaginationTest extends TestCase
                 ->labelPreviousPage()
                 ->paginator($this->createOffsetPaginator($this->data, 1))
                 ->urlArguments([])
-                ->urlName('admin/manage')
                 ->render(),
         );
     }
@@ -439,7 +399,6 @@ final class OffsetPaginationTest extends TestCase
                 ->iconPreviousPage('«')
                 ->paginator($this->createOffsetPaginator($this->data, 1))
                 ->urlArguments([])
-                ->urlName('admin/manage')
                 ->render(),
         );
 
@@ -462,7 +421,6 @@ final class OffsetPaginationTest extends TestCase
                 ->iconClassPreviousPage('bi bi-chevron-double-left p-1')
                 ->paginator($this->createOffsetPaginator($this->data, 1))
                 ->urlArguments([])
-                ->urlName('admin/manage')
                 ->render(),
         );
     }
