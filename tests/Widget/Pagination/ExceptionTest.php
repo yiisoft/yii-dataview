@@ -16,7 +16,6 @@ use Yiisoft\Factory\NotFoundException;
 use Yiisoft\Widget\WidgetFactory;
 use Yiisoft\Yii\DataView\Exception;
 use Yiisoft\Yii\DataView\Tests\Support\Assert;
-use Yiisoft\Yii\DataView\Tests\Support\Mock;
 use Yiisoft\Yii\DataView\Tests\Support\TestTrait;
 use Yiisoft\Yii\DataView\Widget\BasePagination;
 use Yiisoft\Yii\DataView\Widget\OffsetPagination;
