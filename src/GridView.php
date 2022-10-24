@@ -13,6 +13,7 @@ use Yiisoft\Html\Tag\Td;
 use Yiisoft\Html\Tag\Tr;
 use Yiisoft\Router\CurrentRoute;
 use Yiisoft\Router\UrlGeneratorInterface;
+use Yiisoft\Translator\TranslatorInterface;
 
 /**
  * The GridView widget is used to display data in a grid.
@@ -47,9 +48,10 @@ final class GridView extends BaseListView
 
     public function __construct(
         private CurrentRoute $currentRoute,
+        TranslatorInterface|null $translator = null,
         UrlGeneratorInterface|null $urlGenerator = null
     ) {
-        parent::__construct($urlGenerator);
+        parent::__construct($translator, $urlGenerator);
     }
 
     /**

@@ -44,7 +44,7 @@ final class BaseTest extends TestCase
             <div>Id: 2</div><div>Name: Mary</div><div>Age: 21</div>
             </div>
             </span>
-            <div>gridview.summary</div>
+            <div>dataview.summary</div>
             </div>
             HTML,
             ListView::widget()
@@ -52,7 +52,6 @@ final class BaseTest extends TestCase
                 ->beforeItem(static fn () => '<span class="testMe">')
                 ->itemView('//_listview')
                 ->paginator($this->createOffsetPaginator($this->data, 10))
-                ->translator(Mock::translator('en'))
                 ->webView(Mock::webView())
                 ->render(),
         );
@@ -75,14 +74,13 @@ final class BaseTest extends TestCase
             <div class="testMe">
             <div>Id: 2</div><div>Name: Mary</div><div>Age: 21</div>
             </div>
-            <div>gridview.summary</div>
+            <div>dataview.summary</div>
             </div>
             HTML,
             ListView::widget()
                 ->itemView('//_listview')
                 ->itemViewAttributes(['class' => 'testMe'])
                 ->paginator($this->createOffsetPaginator($this->data, 10))
-                ->translator(Mock::translator('en'))
                 ->webView(Mock::webView())
                 ->render(),
         );
@@ -105,13 +103,12 @@ final class BaseTest extends TestCase
             <div>
             <div>Id: 2</div><div>Name: Mary</div><div>Age: 21</div>
             </div>
-            <div>gridview.summary</div>
+            <div>dataview.summary</div>
             </div>
             HTML,
             ListView::widget()
                 ->itemView('//_listview')
                 ->paginator($this->createOffsetPaginator($this->data, 10))
-                ->translator(Mock::translator('en'))
                 ->webView(Mock::webView())
                 ->render(),
         );
@@ -134,7 +131,7 @@ final class BaseTest extends TestCase
             <div>
             <div>2</div><div>Mary</div>
             </div>
-            <div>gridview.summary</div>
+            <div>dataview.summary</div>
             </div>
             HTML,
             ListView::widget()
@@ -142,7 +139,6 @@ final class BaseTest extends TestCase
                     fn (array $data) => '<div>' . $data['id'] . '</div><div>' . $data['name'] . '</div>' . PHP_EOL
                 )
                 ->paginator($this->createOffsetPaginator($this->data, 10))
-                ->translator(Mock::translator('en'))
                 ->webView(Mock::webView())
                 ->render(),
         );
@@ -165,14 +161,13 @@ final class BaseTest extends TestCase
             <div>
             <div>Id: 2</div><div>Name: Mary</div><div>Age: 21</div>
             </div>
-            <div>gridview.summary</div>
+            <div>dataview.summary</div>
             </div>
             HTML,
             ListView::widget()
                 ->itemView('//_listview')
                 ->paginator($this->createOffsetPaginator($this->data, 10))
                 ->separator(PHP_EOL)
-                ->translator(Mock::translator('en'))
                 ->webView(Mock::webView())
                 ->render(),
         );
@@ -195,14 +190,13 @@ final class BaseTest extends TestCase
             <div>
             <div class=text-success>2</div>
             </div>
-            <div>gridview.summary</div>
+            <div>dataview.summary</div>
             </div>
             HTML,
             ListView::widget()
                 ->itemView('//_listviewparams')
                 ->paginator($this->createOffsetPaginator($this->data, 10))
                 ->separator(PHP_EOL)
-                ->translator(Mock::translator('en'))
                 ->webView(Mock::webView())
                 ->viewParams(['itemClass' => 'text-success'])
                 ->render(),

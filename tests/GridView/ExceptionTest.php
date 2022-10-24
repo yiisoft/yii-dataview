@@ -45,19 +45,6 @@ final class ExceptionTest extends TestCase
      * @throws NotInstantiableException
      * @throws CircularReferenceException
      */
-    public function testGetTranslator(): void
-    {
-        $this->expectException(Exception\TranslatorNotSetException::class);
-        $this->expectExceptionMessage('Failed to create widget because "translator" is not set.');
-        DataView\GridView::widget()->getTranslator();
-    }
-
-    /**
-     * @throws InvalidConfigException
-     * @throws NotFoundException
-     * @throws NotInstantiableException
-     * @throws CircularReferenceException
-     */
     public function testGetUrlGenerator(): void
     {
         $this->expectException(Exception\UrlGeneratorNotSetException::class);

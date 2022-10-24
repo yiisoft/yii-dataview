@@ -97,14 +97,13 @@ final class DataColumnFilterTest extends TestCase
             </tr>
             </tbody>
             </table>
-            <div>gridview.summary</div>
+            <div>dataview.summary</div>
             </div>
             HTML,
             GridView::widget()
                 ->columns($this->createDataColumnsWithFilter())
                 ->id('w1-grid')
                 ->paginator($this->createOffsetPaginator($this->data, 10))
-                ->translator(Mock::translator('en'))
                 ->render()
         );
     }
@@ -146,14 +145,13 @@ final class DataColumnFilterTest extends TestCase
             </tr>
             </tbody>
             </table>
-            <div>gridview.summary</div>
+            <div>dataview.summary</div>
             </div>
             HTML,
             GridView::widget()
                 ->columns($this->createDataColumnsWithFilterDate())
                 ->id('w1-grid')
                 ->paginator($this->createOffsetPaginator($this->dataWithDate, 10))
-                ->translator(Mock::translator('en'))
                 ->render()
         );
     }
@@ -195,14 +193,13 @@ final class DataColumnFilterTest extends TestCase
             </tr>
             </tbody>
             </table>
-            <div>gridview.summary</div>
+            <div>dataview.summary</div>
             </div>
             HTML,
             GridView::widget()
                 ->columns($this->createDataColumnsWithFilterDateTime())
                 ->id('w1-grid')
                 ->paginator($this->createOffsetPaginator($this->dataWithDateTime, 10))
-                ->translator(Mock::translator('en'))
                 ->render()
         );
     }
@@ -244,14 +241,13 @@ final class DataColumnFilterTest extends TestCase
             </tr>
             </tbody>
             </table>
-            <div>gridview.summary</div>
+            <div>dataview.summary</div>
             </div>
             HTML,
             GridView::widget()
                 ->columns($this->createDataColumnsWithFilterEmail())
                 ->id('w1-grid')
                 ->paginator($this->createOffsetPaginator($this->dataWithEmail, 10))
-                ->translator(Mock::translator('en'))
                 ->render()
         );
     }
@@ -289,7 +285,7 @@ final class DataColumnFilterTest extends TestCase
             </tr>
             </tbody>
             </table>
-            <div>gridview.summary</div>
+            <div>dataview.summary</div>
             </div>
             HTML,
             GridView::widget()
@@ -297,7 +293,6 @@ final class DataColumnFilterTest extends TestCase
                 ->filterModelName('searchModel')
                 ->id('w1-grid')
                 ->paginator($this->createOffsetPaginator($this->data, 10))
-                ->translator(Mock::translator('en'))
                 ->render()
         );
     }
@@ -339,14 +334,13 @@ final class DataColumnFilterTest extends TestCase
             </tr>
             </tbody>
             </table>
-            <div>gridview.summary</div>
+            <div>dataview.summary</div>
             </div>
             HTML,
             GridView::widget()
                 ->columns($this->createDataColumnsWithFilterMonth())
                 ->id('w1-grid')
                 ->paginator($this->createOffsetPaginator($this->dataWithMonth, 10))
-                ->translator(Mock::translator('en'))
                 ->render()
         );
     }
@@ -384,14 +378,13 @@ final class DataColumnFilterTest extends TestCase
             </tr>
             </tbody>
             </table>
-            <div>gridview.summary</div>
+            <div>dataview.summary</div>
             </div>
             HTML,
             GridView::widget()
                 ->columns($this->createDataColumnsWithFilterNumber())
                 ->id('w1-grid')
                 ->paginator($this->createOffsetPaginator($this->data, 10))
-                ->translator(Mock::translator('en'))
                 ->render()
         );
     }
@@ -434,7 +427,7 @@ final class DataColumnFilterTest extends TestCase
             </tr>
             </tbody>
             </table>
-            <div>gridview.summary</div>
+            <div>dataview.summary</div>
             </div>
             HTML,
             GridView::widget()
@@ -444,7 +437,6 @@ final class DataColumnFilterTest extends TestCase
                 ->footerEnabled(true)
                 ->id('w1-grid')
                 ->paginator($this->createOffsetPaginator($this->data, 10))
-                ->translator(Mock::translator('en'))
                 ->render()
         );
     }
@@ -482,7 +474,7 @@ final class DataColumnFilterTest extends TestCase
             </tr>
             </tbody>
             </table>
-            <div>gridview.summary</div>
+            <div>dataview.summary</div>
             </div>
             HTML,
             GridView::widget()
@@ -491,7 +483,6 @@ final class DataColumnFilterTest extends TestCase
                 ->filterPosition(GridView::FILTER_POS_HEADER)
                 ->id('w1-grid')
                 ->paginator($this->createOffsetPaginator($this->data, 10))
-                ->translator(Mock::translator('en'))
                 ->render()
         );
     }
@@ -529,14 +520,13 @@ final class DataColumnFilterTest extends TestCase
             </tr>
             </tbody>
             </table>
-            <div>gridview.summary</div>
+            <div>dataview.summary</div>
             </div>
             HTML,
             GridView::widget()
                 ->columns($this->createDataColumnsWithFilterRange())
                 ->id('w1-grid')
                 ->paginator($this->createOffsetPaginator($this->data, 10))
-                ->translator(Mock::translator('en'))
                 ->render()
         );
     }
@@ -574,7 +564,7 @@ final class DataColumnFilterTest extends TestCase
             </tr>
             </tbody>
             </table>
-            <div>gridview.summary</div>
+            <div>dataview.summary</div>
             </div>
             HTML,
             GridView::widget()
@@ -583,7 +573,6 @@ final class DataColumnFilterTest extends TestCase
                 ->filterRowAttributes(['class' => 'text-center'])
                 ->id('w1-grid')
                 ->paginator($this->createOffsetPaginator($this->data, 10))
-                ->translator(Mock::translator('en'))
                 ->render()
         );
     }
@@ -621,14 +610,13 @@ final class DataColumnFilterTest extends TestCase
             </tr>
             </tbody>
             </table>
-            <div>gridview.summary</div>
+            <div>dataview.summary</div>
             </div>
             HTML,
             GridView::widget()
                 ->columns($this->createDataColumnsWithFilterSearch())
                 ->id('w1-grid')
                 ->paginator($this->createOffsetPaginator($this->data, 10))
-                ->translator(Mock::translator('en'))
                 ->render()
         );
     }
@@ -670,7 +658,7 @@ final class DataColumnFilterTest extends TestCase
             </tr>
             </tbody>
             </table>
-            <div>gridview.summary</div>
+            <div>dataview.summary</div>
             </div>
             HTML,
             GridView::widget()
@@ -679,7 +667,6 @@ final class DataColumnFilterTest extends TestCase
                 ->filterRowAttributes(['class' => 'text-center'])
                 ->id('w1-grid')
                 ->paginator($this->createOffsetPaginator($this->data, 10))
-                ->translator(Mock::translator('en'))
                 ->render()
         );
     }
@@ -721,7 +708,7 @@ final class DataColumnFilterTest extends TestCase
             </tr>
             </tbody>
             </table>
-            <div>gridview.summary</div>
+            <div>dataview.summary</div>
             </div>
             HTML,
             GridView::widget()
@@ -730,7 +717,6 @@ final class DataColumnFilterTest extends TestCase
                 ->filterRowAttributes(['class' => 'text-center'])
                 ->id('w1-grid')
                 ->paginator($this->createOffsetPaginator($this->dataWithTelephone, 10))
-                ->translator(Mock::translator('en'))
                 ->render()
         );
     }
@@ -772,7 +758,7 @@ final class DataColumnFilterTest extends TestCase
             </tr>
             </tbody>
             </table>
-            <div>gridview.summary</div>
+            <div>dataview.summary</div>
             </div>
             HTML,
             GridView::widget()
@@ -781,7 +767,6 @@ final class DataColumnFilterTest extends TestCase
                 ->filterRowAttributes(['class' => 'text-center'])
                 ->id('w1-grid')
                 ->paginator($this->createOffsetPaginator($this->dataWithTime, 10))
-                ->translator(Mock::translator('en'))
                 ->render()
         );
     }
@@ -823,7 +808,7 @@ final class DataColumnFilterTest extends TestCase
             </tr>
             </tbody>
             </table>
-            <div>gridview.summary</div>
+            <div>dataview.summary</div>
             </div>
             HTML,
             GridView::widget()
@@ -832,7 +817,6 @@ final class DataColumnFilterTest extends TestCase
                 ->filterRowAttributes(['class' => 'text-center'])
                 ->id('w1-grid')
                 ->paginator($this->createOffsetPaginator($this->dataWithTime, 10))
-                ->translator(Mock::translator('en'))
                 ->render()
         );
     }
@@ -874,7 +858,7 @@ final class DataColumnFilterTest extends TestCase
             </tr>
             </tbody>
             </table>
-            <div>gridview.summary</div>
+            <div>dataview.summary</div>
             </div>
             HTML,
             GridView::widget()
@@ -883,7 +867,6 @@ final class DataColumnFilterTest extends TestCase
                 ->filterRowAttributes(['class' => 'text-center'])
                 ->id('w1-grid')
                 ->paginator($this->createOffsetPaginator($this->dataWithWeek, 10))
-                ->translator(Mock::translator('en'))
                 ->render()
         );
     }
@@ -921,7 +904,7 @@ final class DataColumnFilterTest extends TestCase
             </tr>
             </tbody>
             </table>
-            <div>gridview.summary</div>
+            <div>dataview.summary</div>
             </div>
             HTML,
             GridView::widget()
@@ -929,7 +912,6 @@ final class DataColumnFilterTest extends TestCase
                 ->filterModelName('searchModel')
                 ->id('w1-grid')
                 ->paginator($this->createOffsetPaginator($this->data, 10))
-                ->translator(Mock::translator('en'))
                 ->render()
         );
     }
