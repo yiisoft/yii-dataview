@@ -52,7 +52,6 @@ final class KeysetPaginationTest extends TestCase
             KeysetPagination::widget()
                 ->menuClass('pagination justify-content-center')
                 ->paginator($this->createKeysetPaginator($this->data, 2))
-                ->urlName('admin/manage')
                 ->render(),
         );
     }
@@ -86,7 +85,6 @@ final class KeysetPaginationTest extends TestCase
             KeysetPagination::widget()
                 ->disabledPreviousPage(true)
                 ->paginator($this->createKeysetPaginator($this->data, 2))
-                ->urlName('admin/manage')
                 ->render(),
         );
     }
@@ -111,7 +109,6 @@ final class KeysetPaginationTest extends TestCase
             KeysetPagination::widget()
                 ->paginator($this->createKeysetPaginator($this->data, 2))
                 ->urlQueryParameters(['filter' => 'test'])
-                ->urlName('admin/manage')
                 ->render(),
         );
     }
@@ -143,7 +140,6 @@ final class KeysetPaginationTest extends TestCase
                 ->iconPreviousPage('«')
                 ->paginator($this->createKeysetPaginator($this->data, 2))
                 ->urlArguments([])
-                ->urlName('admin/manage')
                 ->render(),
         );
 
@@ -161,7 +157,6 @@ final class KeysetPaginationTest extends TestCase
                 ->iconClassPreviousPage('bi bi-chevron-double-left p-1')
                 ->paginator($this->createKeysetPaginator($this->data, 2))
                 ->urlArguments([])
-                ->urlName('admin/manage')
                 ->render(),
         );
     }

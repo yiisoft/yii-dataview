@@ -35,7 +35,6 @@ abstract class BaseListView extends Widget
     private TranslatorInterface|null $translator = null;
     private string $toolbar = '';
     protected array $urlArguments = [];
-    protected string $urlName = '';
     protected array $urlQueryParameters = [];
     private bool $withContainer = true;
 
@@ -319,19 +318,6 @@ abstract class BaseListView extends Widget
     }
 
     /**
-     * Returns a new instance with the name of the route.
-     *
-     * @param string $value The name of the route.
-     */
-    public function urlName(string $value): static
-    {
-        $new = clone $this;
-        $new->urlName = $value;
-
-        return $new;
-    }
-
-    /**
      * Return a new instance with query parameters of the route.
      *
      * @param array $value The query parameters of the route.
@@ -406,7 +392,6 @@ abstract class BaseListView extends Widget
                 ->linkAttributes($this->sortLinkAttributes)
                 ->pageSize($this->getPaginator()->getPageSize())
                 ->urlArguments($this->urlArguments)
-                ->urlName($this->urlName)
                 ->urlQueryParameters($this->urlQueryParameters)
                 ->render();
         }

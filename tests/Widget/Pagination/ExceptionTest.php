@@ -13,9 +13,11 @@ use Yiisoft\Definitions\Exception\NotInstantiableException;
 use Yiisoft\Di\Container;
 use Yiisoft\Di\ContainerConfig;
 use Yiisoft\Factory\NotFoundException;
+use Yiisoft\Router\CurrentRoute;
 use Yiisoft\Widget\WidgetFactory;
 use Yiisoft\Yii\DataView\Exception;
 use Yiisoft\Yii\DataView\Tests\Support\Assert;
+use Yiisoft\Yii\DataView\Tests\Support\Mock;
 use Yiisoft\Yii\DataView\Tests\Support\TestTrait;
 use Yiisoft\Yii\DataView\Widget\BasePagination;
 use Yiisoft\Yii\DataView\Widget\OffsetPagination;
@@ -23,15 +25,6 @@ use Yiisoft\Yii\DataView\Widget\OffsetPagination;
 final class ExceptionTest extends TestCase
 {
     use TestTrait;
-
-    /**
-     * @throws InvalidConfigException
-     */
-    protected function setUp(): void
-    {
-        $container = new Container(ContainerConfig::create());
-        WidgetFactory::initialize($container, []);
-    }
 
     private array $data = [
         ['id' => 1, 'name' => 'John', 'age' => 20],
@@ -43,6 +36,15 @@ final class ExceptionTest extends TestCase
 
     /**
      * @throws InvalidConfigException
+     */
+    protected function setUp(): void
+    {
+        $container = new Container(ContainerConfig::create());
+        WidgetFactory::initialize($container, []);
+    }
+
+    /**
+     * @throws InvalidConfigException
      * @throws NotFoundException
      * @throws NotInstantiableException
      * @throws CircularReferenceException
@@ -51,11 +53,7 @@ final class ExceptionTest extends TestCase
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('Current page must be less than or equal to total pages.');
-        OffsetPagination::widget()
-            ->menuClass('pagination justify-content-center')
-            ->paginator($this->createOffsetPaginator($this->data, 2, 4))
-            ->urlName('admin/manage')
-            ->render();
+        OffsetPagination::widget()->paginator($this->createOffsetPaginator($this->data, 2, 4))->render();
     }
 
     /**
@@ -63,7 +61,7 @@ final class ExceptionTest extends TestCase
      */
     public function testNotSetPaginator(): void
     {
-        $basePagination = new class () extends BasePagination {
+        $basePagination = new class (new CurrentRoute(), Mock::urlGenerator()) extends BasePagination {
             protected function run(): string
             {
                 return '';
@@ -85,10 +83,6 @@ final class ExceptionTest extends TestCase
     {
         $this->expectException(Exception\UrlGeneratorNotSetException::class);
         $this->expectExceptionMessage('Failed to create widget because "urlgenerator" is not set.');
-        OffsetPagination::widget()
-            ->menuClass('pagination justify-content-center')
-            ->paginator($this->createOffsetPaginator($this->data, 2))
-            ->urlName('admin/manage')
-            ->render();
+        OffsetPagination::widget()->paginator($this->createOffsetPaginator($this->data, 2))->render();
     }
 }

@@ -86,8 +86,8 @@ final class KeysetPaginationBaseTest extends TestCase
             <table class="table">
             <thead>
             <tr>
-            <th><a class="asc" href data-sort="-id,name">Id <i class="bi bi-sort-alpha-up"></i></a></th>
-            <th><a class="asc" href data-sort="-name,id">Name <i class="bi bi-sort-alpha-up"></i></a></th>
+            <th><a class="asc" href="/admin/manage?page=0&amp;pagesize=5&amp;sort=-id%2Cname" data-sort="-id,name">Id <i class="bi bi-sort-alpha-up"></i></a></th>
+            <th><a class="asc" href="/admin/manage?page=0&amp;pagesize=5&amp;sort=-name%2Cid" data-sort="-name,id">Name <i class="bi bi-sort-alpha-up"></i></a></th>
             <th>Description</th>
             </tr>
             </thead>
@@ -131,13 +131,7 @@ final class KeysetPaginationBaseTest extends TestCase
                 ->columns($this->createColumns())
                 ->id('w1-grid')
                 ->paginator($keysetPaginator)
-                ->pagination(
-                    KeysetPagination::widget()
-                        ->paginator($keysetPaginator)
-                        ->urlArguments([])
-                        ->urlName('admin/manage')
-                        ->render(),
-                )
+                ->pagination(KeysetPagination::widget()->paginator($keysetPaginator)->urlArguments([])->render())
                 ->layoutGridTable('{items}' . PHP_EOL . '{pager}')
                 ->translator(Mock::translator('en'))
                 ->render(),
@@ -151,8 +145,8 @@ final class KeysetPaginationBaseTest extends TestCase
             <table class="table">
             <thead>
             <tr>
-            <th><a class="asc" href data-sort="-id,name">Id <i class="bi bi-sort-alpha-up"></i></a></th>
-            <th><a class="asc" href data-sort="-name,id">Name <i class="bi bi-sort-alpha-up"></i></a></th>
+            <th><a class="asc" href="/admin/manage?page=0&amp;pagesize=5&amp;sort=-id%2Cname" data-sort="-id,name">Id <i class="bi bi-sort-alpha-up"></i></a></th>
+            <th><a class="asc" href="/admin/manage?page=0&amp;pagesize=5&amp;sort=-name%2Cid" data-sort="-name,id">Name <i class="bi bi-sort-alpha-up"></i></a></th>
             <th>Description</th>
             </tr>
             </thead>
@@ -196,13 +190,7 @@ final class KeysetPaginationBaseTest extends TestCase
                 ->columns($this->createColumns())
                 ->id('w1-grid')
                 ->paginator($keysetPaginator)
-                ->pagination(
-                    KeysetPagination::widget()
-                        ->paginator($keysetPaginator)
-                        ->urlArguments([])
-                        ->urlName('admin/manage')
-                        ->render(),
-                )
+                ->pagination(KeysetPagination::widget()->paginator($keysetPaginator)->urlArguments([])->render())
                 ->layoutGridTable('{items}' . PHP_EOL . '{pager}')
                 ->translator(Mock::translator('en'))
                 ->render(),
@@ -216,8 +204,8 @@ final class KeysetPaginationBaseTest extends TestCase
             <table class="table">
             <thead>
             <tr>
-            <th><a class="asc" href data-sort="-id,name">Id <i class="bi bi-sort-alpha-up"></i></a></th>
-            <th><a class="asc" href data-sort="-name,id">Name <i class="bi bi-sort-alpha-up"></i></a></th>
+            <th><a class="asc" href="/admin/manage?page=0&amp;pagesize=5&amp;sort=-id%2Cname" data-sort="-id,name">Id <i class="bi bi-sort-alpha-up"></i></a></th>
+            <th><a class="asc" href="/admin/manage?page=0&amp;pagesize=5&amp;sort=-name%2Cid" data-sort="-name,id">Name <i class="bi bi-sort-alpha-up"></i></a></th>
             <th>Description</th>
             </tr>
             </thead>
@@ -246,13 +234,7 @@ final class KeysetPaginationBaseTest extends TestCase
                 ->columns($this->createColumns())
                 ->id('w1-grid')
                 ->paginator($keysetPaginator)
-                ->pagination(
-                    KeysetPagination::widget()
-                        ->paginator($keysetPaginator)
-                        ->urlArguments([])
-                        ->urlName('admin/manage')
-                        ->render(),
-                )
+                ->pagination(KeysetPagination::widget()->paginator($keysetPaginator)->urlArguments([])->render())
                 ->layoutGridTable('{items}' . PHP_EOL . '{pager}')
                 ->translator(Mock::translator('en'))
                 ->render(),
@@ -266,8 +248,8 @@ final class KeysetPaginationBaseTest extends TestCase
             <table class="table">
             <thead>
             <tr>
-            <th><a class="asc" href data-sort="-id,name">Id <i class="bi bi-sort-alpha-up"></i></a></th>
-            <th><a class="asc" href data-sort="-name,id">Name <i class="bi bi-sort-alpha-up"></i></a></th>
+            <th><a class="asc" href="/admin/manage?page=0&amp;pagesize=5&amp;sort=-id%2Cname" data-sort="-id,name">Id <i class="bi bi-sort-alpha-up"></i></a></th>
+            <th><a class="asc" href="/admin/manage?page=0&amp;pagesize=5&amp;sort=-name%2Cid" data-sort="-name,id">Name <i class="bi bi-sort-alpha-up"></i></a></th>
             <th>Description</th>
             </tr>
             </thead>
@@ -311,13 +293,7 @@ final class KeysetPaginationBaseTest extends TestCase
                 ->columns($this->createColumns())
                 ->id('w1-grid')
                 ->paginator($keysetPaginator)
-                ->pagination(
-                    KeysetPagination::widget()
-                        ->paginator($keysetPaginator)
-                        ->urlArguments([])
-                        ->urlName('admin/manage')
-                        ->render(),
-                )
+                ->pagination(KeysetPagination::widget()->paginator($keysetPaginator)->urlArguments([])->render())
                 ->layoutGridTable('{items}' . PHP_EOL . '{pager}')
                 ->translator(Mock::translator('en'))
                 ->render(),
@@ -331,8 +307,8 @@ final class KeysetPaginationBaseTest extends TestCase
             <table class="table">
             <thead>
             <tr>
-            <th><a class="asc" href data-sort="-id,name">Id <i class="bi bi-sort-alpha-up"></i></a></th>
-            <th><a class="asc" href data-sort="-name,id">Name <i class="bi bi-sort-alpha-up"></i></a></th>
+            <th><a class="asc" href="/admin/manage?page=0&amp;pagesize=5&amp;sort=-id%2Cname" data-sort="-id,name">Id <i class="bi bi-sort-alpha-up"></i></a></th>
+            <th><a class="asc" href="/admin/manage?page=0&amp;pagesize=5&amp;sort=-name%2Cid" data-sort="-name,id">Name <i class="bi bi-sort-alpha-up"></i></a></th>
             <th>Description</th>
             </tr>
             </thead>
@@ -376,13 +352,7 @@ final class KeysetPaginationBaseTest extends TestCase
                 ->columns($this->createColumns())
                 ->id('w1-grid')
                 ->paginator($keysetPaginator)
-                ->pagination(
-                    KeysetPagination::widget()
-                        ->paginator($keysetPaginator)
-                        ->urlArguments([])
-                        ->urlName('admin/manage')
-                        ->render(),
-                )
+                ->pagination(KeysetPagination::widget()->paginator($keysetPaginator)->urlArguments([])->render())
                 ->layoutGridTable('{items}' . PHP_EOL . '{pager}')
                 ->translator(Mock::translator('en'))
                 ->render(),

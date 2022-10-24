@@ -48,11 +48,7 @@ final class OffsetPaginationBaseTest extends TestCase
                 ->columns([])
                 ->id('w1-grid')
                 ->paginator($offsetPaginator)
-                ->pagination(
-                    OffsetPagination::widget()
-                        ->paginator($offsetPaginator)
-                        ->render()
-                )
+                ->pagination(OffsetPagination::widget()->paginator($offsetPaginator)->render())
                 ->translator(Mock::translator('en'))
                 ->render(),
         );

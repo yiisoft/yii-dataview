@@ -14,8 +14,6 @@ use Yiisoft\Yii\DataView\Exception\WebViewNotSetException;
 
 /**
  * The ListView widget is used to display data from data provider. Each data model is rendered using the view specified.
- *
- * @psalm-suppress PropertyNotSetInConstructor
  */
 final class ListView extends BaseListView
 {

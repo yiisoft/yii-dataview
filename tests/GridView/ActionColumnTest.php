@@ -122,12 +122,12 @@ final class ActionColumnTest extends TestCase
             <tbody>
             <tr>
             <td data-label="actions">
-            <a class="text-decoration-none" href="/admin/view?id=1" title="Resend password">&#128274;</a>
+            <a class="text-decoration-none" href="/admin/manage/resend-password?id=1" title="Resend password">&#128274;</a>
             </td>
             </tr>
             <tr>
             <td data-label="actions">
-            <a class="text-decoration-none" href="/admin/view?id=2" title="Resend password">&#128274;</a>
+            <a class="text-decoration-none" href="/admin/manage/resend-password?id=2" title="Resend password">&#128274;</a>
             </td>
             </tr>
             </tbody>
@@ -140,7 +140,6 @@ final class ActionColumnTest extends TestCase
                 ->id('w1-grid')
                 ->paginator($this->createOffsetPaginator($this->data, 10))
                 ->translator(Mock::translator('en'))
-                ->urlName('admin')
                 ->render()
         );
     }
@@ -165,16 +164,16 @@ final class ActionColumnTest extends TestCase
             <tbody>
             <tr>
             <td data-label="test.label">
-            <a name="view" href="/admin/view?id=1" title="View" role="button" style="text-decoration: none!important;"><span>🔎</span></a>
-            <a name="update" href="/admin/update?id=1" title="Update" role="button" style="text-decoration: none!important;"><span>✎</span></a>
-            <a name="delete" href="/admin/delete?id=1" title="Delete" role="button" style="text-decoration: none!important;"><span>❌</span></a>
+            <a name="view" href="/admin/manage/view?id=1" title="View" role="button" style="text-decoration: none!important;"><span>🔎</span></a>
+            <a name="update" href="/admin/manage/update?id=1" title="Update" role="button" style="text-decoration: none!important;"><span>✎</span></a>
+            <a name="delete" href="/admin/manage/delete?id=1" title="Delete" role="button" style="text-decoration: none!important;"><span>❌</span></a>
             </td>
             </tr>
             <tr>
             <td data-label="test.label">
-            <a name="view" href="/admin/view?id=2" title="View" role="button" style="text-decoration: none!important;"><span>🔎</span></a>
-            <a name="update" href="/admin/update?id=2" title="Update" role="button" style="text-decoration: none!important;"><span>✎</span></a>
-            <a name="delete" href="/admin/delete?id=2" title="Delete" role="button" style="text-decoration: none!important;"><span>❌</span></a>
+            <a name="view" href="/admin/manage/view?id=2" title="View" role="button" style="text-decoration: none!important;"><span>🔎</span></a>
+            <a name="update" href="/admin/manage/update?id=2" title="Update" role="button" style="text-decoration: none!important;"><span>✎</span></a>
+            <a name="delete" href="/admin/manage/delete?id=2" title="Delete" role="button" style="text-decoration: none!important;"><span>❌</span></a>
             </td>
             </tr>
             </tbody>
@@ -187,7 +186,6 @@ final class ActionColumnTest extends TestCase
                 ->id('w1-grid')
                 ->paginator($this->createOffsetPaginator($this->data, 10))
                 ->translator(Mock::translator('en'))
-                ->urlName('admin')
                 ->render()
         );
     }
@@ -217,16 +215,16 @@ final class ActionColumnTest extends TestCase
             <tbody>
             <tr>
             <td data-label="actions">
-            <a name="view" href="/admin/view?id=1" title="View" role="button" style="text-decoration: none!important;"><span>🔎</span></a>
-            <a name="update" href="/admin/update?id=1" title="Update" role="button" style="text-decoration: none!important;"><span>✎</span></a>
-            <a name="delete" href="/admin/delete?id=1" title="Delete" role="button" style="text-decoration: none!important;"><span>❌</span></a>
+            <a name="view" href="/admin/manage/view?id=1" title="View" role="button" style="text-decoration: none!important;"><span>🔎</span></a>
+            <a name="update" href="/admin/manage/update?id=1" title="Update" role="button" style="text-decoration: none!important;"><span>✎</span></a>
+            <a name="delete" href="/admin/manage/delete?id=1" title="Delete" role="button" style="text-decoration: none!important;"><span>❌</span></a>
             </td>
             </tr>
             <tr>
             <td data-label="actions">
-            <a name="view" href="/admin/view?id=2" title="View" role="button" style="text-decoration: none!important;"><span>🔎</span></a>
-            <a name="update" href="/admin/update?id=2" title="Update" role="button" style="text-decoration: none!important;"><span>✎</span></a>
-            <a name="delete" href="/admin/delete?id=2" title="Delete" role="button" style="text-decoration: none!important;"><span>❌</span></a>
+            <a name="view" href="/admin/manage/view?id=2" title="View" role="button" style="text-decoration: none!important;"><span>🔎</span></a>
+            <a name="update" href="/admin/manage/update?id=2" title="Update" role="button" style="text-decoration: none!important;"><span>✎</span></a>
+            <a name="delete" href="/admin/manage/delete?id=2" title="Delete" role="button" style="text-decoration: none!important;"><span>❌</span></a>
             </td>
             </tr>
             </tbody>
@@ -240,7 +238,6 @@ final class ActionColumnTest extends TestCase
                 ->id('w1-grid')
                 ->paginator($this->createOffsetPaginator($this->data, 10))
                 ->translator(Mock::translator('en'))
-                ->urlName('admin')
                 ->render()
         );
     }
@@ -265,16 +262,16 @@ final class ActionColumnTest extends TestCase
             <tbody>
             <tr>
             <td data-label="test.label">
-            <a name="view" href="/admin/view?id=1" title="View" role="button" style="text-decoration: none!important;"><span>🔎</span></a>
-            <a name="update" href="/admin/update?id=1" title="Update" role="button" style="text-decoration: none!important;"><span>✎</span></a>
-            <a name="delete" href="/admin/delete?id=1" title="Delete" role="button" style="text-decoration: none!important;"><span>❌</span></a>
+            <a name="view" href="/admin/manage/view?id=1" title="View" role="button" style="text-decoration: none!important;"><span>🔎</span></a>
+            <a name="update" href="/admin/manage/update?id=1" title="Update" role="button" style="text-decoration: none!important;"><span>✎</span></a>
+            <a name="delete" href="/admin/manage/delete?id=1" title="Delete" role="button" style="text-decoration: none!important;"><span>❌</span></a>
             </td>
             </tr>
             <tr>
             <td data-label="test.label">
-            <a name="view" href="/admin/view?id=2" title="View" role="button" style="text-decoration: none!important;"><span>🔎</span></a>
-            <a name="update" href="/admin/update?id=2" title="Update" role="button" style="text-decoration: none!important;"><span>✎</span></a>
-            <a name="delete" href="/admin/delete?id=2" title="Delete" role="button" style="text-decoration: none!important;"><span>❌</span></a>
+            <a name="view" href="/admin/manage/view?id=2" title="View" role="button" style="text-decoration: none!important;"><span>🔎</span></a>
+            <a name="update" href="/admin/manage/update?id=2" title="Update" role="button" style="text-decoration: none!important;"><span>✎</span></a>
+            <a name="delete" href="/admin/manage/delete?id=2" title="Delete" role="button" style="text-decoration: none!important;"><span>❌</span></a>
             </td>
             </tr>
             </tbody>
@@ -287,7 +284,6 @@ final class ActionColumnTest extends TestCase
                 ->id('w1-grid')
                 ->paginator($this->createOffsetPaginator($this->data, 10))
                 ->translator(Mock::translator('en'))
-                ->urlName('admin')
                 ->render()
         );
     }
@@ -312,16 +308,16 @@ final class ActionColumnTest extends TestCase
             <tbody>
             <tr>
             <td data-label="ενέργειες">
-            <a name="view" href="/admin/view?id=1" title="View" role="button" style="text-decoration: none!important;"><span>🔎</span></a>
-            <a name="update" href="/admin/update?id=1" title="Update" role="button" style="text-decoration: none!important;"><span>✎</span></a>
-            <a name="delete" href="/admin/delete?id=1" title="Delete" role="button" style="text-decoration: none!important;"><span>❌</span></a>
+            <a name="view" href="/admin/manage/view?id=1" title="View" role="button" style="text-decoration: none!important;"><span>🔎</span></a>
+            <a name="update" href="/admin/manage/update?id=1" title="Update" role="button" style="text-decoration: none!important;"><span>✎</span></a>
+            <a name="delete" href="/admin/manage/delete?id=1" title="Delete" role="button" style="text-decoration: none!important;"><span>❌</span></a>
             </td>
             </tr>
             <tr>
             <td data-label="ενέργειες">
-            <a name="view" href="/admin/view?id=2" title="View" role="button" style="text-decoration: none!important;"><span>🔎</span></a>
-            <a name="update" href="/admin/update?id=2" title="Update" role="button" style="text-decoration: none!important;"><span>✎</span></a>
-            <a name="delete" href="/admin/delete?id=2" title="Delete" role="button" style="text-decoration: none!important;"><span>❌</span></a>
+            <a name="view" href="/admin/manage/view?id=2" title="View" role="button" style="text-decoration: none!important;"><span>🔎</span></a>
+            <a name="update" href="/admin/manage/update?id=2" title="Update" role="button" style="text-decoration: none!important;"><span>✎</span></a>
+            <a name="delete" href="/admin/manage/delete?id=2" title="Delete" role="button" style="text-decoration: none!important;"><span>❌</span></a>
             </td>
             </tr>
             </tbody>
@@ -334,7 +330,6 @@ final class ActionColumnTest extends TestCase
                 ->id('w1-grid')
                 ->paginator($this->createOffsetPaginator($this->data, 10))
                 ->translator(Mock::translator('en'))
-                ->urlName('admin')
                 ->render()
         );
     }
@@ -359,16 +354,16 @@ final class ActionColumnTest extends TestCase
             <tbody>
             <tr>
             <td data-label="test.label">
-            <a name="view" href="/admin/view?id=1" title="View" role="button" style="text-decoration: none!important;"><span>🔎</span></a>
-            <a name="update" href="/admin/update?id=1" title="Update" role="button" style="text-decoration: none!important;"><span>✎</span></a>
-            <a name="delete" href="/admin/delete?id=1" title="Delete" role="button" style="text-decoration: none!important;"><span>❌</span></a>
+            <a name="view" href="/admin/manage/view?id=1" title="View" role="button" style="text-decoration: none!important;"><span>🔎</span></a>
+            <a name="update" href="/admin/manage/update?id=1" title="Update" role="button" style="text-decoration: none!important;"><span>✎</span></a>
+            <a name="delete" href="/admin/manage/delete?id=1" title="Delete" role="button" style="text-decoration: none!important;"><span>❌</span></a>
             </td>
             </tr>
             <tr>
             <td data-label="test.label">
-            <a name="view" href="/admin/view?id=2" title="View" role="button" style="text-decoration: none!important;"><span>🔎</span></a>
-            <a name="update" href="/admin/update?id=2" title="Update" role="button" style="text-decoration: none!important;"><span>✎</span></a>
-            <a name="delete" href="/admin/delete?id=2" title="Delete" role="button" style="text-decoration: none!important;"><span>❌</span></a>
+            <a name="view" href="/admin/manage/view?id=2" title="View" role="button" style="text-decoration: none!important;"><span>🔎</span></a>
+            <a name="update" href="/admin/manage/update?id=2" title="Update" role="button" style="text-decoration: none!important;"><span>✎</span></a>
+            <a name="delete" href="/admin/manage/delete?id=2" title="Delete" role="button" style="text-decoration: none!important;"><span>❌</span></a>
             </td>
             </tr>
             </tbody>
@@ -381,7 +376,6 @@ final class ActionColumnTest extends TestCase
                 ->id('w1-grid')
                 ->paginator($this->createOffsetPaginator($this->data, 10))
                 ->translator(Mock::translator('en'))
-                ->urlName('admin')
                 ->render()
         );
     }
@@ -406,16 +400,16 @@ final class ActionColumnTest extends TestCase
             <tbody>
             <tr>
             <td name="test.name" data-label="actions">
-            <a name="view" href="/admin/view?id=1" title="View" role="button" style="text-decoration: none!important;"><span>🔎</span></a>
-            <a name="update" href="/admin/update?id=1" title="Update" role="button" style="text-decoration: none!important;"><span>✎</span></a>
-            <a name="delete" href="/admin/delete?id=1" title="Delete" role="button" style="text-decoration: none!important;"><span>❌</span></a>
+            <a name="view" href="/admin/manage/view?id=1" title="View" role="button" style="text-decoration: none!important;"><span>🔎</span></a>
+            <a name="update" href="/admin/manage/update?id=1" title="Update" role="button" style="text-decoration: none!important;"><span>✎</span></a>
+            <a name="delete" href="/admin/manage/delete?id=1" title="Delete" role="button" style="text-decoration: none!important;"><span>❌</span></a>
             </td>
             </tr>
             <tr>
             <td name="test.name" data-label="actions">
-            <a name="view" href="/admin/view?id=2" title="View" role="button" style="text-decoration: none!important;"><span>🔎</span></a>
-            <a name="update" href="/admin/update?id=2" title="Update" role="button" style="text-decoration: none!important;"><span>✎</span></a>
-            <a name="delete" href="/admin/delete?id=2" title="Delete" role="button" style="text-decoration: none!important;"><span>❌</span></a>
+            <a name="view" href="/admin/manage/view?id=2" title="View" role="button" style="text-decoration: none!important;"><span>🔎</span></a>
+            <a name="update" href="/admin/manage/update?id=2" title="Update" role="button" style="text-decoration: none!important;"><span>✎</span></a>
+            <a name="delete" href="/admin/manage/delete?id=2" title="Delete" role="button" style="text-decoration: none!important;"><span>❌</span></a>
             </td>
             </tr>
             </tbody>
@@ -428,7 +422,6 @@ final class ActionColumnTest extends TestCase
                 ->id('w1-grid')
                 ->paginator($this->createOffsetPaginator($this->data, 10))
                 ->translator(Mock::translator('en'))
-                ->urlName('admin')
                 ->render()
         );
     }
@@ -461,7 +454,6 @@ final class ActionColumnTest extends TestCase
                 ->id('w1-grid')
                 ->paginator($this->createOffsetPaginator($this->data, 10))
                 ->translator(Mock::translator('en'))
-                ->urlName('admin')
                 ->render()
         );
     }
@@ -486,16 +478,16 @@ final class ActionColumnTest extends TestCase
             <tbody>
             <tr>
             <td data-label="actions">
-            <a name="view" href="/admin/view?identity_id=1" title="View" role="button" style="text-decoration: none!important;"><span>🔎</span></a>
-            <a name="update" href="/admin/update?identity_id=1" title="Update" role="button" style="text-decoration: none!important;"><span>✎</span></a>
-            <a name="delete" href="/admin/delete?identity_id=1" title="Delete" role="button" style="text-decoration: none!important;"><span>❌</span></a>
+            <a name="view" href="/admin/manage/view?identity_id=1" title="View" role="button" style="text-decoration: none!important;"><span>🔎</span></a>
+            <a name="update" href="/admin/manage/update?identity_id=1" title="Update" role="button" style="text-decoration: none!important;"><span>✎</span></a>
+            <a name="delete" href="/admin/manage/delete?identity_id=1" title="Delete" role="button" style="text-decoration: none!important;"><span>❌</span></a>
             </td>
             </tr>
             <tr>
             <td data-label="actions">
-            <a name="view" href="/admin/view?identity_id=2" title="View" role="button" style="text-decoration: none!important;"><span>🔎</span></a>
-            <a name="update" href="/admin/update?identity_id=2" title="Update" role="button" style="text-decoration: none!important;"><span>✎</span></a>
-            <a name="delete" href="/admin/delete?identity_id=2" title="Delete" role="button" style="text-decoration: none!important;"><span>❌</span></a>
+            <a name="view" href="/admin/manage/view?identity_id=2" title="View" role="button" style="text-decoration: none!important;"><span>🔎</span></a>
+            <a name="update" href="/admin/manage/update?identity_id=2" title="Update" role="button" style="text-decoration: none!important;"><span>✎</span></a>
+            <a name="delete" href="/admin/manage/delete?identity_id=2" title="Delete" role="button" style="text-decoration: none!important;"><span>❌</span></a>
             </td>
             </tr>
             </tbody>
@@ -516,7 +508,6 @@ final class ActionColumnTest extends TestCase
                     )
                 )
                 ->translator(Mock::translator('en'))
-                ->urlName('admin')
                 ->render()
         );
     }
@@ -545,18 +536,18 @@ final class ActionColumnTest extends TestCase
             <td data-label="id">1</td>
             <td data-label="name">John</td>
             <td data-label="actions">
-            <a name="view" href="/admin/view?id=1" title="View" role="button" style="text-decoration: none!important;"><span>🔎</span></a>
-            <a name="update" href="/admin/update?id=1" title="Update" role="button" style="text-decoration: none!important;"><span>✎</span></a>
-            <a name="delete" href="/admin/delete?id=1" title="Delete" role="button" style="text-decoration: none!important;"><span>❌</span></a>
+            <a name="view" href="/admin/manage/view?id=1" title="View" role="button" style="text-decoration: none!important;"><span>🔎</span></a>
+            <a name="update" href="/admin/manage/update?id=1" title="Update" role="button" style="text-decoration: none!important;"><span>✎</span></a>
+            <a name="delete" href="/admin/manage/delete?id=1" title="Delete" role="button" style="text-decoration: none!important;"><span>❌</span></a>
             </td>
             </tr>
             <tr>
             <td data-label="id">2</td>
             <td data-label="name">Mary</td>
             <td data-label="actions">
-            <a name="view" href="/admin/view?id=2" title="View" role="button" style="text-decoration: none!important;"><span>🔎</span></a>
-            <a name="update" href="/admin/update?id=2" title="Update" role="button" style="text-decoration: none!important;"><span>✎</span></a>
-            <a name="delete" href="/admin/delete?id=2" title="Delete" role="button" style="text-decoration: none!important;"><span>❌</span></a>
+            <a name="view" href="/admin/manage/view?id=2" title="View" role="button" style="text-decoration: none!important;"><span>🔎</span></a>
+            <a name="update" href="/admin/manage/update?id=2" title="Update" role="button" style="text-decoration: none!important;"><span>✎</span></a>
+            <a name="delete" href="/admin/manage/delete?id=2" title="Delete" role="button" style="text-decoration: none!important;"><span>❌</span></a>
             </td>
             </tr>
             </tbody>
@@ -569,7 +560,6 @@ final class ActionColumnTest extends TestCase
                 ->id('w1-grid')
                 ->paginator($this->createOffsetPaginator($this->data, 10))
                 ->translator(Mock::translator('en'))
-                ->urlName('admin')
                 ->render()
         );
     }
@@ -594,16 +584,16 @@ final class ActionColumnTest extends TestCase
             <tbody>
             <tr>
             <td data-label="actions">
-            <a name="view" href="/admin/view?test-arguments=test.arguments&amp;id=1" title="View" role="button" style="text-decoration: none!important;"><span>🔎</span></a>
-            <a name="update" href="/admin/update?test-arguments=test.arguments&amp;id=1" title="Update" role="button" style="text-decoration: none!important;"><span>✎</span></a>
-            <a name="delete" href="/admin/delete?test-arguments=test.arguments&amp;id=1" title="Delete" role="button" style="text-decoration: none!important;"><span>❌</span></a>
+            <a name="view" href="/admin/manage/view?test-arguments=test.arguments&amp;id=1" title="View" role="button" style="text-decoration: none!important;"><span>🔎</span></a>
+            <a name="update" href="/admin/manage/update?test-arguments=test.arguments&amp;id=1" title="Update" role="button" style="text-decoration: none!important;"><span>✎</span></a>
+            <a name="delete" href="/admin/manage/delete?test-arguments=test.arguments&amp;id=1" title="Delete" role="button" style="text-decoration: none!important;"><span>❌</span></a>
             </td>
             </tr>
             <tr>
             <td data-label="actions">
-            <a name="view" href="/admin/view?test-arguments=test.arguments&amp;id=2" title="View" role="button" style="text-decoration: none!important;"><span>🔎</span></a>
-            <a name="update" href="/admin/update?test-arguments=test.arguments&amp;id=2" title="Update" role="button" style="text-decoration: none!important;"><span>✎</span></a>
-            <a name="delete" href="/admin/delete?test-arguments=test.arguments&amp;id=2" title="Delete" role="button" style="text-decoration: none!important;"><span>❌</span></a>
+            <a name="view" href="/admin/manage/view?test-arguments=test.arguments&amp;id=2" title="View" role="button" style="text-decoration: none!important;"><span>🔎</span></a>
+            <a name="update" href="/admin/manage/update?test-arguments=test.arguments&amp;id=2" title="Update" role="button" style="text-decoration: none!important;"><span>✎</span></a>
+            <a name="delete" href="/admin/manage/delete?test-arguments=test.arguments&amp;id=2" title="Delete" role="button" style="text-decoration: none!important;"><span>❌</span></a>
             </td>
             </tr>
             </tbody>
@@ -616,7 +606,6 @@ final class ActionColumnTest extends TestCase
                 ->id('w1-grid')
                 ->paginator($this->createOffsetPaginator($this->data, 10))
                 ->translator(Mock::translator('en'))
-                ->urlName('admin')
                 ->render()
         );
     }
@@ -663,7 +652,6 @@ final class ActionColumnTest extends TestCase
                 ->id('w1-grid')
                 ->paginator($this->createOffsetPaginator($this->data, 10))
                 ->translator(Mock::translator('en'))
-                ->urlName('admin')
                 ->render()
         );
     }
@@ -688,16 +676,16 @@ final class ActionColumnTest extends TestCase
             <tbody>
             <tr>
             <td data-label="actions">
-            <a name="view" href="/admin/view?test-param=test.param&amp;id=1" title="View" role="button" style="text-decoration: none!important;"><span>🔎</span></a>
-            <a name="update" href="/admin/update?test-param=test.param&amp;id=1" title="Update" role="button" style="text-decoration: none!important;"><span>✎</span></a>
-            <a name="delete" href="/admin/delete?test-param=test.param&amp;id=1" title="Delete" role="button" style="text-decoration: none!important;"><span>❌</span></a>
+            <a name="view" href="/admin/manage/view?test-param=test.param&amp;id=1" title="View" role="button" style="text-decoration: none!important;"><span>🔎</span></a>
+            <a name="update" href="/admin/manage/update?test-param=test.param&amp;id=1" title="Update" role="button" style="text-decoration: none!important;"><span>✎</span></a>
+            <a name="delete" href="/admin/manage/delete?test-param=test.param&amp;id=1" title="Delete" role="button" style="text-decoration: none!important;"><span>❌</span></a>
             </td>
             </tr>
             <tr>
             <td data-label="actions">
-            <a name="view" href="/admin/view?test-param=test.param&amp;id=2" title="View" role="button" style="text-decoration: none!important;"><span>🔎</span></a>
-            <a name="update" href="/admin/update?test-param=test.param&amp;id=2" title="Update" role="button" style="text-decoration: none!important;"><span>✎</span></a>
-            <a name="delete" href="/admin/delete?test-param=test.param&amp;id=2" title="Delete" role="button" style="text-decoration: none!important;"><span>❌</span></a>
+            <a name="view" href="/admin/manage/view?test-param=test.param&amp;id=2" title="View" role="button" style="text-decoration: none!important;"><span>🔎</span></a>
+            <a name="update" href="/admin/manage/update?test-param=test.param&amp;id=2" title="Update" role="button" style="text-decoration: none!important;"><span>✎</span></a>
+            <a name="delete" href="/admin/manage/delete?test-param=test.param&amp;id=2" title="Delete" role="button" style="text-decoration: none!important;"><span>❌</span></a>
             </td>
             </tr>
             </tbody>
@@ -710,7 +698,6 @@ final class ActionColumnTest extends TestCase
                 ->id('w1-grid')
                 ->paginator($this->createOffsetPaginator($this->data, 10))
                 ->translator(Mock::translator('en'))
-                ->urlName('admin')
                 ->render()
         );
     }
@@ -735,16 +722,16 @@ final class ActionColumnTest extends TestCase
             <tbody>
             <tr>
             <td data-label="actions">
-            <a name="view" href="/admin/view?test-param=test.param&amp;id=1" title="View" role="button" style="text-decoration: none!important;"><span>🔎</span></a>
-            <a name="update" href="/admin/update?test-param=test.param&amp;id=1" title="Update" role="button" style="text-decoration: none!important;"><span>✎</span></a>
-            <a name="delete" href="/admin/delete?test-param=test.param&amp;id=1" title="Delete" role="button" style="text-decoration: none!important;"><span>❌</span></a>
+            <a name="view" href="/admin/manage/view?test-param=test.param&amp;id=1" title="View" role="button" style="text-decoration: none!important;"><span>🔎</span></a>
+            <a name="update" href="/admin/manage/update?test-param=test.param&amp;id=1" title="Update" role="button" style="text-decoration: none!important;"><span>✎</span></a>
+            <a name="delete" href="/admin/manage/delete?test-param=test.param&amp;id=1" title="Delete" role="button" style="text-decoration: none!important;"><span>❌</span></a>
             </td>
             </tr>
             <tr>
             <td data-label="actions">
-            <a name="view" href="/admin/view?test-param=test.param&amp;id=2" title="View" role="button" style="text-decoration: none!important;"><span>🔎</span></a>
-            <a name="update" href="/admin/update?test-param=test.param&amp;id=2" title="Update" role="button" style="text-decoration: none!important;"><span>✎</span></a>
-            <a name="delete" href="/admin/delete?test-param=test.param&amp;id=2" title="Delete" role="button" style="text-decoration: none!important;"><span>❌</span></a>
+            <a name="view" href="/admin/manage/view?test-param=test.param&amp;id=2" title="View" role="button" style="text-decoration: none!important;"><span>🔎</span></a>
+            <a name="update" href="/admin/manage/update?test-param=test.param&amp;id=2" title="Update" role="button" style="text-decoration: none!important;"><span>✎</span></a>
+            <a name="delete" href="/admin/manage/delete?test-param=test.param&amp;id=2" title="Delete" role="button" style="text-decoration: none!important;"><span>❌</span></a>
             </td>
             </tr>
             </tbody>
@@ -757,7 +744,6 @@ final class ActionColumnTest extends TestCase
                 ->id('w1-grid')
                 ->paginator($this->createOffsetPaginator($this->data, 10))
                 ->translator(Mock::translator('en'))
-                ->urlName('admin')
                 ->render()
         );
     }
@@ -782,12 +768,12 @@ final class ActionColumnTest extends TestCase
             <tbody>
             <tr>
             <td data-label="actions">
-            <a name="view" href="/admin/view?id=1" title="View" role="button" style="text-decoration: none!important;"><span>🔎</span></a>
+            <a name="view" href="/admin/manage/view?id=1" title="View" role="button" style="text-decoration: none!important;"><span>🔎</span></a>
             </td>
             </tr>
             <tr>
             <td data-label="actions">
-            <a name="update" href="/admin/update?id=2" title="Update" role="button" style="text-decoration: none!important;"><span>✎</span></a>
+            <a name="update" href="/admin/manage/update?id=2" title="Update" role="button" style="text-decoration: none!important;"><span>✎</span></a>
             </td>
             </tr>
             </tbody>
@@ -800,7 +786,6 @@ final class ActionColumnTest extends TestCase
                 ->id('w1-grid')
                 ->paginator($this->createOffsetPaginator($this->data, 10))
                 ->translator(Mock::translator('en'))
-                ->urlName('admin')
                 ->render()
         );
     }

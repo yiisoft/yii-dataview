@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Yiisoft\Yii\DataView\Tests\Widget\LinkSorter;
 
-use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 use Yiisoft\Definitions\Exception\CircularReferenceException;
 use Yiisoft\Definitions\Exception\InvalidConfigException;
@@ -13,6 +12,7 @@ use Yiisoft\Di\Container;
 use Yiisoft\Di\ContainerConfig;
 use Yiisoft\Factory\NotFoundException;
 use Yiisoft\Widget\WidgetFactory;
+use Yiisoft\Yii\DataView\Exception\UrlGeneratorNotSetException;
 use Yiisoft\Yii\DataView\Widget\LinkSorter;
 
 final class ExceptionTest extends TestCase
@@ -22,6 +22,8 @@ final class ExceptionTest extends TestCase
      */
     protected function setUp(): void
     {
+        parent::setUp();
+
         $container = new Container(ContainerConfig::create());
         WidgetFactory::initialize($container, []);
     }
@@ -34,8 +36,9 @@ final class ExceptionTest extends TestCase
      */
     public function testUrlGeneratorNotSet(): void
     {
-        $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage('UrlGenerator must be configured.');
+        $this->expectException(UrlGeneratorNotSetException::class);
+        $this->expectExceptionMessage('Failed to create widget because "urlgenerator" is not set.');
+
         LinkSorter::widget()
             ->attribute('username')
             ->attributes([

@@ -12,8 +12,6 @@ use function mb_strtolower;
 
 /**
  * Column is the base class of all {@see GridView} column classes.
- *
- * @psalm-suppress PropertyNotSetInConstructor
  */
 abstract class Column
 {

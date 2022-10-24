@@ -11,6 +11,8 @@ use Yiisoft\Data\Reader\Sort;
 use Yiisoft\Definitions\Exception\InvalidConfigException;
 use Yiisoft\Di\Container;
 use Yiisoft\Di\ContainerConfig;
+use Yiisoft\Router\CurrentRoute;
+use Yiisoft\Router\Route;
 use Yiisoft\Router\UrlGeneratorInterface;
 use Yiisoft\Widget\WidgetFactory;
 
@@ -56,8 +58,12 @@ trait TestTrait
 
     private function config(): array
     {
+        $currentRoute = new CurrentRoute();
+        $currentRoute->setRouteWithArguments(Route::get('/admin/manage')->name('admin/manage'), []);
+
         return [
-            UrlGeneratorInterface::class => Mock::urlGenerator(),
+            CurrentRoute::class => $currentRoute,
+            UrlGeneratorInterface::class => Mock::urlGenerator([], $currentRoute),
         ];
     }
 }

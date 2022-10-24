@@ -33,7 +33,6 @@ final class LinkSorterTest extends TestCase
                 ->attributes(['id' => SORT_ASC, 'username' => SORT_DESC, 'default' => 'desc'])
                 ->currentPage(2)
                 ->pageSize(5)
-                ->urlName('admin/manage')
                 ->render(),
         );
     }
@@ -52,7 +51,6 @@ final class LinkSorterTest extends TestCase
                 ->attributes(['id' => SORT_ASC, 'username' => SORT_DESC, 'default' => 'desc'])
                 ->currentPage(2)
                 ->pageSize(5)
-                ->urlName('admin/manage')
                 ->render(),
         );
     }
@@ -75,7 +73,6 @@ final class LinkSorterTest extends TestCase
                 ->currentPage(2)
                 ->directions(['id' => 'asc'])
                 ->pageSize(5)
-                ->urlName('admin/manage')
                 ->render(),
         );
     }
@@ -98,7 +95,6 @@ final class LinkSorterTest extends TestCase
                 ->currentPage(2)
                 ->directions(['id' => 'desc'])
                 ->pageSize(5)
-                ->urlName('admin/manage')
                 ->render(),
         );
     }
@@ -122,7 +118,6 @@ final class LinkSorterTest extends TestCase
                 ->directions(['username' => 'asc'])
                 ->iconAscClass('bi bi-sort-alpha-up')
                 ->pageSize(5)
-                ->urlName('admin/manage')
                 ->render(),
         );
     }
@@ -146,7 +141,6 @@ final class LinkSorterTest extends TestCase
                 ->directions(['username' => 'desc'])
                 ->iconDescClass('bi bi-sort-alpha-down')
                 ->pageSize(5)
-                ->urlName('admin/manage')
                 ->render(),
         );
     }
@@ -169,7 +163,6 @@ final class LinkSorterTest extends TestCase
                 ->currentPage(1)
                 ->directions(['id' => 'desc', 'username' => 'desc'])
                 ->pageSize(5)
-                ->urlName('admin/manage')
                 ->render(),
         );
     }
@@ -193,7 +186,6 @@ final class LinkSorterTest extends TestCase
                 ->directions(['id' => SORT_ASC])
                 ->linkAttributes(['class' => 'text-danger'])
                 ->pageSize(5)
-                ->urlName('admin/manage')
                 ->render(),
         );
     }
@@ -217,7 +209,6 @@ final class LinkSorterTest extends TestCase
                 ->directions(['id' => 'desc'])
                 ->linkAttributes(['class' => 'text-danger'])
                 ->pageSize(5)
-                ->urlName('admin/manage')
                 ->render(),
         );
     }
@@ -246,7 +237,6 @@ final class LinkSorterTest extends TestCase
                 ->directions(['username' => 'desc'])
                 ->pageSize(5)
                 ->pageConfig(['page' => 1, 'pagesize' => 5])
-                ->urlName('admin/manage')
                 ->render(),
         );
     }
@@ -274,7 +264,6 @@ final class LinkSorterTest extends TestCase
                 ->currentPage(1)
                 ->directions(['username' => 'desc'])
                 ->pageSize(5)
-                ->urlName('admin/manage')
                 ->render(),
         );
     }
@@ -299,7 +288,6 @@ final class LinkSorterTest extends TestCase
                 ->iconAscClass('bi bi-sort-alpha-up')
                 ->pageSize(5)
                 ->urlArguments(['test' => 'test'])
-                ->urlName('admin/manage')
                 ->render(),
         );
     }
@@ -323,7 +311,6 @@ final class LinkSorterTest extends TestCase
                 ->directions(['id' => 'asc', 'username' => 'desc'])
                 ->iconAscClass('bi bi-sort-alpha-up')
                 ->pageSize(5)
-                ->urlName('admin/manage')
                 ->render(),
         );
     }
@@ -338,7 +325,7 @@ final class LinkSorterTest extends TestCase
     {
         $this->assertSame(
             <<<HTML
-            <a class="asc" href="?test=test&amp;page=1&amp;pagesize=5&amp;sort=-id%2C-username" data-sort="-id,-username">Id <i class="bi bi-sort-alpha-up"></i></a>
+            <a class="asc" href="/admin/manage?test=test&amp;page=1&amp;pagesize=5&amp;sort=-id%2C-username" data-sort="-id,-username">Id <i class="bi bi-sort-alpha-up"></i></a>
             HTML,
             LinkSorter::widget()
                 ->attribute('id')
@@ -372,7 +359,6 @@ final class LinkSorterTest extends TestCase
                 ->iconAscClass('bi bi-sort-alpha-up')
                 ->pageSize(5)
                 ->urlQueryParameters(['test' => 'test'])
-                ->urlName('admin/manage')
                 ->render(),
         );
     }

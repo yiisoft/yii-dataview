@@ -53,11 +53,11 @@ final class Mock extends TestCase
     ): UrlGeneratorInterface {
         if ($routes === []) {
             $routes = [
-                Route::get('/admin/delete')->name('admin/delete'),
                 Route::get('/admin/manage')->name('admin/manage'),
-                Route::get('/admin/update')->name('admin/update'),
-                Route::get('/admin/view')->name('admin/resend-password'),
-                Route::get('/admin/view')->name('admin/view'),
+                Route::get('/admin/manage/delete')->name('admin/manage/delete'),
+                Route::get('/admin/manage/resend-password')->name('admin/manage/resend-password'),
+                Route::get('/admin/manage/update')->name('admin/manage/update'),
+                Route::get('/admin/manage/view')->name('admin/manage/view'),
             ];
         }
 
