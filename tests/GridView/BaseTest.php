@@ -12,7 +12,6 @@ use Yiisoft\Factory\NotFoundException;
 use Yiisoft\Yii\DataView\Column;
 use Yiisoft\Yii\DataView\GridView;
 use Yiisoft\Yii\DataView\Tests\Support\Assert;
-use Yiisoft\Yii\DataView\Tests\Support\Mock;
 use Yiisoft\Yii\DataView\Tests\Support\TestTrait;
 
 final class BaseTest extends TestCase
@@ -63,7 +62,7 @@ final class BaseTest extends TestCase
             </div>
             </tbody>
             </table>
-            <div>gridview.summary</div>
+            <div>dataview.summary</div>
             </div>
             HTML,
             GridView::widget()
@@ -72,7 +71,6 @@ final class BaseTest extends TestCase
                 ->columns($this->createColumns())
                 ->id('w1-grid')
                 ->paginator($this->createOffsetPaginator($this->data, 10))
-                ->translator(Mock::translator('en'))
                 ->render()
         );
     }
@@ -114,7 +112,7 @@ final class BaseTest extends TestCase
             </tr>
             </tbody>
             </table>
-            <div>gridview.summary</div>
+            <div>dataview.summary</div>
             </div>
             HTML,
             GridView::widget()
@@ -122,7 +120,6 @@ final class BaseTest extends TestCase
                 ->columnsGroupEnabled(true)
                 ->id('w1-grid')
                 ->paginator($this->createOffsetPaginator($this->data, 10))
-                ->translator(Mock::translator('en'))
                 ->render()
         );
     }
@@ -168,7 +165,7 @@ final class BaseTest extends TestCase
             </tr>
             </tbody>
             </table>
-            <div>gridview.summary</div>
+            <div>dataview.summary</div>
             </div>
             HTML,
             GridView::widget()
@@ -176,7 +173,6 @@ final class BaseTest extends TestCase
                 ->columnsGroupEnabled(true)
                 ->id('w1-grid')
                 ->paginator($this->createOffsetPaginator($this->data, 10))
-                ->translator(Mock::translator('en'))
                 ->render()
         );
     }
@@ -224,14 +220,13 @@ final class BaseTest extends TestCase
             </tr>
             </tbody>
             </table>
-            <div>gridview.summary</div>
+            <div>dataview.summary</div>
             </div>
             HTML,
             GridView::widget()
                 ->columns([])
                 ->id('w1-grid')
                 ->paginator($this->createOffsetPaginator($this->data, 10))
-                ->translator(Mock::translator('en'))
                 ->render()
         );
     }
@@ -259,7 +254,7 @@ final class BaseTest extends TestCase
             </tr>
             </tbody>
             </table>
-            <div>gridview.summary</div>
+            <div>dataview.summary</div>
             </div>
             HTML,
             GridView::widget()
@@ -267,7 +262,6 @@ final class BaseTest extends TestCase
                 ->emptyCell('Empty cell')
                 ->id('w1-grid')
                 ->paginator($this->createOffsetPaginator([['id' => '']], 10))
-                ->translator(Mock::translator('en'))
                 ->render()
         );
     }
@@ -305,7 +299,6 @@ final class BaseTest extends TestCase
                 ->emptyText('Not found.')
                 ->id('w1-grid')
                 ->paginator($this->createOffsetPaginator([], 10))
-                ->translator(Mock::translator('en'))
                 ->render()
         );
     }
@@ -347,7 +340,7 @@ final class BaseTest extends TestCase
             </tr>
             </tbody>
             </table>
-            <div>gridview.summary</div>
+            <div>dataview.summary</div>
             </div>
             HTML,
             GridView::widget()
@@ -356,7 +349,6 @@ final class BaseTest extends TestCase
                 ->footerRowAttributes(['class' => 'text-primary'])
                 ->id('w1-grid')
                 ->paginator($this->createOffsetPaginator($this->data, 10))
-                ->translator(Mock::translator('en'))
                 ->render()
         );
     }
@@ -397,7 +389,7 @@ final class BaseTest extends TestCase
             </tr>
             </tbody>
             </table>
-            <div>gridview.summary</div>
+            <div>dataview.summary</div>
             </div>
             HTML,
             GridView::widget()
@@ -405,7 +397,6 @@ final class BaseTest extends TestCase
                 ->header('List of users')
                 ->id('w1-grid')
                 ->paginator($this->createOffsetPaginator($this->data, 10))
-                ->translator(Mock::translator('en'))
                 ->render()
         );
     }
@@ -446,7 +437,7 @@ final class BaseTest extends TestCase
             </tr>
             </tbody>
             </table>
-            <div>gridview.summary</div>
+            <div>dataview.summary</div>
             </div>
             HTML,
             GridView::widget()
@@ -456,7 +447,6 @@ final class BaseTest extends TestCase
                 ->paginator($this->createOffsetPaginator($this->data, 10))
                 ->layout('')
                 ->layoutGridTable("{header}\n{items}\n{summary}")
-                ->translator(Mock::translator('en'))
                 ->render()
         );
     }
@@ -496,7 +486,7 @@ final class BaseTest extends TestCase
             </tr>
             </tbody>
             </table>
-            <div>gridview.summary</div>
+            <div>dataview.summary</div>
             </div>
             HTML,
             GridView::widget()
@@ -504,7 +494,6 @@ final class BaseTest extends TestCase
                 ->headerRowAttributes(['class' => 'text-primary'])
                 ->id('w1-grid')
                 ->paginator($this->createOffsetPaginator($this->data, 10))
-                ->translator(Mock::translator('en'))
                 ->render()
         );
     }
@@ -536,7 +525,7 @@ final class BaseTest extends TestCase
             </tr>
             </tbody>
             </table>
-            <div>gridview.summary</div>
+            <div>dataview.summary</div>
             </div>
             HTML,
             GridView::widget()
@@ -544,7 +533,6 @@ final class BaseTest extends TestCase
                 ->headerTableEnabled(false)
                 ->id('w1-grid')
                 ->paginator($this->createOffsetPaginator($this->data, 10))
-                ->translator(Mock::translator('en'))
                 ->render()
         );
     }
@@ -571,7 +559,7 @@ final class BaseTest extends TestCase
             </thead>
             <tbody>
             <tr>
-            <td colspan="4">No results found.</td>
+            <td colspan="4">dataview.empty.text</td>
             </tr>
             </tbody>
             </table>
@@ -581,7 +569,6 @@ final class BaseTest extends TestCase
                 ->columns($this->createColumns())
                 ->id('w1-grid')
                 ->paginator($this->createOffsetPaginator([], 10))
-                ->translator(Mock::translator('en'))
                 ->render()
         );
     }
@@ -621,7 +608,7 @@ final class BaseTest extends TestCase
             </tr>
             </tbody>
             </table>
-            <div>gridview.summary</div>
+            <div>dataview.summary</div>
             </div>
             HTML,
             GridView::widget()
@@ -629,7 +616,6 @@ final class BaseTest extends TestCase
                 ->id('w1-grid')
                 ->paginator($this->createOffsetPaginator($this->data, 10))
                 ->rowAttributes(['class' => 'text-primary'])
-                ->translator(Mock::translator('en'))
                 ->render()
         );
 
@@ -660,7 +646,7 @@ final class BaseTest extends TestCase
             </tr>
             </tbody>
             </table>
-            <div>gridview.summary</div>
+            <div>dataview.summary</div>
             </div>
             HTML,
             GridView::widget()
@@ -668,7 +654,6 @@ final class BaseTest extends TestCase
                 ->id('w1-grid')
                 ->paginator($this->createOffsetPaginator($this->data, 10))
                 ->rowAttributes(['class' => 'text-primary'])
-                ->translator(Mock::translator('en'))
                 ->render()
         );
     }
@@ -708,7 +693,7 @@ final class BaseTest extends TestCase
             </tr>
             </tbody>
             </table>
-            <div>gridview.summary</div>
+            <div>dataview.summary</div>
             </div>
             HTML,
             GridView::widget()
@@ -716,7 +701,6 @@ final class BaseTest extends TestCase
                 ->id('w1-grid')
                 ->paginator($this->createOffsetPaginator($this->data, 10))
                 ->tableAttributes(['class' => 'table table-striped table-bordered'])
-                ->translator(Mock::translator('en'))
                 ->render()
         );
     }

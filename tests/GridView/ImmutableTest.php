@@ -10,7 +10,6 @@ use Yiisoft\Definitions\Exception\InvalidConfigException;
 use Yiisoft\Definitions\Exception\NotInstantiableException;
 use Yiisoft\Factory\NotFoundException;
 use Yiisoft\Yii\DataView;
-use Yiisoft\Yii\DataView\Tests\Support\Mock;
 use Yiisoft\Yii\DataView\Tests\Support\TestTrait;
 
 final class ImmutableTest extends TestCase
@@ -39,7 +38,6 @@ final class ImmutableTest extends TestCase
         $this->assertNotSame($baseListView, $baseListView->summary(''));
         $this->assertNotSame($baseListView, $baseListView->summaryAttributes([]));
         $this->assertNotSame($baseListView, $baseListView->toolbar(''));
-        $this->assertNotSame($baseListView, $baseListView->translator(Mock::translator('en')));
         $this->assertNotSame($baseListView, $baseListView->urlArguments([]));
         $this->assertNotSame($baseListView, $baseListView->urlQueryParameters([]));
         $this->assertNotSame($baseListView, $baseListView->withContainer(false));

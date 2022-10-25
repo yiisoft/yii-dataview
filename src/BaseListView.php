@@ -14,6 +14,7 @@ use Yiisoft\Factory\NotFoundException;
 use Yiisoft\Html\Tag\Div;
 use Yiisoft\Html\Tag\Td;
 use Yiisoft\Router\UrlGeneratorInterface;
+use Yiisoft\Translator\SimpleMessageFormatter;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\Widget\Widget;
 use Yiisoft\Yii\DataView\Widget\LinkSorter;
@@ -21,7 +22,7 @@ use Yiisoft\Yii\DataView\Widget\LinkSorter;
 abstract class BaseListView extends Widget
 {
     private array $attributes = [];
-    protected string $emptyText = 'No results found.';
+    protected string $emptyText = 'dataview.empty.text';
     private array $emptyTextAttributes = [];
     private string $header = '';
     private array $headerAttributes = [];
@@ -29,17 +30,19 @@ abstract class BaseListView extends Widget
     private string $layoutGridTable = "{items}\n{summary}\n{pager}";
     private string $pagination = '';
     protected ?PaginatorInterface $paginator = null;
+    private SimpleMessageFormatter|null $simpleMessageFormatter = null;
     private array $sortLinkAttributes = [];
-    private string $summary = 'gridview.summary';
+    private string $summary = 'dataview.summary';
     private array $summaryAttributes = [];
-    private TranslatorInterface|null $translator = null;
     private string $toolbar = '';
     protected array $urlArguments = [];
     protected array $urlQueryParameters = [];
     private bool $withContainer = true;
 
-    public function __construct(private UrlGeneratorInterface|null $urlGenerator = null)
-    {
+    public function __construct(
+        private TranslatorInterface|null $translator = null,
+        private UrlGeneratorInterface|null $urlGenerator = null
+    ) {
     }
 
     /**
@@ -102,13 +105,13 @@ abstract class BaseListView extends Widget
         return $this->paginator;
     }
 
-    public function getTranslator(): TranslatorInterface
+    public function getSimpleMessageFormatter(): SimpleMessageFormatter
     {
-        if ($this->translator === null) {
-            throw new Exception\TranslatorNotSetException();
+        if ($this->simpleMessageFormatter === null) {
+            $this->simpleMessageFormatter = new SimpleMessageFormatter();
         }
 
-        return $this->translator;
+        return $this->simpleMessageFormatter;
     }
 
     public function getUrlGenerator(): UrlGeneratorInterface
@@ -277,19 +280,6 @@ abstract class BaseListView extends Widget
     }
 
     /**
-     * Returns a new instance with the translator interface of the grid view, detail view, or list view.
-     *
-     * @param TranslatorInterface $value The translator interface of the grid view, detail view, or list view.
-     */
-    public function translator(TranslatorInterface $value): static
-    {
-        $new = clone $this;
-        $new->translator = $value;
-
-        return $new;
-    }
-
-    /**
      * Return new instance with toolbar content.
      *
      * @param string $value The toolbar content.
@@ -358,7 +348,12 @@ abstract class BaseListView extends Widget
     protected function renderEmpty(int $colspan): Td
     {
         $emptyTextAttributes = $this->emptyTextAttributes;
-        $emptyText = $this->getTranslator()->translate($this->emptyText, [], 'gridview');
+        $emptyText = $this->getSimpleMessageFormatter()->format($this->emptyText, []);
+
+        if ($this->translator !== null) {
+            $emptyText = $this->translator->translate($this->emptyText, [], 'dataview');
+        }
+
         $emptyTextAttributes['colspan'] = $colspan;
 
         return Td::tag()->addAttributes($emptyTextAttributes)->content($emptyText);
@@ -418,11 +413,11 @@ abstract class BaseListView extends Widget
 
     private function renderSummary(): string
     {
-        $pageCount = count($this->getDataReader());
-
         if ($this->getPaginator() instanceof KeysetPaginator) {
             return '';
         }
+
+        $pageCount = count($this->getDataReader());
 
         if ($pageCount <= 0) {
             return '';
@@ -431,20 +426,27 @@ abstract class BaseListView extends Widget
         /** @var OffsetPaginator $paginator */
         $paginator = $this->getPaginator();
 
-        return Div::tag()
-            ->addAttributes($this->summaryAttributes)
-            ->content(
-                $this->getTranslator()->translate(
-                    $this->summary,
-                    [
-                        'currentPage' => $paginator->getCurrentPage(),
-                        'totalPages' => $paginator->getTotalPages(),
-                    ],
-                    'gridview',
-                )
-            )
-            ->encode(false)
-            ->render();
+        $summary = $this->getSimpleMessageFormatter()
+            ->format(
+                $this->summary,
+                [
+                    'currentPage' => $paginator->getCurrentPage(),
+                    'totalPages' => $paginator->getTotalPages(),
+                ]
+            );
+
+        if ($this->translator !== null) {
+            $summary = $this->translator->translate(
+                $this->summary,
+                [
+                    'currentPage' => $paginator->getCurrentPage(),
+                    'totalPages' => $paginator->getTotalPages(),
+                ],
+                'dataview',
+            );
+        }
+
+        return Div::tag()->addAttributes($this->summaryAttributes)->content($summary)->encode(false)->render();
     }
 
     private function renderGrid(): string

@@ -12,7 +12,6 @@ use Yiisoft\Definitions\Exception\NotInstantiableException;
 use Yiisoft\Factory\NotFoundException;
 use Yiisoft\Yii\DataView\Exception;
 use Yiisoft\Yii\DataView\ListView;
-use Yiisoft\Yii\DataView\Tests\Support\Mock;
 use Yiisoft\Yii\DataView\Tests\Support\TestTrait;
 
 final class ExceptionTest extends TestCase
@@ -36,24 +35,6 @@ final class ExceptionTest extends TestCase
         $this->expectExceptionMessage('Failed to create widget because "paginator" is not set.');
         ListView::widget()
             ->itemView('//_listview')
-            ->translator(Mock::translator('en'))
-            ->render();
-    }
-
-    /**
-     * @throws InvalidConfigException
-     * @throws NotFoundException
-     * @throws NotInstantiableException
-     * @throws CircularReferenceException
-     */
-    public function testGetTranslator(): void
-    {
-        $this->expectException(Exception\TranslatorNotSetException::class);
-        $this->expectExceptionMessage('Failed to create widget because "translator" is not set.');
-        ListView::widget()
-            ->itemView('//_listview')
-            ->paginator($this->createOffsetPaginator($this->data, 10))
-            ->webView(Mock::webView())
             ->render();
     }
 
@@ -70,7 +51,6 @@ final class ExceptionTest extends TestCase
         ListView::widget()
             ->itemView('//_listview')
             ->paginator($this->createOffsetPaginator($this->data, 10))
-            ->translator(Mock::translator('en'))
             ->render();
     }
 
@@ -86,7 +66,6 @@ final class ExceptionTest extends TestCase
         $this->expectExceptionMessage('The "itemView" property must be set.');
         ListView::widget()
             ->paginator($this->createOffsetPaginator($this->data, 10))
-            ->translator(Mock::translator('en'))
             ->render();
     }
 }

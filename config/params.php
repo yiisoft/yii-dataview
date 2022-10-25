@@ -7,12 +7,12 @@ use Yiisoft\Definitions\Reference;
 return [
     'yiisoft/aliases' => [
         'aliases' => [
-            '@gridview' => dirname(__DIR__),
+            '@yii-dataview' => dirname(__DIR__),
         ],
     ],
     'yiisoft/translator' => [
         'categorySources' => [
-            Reference::to('translator.gridview'),
+            Reference::to('translator.dataview'),
         ],
     ],
 ];

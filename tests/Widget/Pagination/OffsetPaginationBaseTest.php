@@ -11,7 +11,6 @@ use Yiisoft\Definitions\Exception\NotInstantiableException;
 use Yiisoft\Factory\NotFoundException;
 use Yiisoft\Yii\DataView\GridView;
 use Yiisoft\Yii\DataView\Tests\Support\Assert;
-use Yiisoft\Yii\DataView\Tests\Support\Mock;
 use Yiisoft\Yii\DataView\Tests\Support\TestTrait;
 use Yiisoft\Yii\DataView\Widget\OffsetPagination;
 
@@ -38,7 +37,7 @@ final class OffsetPaginationBaseTest extends TestCase
             </thead>
             <tbody>
             <tr>
-            <td colspan="0">No results found.</td>
+            <td colspan="0">dataview.empty.text</td>
             </tr>
             </tbody>
             </table>
@@ -49,7 +48,6 @@ final class OffsetPaginationBaseTest extends TestCase
                 ->id('w1-grid')
                 ->paginator($offsetPaginator)
                 ->pagination(OffsetPagination::widget()->paginator($offsetPaginator)->render())
-                ->translator(Mock::translator('en'))
                 ->render(),
         );
     }

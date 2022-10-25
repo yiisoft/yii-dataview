@@ -13,7 +13,6 @@ use Yiisoft\Yii\DataView\Column\CheckboxColumn;
 use Yiisoft\Yii\DataView\Column\DataColumn;
 use Yiisoft\Yii\DataView\GridView;
 use Yiisoft\Yii\DataView\Tests\Support\Assert;
-use Yiisoft\Yii\DataView\Tests\Support\Mock;
 use Yiisoft\Yii\DataView\Tests\Support\TestTrait;
 
 final class CheckboxColumnTest extends TestCase
@@ -57,14 +56,13 @@ final class CheckboxColumnTest extends TestCase
             </tr>
             </tbody>
             </table>
-            <div>gridview.summary</div>
+            <div>dataview.summary</div>
             </div>
             HTML,
             GridView::widget()
                 ->columns($this->createColumnsWithContent())
                 ->id('w1-grid')
                 ->paginator($this->createOffsetPaginator($this->data, 10))
-                ->translator(Mock::translator('en'))
                 ->render()
         );
     }
@@ -101,14 +99,13 @@ final class CheckboxColumnTest extends TestCase
             </tr>
             </tbody>
             </table>
-            <div>gridview.summary</div>
+            <div>dataview.summary</div>
             </div>
             HTML,
             GridView::widget()
                 ->columns($this->createColumnsWithContentAttributes())
                 ->id('w1-grid')
                 ->paginator($this->createOffsetPaginator($this->data, 10))
-                ->translator(Mock::translator('en'))
                 ->render()
         );
     }
@@ -145,14 +142,13 @@ final class CheckboxColumnTest extends TestCase
             </tr>
             </tbody>
             </table>
-            <div>gridview.summary</div>
+            <div>dataview.summary</div>
             </div>
             HTML,
             GridView::widget()
                 ->columns($this->createColumnsWithDataLabel())
                 ->id('w1-grid')
                 ->paginator($this->createOffsetPaginator($this->data, 10))
-                ->translator(Mock::translator('en'))
                 ->render()
         );
     }
@@ -189,14 +185,13 @@ final class CheckboxColumnTest extends TestCase
             </tr>
             </tbody>
             </table>
-            <div>gridview.summary</div>
+            <div>dataview.summary</div>
             </div>
             HTML,
             GridView::widget()
                 ->columns($this->createColumnsWithLabel())
                 ->id('w1-grid')
                 ->paginator($this->createOffsetPaginator($this->data, 10))
-                ->translator(Mock::translator('en'))
                 ->render()
         );
     }
@@ -233,14 +228,13 @@ final class CheckboxColumnTest extends TestCase
             </tr>
             </tbody>
             </table>
-            <div>gridview.summary</div>
+            <div>dataview.summary</div>
             </div>
             HTML,
             GridView::widget()
                 ->columns($this->createColumnsWithLabelMbString())
                 ->id('w1-grid')
                 ->paginator($this->createOffsetPaginator($this->data, 10))
-                ->translator(Mock::translator('en'))
                 ->render()
         );
     }
@@ -277,14 +271,13 @@ final class CheckboxColumnTest extends TestCase
             </tr>
             </tbody>
             </table>
-            <div>gridview.summary</div>
+            <div>dataview.summary</div>
             </div>
             HTML,
             GridView::widget()
                 ->columns($this->createColumnsWithLabelAttributes())
                 ->id('w1-grid')
                 ->paginator($this->createOffsetPaginator($this->data, 10))
-                ->translator(Mock::translator('en'))
                 ->render()
         );
     }
@@ -321,14 +314,13 @@ final class CheckboxColumnTest extends TestCase
             </tr>
             </tbody>
             </table>
-            <div>gridview.summary</div>
+            <div>dataview.summary</div>
             </div>
             HTML,
             GridView::widget()
                 ->columns($this->createColumnsWithName())
                 ->id('w1-grid')
                 ->paginator($this->createOffsetPaginator($this->data, 10))
-                ->translator(Mock::translator('en'))
                 ->render()
         );
     }
@@ -365,14 +357,13 @@ final class CheckboxColumnTest extends TestCase
             </tr>
             </tbody>
             </table>
-            <div>gridview.summary</div>
+            <div>dataview.summary</div>
             </div>
             HTML,
             GridView::widget()
                 ->columns($this->createColumnsWithNotMultiple())
                 ->id('w1-grid')
                 ->paginator($this->createOffsetPaginator($this->data, 10))
-                ->translator(Mock::translator('en'))
                 ->render()
         );
     }
@@ -406,14 +397,13 @@ final class CheckboxColumnTest extends TestCase
             </tr>
             </tbody>
             </table>
-            <div>gridview.summary</div>
+            <div>dataview.summary</div>
             </div>
             HTML,
             GridView::widget()
                 ->columns($this->createColumnsWithNotVisible())
                 ->id('w1-grid')
                 ->paginator($this->createOffsetPaginator($this->data, 10))
-                ->translator(Mock::translator('en'))
                 ->render()
         );
     }
@@ -450,14 +440,13 @@ final class CheckboxColumnTest extends TestCase
             </tr>
             </tbody>
             </table>
-            <div>gridview.summary</div>
+            <div>dataview.summary</div>
             </div>
             HTML,
             GridView::widget()
                 ->columns($this->createColumns())
                 ->id('w1-grid')
                 ->paginator($this->createOffsetPaginator($this->data, 10))
-                ->translator(Mock::translator('en'))
                 ->render()
         );
     }

@@ -12,7 +12,6 @@ use Yiisoft\Factory\NotFoundException;
 use Yiisoft\Yii\DataView\Column\DataColumn;
 use Yiisoft\Yii\DataView\GridView;
 use Yiisoft\Yii\DataView\Tests\Support\Assert;
-use Yiisoft\Yii\DataView\Tests\Support\Mock;
 use Yiisoft\Yii\DataView\Tests\Support\TestTrait;
 use Yiisoft\Yii\DataView\Widget\KeysetPagination;
 
@@ -54,7 +53,7 @@ final class KeysetPaginationBaseTest extends TestCase
             </thead>
             <tbody>
             <tr>
-            <td colspan="0">No results found.</td>
+            <td colspan="0">dataview.empty.text</td>
             </tr>
             </tbody>
             </table>
@@ -65,7 +64,6 @@ final class KeysetPaginationBaseTest extends TestCase
                 ->id('w1-grid')
                 ->paginator($keysetPaginator)
                 ->pagination(KeysetPagination::widget()->paginator($keysetPaginator)->render())
-                ->translator(Mock::translator('en'))
                 ->render(),
         );
     }
@@ -133,7 +131,6 @@ final class KeysetPaginationBaseTest extends TestCase
                 ->paginator($keysetPaginator)
                 ->pagination(KeysetPagination::widget()->paginator($keysetPaginator)->urlArguments([])->render())
                 ->layoutGridTable('{items}' . PHP_EOL . '{pager}')
-                ->translator(Mock::translator('en'))
                 ->render(),
         );
 
@@ -192,7 +189,6 @@ final class KeysetPaginationBaseTest extends TestCase
                 ->paginator($keysetPaginator)
                 ->pagination(KeysetPagination::widget()->paginator($keysetPaginator)->urlArguments([])->render())
                 ->layoutGridTable('{items}' . PHP_EOL . '{pager}')
-                ->translator(Mock::translator('en'))
                 ->render(),
         );
 
@@ -236,7 +232,6 @@ final class KeysetPaginationBaseTest extends TestCase
                 ->paginator($keysetPaginator)
                 ->pagination(KeysetPagination::widget()->paginator($keysetPaginator)->urlArguments([])->render())
                 ->layoutGridTable('{items}' . PHP_EOL . '{pager}')
-                ->translator(Mock::translator('en'))
                 ->render(),
         );
 
@@ -295,7 +290,6 @@ final class KeysetPaginationBaseTest extends TestCase
                 ->paginator($keysetPaginator)
                 ->pagination(KeysetPagination::widget()->paginator($keysetPaginator)->urlArguments([])->render())
                 ->layoutGridTable('{items}' . PHP_EOL . '{pager}')
-                ->translator(Mock::translator('en'))
                 ->render(),
         );
 
@@ -354,7 +348,6 @@ final class KeysetPaginationBaseTest extends TestCase
                 ->paginator($keysetPaginator)
                 ->pagination(KeysetPagination::widget()->paginator($keysetPaginator)->urlArguments([])->render())
                 ->layoutGridTable('{items}' . PHP_EOL . '{pager}')
-                ->translator(Mock::translator('en'))
                 ->render(),
         );
     }
