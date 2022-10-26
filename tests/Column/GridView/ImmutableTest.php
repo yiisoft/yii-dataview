@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Yiisoft\Yii\DataView\Tests\Column;
+namespace Yiisoft\Yii\DataView\Tests\Column\GridView;
 
 use PHPUnit\Framework\TestCase;
-use Yiisoft\Yii\DataView\Column;
+use Yiisoft\Yii\DataView\Column\GridView;
 use Yiisoft\Yii\DataView\Tests\Support\Mock;
 use Yiisoft\Yii\DataView\Tests\Support\TestTrait;
 
@@ -15,7 +15,7 @@ final class ImmutableTest extends TestCase
 
     public function testActionsColumn(): void
     {
-        $actionColumn = Column\ActionColumn::create();
+        $actionColumn = GridView\ActionColumn::create();
         $this->assertNotSame($actionColumn, $actionColumn->buttons([]));
         $this->assertNotSame($actionColumn, $actionColumn->createDefaultButtons());
         $this->assertNotSame($actionColumn, $actionColumn->primaryKey(''));
@@ -31,7 +31,7 @@ final class ImmutableTest extends TestCase
 
     public function testCheckboxColumn(): void
     {
-        $checkboxColumn = Column\CheckboxColumn::create();
+        $checkboxColumn = GridView\CheckboxColumn::create();
         $this->assertNotSame($checkboxColumn, $checkboxColumn->multiple(false));
     }
 
@@ -54,7 +54,7 @@ final class ImmutableTest extends TestCase
 
     public function testDataColumn(): void
     {
-        $column = Column\DataColumn::create();
+        $column = GridView\DataColumn::create();
         $this->assertNotSame($column, $column->attribute(''));
         $this->assertNotSame($column, $column->filter(''));
         $this->assertNotSame($column, $column->filterAttribute(''));
@@ -69,9 +69,9 @@ final class ImmutableTest extends TestCase
         $this->assertNotSame($column, $column->withSorting(false));
     }
 
-    private function createColumn(): Column\Column
+    private function createColumn(): GridView\AbstractColumn
     {
-        return new class () extends Column\Column {
+        return new class () extends GridView\AbstractColumn {
         };
     }
 }

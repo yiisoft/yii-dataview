@@ -2,20 +2,20 @@
 
 declare(strict_types=1);
 
-namespace Yiisoft\Yii\DataView\Tests\GridView;
+namespace Yiisoft\Yii\DataView\Tests\Column\GridView;
 
 use PHPUnit\Framework\TestCase;
 use Yiisoft\Definitions\Exception\CircularReferenceException;
 use Yiisoft\Definitions\Exception\InvalidConfigException;
 use Yiisoft\Definitions\Exception\NotInstantiableException;
 use Yiisoft\Factory\NotFoundException;
-use Yiisoft\Yii\DataView\Column\CheckboxColumn;
-use Yiisoft\Yii\DataView\Column\DataColumn;
+use Yiisoft\Yii\DataView\Column\GridView\DataColumn;
+use Yiisoft\Yii\DataView\Column\GridView\RadioColumn;
 use Yiisoft\Yii\DataView\GridView;
 use Yiisoft\Yii\DataView\Tests\Support\Assert;
 use Yiisoft\Yii\DataView\Tests\Support\TestTrait;
 
-final class CheckboxColumnTest extends TestCase
+final class RadioColumnTest extends TestCase
 {
     use TestTrait;
 
@@ -40,19 +40,19 @@ final class CheckboxColumnTest extends TestCase
             <tr>
             <th>Id</th>
             <th>Name</th>
-            <th><input type="checkbox" class="select-on-check-all" name="checkbox-selection-all" value="1"></th>
+            <th>&nbsp;</th>
             </tr>
             </thead>
             <tbody>
             <tr>
             <td data-label="id">1</td>
             <td data-label="name">John</td>
-            <td><input name="checkbox-selection" type="checkbox" value="0"></td>
+            <td><input name="radio-selection" type="radio" value="0"></td>
             </tr>
             <tr>
             <td data-label="id">2</td>
             <td data-label="name">Mary</td>
-            <td><input name="checkbox-selection" type="checkbox" value="1"></td>
+            <td><input name="radio-selection" type="radio" value="1"></td>
             </tr>
             </tbody>
             </table>
@@ -83,19 +83,19 @@ final class CheckboxColumnTest extends TestCase
             <tr>
             <th>Id</th>
             <th>Name</th>
-            <th><input type="checkbox" class="select-on-check-all" name="checkbox-selection-all" value="1"></th>
+            <th>&nbsp;</th>
             </tr>
             </thead>
             <tbody>
             <tr>
             <td data-label="id">1</td>
             <td data-label="name">John</td>
-            <td class="test.class"><input name="checkbox-selection" type="checkbox" value="0"></td>
+            <td class="test-class"><input name="radio-selection" type="radio" value="0"></td>
             </tr>
             <tr>
             <td data-label="id">2</td>
             <td data-label="name">Mary</td>
-            <td class="test.class"><input name="checkbox-selection" type="checkbox" value="1"></td>
+            <td class="test-class"><input name="radio-selection" type="radio" value="1"></td>
             </tr>
             </tbody>
             </table>
@@ -126,19 +126,19 @@ final class CheckboxColumnTest extends TestCase
             <tr>
             <th>Id</th>
             <th>Name</th>
-            <th><input type="checkbox" class="select-on-check-all" name="checkbox-selection-all" value="1"></th>
+            <th>&nbsp;</th>
             </tr>
             </thead>
             <tbody>
             <tr>
             <td data-label="id">1</td>
             <td data-label="name">John</td>
-            <td data-label="test.label"><input type="checkbox" name="checkbox-selection" value="0" data-label="test.label"></td>
+            <td data-label="test.label"><input type="radio" name="radio-selection" value="0" data-label="test.label"></td>
             </tr>
             <tr>
             <td data-label="id">2</td>
             <td data-label="name">Mary</td>
-            <td data-label="test.label"><input type="checkbox" name="checkbox-selection" value="1" data-label="test.label"></td>
+            <td data-label="test.label"><input type="radio" name="radio-selection" value="1" data-label="test.label"></td>
             </tr>
             </tbody>
             </table>
@@ -176,12 +176,12 @@ final class CheckboxColumnTest extends TestCase
             <tr>
             <td data-label="id">1</td>
             <td data-label="name">John</td>
-            <td data-label="test.label"><input type="checkbox" name="checkbox-selection" value="0"></td>
+            <td data-label="test.label"><input type="radio" name="radio-selection" value="0"></td>
             </tr>
             <tr>
             <td data-label="id">2</td>
             <td data-label="name">Mary</td>
-            <td data-label="test.label"><input type="checkbox" name="checkbox-selection" value="1"></td>
+            <td data-label="test.label"><input type="radio" name="radio-selection" value="1"></td>
             </tr>
             </tbody>
             </table>
@@ -212,19 +212,19 @@ final class CheckboxColumnTest extends TestCase
             <tr>
             <th>Id</th>
             <th>Name</th>
-            <th>Πλαίσιο ελέγχου</th>
+            <th>Ραδιόφωνο</th>
             </tr>
             </thead>
             <tbody>
             <tr>
             <td data-label="id">1</td>
             <td data-label="name">John</td>
-            <td data-label="πλαίσιο ελέγχου"><input type="checkbox" name="checkbox-selection" value="0"></td>
+            <td data-label="ραδιόφωνο"><input type="radio" name="radio-selection" value="0"></td>
             </tr>
             <tr>
             <td data-label="id">2</td>
             <td data-label="name">Mary</td>
-            <td data-label="πλαίσιο ελέγχου"><input type="checkbox" name="checkbox-selection" value="1"></td>
+            <td data-label="ραδιόφωνο"><input type="radio" name="radio-selection" value="1"></td>
             </tr>
             </tbody>
             </table>
@@ -255,19 +255,19 @@ final class CheckboxColumnTest extends TestCase
             <tr>
             <th>Id</th>
             <th>Name</th>
-            <th class="test.class">test.label</th>
+            <th class="test-class">test.label</th>
             </tr>
             </thead>
             <tbody>
             <tr>
             <td data-label="id">1</td>
             <td data-label="name">John</td>
-            <td data-label="test.label"><input type="checkbox" name="checkbox-selection" value="0"></td>
+            <td data-label="test.label"><input type="radio" name="radio-selection" value="0"></td>
             </tr>
             <tr>
             <td data-label="id">2</td>
             <td data-label="name">Mary</td>
-            <td data-label="test.label"><input type="checkbox" name="checkbox-selection" value="1"></td>
+            <td data-label="test.label"><input type="radio" name="radio-selection" value="1"></td>
             </tr>
             </tbody>
             </table>
@@ -298,19 +298,19 @@ final class CheckboxColumnTest extends TestCase
             <tr>
             <th>Id</th>
             <th>Name</th>
-            <th><input type="checkbox" class="select-on-check-all" name="checkbox-selection-all" value="1"></th>
+            <th>&nbsp;</th>
             </tr>
             </thead>
             <tbody>
             <tr>
             <td data-label="id">1</td>
             <td data-label="name">John</td>
-            <td name="test.checkbox"><input type="checkbox" name="test.checkbox" value="0"></td>
+            <td name="test.radio"><input type="radio" name="test.radio" value="0"></td>
             </tr>
             <tr>
             <td data-label="id">2</td>
             <td data-label="name">Mary</td>
-            <td name="test.checkbox"><input type="checkbox" name="test.checkbox" value="1"></td>
+            <td name="test.radio"><input type="radio" name="test.radio" value="1"></td>
             </tr>
             </tbody>
             </table>
@@ -319,49 +319,6 @@ final class CheckboxColumnTest extends TestCase
             HTML,
             GridView::widget()
                 ->columns($this->createColumnsWithName())
-                ->id('w1-grid')
-                ->paginator($this->createOffsetPaginator($this->data, 10))
-                ->render()
-        );
-    }
-
-    /**
-     * @throws InvalidConfigException
-     * @throws NotFoundException
-     * @throws NotInstantiableException
-     * @throws CircularReferenceException
-     */
-    public function testNotMultiple(): void
-    {
-        Assert::equalsWithoutLE(
-            <<<HTML
-            <div id="w1-grid">
-            <table class="table">
-            <thead>
-            <tr>
-            <th>Id</th>
-            <th>Name</th>
-            <th>&nbsp;</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr>
-            <td data-label="id">1</td>
-            <td data-label="name">John</td>
-            <td><input type="checkbox" name="checkbox-selection" value="0"></td>
-            </tr>
-            <tr>
-            <td data-label="id">2</td>
-            <td data-label="name">Mary</td>
-            <td><input type="checkbox" name="checkbox-selection" value="1"></td>
-            </tr>
-            </tbody>
-            </table>
-            <div>dataview.summary</div>
-            </div>
-            HTML,
-            GridView::widget()
-                ->columns($this->createColumnsWithNotMultiple())
                 ->id('w1-grid')
                 ->paginator($this->createOffsetPaginator($this->data, 10))
                 ->render()
@@ -424,19 +381,19 @@ final class CheckboxColumnTest extends TestCase
             <tr>
             <th>Id</th>
             <th>Name</th>
-            <th><input type="checkbox" class="select-on-check-all" name="checkbox-selection-all" value="1"></th>
+            <th>&nbsp;</th>
             </tr>
             </thead>
             <tbody>
             <tr>
             <td data-label="id">1</td>
             <td data-label="name">John</td>
-            <td><input type="checkbox" name="checkbox-selection" value="0"></td>
+            <td><input type="radio" name="radio-selection" value="0"></td>
             </tr>
             <tr>
             <td data-label="id">2</td>
             <td data-label="name">Mary</td>
-            <td><input type="checkbox" name="checkbox-selection" value="1"></td>
+            <td><input type="radio" name="radio-selection" value="1"></td>
             </tr>
             </tbody>
             </table>
@@ -452,128 +409,116 @@ final class CheckboxColumnTest extends TestCase
     }
 
     /**
-     * @psalm-return array<DataColumn|CheckboxColumn>
+     * @psalm-return array<DataColumn|RadioColumn>
      */
     private function createColumns(): array
     {
         return [
             DataColumn::create()->attribute('id'),
             DataColumn::create()->attribute('name'),
-            CheckboxColumn::create(),
+            RadioColumn::create(),
         ];
     }
 
     /**
-     * @psalm-return array<DataColumn|CheckboxColumn>
+     * @psalm-return array<DataColumn|RadioColumn>
      */
     private function createColumnsWithContent(): array
     {
         return [
             DataColumn::create()->attribute('id'),
             DataColumn::create()->attribute('name'),
-            CheckboxColumn::create()->content(
-                static fn (array|object $data, mixed $key, int $index): string => '<input name="checkbox-selection" type="checkbox" value="' . $index . '">'
+            RadioColumn::create()->content(
+                static fn (array $data, mixed $key, int $index): string => '<input name="radio-selection" type="radio" value="' . $index . '">'
             ),
         ];
     }
 
     /**
-     * @psalm-return array<DataColumn|CheckboxColumn>
+     * @psalm-return array<DataColumn|RadioColumn>
      */
     private function createColumnsWithContentAttributes(): array
     {
         return [
             DataColumn::create()->attribute('id'),
             DataColumn::create()->attribute('name'),
-            CheckboxColumn::create()
+            RadioColumn::create()
                 ->content(
-                    static fn (array|object $data, mixed $key, int $index): string => '<input name="checkbox-selection" type="checkbox" value="' . $index . '">'
+                    static fn (array $data, mixed $key, int $index): string => '<input name="radio-selection" type="radio" value="' . $index . '">'
                 )
-                ->contentAttributes(['class' => 'test.class']),
+                ->contentAttributes(['class' => 'test-class']),
         ];
     }
 
     /**
-     * @psalm-return array<DataColumn|CheckboxColumn>
+     * @psalm-return array<DataColumn|RadioColumn>
      */
     private function createColumnsWithDataLabel(): array
     {
         return [
             DataColumn::create()->attribute('id'),
             DataColumn::create()->attribute('name'),
-            CheckboxColumn::create()->dataLabel('test.label'),
+            RadioColumn::create()->dataLabel('test.label'),
         ];
     }
 
     /**
-     * @psalm-return array<DataColumn|CheckboxColumn>
+     * @psalm-return array<DataColumn|RadioColumn>
      */
     private function createColumnsWithLabel(): array
     {
         return [
             DataColumn::create()->attribute('id'),
             DataColumn::create()->attribute('name'),
-            CheckboxColumn::create()->label('test.label'),
+            RadioColumn::create()->label('test.label'),
         ];
     }
 
     /**
-     * @psalm-return array<DataColumn|CheckboxColumn>
+     * @psalm-return array<DataColumn|RadioColumn>
      */
     private function createColumnsWithLabelMbString(): array
     {
         return [
             DataColumn::create()->attribute('id'),
             DataColumn::create()->attribute('name'),
-            CheckboxColumn::create()->label('Πλαίσιο ελέγχου'),
+            RadioColumn::create()->label('Ραδιόφωνο'),
         ];
     }
 
     /**
-     * @psalm-return array<DataColumn|CheckboxColumn>
+     * @psalm-return array<DataColumn|RadioColumn>
      */
     private function createColumnsWithLabelAttributes(): array
     {
         return [
             DataColumn::create()->attribute('id'),
             DataColumn::create()->attribute('name'),
-            CheckboxColumn::create()->label('test.label')->labelAttributes(['class' => 'test.class']),
+            RadioColumn::create()->label('test.label')->labelAttributes(['class' => 'test-class']),
         ];
     }
 
     /**
-     * @psalm-return array<DataColumn|CheckboxColumn>
+     * @psalm-return array<DataColumn|RadioColumn>
      */
     private function createColumnsWithName(): array
     {
         return [
             DataColumn::create()->attribute('id'),
             DataColumn::create()->attribute('name'),
-            CheckboxColumn::create()->name('test.checkbox'),
+            RadioColumn::create()->name('test.radio'),
         ];
     }
 
     /**
-     * @psalm-return array<DataColumn|CheckboxColumn>
-     */
-    private function createColumnsWithNotMultiple(): array
-    {
-        return [
-            DataColumn::create()->attribute('id'),
-            DataColumn::create()->attribute('name'),
-            CheckboxColumn::create()->multiple(false),
-        ];
-    }
-
-    /**
-     * @psalm-return array<DataColumn|CheckboxColumn>
+     * @psalm-return array<DataColumn|RadioColumn>
      */
     private function createColumnsWithNotVisible(): array
     {
         return [
             DataColumn::create()->attribute('id'),
             DataColumn::create()->attribute('name'),
-            CheckboxColumn::create()->visible(false),
+            RadioColumn::create()->visible(false),
         ];
     }
 }

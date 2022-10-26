@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Yiisoft\Yii\DataView\Column;
+namespace Yiisoft\Yii\DataView\Column\GridView;
 
 use Closure;
 use InvalidArgumentException;
@@ -31,7 +31,7 @@ use function sprintf;
  * calculation, while the actual cell content is a {@see format|formatted} version of that value which may contain HTML
  * markup.
  */
-final class DataColumn extends Column
+final class DataColumn extends AbstractColumn
 {
     private string $attribute = '';
     private string $filter = '';

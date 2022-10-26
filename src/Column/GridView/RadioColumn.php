@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Yiisoft\Yii\DataView\Column;
+namespace Yiisoft\Yii\DataView\Column\GridView;
 
 use Yiisoft\Html\Tag\Input;
 
@@ -11,7 +11,7 @@ use function json_encode;
 /**
  * RadioButtonColumn displays a column of radio buttons in a grid view.
  */
-final class RadioColumn extends Column
+final class RadioColumn extends AbstractColumn
 {
     /**
      * Renders the data cell content.

@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Yiisoft\Yii\DataView\Column;
+namespace Yiisoft\Yii\DataView\Column\GridView;
 
 use Yiisoft\Html\Tag\Input;
 
 /**
  * CheckboxColumn displays a column of checkboxes in a grid view.
  */
-final class CheckboxColumn extends Column
+final class CheckboxColumn extends AbstractColumn
 {
     private bool $multiple = true;
 

@@ -5,6 +5,10 @@ declare(strict_types=1);
 namespace Yiisoft\Yii\DataView;
 
 use Closure;
+use Yiisoft\Definitions\Exception\CircularReferenceException;
+use Yiisoft\Definitions\Exception\InvalidConfigException;
+use Yiisoft\Definitions\Exception\NotInstantiableException;
+use Yiisoft\Factory\NotFoundException;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\Col;
 use Yiisoft\Html\Tag\Colgroup;
@@ -14,6 +18,9 @@ use Yiisoft\Html\Tag\Tr;
 use Yiisoft\Router\CurrentRoute;
 use Yiisoft\Router\UrlGeneratorInterface;
 use Yiisoft\Translator\TranslatorInterface;
+use Yiisoft\Yii\DataView\Column\GridView\AbstractColumn;
+use Yiisoft\Yii\DataView\Column\GridView\ActionColumn;
+use Yiisoft\Yii\DataView\Column\GridView\DataColumn;
 
 /**
  * The GridView widget is used to display data in a grid.
@@ -32,7 +39,7 @@ final class GridView extends BaseListView
     public const FILTER_POS_BODY = 'body';
     private Closure|null $afterRow = null;
     private Closure|null $beforeRow = null;
-    /** @psalm-var array<array-key,Column\Column|null> */
+    /** @psalm-var array<array-key,AbstractColumn|null> */
     private array $columns = [];
     private bool $columnsGroupEnabled = false;
     private string $emptyCell = '&nbsp;';
@@ -98,7 +105,7 @@ final class GridView extends BaseListView
      * ]
      * ```
      *
-     * @psalm-param array<array-key,Column\Column|null> $values
+     * @psalm-param array<array-key,AbstractColumn|null> $values
      */
     public function columns(array $values): self
     {
@@ -266,6 +273,11 @@ final class GridView extends BaseListView
 
     /**
      * Renders the data active record classes for the grid view.
+     *
+     * @throws InvalidConfigException
+     * @throws NotFoundException
+     * @throws NotInstantiableException
+     * @throws CircularReferenceException
      */
     protected function renderItems(): string
     {
@@ -287,7 +299,7 @@ final class GridView extends BaseListView
      * This function tries to guess the columns to show from the given data if {@see columns} are not explicitly
      * specified.
      *
-     * @psalm-return list<Column\ActionColumn|Column\DataColumn>
+     * @psalm-return list<ActionColumn|DataColumn>
      */
     private function guessColumns(): array
     {
@@ -304,14 +316,14 @@ final class GridView extends BaseListView
              */
             foreach ($data as $name => $value) {
                 if ($value === null || is_scalar($value) || is_callable([$value, '__toString'])) {
-                    $columns[] = Column\DataColumn::create()->attribute($name);
+                    $columns[] = DataColumn::create()->attribute($name);
                 }
             }
             break;
         }
 
         if ($dataReader !== []) {
-            $columns[] = Column\ActionColumn::create();
+            $columns[] = ActionColumn::create();
         }
 
         return $columns;
@@ -320,7 +332,12 @@ final class GridView extends BaseListView
     /**
      * Creates column objects and initializes them.
      *
-     * @psalm-return array<array-key,Column\Column|null>
+     * @throws InvalidConfigException
+     * @throws NotFoundException
+     * @throws NotInstantiableException
+     * @throws CircularReferenceException
+     *
+     * @psalm-return array<array-key,AbstractColumn|null>
      */
     private function renderColumns(): array
     {
@@ -331,17 +348,17 @@ final class GridView extends BaseListView
         }
 
         foreach ($columns as $i => $column) {
-            if ($column instanceof Column\Column && $column->isVisible()) {
+            if ($column instanceof AbstractColumn && $column->isVisible()) {
                 $column = $column->emptyCell($this->emptyCell);
 
-                if ($column instanceof Column\ActionColumn) {
+                if ($column instanceof ActionColumn) {
                     $column = $column
                         ->createDefaultButtons()
                         ->urlGenerator($this->getUrlGenerator())
                         ->urlName($this->currentRoute->getName() ?? '');
                 }
 
-                if ($column instanceof Column\DataColumn) {
+                if ($column instanceof DataColumn) {
                     $linkSorter = $this->renderLinkSorter($column->getAttribute(), $column->getLabel());
                     $column = $column->filterModelName($this->filterModelName);
 
@@ -364,14 +381,14 @@ final class GridView extends BaseListView
      *
      * @param array $columns The columns of gridview.
      *
-     * @psalm-param array<array-key,Column\Column|null> $columns
+     * @psalm-param array<array-key,AbstractColumn|null> $columns
      */
     private function renderColumnGroup(array $columns): string
     {
         $cols = [];
 
         foreach ($columns as $column) {
-            if ($column instanceof Column\Column) {
+            if ($column instanceof AbstractColumn) {
                 $cols[] = Col::tag()->addAttributes($column->getAttributes());
             }
         }
@@ -386,7 +403,7 @@ final class GridView extends BaseListView
      *
      * @return string The rendering result.
      *
-     * @psalm-param array<array-key,Column\Column|null> $columns
+     * @psalm-param array<array-key,AbstractColumn|null> $columns
      */
     private function renderFilters(array $columns): string
     {
@@ -397,7 +414,7 @@ final class GridView extends BaseListView
         Html::addCssClass($filterRowAttributes, 'filters');
 
         foreach ($columns as $column) {
-            if ($column instanceof Column\DataColumn && ($column->getFilter() !== '' || $column->getFilterAttribute() !== '')) {
+            if ($column instanceof DataColumn && ($column->getFilter() !== '' || $column->getFilterAttribute() !== '')) {
                 $cells[] = $column->renderFilterCell();
                 $countFilter++;
             } else {
@@ -418,7 +435,7 @@ final class GridView extends BaseListView
      *
      * @param array $columns The columns of gridview.
      *
-     * @psalm-param array<array-key,Column\Column|null> $columns
+     * @psalm-param array<array-key,AbstractColumn|null> $columns
      */
     private function renderTableBody(array $columns): string
     {
@@ -468,7 +485,7 @@ final class GridView extends BaseListView
      *
      * @param array $columns The columns of gridview.
      *
-     * @psalm-param array<array-key,Column\Column|null> $columns
+     * @psalm-param array<array-key,AbstractColumn|null> $columns
      */
     private function renderTableFooter(array $columns): string
     {
@@ -476,7 +493,7 @@ final class GridView extends BaseListView
         $footerRowAttributes = $this->footerRowAttributes;
 
         foreach ($columns as $column) {
-            if ($column instanceof Column\Column) {
+            if ($column instanceof AbstractColumn) {
                 $cells[] = $column->renderFooterCell();
             }
         }
@@ -497,7 +514,7 @@ final class GridView extends BaseListView
      *
      * @param array $columns The columns of gridview.
      *
-     * @psalm-param array<array-key,Column\Column|null> $columns
+     * @psalm-param array<array-key,AbstractColumn|null> $columns
      */
     private function renderTableHeader(array $columns): string
     {
@@ -505,7 +522,7 @@ final class GridView extends BaseListView
         $cells = '';
 
         foreach ($columns as $column) {
-            if ($column instanceof Column\Column) {
+            if ($column instanceof AbstractColumn) {
                 $cell[] = $column->renderHeaderCell();
             }
         }
@@ -534,7 +551,7 @@ final class GridView extends BaseListView
      * @param mixed $key The key associated with the data.
      * @param int $index The zero-based index of the data in the data provider.
      *
-     * @psalm-param array<array-key,Column\Column|null> $columns
+     * @psalm-param array<array-key,AbstractColumn|null> $columns
      */
     private function renderTableRow(array $columns, array|object $data, mixed $key, int $index): string
     {
@@ -542,7 +559,7 @@ final class GridView extends BaseListView
         $content = '';
 
         foreach ($columns as $column) {
-            if ($column instanceof Column\Column) {
+            if ($column instanceof AbstractColumn) {
                 $cells[] = $column->renderDataCell($data, $key, $index);
             }
         }

@@ -9,6 +9,7 @@ use InvalidArgumentException;
 use JsonException;
 use Yiisoft\Html\Html;
 use Yiisoft\Widget\Widget;
+use Yiisoft\Yii\DataView\Column\DetailView\DataColumn;
 
 /**
  * DetailView displays the detail of a single data.
@@ -62,18 +63,20 @@ final class DetailView extends Widget
     /**
      * Return a new instance the specified columns.
      *
-     * @param array $values The grid column configuration. Each array element represents the configuration for one
-     * particular grid column. For example,
+     * @param DataColumn ...$value The `DetailView` column configuration. Each object represents the configuration for
+     * one particular DetailView column. For example,
      *
      * ```php
      * [
+     *    DataColumn::create()->label('Name')->value($data->name),
      * ]
      * ```
+     * @return DetailView
      */
-    public function columns(array $values): self
+    public function columns(DataColumn ...$value): self
     {
         $new = clone $this;
-        $new->columns = $values;
+        $new->columns = $value;
 
         return $new;
     }
@@ -305,37 +308,24 @@ final class DetailView extends Widget
     {
         $normalized = [];
 
-        /** @psalm-var array[] $columns */
-        foreach ($columns as $value) {
-            if (!isset($value['attribute'])) {
-                throw new InvalidArgumentException('The "attribute" must be set.');
+        /** @psalm-var DataColumn[] $columns */
+        foreach ($columns as $column) {
+            if ($column->getLabel() === '') {
+                throw new InvalidArgumentException('The "attribute" or "label" must be set.');
             }
 
-            if (!is_string($value['attribute'])) {
-                throw new InvalidArgumentException('The "attribute" must be a string.');
-            }
-
-            if (isset($value['label']) && !is_string($value['label'])) {
-                throw new InvalidArgumentException('The "label" must be a string.');
-            }
-
-            $attribute = $value['attribute'] ?? '';
-            /** @var string */
-            $label = $value['label'] ?? $value['attribute'];
-            /** @var array|Closure */
-            $labelAttributes = $value['labelAttributes'] ?? $this->labelAttributes;
-            /** @var string */
-            $labelTag = $value['labelTag'] ?? $this->labelTag;
-            /** @var array|Closure */
-            $valueAttributes = $value['valueAttributes'] ?? $this->valueAttributes;
-            /** @var string */
-            $valueTag = $value['valueTag'] ?? $this->valueTag;
+            $labelAttributes = $column->getLabelAttributes() === []
+                ? $this->labelAttributes : $column->getLabelAttributes();
+            $labelTag = $column->getLabelTag() === '' ? $this->labelTag : $column->getLabelTag();
+            $valueTag = $column->getValueTag() === '' ? $this->valueTag : $column->getValueTag();
+            $valueAttributes = $column->getValueAttributes() === []
+                ? $this->valueAttributes : $column->getValueAttributes();
 
             $normalized[] = [
-                'label' => Html::encode($label),
+                'label' => Html::encode($column->getLabel()),
                 'labelAttributes' => $this->renderAttributes($labelAttributes),
                 'labelTag' => Html::encode($labelTag),
-                'value' => Html::encodeAttribute($this->renderValue($attribute, $value['value'] ?? null)),
+                'value' => Html::encodeAttribute($this->renderValue($column->getAttribute(), $column->getValue())),
                 'valueAttributes' => $this->renderAttributes($valueAttributes),
                 'valueTag' => Html::encode($valueTag),
             ];

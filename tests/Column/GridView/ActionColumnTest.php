@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Yiisoft\Yii\DataView\Tests\GridView;
+namespace Yiisoft\Yii\DataView\Tests\Column\GridView;
 
 use PHPUnit\Framework\TestCase;
 use Yiisoft\Definitions\Exception\CircularReferenceException;
@@ -10,8 +10,8 @@ use Yiisoft\Definitions\Exception\InvalidConfigException;
 use Yiisoft\Definitions\Exception\NotInstantiableException;
 use Yiisoft\Factory\NotFoundException;
 use Yiisoft\Html\Tag\A;
-use Yiisoft\Yii\DataView\Column\ActionColumn;
-use Yiisoft\Yii\DataView\Column\DataColumn;
+use Yiisoft\Yii\DataView\Column\GridView\ActionColumn;
+use Yiisoft\Yii\DataView\Column\GridView\DataColumn;
 use Yiisoft\Yii\DataView\GridView;
 use Yiisoft\Yii\DataView\Tests\Support\Assert;
 use Yiisoft\Yii\DataView\Tests\Support\TestTrait;

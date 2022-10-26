@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Yiisoft\Yii\DataView\Column;
+namespace Yiisoft\Yii\DataView\Column\GridView;
 
 /**
  * SerialColumn displays a column of row numbers (1-based).
  */
-final class SerialColumn extends Column
+final class SerialColumn extends AbstractColumn
 {
     protected function getLabel(): string
     {

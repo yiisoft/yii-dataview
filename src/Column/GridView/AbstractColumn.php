@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Yiisoft\Yii\DataView\Column;
+namespace Yiisoft\Yii\DataView\Column\GridView;
 
 use Closure;
 use Yiisoft\Html\Tag\Td;
@@ -13,7 +13,7 @@ use function mb_strtolower;
 /**
  * Column is the base class of all {@see GridView} column classes.
  */
-abstract class Column
+abstract class AbstractColumn
 {
     private array $attributes = [];
     private Closure|null $content = null;

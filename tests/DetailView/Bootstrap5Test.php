@@ -10,6 +10,7 @@ use Yiisoft\Definitions\Exception\InvalidConfigException;
 use Yiisoft\Definitions\Exception\NotInstantiableException;
 use Yiisoft\Factory\NotFoundException;
 use Yiisoft\Html\Tag\H2;
+use Yiisoft\Yii\DataView\Column\DetailView\DataColumn;
 use Yiisoft\Yii\DataView\DetailView;
 use Yiisoft\Yii\DataView\Tests\Support\Assert;
 use Yiisoft\Yii\DataView\Tests\Support\TestTrait;
@@ -49,20 +50,9 @@ final class Bootstrap5Test extends TestCase
             DetailView::widget()
                 ->attributes(['class' => 'container'])
                 ->columns(
-                    [
-                        [
-                            'attribute' => 'id',
-                            'label' => 'Id',
-                        ],
-                        [
-                            'attribute' => 'login',
-                            'label' => 'login',
-                        ],
-                        [
-                            'attribute' => 'created_at',
-                            'label' => 'Created At',
-                        ],
-                    ],
+                    DataColumn::create()->attribute('id')->label('Id'),
+                    DataColumn::create()->attribute('login'),
+                    DataColumn::create()->attribute('created_at')->label('Created At'),
                 )
                 ->containerAttributes(['class' => 'row flex-column justify-content-center align-items-center'])
                 ->data(
@@ -111,20 +101,9 @@ final class Bootstrap5Test extends TestCase
             DetailView::widget()
                 ->attributes(['class' => 'table table-success table-striped'])
                 ->columns(
-                    [
-                        [
-                            'attribute' => 'id',
-                            'label' => 'Id',
-                        ],
-                        [
-                            'attribute' => 'login',
-                            'label' => 'login',
-                        ],
-                        [
-                            'attribute' => 'created_at',
-                            'label' => 'Created At',
-                        ],
-                    ],
+                    DataColumn::create()->attribute('id')->label('Id'),
+                    DataColumn::create()->attribute('login'),
+                    DataColumn::create()->attribute('created_at')->label('Created At'),
                 )
                 ->data(
                     [

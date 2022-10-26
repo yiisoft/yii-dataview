@@ -2,19 +2,20 @@
 
 declare(strict_types=1);
 
-namespace Yiisoft\Yii\DataView\Tests\GridView;
+namespace Yiisoft\Yii\DataView\Tests\Column\GridView;
 
 use PHPUnit\Framework\TestCase;
 use Yiisoft\Definitions\Exception\CircularReferenceException;
 use Yiisoft\Definitions\Exception\InvalidConfigException;
 use Yiisoft\Definitions\Exception\NotInstantiableException;
 use Yiisoft\Factory\NotFoundException;
-use Yiisoft\Yii\DataView\Column\DataColumn;
+use Yiisoft\Yii\DataView\Column\GridView\CheckboxColumn;
+use Yiisoft\Yii\DataView\Column\GridView\DataColumn;
 use Yiisoft\Yii\DataView\GridView;
 use Yiisoft\Yii\DataView\Tests\Support\Assert;
 use Yiisoft\Yii\DataView\Tests\Support\TestTrait;
 
-final class DataColumnTest extends TestCase
+final class CheckboxColumnTest extends TestCase
 {
     use TestTrait;
 
@@ -39,16 +40,19 @@ final class DataColumnTest extends TestCase
             <tr>
             <th>Id</th>
             <th>Name</th>
+            <th><input type="checkbox" class="select-on-check-all" name="checkbox-selection-all" value="1"></th>
             </tr>
             </thead>
             <tbody>
             <tr>
             <td data-label="id">1</td>
             <td data-label="name">John</td>
+            <td><input name="checkbox-selection" type="checkbox" value="0"></td>
             </tr>
             <tr>
             <td data-label="id">2</td>
             <td data-label="name">Mary</td>
+            <td><input name="checkbox-selection" type="checkbox" value="1"></td>
             </tr>
             </tbody>
             </table>
@@ -79,16 +83,19 @@ final class DataColumnTest extends TestCase
             <tr>
             <th>Id</th>
             <th>Name</th>
+            <th><input type="checkbox" class="select-on-check-all" name="checkbox-selection-all" value="1"></th>
             </tr>
             </thead>
             <tbody>
             <tr>
-            <td class="test.class" data-label="id">1</td>
-            <td class="test.class" data-label="name">John</td>
+            <td data-label="id">1</td>
+            <td data-label="name">John</td>
+            <td class="test.class"><input name="checkbox-selection" type="checkbox" value="0"></td>
             </tr>
             <tr>
-            <td class="test.class" data-label="id">2</td>
-            <td class="test.class" data-label="name">Mary</td>
+            <td data-label="id">2</td>
+            <td data-label="name">Mary</td>
+            <td class="test.class"><input name="checkbox-selection" type="checkbox" value="1"></td>
             </tr>
             </tbody>
             </table>
@@ -97,46 +104,6 @@ final class DataColumnTest extends TestCase
             HTML,
             GridView::widget()
                 ->columns($this->createColumnsWithContentAttributes())
-                ->id('w1-grid')
-                ->paginator($this->createOffsetPaginator($this->data, 10))
-                ->render()
-        );
-    }
-
-    /**
-     * @throws InvalidConfigException
-     * @throws NotFoundException
-     * @throws NotInstantiableException
-     * @throws CircularReferenceException
-     */
-    public function testContentAttributesClosure(): void
-    {
-        Assert::equalsWithoutLE(
-            <<<HTML
-            <div id="w1-grid">
-            <table class="table">
-            <thead>
-            <tr>
-            <th>Id</th>
-            <th>Name</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr>
-            <td class="test.class" data-label="id">1</td>
-            <td class="test.class" data-label="name">John</td>
-            </tr>
-            <tr>
-            <td class="test.class" data-label="id">2</td>
-            <td class="test.class" data-label="name">Mary</td>
-            </tr>
-            </tbody>
-            </table>
-            <div>dataview.summary</div>
-            </div>
-            HTML,
-            GridView::widget()
-                ->columns($this->createColumnsWithContentAttributesClosure())
                 ->id('w1-grid')
                 ->paginator($this->createOffsetPaginator($this->data, 10))
                 ->render()
@@ -159,16 +126,19 @@ final class DataColumnTest extends TestCase
             <tr>
             <th>Id</th>
             <th>Name</th>
+            <th><input type="checkbox" class="select-on-check-all" name="checkbox-selection-all" value="1"></th>
             </tr>
             </thead>
             <tbody>
             <tr>
-            <td data-label="test.id">1</td>
-            <td data-label="test.name">John</td>
+            <td data-label="id">1</td>
+            <td data-label="name">John</td>
+            <td data-label="test.label"><input type="checkbox" name="checkbox-selection" value="0" data-label="test.label"></td>
             </tr>
             <tr>
-            <td data-label="test.id">2</td>
-            <td data-label="test.name">Mary</td>
+            <td data-label="id">2</td>
+            <td data-label="name">Mary</td>
+            <td data-label="test.label"><input type="checkbox" name="checkbox-selection" value="1" data-label="test.label"></td>
             </tr>
             </tbody>
             </table>
@@ -197,18 +167,21 @@ final class DataColumnTest extends TestCase
             <table class="table">
             <thead>
             <tr>
-            <th>test.id</th>
-            <th>test.username</th>
+            <th>Id</th>
+            <th>Name</th>
+            <th>test.label</th>
             </tr>
             </thead>
             <tbody>
             <tr>
-            <td data-label="test.id">1</td>
-            <td data-label="test.username">John</td>
+            <td data-label="id">1</td>
+            <td data-label="name">John</td>
+            <td data-label="test.label"><input type="checkbox" name="checkbox-selection" value="0"></td>
             </tr>
             <tr>
-            <td data-label="test.id">2</td>
-            <td data-label="test.username">Mary</td>
+            <td data-label="id">2</td>
+            <td data-label="name">Mary</td>
+            <td data-label="test.label"><input type="checkbox" name="checkbox-selection" value="1"></td>
             </tr>
             </tbody>
             </table>
@@ -238,17 +211,20 @@ final class DataColumnTest extends TestCase
             <thead>
             <tr>
             <th>Id</th>
-            <th>Όνομα χρήστη</th>
+            <th>Name</th>
+            <th>Πλαίσιο ελέγχου</th>
             </tr>
             </thead>
             <tbody>
             <tr>
             <td data-label="id">1</td>
-            <td data-label="όνομα χρήστη">John</td>
+            <td data-label="name">John</td>
+            <td data-label="πλαίσιο ελέγχου"><input type="checkbox" name="checkbox-selection" value="0"></td>
             </tr>
             <tr>
             <td data-label="id">2</td>
-            <td data-label="όνομα χρήστη">Mary</td>
+            <td data-label="name">Mary</td>
+            <td data-label="πλαίσιο ελέγχου"><input type="checkbox" name="checkbox-selection" value="1"></td>
             </tr>
             </tbody>
             </table>
@@ -277,18 +253,21 @@ final class DataColumnTest extends TestCase
             <table class="table">
             <thead>
             <tr>
-            <th class="test.class">test.id</th>
-            <th class="test.class">test.username</th>
+            <th>Id</th>
+            <th>Name</th>
+            <th class="test.class">test.label</th>
             </tr>
             </thead>
             <tbody>
             <tr>
-            <td data-label="test.id">1</td>
-            <td data-label="test.username">John</td>
+            <td data-label="id">1</td>
+            <td data-label="name">John</td>
+            <td data-label="test.label"><input type="checkbox" name="checkbox-selection" value="0"></td>
             </tr>
             <tr>
-            <td data-label="test.id">2</td>
-            <td data-label="test.username">Mary</td>
+            <td data-label="id">2</td>
+            <td data-label="name">Mary</td>
+            <td data-label="test.label"><input type="checkbox" name="checkbox-selection" value="1"></td>
             </tr>
             </tbody>
             </table>
@@ -309,7 +288,7 @@ final class DataColumnTest extends TestCase
      * @throws NotInstantiableException
      * @throws CircularReferenceException
      */
-    public function testLinkSorter(): void
+    public function testName(): void
     {
         Assert::equalsWithoutLE(
             <<<HTML
@@ -317,18 +296,21 @@ final class DataColumnTest extends TestCase
             <table class="table">
             <thead>
             <tr>
-            <th><a href="/admin/manage/1/5?sort=id" data-sort="id">id</a></th>
-            <th><a href="/admin/manage/1/5?sort=name" data-sort="name">name</a></th>
+            <th>Id</th>
+            <th>Name</th>
+            <th><input type="checkbox" class="select-on-check-all" name="checkbox-selection-all" value="1"></th>
             </tr>
             </thead>
             <tbody>
             <tr>
             <td data-label="id">1</td>
             <td data-label="name">John</td>
+            <td name="test.checkbox"><input type="checkbox" name="test.checkbox" value="0"></td>
             </tr>
             <tr>
             <td data-label="id">2</td>
             <td data-label="name">Mary</td>
+            <td name="test.checkbox"><input type="checkbox" name="test.checkbox" value="1"></td>
             </tr>
             </tbody>
             </table>
@@ -336,7 +318,7 @@ final class DataColumnTest extends TestCase
             </div>
             HTML,
             GridView::widget()
-                ->columns($this->createColumnsWithLinkSorter())
+                ->columns($this->createColumnsWithName())
                 ->id('w1-grid')
                 ->paginator($this->createOffsetPaginator($this->data, 10))
                 ->render()
@@ -349,47 +331,7 @@ final class DataColumnTest extends TestCase
      * @throws NotInstantiableException
      * @throws CircularReferenceException
      */
-    public function testName(): void
-    {
-        Assert::equalsWithoutLE(
-            <<<HTML
-            <div id="w1-grid">
-            <table class="table">
-            <thead>
-            <tr>
-            <th><a class="asc" href="/admin/manage?page=1&amp;pagesize=10&amp;sort=-id%2Cname" data-sort="-id,name">Id <i class="bi bi-sort-alpha-up"></i></a></th>
-            <th><a class="asc" href="/admin/manage?page=1&amp;pagesize=10&amp;sort=-name%2Cid" data-sort="-name,id">Name <i class="bi bi-sort-alpha-up"></i></a></th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr>
-            <td name="test.id" data-label="id">1</td>
-            <td name="test.username" data-label="name">John</td>
-            </tr>
-            <tr>
-            <td name="test.id" data-label="id">2</td>
-            <td name="test.username" data-label="name">Mary</td>
-            </tr>
-            </tbody>
-            </table>
-            <div>dataview.summary</div>
-            </div>
-            HTML,
-            GridView::widget()
-                ->columns($this->createColumnsWithName())
-                ->id('w1-grid')
-                ->paginator($this->createOffsetPaginator($this->data, 10, 1, true))
-                ->render()
-        );
-    }
-
-    /**
-     * @throws InvalidConfigException
-     * @throws NotFoundException
-     * @throws NotInstantiableException
-     * @throws CircularReferenceException
-     */
-    public function testNotSorting(): void
+    public function testNotMultiple(): void
     {
         Assert::equalsWithoutLE(
             <<<HTML
@@ -398,17 +340,20 @@ final class DataColumnTest extends TestCase
             <thead>
             <tr>
             <th>Id</th>
-            <th><a class="asc" href="/admin/manage?page=1&amp;pagesize=10&amp;sort=-name%2Cid" data-sort="-name,id">Name <i class="bi bi-sort-alpha-up"></i></a></th>
+            <th>Name</th>
+            <th>&nbsp;</th>
             </tr>
             </thead>
             <tbody>
             <tr>
             <td data-label="id">1</td>
-            <td data-label="name">test</td>
+            <td data-label="name">John</td>
+            <td><input type="checkbox" name="checkbox-selection" value="0"></td>
             </tr>
             <tr>
             <td data-label="id">2</td>
-            <td data-label="name">test</td>
+            <td data-label="name">Mary</td>
+            <td><input type="checkbox" name="checkbox-selection" value="1"></td>
             </tr>
             </tbody>
             </table>
@@ -416,9 +361,9 @@ final class DataColumnTest extends TestCase
             </div>
             HTML,
             GridView::widget()
-                ->columns($this->createColumnsWithNotSorting())
+                ->columns($this->createColumnsWithNotMultiple())
                 ->id('w1-grid')
-                ->paginator($this->createOffsetPaginator($this->data, 10, 1, true))
+                ->paginator($this->createOffsetPaginator($this->data, 10))
                 ->render()
         );
     }
@@ -438,14 +383,17 @@ final class DataColumnTest extends TestCase
             <thead>
             <tr>
             <th>Id</th>
+            <th>Name</th>
             </tr>
             </thead>
             <tbody>
             <tr>
             <td data-label="id">1</td>
+            <td data-label="name">John</td>
             </tr>
             <tr>
             <td data-label="id">2</td>
+            <td data-label="name">Mary</td>
             </tr>
             </tbody>
             </table>
@@ -466,7 +414,7 @@ final class DataColumnTest extends TestCase
      * @throws NotInstantiableException
      * @throws CircularReferenceException
      */
-    public function testSort(): void
+    public function testRender(): void
     {
         Assert::equalsWithoutLE(
             <<<HTML
@@ -474,18 +422,21 @@ final class DataColumnTest extends TestCase
             <table class="table">
             <thead>
             <tr>
-            <th><a class="asc" href="/admin/manage?page=1&amp;pagesize=10&amp;sort=-id%2Cname" data-sort="-id,name">Id <i class="bi bi-sort-alpha-up"></i></a></th>
-            <th><a class="asc" href="/admin/manage?page=1&amp;pagesize=10&amp;sort=-name%2Cid" data-sort="-name,id">Name <i class="bi bi-sort-alpha-up"></i></a></th>
+            <th>Id</th>
+            <th>Name</th>
+            <th><input type="checkbox" class="select-on-check-all" name="checkbox-selection-all" value="1"></th>
             </tr>
             </thead>
             <tbody>
             <tr>
             <td data-label="id">1</td>
             <td data-label="name">John</td>
+            <td><input type="checkbox" name="checkbox-selection" value="0"></td>
             </tr>
             <tr>
             <td data-label="id">2</td>
             <td data-label="name">Mary</td>
+            <td><input type="checkbox" name="checkbox-selection" value="1"></td>
             </tr>
             </tbody>
             </table>
@@ -495,264 +446,134 @@ final class DataColumnTest extends TestCase
             GridView::widget()
                 ->columns($this->createColumns())
                 ->id('w1-grid')
-                ->paginator($this->createOffsetPaginator($this->data, 10, 1, true))
-                ->render()
-        );
-    }
-
-    /**
-     * @throws InvalidConfigException
-     * @throws NotFoundException
-     * @throws NotInstantiableException
-     * @throws CircularReferenceException
-     */
-    public function testValue(): void
-    {
-        Assert::equalsWithoutLE(
-            <<<HTML
-            <div id="w1-grid">
-            <table class="table">
-            <thead>
-            <tr>
-            <th>Id</th>
-            <th>Name</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr>
-            <td data-label="id">1</td>
-            <td data-label="name">test</td>
-            </tr>
-            <tr>
-            <td data-label="id">1</td>
-            <td data-label="name">test</td>
-            </tr>
-            </tbody>
-            </table>
-            <div>dataview.summary</div>
-            </div>
-            HTML,
-            GridView::widget()
-                ->columns($this->createColumnsWithValue())
-                ->id('w1-grid')
                 ->paginator($this->createOffsetPaginator($this->data, 10))
                 ->render()
         );
     }
 
     /**
-     * @throws InvalidConfigException
-     * @throws NotFoundException
-     * @throws NotInstantiableException
-     * @throws CircularReferenceException
-     */
-    public function testValueClosure(): void
-    {
-        Assert::equalsWithoutLE(
-            <<<HTML
-            <div id="w1-grid">
-            <table class="table">
-            <thead>
-            <tr>
-            <th>Id</th>
-            <th>Name</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr>
-            <td data-label="id">1</td>
-            <td data-label="name">John</td>
-            </tr>
-            <tr>
-            <td data-label="id">2</td>
-            <td data-label="name">Mary</td>
-            </tr>
-            </tbody>
-            </table>
-            <div>dataview.summary</div>
-            </div>
-            HTML,
-            GridView::widget()
-                ->columns($this->createColumnsWithValueClosure())
-                ->id('w1-grid')
-                ->paginator($this->createOffsetPaginator($this->data, 10))
-                ->render()
-        );
-    }
-
-    /**
-     * @psalm-return array<DataColumn>
+     * @psalm-return array<DataColumn|CheckboxColumn>
      */
     private function createColumns(): array
     {
         return [
             DataColumn::create()->attribute('id'),
             DataColumn::create()->attribute('name'),
+            CheckboxColumn::create(),
         ];
     }
 
     /**
-     * @psalm-return array<DataColumn>
+     * @psalm-return array<DataColumn|CheckboxColumn>
      */
     private function createColumnsWithContent(): array
     {
         return [
-            DataColumn::create()
-                ->attribute('id')
-                ->content(static fn (array $data): int => $data['id']),
-            DataColumn::create()
-                ->attribute('name')
-                ->content(static fn (array $data): string => $data['name']),
+            DataColumn::create()->attribute('id'),
+            DataColumn::create()->attribute('name'),
+            CheckboxColumn::create()->content(
+                static fn (array|object $data, mixed $key, int $index): string => '<input name="checkbox-selection" type="checkbox" value="' . $index . '">'
+            ),
         ];
     }
 
     /**
-     * @psalm-return array<DataColumn>
+     * @psalm-return array<DataColumn|CheckboxColumn>
      */
     private function createColumnsWithContentAttributes(): array
     {
         return [
-            DataColumn::create()
-                ->attribute('id')
-                ->content(static fn (array $data): int => $data['id'])
-                ->contentAttributes(['class' => 'test.class']),
-            DataColumn::create()
-                ->attribute('name')
-                ->content(static fn (array $data): string => $data['name'])
+            DataColumn::create()->attribute('id'),
+            DataColumn::create()->attribute('name'),
+            CheckboxColumn::create()
+                ->content(
+                    static fn (array|object $data, mixed $key, int $index): string => '<input name="checkbox-selection" type="checkbox" value="' . $index . '">'
+                )
                 ->contentAttributes(['class' => 'test.class']),
         ];
     }
 
     /**
-     * @psalm-return array<DataColumn>
-     */
-    private function createColumnsWithContentAttributesClosure(): array
-    {
-        return [
-            DataColumn::create()
-                ->attribute('id')
-                ->contentAttributes(['class' => static fn (): string => 'test.class']),
-            DataColumn::create()
-                ->attribute('name')
-                ->contentAttributes(['class' => static fn (): string => 'test.class']),
-        ];
-    }
-
-    /**
-     * @psalm-return array<DataColumn>
+     * @psalm-return array<DataColumn|CheckboxColumn>
      */
     private function createColumnsWithDataLabel(): array
     {
         return [
-            DataColumn::create()->attribute('id')->dataLabel('test.id'),
-            DataColumn::create()->attribute('name')->dataLabel('test.name'),
+            DataColumn::create()->attribute('id'),
+            DataColumn::create()->attribute('name'),
+            CheckboxColumn::create()->dataLabel('test.label'),
         ];
     }
 
     /**
-     * @psalm-return array<DataColumn>
+     * @psalm-return array<DataColumn|CheckboxColumn>
      */
     private function createColumnsWithLabel(): array
     {
         return [
-            DataColumn::create()->attribute('id')->label('test.id'),
-            DataColumn::create()->attribute('name')->label('test.username'),
+            DataColumn::create()->attribute('id'),
+            DataColumn::create()->attribute('name'),
+            CheckboxColumn::create()->label('test.label'),
         ];
     }
 
     /**
-     * @psalm-return array<DataColumn>
+     * @psalm-return array<DataColumn|CheckboxColumn>
      */
     private function createColumnsWithLabelMbString(): array
     {
         return [
             DataColumn::create()->attribute('id'),
-            DataColumn::create()->attribute('name')->label('Όνομα χρήστη'),
+            DataColumn::create()->attribute('name'),
+            CheckboxColumn::create()->label('Πλαίσιο ελέγχου'),
         ];
     }
 
     /**
-     * @psalm-return array<DataColumn>
+     * @psalm-return array<DataColumn|CheckboxColumn>
      */
     private function createColumnsWithLabelAttributes(): array
     {
         return [
-            DataColumn::create()->attribute('id')->label('test.id')->labelAttributes(['class' => 'test.class']),
-            DataColumn::create()->attribute('name')->label('test.username')->labelAttributes(['class' => 'test.class']),
+            DataColumn::create()->attribute('id'),
+            DataColumn::create()->attribute('name'),
+            CheckboxColumn::create()->label('test.label')->labelAttributes(['class' => 'test.class']),
         ];
     }
 
     /**
-     * @psalm-return array<DataColumn>
-     */
-    private function createColumnsWithLinkSorter(): array
-    {
-        return [
-            DataColumn::create()
-                ->attribute('id')
-                ->linkSorter('<a href="/admin/manage/1/5?sort=id" data-sort="id">id</a>'),
-            DataColumn::create()
-                ->attribute('name')
-                ->linkSorter('<a href="/admin/manage/1/5?sort=name" data-sort="name">name</a>'),
-        ];
-    }
-
-    /**
-     * @psalm-return array<DataColumn>
-     */
-    private function createColumnsWithNotSorting(): array
-    {
-        return [
-            DataColumn::create()->attribute('id')->withSorting(false),
-            DataColumn::create()->attribute('name')->value('test'),
-        ];
-    }
-
-    /**
-     * @psalm-return array<DataColumn>
+     * @psalm-return array<DataColumn|CheckboxColumn>
      */
     private function createColumnsWithName(): array
     {
         return [
-            DataColumn::create()->attribute('id')->name('test.id'),
-            DataColumn::create()->attribute('name')->name('test.username'),
+            DataColumn::create()->attribute('id'),
+            DataColumn::create()->attribute('name'),
+            CheckboxColumn::create()->name('test.checkbox'),
         ];
     }
 
     /**
-     * @psalm-return array<DataColumn>
+     * @psalm-return array<DataColumn|CheckboxColumn>
+     */
+    private function createColumnsWithNotMultiple(): array
+    {
+        return [
+            DataColumn::create()->attribute('id'),
+            DataColumn::create()->attribute('name'),
+            CheckboxColumn::create()->multiple(false),
+        ];
+    }
+
+    /**
+     * @psalm-return array<DataColumn|CheckboxColumn>
      */
     private function createColumnsWithNotVisible(): array
     {
         return [
             DataColumn::create()->attribute('id'),
-            DataColumn::create()->attribute('name')->visible(false),
-        ];
-    }
-
-    /**
-     * @psalm-return array<DataColumn>
-     */
-    private function createColumnsWithValue(): array
-    {
-        return [
-            DataColumn::create()->attribute('id')->value(1),
-            DataColumn::create()->attribute('name')->value('test'),
-        ];
-    }
-
-    /**
-     * @psalm-return array<DataColumn>
-     */
-    private function createColumnsWithValueClosure(): array
-    {
-        return [
-            DataColumn::create()
-                ->attribute('id')
-                ->value(static fn (array $data): int => $data['id']),
-            DataColumn::create()
-                ->attribute('name')
-                ->value(static fn (array $data): string => $data['name']),
+            DataColumn::create()->attribute('name'),
+            CheckboxColumn::create()->visible(false),
         ];
     }
 }
