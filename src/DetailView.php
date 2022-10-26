@@ -71,6 +71,7 @@ final class DetailView extends Widget
      *    DataColumn::create()->label('Name')->value($data->name),
      * ]
      * ```
+     *
      * @return DetailView
      */
     public function columns(DataColumn ...$value): self

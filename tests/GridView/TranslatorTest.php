@@ -306,7 +306,7 @@ final class TranslatorTest extends TestCase
     private function config(): array
     {
         /** @psalm-var string[][] $params */
-        $params = require dirname(__DIR__,2) . '/config/params.php';
+        $params = require dirname(__DIR__, 2) . '/config/params.php';
         /** @psalm-var string[] $translatorConfig */
         $translatorConfig = require dirname(__DIR__, 2) . '/config/common/translator-yii-dataview.php';
 
