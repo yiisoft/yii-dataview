@@ -11,7 +11,6 @@ use Yiisoft\Html\Tag\I;
 use Yiisoft\Router\CurrentRoute;
 use Yiisoft\Router\UrlGeneratorInterface;
 use Yiisoft\Widget\Widget;
-use Yiisoft\Yii\DataView\Exception;
 
 use function array_merge;
 use function http_build_query;
