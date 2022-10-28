@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Yiisoft\Yii\DataView\Tests\GridView;
+namespace Yiisoft\Yii\DataView\Tests\Column;
 
 use PHPUnit\Framework\TestCase;
 use Yiisoft\Definitions\Exception\CircularReferenceException;
@@ -10,12 +10,11 @@ use Yiisoft\Definitions\Exception\InvalidConfigException;
 use Yiisoft\Definitions\Exception\NotInstantiableException;
 use Yiisoft\Factory\NotFoundException;
 use Yiisoft\Yii\DataView\Column\DataColumn;
-use Yiisoft\Yii\DataView\Column\SerialColumn;
 use Yiisoft\Yii\DataView\GridView;
 use Yiisoft\Yii\DataView\Tests\Support\Assert;
 use Yiisoft\Yii\DataView\Tests\Support\TestTrait;
 
-final class BaseTest extends TestCase
+final class DataColumnTest extends TestCase
 {
     use TestTrait;
 
@@ -30,7 +29,7 @@ final class BaseTest extends TestCase
      * @throws NotInstantiableException
      * @throws CircularReferenceException
      */
-    public function testAfterItemBeforeItem(): void
+    public function testContent(): void
     {
         Assert::equalsWithoutLE(
             <<<HTML
@@ -38,38 +37,26 @@ final class BaseTest extends TestCase
             <table class="table">
             <thead>
             <tr>
-            <th>#</th>
             <th>Id</th>
             <th>Name</th>
-            <th>Age</th>
             </tr>
             </thead>
             <tbody>
-            <div class="testMe">
             <tr>
-            <td data-label="#">1</td>
             <td data-label="id">1</td>
             <td data-label="name">John</td>
-            <td data-label="age">20</td>
             </tr>
-            </div>
-            <div class="testMe">
             <tr>
-            <td data-label="#">2</td>
             <td data-label="id">2</td>
             <td data-label="name">Mary</td>
-            <td data-label="age">21</td>
             </tr>
-            </div>
             </tbody>
             </table>
             <div>dataview.summary</div>
             </div>
             HTML,
             GridView::widget()
-                ->afterRow(static fn () => '</div>')
-                ->beforeRow(static fn () => '<div class="testMe">')
-                ->columns($this->createColumns())
+                ->columns($this->createColumnsWithContent())
                 ->id('w1-grid')
                 ->paginator($this->createOffsetPaginator($this->data, 10))
                 ->render()
@@ -82,34 +69,26 @@ final class BaseTest extends TestCase
      * @throws NotInstantiableException
      * @throws CircularReferenceException
      */
-    public function testColumnGroupEnabled(): void
+    public function testContentAttributes(): void
     {
         Assert::equalsWithoutLE(
             <<<HTML
             <div id="w1-grid">
             <table class="table">
-            <colgroup>
-            <col class="text-primary">
-            <col class="bg-primary">
-            <col class="bg-success">
-            </colgroup>
             <thead>
             <tr>
-            <th>#</th>
             <th>Id</th>
             <th>Name</th>
             </tr>
             </thead>
             <tbody>
             <tr>
-            <td data-label="#">1</td>
-            <td data-label="id">1</td>
-            <td data-label="name">John</td>
+            <td class="test.class" data-label="id">1</td>
+            <td class="test.class" data-label="name">John</td>
             </tr>
             <tr>
-            <td data-label="#">2</td>
-            <td data-label="id">2</td>
-            <td data-label="name">Mary</td>
+            <td class="test.class" data-label="id">2</td>
+            <td class="test.class" data-label="name">Mary</td>
             </tr>
             </tbody>
             </table>
@@ -117,8 +96,7 @@ final class BaseTest extends TestCase
             </div>
             HTML,
             GridView::widget()
-                ->columns($this->createColumnsWithAttributes())
-                ->columnsGroupEnabled(true)
+                ->columns($this->createColumnsWithContentAttributes())
                 ->id('w1-grid')
                 ->paginator($this->createOffsetPaginator($this->data, 10))
                 ->render()
@@ -131,38 +109,26 @@ final class BaseTest extends TestCase
      * @throws NotInstantiableException
      * @throws CircularReferenceException
      */
-    public function testColumnGroupEnabledEmpty(): void
+    public function testContentAttributesClosure(): void
     {
         Assert::equalsWithoutLE(
             <<<HTML
             <div id="w1-grid">
             <table class="table">
-            <colgroup>
-            <col>
-            <col>
-            <col>
-            <col>
-            </colgroup>
             <thead>
             <tr>
-            <th>#</th>
             <th>Id</th>
             <th>Name</th>
-            <th>Age</th>
             </tr>
             </thead>
             <tbody>
             <tr>
-            <td data-label="#">1</td>
-            <td data-label="id">1</td>
-            <td data-label="name">John</td>
-            <td data-label="age">20</td>
+            <td class="test.class" data-label="id">1</td>
+            <td class="test.class" data-label="name">John</td>
             </tr>
             <tr>
-            <td data-label="#">2</td>
-            <td data-label="id">2</td>
-            <td data-label="name">Mary</td>
-            <td data-label="age">21</td>
+            <td class="test.class" data-label="id">2</td>
+            <td class="test.class" data-label="name">Mary</td>
             </tr>
             </tbody>
             </table>
@@ -170,8 +136,7 @@ final class BaseTest extends TestCase
             </div>
             HTML,
             GridView::widget()
-                ->columns($this->createColumns())
-                ->columnsGroupEnabled(true)
+                ->columns($this->createColumnsWithContentAttributesClosure())
                 ->id('w1-grid')
                 ->paginator($this->createOffsetPaginator($this->data, 10))
                 ->render()
@@ -184,7 +149,7 @@ final class BaseTest extends TestCase
      * @throws NotInstantiableException
      * @throws CircularReferenceException
      */
-    public function testColumnGuess(): void
+    public function testDataLabel(): void
     {
         Assert::equalsWithoutLE(
             <<<HTML
@@ -194,30 +159,16 @@ final class BaseTest extends TestCase
             <tr>
             <th>Id</th>
             <th>Name</th>
-            <th>Age</th>
-            <th>Actions</th>
             </tr>
             </thead>
             <tbody>
             <tr>
-            <td data-label="id">1</td>
-            <td data-label="name">John</td>
-            <td data-label="age">20</td>
-            <td data-label="actions">
-            <a name="view" href="/admin/manage/view?id=1" title="View" role="button" style="text-decoration: none!important;"><span>🔎</span></a>
-            <a name="update" href="/admin/manage/update?id=1" title="Update" role="button" style="text-decoration: none!important;"><span>✎</span></a>
-            <a name="delete" href="/admin/manage/delete?id=1" title="Delete" role="button" style="text-decoration: none!important;"><span>❌</span></a>
-            </td>
+            <td data-label="test.id">1</td>
+            <td data-label="test.name">John</td>
             </tr>
             <tr>
-            <td data-label="id">2</td>
-            <td data-label="name">Mary</td>
-            <td data-label="age">21</td>
-            <td data-label="actions">
-            <a name="view" href="/admin/manage/view?id=2" title="View" role="button" style="text-decoration: none!important;"><span>🔎</span></a>
-            <a name="update" href="/admin/manage/update?id=2" title="Update" role="button" style="text-decoration: none!important;"><span>✎</span></a>
-            <a name="delete" href="/admin/manage/delete?id=2" title="Delete" role="button" style="text-decoration: none!important;"><span>❌</span></a>
-            </td>
+            <td data-label="test.id">2</td>
+            <td data-label="test.name">Mary</td>
             </tr>
             </tbody>
             </table>
@@ -225,7 +176,7 @@ final class BaseTest extends TestCase
             </div>
             HTML,
             GridView::widget()
-                ->columns([])
+                ->columns($this->createColumnsWithDataLabel())
                 ->id('w1-grid')
                 ->paginator($this->createOffsetPaginator($this->data, 10))
                 ->render()
@@ -238,7 +189,7 @@ final class BaseTest extends TestCase
      * @throws NotInstantiableException
      * @throws CircularReferenceException
      */
-    public function testEmptyCell(): void
+    public function testLabel(): void
     {
         Assert::equalsWithoutLE(
             <<<HTML
@@ -246,12 +197,18 @@ final class BaseTest extends TestCase
             <table class="table">
             <thead>
             <tr>
-            <th>Id</th>
+            <th>test.id</th>
+            <th>test.username</th>
             </tr>
             </thead>
             <tbody>
             <tr>
-            <td data-label="id">Empty cell</td>
+            <td data-label="test.id">1</td>
+            <td data-label="test.username">John</td>
+            </tr>
+            <tr>
+            <td data-label="test.id">2</td>
+            <td data-label="test.username">Mary</td>
             </tr>
             </tbody>
             </table>
@@ -259,95 +216,7 @@ final class BaseTest extends TestCase
             </div>
             HTML,
             GridView::widget()
-                ->columns([DataColumn::create()->attribute('id')])
-                ->emptyCell('Empty cell')
-                ->id('w1-grid')
-                ->paginator($this->createOffsetPaginator([['id' => '']], 10))
-                ->render()
-        );
-    }
-
-    /**
-     * @throws InvalidConfigException
-     * @throws NotFoundException
-     * @throws NotInstantiableException
-     * @throws CircularReferenceException
-     */
-    public function testEmptyText(): void
-    {
-        Assert::equalsWithoutLE(
-            <<<HTML
-            <div id="w1-grid">
-            <table class="table">
-            <thead>
-            <tr>
-            <th>#</th>
-            <th>Id</th>
-            <th>Name</th>
-            <th>Age</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr>
-            <td colspan="4">Not found.</td>
-            </tr>
-            </tbody>
-            </table>
-            </div>
-            HTML,
-            GridView::widget()
-                ->columns($this->createColumns())
-                ->emptyText('Not found.')
-                ->id('w1-grid')
-                ->paginator($this->createOffsetPaginator([], 10))
-                ->render()
-        );
-    }
-
-    /**
-     * @throws InvalidConfigException
-     * @throws NotFoundException
-     * @throws NotInstantiableException
-     * @throws CircularReferenceException
-     */
-    public function testFooterRowAttributes(): void
-    {
-        Assert::equalsWithoutLE(
-            <<<HTML
-            <div id="w1-grid">
-            <table class="table">
-            <thead>
-            <tr>
-            <th>#</th>
-            <th>Id</th>
-            <th>Name</th>
-            </tr>
-            </thead>
-            <tfoot>
-            <tr class="text-primary">
-            <td>Total:</td><td>2</td><td>2</td>
-            </tr>
-            </tfoot>
-            <tbody>
-            <tr>
-            <td data-label="#">1</td>
-            <td data-label="id">1</td>
-            <td data-label="name">John</td>
-            </tr>
-            <tr>
-            <td data-label="#">2</td>
-            <td data-label="id">2</td>
-            <td data-label="name">Mary</td>
-            </tr>
-            </tbody>
-            </table>
-            <div>dataview.summary</div>
-            </div>
-            HTML,
-            GridView::widget()
-                ->columns($this->createColumnsWithFooter())
-                ->footerEnabled(true)
-                ->footerRowAttributes(['class' => 'text-primary'])
+                ->columns($this->createColumnsWithLabel())
                 ->id('w1-grid')
                 ->paginator($this->createOffsetPaginator($this->data, 10))
                 ->render()
@@ -360,33 +229,26 @@ final class BaseTest extends TestCase
      * @throws NotInstantiableException
      * @throws CircularReferenceException
      */
-    public function testHeader(): void
+    public function testLabelMbString(): void
     {
         Assert::equalsWithoutLE(
             <<<HTML
-            <div>List of users</div>
             <div id="w1-grid">
             <table class="table">
             <thead>
             <tr>
-            <th>#</th>
             <th>Id</th>
-            <th>Name</th>
-            <th>Age</th>
+            <th>Όνομα χρήστη</th>
             </tr>
             </thead>
             <tbody>
             <tr>
-            <td data-label="#">1</td>
             <td data-label="id">1</td>
-            <td data-label="name">John</td>
-            <td data-label="age">20</td>
+            <td data-label="όνομα χρήστη">John</td>
             </tr>
             <tr>
-            <td data-label="#">2</td>
             <td data-label="id">2</td>
-            <td data-label="name">Mary</td>
-            <td data-label="age">21</td>
+            <td data-label="όνομα χρήστη">Mary</td>
             </tr>
             </tbody>
             </table>
@@ -394,8 +256,7 @@ final class BaseTest extends TestCase
             </div>
             HTML,
             GridView::widget()
-                ->columns($this->createColumns())
-                ->header('List of users')
+                ->columns($this->createColumnsWithLabelMbString())
                 ->id('w1-grid')
                 ->paginator($this->createOffsetPaginator($this->data, 10))
                 ->render()
@@ -408,33 +269,26 @@ final class BaseTest extends TestCase
      * @throws NotInstantiableException
      * @throws CircularReferenceException
      */
-    public function testHeaderIntoGrid(): void
+    public function testLabelAttributes(): void
     {
         Assert::equalsWithoutLE(
             <<<HTML
             <div id="w1-grid">
-            <div>List of users</div>
             <table class="table">
             <thead>
             <tr>
-            <th>#</th>
-            <th>Id</th>
-            <th>Name</th>
-            <th>Age</th>
+            <th class="test.class">test.id</th>
+            <th class="test.class">test.username</th>
             </tr>
             </thead>
             <tbody>
             <tr>
-            <td data-label="#">1</td>
-            <td data-label="id">1</td>
-            <td data-label="name">John</td>
-            <td data-label="age">20</td>
+            <td data-label="test.id">1</td>
+            <td data-label="test.username">John</td>
             </tr>
             <tr>
-            <td data-label="#">2</td>
-            <td data-label="id">2</td>
-            <td data-label="name">Mary</td>
-            <td data-label="age">21</td>
+            <td data-label="test.id">2</td>
+            <td data-label="test.username">Mary</td>
             </tr>
             </tbody>
             </table>
@@ -442,57 +296,7 @@ final class BaseTest extends TestCase
             </div>
             HTML,
             GridView::widget()
-                ->columns($this->createColumns())
-                ->header('List of users')
-                ->id('w1-grid')
-                ->paginator($this->createOffsetPaginator($this->data, 10))
-                ->layout('')
-                ->layoutGridTable("{header}\n{items}\n{summary}")
-                ->render()
-        );
-    }
-
-    /**
-     * @throws InvalidConfigException
-     * @throws NotFoundException
-     * @throws NotInstantiableException
-     * @throws CircularReferenceException
-     */
-    public function testHeaderRowAttributes(): void
-    {
-        Assert::equalsWithoutLE(
-            <<<HTML
-            <div id="w1-grid">
-            <table class="table">
-            <thead>
-            <tr class="text-primary">
-            <th>#</th>
-            <th>Id</th>
-            <th>Name</th>
-            <th>Age</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr>
-            <td data-label="#">1</td>
-            <td data-label="id">1</td>
-            <td data-label="name">John</td>
-            <td data-label="age">20</td>
-            </tr>
-            <tr>
-            <td data-label="#">2</td>
-            <td data-label="id">2</td>
-            <td data-label="name">Mary</td>
-            <td data-label="age">21</td>
-            </tr>
-            </tbody>
-            </table>
-            <div>dataview.summary</div>
-            </div>
-            HTML,
-            GridView::widget()
-                ->columns($this->createColumns())
-                ->headerRowAttributes(['class' => 'text-primary'])
+                ->columns($this->createColumnsWithLabelAttributes())
                 ->id('w1-grid')
                 ->paginator($this->createOffsetPaginator($this->data, 10))
                 ->render()
@@ -505,24 +309,26 @@ final class BaseTest extends TestCase
      * @throws NotInstantiableException
      * @throws CircularReferenceException
      */
-    public function testHeaderTableEnabledFalse(): void
+    public function testLinkSorter(): void
     {
         Assert::equalsWithoutLE(
             <<<HTML
             <div id="w1-grid">
             <table class="table">
+            <thead>
+            <tr>
+            <th><a href="/admin/manage/1/5?sort=id" data-sort="id">id</a></th>
+            <th><a href="/admin/manage/1/5?sort=name" data-sort="name">name</a></th>
+            </tr>
+            </thead>
             <tbody>
             <tr>
-            <td data-label="#">1</td>
             <td data-label="id">1</td>
             <td data-label="name">John</td>
-            <td data-label="age">20</td>
             </tr>
             <tr>
-            <td data-label="#">2</td>
             <td data-label="id">2</td>
             <td data-label="name">Mary</td>
-            <td data-label="age">21</td>
             </tr>
             </tbody>
             </table>
@@ -530,8 +336,7 @@ final class BaseTest extends TestCase
             </div>
             HTML,
             GridView::widget()
-                ->columns($this->createColumns())
-                ->headerTableEnabled(false)
+                ->columns($this->createColumnsWithLinkSorter())
                 ->id('w1-grid')
                 ->paginator($this->createOffsetPaginator($this->data, 10))
                 ->render()
@@ -544,7 +349,7 @@ final class BaseTest extends TestCase
      * @throws NotInstantiableException
      * @throws CircularReferenceException
      */
-    public function testRenderEmptyData(): void
+    public function testName(): void
     {
         Assert::equalsWithoutLE(
             <<<HTML
@@ -552,24 +357,28 @@ final class BaseTest extends TestCase
             <table class="table">
             <thead>
             <tr>
-            <th>#</th>
-            <th>Id</th>
-            <th>Name</th>
-            <th>Age</th>
+            <th><a class="asc" href="/admin/manage?page=1&amp;pagesize=10&amp;sort=-id%2Cname" data-sort="-id,name">Id <i class="bi bi-sort-alpha-up"></i></a></th>
+            <th><a class="asc" href="/admin/manage?page=1&amp;pagesize=10&amp;sort=-name%2Cid" data-sort="-name,id">Name <i class="bi bi-sort-alpha-up"></i></a></th>
             </tr>
             </thead>
             <tbody>
             <tr>
-            <td colspan="4">dataview.empty.text</td>
+            <td name="test.id" data-label="id">1</td>
+            <td name="test.username" data-label="name">John</td>
+            </tr>
+            <tr>
+            <td name="test.id" data-label="id">2</td>
+            <td name="test.username" data-label="name">Mary</td>
             </tr>
             </tbody>
             </table>
+            <div>dataview.summary</div>
             </div>
             HTML,
             GridView::widget()
-                ->columns($this->createColumns())
+                ->columns($this->createColumnsWithName())
                 ->id('w1-grid')
-                ->paginator($this->createOffsetPaginator([], 10))
+                ->paginator($this->createOffsetPaginator($this->data, 10, 1, true))
                 ->render()
         );
     }
@@ -580,7 +389,7 @@ final class BaseTest extends TestCase
      * @throws NotInstantiableException
      * @throws CircularReferenceException
      */
-    public function testRowAttributes(): void
+    public function testNotSorting(): void
     {
         Assert::equalsWithoutLE(
             <<<HTML
@@ -588,24 +397,95 @@ final class BaseTest extends TestCase
             <table class="table">
             <thead>
             <tr>
-            <th>#</th>
             <th>Id</th>
-            <th>Name</th>
-            <th>Age</th>
+            <th><a class="asc" href="/admin/manage?page=1&amp;pagesize=10&amp;sort=-name%2Cid" data-sort="-name,id">Name <i class="bi bi-sort-alpha-up"></i></a></th>
             </tr>
             </thead>
             <tbody>
-            <tr class="text-primary">
-            <td data-label="#">1</td>
+            <tr>
+            <td data-label="id">1</td>
+            <td data-label="name">test</td>
+            </tr>
+            <tr>
+            <td data-label="id">2</td>
+            <td data-label="name">test</td>
+            </tr>
+            </tbody>
+            </table>
+            <div>dataview.summary</div>
+            </div>
+            HTML,
+            GridView::widget()
+                ->columns($this->createColumnsWithNotSorting())
+                ->id('w1-grid')
+                ->paginator($this->createOffsetPaginator($this->data, 10, 1, true))
+                ->render()
+        );
+    }
+
+    /**
+     * @throws InvalidConfigException
+     * @throws NotFoundException
+     * @throws NotInstantiableException
+     * @throws CircularReferenceException
+     */
+    public function testNotVisible(): void
+    {
+        Assert::equalsWithoutLE(
+            <<<HTML
+            <div id="w1-grid">
+            <table class="table">
+            <thead>
+            <tr>
+            <th>Id</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+            <td data-label="id">1</td>
+            </tr>
+            <tr>
+            <td data-label="id">2</td>
+            </tr>
+            </tbody>
+            </table>
+            <div>dataview.summary</div>
+            </div>
+            HTML,
+            GridView::widget()
+                ->columns($this->createColumnsWithNotVisible())
+                ->id('w1-grid')
+                ->paginator($this->createOffsetPaginator($this->data, 10))
+                ->render()
+        );
+    }
+
+    /**
+     * @throws InvalidConfigException
+     * @throws NotFoundException
+     * @throws NotInstantiableException
+     * @throws CircularReferenceException
+     */
+    public function testSort(): void
+    {
+        Assert::equalsWithoutLE(
+            <<<HTML
+            <div id="w1-grid">
+            <table class="table">
+            <thead>
+            <tr>
+            <th><a class="asc" href="/admin/manage?page=1&amp;pagesize=10&amp;sort=-id%2Cname" data-sort="-id,name">Id <i class="bi bi-sort-alpha-up"></i></a></th>
+            <th><a class="asc" href="/admin/manage?page=1&amp;pagesize=10&amp;sort=-name%2Cid" data-sort="-name,id">Name <i class="bi bi-sort-alpha-up"></i></a></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
             <td data-label="id">1</td>
             <td data-label="name">John</td>
-            <td data-label="age">20</td>
             </tr>
-            <tr class="text-primary">
-            <td data-label="#">2</td>
+            <tr>
             <td data-label="id">2</td>
             <td data-label="name">Mary</td>
-            <td data-label="age">21</td>
             </tr>
             </tbody>
             </table>
@@ -615,46 +495,7 @@ final class BaseTest extends TestCase
             GridView::widget()
                 ->columns($this->createColumns())
                 ->id('w1-grid')
-                ->paginator($this->createOffsetPaginator($this->data, 10))
-                ->rowAttributes(['class' => 'text-primary'])
-                ->render()
-        );
-
-        Assert::equalsWithoutLE(
-            <<<HTML
-            <div id="w1-grid">
-            <table class="table">
-            <thead>
-            <tr>
-            <th>#</th>
-            <th>Id</th>
-            <th>Name</th>
-            <th>Age</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr class="text-primary">
-            <td data-label="#">1</td>
-            <td data-label="id">1</td>
-            <td data-label="name">John</td>
-            <td data-label="age">20</td>
-            </tr>
-            <tr class="text-primary">
-            <td data-label="#">2</td>
-            <td data-label="id">2</td>
-            <td data-label="name">Mary</td>
-            <td data-label="age">21</td>
-            </tr>
-            </tbody>
-            </table>
-            <div>dataview.summary</div>
-            </div>
-            HTML,
-            GridView::widget()
-                ->columns($this->createColumns())
-                ->id('w1-grid')
-                ->paginator($this->createOffsetPaginator($this->data, 10))
-                ->rowAttributes(['class' => 'text-primary'])
+                ->paginator($this->createOffsetPaginator($this->data, 10, 1, true))
                 ->render()
         );
     }
@@ -665,32 +506,26 @@ final class BaseTest extends TestCase
      * @throws NotInstantiableException
      * @throws CircularReferenceException
      */
-    public function testTableAttributes(): void
+    public function testValue(): void
     {
         Assert::equalsWithoutLE(
             <<<HTML
             <div id="w1-grid">
-            <table class="table table-striped table-bordered">
+            <table class="table">
             <thead>
             <tr>
-            <th>#</th>
             <th>Id</th>
             <th>Name</th>
-            <th>Age</th>
             </tr>
             </thead>
             <tbody>
             <tr>
-            <td data-label="#">1</td>
             <td data-label="id">1</td>
-            <td data-label="name">John</td>
-            <td data-label="age">20</td>
+            <td data-label="name">test</td>
             </tr>
             <tr>
-            <td data-label="#">2</td>
-            <td data-label="id">2</td>
-            <td data-label="name">Mary</td>
-            <td data-label="age">21</td>
+            <td data-label="id">1</td>
+            <td data-label="name">test</td>
             </tr>
             </tbody>
             </table>
@@ -698,48 +533,226 @@ final class BaseTest extends TestCase
             </div>
             HTML,
             GridView::widget()
-                ->columns($this->createColumns())
+                ->columns($this->createColumnsWithValue())
                 ->id('w1-grid')
                 ->paginator($this->createOffsetPaginator($this->data, 10))
-                ->tableAttributes(['class' => 'table table-striped table-bordered'])
                 ->render()
         );
     }
 
     /**
-     * @psalm-return array<SerialColumn|DataColumn>
+     * @throws InvalidConfigException
+     * @throws NotFoundException
+     * @throws NotInstantiableException
+     * @throws CircularReferenceException
+     */
+    public function testValueClosure(): void
+    {
+        Assert::equalsWithoutLE(
+            <<<HTML
+            <div id="w1-grid">
+            <table class="table">
+            <thead>
+            <tr>
+            <th>Id</th>
+            <th>Name</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+            <td data-label="id">1</td>
+            <td data-label="name">John</td>
+            </tr>
+            <tr>
+            <td data-label="id">2</td>
+            <td data-label="name">Mary</td>
+            </tr>
+            </tbody>
+            </table>
+            <div>dataview.summary</div>
+            </div>
+            HTML,
+            GridView::widget()
+                ->columns($this->createColumnsWithValueClosure())
+                ->id('w1-grid')
+                ->paginator($this->createOffsetPaginator($this->data, 10))
+                ->render()
+        );
+    }
+
+    /**
+     * @psalm-return array<DataColumn>
      */
     private function createColumns(): array
     {
         return [
-            SerialColumn::create(),
             DataColumn::create()->attribute('id'),
             DataColumn::create()->attribute('name'),
-            DataColumn::create()->attribute('age'),
         ];
     }
 
     /**
-     * @psalm-return array<SerialColumn|DataColumn>
+     * @psalm-return array<DataColumn>
      */
-    private function createColumnsWithAttributes(): array
+    private function createColumnsWithContent(): array
     {
         return [
-            SerialColumn::create()->attributes(['class' => 'text-primary']),
-            DataColumn::create()->attribute('id')->attributes(['class' => 'bg-primary']),
-            DataColumn::create()->attribute('name')->attributes(['class' => 'bg-success']),
+            DataColumn::create()
+                ->attribute('id')
+                ->content(static fn (array $data): int => (int) $data['id']),
+            DataColumn::create()
+                ->attribute('name')
+                ->content(static fn (array $data): string => (string) $data['name']),
         ];
     }
 
     /**
-     * @psalm-return array<SerialColumn|DataColumn>
+     * @psalm-return array<DataColumn>
      */
-    private function createColumnsWithFooter(): array
+    private function createColumnsWithContentAttributes(): array
     {
         return [
-            SerialColumn::create()->footer('Total:'),
-            DataColumn::create()->attribute('id')->footer('2'),
-            DataColumn::create()->attribute('name')->footer('2'),
+            DataColumn::create()
+                ->attribute('id')
+                ->content(static fn (array $data): int => (int) $data['id'])
+                ->contentAttributes(['class' => 'test.class']),
+            DataColumn::create()
+                ->attribute('name')
+                ->content(static fn (array $data): string => (string) $data['name'])
+                ->contentAttributes(['class' => 'test.class']),
+        ];
+    }
+
+    /**
+     * @psalm-return array<DataColumn>
+     */
+    private function createColumnsWithContentAttributesClosure(): array
+    {
+        return [
+            DataColumn::create()
+                ->attribute('id')
+                ->contentAttributes(['class' => static fn (): string => 'test.class']),
+            DataColumn::create()
+                ->attribute('name')
+                ->contentAttributes(['class' => static fn (): string => 'test.class']),
+        ];
+    }
+
+    /**
+     * @psalm-return array<DataColumn>
+     */
+    private function createColumnsWithDataLabel(): array
+    {
+        return [
+            DataColumn::create()->attribute('id')->dataLabel('test.id'),
+            DataColumn::create()->attribute('name')->dataLabel('test.name'),
+        ];
+    }
+
+    /**
+     * @psalm-return array<DataColumn>
+     */
+    private function createColumnsWithLabel(): array
+    {
+        return [
+            DataColumn::create()->attribute('id')->label('test.id'),
+            DataColumn::create()->attribute('name')->label('test.username'),
+        ];
+    }
+
+    /**
+     * @psalm-return array<DataColumn>
+     */
+    private function createColumnsWithLabelMbString(): array
+    {
+        return [
+            DataColumn::create()->attribute('id'),
+            DataColumn::create()->attribute('name')->label('Όνομα χρήστη'),
+        ];
+    }
+
+    /**
+     * @psalm-return array<DataColumn>
+     */
+    private function createColumnsWithLabelAttributes(): array
+    {
+        return [
+            DataColumn::create()->attribute('id')->label('test.id')->labelAttributes(['class' => 'test.class']),
+            DataColumn::create()->attribute('name')->label('test.username')->labelAttributes(['class' => 'test.class']),
+        ];
+    }
+
+    /**
+     * @psalm-return array<DataColumn>
+     */
+    private function createColumnsWithLinkSorter(): array
+    {
+        return [
+            DataColumn::create()
+                ->attribute('id')
+                ->linkSorter('<a href="/admin/manage/1/5?sort=id" data-sort="id">id</a>'),
+            DataColumn::create()
+                ->attribute('name')
+                ->linkSorter('<a href="/admin/manage/1/5?sort=name" data-sort="name">name</a>'),
+        ];
+    }
+
+    /**
+     * @psalm-return array<DataColumn>
+     */
+    private function createColumnsWithNotSorting(): array
+    {
+        return [
+            DataColumn::create()->attribute('id')->withSorting(false),
+            DataColumn::create()->attribute('name')->value('test'),
+        ];
+    }
+
+    /**
+     * @psalm-return array<DataColumn>
+     */
+    private function createColumnsWithName(): array
+    {
+        return [
+            DataColumn::create()->attribute('id')->name('test.id'),
+            DataColumn::create()->attribute('name')->name('test.username'),
+        ];
+    }
+
+    /**
+     * @psalm-return array<DataColumn>
+     */
+    private function createColumnsWithNotVisible(): array
+    {
+        return [
+            DataColumn::create()->attribute('id'),
+            DataColumn::create()->attribute('name')->visible(false),
+        ];
+    }
+
+    /**
+     * @psalm-return array<DataColumn>
+     */
+    private function createColumnsWithValue(): array
+    {
+        return [
+            DataColumn::create()->attribute('id')->value(1),
+            DataColumn::create()->attribute('name')->value('test'),
+        ];
+    }
+
+    /**
+     * @psalm-return array<DataColumn>
+     */
+    private function createColumnsWithValueClosure(): array
+    {
+        return [
+            DataColumn::create()
+                ->attribute('id')
+                ->value(static fn (array $data): int => (int) $data['id']),
+            DataColumn::create()
+                ->attribute('name')
+                ->value(static fn (array $data): string => (string) $data['name']),
         ];
     }
 }

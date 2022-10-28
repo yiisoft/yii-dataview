@@ -9,7 +9,7 @@ use InvalidArgumentException;
 use JsonException;
 use Yiisoft\Html\Html;
 use Yiisoft\Widget\Widget;
-use Yiisoft\Yii\DataView\Column\DetailView\DataColumn;
+use Yiisoft\Yii\DataView\Column\DetailColumn;
 
 /**
  * DetailView displays the detail of a single data.
@@ -63,16 +63,16 @@ final class DetailView extends Widget
     /**
      * Return a new instance the specified columns.
      *
-     * @param DataColumn ...$value The `DetailView` column configuration. Each object represents the configuration for
+     * @param DetailColumn ...$value The `DetailView` column configuration. Each object represents the configuration for
      * one particular DetailView column. For example,
      *
      * ```php
      * [
-     *    DataColumn::create()->label('Name')->value($data->name),
+     *    DetailColumn::create()->label('Name')->value($data->name),
      * ]
      * ```
      */
-    public function columns(DataColumn ...$value): self
+    public function columns(DetailColumn ...$value): self
     {
         $new = clone $this;
         $new->columns = $value;
@@ -307,7 +307,7 @@ final class DetailView extends Widget
     {
         $normalized = [];
 
-        /** @psalm-var DataColumn[] $columns */
+        /** @psalm-var DetailColumn[] $columns */
         foreach ($columns as $column) {
             if ($column->getLabel() === '') {
                 throw new InvalidArgumentException('The "attribute" or "label" must be set.');

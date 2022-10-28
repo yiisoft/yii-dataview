@@ -17,7 +17,6 @@ use Yiisoft\Router\UrlGeneratorInterface;
 use Yiisoft\Translator\SimpleMessageFormatter;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\Widget\Widget;
-use Yiisoft\Yii\DataView\Widget\LinkSorter;
 
 abstract class BaseListView extends Widget
 {

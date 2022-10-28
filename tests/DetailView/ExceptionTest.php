@@ -10,7 +10,7 @@ use Yiisoft\Definitions\Exception\CircularReferenceException;
 use Yiisoft\Definitions\Exception\InvalidConfigException;
 use Yiisoft\Definitions\Exception\NotInstantiableException;
 use Yiisoft\Factory\NotFoundException;
-use Yiisoft\Yii\DataView\Column\DetailView\DataColumn;
+use Yiisoft\Yii\DataView\Column\DetailColumn;
 use Yiisoft\Yii\DataView\DetailView;
 use Yiisoft\Yii\DataView\Tests\Support\TestTrait;
 
@@ -29,7 +29,7 @@ final class ExceptionTest extends TestCase
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('The "attribute" or "label" must be set.');
         DetailView::widget()
-            ->columns(DataColumn::create())
+            ->columns(DetailColumn::create())
             ->data(['id' => 1, 'username' => 'tests 1', 'total' => '10'])
             ->render();
     }
@@ -44,6 +44,6 @@ final class ExceptionTest extends TestCase
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('The "data" must be set.');
-        DetailView::widget()->columns(DataColumn::create()->attribute('id'))->data([])->render();
+        DetailView::widget()->columns(DetailColumn::create()->attribute('id'))->data([])->render();
     }
 }

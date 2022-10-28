@@ -18,9 +18,9 @@ use Yiisoft\Html\Tag\Tr;
 use Yiisoft\Router\CurrentRoute;
 use Yiisoft\Router\UrlGeneratorInterface;
 use Yiisoft\Translator\TranslatorInterface;
-use Yiisoft\Yii\DataView\Column\GridView\AbstractColumn;
-use Yiisoft\Yii\DataView\Column\GridView\ActionColumn;
-use Yiisoft\Yii\DataView\Column\GridView\DataColumn;
+use Yiisoft\Yii\DataView\Column\AbstractColumn;
+use Yiisoft\Yii\DataView\Column\ActionColumn;
+use Yiisoft\Yii\DataView\Column\DataColumn;
 
 /**
  * The GridView widget is used to display data in a grid.
@@ -96,7 +96,7 @@ final class GridView extends BaseListView
      * ```php
      * [
      *     SerialColumn::create(),
-     *     DataColumn::create()
+     *     DetailColumn::create()
      *         ->attribute('identity_id')
      *         ->filterAttribute('identity_id')
      *         ->filterValueDefault(0)
