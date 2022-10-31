@@ -10,12 +10,12 @@ use Yiisoft\Definitions\Exception\CircularReferenceException;
 use Yiisoft\Definitions\Exception\InvalidConfigException;
 use Yiisoft\Definitions\Exception\NotInstantiableException;
 use Yiisoft\Factory\NotFoundException;
-use Yiisoft\Yii\DataView\Column\DetailColumn;
 use Yiisoft\Yii\DataView\DetailView;
+use Yiisoft\Yii\DataView\Field\DataField;
 use Yiisoft\Yii\DataView\Tests\Support\Assert;
 use Yiisoft\Yii\DataView\Tests\Support\TestTrait;
 
-final class DetailColumnTest extends TestCase
+final class DataFieldTest extends TestCase
 {
     use TestTrait;
 
@@ -52,10 +52,10 @@ final class DetailColumnTest extends TestCase
             </div>
             HTML,
             DetailView::widget()
-                ->columns(
-                    DetailColumn::create()->attribute('id'),
-                    DetailColumn::create()->attribute('username'),
-                    DetailColumn::create()->attribute('isAdmin')->labelAttributes(['class' => 'test-class']),
+                ->fields(
+                    DataField::create()->attribute('id'),
+                    DataField::create()->attribute('username'),
+                    DataField::create()->attribute('isAdmin')->labelAttributes(['class' => 'test-class']),
                 )
                 ->data(['id' => 1, 'username' => 'admin', 'isAdmin' => true])
                 ->render(),
@@ -90,10 +90,10 @@ final class DetailColumnTest extends TestCase
             </div>
             HTML,
             DetailView::widget()
-                ->columns(
-                    DetailColumn::create()->attribute('id'),
-                    DetailColumn::create()->attribute('username'),
-                    DetailColumn::create()->attribute('isAdmin')->labelTag('p'),
+                ->fields(
+                    DataField::create()->attribute('id'),
+                    DataField::create()->attribute('username'),
+                    DataField::create()->attribute('isAdmin')->labelTag('p'),
                 )
                 ->data(['id' => 1, 'username' => 'admin', 'isAdmin' => true])
                 ->render(),
@@ -128,10 +128,10 @@ final class DetailColumnTest extends TestCase
             </div>
             HTML,
             DetailView::widget()
-                ->columns(
-                    DetailColumn::create()->attribute('id'),
-                    DetailColumn::create()->attribute('username'),
-                    DetailColumn::create()
+                ->fields(
+                    DataField::create()->attribute('id'),
+                    DataField::create()->attribute('username'),
+                    DataField::create()
                         ->attribute('total')
                         ->valueAttributes(
                             static fn (array $data) => $data['total'] > 10
@@ -171,10 +171,10 @@ final class DetailColumnTest extends TestCase
             </div>
             HTML,
             DetailView::widget()
-                ->columns(
-                    DetailColumn::create()->attribute('id'),
-                    DetailColumn::create()->attribute('username'),
-                    DetailColumn::create()
+                ->fields(
+                    DataField::create()->attribute('id'),
+                    DataField::create()->attribute('username'),
+                    DataField::create()
                         ->attribute('status')
                         ->value(static fn (array $data): string => $data['status'] ? 'yes' : 'no'),
                 )
@@ -217,10 +217,10 @@ final class DetailColumnTest extends TestCase
             </div>
             HTML,
             DetailView::widget()
-                ->columns(
-                    DetailColumn::create()->attribute('id'),
-                    DetailColumn::create()->attribute('username'),
-                    DetailColumn::create()
+                ->fields(
+                    DataField::create()->attribute('id'),
+                    DataField::create()->attribute('username'),
+                    DataField::create()
                         ->attribute('status')
                         ->value(static fn (object $data): string => $data->status ? 'yes' : 'no'),
                 )
@@ -257,10 +257,10 @@ final class DetailColumnTest extends TestCase
             </div>
             HTML,
             DetailView::widget()
-                ->columns(
-                    DetailColumn::create()->attribute('id'),
-                    DetailColumn::create()->attribute('username'),
-                    DetailColumn::create()->attribute('isAdmin')->value(1),
+                ->fields(
+                    DataField::create()->attribute('id'),
+                    DataField::create()->attribute('username'),
+                    DataField::create()->attribute('isAdmin')->value(1),
                 )
                 ->data(['id' => 1, 'username' => 'guess', 'isAdmin' => false])
                 ->valueFalse('no')
@@ -296,10 +296,10 @@ final class DetailColumnTest extends TestCase
             </div>
             HTML,
             DetailView::widget()
-                ->columns(
-                    DetailColumn::create()->attribute('id'),
-                    DetailColumn::create()->attribute('username'),
-                    DetailColumn::create()->attribute('isAdmin')->valueTag('p'),
+                ->fields(
+                    DataField::create()->attribute('id'),
+                    DataField::create()->attribute('username'),
+                    DataField::create()->attribute('isAdmin')->valueTag('p'),
                 )
                 ->data(['id' => 1, 'username' => 'admin', 'isAdmin' => true])
                 ->render(),

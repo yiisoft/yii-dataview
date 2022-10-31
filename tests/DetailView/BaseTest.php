@@ -10,8 +10,8 @@ use Yiisoft\Definitions\Exception\CircularReferenceException;
 use Yiisoft\Definitions\Exception\InvalidConfigException;
 use Yiisoft\Definitions\Exception\NotInstantiableException;
 use Yiisoft\Factory\NotFoundException;
-use Yiisoft\Yii\DataView\Column\DetailColumn;
 use Yiisoft\Yii\DataView\DetailView;
+use Yiisoft\Yii\DataView\Field\DataField;
 use Yiisoft\Yii\DataView\Tests\Support\Assert;
 use Yiisoft\Yii\DataView\Tests\Support\TestTrait;
 
@@ -48,10 +48,10 @@ final class BaseTest extends TestCase
             HTML,
             DetailView::widget()
                 ->attributes(['class' => 'test-class'])
-                ->columns(
-                    DetailColumn::create()->attribute('id'),
-                    DetailColumn::create()->attribute('username'),
-                    DetailColumn::create()->attribute('total'),
+                ->fields(
+                    DataField::create()->attribute('id'),
+                    DataField::create()->attribute('username'),
+                    DataField::create()->attribute('total'),
                 )
                 ->data(['id' => 1, 'username' => 'tests 1', 'total' => '10'])
                 ->render(),
@@ -86,10 +86,10 @@ final class BaseTest extends TestCase
             </div>
             HTML,
             DetailView::widget()
-                ->columns(
-                    DetailColumn::create()->attribute('id'),
-                    DetailColumn::create()->attribute('username'),
-                    DetailColumn::create()->attribute('total'),
+                ->fields(
+                    DataField::create()->attribute('id'),
+                    DataField::create()->attribute('username'),
+                    DataField::create()->attribute('total'),
                 )
                 ->containerAttributes(['class' => 'test-class'])
                 ->data(['id' => 1, 'username' => 'tests 1', 'total' => '10'])
@@ -125,10 +125,10 @@ final class BaseTest extends TestCase
             </div>
             HTML,
             DetailView::widget()
-                ->columns(
-                    DetailColumn::create()->attribute('id'),
-                    DetailColumn::create()->attribute('username'),
-                    DetailColumn::create()->attribute('total'),
+                ->fields(
+                    DataField::create()->attribute('id'),
+                    DataField::create()->attribute('username'),
+                    DataField::create()->attribute('total'),
                 )
                 ->dataAttributes(['class' => 'test-class'])
                 ->data(['id' => 1, 'username' => 'tests 1', 'total' => '10'])
@@ -165,10 +165,10 @@ final class BaseTest extends TestCase
             </div>
             HTML,
             DetailView::widget()
-                ->columns(
-                    DetailColumn::create()->attribute('id'),
-                    DetailColumn::create()->attribute('username'),
-                    DetailColumn::create()->attribute('total'),
+                ->fields(
+                    DataField::create()->attribute('id'),
+                    DataField::create()->attribute('username'),
+                    DataField::create()->attribute('total'),
                 )
                 ->data(['id' => 1, 'username' => 'tests 1', 'total' => '10'])
                 ->header('Test header')
@@ -204,10 +204,10 @@ final class BaseTest extends TestCase
             </div>
             HTML,
             DetailView::widget()
-                ->columns(
-                    DetailColumn::create()->attribute('id'),
-                    DetailColumn::create()->attribute('username'),
-                    DetailColumn::create()->attribute('total'),
+                ->fields(
+                    DataField::create()->attribute('id'),
+                    DataField::create()->attribute('username'),
+                    DataField::create()->attribute('total'),
                 )
                 ->data(['id' => 1, 'username' => 'tests 1', 'total' => '10'])
                 ->labelAttributes(['class' => 'test-label'])
@@ -243,10 +243,10 @@ final class BaseTest extends TestCase
             </div>
             HTML,
             DetailView::widget()
-                ->columns(
-                    DetailColumn::create()->attribute('id'),
-                    DetailColumn::create()->attribute('username'),
-                    DetailColumn::create()->attribute('total'),
+                ->fields(
+                    DataField::create()->attribute('id'),
+                    DataField::create()->attribute('username'),
+                    DataField::create()->attribute('total'),
                 )
                 ->data(['id' => 1, 'username' => 'tests 1', 'total' => '10'])
                 ->labelTag('p')
@@ -293,10 +293,10 @@ final class BaseTest extends TestCase
             </div>
             HTML,
             DetailView::widget()
-                ->columns(
-                    DetailColumn::create()->attribute('id'),
-                    DetailColumn::create()->attribute('username'),
-                    DetailColumn::create()->attribute('total'),
+                ->fields(
+                    DataField::create()->attribute('id'),
+                    DataField::create()->attribute('username'),
+                    DataField::create()->attribute('total'),
                 )
                 ->data(['id' => 1, 'username' => 'tests 1', 'total' => '10'])
                 ->valueAttributes(['class' => 'test-value'])
@@ -332,10 +332,10 @@ final class BaseTest extends TestCase
             </div>
             HTML,
             DetailView::widget()
-                ->columns(
-                    DetailColumn::create()->attribute('id'),
-                    DetailColumn::create()->attribute('username'),
-                    DetailColumn::create()->attribute('isAdmin'),
+                ->fields(
+                    DataField::create()->attribute('id'),
+                    DataField::create()->attribute('username'),
+                    DataField::create()->attribute('isAdmin'),
                 )
                 ->data(['id' => 1, 'username' => 'guess', 'isAdmin' => false])
                 ->valueFalse('no')
@@ -371,10 +371,10 @@ final class BaseTest extends TestCase
             </div>
             HTML,
             DetailView::widget()
-                ->columns(
-                    DetailColumn::create()->attribute('id'),
-                    DetailColumn::create()->attribute('username'),
-                    DetailColumn::create()->attribute('isAdmin'),
+                ->fields(
+                    DataField::create()->attribute('id'),
+                    DataField::create()->attribute('username'),
+                    DataField::create()->attribute('isAdmin'),
                 )
                 ->data(['id' => 1, 'username' => 'admin', 'isAdmin' => true])
                 ->valueTrue('yes')
@@ -410,10 +410,10 @@ final class BaseTest extends TestCase
             </div>
             HTML,
             DetailView::widget()
-                ->columns(
-                    DetailColumn::create()->attribute('id'),
-                    DetailColumn::create()->attribute('username'),
-                    DetailColumn::create()->attribute('total'),
+                ->fields(
+                    DataField::create()->attribute('id'),
+                    DataField::create()->attribute('username'),
+                    DataField::create()->attribute('total'),
                 )
                 ->data(['id' => 1, 'username' => 'tests 1', 'total' => 0])
                 ->valueTrue('yes')
@@ -440,10 +440,10 @@ final class BaseTest extends TestCase
             </div>
             HTML,
             DetailView::widget()
-                ->columns(
-                    DetailColumn::create()->attribute('id'),
-                    DetailColumn::create()->attribute('username'),
-                    DetailColumn::create()->attribute('status'),
+                ->fields(
+                    DataField::create()->attribute('id'),
+                    DataField::create()->attribute('username'),
+                    DataField::create()->attribute('status'),
                 )
                 ->data(['id' => 1, 'username' => 'tests 1', 'status' => false])
                 ->render(),
@@ -469,10 +469,10 @@ final class BaseTest extends TestCase
             </div>
             HTML,
             DetailView::widget()
-                ->columns(
-                    DetailColumn::create()->attribute('id'),
-                    DetailColumn::create()->attribute('username'),
-                    DetailColumn::create()->attribute('status'),
+                ->fields(
+                    DataField::create()->attribute('id'),
+                    DataField::create()->attribute('username'),
+                    DataField::create()->attribute('status'),
                 )
                 ->data(['id' => 1, 'username' => 'tests 1', 'status' => true])
                 ->render(),
@@ -513,10 +513,10 @@ final class BaseTest extends TestCase
             </div>
             HTML,
             DetailView::widget()
-                ->columns(
-                    DetailColumn::create()->attribute('id'),
-                    DetailColumn::create()->attribute('username'),
-                    DetailColumn::create()->attribute('total'),
+                ->fields(
+                    DataField::create()->attribute('id'),
+                    DataField::create()->attribute('username'),
+                    DataField::create()->attribute('total'),
                 )
                 ->data($dataObject)
                 ->valueTrue('yes')
@@ -549,10 +549,10 @@ final class BaseTest extends TestCase
             </div>
             HTML,
             DetailView::widget()
-                ->columns(
-                    DetailColumn::create()->attribute('id'),
-                    DetailColumn::create()->attribute('username'),
-                    DetailColumn::create()->attribute('status'),
+                ->fields(
+                    DataField::create()->attribute('id'),
+                    DataField::create()->attribute('username'),
+                    DataField::create()->attribute('status'),
                 )
                 ->data($dataObject)
                 ->render(),
@@ -584,10 +584,10 @@ final class BaseTest extends TestCase
             </div>
             HTML,
             DetailView::widget()
-                ->columns(
-                    DetailColumn::create()->attribute('id'),
-                    DetailColumn::create()->attribute('username'),
-                    DetailColumn::create()->attribute('status'),
+                ->fields(
+                    DataField::create()->attribute('id'),
+                    DataField::create()->attribute('username'),
+                    DataField::create()->attribute('status'),
                 )
                 ->data(['id' => 1, 'username' => 'tests 1', 'status' => true])
                 ->render(),

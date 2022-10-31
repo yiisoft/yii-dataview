@@ -9,7 +9,7 @@ use InvalidArgumentException;
 use JsonException;
 use Yiisoft\Html\Html;
 use Yiisoft\Widget\Widget;
-use Yiisoft\Yii\DataView\Column\DetailColumn;
+use Yiisoft\Yii\DataView\Field\DataField;
 
 /**
  * DetailView displays the detail of a single data.
@@ -31,10 +31,10 @@ use Yiisoft\Yii\DataView\Column\DetailColumn;
 final class DetailView extends Widget
 {
     private array $attributes = [];
-    private array $columns = [];
     private array $containerAttributes = [];
     private array|object $data = [];
     private array $dataAttributes = [];
+    private array $fields = [];
     private string $header = '';
     private string $itemTemplate = "<div{dataAttributes}>\n{label}\n{value}\n</div>";
     private array|Closure $labelAttributes = [];
@@ -61,21 +61,21 @@ final class DetailView extends Widget
     }
 
     /**
-     * Return a new instance the specified columns.
+     * Return a new instance the specified fields.
      *
-     * @param DetailColumn ...$value The `DetailView` column configuration. Each object represents the configuration for
+     * @param DataField ...$value The `DetailView` column configuration. Each object represents the configuration for
      * one particular DetailView column. For example,
      *
      * ```php
      * [
-     *    DetailColumn::create()->label('Name')->value($data->name),
+     *    DataField::create()->label('Name')->value($data->name),
      * ]
      * ```
      */
-    public function columns(DetailColumn ...$value): self
+    public function fields(DataField ...$value): self
     {
         $new = clone $this;
-        $new->columns = $value;
+        $new->fields = $value;
 
         return $new;
     }
@@ -303,28 +303,28 @@ final class DetailView extends Widget
      *     }
      * >
      */
-    private function normalizeColumns(array $columns): array
+    private function normalizeColumns(array $fields): array
     {
         $normalized = [];
 
-        /** @psalm-var DetailColumn[] $columns */
-        foreach ($columns as $column) {
-            if ($column->getLabel() === '') {
+        /** @psalm-var DataField[] $fields */
+        foreach ($fields as $field) {
+            if ($field->getLabel() === '') {
                 throw new InvalidArgumentException('The "attribute" or "label" must be set.');
             }
 
-            $labelAttributes = $column->getLabelAttributes() === []
-                ? $this->labelAttributes : $column->getLabelAttributes();
-            $labelTag = $column->getLabelTag() === '' ? $this->labelTag : $column->getLabelTag();
-            $valueTag = $column->getValueTag() === '' ? $this->valueTag : $column->getValueTag();
-            $valueAttributes = $column->getValueAttributes() === []
-                ? $this->valueAttributes : $column->getValueAttributes();
+            $labelAttributes = $field->getLabelAttributes() === []
+                ? $this->labelAttributes : $field->getLabelAttributes();
+            $labelTag = $field->getLabelTag() === '' ? $this->labelTag : $field->getLabelTag();
+            $valueTag = $field->getValueTag() === '' ? $this->valueTag : $field->getValueTag();
+            $valueAttributes = $field->getValueAttributes() === []
+                ? $this->valueAttributes : $field->getValueAttributes();
 
             $normalized[] = [
-                'label' => Html::encode($column->getLabel()),
+                'label' => Html::encode($field->getLabel()),
                 'labelAttributes' => $this->renderAttributes($labelAttributes),
                 'labelTag' => Html::encode($labelTag),
-                'value' => Html::encodeAttribute($this->renderValue($column->getAttribute(), $column->getValue())),
+                'value' => Html::encodeAttribute($this->renderValue($field->getAttribute(), $field->getValue())),
                 'valueAttributes' => $this->renderAttributes($valueAttributes),
                 'valueTag' => Html::encode($valueTag),
             ];
@@ -351,25 +351,25 @@ final class DetailView extends Widget
      */
     private function renderItems(): string
     {
-        $columns = $this->normalizeColumns($this->columns);
+        $fields = $this->normalizeColumns($this->fields);
 
-        if ($columns === []) {
+        if ($fields === []) {
             return '';
         }
 
         $rows = [];
 
-        foreach ($columns as $column) {
+        foreach ($fields as $field) {
             $label = strtr($this->labelTemplate, [
-                '{label}' => $column['label'],
-                '{labelTag}' => $column['labelTag'],
-                '{labelAttributes}' => Html::renderTagAttributes($column['labelAttributes']),
+                '{label}' => $field['label'],
+                '{labelTag}' => $field['labelTag'],
+                '{labelAttributes}' => Html::renderTagAttributes($field['labelAttributes']),
             ]);
 
             $value = strtr($this->valueTemplate, [
-                '{value}' => $column['value'],
-                '{valueTag}' => $column['valueTag'],
-                '{valueAttributes}' => Html::renderTagAttributes($column['valueAttributes']),
+                '{value}' => $field['value'],
+                '{valueTag}' => $field['valueTag'],
+                '{valueAttributes}' => Html::renderTagAttributes($field['valueAttributes']),
             ]);
 
             $rows[] = strtr($this->itemTemplate, [

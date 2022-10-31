@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Yiisoft\Yii\DataView\Tests\Column;
 
 use PHPUnit\Framework\TestCase;
-use Yiisoft\Yii\DataView\Column\DetailColumn;
 use Yiisoft\Yii\DataView\Column;
 use Yiisoft\Yii\DataView\Tests\Support\Mock;
 use Yiisoft\Yii\DataView\Tests\Support\TestTrait;
@@ -68,18 +67,6 @@ final class ImmutableTest extends TestCase
         $this->assertNotSame($column, $column->linkSorter(''));
         $this->assertNotSame($column, $column->value(null));
         $this->assertNotSame($column, $column->withSorting(false));
-    }
-
-    public function testDetailColumn(): void
-    {
-        $dataColumn = DetailColumn::create();
-        $this->assertNotSame($dataColumn, $dataColumn->attribute(''));
-        $this->assertNotSame($dataColumn, $dataColumn->label(''));
-        $this->assertNotSame($dataColumn, $dataColumn->labelAttributes([]));
-        $this->assertNotSame($dataColumn, $dataColumn->labelTag(''));
-        $this->assertNotSame($dataColumn, $dataColumn->value(''));
-        $this->assertNotSame($dataColumn, $dataColumn->valueAttributes([]));
-        $this->assertNotSame($dataColumn, $dataColumn->valueTag(''));
     }
 
     private function createColumn(): Column\AbstractColumn

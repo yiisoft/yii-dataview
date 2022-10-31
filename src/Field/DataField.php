@@ -2,20 +2,20 @@
 
 declare(strict_types=1);
 
-namespace Yiisoft\Yii\DataView\Column;
+namespace Yiisoft\Yii\DataView\Field;
 
 use Closure;
 
 /**
- * DetailColumn is the default column type for the {@see DetailView} widget.
+ * DataField is the default field for the {@see DetailView} widget.
  *
- * A simple data column definition refers to an attribute in the data of the `DetailView`.
+ * A simple data field definition refers to an attribute in the data of the `DetailView`.
  *
  * The name of the attribute is specified by {@see attribute}.
  *
  * By setting {@see value} and {@see label}, the label and column content can be customized.
  */
-final class DetailColumn
+final class DataField
 {
     private string $attribute = '';
     private string $label = '';
@@ -26,7 +26,7 @@ final class DetailColumn
     private array|Closure $valueAttributes = [];
 
     /**
-     * Return new instance of DetailColumn with specified attribute.
+     * Return new instance of DataField with specified attribute.
      *
      * @param string $attribute The attribute name.
      */
