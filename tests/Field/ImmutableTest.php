@@ -6,7 +6,6 @@ namespace Yiisoft\Yii\DataView\Tests\Field;
 
 use PHPUnit\Framework\TestCase;
 use Yiisoft\Yii\DataView\Field\DataField;
-use Yiisoft\Yii\DataView\Tests\Support\Mock;
 use Yiisoft\Yii\DataView\Tests\Support\TestTrait;
 
 final class ImmutableTest extends TestCase

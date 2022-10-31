@@ -15,7 +15,7 @@ use Yiisoft\Yii\DataView\Field\DataField;
 use Yiisoft\Yii\DataView\Tests\Support\Assert;
 use Yiisoft\Yii\DataView\Tests\Support\TestTrait;
 
-final class DataFieldTest extends TestCase
+final class DetailFieldTest extends TestCase
 {
     use TestTrait;
 
