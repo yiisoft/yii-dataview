@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Yiisoft\Yii\DataView\Tests\Column;
+namespace Yiisoft\Yii\DataView\Tests\Field;
 
 use PHPUnit\Framework\TestCase;
 use stdClass;

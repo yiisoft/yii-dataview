@@ -14,18 +14,23 @@ use Yiisoft\Yii\DataView\Field\DataField;
 /**
  * DetailView displays the detail of a single data.
  *
- * DetailView is best used for displaying a data in a regular format (e.g. each data attribute is displayed using
- * flexbox).
+ * DetailView is best used for displaying a data in a regular format (e.g. each field is displayed using flexbox).
  *
  * The data can be either object or an associative array.
  *
- * DetailView uses the {@see dataAttributes} property to determines which model dataAttributes should be displayed
- * and how they should be formatted.
+ * DetailView uses the {@see data} property to determines which model should be displayed how they should be formatted.
  *
  * A typical usage of DetailView is as follows:
  *
  * ```php
- * <?= DetailView::widget()->data($data) ?>
+ * <?= DetailView::widget()
+ *     ->data(['id' => 1, 'username' => 'tests 1', 'status' => true])
+ *     ->fields(
+ *         DataField::create()->attribute('id'),
+ *         DataField::create()->attribute('username'),
+ *         DataField::create()->attribute('status'),
+ *     )
+ *     ->render()
  * ```
  */
 final class DetailView extends Widget
@@ -56,26 +61,6 @@ final class DetailView extends Widget
     {
         $new = clone $this;
         $new->attributes = $values;
-
-        return $new;
-    }
-
-    /**
-     * Return a new instance the specified fields.
-     *
-     * @param DataField ...$value The `DetailView` column configuration. Each object represents the configuration for
-     * one particular DetailView column. For example,
-     *
-     * ```php
-     * [
-     *    DataField::create()->label('Name')->value($data->name),
-     * ]
-     * ```
-     */
-    public function fields(DataField ...$value): self
-    {
-        $new = clone $this;
-        $new->fields = $value;
 
         return $new;
     }
@@ -116,6 +101,26 @@ final class DetailView extends Widget
     {
         $new = clone $this;
         $new->dataAttributes = $values;
+
+        return $new;
+    }
+
+    /**
+     * Return a new instance the specified fields.
+     *
+     * @param DataField ...$value The `DetailView` column configuration. Each object represents the configuration for
+     * one particular DetailView column. For example,
+     *
+     * ```php
+     * [
+     *    DataField::create()->label('Name')->value($data->name),
+     * ]
+     * ```
+     */
+    public function fields(DataField ...$value): self
+    {
+        $new = clone $this;
+        $new->fields = $value;
 
         return $new;
     }

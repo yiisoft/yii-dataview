@@ -1,6 +1,6 @@
 <p align="center">
     <a href="https://github.com/yiisoft" target="_blank">
-        <img src="https://yiisoft.github.io/docs/images/yii_logo.svg" height="100px">
+        <img src="https://yiisoft.github.io/docs/images/yii_logo.svg" height="100px" alt="Yii Framework">
     </a>
     <h1 align="center">Yii Framework Data Displaying Extension</h1>
     <br>
@@ -39,7 +39,7 @@ or add
 "yiisoft/yii-dataview": "^3.0"
 ```
 
-to the require section of your `composer.json`.
+to the requirement section of your `composer.json`.
 
 ### Unit testing
 
