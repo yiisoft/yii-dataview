@@ -56,7 +56,14 @@ final class DataColumnTest extends TestCase
             </div>
             HTML,
             GridView::widget()
-                ->columns($this->createColumnsWithContent())
+                ->columns(
+                    DataColumn::create()
+                        ->attribute('id')
+                        ->content(static fn (array $data): int => (int) $data['id']),
+                    DataColumn::create()
+                        ->attribute('name')
+                        ->content(static fn (array $data): string => (string) $data['name']),
+                )
                 ->id('w1-grid')
                 ->paginator($this->createOffsetPaginator($this->data, 10))
                 ->render()
@@ -96,7 +103,16 @@ final class DataColumnTest extends TestCase
             </div>
             HTML,
             GridView::widget()
-                ->columns($this->createColumnsWithContentAttributes())
+                ->columns(
+                    DataColumn::create()
+                        ->attribute('id')
+                        ->content(static fn (array $data): int => (int) $data['id'])
+                        ->contentAttributes(['class' => 'test.class']),
+                    DataColumn::create()
+                        ->attribute('name')
+                        ->content(static fn (array $data): string => (string) $data['name'])
+                        ->contentAttributes(['class' => 'test.class']),
+                )
                 ->id('w1-grid')
                 ->paginator($this->createOffsetPaginator($this->data, 10))
                 ->render()
@@ -136,7 +152,14 @@ final class DataColumnTest extends TestCase
             </div>
             HTML,
             GridView::widget()
-                ->columns($this->createColumnsWithContentAttributesClosure())
+                ->columns(
+                    DataColumn::create()
+                        ->attribute('id')
+                        ->contentAttributes(['class' => static fn (): string => 'test.class']),
+                    DataColumn::create()
+                        ->attribute('name')
+                        ->contentAttributes(['class' => static fn (): string => 'test.class']),
+                )
                 ->id('w1-grid')
                 ->paginator($this->createOffsetPaginator($this->data, 10))
                 ->render()
@@ -176,7 +199,10 @@ final class DataColumnTest extends TestCase
             </div>
             HTML,
             GridView::widget()
-                ->columns($this->createColumnsWithDataLabel())
+                ->columns(
+                    DataColumn::create()->attribute('id')->dataLabel('test.id'),
+                    DataColumn::create()->attribute('name')->dataLabel('test.name'),
+                )
                 ->id('w1-grid')
                 ->paginator($this->createOffsetPaginator($this->data, 10))
                 ->render()
@@ -216,7 +242,10 @@ final class DataColumnTest extends TestCase
             </div>
             HTML,
             GridView::widget()
-                ->columns($this->createColumnsWithLabel())
+                ->columns(
+                    DataColumn::create()->attribute('id')->label('test.id'),
+                    DataColumn::create()->attribute('name')->label('test.username'),
+                )
                 ->id('w1-grid')
                 ->paginator($this->createOffsetPaginator($this->data, 10))
                 ->render()
@@ -256,7 +285,10 @@ final class DataColumnTest extends TestCase
             </div>
             HTML,
             GridView::widget()
-                ->columns($this->createColumnsWithLabelMbString())
+                ->columns(
+                    DataColumn::create()->attribute('id'),
+                    DataColumn::create()->attribute('name')->label('Όνομα χρήστη'),
+                )
                 ->id('w1-grid')
                 ->paginator($this->createOffsetPaginator($this->data, 10))
                 ->render()
@@ -296,7 +328,16 @@ final class DataColumnTest extends TestCase
             </div>
             HTML,
             GridView::widget()
-                ->columns($this->createColumnsWithLabelAttributes())
+                ->columns(
+                    DataColumn::create()
+                        ->attribute('id')
+                        ->label('test.id')
+                        ->labelAttributes(['class' => 'test.class']),
+                    DataColumn::create()
+                        ->attribute('name')
+                        ->label('test.username')
+                        ->labelAttributes(['class' => 'test.class']),
+                )
                 ->id('w1-grid')
                 ->paginator($this->createOffsetPaginator($this->data, 10))
                 ->render()
@@ -336,7 +377,14 @@ final class DataColumnTest extends TestCase
             </div>
             HTML,
             GridView::widget()
-                ->columns($this->createColumnsWithLinkSorter())
+                ->columns(
+                    DataColumn::create()
+                        ->attribute('id')
+                        ->linkSorter('<a href="/admin/manage/1/5?sort=id" data-sort="id">id</a>'),
+                    DataColumn::create()
+                        ->attribute('name')
+                        ->linkSorter('<a href="/admin/manage/1/5?sort=name" data-sort="name">name</a>'),
+                )
                 ->id('w1-grid')
                 ->paginator($this->createOffsetPaginator($this->data, 10))
                 ->render()
@@ -376,7 +424,10 @@ final class DataColumnTest extends TestCase
             </div>
             HTML,
             GridView::widget()
-                ->columns($this->createColumnsWithName())
+                ->columns(
+                    DataColumn::create()->attribute('id')->name('test.id'),
+                    DataColumn::create()->attribute('name')->name('test.username'),
+                )
                 ->id('w1-grid')
                 ->paginator($this->createOffsetPaginator($this->data, 10, 1, true))
                 ->render()
@@ -416,7 +467,10 @@ final class DataColumnTest extends TestCase
             </div>
             HTML,
             GridView::widget()
-                ->columns($this->createColumnsWithNotSorting())
+                ->columns(
+                    DataColumn::create()->attribute('id')->withSorting(false),
+                    DataColumn::create()->attribute('name')->value('test'),
+                )
                 ->id('w1-grid')
                 ->paginator($this->createOffsetPaginator($this->data, 10, 1, true))
                 ->render()
@@ -453,7 +507,10 @@ final class DataColumnTest extends TestCase
             </div>
             HTML,
             GridView::widget()
-                ->columns($this->createColumnsWithNotVisible())
+                ->columns(
+                    DataColumn::create()->attribute('id'),
+                    DataColumn::create()->attribute('name')->visible(false),
+                )
                 ->id('w1-grid')
                 ->paginator($this->createOffsetPaginator($this->data, 10))
                 ->render()
@@ -493,7 +550,10 @@ final class DataColumnTest extends TestCase
             </div>
             HTML,
             GridView::widget()
-                ->columns($this->createColumns())
+                ->columns(
+                    DataColumn::create()->attribute('id'),
+                    DataColumn::create()->attribute('name'),
+                )
                 ->id('w1-grid')
                 ->paginator($this->createOffsetPaginator($this->data, 10, 1, true))
                 ->render()
@@ -533,7 +593,10 @@ final class DataColumnTest extends TestCase
             </div>
             HTML,
             GridView::widget()
-                ->columns($this->createColumnsWithValue())
+                ->columns(
+                    DataColumn::create()->attribute('id')->value(1),
+                    DataColumn::create()->attribute('name')->value('test'),
+                )
                 ->id('w1-grid')
                 ->paginator($this->createOffsetPaginator($this->data, 10))
                 ->render()
@@ -573,186 +636,17 @@ final class DataColumnTest extends TestCase
             </div>
             HTML,
             GridView::widget()
-                ->columns($this->createColumnsWithValueClosure())
+                ->columns(
+                    DataColumn::create()
+                        ->attribute('id')
+                        ->value(static fn (array $data): int => (int) $data['id']),
+                    DataColumn::create()
+                        ->attribute('name')
+                        ->value(static fn (array $data): string => (string) $data['name']),
+                )
                 ->id('w1-grid')
                 ->paginator($this->createOffsetPaginator($this->data, 10))
                 ->render()
         );
-    }
-
-    /**
-     * @psalm-return array<DataColumn>
-     */
-    private function createColumns(): array
-    {
-        return [
-            DataColumn::create()->attribute('id'),
-            DataColumn::create()->attribute('name'),
-        ];
-    }
-
-    /**
-     * @psalm-return array<DataColumn>
-     */
-    private function createColumnsWithContent(): array
-    {
-        return [
-            DataColumn::create()
-                ->attribute('id')
-                ->content(static fn (array $data): int => (int) $data['id']),
-            DataColumn::create()
-                ->attribute('name')
-                ->content(static fn (array $data): string => (string) $data['name']),
-        ];
-    }
-
-    /**
-     * @psalm-return array<DataColumn>
-     */
-    private function createColumnsWithContentAttributes(): array
-    {
-        return [
-            DataColumn::create()
-                ->attribute('id')
-                ->content(static fn (array $data): int => (int) $data['id'])
-                ->contentAttributes(['class' => 'test.class']),
-            DataColumn::create()
-                ->attribute('name')
-                ->content(static fn (array $data): string => (string) $data['name'])
-                ->contentAttributes(['class' => 'test.class']),
-        ];
-    }
-
-    /**
-     * @psalm-return array<DataColumn>
-     */
-    private function createColumnsWithContentAttributesClosure(): array
-    {
-        return [
-            DataColumn::create()
-                ->attribute('id')
-                ->contentAttributes(['class' => static fn (): string => 'test.class']),
-            DataColumn::create()
-                ->attribute('name')
-                ->contentAttributes(['class' => static fn (): string => 'test.class']),
-        ];
-    }
-
-    /**
-     * @psalm-return array<DataColumn>
-     */
-    private function createColumnsWithDataLabel(): array
-    {
-        return [
-            DataColumn::create()->attribute('id')->dataLabel('test.id'),
-            DataColumn::create()->attribute('name')->dataLabel('test.name'),
-        ];
-    }
-
-    /**
-     * @psalm-return array<DataColumn>
-     */
-    private function createColumnsWithLabel(): array
-    {
-        return [
-            DataColumn::create()->attribute('id')->label('test.id'),
-            DataColumn::create()->attribute('name')->label('test.username'),
-        ];
-    }
-
-    /**
-     * @psalm-return array<DataColumn>
-     */
-    private function createColumnsWithLabelMbString(): array
-    {
-        return [
-            DataColumn::create()->attribute('id'),
-            DataColumn::create()->attribute('name')->label('Όνομα χρήστη'),
-        ];
-    }
-
-    /**
-     * @psalm-return array<DataColumn>
-     */
-    private function createColumnsWithLabelAttributes(): array
-    {
-        return [
-            DataColumn::create()->attribute('id')->label('test.id')->labelAttributes(['class' => 'test.class']),
-            DataColumn::create()->attribute('name')->label('test.username')->labelAttributes(['class' => 'test.class']),
-        ];
-    }
-
-    /**
-     * @psalm-return array<DataColumn>
-     */
-    private function createColumnsWithLinkSorter(): array
-    {
-        return [
-            DataColumn::create()
-                ->attribute('id')
-                ->linkSorter('<a href="/admin/manage/1/5?sort=id" data-sort="id">id</a>'),
-            DataColumn::create()
-                ->attribute('name')
-                ->linkSorter('<a href="/admin/manage/1/5?sort=name" data-sort="name">name</a>'),
-        ];
-    }
-
-    /**
-     * @psalm-return array<DataColumn>
-     */
-    private function createColumnsWithNotSorting(): array
-    {
-        return [
-            DataColumn::create()->attribute('id')->withSorting(false),
-            DataColumn::create()->attribute('name')->value('test'),
-        ];
-    }
-
-    /**
-     * @psalm-return array<DataColumn>
-     */
-    private function createColumnsWithName(): array
-    {
-        return [
-            DataColumn::create()->attribute('id')->name('test.id'),
-            DataColumn::create()->attribute('name')->name('test.username'),
-        ];
-    }
-
-    /**
-     * @psalm-return array<DataColumn>
-     */
-    private function createColumnsWithNotVisible(): array
-    {
-        return [
-            DataColumn::create()->attribute('id'),
-            DataColumn::create()->attribute('name')->visible(false),
-        ];
-    }
-
-    /**
-     * @psalm-return array<DataColumn>
-     */
-    private function createColumnsWithValue(): array
-    {
-        return [
-            DataColumn::create()->attribute('id')->value(1),
-            DataColumn::create()->attribute('name')->value('test'),
-        ];
-    }
-
-    /**
-     * @psalm-return array<DataColumn>
-     */
-    private function createColumnsWithValueClosure(): array
-    {
-        return [
-            DataColumn::create()
-                ->attribute('id')
-                ->value(static fn (array $data): int => (int) $data['id']),
-            DataColumn::create()
-                ->attribute('name')
-                ->value(static fn (array $data): string => (string) $data['name']),
-        ];
     }
 }

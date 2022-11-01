@@ -10,6 +10,7 @@ use Yiisoft\Definitions\Exception\InvalidConfigException;
 use Yiisoft\Definitions\Exception\NotInstantiableException;
 use Yiisoft\Factory\NotFoundException;
 use Yiisoft\Yii\DataView;
+use Yiisoft\Yii\DataView\Column\DataColumn;
 use Yiisoft\Yii\DataView\Tests\Support\TestTrait;
 
 final class ImmutableTest extends TestCase
@@ -54,7 +55,7 @@ final class ImmutableTest extends TestCase
         $gridView = DataView\GridView::widget();
         $this->assertNotSame($gridView, $gridView->afterRow(null));
         $this->assertNotSame($gridView, $gridView->beforeRow(null));
-        $this->assertNotSame($gridView, $gridView->columns([]));
+        $this->assertNotSame($gridView, $gridView->columns(DataColumn::create()));
         $this->assertNotSame($gridView, $gridView->columnsGroupEnabled(false));
         $this->assertNotSame($gridView, $gridView->emptyCell(''));
         $this->assertNotSame($gridView, $gridView->filterModelName(''));

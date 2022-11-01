@@ -55,7 +55,18 @@ final class ActionColumnTest extends TestCase
             </div>
             HTML,
             GridView::widget()
-                ->columns($this->createColumnsWithContent())
+                ->columns(
+                    ActionColumn::create()
+                        ->content(
+                            /** @psalm-param string[] $data */
+                            static fn (array $data): string => A::tag()
+                                ->addAttributes(['class' => 'text-decoration-none', 'title' => 'View'])
+                                ->content('🔎')
+                                ->encode(false)
+                                ->href('/admin/view?id=' . $data['id'])
+                                ->render(),
+                        ),
+                )
                 ->id('w1-grid')
                 ->paginator($this->createOffsetPaginator($this->data, 10))
                 ->render()
@@ -92,7 +103,19 @@ final class ActionColumnTest extends TestCase
             </div>
             HTML,
             GridView::widget()
-                ->columns($this->createColumnsWithContentAttributes())
+                ->columns(
+                    ActionColumn::create()
+                        ->content(
+                            /** @psalm-param string[] $data */
+                            static fn (array $data): string => A::tag()
+                                ->addAttributes(['title' => 'View'])
+                                ->content('🔎')
+                                ->encode(false)
+                                ->href('/admin/view?id=' . $data['id'])
+                                ->render(),
+                        )
+                        ->contentAttributes(['class' => 'text-decoration-none test.class']),
+                )
                 ->id('w1-grid')
                 ->paginator($this->createOffsetPaginator($this->data, 10))
                 ->render()
@@ -133,7 +156,21 @@ final class ActionColumnTest extends TestCase
             </div>
             HTML,
             GridView::widget()
-                ->columns($this->createColumnsWithButtonCustom())
+                ->columns(
+                    ActionColumn::create()
+                        ->buttons(
+                            [
+                                'resend-password' => static fn (string $url): string => A::tag()
+                                    ->addAttributes(['class' => 'text-decoration-none', 'title' => 'Resend password'])
+                                    ->content('&#128274;')
+                                    ->encode(false)
+                                    ->href($url)
+                                    ->render(),
+                            ],
+                        )
+                        ->template('{resend-password}')
+                        ->visibleButtons(['resend-password' => true]),
+                )
                 ->id('w1-grid')
                 ->paginator($this->createOffsetPaginator($this->data, 10))
                 ->render()
@@ -178,7 +215,7 @@ final class ActionColumnTest extends TestCase
             </div>
             HTML,
             GridView::widget()
-                ->columns($this->createColumnsWithDataLabel())
+                ->columns(ActionColumn::create()->dataLabel('test.label'))
                 ->id('w1-grid')
                 ->paginator($this->createOffsetPaginator($this->data, 10))
                 ->render()
@@ -228,7 +265,9 @@ final class ActionColumnTest extends TestCase
             </div>
             HTML,
             GridView::widget()
-                ->columns($this->createColumnsWithFooterAttributes())
+                ->columns(
+                    ActionColumn::create()->footer('test.footer')->footerAttributes(['class' => 'test.class']),
+                )
                 ->footerEnabled(true)
                 ->id('w1-grid')
                 ->paginator($this->createOffsetPaginator($this->data, 10))
@@ -274,7 +313,7 @@ final class ActionColumnTest extends TestCase
             </div>
             HTML,
             GridView::widget()
-                ->columns($this->createColumnsWithLabel())
+                ->columns(ActionColumn::create()->label('test.label'))
                 ->id('w1-grid')
                 ->paginator($this->createOffsetPaginator($this->data, 10))
                 ->render()
@@ -319,7 +358,7 @@ final class ActionColumnTest extends TestCase
             </div>
             HTML,
             GridView::widget()
-                ->columns($this->createColumnsWithLabelMbString())
+                ->columns(ActionColumn::create()->label('Ενέργειες'))
                 ->id('w1-grid')
                 ->paginator($this->createOffsetPaginator($this->data, 10))
                 ->render()
@@ -364,7 +403,7 @@ final class ActionColumnTest extends TestCase
             </div>
             HTML,
             GridView::widget()
-                ->columns($this->createColumnsWithLabelAttributes())
+                ->columns(ActionColumn::create()->label('test.label')->labelAttributes(['class' => 'test.class']))
                 ->id('w1-grid')
                 ->paginator($this->createOffsetPaginator($this->data, 10))
                 ->render()
@@ -409,7 +448,7 @@ final class ActionColumnTest extends TestCase
             </div>
             HTML,
             GridView::widget()
-                ->columns($this->createColumnsWithName())
+                ->columns(ActionColumn::create()->name('test.name'))
                 ->id('w1-grid')
                 ->paginator($this->createOffsetPaginator($this->data, 10))
                 ->render()
@@ -440,7 +479,7 @@ final class ActionColumnTest extends TestCase
             </div>
             HTML,
             GridView::widget()
-                ->columns($this->createColumnsWithNotVisible())
+                ->columns(ActionColumn::create()->visible(false))
                 ->id('w1-grid')
                 ->paginator($this->createOffsetPaginator($this->data, 10))
                 ->render()
@@ -485,7 +524,7 @@ final class ActionColumnTest extends TestCase
             </div>
             HTML,
             GridView::widget()
-                ->columns($this->createColumnsWithPrimaryKey())
+                ->columns(ActionColumn::create()->primaryKey('identity_id'))
                 ->id('w1-grid')
                 ->paginator(
                     $this->createOffsetPaginator(
@@ -544,7 +583,11 @@ final class ActionColumnTest extends TestCase
             </div>
             HTML,
             GridView::widget()
-                ->columns($this->createColumns())
+                ->columns(
+                    DataColumn::create()->attribute('id'),
+                    DataColumn::create()->attribute('name'),
+                    ActionColumn::create(),
+                )
                 ->id('w1-grid')
                 ->paginator($this->createOffsetPaginator($this->data, 10))
                 ->render()
@@ -589,7 +632,7 @@ final class ActionColumnTest extends TestCase
             </div>
             HTML,
             GridView::widget()
-                ->columns($this->createColumnsWithUrlArguments())
+                ->columns(ActionColumn::create()->urlArguments(['test-arguments' => 'test.arguments']))
                 ->id('w1-grid')
                 ->paginator($this->createOffsetPaginator($this->data, 10))
                 ->render()
@@ -634,7 +677,13 @@ final class ActionColumnTest extends TestCase
             </div>
             HTML,
             GridView::widget()
-                ->columns($this->createColumnsWithUrlCreator())
+                ->columns(
+                    ActionColumn::create()
+                    ->urlCreator(
+                        /** @psalm-param string[] $data */
+                        static fn (string $action, array $data): string => 'https://test.com/' . $action . '?id=' . $data['id'],
+                    ),
+                )
                 ->id('w1-grid')
                 ->paginator($this->createOffsetPaginator($this->data, 10))
                 ->render()
@@ -679,7 +728,7 @@ final class ActionColumnTest extends TestCase
             </div>
             HTML,
             GridView::widget()
-                ->columns($this->createColumnsWithUrlQueryParameters())
+                ->columns(ActionColumn::create()->urlQueryParameters(['test-param' => 'test.param']))
                 ->id('w1-grid')
                 ->paginator($this->createOffsetPaginator($this->data, 10))
                 ->render()
@@ -724,7 +773,7 @@ final class ActionColumnTest extends TestCase
             </div>
             HTML,
             GridView::widget()
-                ->columns($this->createColumnsWithUrlParamsConfig())
+                ->columns(ActionColumn::create()->urlParamsConfig(['test-param' => 'test.param']))
                 ->id('w1-grid')
                 ->paginator($this->createOffsetPaginator($this->data, 10))
                 ->render()
@@ -765,225 +814,17 @@ final class ActionColumnTest extends TestCase
             </div>
             HTML,
             GridView::widget()
-                ->columns($this->createColumnsWithVisibleButtonsClosure())
+                ->columns(
+                    ActionColumn::create()->visibleButtons(
+                        [
+                            'view' => static fn (array $data): bool => $data['id'] === 1,
+                            'update' => static fn (array $data): bool => $data['id'] !== 1,
+                        ],
+                    ),
+                )
                 ->id('w1-grid')
                 ->paginator($this->createOffsetPaginator($this->data, 10))
                 ->render()
         );
-    }
-
-    /**
-     * @psalm-return array<ActionColumn|DataColumn>
-     */
-    private function createColumns(): array
-    {
-        return [
-            DataColumn::create()->attribute('id'),
-            DataColumn::create()->attribute('name'),
-            ActionColumn::create(),
-        ];
-    }
-
-    /**
-     * @psalm-return array<ActionColumn>
-     */
-    private function createColumnsWithButtonCustom(): array
-    {
-        return [
-            ActionColumn::create()
-                ->buttons(
-                    [
-                        'resend-password' => static fn (string $url): string => A::tag()
-                            ->addAttributes(['class' => 'text-decoration-none', 'title' => 'Resend password'])
-                            ->content('&#128274;')
-                            ->encode(false)
-                            ->href($url)
-                            ->render(),
-                    ],
-                )
-                ->template('{resend-password}')
-                ->visibleButtons(['resend-password' => true]),
-        ];
-    }
-
-    /**
-     * @psalm-return array<ActionColumn>
-     */
-    private function createColumnsWithContent(): array
-    {
-        return [
-            ActionColumn::create()
-                ->content(
-                    /** @psalm-param string[] $data */
-                    static fn (array $data): string => A::tag()
-                        ->addAttributes(['class' => 'text-decoration-none', 'title' => 'View'])
-                        ->content('🔎')
-                        ->encode(false)
-                        ->href('/admin/view?id=' . $data['id'])
-                        ->render(),
-                ),
-        ];
-    }
-
-    /**
-     * @psalm-return array<ActionColumn>
-     */
-    private function createColumnsWithContentAttributes(): array
-    {
-        return [
-            ActionColumn::create()
-                ->content(
-                    /** @psalm-param string[] $data */
-                    static fn (array $data): string => A::tag()
-                        ->addAttributes(['title' => 'View'])
-                        ->content('🔎')
-                        ->encode(false)
-                        ->href('/admin/view?id=' . $data['id'])
-                        ->render(),
-                )
-                ->contentAttributes(['class' => 'text-decoration-none test.class']),
-        ];
-    }
-
-    /**
-     * @psalm-return array<ActionColumn>
-     */
-    private function createColumnsWithDataLabel(): array
-    {
-        return [
-            ActionColumn::create()->dataLabel('test.label'),
-        ];
-    }
-
-    /**
-     * @psalm-return array<ActionColumn>
-     */
-    private function createColumnsWithFooterAttributes(): array
-    {
-        return [
-            ActionColumn::create()
-                ->footer('test.footer')
-                ->footerAttributes(['class' => 'test.class']),
-        ];
-    }
-
-    /**
-     * @psalm-return array<ActionColumn>
-     */
-    private function createColumnsWithLabel(): array
-    {
-        return [
-            ActionColumn::create()->label('test.label'),
-        ];
-    }
-
-    /**
-     * @psalm-return array<ActionColumn>
-     */
-    private function createColumnsWithLabelMbString(): array
-    {
-        return [
-            ActionColumn::create()->label('Ενέργειες'),
-        ];
-    }
-
-    /**
-     * @psalm-return array<ActionColumn>
-     */
-    private function createColumnsWithLabelAttributes(): array
-    {
-        return [
-            ActionColumn::create()->label('test.label')->labelAttributes(['class' => 'test.class']),
-        ];
-    }
-
-    /**
-     * @psalm-return array<ActionColumn>
-     */
-    private function createColumnsWithName(): array
-    {
-        return [
-            ActionColumn::create()->name('test.name'),
-        ];
-    }
-
-    /**
-     * @psalm-return array<ActionColumn>
-     */
-    private function createColumnsWithNotVisible(): array
-    {
-        return [
-            ActionColumn::create()->visible(false),
-        ];
-    }
-
-    /**
-     * @psalm-return array<ActionColumn>
-     */
-    private function createColumnsWithPrimaryKey(): array
-    {
-        return [
-            ActionColumn::create()->primaryKey('identity_id'),
-        ];
-    }
-
-    /**
-     * @psalm-return array<ActionColumn>
-     */
-    private function createColumnsWithUrlArguments(): array
-    {
-        return [
-            ActionColumn::create()->urlArguments(['test-arguments' => 'test.arguments']),
-        ];
-    }
-
-    /**
-     * @psalm-return array<ActionColumn>
-     */
-    private function createColumnsWithUrlCreator(): array
-    {
-        return [
-            ActionColumn::create()
-                ->urlCreator(
-                    /** @psalm-param string[] $data */
-                    static fn (string $action, array $data): string => 'https://test.com/' . $action . '?id=' . $data['id'],
-                ),
-        ];
-    }
-
-    /**
-     * @psalm-return array<ActionColumn>
-     */
-    private function createColumnsWithUrlQueryParameters(): array
-    {
-        return [
-            ActionColumn::create()
-                ->urlQueryParameters(['test-param' => 'test.param']),
-        ];
-    }
-
-    /**
-     * @psalm-return array<ActionColumn>
-     */
-    private function createColumnsWithUrlParamsConfig(): array
-    {
-        return [
-            ActionColumn::create()->urlParamsConfig(['test-param' => 'test.param']),
-        ];
-    }
-
-    /**
-     * @psalm-return array<ActionColumn>
-     */
-    private function createColumnsWithVisibleButtonsClosure(): array
-    {
-        return [
-            ActionColumn::create()->visibleButtons(
-                [
-                    'view' => static fn (array $data): bool => $data['id'] === 1,
-                    'update' => static fn (array $data): bool => $data['id'] !== 1,
-                ],
-            ),
-        ];
     }
 }

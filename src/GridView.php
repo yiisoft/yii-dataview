@@ -90,8 +90,8 @@ final class GridView extends BaseListView
     /**
      * Return a new instance the specified columns.
      *
-     * @param array $values The grid column configuration. Each array element represents the configuration for one
-     * particular grid column. For example,
+     * @param AbstractColumn ...$values The grid column configuration. Each array element represents the configuration
+     * for one particular grid column. For example,
      *
      * ```php
      * [
@@ -104,10 +104,8 @@ final class GridView extends BaseListView
      *     ActionColumn::create()->primaryKey('identity_id')->visibleButtons(['view' => true]),
      * ]
      * ```
-     *
-     * @psalm-param array<array-key,AbstractColumn|null> $values
      */
-    public function columns(array $values): self
+    public function columns(AbstractColumn ...$values): self
     {
         $new = clone $this;
         $new->columns = $values;

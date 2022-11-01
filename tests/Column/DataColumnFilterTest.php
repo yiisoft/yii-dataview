@@ -100,7 +100,10 @@ final class DataColumnFilterTest extends TestCase
             </div>
             HTML,
             GridView::widget()
-                ->columns($this->createDataColumnsWithFilter())
+                ->columns(
+                    DataColumn::create()->attribute('id')->filter('&nbsp;'),
+                    DataColumn::create()->attribute('name')->filter('<input name="searchModel[name]">'),
+                )
                 ->id('w1-grid')
                 ->paginator($this->createOffsetPaginator($this->data, 10))
                 ->render()
@@ -148,7 +151,11 @@ final class DataColumnFilterTest extends TestCase
             </div>
             HTML,
             GridView::widget()
-                ->columns($this->createDataColumnsWithFilterDate())
+                ->columns(
+                    DataColumn::create()->attribute('id'),
+                    DataColumn::create()->attribute('name'),
+                    DataColumn::create()->attribute('birthday')->filterAttribute('birthday')->filterType('date'),
+                )
                 ->id('w1-grid')
                 ->paginator($this->createOffsetPaginator($this->dataWithDate, 10))
                 ->render()
@@ -196,7 +203,11 @@ final class DataColumnFilterTest extends TestCase
             </div>
             HTML,
             GridView::widget()
-                ->columns($this->createDataColumnsWithFilterDateTime())
+                ->columns(
+                    DataColumn::create()->attribute('id'),
+                    DataColumn::create()->attribute('name'),
+                    DataColumn::create()->attribute('birthday')->filterAttribute('birthday')->filterType('datetime'),
+                )
                 ->id('w1-grid')
                 ->paginator($this->createOffsetPaginator($this->dataWithDateTime, 10))
                 ->render()
@@ -244,7 +255,11 @@ final class DataColumnFilterTest extends TestCase
             </div>
             HTML,
             GridView::widget()
-                ->columns($this->createDataColumnsWithFilterEmail())
+                ->columns(
+                    DataColumn::create()->attribute('id'),
+                    DataColumn::create()->attribute('name'),
+                    DataColumn::create()->attribute('email')->filterAttribute('email')->filterType('email'),
+                )
                 ->id('w1-grid')
                 ->paginator($this->createOffsetPaginator($this->dataWithEmail, 10))
                 ->render()
@@ -288,7 +303,18 @@ final class DataColumnFilterTest extends TestCase
             </div>
             HTML,
             GridView::widget()
-                ->columns($this->createDataColumnsWithFilterInputAttributes())
+                ->columns(
+                    DataColumn::create()
+                        ->attribute('id')
+                        ->filterAttribute('id')
+                        ->filterInputAttributes(['class' => 'test.class'])
+                        ->filterValueDefault(0),
+                    DataColumn::create()
+                        ->attribute('name')
+                        ->filterAttribute('name')
+                        ->filterInputAttributes(['class' => 'test.class'])
+                        ->filterValueDefault(''),
+                )
                 ->filterModelName('searchModel')
                 ->id('w1-grid')
                 ->paginator($this->createOffsetPaginator($this->data, 10))
@@ -337,7 +363,11 @@ final class DataColumnFilterTest extends TestCase
             </div>
             HTML,
             GridView::widget()
-                ->columns($this->createDataColumnsWithFilterMonth())
+                ->columns(
+                    DataColumn::create()->attribute('id'),
+                    DataColumn::create()->attribute('name'),
+                    DataColumn::create()->attribute('month')->filterAttribute('month')->filterType('month'),
+                )
                 ->id('w1-grid')
                 ->paginator($this->createOffsetPaginator($this->dataWithMonth, 10))
                 ->render()
@@ -381,7 +411,10 @@ final class DataColumnFilterTest extends TestCase
             </div>
             HTML,
             GridView::widget()
-                ->columns($this->createDataColumnsWithFilterNumber())
+                ->columns(
+                    DataColumn::create()->attribute('id')->filterAttribute('id')->filterType('number'),
+                    DataColumn::create()->attribute('name'),
+                )
                 ->id('w1-grid')
                 ->paginator($this->createOffsetPaginator($this->data, 10))
                 ->render()
@@ -430,7 +463,20 @@ final class DataColumnFilterTest extends TestCase
             </div>
             HTML,
             GridView::widget()
-                ->columns($this->createDataColumnsWithFilters())
+                ->columns(
+                    DataColumn::create()
+                        ->attribute('id')
+                        ->filterAttribute('id')
+                        ->filterValueDefault(0)
+                        ->filterAttributes(['class' => 'text-center', 'style' => 'width:60px'])
+                        ->filterInputAttributes(['maxlength' => '5']),
+                    DataColumn::create()
+                        ->attribute('name')
+                        ->filterAttribute('name')
+                        ->filterValueDefault('')
+                        ->filterAttributes(['class' => 'text-center', 'style' => 'width:60px'])
+                        ->filterInputAttributes(['maxlength' => '5']),
+                )
                 ->filterModelName('searchModel')
                 ->filterPosition(GridView::FILTER_POS_FOOTER)
                 ->footerEnabled(true)
@@ -477,7 +523,20 @@ final class DataColumnFilterTest extends TestCase
             </div>
             HTML,
             GridView::widget()
-                ->columns($this->createDataColumnsWithFilters())
+                ->columns(
+                    DataColumn::create()
+                        ->attribute('id')
+                        ->filterAttribute('id')
+                        ->filterValueDefault(0)
+                        ->filterAttributes(['class' => 'text-center', 'style' => 'width:60px'])
+                        ->filterInputAttributes(['maxlength' => '5']),
+                    DataColumn::create()
+                        ->attribute('name')
+                        ->filterAttribute('name')
+                        ->filterValueDefault('')
+                        ->filterAttributes(['class' => 'text-center', 'style' => 'width:60px'])
+                        ->filterInputAttributes(['maxlength' => '5']),
+                )
                 ->filterModelName('searchModel')
                 ->filterPosition(GridView::FILTER_POS_HEADER)
                 ->id('w1-grid')
@@ -523,7 +582,14 @@ final class DataColumnFilterTest extends TestCase
             </div>
             HTML,
             GridView::widget()
-                ->columns($this->createDataColumnsWithFilterRange())
+                ->columns(
+                    DataColumn::create()
+                        ->attribute('id')
+                        ->filterAttribute('id')
+                        ->filterType('range')
+                        ->filterValueDefault(0),
+                    DataColumn::create()->attribute('name'),
+                )
                 ->id('w1-grid')
                 ->paginator($this->createOffsetPaginator($this->data, 10))
                 ->render()
@@ -567,7 +633,20 @@ final class DataColumnFilterTest extends TestCase
             </div>
             HTML,
             GridView::widget()
-                ->columns($this->createDataColumnsWithFilters())
+                ->columns(
+                    DataColumn::create()
+                        ->attribute('id')
+                        ->filterAttribute('id')
+                        ->filterValueDefault(0)
+                        ->filterAttributes(['class' => 'text-center', 'style' => 'width:60px'])
+                        ->filterInputAttributes(['maxlength' => '5']),
+                    DataColumn::create()
+                        ->attribute('name')
+                        ->filterAttribute('name')
+                        ->filterValueDefault('')
+                        ->filterAttributes(['class' => 'text-center', 'style' => 'width:60px'])
+                        ->filterInputAttributes(['maxlength' => '5']),
+                )
                 ->filterModelName('searchModel')
                 ->filterRowAttributes(['class' => 'text-center'])
                 ->id('w1-grid')
@@ -613,7 +692,10 @@ final class DataColumnFilterTest extends TestCase
             </div>
             HTML,
             GridView::widget()
-                ->columns($this->createDataColumnsWithFilterSearch())
+                ->columns(
+                    DataColumn::create()->attribute('id'),
+                    DataColumn::create()->attribute('name')->filterAttribute('name')->filterType('search'),
+                )
                 ->id('w1-grid')
                 ->paginator($this->createOffsetPaginator($this->data, 10))
                 ->render()
@@ -661,7 +743,15 @@ final class DataColumnFilterTest extends TestCase
             </div>
             HTML,
             GridView::widget()
-                ->columns($this->createDataColumnsWithFilterSelect())
+                ->columns(
+                    DataColumn::create()
+                        ->attribute('id')
+                        ->filterAttribute('id')
+                        ->filterInputSelectItems(['1' => 'Jhon', '2' => 'Mary'])
+                        ->filterInputSelectPrompt('Select...', 0)
+                        ->filterType('select'),
+                    DataColumn::create()->attribute('name'),
+                )
                 ->filterModelName('searchModel')
                 ->filterRowAttributes(['class' => 'text-center'])
                 ->id('w1-grid')
@@ -711,7 +801,11 @@ final class DataColumnFilterTest extends TestCase
             </div>
             HTML,
             GridView::widget()
-                ->columns($this->createDataColumnsWithFilterTelephone())
+                ->columns(
+                    DataColumn::create()->attribute('id'),
+                    DataColumn::create()->attribute('name'),
+                    DataColumn::create()->attribute('telephone')->filterAttribute('telephone')->filterType('tel'),
+                )
                 ->filterModelName('searchModel')
                 ->filterRowAttributes(['class' => 'text-center'])
                 ->id('w1-grid')
@@ -761,7 +855,11 @@ final class DataColumnFilterTest extends TestCase
             </div>
             HTML,
             GridView::widget()
-                ->columns($this->createDataColumnsWithFilterTime())
+                ->columns(
+                    DataColumn::create()->attribute('id'),
+                    DataColumn::create()->attribute('name'),
+                    DataColumn::create()->attribute('time')->filterAttribute('time')->filterType('time'),
+                )
                 ->filterModelName('searchModel')
                 ->filterRowAttributes(['class' => 'text-center'])
                 ->id('w1-grid')
@@ -811,7 +909,11 @@ final class DataColumnFilterTest extends TestCase
             </div>
             HTML,
             GridView::widget()
-                ->columns($this->createDataColumnsWithFilterUrl())
+                ->columns(
+                    DataColumn::create()->attribute('id'),
+                    DataColumn::create()->attribute('name'),
+                    DataColumn::create()->attribute('url')->filterAttribute('url')->filterType('url'),
+                )
                 ->filterModelName('searchModel')
                 ->filterRowAttributes(['class' => 'text-center'])
                 ->id('w1-grid')
@@ -861,7 +963,11 @@ final class DataColumnFilterTest extends TestCase
             </div>
             HTML,
             GridView::widget()
-                ->columns($this->createDataColumnsWithFilterWeek())
+                ->columns(
+                    DataColumn::create()->attribute('id'),
+                    DataColumn::create()->attribute('name'),
+                    DataColumn::create()->attribute('week')->filterAttribute('week')->filterType('week'),
+                )
                 ->filterModelName('searchModel')
                 ->filterRowAttributes(['class' => 'text-center'])
                 ->id('w1-grid')
@@ -907,265 +1013,24 @@ final class DataColumnFilterTest extends TestCase
             </div>
             HTML,
             GridView::widget()
-                ->columns($this->createDataColumnsWithFilters())
+                ->columns(
+                    DataColumn::create()
+                        ->attribute('id')
+                        ->filterAttribute('id')
+                        ->filterValueDefault(0)
+                        ->filterAttributes(['class' => 'text-center', 'style' => 'width:60px'])
+                        ->filterInputAttributes(['maxlength' => '5']),
+                    DataColumn::create()
+                        ->attribute('name')
+                        ->filterAttribute('name')
+                        ->filterValueDefault('')
+                        ->filterAttributes(['class' => 'text-center', 'style' => 'width:60px'])
+                        ->filterInputAttributes(['maxlength' => '5']),
+                )
                 ->filterModelName('searchModel')
                 ->id('w1-grid')
                 ->paginator($this->createOffsetPaginator($this->data, 10))
                 ->render()
         );
-    }
-
-    /**
-     * @psalm-return array<DataColumn>
-     */
-    private function createDataColumnsWithFilter(): array
-    {
-        return [
-            DataColumn::create()
-                ->attribute('id')
-                ->filter('&nbsp;'),
-            DataColumn::create()
-                ->attribute('name')
-                ->filter('<input name="searchModel[name]">'),
-        ];
-    }
-
-    /**
-     * @psalm-return array<DataColumn>
-     */
-    private function createDataColumnsWithFilterDate(): array
-    {
-        return [
-            DataColumn::create()
-                ->attribute('id'),
-            DataColumn::create()
-                ->attribute('name'),
-            DataColumn::create()
-                ->attribute('birthday')
-                ->filterAttribute('birthday')
-                ->filterType('date'),
-        ];
-    }
-
-    /**
-     * @psalm-return array<DataColumn>
-     */
-    private function createDataColumnsWithFilterDateTime(): array
-    {
-        return [
-            DataColumn::create()
-                ->attribute('id'),
-            DataColumn::create()
-                ->attribute('name'),
-            DataColumn::create()
-                ->attribute('birthday')
-                ->filterAttribute('birthday')
-                ->filterType('datetime'),
-        ];
-    }
-
-    /**
-     * @psalm-return array<DataColumn>
-     */
-    private function createDataColumnsWithFilterEmail(): array
-    {
-        return [
-            DataColumn::create()
-                ->attribute('id'),
-            DataColumn::create()
-                ->attribute('name'),
-            DataColumn::create()
-                ->attribute('email')
-                ->filterAttribute('email')
-                ->filterType('email'),
-        ];
-    }
-
-    /**
-     * @psalm-return array<DataColumn>
-     */
-    private function createDataColumnsWithFilterInputAttributes(): array
-    {
-        return [
-            DataColumn::create()
-                ->attribute('id')
-                ->filterAttribute('id')
-                ->filterInputAttributes(['class' => 'test.class'])
-                ->filterValueDefault(0),
-            DataColumn::create()
-                ->attribute('name')
-                ->filterAttribute('name')
-                ->filterInputAttributes(['class' => 'test.class'])
-                ->filterValueDefault(''),
-        ];
-    }
-
-    /**
-     * @psalm-return array<DataColumn>
-     */
-    private function createDataColumnsWithFilterMonth(): array
-    {
-        return [
-            DataColumn::create()
-                ->attribute('id'),
-            DataColumn::create()
-                ->attribute('name'),
-            DataColumn::create()
-                ->attribute('month')
-                ->filterAttribute('month')
-                ->filterType('month'),
-        ];
-    }
-
-    /**
-     * @psalm-return array<DataColumn>
-     */
-    private function createDataColumnsWithFilterNumber(): array
-    {
-        return [
-            DataColumn::create()
-                ->attribute('id')
-                ->filterAttribute('id')
-                ->filterType('number'),
-            DataColumn::create()
-                ->attribute('name'),
-        ];
-    }
-
-    /**
-     * @psalm-return array<DataColumn>
-     */
-    private function createDataColumnsWithFilterRange(): array
-    {
-        return [
-            DataColumn::create()
-                ->attribute('id')
-                ->filterAttribute('id')
-                ->filterType('range')
-                ->filterValueDefault(0),
-            DataColumn::create()
-                ->attribute('name'),
-        ];
-    }
-
-    /**
-     * @psalm-return array<DataColumn>
-     */
-    private function createDataColumnsWithFilterSearch(): array
-    {
-        return [
-            DataColumn::create()
-                ->attribute('id'),
-            DataColumn::create()
-                ->attribute('name')
-                ->filterAttribute('name')
-                ->filterType('search'),
-        ];
-    }
-
-    /**
-     * @psalm-return array<DataColumn>
-     */
-    private function createDataColumnsWithFilterSelect(): array
-    {
-        return [
-            DataColumn::create()
-                ->attribute('id')
-                ->filterAttribute('id')
-                ->filterInputSelectItems(['1' => 'Jhon', '2' => 'Mary'])
-                ->filterInputSelectPrompt('Select...', 0)
-                ->filterType('select'),
-            DataColumn::create()
-                ->attribute('name'),
-        ];
-    }
-
-    /**
-     * @psalm-return array<DataColumn>
-     */
-    private function createDataColumnsWithFilterTelephone(): array
-    {
-        return [
-            DataColumn::create()
-                ->attribute('id'),
-            DataColumn::create()
-                ->attribute('name'),
-            DataColumn::create()
-                ->attribute('telephone')
-                ->filterAttribute('telephone')
-                ->filterType('tel'),
-        ];
-    }
-
-    /**
-     * @psalm-return array<DataColumn>
-     */
-    private function createDataColumnsWithFilterTime(): array
-    {
-        return [
-            DataColumn::create()
-                ->attribute('id'),
-            DataColumn::create()
-                ->attribute('name'),
-            DataColumn::create()
-                ->attribute('time')
-                ->filterAttribute('time')
-                ->filterType('time'),
-        ];
-    }
-
-    /**
-     * @psalm-return array<DataColumn>
-     */
-    private function createDataColumnsWithFilterUrl(): array
-    {
-        return [
-            DataColumn::create()
-                ->attribute('id'),
-            DataColumn::create()
-                ->attribute('name'),
-            DataColumn::create()
-                ->attribute('url')
-                ->filterAttribute('url')
-                ->filterType('url'),
-        ];
-    }
-
-    /**
-     * @psalm-return array<DataColumn>
-     */
-    private function createDataColumnsWithFilterWeek(): array
-    {
-        return [
-            DataColumn::create()
-                ->attribute('id'),
-            DataColumn::create()
-                ->attribute('name'),
-            DataColumn::create()
-                ->attribute('week')
-                ->filterAttribute('week')
-                ->filterType('week'),
-        ];
-    }
-
-    /**
-     * @psalm-return array<DataColumn>
-     */
-    private function createDataColumnsWithFilters(): array
-    {
-        return [
-            DataColumn::create()
-                ->attribute('id')
-                ->filterAttribute('id')
-                ->filterValueDefault(0)
-                ->filterAttributes(['class' => 'text-center', 'style' => 'width:60px'])
-                ->filterInputAttributes(['maxlength' => '5']),
-            DataColumn::create()
-                ->attribute('name')
-                ->filterAttribute('name')
-                ->filterValueDefault('')
-                ->filterAttributes(['class' => 'text-center', 'style' => 'width:60px'])
-                ->filterInputAttributes(['maxlength' => '5']),
-        ];
     }
 }

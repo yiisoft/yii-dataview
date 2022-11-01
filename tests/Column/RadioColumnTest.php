@@ -60,7 +60,14 @@ final class RadioColumnTest extends TestCase
             </div>
             HTML,
             GridView::widget()
-                ->columns($this->createColumnsWithContent())
+                ->columns(
+                    DataColumn::create()->attribute('id'),
+                    DataColumn::create()->attribute('name'),
+                    RadioColumn::create()
+                        ->content(
+                            static fn (array $data, mixed $key, int $index): string => '<input name="radio-selection" type="radio" value="' . $index . '">'
+                        ),
+                )
                 ->id('w1-grid')
                 ->paginator($this->createOffsetPaginator($this->data, 10))
                 ->render()
@@ -103,7 +110,15 @@ final class RadioColumnTest extends TestCase
             </div>
             HTML,
             GridView::widget()
-                ->columns($this->createColumnsWithContentAttributes())
+                ->columns(
+                    DataColumn::create()->attribute('id'),
+                    DataColumn::create()->attribute('name'),
+                    RadioColumn::create()
+                        ->content(
+                            static fn (array $data, mixed $key, int $index): string => '<input name="radio-selection" type="radio" value="' . $index . '">'
+                        )
+                        ->contentAttributes(['class' => 'test-class']),
+                )
                 ->id('w1-grid')
                 ->paginator($this->createOffsetPaginator($this->data, 10))
                 ->render()
@@ -146,7 +161,11 @@ final class RadioColumnTest extends TestCase
             </div>
             HTML,
             GridView::widget()
-                ->columns($this->createColumnsWithDataLabel())
+                ->columns(
+                    DataColumn::create()->attribute('id'),
+                    DataColumn::create()->attribute('name'),
+                    RadioColumn::create()->dataLabel('test.label'),
+                )
                 ->id('w1-grid')
                 ->paginator($this->createOffsetPaginator($this->data, 10))
                 ->render()
@@ -189,7 +208,11 @@ final class RadioColumnTest extends TestCase
             </div>
             HTML,
             GridView::widget()
-                ->columns($this->createColumnsWithLabel())
+                ->columns(
+                    DataColumn::create()->attribute('id'),
+                    DataColumn::create()->attribute('name'),
+                    RadioColumn::create()->label('test.label'),
+                )
                 ->id('w1-grid')
                 ->paginator($this->createOffsetPaginator($this->data, 10))
                 ->render()
@@ -232,7 +255,11 @@ final class RadioColumnTest extends TestCase
             </div>
             HTML,
             GridView::widget()
-                ->columns($this->createColumnsWithLabelMbString())
+                ->columns(
+                    DataColumn::create()->attribute('id'),
+                    DataColumn::create()->attribute('name'),
+                    RadioColumn::create()->label('Ραδιόφωνο'),
+                )
                 ->id('w1-grid')
                 ->paginator($this->createOffsetPaginator($this->data, 10))
                 ->render()
@@ -275,7 +302,11 @@ final class RadioColumnTest extends TestCase
             </div>
             HTML,
             GridView::widget()
-                ->columns($this->createColumnsWithLabelAttributes())
+                ->columns(
+                    DataColumn::create()->attribute('id'),
+                    DataColumn::create()->attribute('name'),
+                    RadioColumn::create()->label('test.label')->labelAttributes(['class' => 'test-class']),
+                )
                 ->id('w1-grid')
                 ->paginator($this->createOffsetPaginator($this->data, 10))
                 ->render()
@@ -318,7 +349,11 @@ final class RadioColumnTest extends TestCase
             </div>
             HTML,
             GridView::widget()
-                ->columns($this->createColumnsWithName())
+                ->columns(
+                    DataColumn::create()->attribute('id'),
+                    DataColumn::create()->attribute('name'),
+                    RadioColumn::create()->name('test.radio'),
+                )
                 ->id('w1-grid')
                 ->paginator($this->createOffsetPaginator($this->data, 10))
                 ->render()
@@ -358,7 +393,11 @@ final class RadioColumnTest extends TestCase
             </div>
             HTML,
             GridView::widget()
-                ->columns($this->createColumnsWithNotVisible())
+                ->columns(
+                    DataColumn::create()->attribute('id'),
+                    DataColumn::create()->attribute('name'),
+                    RadioColumn::create()->visible(false),
+                )
                 ->id('w1-grid')
                 ->paginator($this->createOffsetPaginator($this->data, 10))
                 ->render()
@@ -401,124 +440,14 @@ final class RadioColumnTest extends TestCase
             </div>
             HTML,
             GridView::widget()
-                ->columns($this->createColumns())
+                ->columns(
+                    DataColumn::create()->attribute('id'),
+                    DataColumn::create()->attribute('name'),
+                    RadioColumn::create(),
+                )
                 ->id('w1-grid')
                 ->paginator($this->createOffsetPaginator($this->data, 10))
                 ->render()
         );
-    }
-
-    /**
-     * @psalm-return array<DataColumn|RadioColumn>
-     */
-    private function createColumns(): array
-    {
-        return [
-            DataColumn::create()->attribute('id'),
-            DataColumn::create()->attribute('name'),
-            RadioColumn::create(),
-        ];
-    }
-
-    /**
-     * @psalm-return array<DataColumn|RadioColumn>
-     */
-    private function createColumnsWithContent(): array
-    {
-        return [
-            DataColumn::create()->attribute('id'),
-            DataColumn::create()->attribute('name'),
-            RadioColumn::create()->content(
-                static fn (array $data, mixed $key, int $index): string => '<input name="radio-selection" type="radio" value="' . $index . '">'
-            ),
-        ];
-    }
-
-    /**
-     * @psalm-return array<DataColumn|RadioColumn>
-     */
-    private function createColumnsWithContentAttributes(): array
-    {
-        return [
-            DataColumn::create()->attribute('id'),
-            DataColumn::create()->attribute('name'),
-            RadioColumn::create()
-                ->content(
-                    static fn (array $data, mixed $key, int $index): string => '<input name="radio-selection" type="radio" value="' . $index . '">'
-                )
-                ->contentAttributes(['class' => 'test-class']),
-        ];
-    }
-
-    /**
-     * @psalm-return array<DataColumn|RadioColumn>
-     */
-    private function createColumnsWithDataLabel(): array
-    {
-        return [
-            DataColumn::create()->attribute('id'),
-            DataColumn::create()->attribute('name'),
-            RadioColumn::create()->dataLabel('test.label'),
-        ];
-    }
-
-    /**
-     * @psalm-return array<DataColumn|RadioColumn>
-     */
-    private function createColumnsWithLabel(): array
-    {
-        return [
-            DataColumn::create()->attribute('id'),
-            DataColumn::create()->attribute('name'),
-            RadioColumn::create()->label('test.label'),
-        ];
-    }
-
-    /**
-     * @psalm-return array<DataColumn|RadioColumn>
-     */
-    private function createColumnsWithLabelMbString(): array
-    {
-        return [
-            DataColumn::create()->attribute('id'),
-            DataColumn::create()->attribute('name'),
-            RadioColumn::create()->label('Ραδιόφωνο'),
-        ];
-    }
-
-    /**
-     * @psalm-return array<DataColumn|RadioColumn>
-     */
-    private function createColumnsWithLabelAttributes(): array
-    {
-        return [
-            DataColumn::create()->attribute('id'),
-            DataColumn::create()->attribute('name'),
-            RadioColumn::create()->label('test.label')->labelAttributes(['class' => 'test-class']),
-        ];
-    }
-
-    /**
-     * @psalm-return array<DataColumn|RadioColumn>
-     */
-    private function createColumnsWithName(): array
-    {
-        return [
-            DataColumn::create()->attribute('id'),
-            DataColumn::create()->attribute('name'),
-            RadioColumn::create()->name('test.radio'),
-        ];
-    }
-
-    /**
-     * @psalm-return array<DataColumn|RadioColumn>
-     */
-    private function createColumnsWithNotVisible(): array
-    {
-        return [
-            DataColumn::create()->attribute('id'),
-            DataColumn::create()->attribute('name'),
-            RadioColumn::create()->visible(false),
-        ];
     }
 }

@@ -60,7 +60,6 @@ final class KeysetPaginationBaseTest extends TestCase
             </div>
             HTML,
             GridView::widget()
-                ->columns([])
                 ->id('w1-grid')
                 ->paginator($keysetPaginator)
                 ->pagination(KeysetPagination::widget()->paginator($keysetPaginator)->render())
@@ -126,7 +125,11 @@ final class KeysetPaginationBaseTest extends TestCase
             </div>
             HTML,
             GridView::widget()
-                ->columns($this->createColumns())
+                ->columns(
+                    DataColumn::create()->attribute('id'),
+                    DataColumn::create()->attribute('name'),
+                    DataColumn::create()->attribute('description'),
+                )
                 ->id('w1-grid')
                 ->paginator($keysetPaginator)
                 ->pagination(KeysetPagination::widget()->paginator($keysetPaginator)->urlArguments([])->render())
@@ -184,7 +187,11 @@ final class KeysetPaginationBaseTest extends TestCase
             </div>
             HTML,
             GridView::widget()
-                ->columns($this->createColumns())
+                ->columns(
+                    DataColumn::create()->attribute('id'),
+                    DataColumn::create()->attribute('name'),
+                    DataColumn::create()->attribute('description'),
+                )
                 ->id('w1-grid')
                 ->paginator($keysetPaginator)
                 ->pagination(KeysetPagination::widget()->paginator($keysetPaginator)->urlArguments([])->render())
@@ -227,7 +234,11 @@ final class KeysetPaginationBaseTest extends TestCase
             </div>
             HTML,
             GridView::widget()
-                ->columns($this->createColumns())
+                ->columns(
+                    DataColumn::create()->attribute('id'),
+                    DataColumn::create()->attribute('name'),
+                    DataColumn::create()->attribute('description'),
+                )
                 ->id('w1-grid')
                 ->paginator($keysetPaginator)
                 ->pagination(KeysetPagination::widget()->paginator($keysetPaginator)->urlArguments([])->render())
@@ -285,7 +296,11 @@ final class KeysetPaginationBaseTest extends TestCase
             </div>
             HTML,
             GridView::widget()
-                ->columns($this->createColumns())
+                ->columns(
+                    DataColumn::create()->attribute('id'),
+                    DataColumn::create()->attribute('name'),
+                    DataColumn::create()->attribute('description'),
+                )
                 ->id('w1-grid')
                 ->paginator($keysetPaginator)
                 ->pagination(KeysetPagination::widget()->paginator($keysetPaginator)->urlArguments([])->render())
@@ -343,24 +358,16 @@ final class KeysetPaginationBaseTest extends TestCase
             </div>
             HTML,
             GridView::widget()
-                ->columns($this->createColumns())
+                ->columns(
+                    DataColumn::create()->attribute('id'),
+                    DataColumn::create()->attribute('name'),
+                    DataColumn::create()->attribute('description'),
+                )
                 ->id('w1-grid')
                 ->paginator($keysetPaginator)
                 ->pagination(KeysetPagination::widget()->paginator($keysetPaginator)->urlArguments([])->render())
                 ->layoutGridTable('{items}' . PHP_EOL . '{pager}')
                 ->render(),
         );
-    }
-
-    /**
-     * @psalm-return array<DataColumn>
-     */
-    private function createColumns(): array
-    {
-        return [
-            DataColumn::create()->attribute('id'),
-            DataColumn::create()->attribute('name'),
-            DataColumn::create()->attribute('description'),
-        ];
     }
 }
