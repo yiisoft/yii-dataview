@@ -60,7 +60,13 @@ final class CheckboxColumnTest extends TestCase
             </div>
             HTML,
             GridView::widget()
-                ->columns($this->createColumnsWithContent())
+                ->columns(
+                    DataColumn::create()->attribute('id'),
+                    DataColumn::create()->attribute('name'),
+                    CheckboxColumn::create()->content(
+                        static fn (array|object $data, mixed $key, int $index): string => '<input name="checkbox-selection" type="checkbox" value="' . $index . '">'
+                    ),
+                )
                 ->id('w1-grid')
                 ->paginator($this->createOffsetPaginator($this->data, 10))
                 ->render()
@@ -103,7 +109,15 @@ final class CheckboxColumnTest extends TestCase
             </div>
             HTML,
             GridView::widget()
-                ->columns($this->createColumnsWithContentAttributes())
+                ->columns(
+                    DataColumn::create()->attribute('id'),
+                    DataColumn::create()->attribute('name'),
+                    CheckboxColumn::create()
+                        ->content(
+                            static fn (array|object $data, mixed $key, int $index): string => '<input name="checkbox-selection" type="checkbox" value="' . $index . '">'
+                        )
+                        ->contentAttributes(['class' => 'test.class']),
+                )
                 ->id('w1-grid')
                 ->paginator($this->createOffsetPaginator($this->data, 10))
                 ->render()
@@ -146,7 +160,11 @@ final class CheckboxColumnTest extends TestCase
             </div>
             HTML,
             GridView::widget()
-                ->columns($this->createColumnsWithDataLabel())
+                ->columns(
+                    DataColumn::create()->attribute('id'),
+                    DataColumn::create()->attribute('name'),
+                    CheckboxColumn::create()->dataLabel('test.label'),
+                )
                 ->id('w1-grid')
                 ->paginator($this->createOffsetPaginator($this->data, 10))
                 ->render()
@@ -189,7 +207,11 @@ final class CheckboxColumnTest extends TestCase
             </div>
             HTML,
             GridView::widget()
-                ->columns($this->createColumnsWithLabel())
+                ->columns(
+                    DataColumn::create()->attribute('id'),
+                    DataColumn::create()->attribute('name'),
+                    CheckboxColumn::create()->label('test.label'),
+                )
                 ->id('w1-grid')
                 ->paginator($this->createOffsetPaginator($this->data, 10))
                 ->render()
@@ -232,7 +254,11 @@ final class CheckboxColumnTest extends TestCase
             </div>
             HTML,
             GridView::widget()
-                ->columns($this->createColumnsWithLabelMbString())
+                ->columns(
+                    DataColumn::create()->attribute('id'),
+                    DataColumn::create()->attribute('name'),
+                    CheckboxColumn::create()->label('Πλαίσιο ελέγχου'),
+                )
                 ->id('w1-grid')
                 ->paginator($this->createOffsetPaginator($this->data, 10))
                 ->render()
@@ -275,7 +301,11 @@ final class CheckboxColumnTest extends TestCase
             </div>
             HTML,
             GridView::widget()
-                ->columns($this->createColumnsWithLabelAttributes())
+                ->columns(
+                    DataColumn::create()->attribute('id'),
+                    DataColumn::create()->attribute('name'),
+                    CheckboxColumn::create()->label('test.label')->labelAttributes(['class' => 'test.class']),
+                )
                 ->id('w1-grid')
                 ->paginator($this->createOffsetPaginator($this->data, 10))
                 ->render()
@@ -318,7 +348,11 @@ final class CheckboxColumnTest extends TestCase
             </div>
             HTML,
             GridView::widget()
-                ->columns($this->createColumnsWithName())
+                ->columns(
+                    DataColumn::create()->attribute('id'),
+                    DataColumn::create()->attribute('name'),
+                    CheckboxColumn::create()->name('test.checkbox'),
+                )
                 ->id('w1-grid')
                 ->paginator($this->createOffsetPaginator($this->data, 10))
                 ->render()
@@ -361,7 +395,11 @@ final class CheckboxColumnTest extends TestCase
             </div>
             HTML,
             GridView::widget()
-                ->columns($this->createColumnsWithNotMultiple())
+                ->columns(
+                    DataColumn::create()->attribute('id'),
+                    DataColumn::create()->attribute('name'),
+                    CheckboxColumn::create()->multiple(false),
+                )
                 ->id('w1-grid')
                 ->paginator($this->createOffsetPaginator($this->data, 10))
                 ->render()
@@ -401,7 +439,11 @@ final class CheckboxColumnTest extends TestCase
             </div>
             HTML,
             GridView::widget()
-                ->columns($this->createColumnsWithNotVisible())
+                ->columns(
+                    DataColumn::create()->attribute('id'),
+                    DataColumn::create()->attribute('name'),
+                    CheckboxColumn::create()->visible(false),
+                )
                 ->id('w1-grid')
                 ->paginator($this->createOffsetPaginator($this->data, 10))
                 ->render()
@@ -444,136 +486,14 @@ final class CheckboxColumnTest extends TestCase
             </div>
             HTML,
             GridView::widget()
-                ->columns($this->createColumns())
+                ->columns(
+                    DataColumn::create()->attribute('id'),
+                    DataColumn::create()->attribute('name'),
+                    CheckboxColumn::create(),
+                )
                 ->id('w1-grid')
                 ->paginator($this->createOffsetPaginator($this->data, 10))
                 ->render()
         );
-    }
-
-    /**
-     * @psalm-return array<DataColumn|CheckboxColumn>
-     */
-    private function createColumns(): array
-    {
-        return [
-            DataColumn::create()->attribute('id'),
-            DataColumn::create()->attribute('name'),
-            CheckboxColumn::create(),
-        ];
-    }
-
-    /**
-     * @psalm-return array<DataColumn|CheckboxColumn>
-     */
-    private function createColumnsWithContent(): array
-    {
-        return [
-            DataColumn::create()->attribute('id'),
-            DataColumn::create()->attribute('name'),
-            CheckboxColumn::create()->content(
-                static fn (array|object $data, mixed $key, int $index): string => '<input name="checkbox-selection" type="checkbox" value="' . $index . '">'
-            ),
-        ];
-    }
-
-    /**
-     * @psalm-return array<DataColumn|CheckboxColumn>
-     */
-    private function createColumnsWithContentAttributes(): array
-    {
-        return [
-            DataColumn::create()->attribute('id'),
-            DataColumn::create()->attribute('name'),
-            CheckboxColumn::create()
-                ->content(
-                    static fn (array|object $data, mixed $key, int $index): string => '<input name="checkbox-selection" type="checkbox" value="' . $index . '">'
-                )
-                ->contentAttributes(['class' => 'test.class']),
-        ];
-    }
-
-    /**
-     * @psalm-return array<DataColumn|CheckboxColumn>
-     */
-    private function createColumnsWithDataLabel(): array
-    {
-        return [
-            DataColumn::create()->attribute('id'),
-            DataColumn::create()->attribute('name'),
-            CheckboxColumn::create()->dataLabel('test.label'),
-        ];
-    }
-
-    /**
-     * @psalm-return array<DataColumn|CheckboxColumn>
-     */
-    private function createColumnsWithLabel(): array
-    {
-        return [
-            DataColumn::create()->attribute('id'),
-            DataColumn::create()->attribute('name'),
-            CheckboxColumn::create()->label('test.label'),
-        ];
-    }
-
-    /**
-     * @psalm-return array<DataColumn|CheckboxColumn>
-     */
-    private function createColumnsWithLabelMbString(): array
-    {
-        return [
-            DataColumn::create()->attribute('id'),
-            DataColumn::create()->attribute('name'),
-            CheckboxColumn::create()->label('Πλαίσιο ελέγχου'),
-        ];
-    }
-
-    /**
-     * @psalm-return array<DataColumn|CheckboxColumn>
-     */
-    private function createColumnsWithLabelAttributes(): array
-    {
-        return [
-            DataColumn::create()->attribute('id'),
-            DataColumn::create()->attribute('name'),
-            CheckboxColumn::create()->label('test.label')->labelAttributes(['class' => 'test.class']),
-        ];
-    }
-
-    /**
-     * @psalm-return array<DataColumn|CheckboxColumn>
-     */
-    private function createColumnsWithName(): array
-    {
-        return [
-            DataColumn::create()->attribute('id'),
-            DataColumn::create()->attribute('name'),
-            CheckboxColumn::create()->name('test.checkbox'),
-        ];
-    }
-
-    /**
-     * @psalm-return array<DataColumn|CheckboxColumn>
-     */
-    private function createColumnsWithNotMultiple(): array
-    {
-        return [
-            DataColumn::create()->attribute('id'),
-            DataColumn::create()->attribute('name'),
-            CheckboxColumn::create()->multiple(false),
-        ];
-    }
-
-    /**
-     * @psalm-return array<DataColumn|CheckboxColumn>
-     */
-    private function createColumnsWithNotVisible(): array
-    {
-        return [
-            DataColumn::create()->attribute('id'),
-            DataColumn::create()->attribute('name'),
-            CheckboxColumn::create()->visible(false),
-        ];
     }
 }

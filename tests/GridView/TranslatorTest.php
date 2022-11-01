@@ -78,7 +78,12 @@ final class TranslatorTest extends TestCase
             </div>
             HTML,
             GridView::widget()
-                ->columns($this->createColumns())
+                ->columns(
+                    SerialColumn::create(),
+                    DataColumn::create()->attribute('id'),
+                    DataColumn::create()->attribute('name'),
+                    DataColumn::create()->attribute('age'),
+                )
                 ->id('w1-grid')
                 ->paginator($this->createOffsetPaginator([], 10))
                 ->render()
@@ -116,7 +121,12 @@ final class TranslatorTest extends TestCase
             </div>
             HTML,
             GridView::widget()
-                ->columns($this->createColumns())
+                ->columns(
+                    SerialColumn::create(),
+                    DataColumn::create()->attribute('id'),
+                    DataColumn::create()->attribute('name'),
+                    DataColumn::create()->attribute('age'),
+                )
                 ->id('w1-grid')
                 ->paginator($this->createOffsetPaginator([], 10))
                 ->render()
@@ -154,7 +164,12 @@ final class TranslatorTest extends TestCase
             </div>
             HTML,
             GridView::widget()
-                ->columns($this->createColumns())
+                ->columns(
+                    SerialColumn::create(),
+                    DataColumn::create()->attribute('id'),
+                    DataColumn::create()->attribute('name'),
+                    DataColumn::create()->attribute('age'),
+                )
                 ->id('w1-grid')
                 ->paginator($this->createOffsetPaginator([], 10))
                 ->render()
@@ -200,7 +215,12 @@ final class TranslatorTest extends TestCase
             </div>
             HTML,
             GridView::widget()
-                ->columns($this->createColumns())
+                ->columns(
+                    SerialColumn::create(),
+                    DataColumn::create()->attribute('id'),
+                    DataColumn::create()->attribute('name'),
+                    DataColumn::create()->attribute('age'),
+                )
                 ->id('w1-grid')
                 ->paginator($this->createOffsetPaginator($this->data, 10))
                 ->render()
@@ -248,7 +268,12 @@ final class TranslatorTest extends TestCase
             </div>
             HTML,
             GridView::widget()
-                ->columns($this->createColumns())
+                ->columns(
+                    SerialColumn::create(),
+                    DataColumn::create()->attribute('id'),
+                    DataColumn::create()->attribute('name'),
+                    DataColumn::create()->attribute('age'),
+                )
                 ->id('w1-grid')
                 ->paginator($this->createOffsetPaginator($this->data, 10))
                 ->render()
@@ -296,7 +321,12 @@ final class TranslatorTest extends TestCase
             </div>
             HTML,
             GridView::widget()
-                ->columns($this->createColumns())
+                ->columns(
+                    SerialColumn::create(),
+                    DataColumn::create()->attribute('id'),
+                    DataColumn::create()->attribute('name'),
+                    DataColumn::create()->attribute('age'),
+                )
                 ->id('w1-grid')
                 ->paginator($this->createOffsetPaginator($this->data, 10))
                 ->render()
@@ -329,18 +359,5 @@ final class TranslatorTest extends TestCase
             ],
             $translatorConfig,
         );
-    }
-
-    /**
-     * @psalm-return array<SerialColumn|DataColumn>
-     */
-    private function createColumns(): array
-    {
-        return [
-            SerialColumn::create(),
-            DataColumn::create()->attribute('id'),
-            DataColumn::create()->attribute('name'),
-            DataColumn::create()->attribute('age'),
-        ];
     }
 }

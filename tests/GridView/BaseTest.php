@@ -69,7 +69,12 @@ final class BaseTest extends TestCase
             GridView::widget()
                 ->afterRow(static fn () => '</div>')
                 ->beforeRow(static fn () => '<div class="testMe">')
-                ->columns($this->createColumns())
+                ->columns(
+                    SerialColumn::create(),
+                    DataColumn::create()->attribute('id'),
+                    DataColumn::create()->attribute('name'),
+                    DataColumn::create()->attribute('age'),
+                )
                 ->id('w1-grid')
                 ->paginator($this->createOffsetPaginator($this->data, 10))
                 ->render()
@@ -117,7 +122,11 @@ final class BaseTest extends TestCase
             </div>
             HTML,
             GridView::widget()
-                ->columns($this->createColumnsWithAttributes())
+                ->columns(
+                    SerialColumn::create()->attributes(['class' => 'text-primary']),
+                    DataColumn::create()->attribute('id')->attributes(['class' => 'bg-primary']),
+                    DataColumn::create()->attribute('name')->attributes(['class' => 'bg-success']),
+                )
                 ->columnsGroupEnabled(true)
                 ->id('w1-grid')
                 ->paginator($this->createOffsetPaginator($this->data, 10))
@@ -170,7 +179,12 @@ final class BaseTest extends TestCase
             </div>
             HTML,
             GridView::widget()
-                ->columns($this->createColumns())
+                ->columns(
+                    SerialColumn::create(),
+                    DataColumn::create()->attribute('id'),
+                    DataColumn::create()->attribute('name'),
+                    DataColumn::create()->attribute('age'),
+                )
                 ->columnsGroupEnabled(true)
                 ->id('w1-grid')
                 ->paginator($this->createOffsetPaginator($this->data, 10))
@@ -225,7 +239,6 @@ final class BaseTest extends TestCase
             </div>
             HTML,
             GridView::widget()
-                ->columns([])
                 ->id('w1-grid')
                 ->paginator($this->createOffsetPaginator($this->data, 10))
                 ->render()
@@ -259,7 +272,7 @@ final class BaseTest extends TestCase
             </div>
             HTML,
             GridView::widget()
-                ->columns([DataColumn::create()->attribute('id')])
+                ->columns(DataColumn::create()->attribute('id'))
                 ->emptyCell('Empty cell')
                 ->id('w1-grid')
                 ->paginator($this->createOffsetPaginator([['id' => '']], 10))
@@ -296,7 +309,12 @@ final class BaseTest extends TestCase
             </div>
             HTML,
             GridView::widget()
-                ->columns($this->createColumns())
+                ->columns(
+                    SerialColumn::create(),
+                    DataColumn::create()->attribute('id'),
+                    DataColumn::create()->attribute('name'),
+                    DataColumn::create()->attribute('age'),
+                )
                 ->emptyText('Not found.')
                 ->id('w1-grid')
                 ->paginator($this->createOffsetPaginator([], 10))
@@ -345,7 +363,11 @@ final class BaseTest extends TestCase
             </div>
             HTML,
             GridView::widget()
-                ->columns($this->createColumnsWithFooter())
+                ->columns(
+                    SerialColumn::create()->footer('Total:'),
+                    DataColumn::create()->attribute('id')->footer('2'),
+                    DataColumn::create()->attribute('name')->footer('2'),
+                )
                 ->footerEnabled(true)
                 ->footerRowAttributes(['class' => 'text-primary'])
                 ->id('w1-grid')
@@ -394,7 +416,12 @@ final class BaseTest extends TestCase
             </div>
             HTML,
             GridView::widget()
-                ->columns($this->createColumns())
+                ->columns(
+                    SerialColumn::create(),
+                    DataColumn::create()->attribute('id'),
+                    DataColumn::create()->attribute('name'),
+                    DataColumn::create()->attribute('age'),
+                )
                 ->header('List of users')
                 ->id('w1-grid')
                 ->paginator($this->createOffsetPaginator($this->data, 10))
@@ -442,7 +469,12 @@ final class BaseTest extends TestCase
             </div>
             HTML,
             GridView::widget()
-                ->columns($this->createColumns())
+                ->columns(
+                    SerialColumn::create(),
+                    DataColumn::create()->attribute('id'),
+                    DataColumn::create()->attribute('name'),
+                    DataColumn::create()->attribute('age'),
+                )
                 ->header('List of users')
                 ->id('w1-grid')
                 ->paginator($this->createOffsetPaginator($this->data, 10))
@@ -491,7 +523,12 @@ final class BaseTest extends TestCase
             </div>
             HTML,
             GridView::widget()
-                ->columns($this->createColumns())
+                ->columns(
+                    SerialColumn::create(),
+                    DataColumn::create()->attribute('id'),
+                    DataColumn::create()->attribute('name'),
+                    DataColumn::create()->attribute('age'),
+                )
                 ->headerRowAttributes(['class' => 'text-primary'])
                 ->id('w1-grid')
                 ->paginator($this->createOffsetPaginator($this->data, 10))
@@ -530,7 +567,12 @@ final class BaseTest extends TestCase
             </div>
             HTML,
             GridView::widget()
-                ->columns($this->createColumns())
+                ->columns(
+                    SerialColumn::create(),
+                    DataColumn::create()->attribute('id'),
+                    DataColumn::create()->attribute('name'),
+                    DataColumn::create()->attribute('age'),
+                )
                 ->headerTableEnabled(false)
                 ->id('w1-grid')
                 ->paginator($this->createOffsetPaginator($this->data, 10))
@@ -567,7 +609,12 @@ final class BaseTest extends TestCase
             </div>
             HTML,
             GridView::widget()
-                ->columns($this->createColumns())
+                ->columns(
+                    SerialColumn::create(),
+                    DataColumn::create()->attribute('id'),
+                    DataColumn::create()->attribute('name'),
+                    DataColumn::create()->attribute('age'),
+                )
                 ->id('w1-grid')
                 ->paginator($this->createOffsetPaginator([], 10))
                 ->render()
@@ -613,7 +660,12 @@ final class BaseTest extends TestCase
             </div>
             HTML,
             GridView::widget()
-                ->columns($this->createColumns())
+                ->columns(
+                    SerialColumn::create(),
+                    DataColumn::create()->attribute('id'),
+                    DataColumn::create()->attribute('name'),
+                    DataColumn::create()->attribute('age'),
+                )
                 ->id('w1-grid')
                 ->paginator($this->createOffsetPaginator($this->data, 10))
                 ->rowAttributes(['class' => 'text-primary'])
@@ -651,7 +703,12 @@ final class BaseTest extends TestCase
             </div>
             HTML,
             GridView::widget()
-                ->columns($this->createColumns())
+                ->columns(
+                    SerialColumn::create(),
+                    DataColumn::create()->attribute('id'),
+                    DataColumn::create()->attribute('name'),
+                    DataColumn::create()->attribute('age'),
+                )
                 ->id('w1-grid')
                 ->paginator($this->createOffsetPaginator($this->data, 10))
                 ->rowAttributes(['class' => 'text-primary'])
@@ -698,48 +755,16 @@ final class BaseTest extends TestCase
             </div>
             HTML,
             GridView::widget()
-                ->columns($this->createColumns())
+                ->columns(
+                    SerialColumn::create(),
+                    DataColumn::create()->attribute('id'),
+                    DataColumn::create()->attribute('name'),
+                    DataColumn::create()->attribute('age'),
+                )
                 ->id('w1-grid')
                 ->paginator($this->createOffsetPaginator($this->data, 10))
                 ->tableAttributes(['class' => 'table table-striped table-bordered'])
                 ->render()
         );
-    }
-
-    /**
-     * @psalm-return array<SerialColumn|DataColumn>
-     */
-    private function createColumns(): array
-    {
-        return [
-            SerialColumn::create(),
-            DataColumn::create()->attribute('id'),
-            DataColumn::create()->attribute('name'),
-            DataColumn::create()->attribute('age'),
-        ];
-    }
-
-    /**
-     * @psalm-return array<SerialColumn|DataColumn>
-     */
-    private function createColumnsWithAttributes(): array
-    {
-        return [
-            SerialColumn::create()->attributes(['class' => 'text-primary']),
-            DataColumn::create()->attribute('id')->attributes(['class' => 'bg-primary']),
-            DataColumn::create()->attribute('name')->attributes(['class' => 'bg-success']),
-        ];
-    }
-
-    /**
-     * @psalm-return array<SerialColumn|DataColumn>
-     */
-    private function createColumnsWithFooter(): array
-    {
-        return [
-            SerialColumn::create()->footer('Total:'),
-            DataColumn::create()->attribute('id')->footer('2'),
-            DataColumn::create()->attribute('name')->footer('2'),
-        ];
     }
 }
