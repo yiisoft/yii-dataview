@@ -13,7 +13,7 @@ use function mb_strtolower;
 /**
  * Column is the base class of all {@see GridView} column classes.
  */
-abstract class Column
+abstract class AbstractColumn
 {
     private array $attributes = [];
     private Closure|null $content = null;

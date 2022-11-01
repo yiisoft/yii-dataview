@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Yiisoft\Yii\DataView\Tests\Widget\Pagination;
+namespace Yiisoft\Yii\DataView\Tests\Pagination;
 
 use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
@@ -15,12 +15,12 @@ use Yiisoft\Di\ContainerConfig;
 use Yiisoft\Factory\NotFoundException;
 use Yiisoft\Router\CurrentRoute;
 use Yiisoft\Widget\WidgetFactory;
+use Yiisoft\Yii\DataView\BasePagination;
 use Yiisoft\Yii\DataView\Exception;
+use Yiisoft\Yii\DataView\OffsetPagination;
 use Yiisoft\Yii\DataView\Tests\Support\Assert;
 use Yiisoft\Yii\DataView\Tests\Support\Mock;
 use Yiisoft\Yii\DataView\Tests\Support\TestTrait;
-use Yiisoft\Yii\DataView\Widget\BasePagination;
-use Yiisoft\Yii\DataView\Widget\OffsetPagination;
 
 final class ExceptionTest extends TestCase
 {

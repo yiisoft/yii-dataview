@@ -9,31 +9,37 @@ use InvalidArgumentException;
 use JsonException;
 use Yiisoft\Html\Html;
 use Yiisoft\Widget\Widget;
+use Yiisoft\Yii\DataView\Field\DataField;
 
 /**
  * DetailView displays the detail of a single data.
  *
- * DetailView is best used for displaying a data in a regular format (e.g. each data attribute is displayed using
- * flexbox).
+ * DetailView is best used for displaying a data in a regular format (e.g. each field is displayed using flexbox).
  *
  * The data can be either object or an associative array.
  *
- * DetailView uses the {@see dataAttributes} property to determines which model dataAttributes should be displayed
- * and how they should be formatted.
+ * DetailView uses the {@see data} property to determines which model should be displayed how they should be formatted.
  *
  * A typical usage of DetailView is as follows:
  *
  * ```php
- * <?= DetailView::widget()->data($data) ?>
+ * <?= DetailView::widget()
+ *     ->data(['id' => 1, 'username' => 'tests 1', 'status' => true])
+ *     ->fields(
+ *         DataField::create()->attribute('id'),
+ *         DataField::create()->attribute('username'),
+ *         DataField::create()->attribute('status'),
+ *     )
+ *     ->render()
  * ```
  */
 final class DetailView extends Widget
 {
     private array $attributes = [];
-    private array $columns = [];
     private array $containerAttributes = [];
     private array|object $data = [];
     private array $dataAttributes = [];
+    private array $fields = [];
     private string $header = '';
     private string $itemTemplate = "<div{dataAttributes}>\n{label}\n{value}\n</div>";
     private array|Closure $labelAttributes = [];
@@ -55,25 +61,6 @@ final class DetailView extends Widget
     {
         $new = clone $this;
         $new->attributes = $values;
-
-        return $new;
-    }
-
-    /**
-     * Return a new instance the specified columns.
-     *
-     * @param array $values The grid column configuration. Each array element represents the configuration for one
-     * particular grid column. For example,
-     *
-     * ```php
-     * [
-     * ]
-     * ```
-     */
-    public function columns(array $values): self
-    {
-        $new = clone $this;
-        $new->columns = $values;
 
         return $new;
     }
@@ -114,6 +101,26 @@ final class DetailView extends Widget
     {
         $new = clone $this;
         $new->dataAttributes = $values;
+
+        return $new;
+    }
+
+    /**
+     * Return a new instance the specified fields.
+     *
+     * @param DataField ...$value The `DetailView` column configuration. Each object represents the configuration for
+     * one particular DetailView column. For example,
+     *
+     * ```php
+     * [
+     *    DataField::create()->label('Name')->value($data->name),
+     * ]
+     * ```
+     */
+    public function fields(DataField ...$value): self
+    {
+        $new = clone $this;
+        $new->fields = $value;
 
         return $new;
     }
@@ -301,41 +308,28 @@ final class DetailView extends Widget
      *     }
      * >
      */
-    private function normalizeColumns(array $columns): array
+    private function normalizeColumns(array $fields): array
     {
         $normalized = [];
 
-        /** @psalm-var array[] $columns */
-        foreach ($columns as $value) {
-            if (!isset($value['attribute'])) {
-                throw new InvalidArgumentException('The "attribute" must be set.');
+        /** @psalm-var DataField[] $fields */
+        foreach ($fields as $field) {
+            if ($field->getLabel() === '') {
+                throw new InvalidArgumentException('The "attribute" or "label" must be set.');
             }
 
-            if (!is_string($value['attribute'])) {
-                throw new InvalidArgumentException('The "attribute" must be a string.');
-            }
-
-            if (isset($value['label']) && !is_string($value['label'])) {
-                throw new InvalidArgumentException('The "label" must be a string.');
-            }
-
-            $attribute = $value['attribute'] ?? '';
-            /** @var string */
-            $label = $value['label'] ?? $value['attribute'];
-            /** @var array|Closure */
-            $labelAttributes = $value['labelAttributes'] ?? $this->labelAttributes;
-            /** @var string */
-            $labelTag = $value['labelTag'] ?? $this->labelTag;
-            /** @var array|Closure */
-            $valueAttributes = $value['valueAttributes'] ?? $this->valueAttributes;
-            /** @var string */
-            $valueTag = $value['valueTag'] ?? $this->valueTag;
+            $labelAttributes = $field->getLabelAttributes() === []
+                ? $this->labelAttributes : $field->getLabelAttributes();
+            $labelTag = $field->getLabelTag() === '' ? $this->labelTag : $field->getLabelTag();
+            $valueTag = $field->getValueTag() === '' ? $this->valueTag : $field->getValueTag();
+            $valueAttributes = $field->getValueAttributes() === []
+                ? $this->valueAttributes : $field->getValueAttributes();
 
             $normalized[] = [
-                'label' => Html::encode($label),
+                'label' => Html::encode($field->getLabel()),
                 'labelAttributes' => $this->renderAttributes($labelAttributes),
                 'labelTag' => Html::encode($labelTag),
-                'value' => Html::encodeAttribute($this->renderValue($attribute, $value['value'] ?? null)),
+                'value' => Html::encodeAttribute($this->renderValue($field->getAttribute(), $field->getValue())),
                 'valueAttributes' => $this->renderAttributes($valueAttributes),
                 'valueTag' => Html::encode($valueTag),
             ];
@@ -362,25 +356,25 @@ final class DetailView extends Widget
      */
     private function renderItems(): string
     {
-        $columns = $this->normalizeColumns($this->columns);
+        $fields = $this->normalizeColumns($this->fields);
 
-        if ($columns === []) {
+        if ($fields === []) {
             return '';
         }
 
         $rows = [];
 
-        foreach ($columns as $column) {
+        foreach ($fields as $field) {
             $label = strtr($this->labelTemplate, [
-                '{label}' => $column['label'],
-                '{labelTag}' => $column['labelTag'],
-                '{labelAttributes}' => Html::renderTagAttributes($column['labelAttributes']),
+                '{label}' => $field['label'],
+                '{labelTag}' => $field['labelTag'],
+                '{labelAttributes}' => Html::renderTagAttributes($field['labelAttributes']),
             ]);
 
             $value = strtr($this->valueTemplate, [
-                '{value}' => $column['value'],
-                '{valueTag}' => $column['valueTag'],
-                '{valueAttributes}' => Html::renderTagAttributes($column['valueAttributes']),
+                '{value}' => $field['value'],
+                '{valueTag}' => $field['valueTag'],
+                '{valueAttributes}' => Html::renderTagAttributes($field['valueAttributes']),
             ]);
 
             $rows[] = strtr($this->itemTemplate, [

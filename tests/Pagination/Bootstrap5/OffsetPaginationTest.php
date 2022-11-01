@@ -2,16 +2,16 @@
 
 declare(strict_types=1);
 
-namespace Yiisoft\Yii\DataView\Tests\Widget\Pagination\Bootstrap5;
+namespace Yiisoft\Yii\DataView\Tests\Pagination\Bootstrap5;
 
 use PHPUnit\Framework\TestCase;
 use Yiisoft\Definitions\Exception\CircularReferenceException;
 use Yiisoft\Definitions\Exception\InvalidConfigException;
 use Yiisoft\Definitions\Exception\NotInstantiableException;
 use Yiisoft\Factory\NotFoundException;
+use Yiisoft\Yii\DataView\OffsetPagination;
 use Yiisoft\Yii\DataView\Tests\Support\Assert;
 use Yiisoft\Yii\DataView\Tests\Support\TestTrait;
-use Yiisoft\Yii\DataView\Widget\OffsetPagination;
 
 /**
  * Documentation and examples for showing pagination to indicate a series of related content exists across multiple

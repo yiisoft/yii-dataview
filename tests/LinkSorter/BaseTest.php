@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Yiisoft\Yii\DataView\Tests\Widget\LinkSorter;
+namespace Yiisoft\Yii\DataView\Tests\LinkSorter;
 
 use PHPUnit\Framework\TestCase;
 use Yiisoft\Definitions\Exception\CircularReferenceException;
@@ -13,9 +13,9 @@ use Yiisoft\Di\ContainerConfig;
 use Yiisoft\Factory\NotFoundException;
 use Yiisoft\Router\UrlGeneratorInterface;
 use Yiisoft\Widget\WidgetFactory;
+use Yiisoft\Yii\DataView\LinkSorter;
 use Yiisoft\Yii\DataView\Tests\Support\Mock;
 use Yiisoft\Yii\DataView\Tests\Support\TestTrait;
-use Yiisoft\Yii\DataView\Widget\LinkSorter;
 
 final class BaseTest extends TestCase
 {

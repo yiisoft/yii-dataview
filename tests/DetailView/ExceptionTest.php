@@ -11,6 +11,7 @@ use Yiisoft\Definitions\Exception\InvalidConfigException;
 use Yiisoft\Definitions\Exception\NotInstantiableException;
 use Yiisoft\Factory\NotFoundException;
 use Yiisoft\Yii\DataView\DetailView;
+use Yiisoft\Yii\DataView\Field\DataField;
 use Yiisoft\Yii\DataView\Tests\Support\TestTrait;
 
 final class ExceptionTest extends TestCase
@@ -23,44 +24,12 @@ final class ExceptionTest extends TestCase
      * @throws NotInstantiableException
      * @throws CircularReferenceException
      */
-    public function testColumnsWithoutAttributes(): void
+    public function testColumnsWithoutAttributesAndLabel(): void
     {
         $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage('The "attribute" must be set.');
+        $this->expectExceptionMessage('The "attribute" or "label" must be set.');
         DetailView::widget()
-            ->columns([['label' => 'id']])
-            ->data(['id' => 1, 'username' => 'tests 1', 'total' => '10'])
-            ->render();
-    }
-
-    /**
-     * @throws InvalidConfigException
-     * @throws NotFoundException
-     * @throws NotInstantiableException
-     * @throws CircularReferenceException
-     */
-    public function testColumnsWithAttributesNotString(): void
-    {
-        $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage('The "attribute" must be a string.');
-        DetailView::widget()
-            ->columns([['attribute' => 1]])
-            ->data(['id' => 1, 'username' => 'tests 1', 'total' => '10'])
-            ->render();
-    }
-
-    /**
-     * @throws InvalidConfigException
-     * @throws NotFoundException
-     * @throws NotInstantiableException
-     * @throws CircularReferenceException
-     */
-    public function testColumnsWithLabelNotString(): void
-    {
-        $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage('The "label" must be a string.');
-        DetailView::widget()
-            ->columns([['attribute' => 'id', 'label' => 1]])
+            ->fields(DataField::create())
             ->data(['id' => 1, 'username' => 'tests 1', 'total' => '10'])
             ->render();
     }
@@ -75,6 +44,6 @@ final class ExceptionTest extends TestCase
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('The "data" must be set.');
-        DetailView::widget()->columns([['attribute' => 'id']])->data([])->render();
+        DetailView::widget()->fields(DataField::create()->attribute('id'))->data([])->render();
     }
 }

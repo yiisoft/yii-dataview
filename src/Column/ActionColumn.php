@@ -15,7 +15,7 @@ use function is_array;
 /**
  * ActionColumn is a column for the {@see GridView} widget that displays buttons for viewing and manipulating the items.
  */
-final class ActionColumn extends Column
+final class ActionColumn extends AbstractColumn
 {
     private array $buttons = [];
     private string $primaryKey = 'id';

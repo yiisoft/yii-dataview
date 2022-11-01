@@ -9,7 +9,7 @@ use Yiisoft\Html\Tag\Input;
 /**
  * CheckboxColumn displays a column of checkboxes in a grid view.
  */
-final class CheckboxColumn extends Column
+final class CheckboxColumn extends AbstractColumn
 {
     private bool $multiple = true;
 

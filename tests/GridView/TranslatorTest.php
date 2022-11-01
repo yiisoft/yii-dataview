@@ -6,15 +6,19 @@ namespace Yiisoft\Yii\DataView\Tests\GridView;
 
 use PHPUnit\Framework\TestCase;
 use Yiisoft\Aliases\Aliases;
+use Yiisoft\Definitions\Exception\CircularReferenceException;
 use Yiisoft\Definitions\Exception\InvalidConfigException;
+use Yiisoft\Definitions\Exception\NotInstantiableException;
 use Yiisoft\Di\Container;
 use Yiisoft\Di\ContainerConfig;
+use Yiisoft\Di\NotFoundException;
 use Yiisoft\Translator\MessageFormatterInterface;
 use Yiisoft\Translator\SimpleMessageFormatter;
 use Yiisoft\Translator\Translator;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\Widget\WidgetFactory;
-use Yiisoft\Yii\DataView\Column;
+use Yiisoft\Yii\DataView\Column\DataColumn;
+use Yiisoft\Yii\DataView\Column\SerialColumn;
 use Yiisoft\Yii\DataView\GridView;
 use Yiisoft\Yii\DataView\Tests\Support\Assert;
 use Yiisoft\Yii\DataView\Tests\Support\TestTrait;
@@ -32,7 +36,10 @@ final class TranslatorTest extends TestCase
     private TranslatorInterface $translator;
 
     /**
+     * @throws CircularReferenceException
      * @throws InvalidConfigException
+     * @throws NotInstantiableException
+     * @throws NotFoundException
      */
     protected function setUp(): void
     {
@@ -42,6 +49,12 @@ final class TranslatorTest extends TestCase
         WidgetFactory::initialize($container, []);
     }
 
+    /**
+     * @throws InvalidConfigException
+     * @throws \Yiisoft\Factory\NotFoundException
+     * @throws NotInstantiableException
+     * @throws CircularReferenceException
+     */
     public function testEmptyTextTranslatorWithLocaleDefault(): void
     {
         Assert::equalsWithoutLE(
@@ -72,6 +85,12 @@ final class TranslatorTest extends TestCase
         );
     }
 
+    /**
+     * @throws InvalidConfigException
+     * @throws \Yiisoft\Factory\NotFoundException
+     * @throws NotInstantiableException
+     * @throws CircularReferenceException
+     */
     public function testEmptyTextTranslatorWithLocaleSpanish(): void
     {
         $this->translator->setLocale('es');
@@ -104,6 +123,12 @@ final class TranslatorTest extends TestCase
         );
     }
 
+    /**
+     * @throws InvalidConfigException
+     * @throws \Yiisoft\Factory\NotFoundException
+     * @throws NotInstantiableException
+     * @throws CircularReferenceException
+     */
     public function testEmptyTextTranslatorWithLocaleRussian(): void
     {
         $this->translator->setLocale('ru');
@@ -136,6 +161,12 @@ final class TranslatorTest extends TestCase
         );
     }
 
+    /**
+     * @throws InvalidConfigException
+     * @throws \Yiisoft\Factory\NotFoundException
+     * @throws NotInstantiableException
+     * @throws CircularReferenceException
+     */
     public function testSummaryTranslatorWithLocaleDefault(): void
     {
         Assert::equalsWithoutLE(
@@ -176,6 +207,12 @@ final class TranslatorTest extends TestCase
         );
     }
 
+    /**
+     * @throws InvalidConfigException
+     * @throws \Yiisoft\Factory\NotFoundException
+     * @throws NotInstantiableException
+     * @throws CircularReferenceException
+     */
     public function testSummaryTranslatorWithLocaleSpanish(): void
     {
         $this->translator->setLocale('es');
@@ -218,6 +255,12 @@ final class TranslatorTest extends TestCase
         );
     }
 
+    /**
+     * @throws InvalidConfigException
+     * @throws \Yiisoft\Factory\NotFoundException
+     * @throws NotInstantiableException
+     * @throws CircularReferenceException
+     */
     public function testSummaryTranslatorWithLocaleRussian(): void
     {
         $this->translator->setLocale('ru');
@@ -262,9 +305,10 @@ final class TranslatorTest extends TestCase
 
     private function config(): array
     {
-        /** @psalm-var string[] */
-        $params = require __DIR__ . '/../../config/params.php';
-        $translatorConfig = require __DIR__ . '/../../config/common/translator-yii-dataview.php';
+        /** @psalm-var string[][] $params */
+        $params = require dirname(__DIR__, 2) . '/config/params.php';
+        /** @psalm-var string[] $translatorConfig */
+        $translatorConfig = require dirname(__DIR__, 2) . '/config/common/translator-yii-dataview.php';
 
         return array_merge(
             [
@@ -288,15 +332,15 @@ final class TranslatorTest extends TestCase
     }
 
     /**
-     * @psalm-return array<Column\SerialColumn|Column\DataColumn>
+     * @psalm-return array<SerialColumn|DataColumn>
      */
     private function createColumns(): array
     {
         return [
-            Column\SerialColumn::create(),
-            Column\DataColumn::create()->attribute('id'),
-            Column\DataColumn::create()->attribute('name'),
-            Column\DataColumn::create()->attribute('age'),
+            SerialColumn::create(),
+            DataColumn::create()->attribute('id'),
+            DataColumn::create()->attribute('name'),
+            DataColumn::create()->attribute('age'),
         ];
     }
 }

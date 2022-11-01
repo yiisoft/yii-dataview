@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Yiisoft\Yii\DataView\Tests\GridView;
+namespace Yiisoft\Yii\DataView\Tests\Column;
 
 use PHPUnit\Framework\TestCase;
 use Yiisoft\Definitions\Exception\CircularReferenceException;
@@ -814,6 +814,7 @@ final class ActionColumnTest extends TestCase
         return [
             ActionColumn::create()
                 ->content(
+                    /** @psalm-param string[] $data */
                     static fn (array $data): string => A::tag()
                         ->addAttributes(['class' => 'text-decoration-none', 'title' => 'View'])
                         ->content('🔎')
@@ -832,6 +833,7 @@ final class ActionColumnTest extends TestCase
         return [
             ActionColumn::create()
                 ->content(
+                    /** @psalm-param string[] $data */
                     static fn (array $data): string => A::tag()
                         ->addAttributes(['title' => 'View'])
                         ->content('🔎')
@@ -943,6 +945,7 @@ final class ActionColumnTest extends TestCase
         return [
             ActionColumn::create()
                 ->urlCreator(
+                    /** @psalm-param string[] $data */
                     static fn (string $action, array $data): string => 'https://test.com/' . $action . '?id=' . $data['id'],
                 ),
         ];

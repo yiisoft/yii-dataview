@@ -7,7 +7,7 @@ namespace Yiisoft\Yii\DataView\Column;
 /**
  * SerialColumn displays a column of row numbers (1-based).
  */
-final class SerialColumn extends Column
+final class SerialColumn extends AbstractColumn
 {
     protected function getLabel(): string
     {

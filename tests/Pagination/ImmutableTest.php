@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Yiisoft\Yii\DataView\Tests\Widget\Pagination;
+namespace Yiisoft\Yii\DataView\Tests\Pagination;
 
 use PHPUnit\Framework\TestCase;
 use Yiisoft\Definitions\Exception\CircularReferenceException;
@@ -10,10 +10,10 @@ use Yiisoft\Definitions\Exception\InvalidConfigException;
 use Yiisoft\Definitions\Exception\NotInstantiableException;
 use Yiisoft\Factory\NotFoundException;
 use Yiisoft\Router\CurrentRoute;
+use Yiisoft\Yii\DataView\BasePagination;
+use Yiisoft\Yii\DataView\OffsetPagination;
 use Yiisoft\Yii\DataView\Tests\Support\Mock;
 use Yiisoft\Yii\DataView\Tests\Support\TestTrait;
-use Yiisoft\Yii\DataView\Widget\BasePagination;
-use Yiisoft\Yii\DataView\Widget\OffsetPagination;
 
 final class ImmutableTest extends TestCase
 {

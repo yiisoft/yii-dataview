@@ -16,7 +16,7 @@ use Yiisoft\Yii\DataView\Helper\Attribute;
 use function sprintf;
 
 /**
- * DataColumn is the default column type for the {@see GridView} widget.
+ * DetailColumn is the default column type for the {@see GridView} widget.
  *
  * It is used to show data columns and allows {@see withSorting|sorting} and {@see filter|filtering} them.
  *
@@ -31,7 +31,7 @@ use function sprintf;
  * calculation, while the actual cell content is a {@see format|formatted} version of that value which may contain HTML
  * markup.
  */
-final class DataColumn extends Column
+final class DataColumn extends AbstractColumn
 {
     private string $attribute = '';
     private string $filter = '';
@@ -175,7 +175,7 @@ final class DataColumn extends Column
      * grid view will enable column-based filtering. Each data column by default will display a text field at the top
      * that users can fill in to filter the data.
      *
-     * Note that in order to show an input field for filtering, a column must have its {@see DataColumn::attribute}
+     * Note that in order to show an input field for filtering, a column must have its {@see DetailColumn::attribute}
      * property set and the attribute should be active in the current scenario of $filterModelName or have
      * {@see DataColumn::filter} set as the HTML code for the input field.
      */
@@ -262,7 +262,7 @@ final class DataColumn extends Column
      * `function ($data, $key, $index, $column)`.
      *
      * Where `$data`, `$key`, and `$index` refer to the data, key and index of the row currently being rendered
-     * and `$column` is a reference to the {@see DataColumn} object.
+     * and `$column` is a reference to the {@see DetailColumn} object.
      *
      * You may also set this property to a string representing the attribute name to be displayed in this column.
      *

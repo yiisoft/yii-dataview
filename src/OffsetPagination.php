@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Yiisoft\Yii\DataView\Widget;
+namespace Yiisoft\Yii\DataView;
 
 use InvalidArgumentException;
 use Yiisoft\Data\Paginator\OffsetPaginator;

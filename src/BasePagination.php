@@ -2,13 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Yiisoft\Yii\DataView\Widget;
+namespace Yiisoft\Yii\DataView;
 
 use Yiisoft\Data\Paginator\PaginatorInterface;
 use Yiisoft\Router\CurrentRoute;
 use Yiisoft\Router\UrlGeneratorInterface;
 use Yiisoft\Widget\Widget;
-use Yiisoft\Yii\DataView\Exception;
 
 use function array_merge;
 use function http_build_query;

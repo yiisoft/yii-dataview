@@ -69,9 +69,9 @@ final class ImmutableTest extends TestCase
         $this->assertNotSame($column, $column->withSorting(false));
     }
 
-    private function createColumn(): Column\Column
+    private function createColumn(): Column\AbstractColumn
     {
-        return new class () extends Column\Column {
+        return new class () extends Column\AbstractColumn {
         };
     }
 }
