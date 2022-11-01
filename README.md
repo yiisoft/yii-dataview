@@ -39,7 +39,7 @@ or add
 "yiisoft/yii-dataview": "^3.0"
 ```
 
-to the requirement section of your `composer.json`.
+to the require section of your `composer.json`.
 
 ### Unit testing
 
