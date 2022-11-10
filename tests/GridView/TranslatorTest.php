@@ -9,6 +9,7 @@ use Yiisoft\Aliases\Aliases;
 use Yiisoft\Definitions\Exception\CircularReferenceException;
 use Yiisoft\Definitions\Exception\InvalidConfigException;
 use Yiisoft\Definitions\Exception\NotInstantiableException;
+use Yiisoft\Definitions\Reference;
 use Yiisoft\Di\Container;
 use Yiisoft\Di\ContainerConfig;
 use Yiisoft\Di\NotFoundException;
@@ -353,7 +354,7 @@ final class TranslatorTest extends TestCase
                     'class' => Translator::class,
                     '__construct()' => ['en'],
                     'addCategorySources()' => [
-                        $params['yiisoft/translator']['categorySources'],
+                        'categories' => Reference::to('tag@translator.categorySource'),
                     ],
                 ],
             ],
