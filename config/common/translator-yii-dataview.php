@@ -16,6 +16,6 @@ return [
 
             return new CategorySource($params['yiisoft/translator']['dataviewCategory'], $messageReader, new SimpleMessageFormatter());
         },
-        'tags' => ['translator.categorySource']
+        'tags' => ['translator.categorySource'],
     ],
 ];
