@@ -9,6 +9,6 @@ return [
         ],
     ],
     'yiisoft/translator' => [
-        'dataviewCategory' => 'dataview'
-    ]
+        'dataviewCategory' => 'dataview',
+    ],
 ];
