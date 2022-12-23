@@ -357,7 +357,7 @@ final class LinkSorter extends Widget
         }
 
         if ($icon !== '' || $iconClass !== '') {
-            $html .= ' ' . I::tag()->addAttributes($iconAttributes)->content($icon)->encode(false)->render();
+            $html .= ' ' . I::tag()->attributes($iconAttributes)->content($icon)->encode(false)->render();
         }
 
         return $html;
@@ -399,7 +399,7 @@ final class LinkSorter extends Widget
         $label = $this->label !== '' ? $this->label : ucfirst($this->attribute);
 
         return A::tag()
-            ->addAttributes($linkAttributes)
+            ->attributes($linkAttributes)
             ->content($this->renderLabel($label, $icon, $iconClass, $this->iconAttributes))
             ->encode(false)
             ->href($this->createUrl($this->attribute))

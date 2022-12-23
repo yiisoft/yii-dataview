@@ -221,7 +221,7 @@ abstract class AbstractColumn
         }
 
         return Td::tag()
-            ->addAttributes($contentAttributes)
+            ->attributes($contentAttributes)
             ->content($this->renderDataCellContent($data, $key, $index))
             ->encode(false)
             ->render();
@@ -233,7 +233,7 @@ abstract class AbstractColumn
     public function renderFilterCell(): string
     {
         return Th::tag()
-            ->addAttributes($this->filterAttributes)
+            ->attributes($this->filterAttributes)
             ->content($this->renderFilterCellContent())
             ->encode(false)
             ->render();
@@ -245,7 +245,7 @@ abstract class AbstractColumn
     public function renderFooterCell(): string
     {
         return Td::tag()
-            ->addAttributes($this->footerAttributes)
+            ->attributes($this->footerAttributes)
             ->content($this->renderFooterCellContent())
             ->encode(false)
             ->render();
@@ -257,7 +257,7 @@ abstract class AbstractColumn
     public function renderHeaderCell(): string
     {
         return Th::tag()
-            ->addAttributes($this->labelAttributes)
+            ->attributes($this->labelAttributes)
             ->content($this->renderHeaderCellContent())
             ->encode(false)
             ->render();
