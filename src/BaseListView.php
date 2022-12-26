@@ -355,7 +355,7 @@ abstract class BaseListView extends Widget
 
         $emptyTextAttributes['colspan'] = $colspan;
 
-        return Td::tag()->addAttributes($emptyTextAttributes)->content($emptyText);
+        return Td::tag()->attributes($emptyTextAttributes)->content($emptyText);
     }
 
     /**
@@ -445,7 +445,7 @@ abstract class BaseListView extends Widget
             );
         }
 
-        return Div::tag()->addAttributes($this->summaryAttributes)->content($summary)->encode(false)->render();
+        return Div::tag()->attributes($this->summaryAttributes)->content($summary)->encode(false)->render();
     }
 
     private function renderGrid(): string
@@ -462,7 +462,7 @@ abstract class BaseListView extends Widget
         return match ($this->withContainer) {
             true => trim(
                 $contentGrid . PHP_EOL . Div::tag()
-                    ->addAttributes($attributes)
+                    ->attributes($attributes)
                     ->content(PHP_EOL . $this->renderGridTable() . PHP_EOL)
                     ->encode(false)
                     ->render()
@@ -492,7 +492,7 @@ abstract class BaseListView extends Widget
         return match ($this->header) {
             '' => '',
             default => Div::tag()
-                ->addAttributes($this->headerAttributes)
+                ->attributes($this->headerAttributes)
                 ->content($this->header)
                 ->encode(false)
                 ->render(),

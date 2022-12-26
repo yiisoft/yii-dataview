@@ -77,7 +77,7 @@ final class ActionColumn extends AbstractColumn
         /** @psalm-var array<string,Closure> */
         $defaultButtons = [
             'view' => static fn (string $url): string => A::tag()
-                ->addAttributes(
+                ->attributes(
                     [
                         'name' => 'view',
                         'role' => 'button',
@@ -89,7 +89,7 @@ final class ActionColumn extends AbstractColumn
                 ->href($url)
                 ->render(),
             'update' => static fn (string $url): string => A::tag()
-                ->addAttributes(
+                ->attributes(
                     [
                         'name' => 'update',
                         'role' => 'button',
@@ -101,7 +101,7 @@ final class ActionColumn extends AbstractColumn
                 ->href($url)
                 ->render(),
             'delete' => static fn (string $url): string => A::tag()
-                ->addAttributes(
+                ->attributes(
                     [
                         'name' => 'delete',
                         'role' => 'button',

@@ -387,7 +387,7 @@ final class GridView extends BaseListView
 
         foreach ($columns as $column) {
             if ($column instanceof AbstractColumn) {
-                $cols[] = Col::tag()->addAttributes($column->getAttributes());
+                $cols[] = Col::tag()->attributes($column->getAttributes());
             }
         }
 

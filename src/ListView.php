@@ -205,7 +205,7 @@ final class ListView extends BaseListView
         }
 
         return Div::tag()
-            ->addAttributes($this->itemViewAttributes)
+            ->attributes($this->itemViewAttributes)
             ->content(PHP_EOL . $content)
             ->encode(false)
             ->render();

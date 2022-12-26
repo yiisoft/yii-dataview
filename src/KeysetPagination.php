@@ -47,7 +47,7 @@ final class KeysetPagination extends BasePagination
 
         return
             Nav::tag()
-                ->addAttributes($attributes)
+                ->attributes($attributes)
                 ->content(
                     PHP_EOL .
                     Menu::widget()
