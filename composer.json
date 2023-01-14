@@ -28,7 +28,7 @@
         "ext-mbstring": "*",
         "yiisoft/aliases": "^1.1|^2.0",
         "yiisoft/arrays": "^2.0",
-        "yiisoft/data": "3.0.x-dev",
+        "yiisoft/data": "^1.0",
         "yiisoft/factory": "^1.0",
         "yiisoft/friendly-exception": "^1.0",
         "yiisoft/html": "^3.0",
