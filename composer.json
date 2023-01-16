@@ -27,7 +27,7 @@
         "ext-json": "*",
         "ext-mbstring": "*",
         "yiisoft/aliases": "^1.1|^2.0",
-        "yiisoft/arrays": "^2.0",
+        "yiisoft/arrays": "^2.0|^3.0",
         "yiisoft/data": "^1.0",
         "yiisoft/factory": "^1.0",
         "yiisoft/friendly-exception": "^1.0",
