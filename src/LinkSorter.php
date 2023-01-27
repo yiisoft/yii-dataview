@@ -253,7 +253,7 @@ final class LinkSorter extends Widget
         return $new;
     }
 
-    protected function run(): string
+    public function render(): string
     {
         return match (isset($this->attributes[$this->attribute])) {
             true => $this->renderSorterLink(),

@@ -62,7 +62,7 @@ final class ExceptionTest extends TestCase
     public function testNotSetPaginator(): void
     {
         $basePagination = new class (new CurrentRoute(), Mock::urlGenerator()) extends BasePagination {
-            protected function run(): string
+            public function render(): string
             {
                 return '';
             }

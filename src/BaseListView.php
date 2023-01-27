@@ -393,7 +393,7 @@ abstract class BaseListView extends Widget
         return $renderLinkSorter;
     }
 
-    protected function run(): string
+    public function render(): string
     {
         if ($this->paginator === null) {
             throw new Exception\PaginatorNotSetException();
