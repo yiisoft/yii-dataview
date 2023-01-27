@@ -22,7 +22,7 @@ final class ImmutableTest extends TestCase
     public function testBasePagination(): void
     {
         $basePagination = new class (new CurrentRoute(), Mock::urlGenerator()) extends BasePagination {
-            protected function run(): string
+            public function render(): string
             {
                 return '';
             }

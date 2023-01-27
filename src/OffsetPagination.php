@@ -162,11 +162,6 @@ final class OffsetPagination extends BasePagination
         return $new;
     }
 
-    protected function run(): string
-    {
-        return $this->renderPagination();
-    }
-
     /**
      * @psalm-return array<int, int>
      */
@@ -192,7 +187,7 @@ final class OffsetPagination extends BasePagination
      * @throws NotInstantiableException
      * @throws CircularReferenceException
      */
-    private function renderPagination(): string
+    public function render(): string
     {
         $attributes = $this->getAttributes();
 

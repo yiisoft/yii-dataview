@@ -22,18 +22,7 @@ final class KeysetPagination extends BasePagination
      * @throws NotInstantiableException
      * @throws CircularReferenceException
      */
-    protected function run(): string
-    {
-        return $this->renderPagination();
-    }
-
-    /**
-     * @throws InvalidConfigException
-     * @throws NotFoundException
-     * @throws NotInstantiableException
-     * @throws CircularReferenceException
-     */
-    private function renderPagination(): string
+    public function render(): string
     {
         $attributes = $this->getAttributes();
         $items = [];

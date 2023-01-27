@@ -271,7 +271,7 @@ final class DetailView extends Widget
     /**
      * @throws JsonException
      */
-    protected function run(): string
+    public function render(): string
     {
         if ($this->renderItems() === '') {
             return '';
