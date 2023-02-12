@@ -339,7 +339,7 @@ final class TranslatorTest extends TestCase
         /** @psalm-var string[][] $params */
         $params = require dirname(__DIR__, 2) . '/config/params.php';
         /** @psalm-var string[] $translatorConfig */
-        $translatorConfig = require dirname(__DIR__, 2) . '/config/common/translator-yii-dataview.php';
+        $containerDefinitions = require dirname(__DIR__, 2) . '/config/di.php';
 
         return array_merge(
             [
@@ -358,7 +358,7 @@ final class TranslatorTest extends TestCase
                     ],
                 ],
             ],
-            $translatorConfig,
+            $containerDefinitions,
         );
     }
 }
