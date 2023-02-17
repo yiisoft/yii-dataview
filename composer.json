@@ -52,7 +52,7 @@
         "yiisoft/di": "^1.2",
         "yiisoft/event-dispatcher": "^1.0",
         "yiisoft/log": "^2.0",
-        "yiisoft/router-fastroute": "^2.0",
+        "yiisoft/router-fastroute": "^3.0",
         "yiisoft/test-support": "^3.0"
     },
     "extra": {
