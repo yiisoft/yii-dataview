@@ -26,20 +26,20 @@
         "php": "^8.0",
         "ext-json": "*",
         "ext-mbstring": "*",
-        "yiisoft/aliases": "^1.1|^2.0",
+        "yiisoft/aliases": "^3.0",
         "yiisoft/arrays": "^2.0|^3.0",
         "yiisoft/data": "^1.0",
         "yiisoft/factory": "^1.0",
         "yiisoft/friendly-exception": "^1.0",
         "yiisoft/html": "^3.0",
         "yiisoft/json": "^1.0",
-        "yiisoft/router": "^2.0",
+        "yiisoft/router": "^3.0",
         "yiisoft/strings": "^2.0",
         "yiisoft/translator-message-php": "^1.1",
-        "yiisoft/translator": "^2.0",
-        "yiisoft/view": "^5.0|^6.0|^7.0",
+        "yiisoft/translator": "^3.0",
+        "yiisoft/view": "^8.0",
         "yiisoft/widget": "^2.0",
-        "yiisoft/yii-widgets": "^2.0"
+        "yiisoft/yii-widgets": "^2.1"
     },
     "require-dev": {
         "maglnet/composer-require-checker": "^4.2",
@@ -52,7 +52,7 @@
         "yiisoft/di": "^1.2",
         "yiisoft/event-dispatcher": "^1.0",
         "yiisoft/log": "^2.0",
-        "yiisoft/router-fastroute": "^2.0",
+        "yiisoft/router-fastroute": "^3.0",
         "yiisoft/test-support": "^3.0"
     },
     "extra": {
