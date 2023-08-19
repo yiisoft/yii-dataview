@@ -335,8 +335,7 @@ final class GridView extends BaseListView
      * @throws NotInstantiableException
      * @throws CircularReferenceException
      *
-     * @psalm-return array<AbstractColumn|array|null>
-     * @return (AbstractColumn|array|null)[]
+     * @psalm-return array<array-key,AbstractColumn>|array
      */
     private function renderColumns(): array
     {
@@ -380,7 +379,7 @@ final class GridView extends BaseListView
      *
      * @param array $columns The columns of gridview.
      *
-     * @psalm-param array<array-key,AbstractColumn|null> $columns
+     * @psalm-param array<array-key,AbstractColumn>|array $columns
      */
     private function renderColumnGroup(array $columns): string
     {
@@ -402,7 +401,7 @@ final class GridView extends BaseListView
      *
      * @return string The rendering result.
      *
-     * @psalm-param array<array-key,AbstractColumn|null> $columns
+     * @psalm-param array<array-key,AbstractColumn>|array $columns
      */
     private function renderFilters(array $columns): string
     {
@@ -434,7 +433,7 @@ final class GridView extends BaseListView
      *
      * @param array $columns The columns of gridview.
      *
-     * @psalm-param array<array-key,AbstractColumn|null> $columns
+     * @psalm-param array<array-key,AbstractColumn>|array $columns
      */
     private function renderTableBody(array $columns): string
     {
@@ -484,7 +483,7 @@ final class GridView extends BaseListView
      *
      * @param array $columns The columns of gridview.
      *
-     * @psalm-param array<array-key,AbstractColumn|null> $columns
+     * @psalm-param array<array-key,AbstractColumn>|array $columns
      */
     private function renderTableFooter(array $columns): string
     {
@@ -513,7 +512,7 @@ final class GridView extends BaseListView
      *
      * @param array $columns The columns of gridview.
      *
-     * @psalm-param array<array-key,AbstractColumn|null> $columns
+     * @psalm-param array<array-key,AbstractColumn>|array $columns
      */
     private function renderTableHeader(array $columns): string
     {
@@ -550,7 +549,7 @@ final class GridView extends BaseListView
      * @param mixed $key The key associated with the data.
      * @param int $index The zero-based index of the data in the data provider.
      *
-     * @psalm-param array<array-key,AbstractColumn|null> $columns
+     * @psalm-param array<array-key,AbstractColumn>|array $columns
      */
     private function renderTableRow(array $columns, array|object $data, mixed $key, int $index): string
     {
