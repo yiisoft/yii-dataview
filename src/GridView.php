@@ -297,7 +297,7 @@ final class GridView extends BaseListView
      * This function tries to guess the columns to show from the given data if {@see columns} are not explicitly
      * specified.
      *
-     * @psalm-return list<ActionColumn|DataColumn>
+     * @psalm-return list<ActionColumn|DataColumn>|list<array>
      */
     private function guessColumns(): array
     {
@@ -335,7 +335,8 @@ final class GridView extends BaseListView
      * @throws NotInstantiableException
      * @throws CircularReferenceException
      *
-     * @psalm-return array<array-key,AbstractColumn|null>
+     * @psalm-return array<AbstractColumn|array|null>
+     * @return (AbstractColumn|array|null)[]
      */
     private function renderColumns(): array
     {
@@ -352,8 +353,8 @@ final class GridView extends BaseListView
                 if ($column instanceof ActionColumn) {
                     $column = $column
                         ->createDefaultButtons()
-                        ->urlGenerator($this->getUrlGenerator())
-                        ->urlName($this->currentRoute->getName() ?? '');
+                        ->currentRoute($this->currentRoute)
+                        ->urlGenerator($this->getUrlGenerator());
                 }
 
                 if ($column instanceof DataColumn) {

@@ -249,7 +249,7 @@ final class ListView extends BaseListView
      * @param mixed $key The key value associated with the data.
      * @param int $index The zero-based index of the data.
      *
-     * @return string {@see afterItem} call result when {@see afterItem} is not a closure.
+     * @return string call result when {@see afterItem} is not a closure.
      *
      * {@see afterItem}
      */
@@ -273,7 +273,7 @@ final class ListView extends BaseListView
      * @param mixed $key The key value associated with the data.
      * @param int $index The zero-based index of the data.
      *
-     * @return string {@see beforeItem} call result or `null` when {@see beforeItem} is not a closure.
+     * @return string call result or `null` when {@see beforeItem} is not a closure.
      *
      * {@see beforeItem}
      */
