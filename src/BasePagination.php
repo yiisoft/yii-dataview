@@ -336,11 +336,11 @@ abstract class BasePagination extends Widget
             $urlQueryParameters = array_merge($pageConfig, $this->urlQueryParameters);
         }
 
-        $urlName = $this->currentRoute->getName() ?? '';
+        $urlName = $this->currentRoute->getName();
 
-        return match ($urlName !== null) {
-            true => $this->urlGenerator->generate($urlName, $urlArguments, $urlQueryParameters),
-            false => $urlQueryParameters ? '?' . http_build_query($urlQueryParameters) : '',
+        return match ($urlName) {
+            null => $urlQueryParameters ? '?' . http_build_query($urlQueryParameters) : '',
+            default => $this->urlGenerator->generate($urlName, $urlArguments, $urlQueryParameters),
         };
     }
 
