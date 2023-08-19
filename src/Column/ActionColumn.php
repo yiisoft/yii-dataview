@@ -382,7 +382,7 @@ final class ActionColumn extends AbstractColumn
 
         $currentRouteName = $this->currentRoute->getName() ?? '';
 
-        $route = match($this->urlName) {
+        $route = match ($this->urlName) {
             '' => $currentRouteName . '/' . $action,
             default => $this->urlName . '/' . $action,
         };
