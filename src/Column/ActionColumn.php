@@ -8,6 +8,7 @@ use Closure;
 use InvalidArgumentException;
 use Yiisoft\Html\Tag\A;
 use Yiisoft\Html\Tag\Span;
+use Yiisoft\Router\CurrentRoute;
 use Yiisoft\Router\UrlGeneratorInterface;
 
 use function is_array;
@@ -22,6 +23,7 @@ final class ActionColumn extends AbstractColumn
     private string $template = '{view}{update}{delete}';
     private array|null $urlArguments = null;
     private Closure|null $urlCreator = null;
+    private CurrentRoute $currentRoute;
     private UrlGeneratorInterface|null $urlGenerator = null;
     private array $urlParamsConfig = [];
     private string $urlName = '';
@@ -119,6 +121,14 @@ final class ActionColumn extends AbstractColumn
         foreach ($defaultButtons as $name => $button) {
             $new->buttons[$name] = $button;
         }
+
+        return $new;
+    }
+
+    public function currentRoute(CurrentRoute $value): self
+    {
+        $new = clone $this;
+        $new->currentRoute = $value;
 
         return $new;
     }
@@ -370,7 +380,13 @@ final class ActionColumn extends AbstractColumn
             $key = $data[$this->primaryKey] ?? $key;
         }
 
-        $route = $this->urlName !== '' ? $this->urlName . '/' . $action : $action;
+        $currentRouteName = $this->currentRoute->getName() ?? '';
+
+        $route = match ($this->urlName) {
+            '' => $currentRouteName . '/' . $action,
+            default => $this->urlName . '/' . $action,
+        };
+
         $urlQueryParameters = [];
         $urlParamsConfig = is_array($key) ? $key : [$this->primaryKey => $key];
 
