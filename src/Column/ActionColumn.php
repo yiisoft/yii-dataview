@@ -340,6 +340,10 @@ final class ActionColumn extends AbstractColumn
             return parent::renderDataCellContent($data, $key, $index);
         }
 
+        if (empty($this->buttons)) {
+            $this->buttons = $this->createDefaultButtons()->buttons;
+        }
+
         return PHP_EOL . preg_replace_callback(
             '/{([\w\-\/]+)}/',
             function (array $matches) use ($data, $key, $index): string {
