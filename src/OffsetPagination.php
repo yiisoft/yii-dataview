@@ -21,24 +21,24 @@ use function min;
 
 final class OffsetPagination extends BasePagination
 {
-    private bool $disabledFirtsPage = false;
+    private bool $disabledFirstPage = false;
     private bool $disabledLastPage = false;
     private bool $disabledPageNavLink = false;
-    private string $iconFirtsPage = '';
-    private string $iconClassFirtsPage = '';
+    private string $iconFirstPage = '';
+    private string $iconClassFirstPage = '';
     private string $iconClassLastPage = '';
     private string $iconLastPage = '';
-    private string $labelFirtsPage = '';
+    private string $labelFirstPage = '';
     private string $labelLastPage = '';
     private int $maxNavLinkCount = 10;
 
     /**
      * Return a new instance with disabled first page.
      */
-    public function disabledFirtsPage(bool $value): self
+    public function disabledFirstPage(bool $value): self
     {
         $new = clone $this;
-        $new->disabledFirtsPage = $value;
+        $new->disabledFirstPage = $value;
 
         return $new;
     }
@@ -68,15 +68,15 @@ final class OffsetPagination extends BasePagination
     }
 
     /**
-     * Returns a new instance with the icon class for icon attributes `<i>` for link firts page.
+     * Returns a new instance with the icon class for icon attributes `<i>` for link first page.
      *
      * @param string $value The icon class.
      */
-    public function iconClassFirtsPage(string $value): self
+    public function iconClassFirstPage(string $value): self
     {
         $new = clone $this;
-        $new->iconClassFirtsPage = $value;
-        $new->labelFirtsPage = '';
+        $new->iconClassFirstPage = $value;
+        $new->labelFirstPage = '';
 
         return $new;
     }
@@ -96,15 +96,15 @@ final class OffsetPagination extends BasePagination
     }
 
     /**
-     * Return a new instance with icon firts page.
+     * Return a new instance with icon first page.
      *
-     * @param string $value The icon firts page.
+     * @param string $value The icon first page.
      */
-    public function iconFirtsPage(string $value): self
+    public function iconFirstPage(string $value): self
     {
         $new = clone $this;
-        $new->iconFirtsPage = $value;
-        $new->labelFirtsPage = '';
+        $new->iconFirstPage = $value;
+        $new->labelFirstPage = '';
 
         return $new;
     }
@@ -128,10 +128,10 @@ final class OffsetPagination extends BasePagination
      *
      * @param string $value The label for first page.
      */
-    public function labelFirtsPage(string $value = ''): self
+    public function labelFirstPage(string $value = ''): self
     {
         $new = clone $this;
-        $new->labelFirtsPage = $value;
+        $new->labelFirstPage = $value;
 
         return $new;
     }
@@ -238,14 +238,14 @@ final class OffsetPagination extends BasePagination
             $iconContainerAttributes['aria-hidden'] = 'true';
         }
 
-        if ($this->labelFirtsPage !== '' || $this->iconFirtsPage !== '' || $this->iconClassFirtsPage !== '') {
+        if ($this->labelFirstPage !== '' || $this->iconFirstPage !== '' || $this->iconClassFirstPage !== '') {
             $items = [
-                'disabled' => $currentPage === 1 || $this->disabledFirtsPage,
-                'icon' => $this->iconFirtsPage,
+                'disabled' => $currentPage === 1 || $this->disabledFirstPage,
+                'icon' => $this->iconFirstPage,
                 'iconAttributes' => $this->getIconAttributes(),
-                'iconClass' => $this->iconClassFirtsPage,
+                'iconClass' => $this->iconClassFirstPage,
                 'iconContainerAttributes' => $iconContainerAttributes,
-                'label' => $this->labelFirtsPage,
+                'label' => $this->labelFirstPage,
                 'link' => $this->createUrl(1),
             ];
         }

@@ -105,7 +105,7 @@ final class OffsetPaginationTest extends TestCase
      * @throws NotInstantiableException
      * @throws CircularReferenceException
      */
-    public function testRenderWithIconFirtsLastPage(): void
+    public function testRenderWithIconFirstLastPage(): void
     {
         Assert::equalsWithoutLE(
             <<<HTML
@@ -124,7 +124,7 @@ final class OffsetPaginationTest extends TestCase
             </nav>
             HTML,
             OffsetPagination::widget()
-                ->iconFirtsPage('«')
+                ->iconFirstPage('«')
                 ->iconLastPage('»')
                 ->paginator($this->createOffsetPaginator($this->data, 1))
                 ->urlArguments([])
@@ -138,7 +138,7 @@ final class OffsetPaginationTest extends TestCase
      * @throws NotInstantiableException
      * @throws CircularReferenceException
      */
-    public function testRenderWithIconClassFirtsLastPage(): void
+    public function testRenderWithIconClassFirstLastPage(): void
     {
         Assert::equalsWithoutLE(
             <<<HTML
@@ -157,7 +157,7 @@ final class OffsetPaginationTest extends TestCase
             </nav>
             HTML,
             OffsetPagination::widget()
-                ->iconClassFirtsPage('bi bi-chevron-double-left p-1')
+                ->iconClassFirstPage('bi bi-chevron-double-left p-1')
                 ->iconClassLastPage('bi bi-chevron-double-right p-1')
                 ->paginator($this->createOffsetPaginator($this->data, 1))
                 ->urlArguments([])
@@ -171,7 +171,7 @@ final class OffsetPaginationTest extends TestCase
      * @throws NotInstantiableException
      * @throws CircularReferenceException
      */
-    public function testRenderWithLabelFirtsLastPage(): void
+    public function testRenderWithLabelFirstLastPage(): void
     {
         Assert::equalsWithoutLE(
             <<<HTML
@@ -190,7 +190,7 @@ final class OffsetPaginationTest extends TestCase
             </nav>
             HTML,
             OffsetPagination::widget()
-                ->labelFirtsPage('First')
+                ->labelFirstPage('First')
                 ->labelLastPage('Last')
                 ->paginator($this->createOffsetPaginator($this->data, 1))
                 ->urlArguments([])
