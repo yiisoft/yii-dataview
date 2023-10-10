@@ -61,14 +61,14 @@ final class ImmutableTest extends TestCase
     public function testOffsetPagination(): void
     {
         $offsetPagination = OffsetPagination::widget();
-        $this->assertNotSame($offsetPagination, $offsetPagination->disabledFirtsPage(false));
+        $this->assertNotSame($offsetPagination, $offsetPagination->disabledFirstPage(false));
         $this->assertNotSame($offsetPagination, $offsetPagination->disabledLastPage(false));
         $this->assertNotSame($offsetPagination, $offsetPagination->disabledPageNavLink(false));
-        $this->assertNotSame($offsetPagination, $offsetPagination->iconClassFirtsPage(''));
+        $this->assertNotSame($offsetPagination, $offsetPagination->iconClassFirstPage(''));
         $this->assertNotSame($offsetPagination, $offsetPagination->iconClassLastPage(''));
-        $this->assertNotSame($offsetPagination, $offsetPagination->iconFirtsPage(''));
+        $this->assertNotSame($offsetPagination, $offsetPagination->iconFirstPage(''));
         $this->assertNotSame($offsetPagination, $offsetPagination->iconLastPage(''));
-        $this->assertNotSame($offsetPagination, $offsetPagination->labelFirtsPage());
+        $this->assertNotSame($offsetPagination, $offsetPagination->labelFirstPage());
         $this->assertNotSame($offsetPagination, $offsetPagination->labelLastPage());
         $this->assertNotSame($offsetPagination, $offsetPagination->maxNavLinkCount(10));
     }
