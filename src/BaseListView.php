@@ -7,6 +7,7 @@ namespace Yiisoft\Yii\DataView;
 use Yiisoft\Data\Paginator\KeysetPaginator;
 use Yiisoft\Data\Paginator\OffsetPaginator;
 use Yiisoft\Data\Paginator\PaginatorInterface;
+use Yiisoft\Data\Reader\ReadableDataInterface;
 use Yiisoft\Definitions\Exception\CircularReferenceException;
 use Yiisoft\Definitions\Exception\InvalidConfigException;
 use Yiisoft\Definitions\Exception\NotInstantiableException;
@@ -28,7 +29,7 @@ abstract class BaseListView extends Widget
     private string $layout = "{header}\n{toolbar}";
     private string $layoutGridTable = "{items}\n{summary}\n{pager}";
     private string $pagination = '';
-    protected ?PaginatorInterface $paginator = null;
+    protected ?ReadableDataInterface $dataReader = null;
     private SimpleMessageFormatter|null $simpleMessageFormatter = null;
     private array $sortLinkAttributes = [];
     private string $summary = 'dataview.summary';
@@ -95,13 +96,13 @@ abstract class BaseListView extends Widget
         return $new;
     }
 
-    public function getPaginator(): PaginatorInterface
+    public function getDataReader(): PaginatorInterface
     {
-        if ($this->paginator === null) {
+        if ($this->dataReader === null) {
             throw new Exception\PaginatorNotSetException();
         }
 
-        return $this->paginator;
+        return $this->dataReader;
     }
 
     public function getSimpleMessageFormatter(): SimpleMessageFormatter
@@ -218,13 +219,12 @@ abstract class BaseListView extends Widget
     /**
      * Returns a new instance with the paginator interface of the grid view, detail view, or list view.
      *
-     * @param PaginatorInterface $value The paginator interface of the grid view, detail view, or list view.
+     * @param ReadableDataInterface $dataReader The paginator interface of the grid view, detail view, or list view.
      */
-    public function paginator(PaginatorInterface $value): static
+    public function dataReader(ReadableDataInterface $dataReader): static
     {
         $new = clone $this;
-        $new->paginator = $value;
-
+        $new->dataReader = $dataReader;
         return $new;
     }
 
@@ -332,18 +332,6 @@ abstract class BaseListView extends Widget
         return $new;
     }
 
-    protected function getDataReader(): array
-    {
-        $dataReader = [];
-
-        /** @var array */
-        foreach ($this->getPaginator()->read() as $read) {
-            $dataReader[] = $read;
-        }
-
-        return $dataReader;
-    }
-
     protected function renderEmpty(int $colspan): Td
     {
         $emptyTextAttributes = $this->emptyTextAttributes;
@@ -367,7 +355,7 @@ abstract class BaseListView extends Widget
     protected function renderLinkSorter(string $attribute, string $label): string
     {
         $renderLinkSorter = '';
-        $paginator = $this->getPaginator();
+        $paginator = $this->getDataReader();
         $sort = $paginator->getSort();
         $linkSorter = LinkSorter::widget();
 
@@ -384,7 +372,7 @@ abstract class BaseListView extends Widget
                 ->iconDescClass('bi bi-sort-alpha-down')
                 ->label($label)
                 ->linkAttributes($this->sortLinkAttributes)
-                ->pageSize($this->getPaginator()->getPageSize())
+                ->pageSize($this->getDataReader()->getPageSize())
                 ->urlArguments($this->urlArguments)
                 ->urlQueryParameters($this->urlQueryParameters)
                 ->render();
@@ -395,7 +383,7 @@ abstract class BaseListView extends Widget
 
     public function render(): string
     {
-        if ($this->paginator === null) {
+        if ($this->dataReader === null) {
             throw new Exception\PaginatorNotSetException();
         }
 
@@ -404,7 +392,7 @@ abstract class BaseListView extends Widget
 
     private function renderPagination(): string
     {
-        return match ($this->getPaginator()->isRequired()) {
+        return match ($this->getDataReader()->isRequired()) {
             true => $this->pagination,
             false => '',
         };
@@ -412,18 +400,19 @@ abstract class BaseListView extends Widget
 
     private function renderSummary(): string
     {
-        if ($this->getPaginator() instanceof KeysetPaginator) {
-            return '';
-        }
-
-        $pageCount = count($this->getDataReader());
-
-        if ($pageCount <= 0) {
+        if ($this->getDataReader() instanceof KeysetPaginator) {
             return '';
         }
 
         /** @var OffsetPaginator $paginator */
-        $paginator = $this->getPaginator();
+        $paginator = $this->getDataReader();
+
+        $data = iterator_to_array($paginator->read());
+        $pageCount = count($data);
+
+        if ($pageCount <= 0) {
+            return '';
+        }
 
         $summary = $this->getSimpleMessageFormatter()
             ->format(

@@ -50,7 +50,7 @@ final class ExceptionTest extends TestCase
         $this->expectExceptionMessage('Failed to create widget because "webview" is not set.');
         ListView::widget()
             ->itemView('//_listview')
-            ->paginator($this->createOffsetPaginator($this->data, 10))
+            ->dataReader($this->createOffsetPaginator($this->data, 10))
             ->render();
     }
 
@@ -65,7 +65,7 @@ final class ExceptionTest extends TestCase
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('The "itemView" property must be set.');
         ListView::widget()
-            ->paginator($this->createOffsetPaginator($this->data, 10))
+            ->dataReader($this->createOffsetPaginator($this->data, 10))
             ->render();
     }
 }

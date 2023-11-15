@@ -45,7 +45,7 @@ final class OffsetPaginationBaseTest extends TestCase
             HTML,
             GridView::widget()
                 ->id('w1-grid')
-                ->paginator($offsetPaginator)
+                ->dataReader($offsetPaginator)
                 ->pagination(OffsetPagination::widget()->paginator($offsetPaginator)->render())
                 ->render(),
         );

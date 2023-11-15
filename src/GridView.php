@@ -304,7 +304,7 @@ final class GridView extends BaseListView
         $columns = [];
 
         /** @psalm-var array[] */
-        $dataReader = $this->getDataReader();
+        $dataReader = iterator_to_array($this->getDataReader()->read());
         reset($dataReader);
 
         foreach ($dataReader as $data) {
@@ -436,13 +436,11 @@ final class GridView extends BaseListView
      */
     private function renderTableBody(array $columns): string
     {
-        $data = $this->getDataReader();
-        $keys = array_keys($data);
         $rows = [];
 
         /** @psalm-var array<int,array> $data */
-        foreach ($data as $index => $value) {
-            $key = $keys[$index];
+        foreach ($this->getDataReader()->read() as $index => $value) {
+            $key = $index;
 
             if ($this->beforeRow !== null) {
                 /** @var array */

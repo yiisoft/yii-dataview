@@ -36,7 +36,7 @@ final class ExceptionTest extends TestCase
     {
         $this->expectException(Exception\PaginatorNotSetException::class);
         $this->expectExceptionMessage('Failed to create widget because "paginator" is not set.');
-        DataView\GridView::widget()->getPaginator();
+        DataView\GridView::widget()->getDataReader();
     }
 
     /**

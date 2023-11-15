@@ -61,7 +61,7 @@ final class KeysetPaginationBaseTest extends TestCase
             HTML,
             GridView::widget()
                 ->id('w1-grid')
-                ->paginator($keysetPaginator)
+                ->dataReader($keysetPaginator)
                 ->pagination(KeysetPagination::widget()->paginator($keysetPaginator)->render())
                 ->render(),
         );
@@ -131,7 +131,7 @@ final class KeysetPaginationBaseTest extends TestCase
                     DataColumn::create()->attribute('description'),
                 )
                 ->id('w1-grid')
-                ->paginator($keysetPaginator)
+                ->dataReader($keysetPaginator)
                 ->pagination(KeysetPagination::widget()->paginator($keysetPaginator)->urlArguments([])->render())
                 ->layoutGridTable('{items}' . PHP_EOL . '{pager}')
                 ->render(),
@@ -193,7 +193,7 @@ final class KeysetPaginationBaseTest extends TestCase
                     DataColumn::create()->attribute('description'),
                 )
                 ->id('w1-grid')
-                ->paginator($keysetPaginator)
+                ->dataReader($keysetPaginator)
                 ->pagination(KeysetPagination::widget()->paginator($keysetPaginator)->urlArguments([])->render())
                 ->layoutGridTable('{items}' . PHP_EOL . '{pager}')
                 ->render(),
@@ -240,7 +240,7 @@ final class KeysetPaginationBaseTest extends TestCase
                     DataColumn::create()->attribute('description'),
                 )
                 ->id('w1-grid')
-                ->paginator($keysetPaginator)
+                ->dataReader($keysetPaginator)
                 ->pagination(KeysetPagination::widget()->paginator($keysetPaginator)->urlArguments([])->render())
                 ->layoutGridTable('{items}' . PHP_EOL . '{pager}')
                 ->render(),
@@ -302,7 +302,7 @@ final class KeysetPaginationBaseTest extends TestCase
                     DataColumn::create()->attribute('description'),
                 )
                 ->id('w1-grid')
-                ->paginator($keysetPaginator)
+                ->dataReader($keysetPaginator)
                 ->pagination(KeysetPagination::widget()->paginator($keysetPaginator)->urlArguments([])->render())
                 ->layoutGridTable('{items}' . PHP_EOL . '{pager}')
                 ->render(),
@@ -364,7 +364,7 @@ final class KeysetPaginationBaseTest extends TestCase
                     DataColumn::create()->attribute('description'),
                 )
                 ->id('w1-grid')
-                ->paginator($keysetPaginator)
+                ->dataReader($keysetPaginator)
                 ->pagination(KeysetPagination::widget()->paginator($keysetPaginator)->urlArguments([])->render())
                 ->layoutGridTable('{items}' . PHP_EOL . '{pager}')
                 ->render(),

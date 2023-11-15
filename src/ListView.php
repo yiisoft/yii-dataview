@@ -218,7 +218,7 @@ final class ListView extends BaseListView
      */
     protected function renderItems(): string
     {
-        $data = $this->getDataReader();
+        $data = iterator_to_array($this->getDataReader()->read());
         $keys = array_keys($data);
         $rows = [];
 
