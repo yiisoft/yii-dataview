@@ -392,6 +392,9 @@ abstract class BaseListView extends Widget
         return $this->renderGrid();
     }
 
+    /**
+     * @psalm-return array<array-key, array|object>
+     */
     protected function getItems(): array
     {
         $data = $this->getDataReader()->read();

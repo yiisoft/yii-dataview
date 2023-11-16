@@ -439,10 +439,6 @@ final class GridView extends BaseListView
 
         $index = 0;
         foreach ($this->getItems() as $key => $value) {
-            if (!is_object($value) && !is_array($value)) {
-                throw new InvalidConfigException('Grid data items must be either an array or an object.');
-            }
-
             if ($this->beforeRow !== null) {
                 /** @var array */
                 $row = call_user_func($this->beforeRow, $value, $key, $index, $this);
