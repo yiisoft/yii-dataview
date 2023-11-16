@@ -14,6 +14,7 @@ use Yiisoft\Factory\NotFoundException;
 use Yiisoft\Widget\WidgetFactory;
 use Yiisoft\Yii\DataView;
 use Yiisoft\Yii\DataView\Exception;
+use Yiisoft\Yii\DataView\Exception\DataReaderNotSetException;
 
 final class ExceptionTest extends TestCase
 {
@@ -34,8 +35,8 @@ final class ExceptionTest extends TestCase
      */
     public function testGetPaginator(): void
     {
-        $this->expectException(Exception\PaginatorNotSetException::class);
-        $this->expectExceptionMessage('Failed to create widget because "paginator" is not set.');
+        $this->expectException(DataReaderNotSetException::class);
+        $this->expectExceptionMessage('Failed to create widget because "dataReader" is not set.');
         DataView\GridView::widget()->getDataReader();
     }
 
@@ -60,8 +61,8 @@ final class ExceptionTest extends TestCase
      */
     public function testPaginator(): void
     {
-        $this->expectException(Exception\PaginatorNotSetException::class);
-        $this->expectExceptionMessage('Failed to create widget because "paginator" is not set.');
+        $this->expectException(DataReaderNotSetException::class);
+        $this->expectExceptionMessage('Failed to create widget because "dataReader" is not set.');
         DataView\GridView::widget()->render();
     }
 }

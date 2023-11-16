@@ -218,12 +218,12 @@ final class ListView extends BaseListView
      */
     protected function renderItems(): string
     {
-        $data = iterator_to_array($this->getDataReader()->read());
-        $keys = array_keys($data);
+        $items = $this->getItems();
+        $keys = array_keys($items);
         $rows = [];
 
-        /** @psalm-var array<array-key,array|object> $data */
-        foreach (array_values($data) as $index => $value) {
+        /** @psalm-var array<array-key,array|object> $items */
+        foreach (array_values($items) as $index => $value) {
             $key = $keys[$index];
 
             if ('' !== ($before = $this->renderBeforeItem($value, $key, $index))) {

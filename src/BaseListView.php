@@ -18,6 +18,7 @@ use Yiisoft\Router\UrlGeneratorInterface;
 use Yiisoft\Translator\SimpleMessageFormatter;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\Widget\Widget;
+use Yiisoft\Yii\DataView\Exception\DataReaderNotSetException;
 
 abstract class BaseListView extends Widget
 {
@@ -96,10 +97,10 @@ abstract class BaseListView extends Widget
         return $new;
     }
 
-    public function getDataReader(): PaginatorInterface
+    public function getDataReader(): ReadableDataInterface
     {
         if ($this->dataReader === null) {
-            throw new Exception\PaginatorNotSetException();
+            throw new DataReaderNotSetException();
         }
 
         return $this->dataReader;
@@ -354,48 +355,57 @@ abstract class BaseListView extends Widget
      */
     protected function renderLinkSorter(string $attribute, string $label): string
     {
-        $renderLinkSorter = '';
-        $paginator = $this->getDataReader();
-        $sort = $paginator->getSort();
-        $linkSorter = LinkSorter::widget();
-
-        if ($paginator instanceof OffsetPaginator) {
-            $linkSorter = $linkSorter->currentPage($paginator->getCurrentPage());
+        $dataReader = $this->getDataReader();
+        if (!$dataReader instanceof PaginatorInterface) {
+            return '';
         }
 
-        if ($sort !== null) {
-            $renderLinkSorter = $linkSorter
-                ->attribute($attribute)
-                ->attributes($sort->getCriteria())
-                ->directions($sort->getOrder())
-                ->iconAscClass('bi bi-sort-alpha-up')
-                ->iconDescClass('bi bi-sort-alpha-down')
-                ->label($label)
-                ->linkAttributes($this->sortLinkAttributes)
-                ->pageSize($this->getDataReader()->getPageSize())
-                ->urlArguments($this->urlArguments)
-                ->urlQueryParameters($this->urlQueryParameters)
-                ->render();
+        $sort = $dataReader->getSort();
+        if ($sort === null) {
+            return '';
         }
 
-        return $renderLinkSorter;
+        $linkSorter = $dataReader instanceof OffsetPaginator
+            ? LinkSorter::widget()->currentPage($dataReader->getCurrentPage())
+            : LinkSorter::widget();
+
+        return $linkSorter
+            ->attribute($attribute)
+            ->attributes($sort->getCriteria())
+            ->directions($sort->getOrder())
+            ->iconAscClass('bi bi-sort-alpha-up')
+            ->iconDescClass('bi bi-sort-alpha-down')
+            ->label($label)
+            ->linkAttributes($this->sortLinkAttributes)
+            ->pageSize($dataReader->getPageSize())
+            ->urlArguments($this->urlArguments)
+            ->urlQueryParameters($this->urlQueryParameters)
+            ->render();
     }
 
     public function render(): string
     {
         if ($this->dataReader === null) {
-            throw new Exception\PaginatorNotSetException();
+            throw new DataReaderNotSetException();
         }
 
         return $this->renderGrid();
     }
 
+    protected function getItems(): array
+    {
+        $data = $this->getDataReader()->read();
+        return is_array($data) ? $data : iterator_to_array($data);
+    }
+
     private function renderPagination(): string
     {
-        return match ($this->getDataReader()->isRequired()) {
-            true => $this->pagination,
-            false => '',
-        };
+        $dataReader = $this->getDataReader();
+        if (!$dataReader instanceof PaginatorInterface) {
+            return '';
+        }
+
+        return $dataReader->isRequired() ? $this->pagination : '';
     }
 
     private function renderSummary(): string

@@ -301,18 +301,15 @@ final class GridView extends BaseListView
      */
     private function guessColumns(): array
     {
+        $items = $this->getItems();
+
         $columns = [];
-
-        /** @psalm-var array[] */
-        $dataReader = iterator_to_array($this->getDataReader()->read());
-        reset($dataReader);
-
-        foreach ($dataReader as $data) {
+        foreach ($items as $item) {
             /**
              * @var string $name
              * @var mixed $value
              */
-            foreach ($data as $name => $value) {
+            foreach ($item as $name => $value) {
                 if ($value === null || is_scalar($value) || is_callable([$value, '__toString'])) {
                     $columns[] = DataColumn::create()->attribute($name);
                 }
@@ -320,7 +317,7 @@ final class GridView extends BaseListView
             break;
         }
 
-        if ($dataReader !== []) {
+        if (!empty($items)) {
             $columns[] = ActionColumn::create();
         }
 
@@ -433,14 +430,18 @@ final class GridView extends BaseListView
      * @param array $columns The columns of gridview.
      *
      * @psalm-param array<array-key,AbstractColumn>|array $columns
+     *
+     * @throws InvalidConfigException
      */
     private function renderTableBody(array $columns): string
     {
         $rows = [];
 
-        /** @psalm-var array<int,array> $data */
-        foreach ($this->getDataReader()->read() as $index => $value) {
-            $key = $index;
+        $index = 0;
+        foreach ($this->getItems() as $key => $value) {
+            if (!is_object($value) && !is_array($value)) {
+                throw new InvalidConfigException('Grid data items must be either an array or an object.');
+            }
 
             if ($this->beforeRow !== null) {
                 /** @var array */
@@ -461,6 +462,8 @@ final class GridView extends BaseListView
                     $rows[] = $row;
                 }
             }
+
+            $index++;
         }
 
         if ($rows === [] && $this->emptyText !== '') {
