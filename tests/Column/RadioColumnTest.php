@@ -56,7 +56,7 @@ final class RadioColumnTest extends TestCase
             </tr>
             </tbody>
             </table>
-            <div>dataview.summary</div>
+            <div>Page <b>1</b> of <b>1</b></div>
             </div>
             HTML,
             GridView::widget()
@@ -106,7 +106,7 @@ final class RadioColumnTest extends TestCase
             </tr>
             </tbody>
             </table>
-            <div>dataview.summary</div>
+            <div>Page <b>1</b> of <b>1</b></div>
             </div>
             HTML,
             GridView::widget()
@@ -157,7 +157,7 @@ final class RadioColumnTest extends TestCase
             </tr>
             </tbody>
             </table>
-            <div>dataview.summary</div>
+            <div>Page <b>1</b> of <b>1</b></div>
             </div>
             HTML,
             GridView::widget()
@@ -204,7 +204,7 @@ final class RadioColumnTest extends TestCase
             </tr>
             </tbody>
             </table>
-            <div>dataview.summary</div>
+            <div>Page <b>1</b> of <b>1</b></div>
             </div>
             HTML,
             GridView::widget()
@@ -251,7 +251,7 @@ final class RadioColumnTest extends TestCase
             </tr>
             </tbody>
             </table>
-            <div>dataview.summary</div>
+            <div>Page <b>1</b> of <b>1</b></div>
             </div>
             HTML,
             GridView::widget()
@@ -298,7 +298,7 @@ final class RadioColumnTest extends TestCase
             </tr>
             </tbody>
             </table>
-            <div>dataview.summary</div>
+            <div>Page <b>1</b> of <b>1</b></div>
             </div>
             HTML,
             GridView::widget()
@@ -345,7 +345,7 @@ final class RadioColumnTest extends TestCase
             </tr>
             </tbody>
             </table>
-            <div>dataview.summary</div>
+            <div>Page <b>1</b> of <b>1</b></div>
             </div>
             HTML,
             GridView::widget()
@@ -389,7 +389,7 @@ final class RadioColumnTest extends TestCase
             </tr>
             </tbody>
             </table>
-            <div>dataview.summary</div>
+            <div>Page <b>1</b> of <b>1</b></div>
             </div>
             HTML,
             GridView::widget()
@@ -436,7 +436,7 @@ final class RadioColumnTest extends TestCase
             </tr>
             </tbody>
             </table>
-            <div>dataview.summary</div>
+            <div>Page <b>1</b> of <b>1</b></div>
             </div>
             HTML,
             GridView::widget()

@@ -44,7 +44,7 @@ final class BaseTest extends TestCase
             <div>Id: 2</div><div>Name: Mary</div><div>Age: 21</div>
             </div>
             </span>
-            <div>dataview.summary</div>
+            <div>Page <b>1</b> of <b>1</b></div>
             </div>
             HTML,
             ListView::widget()
@@ -74,7 +74,7 @@ final class BaseTest extends TestCase
             <div class="testMe">
             <div>Id: 2</div><div>Name: Mary</div><div>Age: 21</div>
             </div>
-            <div>dataview.summary</div>
+            <div>Page <b>1</b> of <b>1</b></div>
             </div>
             HTML,
             ListView::widget()
@@ -103,7 +103,7 @@ final class BaseTest extends TestCase
             <div>
             <div>Id: 2</div><div>Name: Mary</div><div>Age: 21</div>
             </div>
-            <div>dataview.summary</div>
+            <div>Page <b>1</b> of <b>1</b></div>
             </div>
             HTML,
             ListView::widget()
@@ -131,7 +131,7 @@ final class BaseTest extends TestCase
             <div>
             <div>2</div><div>Mary</div>
             </div>
-            <div>dataview.summary</div>
+            <div>Page <b>1</b> of <b>1</b></div>
             </div>
             HTML,
             ListView::widget()
@@ -161,7 +161,7 @@ final class BaseTest extends TestCase
             <div>
             <div>Id: 2</div><div>Name: Mary</div><div>Age: 21</div>
             </div>
-            <div>dataview.summary</div>
+            <div>Page <b>1</b> of <b>1</b></div>
             </div>
             HTML,
             ListView::widget()
@@ -190,7 +190,7 @@ final class BaseTest extends TestCase
             <div>
             <div class=text-success>2</div>
             </div>
-            <div>dataview.summary</div>
+            <div>Page <b>1</b> of <b>1</b></div>
             </div>
             HTML,
             ListView::widget()

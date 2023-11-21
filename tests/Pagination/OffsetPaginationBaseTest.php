@@ -37,7 +37,7 @@ final class OffsetPaginationBaseTest extends TestCase
             </thead>
             <tbody>
             <tr>
-            <td colspan="0">dataview.empty.text</td>
+            <td colspan="0">No results found.</td>
             </tr>
             </tbody>
             </table>

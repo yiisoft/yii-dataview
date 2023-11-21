@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Yiisoft\Yii\DataView\Tests\GridView;
 
 use PHPUnit\Framework\TestCase;
-use Yiisoft\Aliases\Aliases;
 use Yiisoft\Definitions\Exception\CircularReferenceException;
 use Yiisoft\Definitions\Exception\InvalidConfigException;
 use Yiisoft\Definitions\Exception\NotInstantiableException;
@@ -13,8 +12,6 @@ use Yiisoft\Definitions\Reference;
 use Yiisoft\Di\Container;
 use Yiisoft\Di\ContainerConfig;
 use Yiisoft\Di\NotFoundException;
-use Yiisoft\Translator\MessageFormatterInterface;
-use Yiisoft\Translator\SimpleMessageFormatter;
 use Yiisoft\Translator\Translator;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\Widget\WidgetFactory;
@@ -158,7 +155,7 @@ final class TranslatorTest extends TestCase
             </thead>
             <tbody>
             <tr>
-            <td colspan="4">результатов не найдено</td>
+            <td colspan="4">Результатов не найдено.</td>
             </tr>
             </tbody>
             </table>
@@ -343,18 +340,11 @@ final class TranslatorTest extends TestCase
 
         return array_merge(
             [
-                Aliases::class => [
-                    'class' => Aliases::class,
-                    '__construct()' => [$params['yiisoft/aliases']['aliases']],
-                ],
-
-                MessageFormatterInterface::class => SimpleMessageFormatter::class,
-
                 TranslatorInterface::class => [
                     'class' => Translator::class,
                     '__construct()' => ['en'],
                     'addCategorySources()' => [
-                        'categories' => Reference::to('tag@translator.categorySource'),
+                        'categories' => Reference::to('tag@translation.categorySource'),
                     ],
                 ],
             ],
