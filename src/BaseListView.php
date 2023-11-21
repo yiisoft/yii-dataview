@@ -15,15 +15,30 @@ use Yiisoft\Factory\NotFoundException;
 use Yiisoft\Html\Tag\Div;
 use Yiisoft\Html\Tag\Td;
 use Yiisoft\Router\UrlGeneratorInterface;
+use Yiisoft\Translator\CategorySource;
+use Yiisoft\Translator\IdMessageReader;
+use Yiisoft\Translator\IntlMessageFormatter;
 use Yiisoft\Translator\SimpleMessageFormatter;
+use Yiisoft\Translator\Translator;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\Widget\Widget;
 use Yiisoft\Yii\DataView\Exception\DataReaderNotSetException;
 
 abstract class BaseListView extends Widget
 {
+    /**
+     * A name for {@see CategorySource} used with translator ({@see TranslatorInterface}) by default.
+     */
+    public const DEFAULT_TRANSLATION_CATEGORY = 'yii-dataview';
+
+    /**
+     * @var TranslatorInterface A translator instance used for translations of messages. If it was not set
+     * explicitly in the constructor, a default one created automatically in {@see createDefaultTranslator()}.
+     */
+    private TranslatorInterface $translator;
+
     private array $attributes = [];
-    protected string $emptyText = 'dataview.empty.text';
+    protected ?string $emptyText = null;
     private array $emptyTextAttributes = [];
     private string $header = '';
     private array $headerAttributes = [];
@@ -31,9 +46,8 @@ abstract class BaseListView extends Widget
     private string $layoutGridTable = "{items}\n{summary}\n{pager}";
     private string $pagination = '';
     protected ?ReadableDataInterface $dataReader = null;
-    private SimpleMessageFormatter|null $simpleMessageFormatter = null;
     private array $sortLinkAttributes = [];
-    private string $summary = 'dataview.summary';
+    private ?string $summary = null;
     private array $summaryAttributes = [];
     private string $toolbar = '';
     protected array $urlArguments = [];
@@ -41,9 +55,11 @@ abstract class BaseListView extends Widget
     private bool $withContainer = true;
 
     public function __construct(
-        private TranslatorInterface|null $translator = null,
-        private UrlGeneratorInterface|null $urlGenerator = null
+        TranslatorInterface|null $translator = null,
+        private UrlGeneratorInterface|null $urlGenerator = null,
+        private string $translationCategory = self::DEFAULT_TRANSLATION_CATEGORY,
     ) {
+        $this->translator = $translator ?? $this->createDefaultTranslator();
     }
 
     /**
@@ -76,7 +92,7 @@ abstract class BaseListView extends Widget
      * {@see notShowOnEmpty()}
      * {@see emptyTextAttributes()}
      */
-    public function emptyText(string $emptyText): static
+    public function emptyText(?string $emptyText): static
     {
         $new = clone $this;
         $new->emptyText = $emptyText;
@@ -104,15 +120,6 @@ abstract class BaseListView extends Widget
         }
 
         return $this->dataReader;
-    }
-
-    public function getSimpleMessageFormatter(): SimpleMessageFormatter
-    {
-        if ($this->simpleMessageFormatter === null) {
-            $this->simpleMessageFormatter = new SimpleMessageFormatter();
-        }
-
-        return $this->simpleMessageFormatter;
     }
 
     public function getUrlGenerator(): UrlGeneratorInterface
@@ -258,7 +265,7 @@ abstract class BaseListView extends Widget
      * - `{page}`: the page number (1-based) current being displayed.
      * - `{pageCount}`: the number of pages available.
      */
-    public function summary(string $value): static
+    public function summary(?string $value): static
     {
         $new = clone $this;
         $new->summary = $value;
@@ -336,13 +343,12 @@ abstract class BaseListView extends Widget
     protected function renderEmpty(int $colspan): Td
     {
         $emptyTextAttributes = $this->emptyTextAttributes;
-        $emptyText = $this->getSimpleMessageFormatter()->format($this->emptyText, []);
-
-        if ($this->translator !== null) {
-            $emptyText = $this->translator->translate($this->emptyText, [], 'dataview');
-        }
-
         $emptyTextAttributes['colspan'] = $colspan;
+
+        $emptyText = $this->translator->translate(
+            $this->emptyText ?? 'No results found.',
+            category: $this->translationCategory
+        );
 
         return Td::tag()->attributes($emptyTextAttributes)->content($emptyText);
     }
@@ -427,25 +433,14 @@ abstract class BaseListView extends Widget
             return '';
         }
 
-        $summary = $this->getSimpleMessageFormatter()
-            ->format(
-                $this->summary,
-                [
-                    'currentPage' => $paginator->getCurrentPage(),
-                    'totalPages' => $paginator->getTotalPages(),
-                ]
-            );
-
-        if ($this->translator !== null) {
-            $summary = $this->translator->translate(
-                $this->summary,
-                [
-                    'currentPage' => $paginator->getCurrentPage(),
-                    'totalPages' => $paginator->getTotalPages(),
-                ],
-                'dataview',
-            );
-        }
+        $summary = $this->translator->translate(
+            $this->summary ?? 'Page <b>{currentPage}</b> of <b>{totalPages}</b>',
+            [
+                'currentPage' => $paginator->getCurrentPage(),
+                'totalPages' => $paginator->getTotalPages(),
+            ],
+            $this->translationCategory,
+        );
 
         return Div::tag()->attributes($this->summaryAttributes)->content($summary)->encode(false)->render();
     }
@@ -499,5 +494,25 @@ abstract class BaseListView extends Widget
                 ->encode(false)
                 ->render(),
         };
+    }
+
+    /**
+     * Creates default translator to use if {@see $translator} was not set explicitly in the constructor. Depending on
+     * "intl" extension availability, either {@see IntlMessageFormatter} or {@see SimpleMessageFormatter} is used as
+     * formatter.
+     *
+     * @return Translator Translator instance used for translations of messages.
+     */
+    private function createDefaultTranslator(): Translator
+    {
+        $categorySource = new CategorySource(
+            $this->translationCategory,
+            new IdMessageReader(),
+            extension_loaded('intl') ? new IntlMessageFormatter() : new SimpleMessageFormatter(),
+        );
+        $translator = new Translator();
+        $translator->addCategorySources($categorySource);
+
+        return $translator;
     }
 }

@@ -51,7 +51,7 @@ final class ActionColumnTest extends TestCase
             </tr>
             </tbody>
             </table>
-            <div>dataview.summary</div>
+            <div>Page <b>1</b> of <b>1</b></div>
             </div>
             HTML,
             GridView::widget()
@@ -99,7 +99,7 @@ final class ActionColumnTest extends TestCase
             </tr>
             </tbody>
             </table>
-            <div>dataview.summary</div>
+            <div>Page <b>1</b> of <b>1</b></div>
             </div>
             HTML,
             GridView::widget()
@@ -152,7 +152,7 @@ final class ActionColumnTest extends TestCase
             </tr>
             </tbody>
             </table>
-            <div>dataview.summary</div>
+            <div>Page <b>1</b> of <b>1</b></div>
             </div>
             HTML,
             GridView::widget()
@@ -211,7 +211,7 @@ final class ActionColumnTest extends TestCase
             </tr>
             </tbody>
             </table>
-            <div>dataview.summary</div>
+            <div>Page <b>1</b> of <b>1</b></div>
             </div>
             HTML,
             GridView::widget()
@@ -261,7 +261,7 @@ final class ActionColumnTest extends TestCase
             </tr>
             </tbody>
             </table>
-            <div>dataview.summary</div>
+            <div>Page <b>1</b> of <b>1</b></div>
             </div>
             HTML,
             GridView::widget()
@@ -309,7 +309,7 @@ final class ActionColumnTest extends TestCase
             </tr>
             </tbody>
             </table>
-            <div>dataview.summary</div>
+            <div>Page <b>1</b> of <b>1</b></div>
             </div>
             HTML,
             GridView::widget()
@@ -354,7 +354,7 @@ final class ActionColumnTest extends TestCase
             </tr>
             </tbody>
             </table>
-            <div>dataview.summary</div>
+            <div>Page <b>1</b> of <b>1</b></div>
             </div>
             HTML,
             GridView::widget()
@@ -399,7 +399,7 @@ final class ActionColumnTest extends TestCase
             </tr>
             </tbody>
             </table>
-            <div>dataview.summary</div>
+            <div>Page <b>1</b> of <b>1</b></div>
             </div>
             HTML,
             GridView::widget()
@@ -444,7 +444,7 @@ final class ActionColumnTest extends TestCase
             </tr>
             </tbody>
             </table>
-            <div>dataview.summary</div>
+            <div>Page <b>1</b> of <b>1</b></div>
             </div>
             HTML,
             GridView::widget()
@@ -475,7 +475,7 @@ final class ActionColumnTest extends TestCase
             <tr></tr>
             </tbody>
             </table>
-            <div>dataview.summary</div>
+            <div>Page <b>1</b> of <b>1</b></div>
             </div>
             HTML,
             GridView::widget()
@@ -520,7 +520,7 @@ final class ActionColumnTest extends TestCase
             </tr>
             </tbody>
             </table>
-            <div>dataview.summary</div>
+            <div>Page <b>1</b> of <b>1</b></div>
             </div>
             HTML,
             GridView::widget()
@@ -579,7 +579,7 @@ final class ActionColumnTest extends TestCase
             </tr>
             </tbody>
             </table>
-            <div>dataview.summary</div>
+            <div>Page <b>1</b> of <b>1</b></div>
             </div>
             HTML,
             GridView::widget()
@@ -628,7 +628,7 @@ final class ActionColumnTest extends TestCase
             </tr>
             </tbody>
             </table>
-            <div>dataview.summary</div>
+            <div>Page <b>1</b> of <b>1</b></div>
             </div>
             HTML,
             GridView::widget()
@@ -673,7 +673,7 @@ final class ActionColumnTest extends TestCase
             </tr>
             </tbody>
             </table>
-            <div>dataview.summary</div>
+            <div>Page <b>1</b> of <b>1</b></div>
             </div>
             HTML,
             GridView::widget()
@@ -724,7 +724,7 @@ final class ActionColumnTest extends TestCase
             </tr>
             </tbody>
             </table>
-            <div>dataview.summary</div>
+            <div>Page <b>1</b> of <b>1</b></div>
             </div>
             HTML,
             GridView::widget()
@@ -769,7 +769,7 @@ final class ActionColumnTest extends TestCase
             </tr>
             </tbody>
             </table>
-            <div>dataview.summary</div>
+            <div>Page <b>1</b> of <b>1</b></div>
             </div>
             HTML,
             GridView::widget()
@@ -810,7 +810,7 @@ final class ActionColumnTest extends TestCase
             </tr>
             </tbody>
             </table>
-            <div>dataview.summary</div>
+            <div>Page <b>1</b> of <b>1</b></div>
             </div>
             HTML,
             GridView::widget()

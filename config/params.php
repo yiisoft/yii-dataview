@@ -2,13 +2,10 @@
 
 declare(strict_types=1);
 
+use Yiisoft\Yii\DataView\BaseListView;
+
 return [
-    'yiisoft/aliases' => [
-        'aliases' => [
-            '@yii-dataview' => dirname(__DIR__),
-        ],
-    ],
-    'yiisoft/translator' => [
-        'dataviewCategory' => 'dataview',
+    'yiisoft/yii-dataview' => [
+        'translation.category' => BaseListView::DEFAULT_TRANSLATION_CATEGORY,
     ],
 ];

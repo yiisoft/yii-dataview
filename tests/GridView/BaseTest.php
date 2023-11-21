@@ -63,7 +63,7 @@ final class BaseTest extends TestCase
             </div>
             </tbody>
             </table>
-            <div>dataview.summary</div>
+            <div>Page <b>1</b> of <b>1</b></div>
             </div>
             HTML,
             GridView::widget()
@@ -118,7 +118,7 @@ final class BaseTest extends TestCase
             </tr>
             </tbody>
             </table>
-            <div>dataview.summary</div>
+            <div>Page <b>1</b> of <b>1</b></div>
             </div>
             HTML,
             GridView::widget()
@@ -175,7 +175,7 @@ final class BaseTest extends TestCase
             </tr>
             </tbody>
             </table>
-            <div>dataview.summary</div>
+            <div>Page <b>1</b> of <b>1</b></div>
             </div>
             HTML,
             GridView::widget()
@@ -235,7 +235,7 @@ final class BaseTest extends TestCase
             </tr>
             </tbody>
             </table>
-            <div>dataview.summary</div>
+            <div>Page <b>1</b> of <b>1</b></div>
             </div>
             HTML,
             GridView::widget()
@@ -268,7 +268,7 @@ final class BaseTest extends TestCase
             </tr>
             </tbody>
             </table>
-            <div>dataview.summary</div>
+            <div>Page <b>1</b> of <b>1</b></div>
             </div>
             HTML,
             GridView::widget()
@@ -359,7 +359,7 @@ final class BaseTest extends TestCase
             </tr>
             </tbody>
             </table>
-            <div>dataview.summary</div>
+            <div>Page <b>1</b> of <b>1</b></div>
             </div>
             HTML,
             GridView::widget()
@@ -412,7 +412,7 @@ final class BaseTest extends TestCase
             </tr>
             </tbody>
             </table>
-            <div>dataview.summary</div>
+            <div>Page <b>1</b> of <b>1</b></div>
             </div>
             HTML,
             GridView::widget()
@@ -465,7 +465,7 @@ final class BaseTest extends TestCase
             </tr>
             </tbody>
             </table>
-            <div>dataview.summary</div>
+            <div>Page <b>1</b> of <b>1</b></div>
             </div>
             HTML,
             GridView::widget()
@@ -519,7 +519,7 @@ final class BaseTest extends TestCase
             </tr>
             </tbody>
             </table>
-            <div>dataview.summary</div>
+            <div>Page <b>1</b> of <b>1</b></div>
             </div>
             HTML,
             GridView::widget()
@@ -563,7 +563,7 @@ final class BaseTest extends TestCase
             </tr>
             </tbody>
             </table>
-            <div>dataview.summary</div>
+            <div>Page <b>1</b> of <b>1</b></div>
             </div>
             HTML,
             GridView::widget()
@@ -602,7 +602,7 @@ final class BaseTest extends TestCase
             </thead>
             <tbody>
             <tr>
-            <td colspan="4">dataview.empty.text</td>
+            <td colspan="4">No results found.</td>
             </tr>
             </tbody>
             </table>
@@ -656,7 +656,7 @@ final class BaseTest extends TestCase
             </tr>
             </tbody>
             </table>
-            <div>dataview.summary</div>
+            <div>Page <b>1</b> of <b>1</b></div>
             </div>
             HTML,
             GridView::widget()
@@ -699,7 +699,7 @@ final class BaseTest extends TestCase
             </tr>
             </tbody>
             </table>
-            <div>dataview.summary</div>
+            <div>Page <b>1</b> of <b>1</b></div>
             </div>
             HTML,
             GridView::widget()
@@ -751,7 +751,7 @@ final class BaseTest extends TestCase
             </tr>
             </tbody>
             </table>
-            <div>dataview.summary</div>
+            <div>Page <b>1</b> of <b>1</b></div>
             </div>
             HTML,
             GridView::widget()
