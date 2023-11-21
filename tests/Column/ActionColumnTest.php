@@ -68,7 +68,7 @@ final class ActionColumnTest extends TestCase
                         ),
                 )
                 ->id('w1-grid')
-                ->paginator($this->createOffsetPaginator($this->data, 10))
+                ->dataReader($this->createOffsetPaginator($this->data, 10))
                 ->render()
         );
     }
@@ -117,7 +117,7 @@ final class ActionColumnTest extends TestCase
                         ->contentAttributes(['class' => 'text-decoration-none test.class']),
                 )
                 ->id('w1-grid')
-                ->paginator($this->createOffsetPaginator($this->data, 10))
+                ->dataReader($this->createOffsetPaginator($this->data, 10))
                 ->render()
         );
     }
@@ -172,7 +172,7 @@ final class ActionColumnTest extends TestCase
                         ->visibleButtons(['resend-password' => true]),
                 )
                 ->id('w1-grid')
-                ->paginator($this->createOffsetPaginator($this->data, 10))
+                ->dataReader($this->createOffsetPaginator($this->data, 10))
                 ->render()
         );
     }
@@ -217,7 +217,7 @@ final class ActionColumnTest extends TestCase
             GridView::widget()
                 ->columns(ActionColumn::create()->dataLabel('test.label'))
                 ->id('w1-grid')
-                ->paginator($this->createOffsetPaginator($this->data, 10))
+                ->dataReader($this->createOffsetPaginator($this->data, 10))
                 ->render()
         );
     }
@@ -270,7 +270,7 @@ final class ActionColumnTest extends TestCase
                 )
                 ->footerEnabled(true)
                 ->id('w1-grid')
-                ->paginator($this->createOffsetPaginator($this->data, 10))
+                ->dataReader($this->createOffsetPaginator($this->data, 10))
                 ->render()
         );
     }
@@ -315,7 +315,7 @@ final class ActionColumnTest extends TestCase
             GridView::widget()
                 ->columns(ActionColumn::create()->label('test.label'))
                 ->id('w1-grid')
-                ->paginator($this->createOffsetPaginator($this->data, 10))
+                ->dataReader($this->createOffsetPaginator($this->data, 10))
                 ->render()
         );
     }
@@ -360,7 +360,7 @@ final class ActionColumnTest extends TestCase
             GridView::widget()
                 ->columns(ActionColumn::create()->label('Ενέργειες'))
                 ->id('w1-grid')
-                ->paginator($this->createOffsetPaginator($this->data, 10))
+                ->dataReader($this->createOffsetPaginator($this->data, 10))
                 ->render()
         );
     }
@@ -405,7 +405,7 @@ final class ActionColumnTest extends TestCase
             GridView::widget()
                 ->columns(ActionColumn::create()->label('test.label')->labelAttributes(['class' => 'test.class']))
                 ->id('w1-grid')
-                ->paginator($this->createOffsetPaginator($this->data, 10))
+                ->dataReader($this->createOffsetPaginator($this->data, 10))
                 ->render()
         );
     }
@@ -450,7 +450,7 @@ final class ActionColumnTest extends TestCase
             GridView::widget()
                 ->columns(ActionColumn::create()->name('test.name'))
                 ->id('w1-grid')
-                ->paginator($this->createOffsetPaginator($this->data, 10))
+                ->dataReader($this->createOffsetPaginator($this->data, 10))
                 ->render()
         );
     }
@@ -481,7 +481,7 @@ final class ActionColumnTest extends TestCase
             GridView::widget()
                 ->columns(ActionColumn::create()->visible(false))
                 ->id('w1-grid')
-                ->paginator($this->createOffsetPaginator($this->data, 10))
+                ->dataReader($this->createOffsetPaginator($this->data, 10))
                 ->render()
         );
     }
@@ -526,7 +526,7 @@ final class ActionColumnTest extends TestCase
             GridView::widget()
                 ->columns(ActionColumn::create()->primaryKey('identity_id'))
                 ->id('w1-grid')
-                ->paginator(
+                ->dataReader(
                     $this->createOffsetPaginator(
                         [
                             ['identity_id' => 1, 'name' => 'John', 'age' => 20],
@@ -589,7 +589,7 @@ final class ActionColumnTest extends TestCase
                     ActionColumn::create(),
                 )
                 ->id('w1-grid')
-                ->paginator($this->createOffsetPaginator($this->data, 10))
+                ->dataReader($this->createOffsetPaginator($this->data, 10))
                 ->render()
         );
     }
@@ -634,7 +634,7 @@ final class ActionColumnTest extends TestCase
             GridView::widget()
                 ->columns(ActionColumn::create()->urlArguments(['test-arguments' => 'test.arguments']))
                 ->id('w1-grid')
-                ->paginator($this->createOffsetPaginator($this->data, 10))
+                ->dataReader($this->createOffsetPaginator($this->data, 10))
                 ->render()
         );
     }
@@ -685,7 +685,7 @@ final class ActionColumnTest extends TestCase
                     ),
                 )
                 ->id('w1-grid')
-                ->paginator($this->createOffsetPaginator($this->data, 10))
+                ->dataReader($this->createOffsetPaginator($this->data, 10))
                 ->render()
         );
     }
@@ -730,7 +730,7 @@ final class ActionColumnTest extends TestCase
             GridView::widget()
                 ->columns(ActionColumn::create()->urlQueryParameters(['test-param' => 'test.param']))
                 ->id('w1-grid')
-                ->paginator($this->createOffsetPaginator($this->data, 10))
+                ->dataReader($this->createOffsetPaginator($this->data, 10))
                 ->render()
         );
     }
@@ -775,7 +775,7 @@ final class ActionColumnTest extends TestCase
             GridView::widget()
                 ->columns(ActionColumn::create()->urlParamsConfig(['test-param' => 'test.param']))
                 ->id('w1-grid')
-                ->paginator($this->createOffsetPaginator($this->data, 10))
+                ->dataReader($this->createOffsetPaginator($this->data, 10))
                 ->render()
         );
     }
@@ -823,7 +823,7 @@ final class ActionColumnTest extends TestCase
                     ),
                 )
                 ->id('w1-grid')
-                ->paginator($this->createOffsetPaginator($this->data, 10))
+                ->dataReader($this->createOffsetPaginator($this->data, 10))
                 ->render()
         );
     }

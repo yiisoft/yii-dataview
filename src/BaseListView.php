@@ -7,6 +7,7 @@ namespace Yiisoft\Yii\DataView;
 use Yiisoft\Data\Paginator\KeysetPaginator;
 use Yiisoft\Data\Paginator\OffsetPaginator;
 use Yiisoft\Data\Paginator\PaginatorInterface;
+use Yiisoft\Data\Reader\ReadableDataInterface;
 use Yiisoft\Definitions\Exception\CircularReferenceException;
 use Yiisoft\Definitions\Exception\InvalidConfigException;
 use Yiisoft\Definitions\Exception\NotInstantiableException;
@@ -17,6 +18,7 @@ use Yiisoft\Router\UrlGeneratorInterface;
 use Yiisoft\Translator\SimpleMessageFormatter;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\Widget\Widget;
+use Yiisoft\Yii\DataView\Exception\DataReaderNotSetException;
 
 abstract class BaseListView extends Widget
 {
@@ -28,7 +30,7 @@ abstract class BaseListView extends Widget
     private string $layout = "{header}\n{toolbar}";
     private string $layoutGridTable = "{items}\n{summary}\n{pager}";
     private string $pagination = '';
-    protected ?PaginatorInterface $paginator = null;
+    protected ?ReadableDataInterface $dataReader = null;
     private SimpleMessageFormatter|null $simpleMessageFormatter = null;
     private array $sortLinkAttributes = [];
     private string $summary = 'dataview.summary';
@@ -95,13 +97,13 @@ abstract class BaseListView extends Widget
         return $new;
     }
 
-    public function getPaginator(): PaginatorInterface
+    public function getDataReader(): ReadableDataInterface
     {
-        if ($this->paginator === null) {
-            throw new Exception\PaginatorNotSetException();
+        if ($this->dataReader === null) {
+            throw new DataReaderNotSetException();
         }
 
-        return $this->paginator;
+        return $this->dataReader;
     }
 
     public function getSimpleMessageFormatter(): SimpleMessageFormatter
@@ -218,13 +220,12 @@ abstract class BaseListView extends Widget
     /**
      * Returns a new instance with the paginator interface of the grid view, detail view, or list view.
      *
-     * @param PaginatorInterface $value The paginator interface of the grid view, detail view, or list view.
+     * @param ReadableDataInterface $dataReader The paginator interface of the grid view, detail view, or list view.
      */
-    public function paginator(PaginatorInterface $value): static
+    public function dataReader(ReadableDataInterface $dataReader): static
     {
         $new = clone $this;
-        $new->paginator = $value;
-
+        $new->dataReader = $dataReader;
         return $new;
     }
 
@@ -332,18 +333,6 @@ abstract class BaseListView extends Widget
         return $new;
     }
 
-    protected function getDataReader(): array
-    {
-        $dataReader = [];
-
-        /** @var array */
-        foreach ($this->getPaginator()->read() as $read) {
-            $dataReader[] = $read;
-        }
-
-        return $dataReader;
-    }
-
     protected function renderEmpty(int $colspan): Td
     {
         $emptyTextAttributes = $this->emptyTextAttributes;
@@ -366,64 +355,77 @@ abstract class BaseListView extends Widget
      */
     protected function renderLinkSorter(string $attribute, string $label): string
     {
-        $renderLinkSorter = '';
-        $paginator = $this->getPaginator();
-        $sort = $paginator->getSort();
-        $linkSorter = LinkSorter::widget();
-
-        if ($paginator instanceof OffsetPaginator) {
-            $linkSorter = $linkSorter->currentPage($paginator->getCurrentPage());
+        $dataReader = $this->getDataReader();
+        if (!$dataReader instanceof PaginatorInterface) {
+            return '';
         }
 
-        if ($sort !== null) {
-            $renderLinkSorter = $linkSorter
-                ->attribute($attribute)
-                ->attributes($sort->getCriteria())
-                ->directions($sort->getOrder())
-                ->iconAscClass('bi bi-sort-alpha-up')
-                ->iconDescClass('bi bi-sort-alpha-down')
-                ->label($label)
-                ->linkAttributes($this->sortLinkAttributes)
-                ->pageSize($this->getPaginator()->getPageSize())
-                ->urlArguments($this->urlArguments)
-                ->urlQueryParameters($this->urlQueryParameters)
-                ->render();
+        $sort = $dataReader->getSort();
+        if ($sort === null) {
+            return '';
         }
 
-        return $renderLinkSorter;
+        $linkSorter = $dataReader instanceof OffsetPaginator
+            ? LinkSorter::widget()->currentPage($dataReader->getCurrentPage())
+            : LinkSorter::widget();
+
+        return $linkSorter
+            ->attribute($attribute)
+            ->attributes($sort->getCriteria())
+            ->directions($sort->getOrder())
+            ->iconAscClass('bi bi-sort-alpha-up')
+            ->iconDescClass('bi bi-sort-alpha-down')
+            ->label($label)
+            ->linkAttributes($this->sortLinkAttributes)
+            ->pageSize($dataReader->getPageSize())
+            ->urlArguments($this->urlArguments)
+            ->urlQueryParameters($this->urlQueryParameters)
+            ->render();
     }
 
     public function render(): string
     {
-        if ($this->paginator === null) {
-            throw new Exception\PaginatorNotSetException();
+        if ($this->dataReader === null) {
+            throw new DataReaderNotSetException();
         }
 
         return $this->renderGrid();
     }
 
+    /**
+     * @psalm-return array<array-key, array|object>
+     */
+    protected function getItems(): array
+    {
+        $data = $this->getDataReader()->read();
+        return is_array($data) ? $data : iterator_to_array($data);
+    }
+
     private function renderPagination(): string
     {
-        return match ($this->getPaginator()->isRequired()) {
-            true => $this->pagination,
-            false => '',
-        };
+        $dataReader = $this->getDataReader();
+        if (!$dataReader instanceof PaginatorInterface) {
+            return '';
+        }
+
+        return $dataReader->isRequired() ? $this->pagination : '';
     }
 
     private function renderSummary(): string
     {
-        if ($this->getPaginator() instanceof KeysetPaginator) {
-            return '';
-        }
-
-        $pageCount = count($this->getDataReader());
-
-        if ($pageCount <= 0) {
+        if ($this->getDataReader() instanceof KeysetPaginator) {
             return '';
         }
 
         /** @var OffsetPaginator $paginator */
-        $paginator = $this->getPaginator();
+        $paginator = $this->getDataReader();
+
+        $data = iterator_to_array($paginator->read());
+        $pageCount = count($data);
+
+        if ($pageCount <= 0) {
+            return '';
+        }
 
         $summary = $this->getSimpleMessageFormatter()
             ->format(

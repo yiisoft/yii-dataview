@@ -34,7 +34,7 @@ final class ImmutableTest extends TestCase
         $this->assertNotSame($baseListView, $baseListView->layout(''));
         $this->assertNotSame($baseListView, $baseListView->layoutGridTable(''));
         $this->assertNotSame($baseListView, $baseListView->pagination(''));
-        $this->assertNotSame($baseListView, $baseListView->paginator($this->createOffsetPaginator($this->data, 10)));
+        $this->assertNotSame($baseListView, $baseListView->dataReader($this->createOffsetPaginator($this->data, 10)));
         $this->assertNotSame($baseListView, $baseListView->sortLinkAttributes([]));
         $this->assertNotSame($baseListView, $baseListView->summary(''));
         $this->assertNotSame($baseListView, $baseListView->summaryAttributes([]));

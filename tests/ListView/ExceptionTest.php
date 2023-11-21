@@ -11,6 +11,7 @@ use Yiisoft\Definitions\Exception\InvalidConfigException;
 use Yiisoft\Definitions\Exception\NotInstantiableException;
 use Yiisoft\Factory\NotFoundException;
 use Yiisoft\Yii\DataView\Exception;
+use Yiisoft\Yii\DataView\Exception\DataReaderNotSetException;
 use Yiisoft\Yii\DataView\ListView;
 use Yiisoft\Yii\DataView\Tests\Support\TestTrait;
 
@@ -31,8 +32,8 @@ final class ExceptionTest extends TestCase
      */
     public function testGetPaginator(): void
     {
-        $this->expectException(Exception\PaginatorNotSetException::class);
-        $this->expectExceptionMessage('Failed to create widget because "paginator" is not set.');
+        $this->expectException(DataReaderNotSetException::class);
+        $this->expectExceptionMessage('Failed to create widget because "dataReader" is not set.');
         ListView::widget()
             ->itemView('//_listview')
             ->render();
@@ -50,7 +51,7 @@ final class ExceptionTest extends TestCase
         $this->expectExceptionMessage('Failed to create widget because "webview" is not set.');
         ListView::widget()
             ->itemView('//_listview')
-            ->paginator($this->createOffsetPaginator($this->data, 10))
+            ->dataReader($this->createOffsetPaginator($this->data, 10))
             ->render();
     }
 
@@ -65,7 +66,7 @@ final class ExceptionTest extends TestCase
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('The "itemView" property must be set.');
         ListView::widget()
-            ->paginator($this->createOffsetPaginator($this->data, 10))
+            ->dataReader($this->createOffsetPaginator($this->data, 10))
             ->render();
     }
 }

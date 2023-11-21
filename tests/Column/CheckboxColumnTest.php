@@ -68,7 +68,7 @@ final class CheckboxColumnTest extends TestCase
                     ),
                 )
                 ->id('w1-grid')
-                ->paginator($this->createOffsetPaginator($this->data, 10))
+                ->dataReader($this->createOffsetPaginator($this->data, 10))
                 ->render()
         );
     }
@@ -119,7 +119,7 @@ final class CheckboxColumnTest extends TestCase
                         ->contentAttributes(['class' => 'test.class']),
                 )
                 ->id('w1-grid')
-                ->paginator($this->createOffsetPaginator($this->data, 10))
+                ->dataReader($this->createOffsetPaginator($this->data, 10))
                 ->render()
         );
     }
@@ -166,7 +166,7 @@ final class CheckboxColumnTest extends TestCase
                     CheckboxColumn::create()->dataLabel('test.label'),
                 )
                 ->id('w1-grid')
-                ->paginator($this->createOffsetPaginator($this->data, 10))
+                ->dataReader($this->createOffsetPaginator($this->data, 10))
                 ->render()
         );
     }
@@ -213,7 +213,7 @@ final class CheckboxColumnTest extends TestCase
                     CheckboxColumn::create()->label('test.label'),
                 )
                 ->id('w1-grid')
-                ->paginator($this->createOffsetPaginator($this->data, 10))
+                ->dataReader($this->createOffsetPaginator($this->data, 10))
                 ->render()
         );
     }
@@ -260,7 +260,7 @@ final class CheckboxColumnTest extends TestCase
                     CheckboxColumn::create()->label('Πλαίσιο ελέγχου'),
                 )
                 ->id('w1-grid')
-                ->paginator($this->createOffsetPaginator($this->data, 10))
+                ->dataReader($this->createOffsetPaginator($this->data, 10))
                 ->render()
         );
     }
@@ -307,7 +307,7 @@ final class CheckboxColumnTest extends TestCase
                     CheckboxColumn::create()->label('test.label')->labelAttributes(['class' => 'test.class']),
                 )
                 ->id('w1-grid')
-                ->paginator($this->createOffsetPaginator($this->data, 10))
+                ->dataReader($this->createOffsetPaginator($this->data, 10))
                 ->render()
         );
     }
@@ -354,7 +354,7 @@ final class CheckboxColumnTest extends TestCase
                     CheckboxColumn::create()->name('test.checkbox'),
                 )
                 ->id('w1-grid')
-                ->paginator($this->createOffsetPaginator($this->data, 10))
+                ->dataReader($this->createOffsetPaginator($this->data, 10))
                 ->render()
         );
     }
@@ -401,7 +401,7 @@ final class CheckboxColumnTest extends TestCase
                     CheckboxColumn::create()->multiple(false),
                 )
                 ->id('w1-grid')
-                ->paginator($this->createOffsetPaginator($this->data, 10))
+                ->dataReader($this->createOffsetPaginator($this->data, 10))
                 ->render()
         );
     }
@@ -445,7 +445,7 @@ final class CheckboxColumnTest extends TestCase
                     CheckboxColumn::create()->visible(false),
                 )
                 ->id('w1-grid')
-                ->paginator($this->createOffsetPaginator($this->data, 10))
+                ->dataReader($this->createOffsetPaginator($this->data, 10))
                 ->render()
         );
     }
@@ -492,7 +492,7 @@ final class CheckboxColumnTest extends TestCase
                     CheckboxColumn::create(),
                 )
                 ->id('w1-grid')
-                ->paginator($this->createOffsetPaginator($this->data, 10))
+                ->dataReader($this->createOffsetPaginator($this->data, 10))
                 ->render()
         );
     }

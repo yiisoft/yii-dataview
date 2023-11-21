@@ -105,7 +105,7 @@ final class DataColumnFilterTest extends TestCase
                     DataColumn::create()->attribute('name')->filter('<input name="searchModel[name]">'),
                 )
                 ->id('w1-grid')
-                ->paginator($this->createOffsetPaginator($this->data, 10))
+                ->dataReader($this->createOffsetPaginator($this->data, 10))
                 ->render()
         );
     }
@@ -157,7 +157,7 @@ final class DataColumnFilterTest extends TestCase
                     DataColumn::create()->attribute('birthday')->filterAttribute('birthday')->filterType('date'),
                 )
                 ->id('w1-grid')
-                ->paginator($this->createOffsetPaginator($this->dataWithDate, 10))
+                ->dataReader($this->createOffsetPaginator($this->dataWithDate, 10))
                 ->render()
         );
     }
@@ -209,7 +209,7 @@ final class DataColumnFilterTest extends TestCase
                     DataColumn::create()->attribute('birthday')->filterAttribute('birthday')->filterType('datetime'),
                 )
                 ->id('w1-grid')
-                ->paginator($this->createOffsetPaginator($this->dataWithDateTime, 10))
+                ->dataReader($this->createOffsetPaginator($this->dataWithDateTime, 10))
                 ->render()
         );
     }
@@ -261,7 +261,7 @@ final class DataColumnFilterTest extends TestCase
                     DataColumn::create()->attribute('email')->filterAttribute('email')->filterType('email'),
                 )
                 ->id('w1-grid')
-                ->paginator($this->createOffsetPaginator($this->dataWithEmail, 10))
+                ->dataReader($this->createOffsetPaginator($this->dataWithEmail, 10))
                 ->render()
         );
     }
@@ -317,7 +317,7 @@ final class DataColumnFilterTest extends TestCase
                 )
                 ->filterModelName('searchModel')
                 ->id('w1-grid')
-                ->paginator($this->createOffsetPaginator($this->data, 10))
+                ->dataReader($this->createOffsetPaginator($this->data, 10))
                 ->render()
         );
     }
@@ -369,7 +369,7 @@ final class DataColumnFilterTest extends TestCase
                     DataColumn::create()->attribute('month')->filterAttribute('month')->filterType('month'),
                 )
                 ->id('w1-grid')
-                ->paginator($this->createOffsetPaginator($this->dataWithMonth, 10))
+                ->dataReader($this->createOffsetPaginator($this->dataWithMonth, 10))
                 ->render()
         );
     }
@@ -416,7 +416,7 @@ final class DataColumnFilterTest extends TestCase
                     DataColumn::create()->attribute('name'),
                 )
                 ->id('w1-grid')
-                ->paginator($this->createOffsetPaginator($this->data, 10))
+                ->dataReader($this->createOffsetPaginator($this->data, 10))
                 ->render()
         );
     }
@@ -481,7 +481,7 @@ final class DataColumnFilterTest extends TestCase
                 ->filterPosition(GridView::FILTER_POS_FOOTER)
                 ->footerEnabled(true)
                 ->id('w1-grid')
-                ->paginator($this->createOffsetPaginator($this->data, 10))
+                ->dataReader($this->createOffsetPaginator($this->data, 10))
                 ->render()
         );
     }
@@ -540,7 +540,7 @@ final class DataColumnFilterTest extends TestCase
                 ->filterModelName('searchModel')
                 ->filterPosition(GridView::FILTER_POS_HEADER)
                 ->id('w1-grid')
-                ->paginator($this->createOffsetPaginator($this->data, 10))
+                ->dataReader($this->createOffsetPaginator($this->data, 10))
                 ->render()
         );
     }
@@ -591,7 +591,7 @@ final class DataColumnFilterTest extends TestCase
                     DataColumn::create()->attribute('name'),
                 )
                 ->id('w1-grid')
-                ->paginator($this->createOffsetPaginator($this->data, 10))
+                ->dataReader($this->createOffsetPaginator($this->data, 10))
                 ->render()
         );
     }
@@ -650,7 +650,7 @@ final class DataColumnFilterTest extends TestCase
                 ->filterModelName('searchModel')
                 ->filterRowAttributes(['class' => 'text-center'])
                 ->id('w1-grid')
-                ->paginator($this->createOffsetPaginator($this->data, 10))
+                ->dataReader($this->createOffsetPaginator($this->data, 10))
                 ->render()
         );
     }
@@ -697,7 +697,7 @@ final class DataColumnFilterTest extends TestCase
                     DataColumn::create()->attribute('name')->filterAttribute('name')->filterType('search'),
                 )
                 ->id('w1-grid')
-                ->paginator($this->createOffsetPaginator($this->data, 10))
+                ->dataReader($this->createOffsetPaginator($this->data, 10))
                 ->render()
         );
     }
@@ -755,7 +755,7 @@ final class DataColumnFilterTest extends TestCase
                 ->filterModelName('searchModel')
                 ->filterRowAttributes(['class' => 'text-center'])
                 ->id('w1-grid')
-                ->paginator($this->createOffsetPaginator($this->data, 10))
+                ->dataReader($this->createOffsetPaginator($this->data, 10))
                 ->render()
         );
     }
@@ -809,7 +809,7 @@ final class DataColumnFilterTest extends TestCase
                 ->filterModelName('searchModel')
                 ->filterRowAttributes(['class' => 'text-center'])
                 ->id('w1-grid')
-                ->paginator($this->createOffsetPaginator($this->dataWithTelephone, 10))
+                ->dataReader($this->createOffsetPaginator($this->dataWithTelephone, 10))
                 ->render()
         );
     }
@@ -863,7 +863,7 @@ final class DataColumnFilterTest extends TestCase
                 ->filterModelName('searchModel')
                 ->filterRowAttributes(['class' => 'text-center'])
                 ->id('w1-grid')
-                ->paginator($this->createOffsetPaginator($this->dataWithTime, 10))
+                ->dataReader($this->createOffsetPaginator($this->dataWithTime, 10))
                 ->render()
         );
     }
@@ -917,7 +917,7 @@ final class DataColumnFilterTest extends TestCase
                 ->filterModelName('searchModel')
                 ->filterRowAttributes(['class' => 'text-center'])
                 ->id('w1-grid')
-                ->paginator($this->createOffsetPaginator($this->dataWithTime, 10))
+                ->dataReader($this->createOffsetPaginator($this->dataWithTime, 10))
                 ->render()
         );
     }
@@ -971,7 +971,7 @@ final class DataColumnFilterTest extends TestCase
                 ->filterModelName('searchModel')
                 ->filterRowAttributes(['class' => 'text-center'])
                 ->id('w1-grid')
-                ->paginator($this->createOffsetPaginator($this->dataWithWeek, 10))
+                ->dataReader($this->createOffsetPaginator($this->dataWithWeek, 10))
                 ->render()
         );
     }
@@ -1029,7 +1029,7 @@ final class DataColumnFilterTest extends TestCase
                 )
                 ->filterModelName('searchModel')
                 ->id('w1-grid')
-                ->paginator($this->createOffsetPaginator($this->data, 10))
+                ->dataReader($this->createOffsetPaginator($this->data, 10))
                 ->render()
         );
     }

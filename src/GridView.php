@@ -301,18 +301,15 @@ final class GridView extends BaseListView
      */
     private function guessColumns(): array
     {
+        $items = $this->getItems();
+
         $columns = [];
-
-        /** @psalm-var array[] */
-        $dataReader = $this->getDataReader();
-        reset($dataReader);
-
-        foreach ($dataReader as $data) {
+        foreach ($items as $item) {
             /**
              * @var string $name
              * @var mixed $value
              */
-            foreach ($data as $name => $value) {
+            foreach ($item as $name => $value) {
                 if ($value === null || is_scalar($value) || is_callable([$value, '__toString'])) {
                     $columns[] = DataColumn::create()->attribute($name);
                 }
@@ -320,7 +317,7 @@ final class GridView extends BaseListView
             break;
         }
 
-        if ($dataReader !== []) {
+        if (!empty($items)) {
             $columns[] = ActionColumn::create();
         }
 
@@ -433,17 +430,15 @@ final class GridView extends BaseListView
      * @param array $columns The columns of gridview.
      *
      * @psalm-param array<array-key,AbstractColumn>|array $columns
+     *
+     * @throws InvalidConfigException
      */
     private function renderTableBody(array $columns): string
     {
-        $data = $this->getDataReader();
-        $keys = array_keys($data);
         $rows = [];
 
-        /** @psalm-var array<int,array> $data */
-        foreach ($data as $index => $value) {
-            $key = $keys[$index];
-
+        $index = 0;
+        foreach ($this->getItems() as $key => $value) {
             if ($this->beforeRow !== null) {
                 /** @var array */
                 $row = call_user_func($this->beforeRow, $value, $key, $index, $this);
@@ -463,6 +458,8 @@ final class GridView extends BaseListView
                     $rows[] = $row;
                 }
             }
+
+            $index++;
         }
 
         if ($rows === [] && $this->emptyText !== '') {

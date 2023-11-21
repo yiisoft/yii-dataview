@@ -76,7 +76,7 @@ final class BaseTest extends TestCase
                     DataColumn::create()->attribute('age'),
                 )
                 ->id('w1-grid')
-                ->paginator($this->createOffsetPaginator($this->data, 10))
+                ->dataReader($this->createOffsetPaginator($this->data, 10))
                 ->render()
         );
     }
@@ -129,7 +129,7 @@ final class BaseTest extends TestCase
                 )
                 ->columnsGroupEnabled(true)
                 ->id('w1-grid')
-                ->paginator($this->createOffsetPaginator($this->data, 10))
+                ->dataReader($this->createOffsetPaginator($this->data, 10))
                 ->render()
         );
     }
@@ -187,7 +187,7 @@ final class BaseTest extends TestCase
                 )
                 ->columnsGroupEnabled(true)
                 ->id('w1-grid')
-                ->paginator($this->createOffsetPaginator($this->data, 10))
+                ->dataReader($this->createOffsetPaginator($this->data, 10))
                 ->render()
         );
     }
@@ -240,7 +240,7 @@ final class BaseTest extends TestCase
             HTML,
             GridView::widget()
                 ->id('w1-grid')
-                ->paginator($this->createOffsetPaginator($this->data, 10))
+                ->dataReader($this->createOffsetPaginator($this->data, 10))
                 ->render()
         );
     }
@@ -275,7 +275,7 @@ final class BaseTest extends TestCase
                 ->columns(DataColumn::create()->attribute('id'))
                 ->emptyCell('Empty cell')
                 ->id('w1-grid')
-                ->paginator($this->createOffsetPaginator([['id' => '']], 10))
+                ->dataReader($this->createOffsetPaginator([['id' => '']], 10))
                 ->render()
         );
     }
@@ -317,7 +317,7 @@ final class BaseTest extends TestCase
                 )
                 ->emptyText('Not found.')
                 ->id('w1-grid')
-                ->paginator($this->createOffsetPaginator([], 10))
+                ->dataReader($this->createOffsetPaginator([], 10))
                 ->render()
         );
     }
@@ -371,7 +371,7 @@ final class BaseTest extends TestCase
                 ->footerEnabled(true)
                 ->footerRowAttributes(['class' => 'text-primary'])
                 ->id('w1-grid')
-                ->paginator($this->createOffsetPaginator($this->data, 10))
+                ->dataReader($this->createOffsetPaginator($this->data, 10))
                 ->render()
         );
     }
@@ -424,7 +424,7 @@ final class BaseTest extends TestCase
                 )
                 ->header('List of users')
                 ->id('w1-grid')
-                ->paginator($this->createOffsetPaginator($this->data, 10))
+                ->dataReader($this->createOffsetPaginator($this->data, 10))
                 ->render()
         );
     }
@@ -477,7 +477,7 @@ final class BaseTest extends TestCase
                 )
                 ->header('List of users')
                 ->id('w1-grid')
-                ->paginator($this->createOffsetPaginator($this->data, 10))
+                ->dataReader($this->createOffsetPaginator($this->data, 10))
                 ->layout('')
                 ->layoutGridTable("{header}\n{items}\n{summary}")
                 ->render()
@@ -531,7 +531,7 @@ final class BaseTest extends TestCase
                 )
                 ->headerRowAttributes(['class' => 'text-primary'])
                 ->id('w1-grid')
-                ->paginator($this->createOffsetPaginator($this->data, 10))
+                ->dataReader($this->createOffsetPaginator($this->data, 10))
                 ->render()
         );
     }
@@ -575,7 +575,7 @@ final class BaseTest extends TestCase
                 )
                 ->headerTableEnabled(false)
                 ->id('w1-grid')
-                ->paginator($this->createOffsetPaginator($this->data, 10))
+                ->dataReader($this->createOffsetPaginator($this->data, 10))
                 ->render()
         );
     }
@@ -616,7 +616,7 @@ final class BaseTest extends TestCase
                     DataColumn::create()->attribute('age'),
                 )
                 ->id('w1-grid')
-                ->paginator($this->createOffsetPaginator([], 10))
+                ->dataReader($this->createOffsetPaginator([], 10))
                 ->render()
         );
     }
@@ -667,7 +667,7 @@ final class BaseTest extends TestCase
                     DataColumn::create()->attribute('age'),
                 )
                 ->id('w1-grid')
-                ->paginator($this->createOffsetPaginator($this->data, 10))
+                ->dataReader($this->createOffsetPaginator($this->data, 10))
                 ->rowAttributes(['class' => 'text-primary'])
                 ->render()
         );
@@ -710,7 +710,7 @@ final class BaseTest extends TestCase
                     DataColumn::create()->attribute('age'),
                 )
                 ->id('w1-grid')
-                ->paginator($this->createOffsetPaginator($this->data, 10))
+                ->dataReader($this->createOffsetPaginator($this->data, 10))
                 ->rowAttributes(['class' => 'text-primary'])
                 ->render()
         );
@@ -762,7 +762,7 @@ final class BaseTest extends TestCase
                     DataColumn::create()->attribute('age'),
                 )
                 ->id('w1-grid')
-                ->paginator($this->createOffsetPaginator($this->data, 10))
+                ->dataReader($this->createOffsetPaginator($this->data, 10))
                 ->tableAttributes(['class' => 'table table-striped table-bordered'])
                 ->render()
         );

@@ -86,7 +86,7 @@ final class TranslatorTest extends TestCase
                     DataColumn::create()->attribute('age'),
                 )
                 ->id('w1-grid')
-                ->paginator($this->createOffsetPaginator([], 10))
+                ->dataReader($this->createOffsetPaginator([], 10))
                 ->render()
         );
     }
@@ -129,7 +129,7 @@ final class TranslatorTest extends TestCase
                     DataColumn::create()->attribute('age'),
                 )
                 ->id('w1-grid')
-                ->paginator($this->createOffsetPaginator([], 10))
+                ->dataReader($this->createOffsetPaginator([], 10))
                 ->render()
         );
     }
@@ -172,7 +172,7 @@ final class TranslatorTest extends TestCase
                     DataColumn::create()->attribute('age'),
                 )
                 ->id('w1-grid')
-                ->paginator($this->createOffsetPaginator([], 10))
+                ->dataReader($this->createOffsetPaginator([], 10))
                 ->render()
         );
     }
@@ -223,7 +223,7 @@ final class TranslatorTest extends TestCase
                     DataColumn::create()->attribute('age'),
                 )
                 ->id('w1-grid')
-                ->paginator($this->createOffsetPaginator($this->data, 10))
+                ->dataReader($this->createOffsetPaginator($this->data, 10))
                 ->render()
         );
     }
@@ -276,7 +276,7 @@ final class TranslatorTest extends TestCase
                     DataColumn::create()->attribute('age'),
                 )
                 ->id('w1-grid')
-                ->paginator($this->createOffsetPaginator($this->data, 10))
+                ->dataReader($this->createOffsetPaginator($this->data, 10))
                 ->render()
         );
     }
@@ -329,7 +329,7 @@ final class TranslatorTest extends TestCase
                     DataColumn::create()->attribute('age'),
                 )
                 ->id('w1-grid')
-                ->paginator($this->createOffsetPaginator($this->data, 10))
+                ->dataReader($this->createOffsetPaginator($this->data, 10))
                 ->render()
         );
     }

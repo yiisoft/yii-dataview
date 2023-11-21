@@ -69,7 +69,7 @@ final class RadioColumnTest extends TestCase
                         ),
                 )
                 ->id('w1-grid')
-                ->paginator($this->createOffsetPaginator($this->data, 10))
+                ->dataReader($this->createOffsetPaginator($this->data, 10))
                 ->render()
         );
     }
@@ -120,7 +120,7 @@ final class RadioColumnTest extends TestCase
                         ->contentAttributes(['class' => 'test-class']),
                 )
                 ->id('w1-grid')
-                ->paginator($this->createOffsetPaginator($this->data, 10))
+                ->dataReader($this->createOffsetPaginator($this->data, 10))
                 ->render()
         );
     }
@@ -167,7 +167,7 @@ final class RadioColumnTest extends TestCase
                     RadioColumn::create()->dataLabel('test.label'),
                 )
                 ->id('w1-grid')
-                ->paginator($this->createOffsetPaginator($this->data, 10))
+                ->dataReader($this->createOffsetPaginator($this->data, 10))
                 ->render()
         );
     }
@@ -214,7 +214,7 @@ final class RadioColumnTest extends TestCase
                     RadioColumn::create()->label('test.label'),
                 )
                 ->id('w1-grid')
-                ->paginator($this->createOffsetPaginator($this->data, 10))
+                ->dataReader($this->createOffsetPaginator($this->data, 10))
                 ->render()
         );
     }
@@ -261,7 +261,7 @@ final class RadioColumnTest extends TestCase
                     RadioColumn::create()->label('Ραδιόφωνο'),
                 )
                 ->id('w1-grid')
-                ->paginator($this->createOffsetPaginator($this->data, 10))
+                ->dataReader($this->createOffsetPaginator($this->data, 10))
                 ->render()
         );
     }
@@ -308,7 +308,7 @@ final class RadioColumnTest extends TestCase
                     RadioColumn::create()->label('test.label')->labelAttributes(['class' => 'test-class']),
                 )
                 ->id('w1-grid')
-                ->paginator($this->createOffsetPaginator($this->data, 10))
+                ->dataReader($this->createOffsetPaginator($this->data, 10))
                 ->render()
         );
     }
@@ -355,7 +355,7 @@ final class RadioColumnTest extends TestCase
                     RadioColumn::create()->name('test.radio'),
                 )
                 ->id('w1-grid')
-                ->paginator($this->createOffsetPaginator($this->data, 10))
+                ->dataReader($this->createOffsetPaginator($this->data, 10))
                 ->render()
         );
     }
@@ -399,7 +399,7 @@ final class RadioColumnTest extends TestCase
                     RadioColumn::create()->visible(false),
                 )
                 ->id('w1-grid')
-                ->paginator($this->createOffsetPaginator($this->data, 10))
+                ->dataReader($this->createOffsetPaginator($this->data, 10))
                 ->render()
         );
     }
@@ -446,7 +446,7 @@ final class RadioColumnTest extends TestCase
                     RadioColumn::create(),
                 )
                 ->id('w1-grid')
-                ->paginator($this->createOffsetPaginator($this->data, 10))
+                ->dataReader($this->createOffsetPaginator($this->data, 10))
                 ->render()
         );
     }

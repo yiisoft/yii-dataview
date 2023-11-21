@@ -51,7 +51,7 @@ final class BaseTest extends TestCase
                 ->afterItem(static fn () => '</span>')
                 ->beforeItem(static fn () => '<span class="testMe">')
                 ->itemView('//_listview')
-                ->paginator($this->createOffsetPaginator($this->data, 10))
+                ->dataReader($this->createOffsetPaginator($this->data, 10))
                 ->webView(Mock::webView())
                 ->render(),
         );
@@ -80,7 +80,7 @@ final class BaseTest extends TestCase
             ListView::widget()
                 ->itemView('//_listview')
                 ->itemViewAttributes(['class' => 'testMe'])
-                ->paginator($this->createOffsetPaginator($this->data, 10))
+                ->dataReader($this->createOffsetPaginator($this->data, 10))
                 ->webView(Mock::webView())
                 ->render(),
         );
@@ -108,7 +108,7 @@ final class BaseTest extends TestCase
             HTML,
             ListView::widget()
                 ->itemView('//_listview')
-                ->paginator($this->createOffsetPaginator($this->data, 10))
+                ->dataReader($this->createOffsetPaginator($this->data, 10))
                 ->webView(Mock::webView())
                 ->render(),
         );
@@ -138,7 +138,7 @@ final class BaseTest extends TestCase
                 ->itemView(
                     fn (array $data) => '<div>' . $data['id'] . '</div><div>' . $data['name'] . '</div>' . PHP_EOL
                 )
-                ->paginator($this->createOffsetPaginator($this->data, 10))
+                ->dataReader($this->createOffsetPaginator($this->data, 10))
                 ->webView(Mock::webView())
                 ->render(),
         );
@@ -166,7 +166,7 @@ final class BaseTest extends TestCase
             HTML,
             ListView::widget()
                 ->itemView('//_listview')
-                ->paginator($this->createOffsetPaginator($this->data, 10))
+                ->dataReader($this->createOffsetPaginator($this->data, 10))
                 ->separator(PHP_EOL)
                 ->webView(Mock::webView())
                 ->render(),
@@ -195,7 +195,7 @@ final class BaseTest extends TestCase
             HTML,
             ListView::widget()
                 ->itemView('//_listviewparams')
-                ->paginator($this->createOffsetPaginator($this->data, 10))
+                ->dataReader($this->createOffsetPaginator($this->data, 10))
                 ->separator(PHP_EOL)
                 ->webView(Mock::webView())
                 ->viewParams(['itemClass' => 'text-success'])
