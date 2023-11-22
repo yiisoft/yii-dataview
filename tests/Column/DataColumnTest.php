@@ -34,7 +34,7 @@ final class DataColumnTest extends TestCase
         Assert::equalsWithoutLE(
             <<<HTML
             <div id="w1-grid">
-            <table class="table">
+            <table>
             <thead>
             <tr>
             <th>Id</th>
@@ -81,7 +81,7 @@ final class DataColumnTest extends TestCase
         Assert::equalsWithoutLE(
             <<<HTML
             <div id="w1-grid">
-            <table class="table">
+            <table>
             <thead>
             <tr>
             <th>Id</th>
@@ -130,7 +130,7 @@ final class DataColumnTest extends TestCase
         Assert::equalsWithoutLE(
             <<<HTML
             <div id="w1-grid">
-            <table class="table">
+            <table>
             <thead>
             <tr>
             <th>Id</th>
@@ -177,7 +177,7 @@ final class DataColumnTest extends TestCase
         Assert::equalsWithoutLE(
             <<<HTML
             <div id="w1-grid">
-            <table class="table">
+            <table>
             <thead>
             <tr>
             <th>Id</th>
@@ -220,7 +220,7 @@ final class DataColumnTest extends TestCase
         Assert::equalsWithoutLE(
             <<<HTML
             <div id="w1-grid">
-            <table class="table">
+            <table>
             <thead>
             <tr>
             <th>test.id</th>
@@ -263,7 +263,7 @@ final class DataColumnTest extends TestCase
         Assert::equalsWithoutLE(
             <<<HTML
             <div id="w1-grid">
-            <table class="table">
+            <table>
             <thead>
             <tr>
             <th>Id</th>
@@ -306,7 +306,7 @@ final class DataColumnTest extends TestCase
         Assert::equalsWithoutLE(
             <<<HTML
             <div id="w1-grid">
-            <table class="table">
+            <table>
             <thead>
             <tr>
             <th class="test.class">test.id</th>
@@ -355,7 +355,7 @@ final class DataColumnTest extends TestCase
         Assert::equalsWithoutLE(
             <<<HTML
             <div id="w1-grid">
-            <table class="table">
+            <table>
             <thead>
             <tr>
             <th><a href="/admin/manage/1/5?sort=id" data-sort="id">id</a></th>
@@ -402,7 +402,7 @@ final class DataColumnTest extends TestCase
         Assert::equalsWithoutLE(
             <<<HTML
             <div id="w1-grid">
-            <table class="table">
+            <table>
             <thead>
             <tr>
             <th><a class="asc" href="/admin/manage?page=1&amp;pagesize=10&amp;sort=-id%2Cname" data-sort="-id,name">Id <i class="bi bi-sort-alpha-up"></i></a></th>
@@ -445,7 +445,7 @@ final class DataColumnTest extends TestCase
         Assert::equalsWithoutLE(
             <<<HTML
             <div id="w1-grid">
-            <table class="table">
+            <table>
             <thead>
             <tr>
             <th>Id</th>
@@ -488,7 +488,7 @@ final class DataColumnTest extends TestCase
         Assert::equalsWithoutLE(
             <<<HTML
             <div id="w1-grid">
-            <table class="table">
+            <table>
             <thead>
             <tr>
             <th>Id</th>
@@ -528,7 +528,7 @@ final class DataColumnTest extends TestCase
         Assert::equalsWithoutLE(
             <<<HTML
             <div id="w1-grid">
-            <table class="table">
+            <table>
             <thead>
             <tr>
             <th><a class="asc" href="/admin/manage?page=1&amp;pagesize=10&amp;sort=-id%2Cname" data-sort="-id,name">Id <i class="bi bi-sort-alpha-up"></i></a></th>
@@ -571,7 +571,7 @@ final class DataColumnTest extends TestCase
         Assert::equalsWithoutLE(
             <<<HTML
             <div id="w1-grid">
-            <table class="table">
+            <table>
             <thead>
             <tr>
             <th>Id</th>
@@ -614,7 +614,7 @@ final class DataColumnTest extends TestCase
         Assert::equalsWithoutLE(
             <<<HTML
             <div id="w1-grid">
-            <table class="table">
+            <table>
             <thead>
             <tr>
             <th>Id</th>

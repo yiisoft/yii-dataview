@@ -36,7 +36,7 @@ final class ActionColumnTest extends TestCase
         Assert::equalsWithoutLE(
             <<<HTML
             <div id="w1-grid">
-            <table class="table">
+            <table>
             <thead>
             <tr>
             <th>Actions</th>
@@ -84,7 +84,7 @@ final class ActionColumnTest extends TestCase
         Assert::equalsWithoutLE(
             <<<HTML
             <div id="w1-grid">
-            <table class="table">
+            <table>
             <thead>
             <tr>
             <th>Actions</th>
@@ -133,7 +133,7 @@ final class ActionColumnTest extends TestCase
         Assert::equalsWithoutLE(
             <<<HTML
             <div id="w1-grid">
-            <table class="table">
+            <table>
             <thead>
             <tr>
             <th>Actions</th>
@@ -188,7 +188,7 @@ final class ActionColumnTest extends TestCase
         Assert::equalsWithoutLE(
             <<<HTML
             <div id="w1-grid">
-            <table class="table">
+            <table>
             <thead>
             <tr>
             <th>Actions</th>
@@ -233,7 +233,7 @@ final class ActionColumnTest extends TestCase
         Assert::equalsWithoutLE(
             <<<HTML
             <div id="w1-grid">
-            <table class="table">
+            <table>
             <thead>
             <tr>
             <th>Actions</th>
@@ -286,7 +286,7 @@ final class ActionColumnTest extends TestCase
         Assert::equalsWithoutLE(
             <<<HTML
             <div id="w1-grid">
-            <table class="table">
+            <table>
             <thead>
             <tr>
             <th>test.label</th>
@@ -331,7 +331,7 @@ final class ActionColumnTest extends TestCase
         Assert::equalsWithoutLE(
             <<<HTML
             <div id="w1-grid">
-            <table class="table">
+            <table>
             <thead>
             <tr>
             <th>Ενέργειες</th>
@@ -376,7 +376,7 @@ final class ActionColumnTest extends TestCase
         Assert::equalsWithoutLE(
             <<<HTML
             <div id="w1-grid">
-            <table class="table">
+            <table>
             <thead>
             <tr>
             <th class="test.class">test.label</th>
@@ -421,7 +421,7 @@ final class ActionColumnTest extends TestCase
         Assert::equalsWithoutLE(
             <<<HTML
             <div id="w1-grid">
-            <table class="table">
+            <table>
             <thead>
             <tr>
             <th>Actions</th>
@@ -466,7 +466,7 @@ final class ActionColumnTest extends TestCase
         Assert::equalsWithoutLE(
             <<<HTML
             <div id="w1-grid">
-            <table class="table">
+            <table>
             <thead>
             <tr></tr>
             </thead>
@@ -497,7 +497,7 @@ final class ActionColumnTest extends TestCase
         Assert::equalsWithoutLE(
             <<<HTML
             <div id="w1-grid">
-            <table class="table">
+            <table>
             <thead>
             <tr>
             <th>Actions</th>
@@ -550,7 +550,7 @@ final class ActionColumnTest extends TestCase
         Assert::equalsWithoutLE(
             <<<HTML
             <div id="w1-grid">
-            <table class="table">
+            <table>
             <thead>
             <tr>
             <th>Id</th>
@@ -605,7 +605,7 @@ final class ActionColumnTest extends TestCase
         Assert::equalsWithoutLE(
             <<<HTML
             <div id="w1-grid">
-            <table class="table">
+            <table>
             <thead>
             <tr>
             <th>Actions</th>
@@ -650,7 +650,7 @@ final class ActionColumnTest extends TestCase
         Assert::equalsWithoutLE(
             <<<HTML
             <div id="w1-grid">
-            <table class="table">
+            <table>
             <thead>
             <tr>
             <th>Actions</th>
@@ -701,7 +701,7 @@ final class ActionColumnTest extends TestCase
         Assert::equalsWithoutLE(
             <<<HTML
             <div id="w1-grid">
-            <table class="table">
+            <table>
             <thead>
             <tr>
             <th>Actions</th>
@@ -746,7 +746,7 @@ final class ActionColumnTest extends TestCase
         Assert::equalsWithoutLE(
             <<<HTML
             <div id="w1-grid">
-            <table class="table">
+            <table>
             <thead>
             <tr>
             <th>Actions</th>
@@ -791,7 +791,7 @@ final class ActionColumnTest extends TestCase
         Assert::equalsWithoutLE(
             <<<HTML
             <div id="w1-grid">
-            <table class="table">
+            <table>
             <thead>
             <tr>
             <th>Actions</th>

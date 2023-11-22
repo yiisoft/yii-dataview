@@ -35,7 +35,7 @@ final class BaseTest extends TestCase
         Assert::equalsWithoutLE(
             <<<HTML
             <div id="w1-grid">
-            <table class="table">
+            <table>
             <thead>
             <tr>
             <th>#</th>
@@ -92,7 +92,7 @@ final class BaseTest extends TestCase
         Assert::equalsWithoutLE(
             <<<HTML
             <div id="w1-grid">
-            <table class="table">
+            <table>
             <colgroup>
             <col class="text-primary">
             <col class="bg-primary">
@@ -145,7 +145,7 @@ final class BaseTest extends TestCase
         Assert::equalsWithoutLE(
             <<<HTML
             <div id="w1-grid">
-            <table class="table">
+            <table>
             <colgroup>
             <col>
             <col>
@@ -203,7 +203,7 @@ final class BaseTest extends TestCase
         Assert::equalsWithoutLE(
             <<<HTML
             <div id="w1-grid">
-            <table class="table">
+            <table>
             <thead>
             <tr>
             <th>Id</th>
@@ -256,7 +256,7 @@ final class BaseTest extends TestCase
         Assert::equalsWithoutLE(
             <<<HTML
             <div id="w1-grid">
-            <table class="table">
+            <table>
             <thead>
             <tr>
             <th>Id</th>
@@ -291,7 +291,7 @@ final class BaseTest extends TestCase
         Assert::equalsWithoutLE(
             <<<HTML
             <div id="w1-grid">
-            <table class="table">
+            <table>
             <thead>
             <tr>
             <th>#</th>
@@ -333,7 +333,7 @@ final class BaseTest extends TestCase
         Assert::equalsWithoutLE(
             <<<HTML
             <div id="w1-grid">
-            <table class="table">
+            <table>
             <thead>
             <tr>
             <th>#</th>
@@ -388,7 +388,7 @@ final class BaseTest extends TestCase
             <<<HTML
             <div>List of users</div>
             <div id="w1-grid">
-            <table class="table">
+            <table>
             <thead>
             <tr>
             <th>#</th>
@@ -441,7 +441,7 @@ final class BaseTest extends TestCase
             <<<HTML
             <div id="w1-grid">
             <div>List of users</div>
-            <table class="table">
+            <table>
             <thead>
             <tr>
             <th>#</th>
@@ -495,7 +495,7 @@ final class BaseTest extends TestCase
         Assert::equalsWithoutLE(
             <<<HTML
             <div id="w1-grid">
-            <table class="table">
+            <table>
             <thead>
             <tr class="text-primary">
             <th>#</th>
@@ -547,7 +547,7 @@ final class BaseTest extends TestCase
         Assert::equalsWithoutLE(
             <<<HTML
             <div id="w1-grid">
-            <table class="table">
+            <table>
             <tbody>
             <tr>
             <td data-label="#">1</td>
@@ -591,7 +591,7 @@ final class BaseTest extends TestCase
         Assert::equalsWithoutLE(
             <<<HTML
             <div id="w1-grid">
-            <table class="table">
+            <table>
             <thead>
             <tr>
             <th>#</th>
@@ -632,7 +632,7 @@ final class BaseTest extends TestCase
         Assert::equalsWithoutLE(
             <<<HTML
             <div id="w1-grid">
-            <table class="table">
+            <table>
             <thead>
             <tr>
             <th>#</th>
@@ -675,7 +675,7 @@ final class BaseTest extends TestCase
         Assert::equalsWithoutLE(
             <<<HTML
             <div id="w1-grid">
-            <table class="table">
+            <table>
             <thead>
             <tr>
             <th>#</th>

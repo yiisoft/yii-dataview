@@ -51,7 +51,7 @@ final class GridView extends BaseListView
     private bool $headerTableEnabled = true;
     private array $headerRowAttributes = [];
     private array $rowAttributes = [];
-    private array $tableAttributes = ['class' => 'table'];
+    private array $tableAttributes = [];
 
     public function __construct(
         private CurrentRoute $currentRoute,
@@ -257,15 +257,38 @@ final class GridView extends BaseListView
     }
 
     /**
-     * Return new instance with the HTML attributes for the table.
+     * Return new instance with the HTML attributes for the table tag.
      *
-     * @param array $values Attribute values indexed by attribute names.
+     * @param array $attributes The tag attributes in terms of name-value pairs.
      */
-    public function tableAttributes(array $values): self
+    public function tableAttributes(array $attributes): self
     {
         $new = clone $this;
-        $new->tableAttributes = $values;
+        $new->tableAttributes = $attributes;
+        return $new;
+    }
 
+    /**
+     * Add one or more CSS classes to the table tag.
+     *
+     * @param string|null ...$class One or many CSS classes.
+     */
+    public function addTableClass(?string ...$class): self
+    {
+        $new = clone $this;
+        Html::addCssClass($new->tableAttributes, $class);
+        return $new;
+    }
+
+    /**
+     * Replace current table tag CSS classes with a new set of classes.
+     *
+     * @param string|null ...$class One or many CSS classes.
+     */
+    public function tableClass(?string ...$class): static
+    {
+        $new = clone $this;
+        $new->tableAttributes['class'] = array_filter($class, static fn ($c) => $c !== null);
         return $new;
     }
 

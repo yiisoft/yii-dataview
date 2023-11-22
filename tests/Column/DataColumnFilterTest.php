@@ -74,7 +74,7 @@ final class DataColumnFilterTest extends TestCase
         Assert::equalsWithoutLE(
             <<<HTML
             <div id="w1-grid">
-            <table class="table">
+            <table>
             <thead>
             <tr>
             <th>Id</th>
@@ -121,7 +121,7 @@ final class DataColumnFilterTest extends TestCase
         Assert::equalsWithoutLE(
             <<<HTML
             <div id="w1-grid">
-            <table class="table">
+            <table>
             <thead>
             <tr>
             <th>Id</th>
@@ -173,7 +173,7 @@ final class DataColumnFilterTest extends TestCase
         Assert::equalsWithoutLE(
             <<<HTML
             <div id="w1-grid">
-            <table class="table">
+            <table>
             <thead>
             <tr>
             <th>Id</th>
@@ -225,7 +225,7 @@ final class DataColumnFilterTest extends TestCase
         Assert::equalsWithoutLE(
             <<<HTML
             <div id="w1-grid">
-            <table class="table">
+            <table>
             <thead>
             <tr>
             <th>Id</th>
@@ -277,7 +277,7 @@ final class DataColumnFilterTest extends TestCase
         Assert::equalsWithoutLE(
             <<<HTML
             <div id="w1-grid">
-            <table class="table">
+            <table>
             <thead>
             <tr>
             <th>Id</th>
@@ -333,7 +333,7 @@ final class DataColumnFilterTest extends TestCase
         Assert::equalsWithoutLE(
             <<<HTML
             <div id="w1-grid">
-            <table class="table">
+            <table>
             <thead>
             <tr>
             <th>Id</th>
@@ -385,7 +385,7 @@ final class DataColumnFilterTest extends TestCase
         Assert::equalsWithoutLE(
             <<<HTML
             <div id="w1-grid">
-            <table class="table">
+            <table>
             <thead>
             <tr>
             <th>Id</th>
@@ -432,7 +432,7 @@ final class DataColumnFilterTest extends TestCase
         Assert::equalsWithoutLE(
             <<<HTML
             <div id="w1-grid">
-            <table class="table">
+            <table>
             <thead>
             <tr>
             <th>Id</th>
@@ -497,7 +497,7 @@ final class DataColumnFilterTest extends TestCase
         Assert::equalsWithoutLE(
             <<<HTML
             <div id="w1-grid">
-            <table class="table">
+            <table>
             <thead>
             <tr class="filters">
             <th class="text-center" style="width:60px"><input type="text" name="searchModel[id]" value="0" maxlength="5"></th>
@@ -556,7 +556,7 @@ final class DataColumnFilterTest extends TestCase
         Assert::equalsWithoutLE(
             <<<HTML
             <div id="w1-grid">
-            <table class="table">
+            <table>
             <thead>
             <tr>
             <th>Id</th>
@@ -607,7 +607,7 @@ final class DataColumnFilterTest extends TestCase
         Assert::equalsWithoutLE(
             <<<HTML
             <div id="w1-grid">
-            <table class="table">
+            <table>
             <thead>
             <tr>
             <th>Id</th>
@@ -666,7 +666,7 @@ final class DataColumnFilterTest extends TestCase
         Assert::equalsWithoutLE(
             <<<HTML
             <div id="w1-grid">
-            <table class="table">
+            <table>
             <thead>
             <tr>
             <th>Id</th>
@@ -713,7 +713,7 @@ final class DataColumnFilterTest extends TestCase
         Assert::equalsWithoutLE(
             <<<HTML
             <div id="w1-grid">
-            <table class="table">
+            <table>
             <thead>
             <tr>
             <th>Id</th>
@@ -771,7 +771,7 @@ final class DataColumnFilterTest extends TestCase
         Assert::equalsWithoutLE(
             <<<HTML
             <div id="w1-grid">
-            <table class="table">
+            <table>
             <thead>
             <tr>
             <th>Id</th>
@@ -825,7 +825,7 @@ final class DataColumnFilterTest extends TestCase
         Assert::equalsWithoutLE(
             <<<HTML
             <div id="w1-grid">
-            <table class="table">
+            <table>
             <thead>
             <tr>
             <th>Id</th>
@@ -879,7 +879,7 @@ final class DataColumnFilterTest extends TestCase
         Assert::equalsWithoutLE(
             <<<HTML
             <div id="w1-grid">
-            <table class="table">
+            <table>
             <thead>
             <tr>
             <th>Id</th>
@@ -933,7 +933,7 @@ final class DataColumnFilterTest extends TestCase
         Assert::equalsWithoutLE(
             <<<HTML
             <div id="w1-grid">
-            <table class="table">
+            <table>
             <thead>
             <tr>
             <th>Id</th>
@@ -987,7 +987,7 @@ final class DataColumnFilterTest extends TestCase
         Assert::equalsWithoutLE(
             <<<HTML
             <div id="w1-grid">
-            <table class="table">
+            <table>
             <thead>
             <tr>
             <th>Id</th>
