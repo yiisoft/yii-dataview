@@ -7,7 +7,7 @@ use Yiisoft\Yii\DataView\GridView;
 return [
     'bootstrap5' => [
         GridView::class => [
-            'tableClass' => ['table'],
+            'tableClass()' => ['table'],
         ],
     ],
 ];
