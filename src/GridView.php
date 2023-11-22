@@ -499,7 +499,7 @@ final class GridView extends BaseListView
         $index = 0;
         foreach ($this->getItems() as $key => $value) {
             if ($this->beforeRow !== null) {
-                /** @var array */
+                /** @var string */
                 $row = call_user_func($this->beforeRow, $value, $key, $index, $this);
 
                 if (!empty($row)) {
@@ -510,10 +510,10 @@ final class GridView extends BaseListView
             $rows[] = $this->renderTableRow($columns, $value, $key, $index);
 
             if ($this->afterRow !== null) {
-                /** @psalm-var array<array-key,string> */
+                /** @var string */
                 $row = call_user_func($this->afterRow, $value, $key, $index, $this);
 
-                if ($row !== []) {
+                if (!empty($row)) {
                     $rows[] = $row;
                 }
             }
@@ -529,8 +529,8 @@ final class GridView extends BaseListView
                 ->render();
         }
 
-        /** @psalm-var array<array-key,string> $rows */
-        return Html::tag('tbody', PHP_EOL . implode(PHP_EOL, $rows) . PHP_EOL)->encode(false)->render();
+        $tbody = Html::tbody($this->tbodyAttributes);
+        return $tbody->open() . PHP_EOL . implode(PHP_EOL, $rows) . PHP_EOL . $tbody->close();
     }
 
     /**
