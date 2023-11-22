@@ -12,7 +12,6 @@ use Yiisoft\Factory\NotFoundException;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\Col;
 use Yiisoft\Html\Tag\Colgroup;
-use Yiisoft\Html\Tag\Tbody;
 use Yiisoft\Html\Tag\Td;
 use Yiisoft\Html\Tag\Tr;
 use Yiisoft\Router\CurrentRoute;
@@ -51,7 +50,8 @@ final class GridView extends BaseListView
     private bool $headerTableEnabled = true;
     private array $headerRowAttributes = [];
     private array $rowAttributes = [];
-    private array $tableAttributes = ['class' => 'table'];
+    private array $tableAttributes = [];
+    private array $tbodyAttributes = [];
 
     public function __construct(
         private CurrentRoute $currentRoute,
@@ -257,15 +257,74 @@ final class GridView extends BaseListView
     }
 
     /**
-     * Return new instance with the HTML attributes for the table.
+     * Return new instance with the HTML attributes for the `table` tag.
      *
-     * @param array $values Attribute values indexed by attribute names.
+     * @param array $attributes The tag attributes in terms of name-value pairs.
      */
-    public function tableAttributes(array $values): self
+    public function tableAttributes(array $attributes): self
     {
         $new = clone $this;
-        $new->tableAttributes = $values;
+        $new->tableAttributes = $attributes;
+        return $new;
+    }
 
+    /**
+     * Add one or more CSS classes to the `table` tag.
+     *
+     * @param string|null ...$class One or many CSS classes.
+     */
+    public function addTableClass(?string ...$class): self
+    {
+        $new = clone $this;
+        Html::addCssClass($new->tableAttributes, $class);
+        return $new;
+    }
+
+    /**
+     * Replace current `table` tag CSS classes with a new set of classes.
+     *
+     * @param string|null ...$class One or many CSS classes.
+     */
+    public function tableClass(?string ...$class): static
+    {
+        $new = clone $this;
+        $new->tableAttributes['class'] = array_filter($class, static fn ($c) => $c !== null);
+        return $new;
+    }
+
+    /**
+     * Return new instance with the HTML attributes for the `tbody` tag.
+     *
+     * @param array $attributes The tag attributes in terms of name-value pairs.
+     */
+    public function tbodyAttributes(array $attributes): self
+    {
+        $new = clone $this;
+        $new->tbodyAttributes = $attributes;
+        return $new;
+    }
+
+    /**
+     * Add one or more CSS classes to the `tbody` tag.
+     *
+     * @param string|null ...$class One or many CSS classes.
+     */
+    public function addTbodyClass(?string ...$class): self
+    {
+        $new = clone $this;
+        Html::addCssClass($new->tbodyAttributes, $class);
+        return $new;
+    }
+
+    /**
+     * Replace current `tbody` tag CSS classes with a new set of classes.
+     *
+     * @param string|null ...$class One or many CSS classes.
+     */
+    public function tbodyClass(?string ...$class): static
+    {
+        $new = clone $this;
+        $new->tbodyAttributes['class'] = array_filter($class, static fn ($c) => $c !== null);
         return $new;
     }
 
@@ -440,7 +499,7 @@ final class GridView extends BaseListView
         $index = 0;
         foreach ($this->getItems() as $key => $value) {
             if ($this->beforeRow !== null) {
-                /** @var array */
+                /** @var string */
                 $row = call_user_func($this->beforeRow, $value, $key, $index, $this);
 
                 if (!empty($row)) {
@@ -451,10 +510,10 @@ final class GridView extends BaseListView
             $rows[] = $this->renderTableRow($columns, $value, $key, $index);
 
             if ($this->afterRow !== null) {
-                /** @psalm-var array<array-key,string> */
+                /** @var string */
                 $row = call_user_func($this->afterRow, $value, $key, $index, $this);
 
-                if ($row !== []) {
+                if (!empty($row)) {
                     $rows[] = $row;
                 }
             }
@@ -465,13 +524,13 @@ final class GridView extends BaseListView
         if ($rows === [] && $this->emptyText !== '') {
             $colspan = count($columns);
 
-            return Tbody::tag()
+            return Html::tbody($this->tbodyAttributes)
                 ->rows(Tr::tag()->cells($this->renderEmpty($colspan)))
                 ->render();
         }
 
-        /** @psalm-var array<array-key,string> $rows */
-        return Html::tag('tbody', PHP_EOL . implode(PHP_EOL, $rows) . PHP_EOL)->encode(false)->render();
+        $tbody = Html::tbody($this->tbodyAttributes);
+        return $tbody->open() . PHP_EOL . implode(PHP_EOL, $rows) . PHP_EOL . $tbody->close();
     }
 
     /**

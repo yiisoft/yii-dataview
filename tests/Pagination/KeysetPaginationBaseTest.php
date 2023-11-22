@@ -47,7 +47,7 @@ final class KeysetPaginationBaseTest extends TestCase
         Assert::equalsWithoutLE(
             <<<HTML
             <div id="w1-grid">
-            <table class="table">
+            <table>
             <thead>
             <tr></tr>
             </thead>
@@ -80,7 +80,7 @@ final class KeysetPaginationBaseTest extends TestCase
         Assert::equalsWithoutLE(
             <<<HTML
             <div id="w1-grid">
-            <table class="table">
+            <table>
             <thead>
             <tr>
             <th><a class="asc" href="/admin/manage?page=0&amp;pagesize=5&amp;sort=-id%2Cname" data-sort="-id,name">Id <i class="bi bi-sort-alpha-up"></i></a></th>
@@ -142,7 +142,7 @@ final class KeysetPaginationBaseTest extends TestCase
         Assert::equalsWithoutLE(
             <<<HTML
             <div id="w1-grid">
-            <table class="table">
+            <table>
             <thead>
             <tr>
             <th><a class="asc" href="/admin/manage?page=0&amp;pagesize=5&amp;sort=-id%2Cname" data-sort="-id,name">Id <i class="bi bi-sort-alpha-up"></i></a></th>
@@ -204,7 +204,7 @@ final class KeysetPaginationBaseTest extends TestCase
         Assert::equalsWithoutLE(
             <<<HTML
             <div id="w1-grid">
-            <table class="table">
+            <table>
             <thead>
             <tr>
             <th><a class="asc" href="/admin/manage?page=0&amp;pagesize=5&amp;sort=-id%2Cname" data-sort="-id,name">Id <i class="bi bi-sort-alpha-up"></i></a></th>
@@ -251,7 +251,7 @@ final class KeysetPaginationBaseTest extends TestCase
         Assert::equalsWithoutLE(
             <<<HTML
             <div id="w1-grid">
-            <table class="table">
+            <table>
             <thead>
             <tr>
             <th><a class="asc" href="/admin/manage?page=0&amp;pagesize=5&amp;sort=-id%2Cname" data-sort="-id,name">Id <i class="bi bi-sort-alpha-up"></i></a></th>
@@ -313,7 +313,7 @@ final class KeysetPaginationBaseTest extends TestCase
         Assert::equalsWithoutLE(
             <<<HTML
             <div id="w1-grid">
-            <table class="table">
+            <table>
             <thead>
             <tr>
             <th><a class="asc" href="/admin/manage?page=0&amp;pagesize=5&amp;sort=-id%2Cname" data-sort="-id,name">Id <i class="bi bi-sort-alpha-up"></i></a></th>

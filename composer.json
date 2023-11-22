@@ -63,7 +63,8 @@
         },
         "config-plugin": {
             "params": "params.php",
-            "di": "di.php"
+            "di": "di.php",
+            "widgets-themes": "widgets-themes.php"
         }
     },
     "autoload": {

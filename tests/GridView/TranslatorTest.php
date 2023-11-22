@@ -58,7 +58,7 @@ final class TranslatorTest extends TestCase
         Assert::equalsWithoutLE(
             <<<HTML
             <div id="w1-grid">
-            <table class="table">
+            <table>
             <thead>
             <tr>
             <th>#</th>
@@ -101,7 +101,7 @@ final class TranslatorTest extends TestCase
         Assert::equalsWithoutLE(
             <<<HTML
             <div id="w1-grid">
-            <table class="table">
+            <table>
             <thead>
             <tr>
             <th>#</th>
@@ -144,7 +144,7 @@ final class TranslatorTest extends TestCase
         Assert::equalsWithoutLE(
             <<<HTML
             <div id="w1-grid">
-            <table class="table">
+            <table>
             <thead>
             <tr>
             <th>#</th>
@@ -185,7 +185,7 @@ final class TranslatorTest extends TestCase
         Assert::equalsWithoutLE(
             <<<HTML
             <div id="w1-grid">
-            <table class="table">
+            <table>
             <thead>
             <tr>
             <th>#</th>
@@ -238,7 +238,7 @@ final class TranslatorTest extends TestCase
         Assert::equalsWithoutLE(
             <<<HTML
             <div id="w1-grid">
-            <table class="table">
+            <table>
             <thead>
             <tr>
             <th>#</th>
@@ -291,7 +291,7 @@ final class TranslatorTest extends TestCase
         Assert::equalsWithoutLE(
             <<<HTML
             <div id="w1-grid">
-            <table class="table">
+            <table>
             <thead>
             <tr>
             <th>#</th>

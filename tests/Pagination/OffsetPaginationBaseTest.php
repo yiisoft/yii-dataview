@@ -31,7 +31,7 @@ final class OffsetPaginationBaseTest extends TestCase
         Assert::equalsWithoutLE(
             <<<HTML
             <div id="w1-grid">
-            <table class="table">
+            <table>
             <thead>
             <tr></tr>
             </thead>
