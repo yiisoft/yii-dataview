@@ -8,7 +8,7 @@ return [
     'bootstrap5' => [
         GridView::class => [
             'tableClass()' => ['table table-bordered'],
-            'tbodyClass()' => ['table-group-divider']
+            'tbodyClass()' => ['table-group-divider'],
         ],
     ],
 ];
