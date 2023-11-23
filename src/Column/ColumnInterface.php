@@ -12,9 +12,9 @@ interface ColumnInterface
     /**
      * A matching renderer name or an instance used for rendering this column.
      *
-     * @return ColumnRendererInterface|string A column renderer name or an instance.
+     * @return string A column renderer name.
      */
-    public function getRenderer(): string|ColumnRendererInterface;
+    public function getRenderer(): string;
 
     public function isVisible(): bool;
 }

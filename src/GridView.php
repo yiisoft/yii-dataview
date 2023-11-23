@@ -576,12 +576,7 @@ final class GridView extends BaseListView
 
     private function getColumnRenderer(ColumnInterface $column): ColumnRendererInterface
     {
-        $renderer = $column->getRenderer();
-        if (!is_string($renderer)) {
-            return $renderer;
-        }
-
         /** @var ColumnRendererInterface */
-        return $this->columnRenderersContainer->get($renderer);
+        return $this->columnRenderersContainer->get($column->getRenderer());
     }
 }
