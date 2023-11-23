@@ -12,7 +12,7 @@ final class Cell
     private bool $doubleEncode = true;
 
     /**
-     * @param string|Stringable|callable $content
+     * @param callable|string|Stringable $content
      */
     public function __construct(
         private array $attributes = [],
@@ -29,7 +29,7 @@ final class Cell
      *  - `false`: nothing is encoded.
      * Defaults to `null`.
      */
-    final public function encode(?bool $encode): self
+    public function encode(?bool $encode): self
     {
         $new = clone $this;
         $new->encode = $encode;
@@ -48,7 +48,7 @@ final class Cell
     }
 
     /**
-     * @param string|Stringable|callable $content Tag content.
+     * @param callable|string|Stringable $content Tag content.
      */
     public function content(string|Stringable|callable $content): self
     {
@@ -63,7 +63,7 @@ final class Cell
      *
      * @param array $attributes Name-value set of attributes.
      */
-    final public function addAttributes(array $attributes): self
+    public function addAttributes(array $attributes): self
     {
         $new = clone $this;
         $new->attributes = array_merge($new->attributes, $attributes);
@@ -75,7 +75,7 @@ final class Cell
      *
      * @param array $attributes Name-value set of attributes.
      */
-    final public function attributes(array $attributes): self
+    public function attributes(array $attributes): self
     {
         $new = clone $this;
         $new->attributes = $attributes;
@@ -88,7 +88,7 @@ final class Cell
      * @param string $name Name of the attribute.
      * @param mixed $value Value of the attribute.
      */
-    final public function attribute(string $name, mixed $value): self
+    public function attribute(string $name, mixed $value): self
     {
         $new = clone $this;
         $new->attributes[$name] = $value;

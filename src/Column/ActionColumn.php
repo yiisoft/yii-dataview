@@ -16,7 +16,6 @@ use function is_array;
  */
 final class ActionColumn implements ColumnInterface
 {
-
     private Closure|null $urlCreator = null;
     private CurrentRoute $currentRoute;
     private UrlGeneratorInterface|null $urlGenerator = null;

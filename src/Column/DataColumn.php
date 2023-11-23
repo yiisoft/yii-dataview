@@ -170,7 +170,6 @@ final class DataColumn implements ColumnInterface, ColumnRendererInterface
         return $this->visible;
     }
 
-
     /**
      * Return new instance with the filter input select items.
      *
@@ -266,7 +265,7 @@ final class DataColumn implements ColumnInterface, ColumnRendererInterface
         return $this->getDataCellValue($data, $key, $index);
     }
 
-    private function renderFilterInput(DataColumn $column, GlobalContext $context): string
+    private function renderFilterInput(self $column, GlobalContext $context): string
     {
         $filterInputAttributes = $column->getFilterInputAttributes();
         $filterInputTag = Input::tag();
@@ -290,7 +289,7 @@ final class DataColumn implements ColumnInterface, ColumnRendererInterface
             ->render();
     }
 
-    private function renderFilterSelect(DataColumn $column, GlobalContext $context): string
+    private function renderFilterSelect(self $column, GlobalContext $context): string
     {
         $filterInputAttributes = $column->getFilterInputAttributes();
         $filterSelectTag = Select::tag();

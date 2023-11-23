@@ -6,7 +6,6 @@ namespace Yiisoft\Yii\DataView\Column;
 
 use Closure;
 use InvalidArgumentException;
-use Yiisoft\Data\Reader\ReadableDataInterface;
 use Yiisoft\Html\Html;
 use Yiisoft\Router\CurrentRoute;
 use Yiisoft\Router\UrlGeneratorInterface;
@@ -154,7 +153,6 @@ final class ActionColumnRenderer implements ColumnRendererInterface
             'update' => static fn(string $url): string => Html::a(
                 Html::span('✎'),
                 $url,
-
                 [
                     'name' => 'update',
                     'role' => 'button',
