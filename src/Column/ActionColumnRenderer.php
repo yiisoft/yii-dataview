@@ -29,7 +29,9 @@ final class ActionColumnRenderer implements ColumnRendererInterface
     public function renderHeader(ColumnInterface $column, Cell $cell, GlobalContext $context): Cell
     {
         $this->checkColumn($column);
-        return $cell->content($column->getHeader() ?? 'Actions');
+        return $cell
+            ->content($column->getHeader() ?? 'Actions')
+            ->addAttributes($column->getHeaderAttributes());
     }
 
     public function renderFilter(ColumnInterface $column, Cell $cell, GlobalContext $context): ?Cell
@@ -41,32 +43,38 @@ final class ActionColumnRenderer implements ColumnRendererInterface
     {
         $this->checkColumn($column);
 
-        $buttons = empty($column->getButtons()) ? $this->getDefaultButtons() : $column->getButtons();
+        $contentSource = $column->getContent();
 
-        $content = preg_replace_callback(
-            '/{([\w\-\/]+)}/',
-            function (array $matches) use ($column, $buttons, $context): string {
-                $name = $matches[1];
+        if ($contentSource !== null) {
+            $content = (string)(is_callable($contentSource) ? $contentSource($context) : $contentSource);
+        } else {
+            $buttons = empty($column->getButtons()) ? $this->getDefaultButtons() : $column->getButtons();
+            $content = preg_replace_callback(
+                '/{([\w\-\/]+)}/',
+                function (array $matches) use ($column, $buttons, $context): string {
+                    $name = $matches[1];
 
-                if (
-                    $this->isVisibleButton(
-                        $column,
-                        $name,
-                        $context->getData(),
-                        $context->getKey(),
-                        $context->getIndex()
-                    ) &&
-                    isset($buttons[$name]) &&
-                    $buttons[$name] instanceof Closure
-                ) {
-                    $url = $this->createUrl($column, $name, $context->getData(), $context->getKey());
-                    return (string)$buttons[$name]($url);
-                }
+                    if (
+                        $this->isVisibleButton(
+                            $column,
+                            $name,
+                            $context->getData(),
+                            $context->getKey(),
+                            $context->getIndex()
+                        ) &&
+                        isset($buttons[$name]) &&
+                        $buttons[$name] instanceof Closure
+                    ) {
+                        $url = $this->createUrl($column, $name, $context->getData(), $context->getKey());
+                        return (string)$buttons[$name]($url);
+                    }
 
-                return '';
-            },
-            $column->getTemplate()
-        );
+                    return '';
+                },
+                $column->getTemplate()
+            );
+            $content = trim($content);
+        }
 
         return $cell
             ->addAttributes($column->getBodyAttributes())
@@ -76,11 +84,21 @@ final class ActionColumnRenderer implements ColumnRendererInterface
 
     public function renderFooter(ColumnInterface $column, Cell $cell, GlobalContext $context): Cell
     {
-        // TODO: Implement renderFooter() method.
+        $this->checkColumn($column);
+
+        if ($column->getFooter() !== null) {
+            $cell = $cell->content($column->getFooter());
+        }
+
+        return $cell->addAttributes($column->getFooterAttributes());
     }
 
     private function createUrl(ActionColumn $column, string $action, array|object $data, mixed $key): string
     {
+        if ($column->getUrlCreator() !== null) {
+            return (string) call_user_func($column->getUrlCreator(), $action, $data, $key);
+        }
+
         $primaryKey = $column->getPrimaryKey();
         $routeName = $column->getRouteName();
 

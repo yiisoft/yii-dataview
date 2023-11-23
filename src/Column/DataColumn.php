@@ -78,6 +78,9 @@ final class DataColumn implements ColumnInterface, ColumnRendererInterface
         private string $filterInputSelectPrompt = '',
         private bool $visible = true,
     ) {
+        if (!isset($this->filterTypes[$filterType])) {
+            throw new InvalidArgumentException(sprintf('Invalid filter type "%s".', $filterType));
+        }
     }
 
     public function getProperty(): ?string
@@ -387,8 +390,8 @@ final class DataColumn implements ColumnInterface, ColumnRendererInterface
     {
         $this->checkColumn($column);
 
-        if ($this->getFooter() !== null) {
-            $cell = $cell->content($this->getFooter());
+        if ($column->getFooter() !== null) {
+            $cell = $cell->content($column->getFooter());
         }
 
         return $cell;

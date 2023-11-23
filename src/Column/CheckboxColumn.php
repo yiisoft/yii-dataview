@@ -4,73 +4,81 @@ declare(strict_types=1);
 
 namespace Yiisoft\Yii\DataView\Column;
 
-use Yiisoft\Html\Tag\Input;
-
 /**
- * CheckboxColumn displays a column of checkboxes in a grid view.
+ * `CheckboxColumn` displays a column of checkboxes in a grid view.
  */
-final class CheckboxColumn extends AbstractColumn
+final class CheckboxColumn implements ColumnInterface
 {
-    private bool $multiple = true;
-
     /**
-     * Return new instance with the multiple flag, for default is `true`.
-     *
-     * @param bool $value The multiple flag value.
+     * @var callable|null
      */
-    public function multiple(bool $value): self
-    {
-        $new = clone $this;
-        $new->multiple = $value;
+    private $content;
 
-        return $new;
+    public function __construct(
+        private ?string $header = null,
+        private ?string $footer = null,
+        private array $columnAttributes = [],
+        private array $headerAttributes = [],
+        private array $bodyAttributes = [],
+        private array $inputAttributes = [],
+        ?string $name = null,
+        private bool $multiple = true,
+        ?callable $content = null,
+        private bool $visible = true,
+    ) {
+        $this->content = $content;
+        if ($name !== null) {
+            $this->inputAttributes['name'] = $name;
+        }
     }
 
-    /**
-     * Renders the data cell content.
-     *
-     * @param array|object $data The data.
-     * @param mixed $key The key associated with the data.
-     * @param int $index The zero-based index of the data in the data provider.
-     */
-    protected function renderDataCellContent(array|object $data, mixed $key, int $index): string
+    public function getHeader(): ?string
     {
-        if ($this->getContent() !== null) {
-            return parent::renderDataCellContent($data, $key, $index);
-        }
-
-        $contentAttributes = $this->getContentAttributes();
-        $name = null;
-        $value = null;
-
-        if (!array_key_exists('value', $contentAttributes)) {
-            $value = is_array($key)
-                ? json_encode($key, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) : (string) $key;
-        }
-
-        if (!array_key_exists('name', $contentAttributes)) {
-            $name = 'checkbox-selection';
-        }
-
-        return Input::checkbox($name, $value)->addAttributes($contentAttributes)->render();
+        return $this->header;
     }
 
-    /**
-     * Renders the header cell content.
-     *
-     * The default implementation simply renders {@see header}.
-     * This method may be overridden to customize the rendering of the header cell.
-     */
-    protected function renderHeaderCellContent(): string
+    public function getFooter(): ?string
     {
-        if ($this->getLabel() !== '' || $this->multiple === false) {
-            return parent::renderHeaderCellContent();
-        }
+        return $this->footer;
+    }
 
-        return Input::checkbox()
-            ->addAttributes(['class' => 'select-on-check-all'])
-            ->name('checkbox-selection-all')
-            ->value(1)
-            ->render();
+    public function getColumnAttributes(): array
+    {
+        return $this->columnAttributes;
+    }
+
+    public function getHeaderAttributes(): array
+    {
+        return $this->headerAttributes;
+    }
+
+    public function getBodyAttributes(): array
+    {
+        return $this->bodyAttributes;
+    }
+
+    public function getInputAttributes(): array
+    {
+        return $this->inputAttributes;
+    }
+
+    public function isMultiple(): bool
+    {
+        return $this->multiple;
+    }
+
+    public function getContent(): ?callable
+    {
+        return $this->content;
+    }
+
+    public function getRenderer(): string
+    {
+        return CheckboxColumnRenderer::class;
+    }
+
+    public function isVisible(): bool
+    {
+        return $this->visible;
     }
 }

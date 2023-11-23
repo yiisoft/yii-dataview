@@ -9,6 +9,8 @@ use Yiisoft\Definitions\Exception\CircularReferenceException;
 use Yiisoft\Definitions\Exception\InvalidConfigException;
 use Yiisoft\Definitions\Exception\NotInstantiableException;
 use Yiisoft\Factory\NotFoundException;
+use Yiisoft\Html\Tag\Input\Checkbox;
+use Yiisoft\Yii\DataView\Column\Base\DataContext;
 use Yiisoft\Yii\DataView\Column\CheckboxColumn;
 use Yiisoft\Yii\DataView\Column\DataColumn;
 use Yiisoft\Yii\DataView\GridView;
@@ -40,18 +42,18 @@ final class CheckboxColumnTest extends TestCase
             <tr>
             <th>Id</th>
             <th>Name</th>
-            <th><input type="checkbox" class="select-on-check-all" name="checkbox-selection-all" value="1"></th>
+            <th><input type="checkbox" name="checkbox-selection-all" value="1"></th>
             </tr>
             </thead>
             <tbody>
             <tr>
-            <td data-label="id">1</td>
-            <td data-label="name">John</td>
+            <td>1</td>
+            <td>John</td>
             <td><input name="checkbox-selection" type="checkbox" value="0"></td>
             </tr>
             <tr>
-            <td data-label="id">2</td>
-            <td data-label="name">Mary</td>
+            <td>2</td>
+            <td>Mary</td>
             <td><input name="checkbox-selection" type="checkbox" value="1"></td>
             </tr>
             </tbody>
@@ -61,11 +63,11 @@ final class CheckboxColumnTest extends TestCase
             HTML,
             GridView::widget()
                 ->columns(
-                    DataColumn::create()->attribute('id'),
-                    DataColumn::create()->attribute('name'),
-                    CheckboxColumn::create()->content(
-                        static fn (array|object $data, mixed $key, int $index): string => '<input name="checkbox-selection" type="checkbox" value="' . $index . '">'
-                    ),
+                    new DataColumn('id'),
+                    new DataColumn('name'),
+                    new CheckboxColumn(content: static function (Checkbox $input, DataContext $context): string {
+                        return '<input name="checkbox-selection" type="checkbox" value="' . $context->getIndex() . '">';
+                    }),
                 )
                 ->id('w1-grid')
                 ->dataReader($this->createOffsetPaginator($this->data, 10))
@@ -89,18 +91,18 @@ final class CheckboxColumnTest extends TestCase
             <tr>
             <th>Id</th>
             <th>Name</th>
-            <th><input type="checkbox" class="select-on-check-all" name="checkbox-selection-all" value="1"></th>
+            <th><input type="checkbox" name="checkbox-selection-all" value="1"></th>
             </tr>
             </thead>
             <tbody>
             <tr>
-            <td data-label="id">1</td>
-            <td data-label="name">John</td>
+            <td>1</td>
+            <td>John</td>
             <td class="test.class"><input name="checkbox-selection" type="checkbox" value="0"></td>
             </tr>
             <tr>
-            <td data-label="id">2</td>
-            <td data-label="name">Mary</td>
+            <td>2</td>
+            <td>Mary</td>
             <td class="test.class"><input name="checkbox-selection" type="checkbox" value="1"></td>
             </tr>
             </tbody>
@@ -110,60 +112,15 @@ final class CheckboxColumnTest extends TestCase
             HTML,
             GridView::widget()
                 ->columns(
-                    DataColumn::create()->attribute('id'),
-                    DataColumn::create()->attribute('name'),
-                    CheckboxColumn::create()
-                        ->content(
-                            static fn (array|object $data, mixed $key, int $index): string => '<input name="checkbox-selection" type="checkbox" value="' . $index . '">'
-                        )
-                        ->contentAttributes(['class' => 'test.class']),
-                )
-                ->id('w1-grid')
-                ->dataReader($this->createOffsetPaginator($this->data, 10))
-                ->render()
-        );
-    }
-
-    /**
-     * @throws InvalidConfigException
-     * @throws NotFoundException
-     * @throws NotInstantiableException
-     * @throws CircularReferenceException
-     */
-    public function testDataLabel(): void
-    {
-        Assert::equalsWithoutLE(
-            <<<HTML
-            <div id="w1-grid">
-            <table>
-            <thead>
-            <tr>
-            <th>Id</th>
-            <th>Name</th>
-            <th><input type="checkbox" class="select-on-check-all" name="checkbox-selection-all" value="1"></th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr>
-            <td data-label="id">1</td>
-            <td data-label="name">John</td>
-            <td data-label="test.label"><input type="checkbox" name="checkbox-selection" value="0" data-label="test.label"></td>
-            </tr>
-            <tr>
-            <td data-label="id">2</td>
-            <td data-label="name">Mary</td>
-            <td data-label="test.label"><input type="checkbox" name="checkbox-selection" value="1" data-label="test.label"></td>
-            </tr>
-            </tbody>
-            </table>
-            <div>Page <b>1</b> of <b>1</b></div>
-            </div>
-            HTML,
-            GridView::widget()
-                ->columns(
-                    DataColumn::create()->attribute('id'),
-                    DataColumn::create()->attribute('name'),
-                    CheckboxColumn::create()->dataLabel('test.label'),
+                    new DataColumn('id'),
+                    new DataColumn('name'),
+                    new CheckboxColumn(
+                        content: static function (Checkbox $input, DataContext $context): string {
+                            return '<input name="checkbox-selection" type="checkbox" value="'
+                                . $context->getIndex() . '">';
+                        },
+                        bodyAttributes: ['class' => 'test.class'],
+                    ),
                 )
                 ->id('w1-grid')
                 ->dataReader($this->createOffsetPaginator($this->data, 10))
@@ -192,14 +149,14 @@ final class CheckboxColumnTest extends TestCase
             </thead>
             <tbody>
             <tr>
-            <td data-label="id">1</td>
-            <td data-label="name">John</td>
-            <td data-label="test.label"><input type="checkbox" name="checkbox-selection" value="0"></td>
+            <td>1</td>
+            <td>John</td>
+            <td><input type="checkbox" name="checkbox-selection" value="0"></td>
             </tr>
             <tr>
-            <td data-label="id">2</td>
-            <td data-label="name">Mary</td>
-            <td data-label="test.label"><input type="checkbox" name="checkbox-selection" value="1"></td>
+            <td>2</td>
+            <td>Mary</td>
+            <td><input type="checkbox" name="checkbox-selection" value="1"></td>
             </tr>
             </tbody>
             </table>
@@ -208,9 +165,9 @@ final class CheckboxColumnTest extends TestCase
             HTML,
             GridView::widget()
                 ->columns(
-                    DataColumn::create()->attribute('id'),
-                    DataColumn::create()->attribute('name'),
-                    CheckboxColumn::create()->label('test.label'),
+                    new DataColumn('id'),
+                    new DataColumn('name'),
+                    new CheckboxColumn(header: 'test.label'),
                 )
                 ->id('w1-grid')
                 ->dataReader($this->createOffsetPaginator($this->data, 10))
@@ -239,14 +196,14 @@ final class CheckboxColumnTest extends TestCase
             </thead>
             <tbody>
             <tr>
-            <td data-label="id">1</td>
-            <td data-label="name">John</td>
-            <td data-label="πλαίσιο ελέγχου"><input type="checkbox" name="checkbox-selection" value="0"></td>
+            <td>1</td>
+            <td>John</td>
+            <td><input type="checkbox" name="checkbox-selection" value="0"></td>
             </tr>
             <tr>
-            <td data-label="id">2</td>
-            <td data-label="name">Mary</td>
-            <td data-label="πλαίσιο ελέγχου"><input type="checkbox" name="checkbox-selection" value="1"></td>
+            <td>2</td>
+            <td>Mary</td>
+            <td><input type="checkbox" name="checkbox-selection" value="1"></td>
             </tr>
             </tbody>
             </table>
@@ -255,9 +212,9 @@ final class CheckboxColumnTest extends TestCase
             HTML,
             GridView::widget()
                 ->columns(
-                    DataColumn::create()->attribute('id'),
-                    DataColumn::create()->attribute('name'),
-                    CheckboxColumn::create()->label('Πλαίσιο ελέγχου'),
+                    new DataColumn('id'),
+                    new DataColumn('name'),
+                    new CheckboxColumn(header: 'Πλαίσιο ελέγχου'),
                 )
                 ->id('w1-grid')
                 ->dataReader($this->createOffsetPaginator($this->data, 10))
@@ -286,14 +243,14 @@ final class CheckboxColumnTest extends TestCase
             </thead>
             <tbody>
             <tr>
-            <td data-label="id">1</td>
-            <td data-label="name">John</td>
-            <td data-label="test.label"><input type="checkbox" name="checkbox-selection" value="0"></td>
+            <td>1</td>
+            <td>John</td>
+            <td><input type="checkbox" name="checkbox-selection" value="0"></td>
             </tr>
             <tr>
-            <td data-label="id">2</td>
-            <td data-label="name">Mary</td>
-            <td data-label="test.label"><input type="checkbox" name="checkbox-selection" value="1"></td>
+            <td>2</td>
+            <td>Mary</td>
+            <td><input type="checkbox" name="checkbox-selection" value="1"></td>
             </tr>
             </tbody>
             </table>
@@ -302,9 +259,9 @@ final class CheckboxColumnTest extends TestCase
             HTML,
             GridView::widget()
                 ->columns(
-                    DataColumn::create()->attribute('id'),
-                    DataColumn::create()->attribute('name'),
-                    CheckboxColumn::create()->label('test.label')->labelAttributes(['class' => 'test.class']),
+                    new DataColumn('id'),
+                    new DataColumn('name'),
+                    new CheckboxColumn(header: 'test.label', headerAttributes: ['class' => 'test.class']),
                 )
                 ->id('w1-grid')
                 ->dataReader($this->createOffsetPaginator($this->data, 10))
@@ -328,19 +285,19 @@ final class CheckboxColumnTest extends TestCase
             <tr>
             <th>Id</th>
             <th>Name</th>
-            <th><input type="checkbox" class="select-on-check-all" name="checkbox-selection-all" value="1"></th>
+            <th><input type="checkbox" name="checkbox-selection-all" value="1"></th>
             </tr>
             </thead>
             <tbody>
             <tr>
-            <td data-label="id">1</td>
-            <td data-label="name">John</td>
-            <td name="test.checkbox"><input type="checkbox" name="test.checkbox" value="0"></td>
+            <td>1</td>
+            <td>John</td>
+            <td><input type="checkbox" name="test.checkbox" value="0"></td>
             </tr>
             <tr>
-            <td data-label="id">2</td>
-            <td data-label="name">Mary</td>
-            <td name="test.checkbox"><input type="checkbox" name="test.checkbox" value="1"></td>
+            <td>2</td>
+            <td>Mary</td>
+            <td><input type="checkbox" name="test.checkbox" value="1"></td>
             </tr>
             </tbody>
             </table>
@@ -349,9 +306,9 @@ final class CheckboxColumnTest extends TestCase
             HTML,
             GridView::widget()
                 ->columns(
-                    DataColumn::create()->attribute('id'),
-                    DataColumn::create()->attribute('name'),
-                    CheckboxColumn::create()->name('test.checkbox'),
+                    new DataColumn('id'),
+                    new DataColumn('name'),
+                    new CheckboxColumn(name: 'test.checkbox'),
                 )
                 ->id('w1-grid')
                 ->dataReader($this->createOffsetPaginator($this->data, 10))
@@ -380,13 +337,13 @@ final class CheckboxColumnTest extends TestCase
             </thead>
             <tbody>
             <tr>
-            <td data-label="id">1</td>
-            <td data-label="name">John</td>
+            <td>1</td>
+            <td>John</td>
             <td><input type="checkbox" name="checkbox-selection" value="0"></td>
             </tr>
             <tr>
-            <td data-label="id">2</td>
-            <td data-label="name">Mary</td>
+            <td>2</td>
+            <td>Mary</td>
             <td><input type="checkbox" name="checkbox-selection" value="1"></td>
             </tr>
             </tbody>
@@ -396,9 +353,9 @@ final class CheckboxColumnTest extends TestCase
             HTML,
             GridView::widget()
                 ->columns(
-                    DataColumn::create()->attribute('id'),
-                    DataColumn::create()->attribute('name'),
-                    CheckboxColumn::create()->multiple(false),
+                    new DataColumn('id'),
+                    new DataColumn('name'),
+                    new CheckboxColumn(multiple: false),
                 )
                 ->id('w1-grid')
                 ->dataReader($this->createOffsetPaginator($this->data, 10))
@@ -426,12 +383,12 @@ final class CheckboxColumnTest extends TestCase
             </thead>
             <tbody>
             <tr>
-            <td data-label="id">1</td>
-            <td data-label="name">John</td>
+            <td>1</td>
+            <td>John</td>
             </tr>
             <tr>
-            <td data-label="id">2</td>
-            <td data-label="name">Mary</td>
+            <td>2</td>
+            <td>Mary</td>
             </tr>
             </tbody>
             </table>
@@ -440,9 +397,9 @@ final class CheckboxColumnTest extends TestCase
             HTML,
             GridView::widget()
                 ->columns(
-                    DataColumn::create()->attribute('id'),
-                    DataColumn::create()->attribute('name'),
-                    CheckboxColumn::create()->visible(false),
+                    new DataColumn('id'),
+                    new DataColumn('name'),
+                    new CheckboxColumn(visible: false),
                 )
                 ->id('w1-grid')
                 ->dataReader($this->createOffsetPaginator($this->data, 10))
@@ -466,18 +423,18 @@ final class CheckboxColumnTest extends TestCase
             <tr>
             <th>Id</th>
             <th>Name</th>
-            <th><input type="checkbox" class="select-on-check-all" name="checkbox-selection-all" value="1"></th>
+            <th><input type="checkbox" name="checkbox-selection-all" value="1"></th>
             </tr>
             </thead>
             <tbody>
             <tr>
-            <td data-label="id">1</td>
-            <td data-label="name">John</td>
+            <td>1</td>
+            <td>John</td>
             <td><input type="checkbox" name="checkbox-selection" value="0"></td>
             </tr>
             <tr>
-            <td data-label="id">2</td>
-            <td data-label="name">Mary</td>
+            <td>2</td>
+            <td>Mary</td>
             <td><input type="checkbox" name="checkbox-selection" value="1"></td>
             </tr>
             </tbody>
@@ -487,9 +444,9 @@ final class CheckboxColumnTest extends TestCase
             HTML,
             GridView::widget()
                 ->columns(
-                    DataColumn::create()->attribute('id'),
-                    DataColumn::create()->attribute('name'),
-                    CheckboxColumn::create(),
+                    new DataColumn('id'),
+                    new DataColumn('name'),
+                    new CheckboxColumn(),
                 )
                 ->id('w1-grid')
                 ->dataReader($this->createOffsetPaginator($this->data, 10))

@@ -10,7 +10,7 @@ use Yiisoft\Yii\DataView\Column\Base\Cell;
 use Yiisoft\Yii\DataView\Column\Base\DataContext;
 use Yiisoft\Yii\DataView\Column\Base\GlobalContext;
 
-final class RadioColumnRenderer implements ColumnRendererInterface
+final class CheckboxColumnRenderer implements ColumnRendererInterface
 {
     public function renderColumn(ColumnInterface $column, Cell $cell, GlobalContext $context): Cell
     {
@@ -24,7 +24,10 @@ final class RadioColumnRenderer implements ColumnRendererInterface
 
         $header = $column->getHeader();
         if ($header === null) {
-            return null;
+            if (!$column->isMultiple()) {
+                return null;
+            }
+            $header = Html::checkbox('checkbox-selection-all', 1);
         }
 
         return $cell
@@ -46,7 +49,7 @@ final class RadioColumnRenderer implements ColumnRendererInterface
         $value = null;
 
         if (!array_key_exists('name', $inputAttributes)) {
-            $name = 'radio-selection';
+            $name = 'checkbox-selection';
         }
 
         if (!array_key_exists('value', $inputAttributes)) {
@@ -56,7 +59,7 @@ final class RadioColumnRenderer implements ColumnRendererInterface
                 : (string)$key;
         }
 
-        $input = Html::radio($name, $value, $inputAttributes);
+        $input = Html::checkbox($name, $value, $inputAttributes);
 
         $contentClosure = $column->getContent();
         $content = $contentClosure === null ? $input : $contentClosure($input, $context);
@@ -79,15 +82,15 @@ final class RadioColumnRenderer implements ColumnRendererInterface
     }
 
     /**
-     * @psalm-assert RadioColumn $column
+     * @psalm-assert CheckboxColumn $column
      */
     private function checkColumn(ColumnInterface $column): void
     {
-        if (!$column instanceof RadioColumn) {
+        if (!$column instanceof CheckboxColumn) {
             throw new InvalidArgumentException(
                 sprintf(
                     'Expected "%s", but "%s" given.',
-                    RadioColumn::class,
+                    CheckboxColumn::class,
                     $column::class
                 )
             );
