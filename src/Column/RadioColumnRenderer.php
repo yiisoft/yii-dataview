@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Yiisoft\Yii\DataView\Column;
 
 use InvalidArgumentException;
+use Stringable;
 use Yiisoft\Html\Html;
 use Yiisoft\Yii\DataView\Column\Base\Cell;
 use Yiisoft\Yii\DataView\Column\Base\DataContext;
@@ -59,6 +60,7 @@ final class RadioColumnRenderer implements ColumnRendererInterface
         $input = Html::radio($name, $value, $inputAttributes);
 
         $contentClosure = $column->getContent();
+        /** @var string|Stringable $content */
         $content = $contentClosure === null ? $input : $contentClosure($input, $context);
 
         return $cell

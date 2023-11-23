@@ -19,6 +19,7 @@ final class ActionColumn implements ColumnInterface
 
     /**
      * @psalm-param array<string,Closure> $buttons
+     * @psalm-param array<string,bool|Closure> $visibleButtons
      */
     public function __construct(
         private string $primaryKey = 'id',
@@ -100,6 +101,9 @@ final class ActionColumn implements ColumnInterface
         return $this->buttons;
     }
 
+    /**
+     * @psalm-return array<string,bool|Closure>
+     */
     public function getVisibleButtons(): array
     {
         return $this->visibleButtons;

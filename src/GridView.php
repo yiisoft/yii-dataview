@@ -6,16 +6,15 @@ namespace Yiisoft\Yii\DataView;
 
 use Closure;
 use Psr\Container\ContainerInterface;
+use Stringable;
 use Yiisoft\Definitions\Exception\CircularReferenceException;
 use Yiisoft\Definitions\Exception\InvalidConfigException;
 use Yiisoft\Definitions\Exception\NotInstantiableException;
 use Yiisoft\Factory\NotFoundException;
 use Yiisoft\Html\Html;
-use Yiisoft\Html\Tag\Td;
 use Yiisoft\Html\Tag\Tr;
 use Yiisoft\Router\UrlGeneratorInterface;
 use Yiisoft\Translator\TranslatorInterface;
-use Yiisoft\Yii\DataView\Column\AbstractColumn;
 use Yiisoft\Yii\DataView\Column\ActionColumn;
 use Yiisoft\Yii\DataView\Column\Base\Cell;
 use Yiisoft\Yii\DataView\Column\Base\GlobalContext;
@@ -100,7 +99,7 @@ final class GridView extends BaseListView
     /**
      * Return a new instance the specified columns.
      *
-     * @param AbstractColumn ...$values The grid column configuration. Each array element represents the configuration
+     * @param ColumnInterface ...$values The grid column configuration. Each array element represents the configuration
      * for one particular grid column. For example,
      *
      * ```php
@@ -415,8 +414,10 @@ final class GridView extends BaseListView
                 } else {
                     $hasFilters = true;
                 }
+                /** @var string|Stringable $content */
+                $content = $cell->getContent();
                 $tags[] = Html::td(attributes: $cell->getAttributes())
-                    ->content($cell->getContent())
+                    ->content($content)
                     ->encode($cell->isEncode())
                     ->doubleEncode($cell->isDoubleEncode());
             }
@@ -429,10 +430,12 @@ final class GridView extends BaseListView
             $tags = [];
             foreach ($columns as $i => $column) {
                 $cell = $renderers[$i]->renderHeader($column, new Cell($this->headerCellAttributes), $globalContext);
+                /** @var string|Stringable $content */
+                $content = $cell?->getContent();
                 $tags[] = $cell === null
                     ? Html::th('&nbsp;')->encode(false)
                     : Html::th(attributes: $cell->getAttributes())
-                        ->content($cell->getContent())
+                        ->content($content)
                         ->encode($cell->isEncode())
                         ->doubleEncode($cell->isDoubleEncode());
             }
@@ -459,8 +462,10 @@ final class GridView extends BaseListView
                     (new Cell())->content('&nbsp;')->encode(false),
                     $globalContext
                 );
+                /** @var string|Stringable $content */
+                $content = $cell->getContent();
                 $tags[] = Html::td(attributes: $cell->getAttributes())
-                    ->content($cell->getContent())
+                    ->content($content)
                     ->encode($cell->isEncode())
                     ->doubleEncode($cell->isDoubleEncode());
             }
@@ -468,6 +473,7 @@ final class GridView extends BaseListView
 
             $rows = [$footerRow];
             if ($this->filterPosition === self::FILTER_POS_FOOTER) {
+                /** @var Tr */
                 $rows[] = $filterRow;
             }
 
@@ -478,7 +484,7 @@ final class GridView extends BaseListView
         $index = 0;
         foreach ($this->getItems() as $key => $value) {
             if ($this->beforeRow !== null) {
-                /** @var Tr */
+                /** @var Tr|null $row */
                 $row = call_user_func($this->beforeRow, $value, $key, $index, $this);
                 if (!empty($row)) {
                     $rows[] = $row;
@@ -489,17 +495,22 @@ final class GridView extends BaseListView
             foreach ($columns as $i => $column) {
                 $context = new DataContext($column, $value, $key, $index);
                 $cell = $renderers[$i]->renderBody($column, new Cell(), $context);
-                $tags[] = empty($cell->getContent())
+                $contentSource = $cell->getContent();
+                /** @var string|Stringable $content */
+                $content = $contentSource instanceof Closure
+                    ? $contentSource($context)
+                    : $contentSource;
+                $tags[] = empty($content)
                     ? Html::td()->content($this->emptyCell)->encode(false)
                     : Html::td(attributes: $this->prepareBodyAttributes($cell->getAttributes(), $context))
-                        ->content($cell->getContent())
+                        ->content($content)
                         ->encode($cell->isEncode())
                         ->doubleEncode($cell->isDoubleEncode());
             }
             $rows[] = Html::tr($this->rowAttributes)->cells(...$tags);
 
             if ($this->afterRow !== null) {
-                /** @var Tr */
+                /** @var Tr|null $row */
                 $row = call_user_func($this->afterRow, $value, $key, $index, $this);
                 if (!empty($row)) {
                     $rows[] = $row;
@@ -525,7 +536,7 @@ final class GridView extends BaseListView
      * This function tries to guess the columns to show from the given data if {@see columns} are not explicitly
      * specified.
      *
-     * @psalm-return list<ActionColumn|DataColumn>|list<array>
+     * @psalm-return list<ColumnInterface>
      */
     private function guessColumns(): array
     {
@@ -550,172 +561,6 @@ final class GridView extends BaseListView
         }
 
         return $columns;
-    }
-
-    /**
-     * Renders the filter.
-     *
-     * @param array $columns The columns of gridview.
-     *
-     * @return string The rendering result.
-     */
-    private function renderFilters(array $columns): string
-    {
-        $cells = [];
-        $countFilter = 0;
-        $filterRowAttributes = $this->filterRowAttributes;
-
-        Html::addCssClass($filterRowAttributes, 'filters');
-
-        foreach ($columns as $column) {
-            if ($column instanceof DataColumn && ($column->getFilter() !== '' || $column->getFilterAttribute() !== '')) {
-                $cells[] = $column->renderFilterCell();
-                $countFilter++;
-            } else {
-                $cells[] = Td::tag()->content('&nbsp;')->encode(false)->render();
-            }
-        }
-
-        return match ($countFilter > 0) {
-            false => '',
-            default => Html::tag('tr', PHP_EOL . implode(PHP_EOL, $cells) . PHP_EOL, $filterRowAttributes)
-                ->encode(false)
-                ->render(),
-        };
-    }
-
-    /**
-     * Renders the table body.
-     *
-     * @param array $columns The columns of gridview.
-     *
-     * @psalm-param array<array-key,AbstractColumn>|array $columns
-     *
-     * @throws InvalidConfigException
-     */
-    private function renderTableBody(array $columns): string
-    {
-        $rows = [];
-
-        $index = 0;
-        foreach ($this->getItems() as $key => $value) {
-            if ($this->beforeRow !== null) {
-                /** @var string */
-                $row = call_user_func($this->beforeRow, $value, $key, $index, $this);
-
-                if (!empty($row)) {
-                    $rows[] = $row;
-                }
-            }
-
-            $rows[] = $this->renderTableRow($columns, $value, $key, $index);
-
-            if ($this->afterRow !== null) {
-                /** @var string */
-                $row = call_user_func($this->afterRow, $value, $key, $index, $this);
-
-                if (!empty($row)) {
-                    $rows[] = $row;
-                }
-            }
-
-            $index++;
-        }
-
-        if ($rows === [] && $this->emptyText !== '') {
-            $colspan = count($columns);
-
-            return Html::tbody($this->tbodyAttributes)
-                ->rows(Tr::tag()->cells($this->renderEmpty($colspan)))
-                ->render();
-        }
-
-        $tbody = Html::tbody($this->tbodyAttributes);
-        return $tbody->open() . PHP_EOL . implode(PHP_EOL, $rows) . PHP_EOL . $tbody->close();
-    }
-
-    /**
-     * Renders the table footer.
-     *
-     * @param array $columns The columns of gridview.
-     *
-     * @psalm-param array<array-key,AbstractColumn>|array $columns
-     */
-    private function renderTableFooter(array $columns): string
-    {
-        $cells = [];
-        $footerRowAttributes = $this->footerRowAttributes;
-
-        foreach ($columns as $column) {
-            if ($column instanceof AbstractColumn) {
-                $cells[] = $column->renderFooterCell();
-            }
-        }
-
-        $content = Html::tag('tr', PHP_EOL . implode('', $cells) . PHP_EOL, $footerRowAttributes)
-            ->encode(false)
-            ->render();
-
-        if ($this->filterPosition === self::FILTER_POS_FOOTER) {
-            $content .= PHP_EOL . $this->renderFilters($columns);
-        }
-
-        return Html::tag('tfoot', PHP_EOL . $content . PHP_EOL)->encode(false)->render();
-    }
-
-    /**
-     * Renders a table row with the given data and key.
-     *
-     * @param array $columns The columns of gridview.
-     * @param array|object $data The data.
-     * @param mixed $key The key associated with the data.
-     * @param int $index The zero-based index of the data in the data provider.
-     *
-     * @psalm-param array<array-key,AbstractColumn>|array $columns
-     */
-    private function renderTableRow(array $columns, array|object $data, mixed $key, int $index): string
-    {
-        $cells = [];
-        $content = '';
-
-        foreach ($columns as $column) {
-            if ($column instanceof AbstractColumn) {
-                $cells[] = $column->renderDataCell($data, $key, $index);
-            }
-        }
-
-        if ($cells !== []) {
-            $content = PHP_EOL . implode(PHP_EOL, $cells) . PHP_EOL;
-        }
-
-        return Html::tag('tr', $content, $this->rowAttributes)->encode(false)->render();
-    }
-
-    private function renderTableHeader(array $columns): string
-    {
-        $cell = [];
-        $cells = '';
-
-        foreach ($columns as $column) {
-            if ($column instanceof AbstractColumn) {
-                $cell[] = $column->renderHeaderCell();
-            }
-        }
-
-        if ($cell !== []) {
-            $cells = PHP_EOL . implode(PHP_EOL, $cell) . PHP_EOL;
-        }
-
-        $content = Html::tag('tr', $cells, $this->headerRowAttributes)->encode(false)->render();
-        $renderFilters = PHP_EOL . $this->renderFilters($columns);
-
-        if ($this->filterPosition === self::FILTER_POS_HEADER) {
-            $content = $renderFilters . PHP_EOL . $content;
-        } elseif (self::FILTER_POS_BODY === $this->filterPosition) {
-            $content .= $renderFilters;
-        }
-
-        return Html::tag('thead', PHP_EOL . trim($content) . PHP_EOL)->encode(false)->render();
     }
 
     private function prepareBodyAttributes(array $attributes, DataContext $context): array

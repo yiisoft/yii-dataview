@@ -55,9 +55,9 @@ final class DataColumn implements ColumnInterface, ColumnRendererInterface
         'week' => 'week',
     ];
 
-    private string $linkSorter = '';
-    private mixed $value = null;
-
+    /**
+     * @psalm-param array<array-key, string|array<array-key,string>> $filterInputSelectItems
+     */
     public function __construct(
         private ?string $property = null,
         private ?string $header = null,
@@ -158,6 +158,9 @@ final class DataColumn implements ColumnInterface, ColumnRendererInterface
         return $this->filterValueDefault;
     }
 
+    /**
+     * @psalm-return array<array-key, string|array<array-key,string>>
+     */
     public function getFilterInputSelectItems(): array
     {
         return $this->filterInputSelectItems;
@@ -173,101 +176,6 @@ final class DataColumn implements ColumnInterface, ColumnRendererInterface
         return $this->visible;
     }
 
-    /**
-     * Return new instance with the filter input select items.
-     *
-     * @param array $values The select items for the filter input.
-     *
-     * This property is used in combination with the {@see filter} property. When {@see filter} is not set or is an
-     * array, this property will be used to render the HTML attributes for the generated filter input fields.
-     *
-     * @psalm-param string[] $values
-     */
-    public function filterInputSelectItems(array $values): self
-    {
-        $new = clone $this;
-        $new->filterInputSelectItems = $values;
-
-        return $new;
-    }
-
-    /**
-     * Return new instance with the filter type.
-     *
-     * @param string $value The filter type.
-     */
-    public function filterType(string $value): self
-    {
-        if (!isset($this->filterTypes[$value])) {
-            throw new InvalidArgumentException(sprintf('Invalid filter type "%s".', $value));
-        }
-
-        $new = clone $this;
-        $new->filterType = $value;
-
-        return $new;
-    }
-
-    /**
-     * Return new instance with the link sorter.
-     *
-     * @param string $value The URL that will be used to sort the data in this column.
-     */
-    public function linkSorter(string $value): self
-    {
-        $new = clone $this;
-        $new->linkSorter = $value;
-
-        return $new;
-    }
-
-    /**
-     * Return new instance with the value of column.
-     *
-     * @param mixed $value An anonymous function or a string that is used to determine the value to
-     * display in the current column.
-     *
-     * If this is an anonymous function, it will be called for each row and the return value will be used as the value
-     * to display for every data. The signature of this function should be:
-     *
-     * `function ($data, $key, $index, $column)`.
-     *
-     * Where `$data`, `$key`, and `$index` refer to the data, key and index of the row currently being rendered
-     * and `$column` is a reference to the {@see DetailColumn} object.
-     *
-     * You may also set this property to a string representing the attribute name to be displayed in this column.
-     *
-     * This can be used when the attribute to be displayed is different from the {@see attribute} that is used for
-     * sorting and filtering.
-     *
-     * If this is not set, `$data[$attribute]` will be used to obtain the value, where `$attribute` is the value of
-     * {@see attribute}.
-     */
-    public function value(mixed $value): self
-    {
-        $new = clone $this;
-        $new->value = $value;
-
-        return $new;
-    }
-
-    /**
-     * Renders the data cell content.
-     *
-     * @param array|object $data The data.
-     * @param mixed $key The key associated with the data.
-     * @param int $index The zero-based index of the data in the data provider.
-     */
-    protected function renderDataCellContent(object|array $data, mixed $key, int $index): string
-    {
-        if ($this->getContent() !== null) {
-            return '';
-            //   return parent::renderDataCellContent($data, $key, $index);
-        }
-
-        return $this->getDataCellValue($data, $key, $index);
-    }
-
     private function renderFilterInput(self $column, GlobalContext $context): string
     {
         $filterInputAttributes = $column->getFilterInputAttributes();
@@ -277,7 +185,7 @@ final class DataColumn implements ColumnInterface, ColumnRendererInterface
             $filterInputTag = $filterInputTag->name(
                 Attribute::getInputName(
                     (string)($column->getFilterModelName() ?? $context->getFilterModelName()),
-                    $column->getFilterProperty()
+                    $column->getFilterProperty() ?? ''
                 ),
             );
         }
@@ -301,7 +209,7 @@ final class DataColumn implements ColumnInterface, ColumnRendererInterface
             $filterSelectTag = $filterSelectTag->name(
                 Attribute::getInputName(
                     (string)($column->getFilterModelName() ?? $context->getFilterModelName()),
-                    $column->getFilterProperty()
+                    $column->getFilterProperty() ?? ''
                 ),
             );
         }
@@ -332,7 +240,7 @@ final class DataColumn implements ColumnInterface, ColumnRendererInterface
     {
         $this->checkColumn($column);
 
-        $label = $this->getHeader() ?? ucfirst($this->property);
+        $label = $this->getHeader() ?? ($this->property === null ? '' : ucfirst($this->property));
 
         if ($column->getProperty() !== null && $column->isWithSorting()) {
             $linkSorter = $this->renderLinkSorter($context, $column->getProperty(), $label);

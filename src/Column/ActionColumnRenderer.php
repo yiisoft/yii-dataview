@@ -23,7 +23,8 @@ final class ActionColumnRenderer implements ColumnRendererInterface
 
     public function renderColumn(ColumnInterface $column, Cell $cell, GlobalContext $context): Cell
     {
-        // TODO: Implement renderColumn() method.
+        $this->checkColumn($column);
+        return $cell->addAttributes($column->getColumnAttributes());
     }
 
     public function renderHeader(ColumnInterface $column, Cell $cell, GlobalContext $context): Cell
@@ -62,8 +63,7 @@ final class ActionColumnRenderer implements ColumnRendererInterface
                             $context->getKey(),
                             $context->getIndex()
                         ) &&
-                        isset($buttons[$name]) &&
-                        $buttons[$name] instanceof Closure
+                        isset($buttons[$name])
                     ) {
                         $url = $this->createUrl($column, $name, $context->getData(), $context->getKey());
                         return (string)$buttons[$name]($url);
@@ -148,6 +148,7 @@ final class ActionColumnRenderer implements ColumnRendererInterface
             return $visibleValue;
         }
 
+        /** @var bool */
         return $visibleValue($data, $key, $index);
     }
 
@@ -192,7 +193,7 @@ final class ActionColumnRenderer implements ColumnRendererInterface
     }
 
     /**
-     * @psalm-assert self $column
+     * @psalm-assert ActionColumn $column
      */
     private function checkColumn(ColumnInterface $column): void
     {
