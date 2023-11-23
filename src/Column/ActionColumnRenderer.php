@@ -96,7 +96,7 @@ final class ActionColumnRenderer implements ColumnRendererInterface
     private function createUrl(ActionColumn $column, string $action, array|object $data, mixed $key): string
     {
         if ($column->getUrlCreator() !== null) {
-            return (string) call_user_func($column->getUrlCreator(), $action, $data, $key);
+            return (string) ($column->getUrlCreator())($action, $data, $key);
         }
 
         $primaryKey = $column->getPrimaryKey();

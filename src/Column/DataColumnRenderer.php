@@ -18,8 +18,6 @@ use Yiisoft\Yii\DataView\LinkSorter;
 
 final class DataColumnRenderer implements ColumnRendererInterface
 {
-
-
     public function renderColumn(ColumnInterface $column, Cell $cell, GlobalContext $context): Cell
     {
         $this->checkColumn($column);

@@ -6,17 +6,8 @@ namespace Yiisoft\Yii\DataView\Column;
 
 use InvalidArgumentException;
 use Stringable;
-use Yiisoft\Arrays\ArrayHelper;
-use Yiisoft\Data\Paginator\OffsetPaginator;
-use Yiisoft\Data\Paginator\PaginatorInterface;
-use Yiisoft\Html\Tag\Input;
-use Yiisoft\Html\Tag\Select;
 use Yiisoft\Yii\DataView\Column\Base\Cell;
-use Yiisoft\Yii\DataView\Column\Base\GlobalContext;
-use Yiisoft\Yii\DataView\Column\Base\DataContext;
 use Yiisoft\Yii\DataView\Helper\Attribute;
-
-use Yiisoft\Yii\DataView\LinkSorter;
 
 use function sprintf;
 
