@@ -26,6 +26,7 @@
         "php": "^8.0",
         "ext-json": "*",
         "ext-mbstring": "*",
+        "psr/container": "^1.0|^2.0",
         "yiisoft/arrays": "^2.0|^3.0",
         "yiisoft/data": "dev-master",
         "yiisoft/factory": "^1.0",
