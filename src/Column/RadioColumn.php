@@ -4,41 +4,75 @@ declare(strict_types=1);
 
 namespace Yiisoft\Yii\DataView\Column;
 
-use Yiisoft\Html\Tag\Input;
-
-use function json_encode;
-
 /**
- * RadioButtonColumn displays a column of radio buttons in a grid view.
+ * `RadioColumn` displays a column of radio buttons in a grid view.
  */
-final class RadioColumn extends AbstractColumn
+final class RadioColumn implements ColumnInterface
 {
     /**
-     * Renders the data cell content.
-     *
-     * @param array|object $data The data.
-     * @param mixed $key The key associated with the data.
-     * @param int $index The zero-based index of the data in the data provider.
+     * @var callable|null
      */
-    protected function renderDataCellContent(array|object $data, mixed $key, int $index): string
+    private $content;
+
+    public function __construct(
+        private ?string $header = null,
+        private ?string $footer = null,
+        private array $columnAttributes = [],
+        private array $headerAttributes = [],
+        private array $bodyAttributes = [],
+        private array $inputAttributes = [],
+        ?string $name = null,
+        ?callable $content = null,
+        private bool $visible = true,
+    ) {
+        $this->content = $content;
+        if ($name !== null) {
+            $this->inputAttributes['name'] = $name;
+        }
+    }
+
+    public function getHeader(): ?string
     {
-        if ($this->getContent() !== null) {
-            return parent::renderDataCellContent($data, $key, $index);
-        }
+        return $this->header;
+    }
 
-        $contentAttributes = $this->getContentAttributes();
-        $name = null;
-        $value = null;
+    public function getFooter(): ?string
+    {
+        return $this->footer;
+    }
 
-        if (!array_key_exists('name', $contentAttributes)) {
-            $name = 'radio-selection';
-        }
+    public function getColumnAttributes(): array
+    {
+        return $this->columnAttributes;
+    }
 
-        if (!array_key_exists('value', $contentAttributes)) {
-            $value = is_array($key)
-                ? json_encode($key, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) : (string) $key;
-        }
+    public function getHeaderAttributes(): array
+    {
+        return $this->headerAttributes;
+    }
 
-        return Input::radio($name, $value)->addAttributes($contentAttributes)->render();
+    public function getBodyAttributes(): array
+    {
+        return $this->bodyAttributes;
+    }
+
+    public function getInputAttributes(): array
+    {
+        return $this->inputAttributes;
+    }
+
+    public function getContent(): ?callable
+    {
+        return $this->content;
+    }
+
+    public function isVisible(): bool
+    {
+        return $this->visible;
+    }
+
+    public function getRenderer(): string
+    {
+        return RadioColumnRenderer::class;
     }
 }

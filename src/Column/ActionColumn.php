@@ -5,148 +5,110 @@ declare(strict_types=1);
 namespace Yiisoft\Yii\DataView\Column;
 
 use Closure;
-use InvalidArgumentException;
-use Yiisoft\Html\Tag\A;
-use Yiisoft\Html\Tag\Span;
 use Yiisoft\Router\CurrentRoute;
 use Yiisoft\Router\UrlGeneratorInterface;
 
 use function is_array;
 
 /**
- * ActionColumn is a column for the {@see GridView} widget that displays buttons for viewing and manipulating the items.
+ * `ActionColumn` is a column for the {@see GridView} widget that displays buttons for viewing and manipulating
+ * the items.
  */
-final class ActionColumn extends AbstractColumn
+final class ActionColumn implements ColumnInterface
 {
-    private array $buttons = [];
-    private string $primaryKey = 'id';
-    private string $template = '{view}{update}{delete}';
-    private array|null $urlArguments = null;
+
     private Closure|null $urlCreator = null;
     private CurrentRoute $currentRoute;
     private UrlGeneratorInterface|null $urlGenerator = null;
-    private array $urlParamsConfig = [];
-    private string $urlName = '';
-    private array $urlQueryParameters = [];
-    private array $visibleButtons = [];
 
     /**
-     * Return new instance with the buttons array.
-     *
-     * @param array $value button rendering callbacks. The array keys are the button names (without curly brackets),
-     * and the values are the corresponding button rendering callbacks. The callbacks should use the following
-     * signature:
-     *
-     * ```php
-     * [
-     *     buttons => [
-     *         'action' => function (string $url, $data, int $key) {
-     *             // return the button HTML code
-     *         }
-     *     ],
-     * ]
-     * ```
-     *
-     * where `$url` is the URL that the column creates for the button, `$data` is the data object being rendered
-     * for the current row, and `$key` is the key of the data in the data provider array.
-     *
-     * You can add further conditions to the button, for example only display it, when the data is editable (here
-     * assuming you have a status field that indicates that):
-     *
-     * ```php
-     * [
-     *     buttons = [
-     *         'update' => function (string $url, $data, $key) {
-     *             return $data->status === 'editable' ? Html::a('Update', $url) : '';
-     *         },
-     *     ],
-     * ],
-     * ```
+     * @psalm-param array<string,Closure> $buttons
      */
-    public function buttons(array $value): self
-    {
-        $new = clone $this;
-        $new->buttons = $value;
+    public function __construct(
+        private string $primaryKey = 'id',
+        private string $template = "{view}\n{update}\n{delete}",
+        private ?string $routeName = null,
+        private array $urlParamsConfig = [],
+        private ?array $urlArguments = null,
+        private array $urlQueryParameters = [],
+        private ?string $header = null,
+        private array $buttons = [],
+        private array $visibleButtons = [],
+        private array $columnAttributes = [],
+        private array $bodyAttributes = [],
+        private bool $visible = true,
+    ) {
+    }
 
-        return $new;
+    public function getPrimaryKey(): string
+    {
+        return $this->primaryKey;
+    }
+
+    public function getTemplate(): string
+    {
+        return $this->template;
+    }
+
+    public function getRouteName(): ?string
+    {
+        return $this->routeName;
+    }
+
+    public function getUrlParamsConfig(): array
+    {
+        return $this->urlParamsConfig;
+    }
+
+    public function getUrlArguments(): ?array
+    {
+        return $this->urlArguments;
+    }
+
+    public function getUrlQueryParameters(): array
+    {
+        return $this->urlQueryParameters;
+    }
+
+    public function getHeader(): ?string
+    {
+        return $this->header;
     }
 
     /**
-     * Initializes the default button rendering callback for single button.
+     * @psalm-return array<string,Closure>
      */
-    public function createDefaultButtons(): self
+    public function getButtons(): array
     {
-        /** @psalm-var array<string,Closure> */
-        $defaultButtons = [
-            'view' => static fn (string $url): string => A::tag()
-                ->attributes(
-                    [
-                        'name' => 'view',
-                        'role' => 'button',
-                        'style' => 'text-decoration: none!important;',
-                        'title' => 'View',
-                    ],
-                )
-                ->content(Span::tag()->content('🔎'))
-                ->href($url)
-                ->render(),
-            'update' => static fn (string $url): string => A::tag()
-                ->attributes(
-                    [
-                        'name' => 'update',
-                        'role' => 'button',
-                        'style' => 'text-decoration: none!important;',
-                        'title' => 'Update',
-                    ],
-                )
-                ->content(Span::tag()->content('✎'))
-                ->href($url)
-                ->render(),
-            'delete' => static fn (string $url): string => A::tag()
-                ->attributes(
-                    [
-                        'name' => 'delete',
-                        'role' => 'button',
-                        'style' => 'text-decoration: none!important;',
-                        'title' => 'Delete',
-                    ],
-                )
-                ->content(Span::tag()->content('❌'))
-                ->href($url)
-                ->render(),
-        ];
-
-        $new = clone $this;
-
-        foreach ($defaultButtons as $name => $button) {
-            $new->buttons[$name] = $button;
-        }
-
-        return $new;
+        return $this->buttons;
     }
 
-    public function currentRoute(CurrentRoute $value): self
+    public function getVisibleButtons(): array
     {
-        $new = clone $this;
-        $new->currentRoute = $value;
+        return $this->visibleButtons;
+    }
 
-        return $new;
+    public function getColumnAttributes(): array
+    {
+        return $this->columnAttributes;
+    }
+
+    public function getBodyAttributes(): array
+    {
+        return $this->bodyAttributes;
+    }
+
+    public function isVisible(): bool
+    {
+        return $this->visible;
     }
 
     public function getLabel(): string
     {
-        $label = parent::getLabel();
+//        $label = parent::getLabel();
+        $label = '';
 
         return  $label !== '' ? $label : 'Actions';
-    }
-
-    public function getUrlGenerator(): UrlGeneratorInterface
-    {
-        if ($this->urlGenerator === null) {
-            throw new InvalidArgumentException('Url generator is not set.');
-        }
-
-        return $this->urlGenerator;
     }
 
     /**
@@ -158,56 +120,6 @@ final class ActionColumn extends AbstractColumn
     {
         $new = clone $this;
         $new->primaryKey = $value;
-
-        return $new;
-    }
-
-    /**
-     * Return new instance with the template set.
-     *
-     * @param string $value The template used for composing each cell in the action column. Tokens enclosed within curly
-     * brackets are treated as controller action IDs (also called *button names* in the context of action column).
-     *
-     * They will be replaced by the corresponding button rendering callbacks specified in {@see buttons}. For example,
-     * the token `{view}` will be replaced by the result of the callback `buttons['view']`. If a callback cannot be
-     * found, the token will be replaced with an empty string.
-     *
-     * As an example, to only have the view, and update button you can add the ActionColumn to your GridView columns as
-     * follows:
-     *
-     * ```php
-     * [
-     *     'class' => ActionColumn::class,
-     *     'template()' => ['{view} {update} {delete}'],
-     * ],
-     * ```
-     *
-     * {@see buttons}
-     */
-    public function template(string $value): self
-    {
-        $new = clone $this;
-
-        $result = preg_match_all('/{([\w\-\/]+)}/', $value, $matches);
-
-        if ($result > 0 && !empty($matches[1])) {
-            $new->buttons = array_intersect_key($new->buttons, array_flip($matches[1]));
-        }
-
-        $new->template = $value;
-
-        return $new;
-    }
-
-    /**
-     * Return a new instance with arguments of the route.
-     *
-     * @param array $value Arguments of the route.
-     */
-    public function urlArguments(array $value): self
-    {
-        $new = clone $this;
-        $new->urlArguments = $value;
 
         return $new;
     }
@@ -244,19 +156,6 @@ final class ActionColumn extends AbstractColumn
     {
         $new = clone $this;
         $new->urlGenerator = $value;
-
-        return $new;
-    }
-
-    /**
-     * Returns a new instance with the name of the route.
-     *
-     * @param string $value The name of the route.
-     */
-    public function urlName(string $value): self
-    {
-        $new = clone $this;
-        $new->urlName = $value;
 
         return $new;
     }
@@ -337,7 +236,8 @@ final class ActionColumn extends AbstractColumn
     protected function renderDataCellContent(array|object $data, mixed $key, int $index): string
     {
         if ($this->getContent() !== null) {
-            return parent::renderDataCellContent($data, $key, $index);
+            return '';
+//            return parent::renderDataCellContent($data, $key, $index);
         }
 
         if (empty($this->buttons)) {
@@ -428,5 +328,10 @@ final class ActionColumn extends AbstractColumn
         }
 
         return $visible;
+    }
+
+    public function getRenderer(): string
+    {
+        return ActionColumnRenderer::class;
     }
 }

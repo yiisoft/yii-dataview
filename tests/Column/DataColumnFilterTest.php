@@ -80,19 +80,19 @@ final class DataColumnFilterTest extends TestCase
             <th>Id</th>
             <th>Name</th>
             </tr>
-            <tr class="filters">
-            <th>&nbsp;</th>
-            <th><input name="searchModel[name]"></th>
+            <tr>
+            <td>&nbsp;</td>
+            <td><input name="searchModel[name]"></td>
             </tr>
             </thead>
             <tbody>
             <tr>
-            <td data-label="id">1</td>
-            <td data-label="name">John</td>
+            <td>1</td>
+            <td>John</td>
             </tr>
             <tr>
-            <td data-label="id">2</td>
-            <td data-label="name">Mary</td>
+            <td>2</td>
+            <td>Mary</td>
             </tr>
             </tbody>
             </table>
@@ -101,8 +101,8 @@ final class DataColumnFilterTest extends TestCase
             HTML,
             GridView::widget()
                 ->columns(
-                    DataColumn::create()->attribute('id')->filter('&nbsp;'),
-                    DataColumn::create()->attribute('name')->filter('<input name="searchModel[name]">'),
+                    new DataColumn('id', filter: '&nbsp;'),
+                    new DataColumn('name', filter: '<input name="searchModel[name]">'),
                 )
                 ->id('w1-grid')
                 ->dataReader($this->createOffsetPaginator($this->data, 10))
@@ -128,22 +128,22 @@ final class DataColumnFilterTest extends TestCase
             <th>Name</th>
             <th>Birthday</th>
             </tr>
-            <tr class="filters">
+            <tr>
             <td>&nbsp;</td>
             <td>&nbsp;</td>
-            <th><input type="date" name="birthday"></th>
+            <td><input type="date" name="birthday"></td>
             </tr>
             </thead>
             <tbody>
             <tr>
-            <td data-label="id">1</td>
-            <td data-label="name">John</td>
-            <td data-label="birthday">2000-01-01</td>
+            <td>1</td>
+            <td>John</td>
+            <td>2000-01-01</td>
             </tr>
             <tr>
-            <td data-label="id">2</td>
-            <td data-label="name">Mary</td>
-            <td data-label="birthday">2000-01-02</td>
+            <td>2</td>
+            <td>Mary</td>
+            <td>2000-01-02</td>
             </tr>
             </tbody>
             </table>
@@ -152,9 +152,9 @@ final class DataColumnFilterTest extends TestCase
             HTML,
             GridView::widget()
                 ->columns(
-                    DataColumn::create()->attribute('id'),
-                    DataColumn::create()->attribute('name'),
-                    DataColumn::create()->attribute('birthday')->filterAttribute('birthday')->filterType('date'),
+                    new DataColumn('id'),
+                    new DataColumn('name'),
+                    new DataColumn('birthday', filterProperty: 'birthday', filterType: 'date'),
                 )
                 ->id('w1-grid')
                 ->dataReader($this->createOffsetPaginator($this->dataWithDate, 10))
@@ -180,22 +180,22 @@ final class DataColumnFilterTest extends TestCase
             <th>Name</th>
             <th>Birthday</th>
             </tr>
-            <tr class="filters">
+            <tr>
             <td>&nbsp;</td>
             <td>&nbsp;</td>
-            <th><input type="datetime-local" name="birthday"></th>
+            <td><input type="datetime-local" name="birthday"></td>
             </tr>
             </thead>
             <tbody>
             <tr>
-            <td data-label="id">1</td>
-            <td data-label="name">John</td>
-            <td data-label="birthday">2000-01-01 00:00:00</td>
+            <td>1</td>
+            <td>John</td>
+            <td>2000-01-01 00:00:00</td>
             </tr>
             <tr>
-            <td data-label="id">2</td>
-            <td data-label="name">Mary</td>
-            <td data-label="birthday">2000-01-02 00:00:00</td>
+            <td>2</td>
+            <td>Mary</td>
+            <td>2000-01-02 00:00:00</td>
             </tr>
             </tbody>
             </table>
@@ -204,9 +204,9 @@ final class DataColumnFilterTest extends TestCase
             HTML,
             GridView::widget()
                 ->columns(
-                    DataColumn::create()->attribute('id'),
-                    DataColumn::create()->attribute('name'),
-                    DataColumn::create()->attribute('birthday')->filterAttribute('birthday')->filterType('datetime'),
+                    new DataColumn('id'),
+                    new DataColumn('name'),
+                    new DataColumn('birthday', filterProperty: 'birthday', filterType: 'datetime'),
                 )
                 ->id('w1-grid')
                 ->dataReader($this->createOffsetPaginator($this->dataWithDateTime, 10))
@@ -232,22 +232,22 @@ final class DataColumnFilterTest extends TestCase
             <th>Name</th>
             <th>Email</th>
             </tr>
-            <tr class="filters">
+            <tr>
             <td>&nbsp;</td>
             <td>&nbsp;</td>
-            <th><input type="email" name="email"></th>
+            <td><input type="email" name="email"></td>
             </tr>
             </thead>
             <tbody>
             <tr>
-            <td data-label="id">1</td>
-            <td data-label="name">John</td>
-            <td data-label="email">test1@example.com</td>
+            <td>1</td>
+            <td>John</td>
+            <td>test1@example.com</td>
             </tr>
             <tr>
-            <td data-label="id">2</td>
-            <td data-label="name">Mary</td>
-            <td data-label="email">test2@example.com</td>
+            <td>2</td>
+            <td>Mary</td>
+            <td>test2@example.com</td>
             </tr>
             </tbody>
             </table>
@@ -256,9 +256,9 @@ final class DataColumnFilterTest extends TestCase
             HTML,
             GridView::widget()
                 ->columns(
-                    DataColumn::create()->attribute('id'),
-                    DataColumn::create()->attribute('name'),
-                    DataColumn::create()->attribute('email')->filterAttribute('email')->filterType('email'),
+                    new DataColumn('id'),
+                    new DataColumn('name'),
+                    new DataColumn('email', filterProperty: 'email', filterType: 'email'),
                 )
                 ->id('w1-grid')
                 ->dataReader($this->createOffsetPaginator($this->dataWithEmail, 10))
@@ -283,19 +283,19 @@ final class DataColumnFilterTest extends TestCase
             <th>Id</th>
             <th>Name</th>
             </tr>
-            <tr class="filters">
-            <th><input type="text" class="test.class" name="searchModel[id]" value="0"></th>
-            <th><input type="text" class="test.class" name="searchModel[name]"></th>
+            <tr>
+            <td><input type="text" class="test.class" name="searchModel[id]" value="0"></td>
+            <td><input type="text" class="test.class" name="searchModel[name]"></td>
             </tr>
             </thead>
             <tbody>
             <tr>
-            <td data-label="id">1</td>
-            <td data-label="name">John</td>
+            <td>1</td>
+            <td>John</td>
             </tr>
             <tr>
-            <td data-label="id">2</td>
-            <td data-label="name">Mary</td>
+            <td>2</td>
+            <td>Mary</td>
             </tr>
             </tbody>
             </table>
@@ -304,16 +304,18 @@ final class DataColumnFilterTest extends TestCase
             HTML,
             GridView::widget()
                 ->columns(
-                    DataColumn::create()
-                        ->attribute('id')
-                        ->filterAttribute('id')
-                        ->filterInputAttributes(['class' => 'test.class'])
-                        ->filterValueDefault(0),
-                    DataColumn::create()
-                        ->attribute('name')
-                        ->filterAttribute('name')
-                        ->filterInputAttributes(['class' => 'test.class'])
-                        ->filterValueDefault(''),
+                    new DataColumn(
+                        property: 'id',
+                        filterProperty: 'id',
+                        filterInputAttributes: ['class' => 'test.class'],
+                        filterValueDefault: 0,
+                    ),
+                    new DataColumn(
+                        property: 'name',
+                        filterProperty: 'name',
+                        filterInputAttributes: ['class' => 'test.class'],
+                        filterValueDefault: '',
+                    ),
                 )
                 ->filterModelName('searchModel')
                 ->id('w1-grid')
@@ -340,22 +342,22 @@ final class DataColumnFilterTest extends TestCase
             <th>Name</th>
             <th>Month</th>
             </tr>
-            <tr class="filters">
+            <tr>
             <td>&nbsp;</td>
             <td>&nbsp;</td>
-            <th><input type="month" name="month"></th>
+            <td><input type="month" name="month"></td>
             </tr>
             </thead>
             <tbody>
             <tr>
-            <td data-label="id">1</td>
-            <td data-label="name">John</td>
-            <td data-label="month">2000-01</td>
+            <td>1</td>
+            <td>John</td>
+            <td>2000-01</td>
             </tr>
             <tr>
-            <td data-label="id">2</td>
-            <td data-label="name">Mary</td>
-            <td data-label="month">2000-02</td>
+            <td>2</td>
+            <td>Mary</td>
+            <td>2000-02</td>
             </tr>
             </tbody>
             </table>
@@ -364,9 +366,9 @@ final class DataColumnFilterTest extends TestCase
             HTML,
             GridView::widget()
                 ->columns(
-                    DataColumn::create()->attribute('id'),
-                    DataColumn::create()->attribute('name'),
-                    DataColumn::create()->attribute('month')->filterAttribute('month')->filterType('month'),
+                    new DataColumn('id'),
+                    new DataColumn('name'),
+                    new DataColumn('month', filterProperty: 'month', filterType: 'month'),
                 )
                 ->id('w1-grid')
                 ->dataReader($this->createOffsetPaginator($this->dataWithMonth, 10))
@@ -391,19 +393,19 @@ final class DataColumnFilterTest extends TestCase
             <th>Id</th>
             <th>Name</th>
             </tr>
-            <tr class="filters">
-            <th><input type="number" name="id"></th>
+            <tr>
+            <td><input type="number" name="id"></td>
             <td>&nbsp;</td>
             </tr>
             </thead>
             <tbody>
             <tr>
-            <td data-label="id">1</td>
-            <td data-label="name">John</td>
+            <td>1</td>
+            <td>John</td>
             </tr>
             <tr>
-            <td data-label="id">2</td>
-            <td data-label="name">Mary</td>
+            <td>2</td>
+            <td>Mary</td>
             </tr>
             </tbody>
             </table>
@@ -412,8 +414,8 @@ final class DataColumnFilterTest extends TestCase
             HTML,
             GridView::widget()
                 ->columns(
-                    DataColumn::create()->attribute('id')->filterAttribute('id')->filterType('number'),
-                    DataColumn::create()->attribute('name'),
+                    new DataColumn('id', filterProperty: 'id', filterType: 'number'),
+                    new DataColumn('name'),
                 )
                 ->id('w1-grid')
                 ->dataReader($this->createOffsetPaginator($this->data, 10))
@@ -441,21 +443,22 @@ final class DataColumnFilterTest extends TestCase
             </thead>
             <tfoot>
             <tr>
-            <td>&nbsp;</td><td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
             </tr>
-            <tr class="filters">
-            <th class="text-center" style="width:60px"><input type="text" name="searchModel[id]" value="0" maxlength="5"></th>
-            <th class="text-center" style="width:60px"><input type="text" name="searchModel[name]" maxlength="5"></th>
+            <tr>
+            <td class="text-center" style="width:60px"><input type="text" name="searchModel[id]" value="0" maxlength="5"></td>
+            <td class="text-center" style="width:60px"><input type="text" name="searchModel[name]" maxlength="5"></td>
             </tr>
             </tfoot>
             <tbody>
             <tr>
-            <td data-label="id">1</td>
-            <td data-label="name">John</td>
+            <td>1</td>
+            <td>John</td>
             </tr>
             <tr>
-            <td data-label="id">2</td>
-            <td data-label="name">Mary</td>
+            <td>2</td>
+            <td>Mary</td>
             </tr>
             </tbody>
             </table>
@@ -464,18 +467,20 @@ final class DataColumnFilterTest extends TestCase
             HTML,
             GridView::widget()
                 ->columns(
-                    DataColumn::create()
-                        ->attribute('id')
-                        ->filterAttribute('id')
-                        ->filterValueDefault(0)
-                        ->filterAttributes(['class' => 'text-center', 'style' => 'width:60px'])
-                        ->filterInputAttributes(['maxlength' => '5']),
-                    DataColumn::create()
-                        ->attribute('name')
-                        ->filterAttribute('name')
-                        ->filterValueDefault('')
-                        ->filterAttributes(['class' => 'text-center', 'style' => 'width:60px'])
-                        ->filterInputAttributes(['maxlength' => '5']),
+                    new DataColumn(
+                        property: 'id',
+                        filterProperty: 'id',
+                        filterValueDefault: 0,
+                        filterAttributes: ['class' => 'text-center', 'style' => 'width:60px'],
+                        filterInputAttributes: ['maxlength' => '5'],
+                    ),
+                    new DataColumn(
+                        property: 'name',
+                        filterProperty: 'name',
+                        filterValueDefault: '',
+                        filterAttributes: ['class' => 'text-center', 'style' => 'width:60px'],
+                        filterInputAttributes: ['maxlength' => '5'],
+                    ),
                 )
                 ->filterModelName('searchModel')
                 ->filterPosition(GridView::FILTER_POS_FOOTER)
@@ -499,9 +504,9 @@ final class DataColumnFilterTest extends TestCase
             <div id="w1-grid">
             <table>
             <thead>
-            <tr class="filters">
-            <th class="text-center" style="width:60px"><input type="text" name="searchModel[id]" value="0" maxlength="5"></th>
-            <th class="text-center" style="width:60px"><input type="text" name="searchModel[name]" maxlength="5"></th>
+            <tr>
+            <td class="text-center" style="width:60px"><input type="text" name="searchModel[id]" value="0" maxlength="5"></td>
+            <td class="text-center" style="width:60px"><input type="text" name="searchModel[name]" maxlength="5"></td>
             </tr>
             <tr>
             <th>Id</th>
@@ -510,12 +515,12 @@ final class DataColumnFilterTest extends TestCase
             </thead>
             <tbody>
             <tr>
-            <td data-label="id">1</td>
-            <td data-label="name">John</td>
+            <td>1</td>
+            <td>John</td>
             </tr>
             <tr>
-            <td data-label="id">2</td>
-            <td data-label="name">Mary</td>
+            <td>2</td>
+            <td>Mary</td>
             </tr>
             </tbody>
             </table>
@@ -524,18 +529,20 @@ final class DataColumnFilterTest extends TestCase
             HTML,
             GridView::widget()
                 ->columns(
-                    DataColumn::create()
-                        ->attribute('id')
-                        ->filterAttribute('id')
-                        ->filterValueDefault(0)
-                        ->filterAttributes(['class' => 'text-center', 'style' => 'width:60px'])
-                        ->filterInputAttributes(['maxlength' => '5']),
-                    DataColumn::create()
-                        ->attribute('name')
-                        ->filterAttribute('name')
-                        ->filterValueDefault('')
-                        ->filterAttributes(['class' => 'text-center', 'style' => 'width:60px'])
-                        ->filterInputAttributes(['maxlength' => '5']),
+                    new DataColumn(
+                        property: 'id',
+                        filterProperty: 'id',
+                        filterValueDefault: 0,
+                        filterAttributes: ['class' => 'text-center', 'style' => 'width:60px'],
+                        filterInputAttributes: ['maxlength' => '5'],
+                    ),
+                    new DataColumn(
+                        property: 'name',
+                        filterProperty: 'name',
+                        filterValueDefault: '',
+                        filterAttributes: ['class' => 'text-center', 'style' => 'width:60px'],
+                        filterInputAttributes: ['maxlength' => '5'],
+                    ),
                 )
                 ->filterModelName('searchModel')
                 ->filterPosition(GridView::FILTER_POS_HEADER)
@@ -562,19 +569,19 @@ final class DataColumnFilterTest extends TestCase
             <th>Id</th>
             <th>Name</th>
             </tr>
-            <tr class="filters">
-            <th><input type="range" name="id" value="0"></th>
+            <tr>
+            <td><input type="range" name="id" value="0"></td>
             <td>&nbsp;</td>
             </tr>
             </thead>
             <tbody>
             <tr>
-            <td data-label="id">1</td>
-            <td data-label="name">John</td>
+            <td>1</td>
+            <td>John</td>
             </tr>
             <tr>
-            <td data-label="id">2</td>
-            <td data-label="name">Mary</td>
+            <td>2</td>
+            <td>Mary</td>
             </tr>
             </tbody>
             </table>
@@ -583,12 +590,13 @@ final class DataColumnFilterTest extends TestCase
             HTML,
             GridView::widget()
                 ->columns(
-                    DataColumn::create()
-                        ->attribute('id')
-                        ->filterAttribute('id')
-                        ->filterType('range')
-                        ->filterValueDefault(0),
-                    DataColumn::create()->attribute('name'),
+                    new DataColumn(
+                        property: 'id',
+                        filterProperty: 'id',
+                        filterType: 'range',
+                        filterValueDefault: 0,
+                    ),
+                    new DataColumn('name'),
                 )
                 ->id('w1-grid')
                 ->dataReader($this->createOffsetPaginator($this->data, 10))
@@ -613,19 +621,19 @@ final class DataColumnFilterTest extends TestCase
             <th>Id</th>
             <th>Name</th>
             </tr>
-            <tr class="text-center filters">
-            <th class="text-center" style="width:60px"><input type="text" name="searchModel[id]" value="0" maxlength="5"></th>
-            <th class="text-center" style="width:60px"><input type="text" name="searchModel[name]" maxlength="5"></th>
+            <tr class="text-center">
+            <td class="text-center" style="width:60px"><input type="text" name="searchModel[id]" value="0" maxlength="5"></td>
+            <td class="text-center" style="width:60px"><input type="text" name="searchModel[name]" maxlength="5"></td>
             </tr>
             </thead>
             <tbody>
             <tr>
-            <td data-label="id">1</td>
-            <td data-label="name">John</td>
+            <td>1</td>
+            <td>John</td>
             </tr>
             <tr>
-            <td data-label="id">2</td>
-            <td data-label="name">Mary</td>
+            <td>2</td>
+            <td>Mary</td>
             </tr>
             </tbody>
             </table>
@@ -634,18 +642,20 @@ final class DataColumnFilterTest extends TestCase
             HTML,
             GridView::widget()
                 ->columns(
-                    DataColumn::create()
-                        ->attribute('id')
-                        ->filterAttribute('id')
-                        ->filterValueDefault(0)
-                        ->filterAttributes(['class' => 'text-center', 'style' => 'width:60px'])
-                        ->filterInputAttributes(['maxlength' => '5']),
-                    DataColumn::create()
-                        ->attribute('name')
-                        ->filterAttribute('name')
-                        ->filterValueDefault('')
-                        ->filterAttributes(['class' => 'text-center', 'style' => 'width:60px'])
-                        ->filterInputAttributes(['maxlength' => '5']),
+                    new DataColumn(
+                        property: 'id',
+                        filterProperty: 'id',
+                        filterValueDefault: 0,
+                        filterAttributes: ['class' => 'text-center', 'style' => 'width:60px'],
+                        filterInputAttributes: ['maxlength' => '5'],
+                    ),
+                    new DataColumn(
+                        property: 'name',
+                        filterProperty: 'name',
+                        filterValueDefault: '',
+                        filterAttributes: ['class' => 'text-center', 'style' => 'width:60px'],
+                        filterInputAttributes: ['maxlength' => '5'],
+                    ),
                 )
                 ->filterModelName('searchModel')
                 ->filterRowAttributes(['class' => 'text-center'])
@@ -672,19 +682,19 @@ final class DataColumnFilterTest extends TestCase
             <th>Id</th>
             <th>Name</th>
             </tr>
-            <tr class="filters">
+            <tr>
             <td>&nbsp;</td>
-            <th><input type="search" name="name"></th>
+            <td><input type="search" name="name"></td>
             </tr>
             </thead>
             <tbody>
             <tr>
-            <td data-label="id">1</td>
-            <td data-label="name">John</td>
+            <td>1</td>
+            <td>John</td>
             </tr>
             <tr>
-            <td data-label="id">2</td>
-            <td data-label="name">Mary</td>
+            <td>2</td>
+            <td>Mary</td>
             </tr>
             </tbody>
             </table>
@@ -693,8 +703,8 @@ final class DataColumnFilterTest extends TestCase
             HTML,
             GridView::widget()
                 ->columns(
-                    DataColumn::create()->attribute('id'),
-                    DataColumn::create()->attribute('name')->filterAttribute('name')->filterType('search'),
+                    new DataColumn('id'),
+                    new DataColumn('name', filterProperty: 'name', filterType: 'search'),
                 )
                 ->id('w1-grid')
                 ->dataReader($this->createOffsetPaginator($this->data, 10))
@@ -719,23 +729,23 @@ final class DataColumnFilterTest extends TestCase
             <th>Id</th>
             <th>Name</th>
             </tr>
-            <tr class="text-center filters">
-            <th><select name="searchModel[id]">
+            <tr class="text-center">
+            <td><select name="searchModel[id]">
             <option value>Select...</option>
             <option value="1">Jhon</option>
             <option value="2">Mary</option>
-            </select></th>
+            </select></td>
             <td>&nbsp;</td>
             </tr>
             </thead>
             <tbody>
             <tr>
-            <td data-label="id">1</td>
-            <td data-label="name">John</td>
+            <td>1</td>
+            <td>John</td>
             </tr>
             <tr>
-            <td data-label="id">2</td>
-            <td data-label="name">Mary</td>
+            <td>2</td>
+            <td>Mary</td>
             </tr>
             </tbody>
             </table>
@@ -744,13 +754,15 @@ final class DataColumnFilterTest extends TestCase
             HTML,
             GridView::widget()
                 ->columns(
-                    DataColumn::create()
-                        ->attribute('id')
-                        ->filterAttribute('id')
-                        ->filterInputSelectItems(['1' => 'Jhon', '2' => 'Mary'])
-                        ->filterInputSelectPrompt('Select...', 0)
-                        ->filterType('select'),
-                    DataColumn::create()->attribute('name'),
+                    new DataColumn(
+                        property: 'id',
+                        filterProperty: 'id',
+                        filterInputSelectItems: ['1' => 'Jhon', '2' => 'Mary'],
+                        filterInputSelectPrompt: 'Select...',
+                        filterValueDefault: 0,
+                        filterType: 'select',
+                    ),
+                    new DataColumn('name'),
                 )
                 ->filterModelName('searchModel')
                 ->filterRowAttributes(['class' => 'text-center'])
@@ -778,22 +790,22 @@ final class DataColumnFilterTest extends TestCase
             <th>Name</th>
             <th>Telephone</th>
             </tr>
-            <tr class="text-center filters">
+            <tr class="text-center">
             <td>&nbsp;</td>
             <td>&nbsp;</td>
-            <th><input type="tel" name="searchModel[telephone]"></th>
+            <td><input type="tel" name="searchModel[telephone]"></td>
             </tr>
             </thead>
             <tbody>
             <tr>
-            <td data-label="id">1</td>
-            <td data-label="name">John</td>
-            <td data-label="telephone">1 (555) 123-4567</td>
+            <td>1</td>
+            <td>John</td>
+            <td>1 (555) 123-4567</td>
             </tr>
             <tr>
-            <td data-label="id">2</td>
-            <td data-label="name">Mary</td>
-            <td data-label="telephone">1 (555) 123-4568</td>
+            <td>2</td>
+            <td>Mary</td>
+            <td>1 (555) 123-4568</td>
             </tr>
             </tbody>
             </table>
@@ -802,9 +814,9 @@ final class DataColumnFilterTest extends TestCase
             HTML,
             GridView::widget()
                 ->columns(
-                    DataColumn::create()->attribute('id'),
-                    DataColumn::create()->attribute('name'),
-                    DataColumn::create()->attribute('telephone')->filterAttribute('telephone')->filterType('tel'),
+                    new DataColumn('id'),
+                    new DataColumn('name'),
+                    new DataColumn('telephone', filterProperty: 'telephone', filterType: 'tel'),
                 )
                 ->filterModelName('searchModel')
                 ->filterRowAttributes(['class' => 'text-center'])
@@ -832,22 +844,22 @@ final class DataColumnFilterTest extends TestCase
             <th>Name</th>
             <th>Time</th>
             </tr>
-            <tr class="text-center filters">
+            <tr class="text-center">
             <td>&nbsp;</td>
             <td>&nbsp;</td>
-            <th><input type="time" name="searchModel[time]"></th>
+            <td><input type="time" name="searchModel[time]"></td>
             </tr>
             </thead>
             <tbody>
             <tr>
-            <td data-label="id">1</td>
-            <td data-label="name">John</td>
-            <td data-label="time">12:00:00</td>
+            <td>1</td>
+            <td>John</td>
+            <td>12:00:00</td>
             </tr>
             <tr>
-            <td data-label="id">2</td>
-            <td data-label="name">Mary</td>
-            <td data-label="time">12:00:01</td>
+            <td>2</td>
+            <td>Mary</td>
+            <td>12:00:01</td>
             </tr>
             </tbody>
             </table>
@@ -856,9 +868,9 @@ final class DataColumnFilterTest extends TestCase
             HTML,
             GridView::widget()
                 ->columns(
-                    DataColumn::create()->attribute('id'),
-                    DataColumn::create()->attribute('name'),
-                    DataColumn::create()->attribute('time')->filterAttribute('time')->filterType('time'),
+                    new DataColumn('id'),
+                    new DataColumn('name'),
+                    new DataColumn('time', filterProperty: 'time', filterType: 'time'),
                 )
                 ->filterModelName('searchModel')
                 ->filterRowAttributes(['class' => 'text-center'])
@@ -886,22 +898,22 @@ final class DataColumnFilterTest extends TestCase
             <th>Name</th>
             <th>Url</th>
             </tr>
-            <tr class="text-center filters">
+            <tr class="text-center">
             <td>&nbsp;</td>
             <td>&nbsp;</td>
-            <th><input type="url" name="searchModel[url]"></th>
+            <td><input type="url" name="searchModel[url]"></td>
             </tr>
             </thead>
             <tbody>
             <tr>
-            <td data-label="id">1</td>
-            <td data-label="name">John</td>
-            <td data-label="url">&nbsp;</td>
+            <td>1</td>
+            <td>John</td>
+            <td>&nbsp;</td>
             </tr>
             <tr>
-            <td data-label="id">2</td>
-            <td data-label="name">Mary</td>
-            <td data-label="url">&nbsp;</td>
+            <td>2</td>
+            <td>Mary</td>
+            <td>&nbsp;</td>
             </tr>
             </tbody>
             </table>
@@ -910,9 +922,9 @@ final class DataColumnFilterTest extends TestCase
             HTML,
             GridView::widget()
                 ->columns(
-                    DataColumn::create()->attribute('id'),
-                    DataColumn::create()->attribute('name'),
-                    DataColumn::create()->attribute('url')->filterAttribute('url')->filterType('url'),
+                    new DataColumn('id'),
+                    new DataColumn('name'),
+                    new DataColumn('url', filterProperty: 'url', filterType: 'url'),
                 )
                 ->filterModelName('searchModel')
                 ->filterRowAttributes(['class' => 'text-center'])
@@ -940,22 +952,22 @@ final class DataColumnFilterTest extends TestCase
             <th>Name</th>
             <th>Week</th>
             </tr>
-            <tr class="text-center filters">
+            <tr class="text-center">
             <td>&nbsp;</td>
             <td>&nbsp;</td>
-            <th><input type="week" name="searchModel[week]"></th>
+            <td><input type="week" name="searchModel[week]"></td>
             </tr>
             </thead>
             <tbody>
             <tr>
-            <td data-label="id">1</td>
-            <td data-label="name">John</td>
-            <td data-label="week">2000-W01</td>
+            <td>1</td>
+            <td>John</td>
+            <td>2000-W01</td>
             </tr>
             <tr>
-            <td data-label="id">2</td>
-            <td data-label="name">Mary</td>
-            <td data-label="week">2000-W02</td>
+            <td>2</td>
+            <td>Mary</td>
+            <td>2000-W02</td>
             </tr>
             </tbody>
             </table>
@@ -964,9 +976,9 @@ final class DataColumnFilterTest extends TestCase
             HTML,
             GridView::widget()
                 ->columns(
-                    DataColumn::create()->attribute('id'),
-                    DataColumn::create()->attribute('name'),
-                    DataColumn::create()->attribute('week')->filterAttribute('week')->filterType('week'),
+                    new DataColumn('id'),
+                    new DataColumn('name'),
+                    new DataColumn('week', filterProperty: 'week', filterType: 'week'),
                 )
                 ->filterModelName('searchModel')
                 ->filterRowAttributes(['class' => 'text-center'])
@@ -993,19 +1005,19 @@ final class DataColumnFilterTest extends TestCase
             <th>Id</th>
             <th>Name</th>
             </tr>
-            <tr class="filters">
-            <th class="text-center" style="width:60px"><input type="text" name="searchModel[id]" value="0" maxlength="5"></th>
-            <th class="text-center" style="width:60px"><input type="text" name="searchModel[name]" maxlength="5"></th>
+            <tr>
+            <td class="text-center" style="width:60px"><input type="text" name="searchModel[id]" value="0" maxlength="5"></td>
+            <td class="text-center" style="width:60px"><input type="text" name="searchModel[name]" maxlength="5"></td>
             </tr>
             </thead>
             <tbody>
             <tr>
-            <td data-label="id">1</td>
-            <td data-label="name">John</td>
+            <td>1</td>
+            <td>John</td>
             </tr>
             <tr>
-            <td data-label="id">2</td>
-            <td data-label="name">Mary</td>
+            <td>2</td>
+            <td>Mary</td>
             </tr>
             </tbody>
             </table>
@@ -1014,18 +1026,20 @@ final class DataColumnFilterTest extends TestCase
             HTML,
             GridView::widget()
                 ->columns(
-                    DataColumn::create()
-                        ->attribute('id')
-                        ->filterAttribute('id')
-                        ->filterValueDefault(0)
-                        ->filterAttributes(['class' => 'text-center', 'style' => 'width:60px'])
-                        ->filterInputAttributes(['maxlength' => '5']),
-                    DataColumn::create()
-                        ->attribute('name')
-                        ->filterAttribute('name')
-                        ->filterValueDefault('')
-                        ->filterAttributes(['class' => 'text-center', 'style' => 'width:60px'])
-                        ->filterInputAttributes(['maxlength' => '5']),
+                    new DataColumn(
+                        property: 'id',
+                        filterProperty: 'id',
+                        filterValueDefault: 0,
+                        filterAttributes: ['class' => 'text-center', 'style' => 'width:60px'],
+                        filterInputAttributes: ['maxlength' => '5'],
+                    ),
+                    new DataColumn(
+                        property: 'name',
+                        filterProperty: 'name',
+                        filterValueDefault: '',
+                        filterAttributes: ['class' => 'text-center', 'style' => 'width:60px'],
+                        filterInputAttributes: ['maxlength' => '5'],
+                    ),
                 )
                 ->filterModelName('searchModel')
                 ->id('w1-grid')

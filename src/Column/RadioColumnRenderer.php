@@ -5,64 +5,31 @@ declare(strict_types=1);
 namespace Yiisoft\Yii\DataView\Column;
 
 use InvalidArgumentException;
+use Yiisoft\Html\Html;
 use Yiisoft\Yii\DataView\Column\Base\Cell;
-use Yiisoft\Yii\DataView\Column\Base\GlobalContext;
 use Yiisoft\Yii\DataView\Column\Base\DataContext;
+use Yiisoft\Yii\DataView\Column\Base\GlobalContext;
 
-/**
- * `SerialColumn` displays a column of row numbers (1-based).
- */
-final class SerialColumn implements ColumnInterface, ColumnRendererInterface
+final class RadioColumnRenderer implements ColumnRendererInterface
 {
-    public function __construct(
-        private ?string $header = null,
-        private ?string $footer = null,
-        private array $columnAttributes = [],
-        private array $bodyAttributes = [],
-        private bool $visible = true,
-    ) {
-    }
-
-    public function getHeader(): ?string
-    {
-        return $this->header;
-    }
-
-    public function getFooter(): ?string
-    {
-        return $this->footer;
-    }
-
-    public function getColumnAttributes(): array
-    {
-        return $this->columnAttributes;
-    }
-
-    public function getBodyAttributes(): array
-    {
-        return $this->bodyAttributes;
-    }
-
-    public function isVisible(): bool
-    {
-        return $this->visible;
-    }
-
-    public function getRenderer(): self
-    {
-        return $this;
-    }
-
     public function renderColumn(ColumnInterface $column, Cell $cell, GlobalContext $context): Cell
     {
         $this->checkColumn($column);
         return $cell->addAttributes($column->getColumnAttributes());
     }
 
-    public function renderHeader(ColumnInterface $column, Cell $cell, GlobalContext $context): Cell
+    public function renderHeader(ColumnInterface $column, Cell $cell, GlobalContext $context): ?Cell
     {
         $this->checkColumn($column);
-        return $cell->content($column->getHeader() ?? '#');
+
+        $header = $column->getHeader();
+        if ($header === null) {
+            return null;
+        }
+
+        return $cell
+            ->addAttributes($column->getHeaderAttributes())
+            ->content($header);
     }
 
     public function renderFilter(ColumnInterface $column, Cell $cell, GlobalContext $context): ?Cell
@@ -74,9 +41,30 @@ final class SerialColumn implements ColumnInterface, ColumnRendererInterface
     {
         $this->checkColumn($column);
 
+        $inputAttributes = $column->getInputAttributes();
+        $name = null;
+        $value = null;
+
+        if (!array_key_exists('name', $inputAttributes)) {
+            $name = 'radio-selection';
+        }
+
+        if (!array_key_exists('value', $inputAttributes)) {
+            $key = $context->getKey();
+            $value = is_array($key)
+                ? json_encode($key, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE)
+                : (string)$key;
+        }
+
+        $input = Html::radio($name, $value, $inputAttributes);
+
+        $contentClosure = $column->getContent();
+        $content = $contentClosure === null ? $input : $contentClosure($input, $context);
+
         return $cell
             ->addAttributes($column->getBodyAttributes())
-            ->content((string)($context->getIndex() + 1));
+            ->content($content)
+            ->encode(false);
     }
 
     public function renderFooter(ColumnInterface $column, Cell $cell, GlobalContext $context): Cell
@@ -86,15 +74,15 @@ final class SerialColumn implements ColumnInterface, ColumnRendererInterface
     }
 
     /**
-     * @psalm-assert self $column
+     * @psalm-assert RadioColumn $column
      */
     private function checkColumn(ColumnInterface $column): void
     {
-        if (!$column instanceof self) {
+        if (!$column instanceof RadioColumn) {
             throw new InvalidArgumentException(
                 sprintf(
                     'Expected "%s", but "%s" given.',
-                    self::class,
+                    RadioColumn::class,
                     $column::class
                 )
             );

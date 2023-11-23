@@ -22,7 +22,7 @@ abstract class AbstractColumn
     private array $filterAttributes = [];
     private string $footer = '';
     private array $footerAttributes = [];
-    private string $label = '';
+    private ?string $label = null;
     private array $labelAttributes = [];
     protected bool $visible = true;
 
@@ -296,7 +296,7 @@ abstract class AbstractColumn
         return $this->emptyCell;
     }
 
-    protected function getLabel(): string
+    protected function getLabel(): ?string
     {
         return $this->label;
     }

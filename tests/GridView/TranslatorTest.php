@@ -47,12 +47,6 @@ final class TranslatorTest extends TestCase
         WidgetFactory::initialize($container, []);
     }
 
-    /**
-     * @throws InvalidConfigException
-     * @throws \Yiisoft\Factory\NotFoundException
-     * @throws NotInstantiableException
-     * @throws CircularReferenceException
-     */
     public function testEmptyTextTranslatorWithLocaleDefault(): void
     {
         Assert::equalsWithoutLE(
@@ -77,10 +71,10 @@ final class TranslatorTest extends TestCase
             HTML,
             GridView::widget()
                 ->columns(
-                    SerialColumn::create(),
-                    DataColumn::create()->attribute('id'),
-                    DataColumn::create()->attribute('name'),
-                    DataColumn::create()->attribute('age'),
+                    new SerialColumn(),
+                    new DataColumn('id'),
+                    new DataColumn('name'),
+                    new DataColumn('age'),
                 )
                 ->id('w1-grid')
                 ->dataReader($this->createOffsetPaginator([], 10))
@@ -88,12 +82,6 @@ final class TranslatorTest extends TestCase
         );
     }
 
-    /**
-     * @throws InvalidConfigException
-     * @throws \Yiisoft\Factory\NotFoundException
-     * @throws NotInstantiableException
-     * @throws CircularReferenceException
-     */
     public function testEmptyTextTranslatorWithLocaleSpanish(): void
     {
         $this->translator->setLocale('es');
@@ -120,10 +108,10 @@ final class TranslatorTest extends TestCase
             HTML,
             GridView::widget()
                 ->columns(
-                    SerialColumn::create(),
-                    DataColumn::create()->attribute('id'),
-                    DataColumn::create()->attribute('name'),
-                    DataColumn::create()->attribute('age'),
+                    new SerialColumn(),
+                    new DataColumn('id'),
+                    new DataColumn('name'),
+                    new DataColumn('age'),
                 )
                 ->id('w1-grid')
                 ->dataReader($this->createOffsetPaginator([], 10))
@@ -131,12 +119,6 @@ final class TranslatorTest extends TestCase
         );
     }
 
-    /**
-     * @throws InvalidConfigException
-     * @throws \Yiisoft\Factory\NotFoundException
-     * @throws NotInstantiableException
-     * @throws CircularReferenceException
-     */
     public function testEmptyTextTranslatorWithLocaleRussian(): void
     {
         $this->translator->setLocale('ru');
@@ -163,10 +145,10 @@ final class TranslatorTest extends TestCase
             HTML,
             GridView::widget()
                 ->columns(
-                    SerialColumn::create(),
-                    DataColumn::create()->attribute('id'),
-                    DataColumn::create()->attribute('name'),
-                    DataColumn::create()->attribute('age'),
+                    new SerialColumn(),
+                    new DataColumn('id'),
+                    new DataColumn('name'),
+                    new DataColumn('age'),
                 )
                 ->id('w1-grid')
                 ->dataReader($this->createOffsetPaginator([], 10))
@@ -196,16 +178,16 @@ final class TranslatorTest extends TestCase
             </thead>
             <tbody>
             <tr>
-            <td data-label="#">1</td>
-            <td data-label="id">1</td>
-            <td data-label="name">John</td>
-            <td data-label="age">20</td>
+            <td>1</td>
+            <td>1</td>
+            <td>John</td>
+            <td>20</td>
             </tr>
             <tr>
-            <td data-label="#">2</td>
-            <td data-label="id">2</td>
-            <td data-label="name">Mary</td>
-            <td data-label="age">21</td>
+            <td>2</td>
+            <td>2</td>
+            <td>Mary</td>
+            <td>21</td>
             </tr>
             </tbody>
             </table>
@@ -214,10 +196,10 @@ final class TranslatorTest extends TestCase
             HTML,
             GridView::widget()
                 ->columns(
-                    SerialColumn::create(),
-                    DataColumn::create()->attribute('id'),
-                    DataColumn::create()->attribute('name'),
-                    DataColumn::create()->attribute('age'),
+                    new SerialColumn(),
+                    new DataColumn('id'),
+                    new DataColumn('name'),
+                    new DataColumn('age'),
                 )
                 ->id('w1-grid')
                 ->dataReader($this->createOffsetPaginator($this->data, 10))
@@ -249,16 +231,16 @@ final class TranslatorTest extends TestCase
             </thead>
             <tbody>
             <tr>
-            <td data-label="#">1</td>
-            <td data-label="id">1</td>
-            <td data-label="name">John</td>
-            <td data-label="age">20</td>
+            <td>1</td>
+            <td>1</td>
+            <td>John</td>
+            <td>20</td>
             </tr>
             <tr>
-            <td data-label="#">2</td>
-            <td data-label="id">2</td>
-            <td data-label="name">Mary</td>
-            <td data-label="age">21</td>
+            <td>2</td>
+            <td>2</td>
+            <td>Mary</td>
+            <td>21</td>
             </tr>
             </tbody>
             </table>
@@ -267,10 +249,10 @@ final class TranslatorTest extends TestCase
             HTML,
             GridView::widget()
                 ->columns(
-                    SerialColumn::create(),
-                    DataColumn::create()->attribute('id'),
-                    DataColumn::create()->attribute('name'),
-                    DataColumn::create()->attribute('age'),
+                    new SerialColumn(),
+                    new DataColumn('id'),
+                    new DataColumn('name'),
+                    new DataColumn('age'),
                 )
                 ->id('w1-grid')
                 ->dataReader($this->createOffsetPaginator($this->data, 10))
@@ -302,16 +284,16 @@ final class TranslatorTest extends TestCase
             </thead>
             <tbody>
             <tr>
-            <td data-label="#">1</td>
-            <td data-label="id">1</td>
-            <td data-label="name">John</td>
-            <td data-label="age">20</td>
+            <td>1</td>
+            <td>1</td>
+            <td>John</td>
+            <td>20</td>
             </tr>
             <tr>
-            <td data-label="#">2</td>
-            <td data-label="id">2</td>
-            <td data-label="name">Mary</td>
-            <td data-label="age">21</td>
+            <td>2</td>
+            <td>2</td>
+            <td>Mary</td>
+            <td>21</td>
             </tr>
             </tbody>
             </table>
@@ -320,10 +302,10 @@ final class TranslatorTest extends TestCase
             HTML,
             GridView::widget()
                 ->columns(
-                    SerialColumn::create(),
-                    DataColumn::create()->attribute('id'),
-                    DataColumn::create()->attribute('name'),
-                    DataColumn::create()->attribute('age'),
+                    new SerialColumn(),
+                    new DataColumn('id'),
+                    new DataColumn('name'),
+                    new DataColumn('age'),
                 )
                 ->id('w1-grid')
                 ->dataReader($this->createOffsetPaginator($this->data, 10))

@@ -9,6 +9,7 @@ use Yiisoft\Definitions\Exception\CircularReferenceException;
 use Yiisoft\Definitions\Exception\InvalidConfigException;
 use Yiisoft\Definitions\Exception\NotInstantiableException;
 use Yiisoft\Factory\NotFoundException;
+use Yiisoft\Html\Html;
 use Yiisoft\Yii\DataView\Column\DataColumn;
 use Yiisoft\Yii\DataView\Column\SerialColumn;
 use Yiisoft\Yii\DataView\GridView;
@@ -24,12 +25,6 @@ final class BaseTest extends TestCase
         ['id' => 2, 'name' => 'Mary', 'age' => 21],
     ];
 
-    /**
-     * @throws InvalidConfigException
-     * @throws NotFoundException
-     * @throws NotInstantiableException
-     * @throws CircularReferenceException
-     */
     public function testAfterItemBeforeItem(): void
     {
         Assert::equalsWithoutLE(
@@ -45,35 +40,35 @@ final class BaseTest extends TestCase
             </tr>
             </thead>
             <tbody>
-            <div class="testMe">
+            <tr class="before"></tr>
             <tr>
-            <td data-label="#">1</td>
-            <td data-label="id">1</td>
-            <td data-label="name">John</td>
-            <td data-label="age">20</td>
+            <td>1</td>
+            <td>1</td>
+            <td>John</td>
+            <td>20</td>
             </tr>
-            </div>
-            <div class="testMe">
+            <tr class="after"></tr>
+            <tr class="before"></tr>
             <tr>
-            <td data-label="#">2</td>
-            <td data-label="id">2</td>
-            <td data-label="name">Mary</td>
-            <td data-label="age">21</td>
+            <td>2</td>
+            <td>2</td>
+            <td>Mary</td>
+            <td>21</td>
             </tr>
-            </div>
+            <tr class="after"></tr>
             </tbody>
             </table>
             <div>Page <b>1</b> of <b>1</b></div>
             </div>
             HTML,
             GridView::widget()
-                ->afterRow(static fn () => '</div>')
-                ->beforeRow(static fn () => '<div class="testMe">')
+                ->afterRow(static fn() => Html::tr(['class' => 'after']))
+                ->beforeRow(static fn() => Html::tr(['class' => 'before']))
                 ->columns(
-                    SerialColumn::create(),
-                    DataColumn::create()->attribute('id'),
-                    DataColumn::create()->attribute('name'),
-                    DataColumn::create()->attribute('age'),
+                    new SerialColumn(),
+                    new DataColumn(property: 'id'),
+                    new DataColumn(property: 'name'),
+                    new DataColumn(property: 'age'),
                 )
                 ->id('w1-grid')
                 ->dataReader($this->createOffsetPaginator($this->data, 10))
@@ -81,12 +76,6 @@ final class BaseTest extends TestCase
         );
     }
 
-    /**
-     * @throws InvalidConfigException
-     * @throws NotFoundException
-     * @throws NotInstantiableException
-     * @throws CircularReferenceException
-     */
     public function testColumnGroupEnabled(): void
     {
         Assert::equalsWithoutLE(
@@ -107,14 +96,14 @@ final class BaseTest extends TestCase
             </thead>
             <tbody>
             <tr>
-            <td data-label="#">1</td>
-            <td data-label="id">1</td>
-            <td data-label="name">John</td>
+            <td>1</td>
+            <td>1</td>
+            <td>John</td>
             </tr>
             <tr>
-            <td data-label="#">2</td>
-            <td data-label="id">2</td>
-            <td data-label="name">Mary</td>
+            <td>2</td>
+            <td>2</td>
+            <td>Mary</td>
             </tr>
             </tbody>
             </table>
@@ -123,9 +112,9 @@ final class BaseTest extends TestCase
             HTML,
             GridView::widget()
                 ->columns(
-                    SerialColumn::create()->attributes(['class' => 'text-primary']),
-                    DataColumn::create()->attribute('id')->attributes(['class' => 'bg-primary']),
-                    DataColumn::create()->attribute('name')->attributes(['class' => 'bg-success']),
+                    new SerialColumn(columnAttributes: ['class' => 'text-primary']),
+                    new DataColumn(property: 'id', columnAttributes: ['class' => 'bg-primary']),
+                    new DataColumn(property: 'name', columnAttributes: ['class' => 'bg-success']),
                 )
                 ->columnsGroupEnabled(true)
                 ->id('w1-grid')
@@ -134,12 +123,6 @@ final class BaseTest extends TestCase
         );
     }
 
-    /**
-     * @throws InvalidConfigException
-     * @throws NotFoundException
-     * @throws NotInstantiableException
-     * @throws CircularReferenceException
-     */
     public function testColumnGroupEnabledEmpty(): void
     {
         Assert::equalsWithoutLE(
@@ -162,16 +145,16 @@ final class BaseTest extends TestCase
             </thead>
             <tbody>
             <tr>
-            <td data-label="#">1</td>
-            <td data-label="id">1</td>
-            <td data-label="name">John</td>
-            <td data-label="age">20</td>
+            <td>1</td>
+            <td>1</td>
+            <td>John</td>
+            <td>20</td>
             </tr>
             <tr>
-            <td data-label="#">2</td>
-            <td data-label="id">2</td>
-            <td data-label="name">Mary</td>
-            <td data-label="age">21</td>
+            <td>2</td>
+            <td>2</td>
+            <td>Mary</td>
+            <td>21</td>
             </tr>
             </tbody>
             </table>
@@ -180,10 +163,10 @@ final class BaseTest extends TestCase
             HTML,
             GridView::widget()
                 ->columns(
-                    SerialColumn::create(),
-                    DataColumn::create()->attribute('id'),
-                    DataColumn::create()->attribute('name'),
-                    DataColumn::create()->attribute('age'),
+                    new SerialColumn(),
+                    new DataColumn(property: 'id'),
+                    new DataColumn(property: 'name'),
+                    new DataColumn(property: 'age'),
                 )
                 ->columnsGroupEnabled(true)
                 ->id('w1-grid')
@@ -192,12 +175,6 @@ final class BaseTest extends TestCase
         );
     }
 
-    /**
-     * @throws InvalidConfigException
-     * @throws NotFoundException
-     * @throws NotInstantiableException
-     * @throws CircularReferenceException
-     */
     public function testColumnGuess(): void
     {
         Assert::equalsWithoutLE(
@@ -214,20 +191,20 @@ final class BaseTest extends TestCase
             </thead>
             <tbody>
             <tr>
-            <td data-label="id">1</td>
-            <td data-label="name">John</td>
-            <td data-label="age">20</td>
-            <td data-label="actions">
+            <td>1</td>
+            <td>John</td>
+            <td>20</td>
+            <td>
             <a name="view" href="/admin/manage/view?id=1" title="View" role="button" style="text-decoration: none!important;"><span>🔎</span></a>
             <a name="update" href="/admin/manage/update?id=1" title="Update" role="button" style="text-decoration: none!important;"><span>✎</span></a>
             <a name="delete" href="/admin/manage/delete?id=1" title="Delete" role="button" style="text-decoration: none!important;"><span>❌</span></a>
             </td>
             </tr>
             <tr>
-            <td data-label="id">2</td>
-            <td data-label="name">Mary</td>
-            <td data-label="age">21</td>
-            <td data-label="actions">
+            <td>2</td>
+            <td>Mary</td>
+            <td>21</td>
+            <td>
             <a name="view" href="/admin/manage/view?id=2" title="View" role="button" style="text-decoration: none!important;"><span>🔎</span></a>
             <a name="update" href="/admin/manage/update?id=2" title="Update" role="button" style="text-decoration: none!important;"><span>✎</span></a>
             <a name="delete" href="/admin/manage/delete?id=2" title="Delete" role="button" style="text-decoration: none!important;"><span>❌</span></a>
@@ -245,12 +222,6 @@ final class BaseTest extends TestCase
         );
     }
 
-    /**
-     * @throws InvalidConfigException
-     * @throws NotFoundException
-     * @throws NotInstantiableException
-     * @throws CircularReferenceException
-     */
     public function testEmptyCell(): void
     {
         Assert::equalsWithoutLE(
@@ -264,7 +235,7 @@ final class BaseTest extends TestCase
             </thead>
             <tbody>
             <tr>
-            <td data-label="id">Empty cell</td>
+            <td>Empty cell</td>
             </tr>
             </tbody>
             </table>
@@ -272,7 +243,7 @@ final class BaseTest extends TestCase
             </div>
             HTML,
             GridView::widget()
-                ->columns(DataColumn::create()->attribute('id'))
+                ->columns(new DataColumn('id'))
                 ->emptyCell('Empty cell')
                 ->id('w1-grid')
                 ->dataReader($this->createOffsetPaginator([['id' => '']], 10))
@@ -280,12 +251,6 @@ final class BaseTest extends TestCase
         );
     }
 
-    /**
-     * @throws InvalidConfigException
-     * @throws NotFoundException
-     * @throws NotInstantiableException
-     * @throws CircularReferenceException
-     */
     public function testEmptyText(): void
     {
         Assert::equalsWithoutLE(
@@ -310,10 +275,10 @@ final class BaseTest extends TestCase
             HTML,
             GridView::widget()
                 ->columns(
-                    SerialColumn::create(),
-                    DataColumn::create()->attribute('id'),
-                    DataColumn::create()->attribute('name'),
-                    DataColumn::create()->attribute('age'),
+                    new SerialColumn(),
+                    new DataColumn('id'),
+                    new DataColumn('name'),
+                    new DataColumn('age'),
                 )
                 ->emptyText('Not found.')
                 ->id('w1-grid')
@@ -343,19 +308,21 @@ final class BaseTest extends TestCase
             </thead>
             <tfoot>
             <tr class="text-primary">
-            <td>Total:</td><td>2</td><td>2</td>
+            <td>Total:</td>
+            <td>2</td>
+            <td>2</td>
             </tr>
             </tfoot>
             <tbody>
             <tr>
-            <td data-label="#">1</td>
-            <td data-label="id">1</td>
-            <td data-label="name">John</td>
+            <td>1</td>
+            <td>1</td>
+            <td>John</td>
             </tr>
             <tr>
-            <td data-label="#">2</td>
-            <td data-label="id">2</td>
-            <td data-label="name">Mary</td>
+            <td>2</td>
+            <td>2</td>
+            <td>Mary</td>
             </tr>
             </tbody>
             </table>
@@ -364,9 +331,9 @@ final class BaseTest extends TestCase
             HTML,
             GridView::widget()
                 ->columns(
-                    SerialColumn::create()->footer('Total:'),
-                    DataColumn::create()->attribute('id')->footer('2'),
-                    DataColumn::create()->attribute('name')->footer('2'),
+                    new SerialColumn(footer: 'Total:'),
+                    new DataColumn('id', footer: '2'),
+                    new DataColumn('name', footer: '2'),
                 )
                 ->footerEnabled(true)
                 ->footerRowAttributes(['class' => 'text-primary'])
@@ -399,16 +366,16 @@ final class BaseTest extends TestCase
             </thead>
             <tbody>
             <tr>
-            <td data-label="#">1</td>
-            <td data-label="id">1</td>
-            <td data-label="name">John</td>
-            <td data-label="age">20</td>
+            <td>1</td>
+            <td>1</td>
+            <td>John</td>
+            <td>20</td>
             </tr>
             <tr>
-            <td data-label="#">2</td>
-            <td data-label="id">2</td>
-            <td data-label="name">Mary</td>
-            <td data-label="age">21</td>
+            <td>2</td>
+            <td>2</td>
+            <td>Mary</td>
+            <td>21</td>
             </tr>
             </tbody>
             </table>
@@ -417,10 +384,10 @@ final class BaseTest extends TestCase
             HTML,
             GridView::widget()
                 ->columns(
-                    SerialColumn::create(),
-                    DataColumn::create()->attribute('id'),
-                    DataColumn::create()->attribute('name'),
-                    DataColumn::create()->attribute('age'),
+                    new SerialColumn(),
+                    new DataColumn('id'),
+                    new DataColumn('name'),
+                    new DataColumn('age'),
                 )
                 ->header('List of users')
                 ->id('w1-grid')
@@ -452,16 +419,16 @@ final class BaseTest extends TestCase
             </thead>
             <tbody>
             <tr>
-            <td data-label="#">1</td>
-            <td data-label="id">1</td>
-            <td data-label="name">John</td>
-            <td data-label="age">20</td>
+            <td>1</td>
+            <td>1</td>
+            <td>John</td>
+            <td>20</td>
             </tr>
             <tr>
-            <td data-label="#">2</td>
-            <td data-label="id">2</td>
-            <td data-label="name">Mary</td>
-            <td data-label="age">21</td>
+            <td>2</td>
+            <td>2</td>
+            <td>Mary</td>
+            <td>21</td>
             </tr>
             </tbody>
             </table>
@@ -470,10 +437,10 @@ final class BaseTest extends TestCase
             HTML,
             GridView::widget()
                 ->columns(
-                    SerialColumn::create(),
-                    DataColumn::create()->attribute('id'),
-                    DataColumn::create()->attribute('name'),
-                    DataColumn::create()->attribute('age'),
+                    new SerialColumn(),
+                    new DataColumn('id'),
+                    new DataColumn('name'),
+                    new DataColumn('age'),
                 )
                 ->header('List of users')
                 ->id('w1-grid')
@@ -506,16 +473,16 @@ final class BaseTest extends TestCase
             </thead>
             <tbody>
             <tr>
-            <td data-label="#">1</td>
-            <td data-label="id">1</td>
-            <td data-label="name">John</td>
-            <td data-label="age">20</td>
+            <td>1</td>
+            <td>1</td>
+            <td>John</td>
+            <td>20</td>
             </tr>
             <tr>
-            <td data-label="#">2</td>
-            <td data-label="id">2</td>
-            <td data-label="name">Mary</td>
-            <td data-label="age">21</td>
+            <td>2</td>
+            <td>2</td>
+            <td>Mary</td>
+            <td>21</td>
             </tr>
             </tbody>
             </table>
@@ -524,10 +491,10 @@ final class BaseTest extends TestCase
             HTML,
             GridView::widget()
                 ->columns(
-                    SerialColumn::create(),
-                    DataColumn::create()->attribute('id'),
-                    DataColumn::create()->attribute('name'),
-                    DataColumn::create()->attribute('age'),
+                    new SerialColumn(),
+                    new DataColumn('id'),
+                    new DataColumn('name'),
+                    new DataColumn('age'),
                 )
                 ->headerRowAttributes(['class' => 'text-primary'])
                 ->id('w1-grid')
@@ -550,16 +517,16 @@ final class BaseTest extends TestCase
             <table>
             <tbody>
             <tr>
-            <td data-label="#">1</td>
-            <td data-label="id">1</td>
-            <td data-label="name">John</td>
-            <td data-label="age">20</td>
+            <td>1</td>
+            <td>1</td>
+            <td>John</td>
+            <td>20</td>
             </tr>
             <tr>
-            <td data-label="#">2</td>
-            <td data-label="id">2</td>
-            <td data-label="name">Mary</td>
-            <td data-label="age">21</td>
+            <td>2</td>
+            <td>2</td>
+            <td>Mary</td>
+            <td>21</td>
             </tr>
             </tbody>
             </table>
@@ -568,10 +535,10 @@ final class BaseTest extends TestCase
             HTML,
             GridView::widget()
                 ->columns(
-                    SerialColumn::create(),
-                    DataColumn::create()->attribute('id'),
-                    DataColumn::create()->attribute('name'),
-                    DataColumn::create()->attribute('age'),
+                    new SerialColumn(),
+                    new DataColumn('id'),
+                    new DataColumn('name'),
+                    new DataColumn('age'),
                 )
                 ->headerTableEnabled(false)
                 ->id('w1-grid')
@@ -610,10 +577,10 @@ final class BaseTest extends TestCase
             HTML,
             GridView::widget()
                 ->columns(
-                    SerialColumn::create(),
-                    DataColumn::create()->attribute('id'),
-                    DataColumn::create()->attribute('name'),
-                    DataColumn::create()->attribute('age'),
+                    new SerialColumn(),
+                    new DataColumn('id'),
+                    new DataColumn('name'),
+                    new DataColumn('age'),
                 )
                 ->id('w1-grid')
                 ->dataReader($this->createOffsetPaginator([], 10))
@@ -643,16 +610,16 @@ final class BaseTest extends TestCase
             </thead>
             <tbody>
             <tr class="text-primary">
-            <td data-label="#">1</td>
-            <td data-label="id">1</td>
-            <td data-label="name">John</td>
-            <td data-label="age">20</td>
+            <td>1</td>
+            <td>1</td>
+            <td>John</td>
+            <td>20</td>
             </tr>
             <tr class="text-primary">
-            <td data-label="#">2</td>
-            <td data-label="id">2</td>
-            <td data-label="name">Mary</td>
-            <td data-label="age">21</td>
+            <td>2</td>
+            <td>2</td>
+            <td>Mary</td>
+            <td>21</td>
             </tr>
             </tbody>
             </table>
@@ -661,10 +628,10 @@ final class BaseTest extends TestCase
             HTML,
             GridView::widget()
                 ->columns(
-                    SerialColumn::create(),
-                    DataColumn::create()->attribute('id'),
-                    DataColumn::create()->attribute('name'),
-                    DataColumn::create()->attribute('age'),
+                    new SerialColumn(),
+                    new DataColumn('id'),
+                    new DataColumn('name'),
+                    new DataColumn('age'),
                 )
                 ->id('w1-grid')
                 ->dataReader($this->createOffsetPaginator($this->data, 10))
@@ -686,16 +653,16 @@ final class BaseTest extends TestCase
             </thead>
             <tbody>
             <tr class="text-primary">
-            <td data-label="#">1</td>
-            <td data-label="id">1</td>
-            <td data-label="name">John</td>
-            <td data-label="age">20</td>
+            <td>1</td>
+            <td>1</td>
+            <td>John</td>
+            <td>20</td>
             </tr>
             <tr class="text-primary">
-            <td data-label="#">2</td>
-            <td data-label="id">2</td>
-            <td data-label="name">Mary</td>
-            <td data-label="age">21</td>
+            <td>2</td>
+            <td>2</td>
+            <td>Mary</td>
+            <td>21</td>
             </tr>
             </tbody>
             </table>
@@ -704,10 +671,10 @@ final class BaseTest extends TestCase
             HTML,
             GridView::widget()
                 ->columns(
-                    SerialColumn::create(),
-                    DataColumn::create()->attribute('id'),
-                    DataColumn::create()->attribute('name'),
-                    DataColumn::create()->attribute('age'),
+                    new SerialColumn(),
+                    new DataColumn('id'),
+                    new DataColumn('name'),
+                    new DataColumn('age'),
                 )
                 ->id('w1-grid')
                 ->dataReader($this->createOffsetPaginator($this->data, 10))
@@ -738,16 +705,16 @@ final class BaseTest extends TestCase
             </thead>
             <tbody>
             <tr>
-            <td data-label="#">1</td>
-            <td data-label="id">1</td>
-            <td data-label="name">John</td>
-            <td data-label="age">20</td>
+            <td>1</td>
+            <td>1</td>
+            <td>John</td>
+            <td>20</td>
             </tr>
             <tr>
-            <td data-label="#">2</td>
-            <td data-label="id">2</td>
-            <td data-label="name">Mary</td>
-            <td data-label="age">21</td>
+            <td>2</td>
+            <td>2</td>
+            <td>Mary</td>
+            <td>21</td>
             </tr>
             </tbody>
             </table>
@@ -756,10 +723,10 @@ final class BaseTest extends TestCase
             HTML,
             GridView::widget()
                 ->columns(
-                    SerialColumn::create(),
-                    DataColumn::create()->attribute('id'),
-                    DataColumn::create()->attribute('name'),
-                    DataColumn::create()->attribute('age'),
+                    new SerialColumn(),
+                    new DataColumn('id'),
+                    new DataColumn('name'),
+                    new DataColumn('age'),
                 )
                 ->id('w1-grid')
                 ->dataReader($this->createOffsetPaginator($this->data, 10))

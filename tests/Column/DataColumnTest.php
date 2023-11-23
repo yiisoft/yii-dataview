@@ -9,6 +9,7 @@ use Yiisoft\Definitions\Exception\CircularReferenceException;
 use Yiisoft\Definitions\Exception\InvalidConfigException;
 use Yiisoft\Definitions\Exception\NotInstantiableException;
 use Yiisoft\Factory\NotFoundException;
+use Yiisoft\Yii\DataView\Column\Base\DataContext;
 use Yiisoft\Yii\DataView\Column\DataColumn;
 use Yiisoft\Yii\DataView\GridView;
 use Yiisoft\Yii\DataView\Tests\Support\Assert;
@@ -43,12 +44,12 @@ final class DataColumnTest extends TestCase
             </thead>
             <tbody>
             <tr>
-            <td data-label="id">1</td>
-            <td data-label="name">John</td>
+            <td>1</td>
+            <td>John</td>
             </tr>
             <tr>
-            <td data-label="id">2</td>
-            <td data-label="name">Mary</td>
+            <td>2</td>
+            <td>Mary</td>
             </tr>
             </tbody>
             </table>
@@ -57,12 +58,14 @@ final class DataColumnTest extends TestCase
             HTML,
             GridView::widget()
                 ->columns(
-                    DataColumn::create()
-                        ->attribute('id')
-                        ->content(static fn (array $data): int => (int) $data['id']),
-                    DataColumn::create()
-                        ->attribute('name')
-                        ->content(static fn (array $data): string => (string) $data['name']),
+                    new DataColumn(
+                        'id',
+                        content: static fn(DataContext $context): int => (int)$context->getData()['id'],
+                    ),
+                    new DataColumn(
+                        'name',
+                        content: static fn(DataContext $context): string => (string)$context->getData()['name'],
+                    ),
                 )
                 ->id('w1-grid')
                 ->dataReader($this->createOffsetPaginator($this->data, 10))
@@ -90,12 +93,12 @@ final class DataColumnTest extends TestCase
             </thead>
             <tbody>
             <tr>
-            <td class="test.class" data-label="id">1</td>
-            <td class="test.class" data-label="name">John</td>
+            <td class="test.class">1</td>
+            <td class="test.class">John</td>
             </tr>
             <tr>
-            <td class="test.class" data-label="id">2</td>
-            <td class="test.class" data-label="name">Mary</td>
+            <td class="test.class">2</td>
+            <td class="test.class">Mary</td>
             </tr>
             </tbody>
             </table>
@@ -104,14 +107,16 @@ final class DataColumnTest extends TestCase
             HTML,
             GridView::widget()
                 ->columns(
-                    DataColumn::create()
-                        ->attribute('id')
-                        ->content(static fn (array $data): int => (int) $data['id'])
-                        ->contentAttributes(['class' => 'test.class']),
-                    DataColumn::create()
-                        ->attribute('name')
-                        ->content(static fn (array $data): string => (string) $data['name'])
-                        ->contentAttributes(['class' => 'test.class']),
+                    new DataColumn(
+                        'id',
+                        content: static fn(DataContext $context): int => (int)$context->getData()['id'],
+                        bodyAttributes: ['class' => 'test.class'],
+                    ),
+                    new DataColumn(
+                        'name',
+                        content: static fn(DataContext $context): string => (string)$context->getData()['name'],
+                        bodyAttributes: ['class' => 'test.class'],
+                    ),
                 )
                 ->id('w1-grid')
                 ->dataReader($this->createOffsetPaginator($this->data, 10))
@@ -139,12 +144,12 @@ final class DataColumnTest extends TestCase
             </thead>
             <tbody>
             <tr>
-            <td class="test.class" data-label="id">1</td>
-            <td class="test.class" data-label="name">John</td>
+            <td class="test.class">1</td>
+            <td class="test.class">John</td>
             </tr>
             <tr>
-            <td class="test.class" data-label="id">2</td>
-            <td class="test.class" data-label="name">Mary</td>
+            <td class="test.class">2</td>
+            <td class="test.class">Mary</td>
             </tr>
             </tbody>
             </table>
@@ -153,12 +158,8 @@ final class DataColumnTest extends TestCase
             HTML,
             GridView::widget()
                 ->columns(
-                    DataColumn::create()
-                        ->attribute('id')
-                        ->contentAttributes(['class' => static fn (): string => 'test.class']),
-                    DataColumn::create()
-                        ->attribute('name')
-                        ->contentAttributes(['class' => static fn (): string => 'test.class']),
+                    new DataColumn('id', bodyAttributes: ['class' => static fn(): string => 'test.class']),
+                    new DataColumn('name', bodyAttributes: ['class' => static fn(): string => 'test.class']),
                 )
                 ->id('w1-grid')
                 ->dataReader($this->createOffsetPaginator($this->data, 10))
@@ -166,55 +167,6 @@ final class DataColumnTest extends TestCase
         );
     }
 
-    /**
-     * @throws InvalidConfigException
-     * @throws NotFoundException
-     * @throws NotInstantiableException
-     * @throws CircularReferenceException
-     */
-    public function testDataLabel(): void
-    {
-        Assert::equalsWithoutLE(
-            <<<HTML
-            <div id="w1-grid">
-            <table>
-            <thead>
-            <tr>
-            <th>Id</th>
-            <th>Name</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr>
-            <td data-label="test.id">1</td>
-            <td data-label="test.name">John</td>
-            </tr>
-            <tr>
-            <td data-label="test.id">2</td>
-            <td data-label="test.name">Mary</td>
-            </tr>
-            </tbody>
-            </table>
-            <div>Page <b>1</b> of <b>1</b></div>
-            </div>
-            HTML,
-            GridView::widget()
-                ->columns(
-                    DataColumn::create()->attribute('id')->dataLabel('test.id'),
-                    DataColumn::create()->attribute('name')->dataLabel('test.name'),
-                )
-                ->id('w1-grid')
-                ->dataReader($this->createOffsetPaginator($this->data, 10))
-                ->render()
-        );
-    }
-
-    /**
-     * @throws InvalidConfigException
-     * @throws NotFoundException
-     * @throws NotInstantiableException
-     * @throws CircularReferenceException
-     */
     public function testLabel(): void
     {
         Assert::equalsWithoutLE(
@@ -229,12 +181,12 @@ final class DataColumnTest extends TestCase
             </thead>
             <tbody>
             <tr>
-            <td data-label="test.id">1</td>
-            <td data-label="test.username">John</td>
+            <td>1</td>
+            <td>John</td>
             </tr>
             <tr>
-            <td data-label="test.id">2</td>
-            <td data-label="test.username">Mary</td>
+            <td>2</td>
+            <td>Mary</td>
             </tr>
             </tbody>
             </table>
@@ -243,8 +195,8 @@ final class DataColumnTest extends TestCase
             HTML,
             GridView::widget()
                 ->columns(
-                    DataColumn::create()->attribute('id')->label('test.id'),
-                    DataColumn::create()->attribute('name')->label('test.username'),
+                    new DataColumn('id', header: 'test.id'),
+                    new DataColumn('name', header: 'test.username'),
                 )
                 ->id('w1-grid')
                 ->dataReader($this->createOffsetPaginator($this->data, 10))
@@ -272,12 +224,12 @@ final class DataColumnTest extends TestCase
             </thead>
             <tbody>
             <tr>
-            <td data-label="id">1</td>
-            <td data-label="όνομα χρήστη">John</td>
+            <td>1</td>
+            <td>John</td>
             </tr>
             <tr>
-            <td data-label="id">2</td>
-            <td data-label="όνομα χρήστη">Mary</td>
+            <td>2</td>
+            <td>Mary</td>
             </tr>
             </tbody>
             </table>
@@ -286,8 +238,8 @@ final class DataColumnTest extends TestCase
             HTML,
             GridView::widget()
                 ->columns(
-                    DataColumn::create()->attribute('id'),
-                    DataColumn::create()->attribute('name')->label('Όνομα χρήστη'),
+                    new DataColumn('id'),
+                    new DataColumn('name', header: 'Όνομα χρήστη'),
                 )
                 ->id('w1-grid')
                 ->dataReader($this->createOffsetPaginator($this->data, 10))
@@ -315,12 +267,12 @@ final class DataColumnTest extends TestCase
             </thead>
             <tbody>
             <tr>
-            <td data-label="test.id">1</td>
-            <td data-label="test.username">John</td>
+            <td>1</td>
+            <td>John</td>
             </tr>
             <tr>
-            <td data-label="test.id">2</td>
-            <td data-label="test.username">Mary</td>
+            <td>2</td>
+            <td>Mary</td>
             </tr>
             </tbody>
             </table>
@@ -329,14 +281,8 @@ final class DataColumnTest extends TestCase
             HTML,
             GridView::widget()
                 ->columns(
-                    DataColumn::create()
-                        ->attribute('id')
-                        ->label('test.id')
-                        ->labelAttributes(['class' => 'test.class']),
-                    DataColumn::create()
-                        ->attribute('name')
-                        ->label('test.username')
-                        ->labelAttributes(['class' => 'test.class']),
+                    new DataColumn('id', header: 'test.id', headerAttributes: ['class' => 'test.class']),
+                    new DataColumn('name', header: 'test.username', headerAttributes: ['class' => 'test.class']),
                 )
                 ->id('w1-grid')
                 ->dataReader($this->createOffsetPaginator($this->data, 10))
@@ -344,102 +290,6 @@ final class DataColumnTest extends TestCase
         );
     }
 
-    /**
-     * @throws InvalidConfigException
-     * @throws NotFoundException
-     * @throws NotInstantiableException
-     * @throws CircularReferenceException
-     */
-    public function testLinkSorter(): void
-    {
-        Assert::equalsWithoutLE(
-            <<<HTML
-            <div id="w1-grid">
-            <table>
-            <thead>
-            <tr>
-            <th><a href="/admin/manage/1/5?sort=id" data-sort="id">id</a></th>
-            <th><a href="/admin/manage/1/5?sort=name" data-sort="name">name</a></th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr>
-            <td data-label="id">1</td>
-            <td data-label="name">John</td>
-            </tr>
-            <tr>
-            <td data-label="id">2</td>
-            <td data-label="name">Mary</td>
-            </tr>
-            </tbody>
-            </table>
-            <div>Page <b>1</b> of <b>1</b></div>
-            </div>
-            HTML,
-            GridView::widget()
-                ->columns(
-                    DataColumn::create()
-                        ->attribute('id')
-                        ->linkSorter('<a href="/admin/manage/1/5?sort=id" data-sort="id">id</a>'),
-                    DataColumn::create()
-                        ->attribute('name')
-                        ->linkSorter('<a href="/admin/manage/1/5?sort=name" data-sort="name">name</a>'),
-                )
-                ->id('w1-grid')
-                ->dataReader($this->createOffsetPaginator($this->data, 10))
-                ->render()
-        );
-    }
-
-    /**
-     * @throws InvalidConfigException
-     * @throws NotFoundException
-     * @throws NotInstantiableException
-     * @throws CircularReferenceException
-     */
-    public function testName(): void
-    {
-        Assert::equalsWithoutLE(
-            <<<HTML
-            <div id="w1-grid">
-            <table>
-            <thead>
-            <tr>
-            <th><a class="asc" href="/admin/manage?page=1&amp;pagesize=10&amp;sort=-id%2Cname" data-sort="-id,name">Id <i class="bi bi-sort-alpha-up"></i></a></th>
-            <th><a class="asc" href="/admin/manage?page=1&amp;pagesize=10&amp;sort=-name%2Cid" data-sort="-name,id">Name <i class="bi bi-sort-alpha-up"></i></a></th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr>
-            <td name="test.id" data-label="id">1</td>
-            <td name="test.username" data-label="name">John</td>
-            </tr>
-            <tr>
-            <td name="test.id" data-label="id">2</td>
-            <td name="test.username" data-label="name">Mary</td>
-            </tr>
-            </tbody>
-            </table>
-            <div>Page <b>1</b> of <b>1</b></div>
-            </div>
-            HTML,
-            GridView::widget()
-                ->columns(
-                    DataColumn::create()->attribute('id')->name('test.id'),
-                    DataColumn::create()->attribute('name')->name('test.username'),
-                )
-                ->id('w1-grid')
-                ->dataReader($this->createOffsetPaginator($this->data, 10, 1, true))
-                ->render()
-        );
-    }
-
-    /**
-     * @throws InvalidConfigException
-     * @throws NotFoundException
-     * @throws NotInstantiableException
-     * @throws CircularReferenceException
-     */
     public function testNotSorting(): void
     {
         Assert::equalsWithoutLE(
@@ -454,12 +304,12 @@ final class DataColumnTest extends TestCase
             </thead>
             <tbody>
             <tr>
-            <td data-label="id">1</td>
-            <td data-label="name">test</td>
+            <td>1</td>
+            <td>test</td>
             </tr>
             <tr>
-            <td data-label="id">2</td>
-            <td data-label="name">test</td>
+            <td>2</td>
+            <td>test</td>
             </tr>
             </tbody>
             </table>
@@ -468,8 +318,8 @@ final class DataColumnTest extends TestCase
             HTML,
             GridView::widget()
                 ->columns(
-                    DataColumn::create()->attribute('id')->withSorting(false),
-                    DataColumn::create()->attribute('name')->value('test'),
+                    new DataColumn('id', withSorting: false),
+                    new DataColumn('name', content: 'test'),
                 )
                 ->id('w1-grid')
                 ->dataReader($this->createOffsetPaginator($this->data, 10, 1, true))
@@ -496,10 +346,10 @@ final class DataColumnTest extends TestCase
             </thead>
             <tbody>
             <tr>
-            <td data-label="id">1</td>
+            <td>1</td>
             </tr>
             <tr>
-            <td data-label="id">2</td>
+            <td>2</td>
             </tr>
             </tbody>
             </table>
@@ -508,8 +358,8 @@ final class DataColumnTest extends TestCase
             HTML,
             GridView::widget()
                 ->columns(
-                    DataColumn::create()->attribute('id'),
-                    DataColumn::create()->attribute('name')->visible(false),
+                    new DataColumn('id'),
+                    new DataColumn('name', visible: false),
                 )
                 ->id('w1-grid')
                 ->dataReader($this->createOffsetPaginator($this->data, 10))
@@ -537,12 +387,12 @@ final class DataColumnTest extends TestCase
             </thead>
             <tbody>
             <tr>
-            <td data-label="id">1</td>
-            <td data-label="name">John</td>
+            <td>1</td>
+            <td>John</td>
             </tr>
             <tr>
-            <td data-label="id">2</td>
-            <td data-label="name">Mary</td>
+            <td>2</td>
+            <td>Mary</td>
             </tr>
             </tbody>
             </table>
@@ -551,8 +401,8 @@ final class DataColumnTest extends TestCase
             HTML,
             GridView::widget()
                 ->columns(
-                    DataColumn::create()->attribute('id'),
-                    DataColumn::create()->attribute('name'),
+                    new DataColumn('id'),
+                    new DataColumn('name'),
                 )
                 ->id('w1-grid')
                 ->dataReader($this->createOffsetPaginator($this->data, 10, 1, true))
@@ -580,12 +430,12 @@ final class DataColumnTest extends TestCase
             </thead>
             <tbody>
             <tr>
-            <td data-label="id">1</td>
-            <td data-label="name">test</td>
+            <td>1</td>
+            <td>test</td>
             </tr>
             <tr>
-            <td data-label="id">1</td>
-            <td data-label="name">test</td>
+            <td>1</td>
+            <td>test</td>
             </tr>
             </tbody>
             </table>
@@ -594,8 +444,8 @@ final class DataColumnTest extends TestCase
             HTML,
             GridView::widget()
                 ->columns(
-                    DataColumn::create()->attribute('id')->value(1),
-                    DataColumn::create()->attribute('name')->value('test'),
+                    new DataColumn('id', content: 1),
+                    new DataColumn('name', content: 'test'),
                 )
                 ->id('w1-grid')
                 ->dataReader($this->createOffsetPaginator($this->data, 10))
@@ -623,12 +473,12 @@ final class DataColumnTest extends TestCase
             </thead>
             <tbody>
             <tr>
-            <td data-label="id">1</td>
-            <td data-label="name">John</td>
+            <td>1</td>
+            <td>John</td>
             </tr>
             <tr>
-            <td data-label="id">2</td>
-            <td data-label="name">Mary</td>
+            <td>2</td>
+            <td>Mary</td>
             </tr>
             </tbody>
             </table>
@@ -637,12 +487,14 @@ final class DataColumnTest extends TestCase
             HTML,
             GridView::widget()
                 ->columns(
-                    DataColumn::create()
-                        ->attribute('id')
-                        ->value(static fn (array $data): int => (int) $data['id']),
-                    DataColumn::create()
-                        ->attribute('name')
-                        ->value(static fn (array $data): string => (string) $data['name']),
+                    new DataColumn(
+                        'id',
+                        content: static fn(DataContext $context): string => (string)$context->getData()['id']
+                    ),
+                    new DataColumn(
+                        'name',
+                        content: static fn(DataContext $context): string => (string)$context->getData()['name']
+                    ),
                 )
                 ->id('w1-grid')
                 ->dataReader($this->createOffsetPaginator($this->data, 10))

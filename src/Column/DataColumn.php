@@ -4,14 +4,19 @@ declare(strict_types=1);
 
 namespace Yiisoft\Yii\DataView\Column;
 
-use Closure;
 use InvalidArgumentException;
 use Stringable;
 use Yiisoft\Arrays\ArrayHelper;
-use Yiisoft\Html\Html;
+use Yiisoft\Data\Paginator\OffsetPaginator;
+use Yiisoft\Data\Paginator\PaginatorInterface;
 use Yiisoft\Html\Tag\Input;
 use Yiisoft\Html\Tag\Select;
+use Yiisoft\Yii\DataView\Column\Base\Cell;
+use Yiisoft\Yii\DataView\Column\Base\GlobalContext;
+use Yiisoft\Yii\DataView\Column\Base\DataContext;
 use Yiisoft\Yii\DataView\Helper\Attribute;
+
+use Yiisoft\Yii\DataView\LinkSorter;
 
 use function sprintf;
 
@@ -31,17 +36,8 @@ use function sprintf;
  * calculation, while the actual cell content is a {@see format|formatted} version of that value which may contain HTML
  * markup.
  */
-final class DataColumn extends AbstractColumn
+final class DataColumn implements ColumnInterface, ColumnRendererInterface
 {
-    private string $attribute = '';
-    private string $filter = '';
-    private string $filterAttribute = '';
-    private array $filterInputAttributes = [];
-    /** @psalm-var string[] */
-    private array $filterInputSelectItems = [];
-    private string $filterInputSelectPrompt = '';
-    private string $filterModelName = '';
-    private string $filterType = 'text';
     /** @psalm-var string[] */
     private array $filterTypes = [
         'date' => 'date',
@@ -58,79 +54,122 @@ final class DataColumn extends AbstractColumn
         'url' => 'url',
         'week' => 'week',
     ];
-    private Stringable|null|string|int|bool|float $filterValueDefault = null;
+
     private string $linkSorter = '';
     private mixed $value = null;
-    private bool $withSorting = true;
 
-    /**
-     * Return new instance with the attribute name.
-     *
-     * @param string $value The attribute name associated with this column. When neither {@see content} nor {@see value}
-     * is specified, the value of the specified attribute will be retrieved from each data and displayed.
-     *
-     * Also, if {@see label} is not specified, the label associated with the attribute will be displayed.
-     */
-    public function attribute(string $value): self
-    {
-        $new = clone $this;
-        $new->attribute = $value;
-
-        return $new;
+    public function __construct(
+        private ?string $property = null,
+        private ?string $header = null,
+        private ?string $footer = null,
+        private array $columnAttributes = [],
+        private array $headerAttributes = [],
+        private array $filterAttributes = [],
+        private array $bodyAttributes = [],
+        private bool $withSorting = true,
+        private mixed $content = null,
+        private ?string $filter = null,
+        private ?string $filterProperty = null,
+        private string $filterType = 'text',
+        private array $filterInputAttributes = [],
+        private ?string $filterModelName = null,
+        private Stringable|null|string|int|bool|float $filterValueDefault = null,
+        private array $filterInputSelectItems = [],
+        private string $filterInputSelectPrompt = '',
+        private bool $visible = true,
+    ) {
     }
 
-    /**
-     * Return new instance with the filter input.
-     *
-     * @param string $value The HTML code representing a filter input (e.g. a text field, a dropdown list) that is
-     * used for this data column. This property is effective only when {@see filterModel} is set.
-     *
-     * - If this property is not set, a text field will be generated as the filter input with attributes defined
-     *   with {@see filterInputAttributes}.
-     * - If this property is an array, a dropdown list will be generated that uses this property value as the list
-     *   options.
-     * - If you don't want a filter for this data column, set this value to be false.
-     */
-    public function filter(string $value): self
+    public function getProperty(): ?string
     {
-        $new = clone $this;
-        $new->filter = $value;
-
-        return $new;
+        return $this->property;
     }
 
-    /**
-     * Return new instance with the filter attribute.
-     *
-     * @param string $value The attribute name of the {@see filterModel} associated with this column. If not set, will
-     * have the same value as {@see attribute}.
-     */
-    public function filterAttribute(string $value): self
+    public function getHeader(): ?string
     {
-        $new = clone $this;
-        $new->filterAttribute = $value;
-
-        return $new;
+        return $this->header;
     }
 
-    /**
-     * Return new instance with the HTML attributes for the filter input.
-     *
-     * @param array $values Attribute values indexed by attribute names.
-     *
-     * This property is used in combination with the {@see filter} property. When {@see filter} is not set or is an
-     * array, this property will be used to render the HTML attributes for the generated filter input fields.
-     *
-     * Empty `id` in the default value ensures that id would not be obtained from the data attribute thus
-     * providing better performance.
-     */
-    public function filterInputAttributes(array $values): self
+    public function getFooter(): ?string
     {
-        $new = clone $this;
-        $new->filterInputAttributes = $values;
-
-        return $new;
+        return $this->footer;
     }
+
+    public function getColumnAttributes(): array
+    {
+        return $this->columnAttributes;
+    }
+
+    public function getHeaderAttributes(): array
+    {
+        return $this->headerAttributes;
+    }
+
+    public function getFilterAttributes(): array
+    {
+        return $this->filterAttributes;
+    }
+
+    public function getBodyAttributes(): array
+    {
+        return $this->bodyAttributes;
+    }
+
+    public function isWithSorting(): bool
+    {
+        return $this->withSorting;
+    }
+
+    public function getContent(): mixed
+    {
+        return $this->content;
+    }
+
+    public function getFilter(): ?string
+    {
+        return $this->filter;
+    }
+
+    public function getFilterProperty(): ?string
+    {
+        return $this->filterProperty;
+    }
+
+    public function getFilterType(): string
+    {
+        return $this->filterType;
+    }
+
+    public function getFilterInputAttributes(): array
+    {
+        return $this->filterInputAttributes;
+    }
+
+    public function getFilterModelName(): ?string
+    {
+        return $this->filterModelName;
+    }
+
+    public function getFilterValueDefault(): float|Stringable|bool|int|string|null
+    {
+        return $this->filterValueDefault;
+    }
+
+    public function getFilterInputSelectItems(): array
+    {
+        return $this->filterInputSelectItems;
+    }
+
+    public function getFilterInputSelectPrompt(): string
+    {
+        return $this->filterInputSelectPrompt;
+    }
+
+    public function isVisible(): bool
+    {
+        return $this->visible;
+    }
+
 
     /**
      * Return new instance with the filter input select items.
@@ -151,43 +190,6 @@ final class DataColumn extends AbstractColumn
     }
 
     /**
-     * Return new instance with the filter input select prompt.
-     *
-     * @param string $prompt The prompt text for the filter input select.
-     * @param bool|float|int|string|Stringable|null $value The value for the prompt.
-     *
-     * This property is used in combination with the {@see filter} property. When {@see filter} is not set or is an
-     * array, this property will be used to render the HTML attributes for the generated filter input fields.
-     */
-    public function filterInputSelectPrompt(string $prompt, Stringable|null|string|int|bool|float $value = null): self
-    {
-        $new = clone $this;
-        $new->filterInputSelectPrompt = $prompt;
-        $new->filterValueDefault = $value;
-
-        return $new;
-    }
-
-    /**
-     * Return new instance with the filter model name.
-     *
-     * @param string $value The form model name that keeps the user-entered filter data. When this property is set, the
-     * grid view will enable column-based filtering. Each data column by default will display a text field at the top
-     * that users can fill in to filter the data.
-     *
-     * Note that in order to show an input field for filtering, a column must have its {@see DetailColumn::attribute}
-     * property set and the attribute should be active in the current scenario of $filterModelName or have
-     * {@see DataColumn::filter} set as the HTML code for the input field.
-     */
-    public function filterModelName(string $value): self
-    {
-        $new = clone $this;
-        $new->filterModelName = $value;
-
-        return $new;
-    }
-
-    /**
      * Return new instance with the filter type.
      *
      * @param string $value The filter type.
@@ -202,39 +204,6 @@ final class DataColumn extends AbstractColumn
         $new->filterType = $value;
 
         return $new;
-    }
-
-    /**
-     * Return new instance with set filter value default text input field.
-     *
-     * @param bool|float|int|string|Stringable|null $value The default value for the filter input field.
-     */
-    public function filterValueDefault(Stringable|null|string|int|bool|float $value): self
-    {
-        $new = clone $this;
-        $new->filterValueDefault = $value;
-
-        return $new;
-    }
-
-    public function getAttribute(): string
-    {
-        return $this->attribute;
-    }
-
-    public function getFilter(): string
-    {
-        return $this->filter;
-    }
-
-    public function getFilterAttribute(): string
-    {
-        return $this->filterAttribute;
-    }
-
-    public function getLabel(): string
-    {
-        return parent::getLabel() !== '' ? parent::getLabel() : ucfirst($this->attribute);
     }
 
     /**
@@ -281,19 +250,6 @@ final class DataColumn extends AbstractColumn
     }
 
     /**
-     * Return new instance whether the column is sortable or not.
-     *
-     * @param bool $value Whether the column is sortable or not.
-     */
-    public function withSorting(bool $value): self
-    {
-        $new = clone $this;
-        $new->withSorting = $value;
-
-        return $new;
-    }
-
-    /**
      * Renders the data cell content.
      *
      * @param array|object $data The data.
@@ -303,76 +259,29 @@ final class DataColumn extends AbstractColumn
     protected function renderDataCellContent(object|array $data, mixed $key, int $index): string
     {
         if ($this->getContent() !== null) {
-            return parent::renderDataCellContent($data, $key, $index);
+            return '';
+            //   return parent::renderDataCellContent($data, $key, $index);
         }
 
         return $this->getDataCellValue($data, $key, $index);
     }
 
-    protected function renderFilterCellContent(): string
+    private function renderFilterInput(DataColumn $column, GlobalContext $context): string
     {
-        $filter = $this->filter !== '' ? $this->filter : parent::renderFilterCellContent();
-
-        if ($this->filterAttribute !== '') {
-            $filter = match ($this->filterType) {
-                'select' => $this->renderFilterSelect(),
-                default => $this->renderFilterInput(),
-            };
-        }
-
-        return $filter;
-    }
-
-    protected function renderHeaderCellContent(): string
-    {
-        $label = Html::encode($this->getLabel());
-
-        if ($this->attribute !== '' && $this->withSorting && $this->linkSorter !== '') {
-            $label = $this->linkSorter;
-        }
-
-        return $label;
-    }
-
-    /**
-     * Returns the data cell value.
-     *
-     * @param array|object $data The data.
-     * @param mixed $key The key associated with the data.
-     * @param int $index The zero-based index of the data in the data provider.
-     */
-    private function getDataCellValue(array|object $data, mixed $key, int $index): string
-    {
-        $value = '';
-
-        if ($this->value !== null && !($this->value instanceof Closure)) {
-            $value = (string) $this->value;
-        }
-
-        if ($this->value instanceof Closure) {
-            $value = (string) call_user_func($this->value, $data, $key, $index, $this);
-        }
-
-        if ($this->attribute !== '' && $this->value === null) {
-            $value = (string) ArrayHelper::getValue($data, $this->attribute);
-        }
-
-        return $value === '' ? $this->getEmptyCell() : $value;
-    }
-
-    private function renderFilterInput(): string
-    {
-        $filterInputAttributes = $this->filterInputAttributes;
+        $filterInputAttributes = $column->getFilterInputAttributes();
         $filterInputTag = Input::tag();
 
         if (!array_key_exists('name', $filterInputAttributes)) {
             $filterInputTag = $filterInputTag->name(
-                Attribute::getInputName($this->filterModelName, $this->filterAttribute),
+                Attribute::getInputName(
+                    (string)($column->getFilterModelName() ?? $context->getFilterModelName()),
+                    $column->getFilterProperty()
+                ),
             );
         }
 
-        if (!array_key_exists('value', $filterInputAttributes) && $this->filterValueDefault !== '') {
-            $filterInputTag = $filterInputTag->value($this->filterValueDefault);
+        if (!array_key_exists('value', $filterInputAttributes) && $column->getFilterValueDefault() !== '') {
+            $filterInputTag = $filterInputTag->value($column->getFilterValueDefault());
         }
 
         return $filterInputTag
@@ -381,25 +290,154 @@ final class DataColumn extends AbstractColumn
             ->render();
     }
 
-    private function renderFilterSelect(): string
+    private function renderFilterSelect(DataColumn $column, GlobalContext $context): string
     {
-        $filterInputAttributes = $this->filterInputAttributes;
+        $filterInputAttributes = $column->getFilterInputAttributes();
         $filterSelectTag = Select::tag();
 
         if (!array_key_exists('name', $filterInputAttributes)) {
             $filterSelectTag = $filterSelectTag->name(
-                Attribute::getInputName($this->filterModelName, $this->filterAttribute),
+                Attribute::getInputName(
+                    (string)($column->getFilterModelName() ?? $context->getFilterModelName()),
+                    $column->getFilterProperty()
+                ),
             );
         }
 
-        if ($this->filterValueDefault !== null) {
-            $filterSelectTag = $filterSelectTag->value($this->filterValueDefault);
+        if ($column->getFilterValueDefault() !== null) {
+            $filterSelectTag = $filterSelectTag->value($column->getFilterValueDefault());
         }
 
         return $filterSelectTag
             ->addAttributes($filterInputAttributes)
-            ->optionsData($this->filterInputSelectItems)
-            ->prompt($this->filterInputSelectPrompt)
+            ->optionsData($column->getFilterInputSelectItems())
+            ->prompt($column->getFilterInputSelectPrompt())
             ->render();
+    }
+
+    public function getRenderer(): self
+    {
+        return $this;
+    }
+
+    public function renderColumn(ColumnInterface $column, Cell $cell, GlobalContext $context): Cell
+    {
+        $this->checkColumn($column);
+        return $cell->addAttributes($column->getColumnAttributes());
+    }
+
+    public function renderHeader(ColumnInterface $column, Cell $cell, GlobalContext $context): Cell
+    {
+        $this->checkColumn($column);
+
+        $label = $this->getHeader() ?? ucfirst($this->property);
+
+        if ($column->getProperty() !== null && $column->isWithSorting()) {
+            $linkSorter = $this->renderLinkSorter($context, $column->getProperty(), $label);
+            if (!empty($linkSorter)) {
+                return $cell->content($linkSorter)->encode(false);
+            }
+        }
+
+        return $cell
+            ->addAttributes($column->getHeaderAttributes())
+            ->content($label);
+    }
+
+    public function renderFilter(ColumnInterface $column, Cell $cell, GlobalContext $context): ?Cell
+    {
+        $this->checkColumn($column);
+
+        if ($column->getFilter() !== null) {
+            $content = $column->getFilter();
+        } elseif ($column->getFilterProperty() !== null) {
+            $content = match ($column->getFilterType()) {
+                'select' => $this->renderFilterSelect($column, $context),
+                default => $this->renderFilterInput($column, $context),
+            };
+        } else {
+            return null;
+        }
+
+        return $cell
+            ->content($content)
+            ->addAttributes($column->getFilterAttributes())
+            ->encode(false);
+    }
+
+    public function renderBody(ColumnInterface $column, Cell $cell, DataContext $context): Cell
+    {
+        $this->checkColumn($column);
+
+        $contentSource = $column->getContent();
+
+        if ($contentSource !== null) {
+            $content = (string)(is_callable($contentSource) ? $contentSource($context) : $contentSource);
+        } elseif ($this->property !== null) {
+            $content = (string)ArrayHelper::getValue($context->getData(), $this->property);
+        } else {
+            $content = '';
+        }
+
+        return $cell
+            ->addAttributes($column->getBodyAttributes())
+            ->content($content);
+    }
+
+    public function renderFooter(ColumnInterface $column, Cell $cell, GlobalContext $context): Cell
+    {
+        $this->checkColumn($column);
+
+        if ($this->getFooter() !== null) {
+            $cell = $cell->content($this->getFooter());
+        }
+
+        return $cell;
+    }
+
+    private function renderLinkSorter(GlobalContext $context, string $property, string $label): string
+    {
+        $dataReader = $context->getDataReader();
+        if (!$dataReader instanceof PaginatorInterface) {
+            return '';
+        }
+
+        $sort = $dataReader->getSort();
+        if ($sort === null) {
+            return '';
+        }
+
+        $linkSorter = $dataReader instanceof OffsetPaginator
+            ? LinkSorter::widget()->currentPage($dataReader->getCurrentPage())
+            : LinkSorter::widget();
+
+        return $linkSorter
+            ->attribute($property)
+            ->attributes($sort->getCriteria())
+            ->directions($sort->getOrder())
+            ->iconAscClass('bi bi-sort-alpha-up')
+            ->iconDescClass('bi bi-sort-alpha-down')
+            ->label($label)
+            ->linkAttributes($context->getSortLinkAttributes())
+            ->pageSize($dataReader->getPageSize())
+            ->urlArguments($context->getUrlArguments())
+            ->urlQueryParameters($context->getUrlQueryParameters())
+            ->render();
+    }
+
+    /**
+     * @psalm-assert self $column
+     */
+    private function checkColumn(ColumnInterface $column): void
+    {
+        if (!$column instanceof self) {
+            throw new InvalidArgumentException(
+                sprintf(
+                    'Expected "%s", but "%s" given.',
+                    self::class,
+                    $column::class
+                )
+            );
+        }
     }
 }
