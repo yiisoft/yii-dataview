@@ -69,7 +69,7 @@ final class RadioColumnTest extends TestCase
                         content: static fn(
                             Radio $input,
                             DataContext $context
-                        ): string => '<input name="radio-selection" type="radio" value="' . $context->getIndex() . '">'
+                        ): string => '<input name="radio-selection" type="radio" value="' . $context->index . '">'
                     ),
                 )
                 ->id('w1-grid')
@@ -121,7 +121,7 @@ final class RadioColumnTest extends TestCase
                         content: static fn(
                             Radio $input,
                             DataContext $context
-                        ): string => '<input name="radio-selection" type="radio" value="' . $context->getIndex() . '">',
+                        ): string => '<input name="radio-selection" type="radio" value="' . $context->index . '">',
                         bodyAttributes: ['class' => 'test-class']
                     ),
                 )

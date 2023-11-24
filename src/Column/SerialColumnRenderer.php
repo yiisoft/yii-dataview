@@ -14,13 +14,13 @@ final class SerialColumnRenderer implements ColumnRendererInterface
     public function renderColumn(ColumnInterface $column, Cell $cell, GlobalContext $context): Cell
     {
         $this->checkColumn($column);
-        return $cell->addAttributes($column->getColumnAttributes());
+        return $cell->addAttributes($column->columnAttributes);
     }
 
     public function renderHeader(ColumnInterface $column, Cell $cell, GlobalContext $context): Cell
     {
         $this->checkColumn($column);
-        return $cell->content($column->getHeader() ?? '#');
+        return $cell->content($column->header ?? '#');
     }
 
     public function renderFilter(ColumnInterface $column, Cell $cell, GlobalContext $context): ?Cell
@@ -33,14 +33,14 @@ final class SerialColumnRenderer implements ColumnRendererInterface
         $this->checkColumn($column);
 
         return $cell
-            ->addAttributes($column->getBodyAttributes())
-            ->content((string)($context->getIndex() + 1));
+            ->addAttributes($column->bodyAttributes)
+            ->content((string)($context->index + 1));
     }
 
     public function renderFooter(ColumnInterface $column, Cell $cell, GlobalContext $context): Cell
     {
         $this->checkColumn($column);
-        return $cell->content($column->getFooter() ?? '');
+        return $cell->content($column->footer ?? '');
     }
 
     /**

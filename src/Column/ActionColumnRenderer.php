@@ -16,23 +16,23 @@ use Yiisoft\Yii\DataView\Column\Base\DataContext;
 final class ActionColumnRenderer implements ColumnRendererInterface
 {
     public function __construct(
-        private UrlGeneratorInterface $urlGenerator,
-        private CurrentRoute $currentRoute,
+        private readonly UrlGeneratorInterface $urlGenerator,
+        private readonly CurrentRoute $currentRoute,
     ) {
     }
 
     public function renderColumn(ColumnInterface $column, Cell $cell, GlobalContext $context): Cell
     {
         $this->checkColumn($column);
-        return $cell->addAttributes($column->getColumnAttributes());
+        return $cell->addAttributes($column->columnAttributes);
     }
 
     public function renderHeader(ColumnInterface $column, Cell $cell, GlobalContext $context): Cell
     {
         $this->checkColumn($column);
         return $cell
-            ->content($column->getHeader() ?? 'Actions')
-            ->addAttributes($column->getHeaderAttributes());
+            ->content($column->header ?? 'Actions')
+            ->addAttributes($column->headerAttributes);
     }
 
     public function renderFilter(ColumnInterface $column, Cell $cell, GlobalContext $context): ?Cell
@@ -44,12 +44,12 @@ final class ActionColumnRenderer implements ColumnRendererInterface
     {
         $this->checkColumn($column);
 
-        $contentSource = $column->getContent();
+        $contentSource = $column->content;
 
         if ($contentSource !== null) {
             $content = (string)(is_callable($contentSource) ? $contentSource($context) : $contentSource);
         } else {
-            $buttons = empty($column->getButtons()) ? $this->getDefaultButtons() : $column->getButtons();
+            $buttons = empty($column->buttons) ? $this->getDefaultButtons() : $column->buttons;
             $content = preg_replace_callback(
                 '/{([\w\-\/]+)}/',
                 function (array $matches) use ($column, $buttons, $context): string {
@@ -59,25 +59,25 @@ final class ActionColumnRenderer implements ColumnRendererInterface
                         $this->isVisibleButton(
                             $column,
                             $name,
-                            $context->getData(),
-                            $context->getKey(),
-                            $context->getIndex()
+                            $context->data,
+                            $context->key,
+                            $context->index,
                         ) &&
                         isset($buttons[$name])
                     ) {
-                        $url = $this->createUrl($column, $name, $context->getData(), $context->getKey());
+                        $url = $this->createUrl($column, $name, $context->data, $context->key);
                         return (string)$buttons[$name]($url);
                     }
 
                     return '';
                 },
-                $column->getTemplate()
+                $column->template
             );
             $content = trim($content);
         }
 
         return $cell
-            ->addAttributes($column->getBodyAttributes())
+            ->addAttributes($column->bodyAttributes)
             ->content(PHP_EOL . $content . PHP_EOL)
             ->encode(false);
     }
@@ -86,21 +86,21 @@ final class ActionColumnRenderer implements ColumnRendererInterface
     {
         $this->checkColumn($column);
 
-        if ($column->getFooter() !== null) {
-            $cell = $cell->content($column->getFooter());
+        if ($column->footer !== null) {
+            $cell = $cell->content($column->footer);
         }
 
-        return $cell->addAttributes($column->getFooterAttributes());
+        return $cell->addAttributes($column->footerAttributes);
     }
 
     private function createUrl(ActionColumn $column, string $action, array|object $data, mixed $key): string
     {
-        if ($column->getUrlCreator() !== null) {
-            return (string) ($column->getUrlCreator())($action, $data, $key);
+        if ($column->urlCreator !== null) {
+            return (string) ($column->urlCreator)($action, $data, $key);
         }
 
-        $primaryKey = $column->getPrimaryKey();
-        $routeName = $column->getRouteName();
+        $primaryKey = $column->primaryKey;
+        $routeName = $column->routeName;
 
         if ($primaryKey !== '') {
             $key = $data[$primaryKey] ?? $key;
@@ -114,17 +114,17 @@ final class ActionColumnRenderer implements ColumnRendererInterface
 
 
         $urlParamsConfig = array_merge(
-            $column->getUrlParamsConfig(),
+            $column->urlParamsConfig,
             is_array($key) ? $key : [$primaryKey => $key]
         );
 
-        if ($column->getUrlArguments() !== null) {
+        if ($column->urlArguments !== null) {
             /** @psalm-var array<string,string> */
-            $urlArguments = array_merge($column->getUrlArguments(), $urlParamsConfig);
+            $urlArguments = array_merge($column->urlArguments, $urlParamsConfig);
             $urlQueryParameters = [];
         } else {
             $urlArguments = [];
-            $urlQueryParameters = array_merge($column->getUrlQueryParameters(), $urlParamsConfig);
+            $urlQueryParameters = array_merge($column->urlQueryParameters, $urlParamsConfig);
         }
 
         return $this->urlGenerator->generate($route, $urlArguments, $urlQueryParameters);
@@ -137,7 +137,7 @@ final class ActionColumnRenderer implements ColumnRendererInterface
         mixed $key,
         int $index
     ): bool {
-        $visibleButtons = $column->getVisibleButtons();
+        $visibleButtons = $column->visibleButtons;
 
         if (empty($visibleButtons)) {
             return true;

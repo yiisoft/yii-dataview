@@ -66,7 +66,7 @@ final class ActionColumnTest extends TestCase
                             ->addAttributes(['class' => 'text-decoration-none', 'title' => 'View'])
                             ->content('🔎')
                             ->encode(false)
-                            ->href('/admin/view?id=' . $context->getData()['id'])
+                            ->href('/admin/view?id=' . $context->data['id'])
                             ->render(),
                     )
                 )
@@ -116,7 +116,7 @@ final class ActionColumnTest extends TestCase
                             ->addAttributes(['title' => 'View'])
                             ->content('🔎')
                             ->encode(false)
-                            ->href('/admin/view?id=' . $context->getData()['id'])
+                            ->href('/admin/view?id=' . $context->data['id'])
                             ->render(),
                         bodyAttributes: ['class' => 'text-decoration-none test.class']
                     ),

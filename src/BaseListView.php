@@ -29,7 +29,7 @@ abstract class BaseListView extends Widget
     /**
      * A name for {@see CategorySource} used with translator ({@see TranslatorInterface}) by default.
      */
-    public const DEFAULT_TRANSLATION_CATEGORY = 'yii-dataview';
+    final public const DEFAULT_TRANSLATION_CATEGORY = 'yii-dataview';
 
     /**
      * @var TranslatorInterface A translator instance used for translations of messages. If it was not set
