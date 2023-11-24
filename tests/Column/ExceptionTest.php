@@ -17,13 +17,6 @@ final class ExceptionTest extends TestCase
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('Invalid filter type "unknown".');
-        Column\DataColumn::create()->filterType('unknown');
-    }
-
-    public function testGetUrlGenerator(): void
-    {
-        $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage('Url generator is not set');
-        Column\ActionColumn::create()->getUrlGenerator();
+        new Column\DataColumn(filterType: 'unknown');
     }
 }

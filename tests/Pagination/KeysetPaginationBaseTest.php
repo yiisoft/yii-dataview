@@ -90,29 +90,29 @@ final class KeysetPaginationBaseTest extends TestCase
             </thead>
             <tbody>
             <tr>
-            <td data-label="id">1</td>
-            <td data-label="name">name1</td>
-            <td data-label="description">description1</td>
+            <td>1</td>
+            <td>name1</td>
+            <td>description1</td>
             </tr>
             <tr>
-            <td data-label="id">2</td>
-            <td data-label="name">name2</td>
-            <td data-label="description">description2</td>
+            <td>2</td>
+            <td>name2</td>
+            <td>description2</td>
             </tr>
             <tr>
-            <td data-label="id">3</td>
-            <td data-label="name">name3</td>
-            <td data-label="description">description3</td>
+            <td>3</td>
+            <td>name3</td>
+            <td>description3</td>
             </tr>
             <tr>
-            <td data-label="id">4</td>
-            <td data-label="name">name4</td>
-            <td data-label="description">description4</td>
+            <td>4</td>
+            <td>name4</td>
+            <td>description4</td>
             </tr>
             <tr>
-            <td data-label="id">5</td>
-            <td data-label="name">name5</td>
-            <td data-label="description">description5</td>
+            <td>5</td>
+            <td>name5</td>
+            <td>description5</td>
             </tr>
             </tbody>
             </table>
@@ -126,9 +126,9 @@ final class KeysetPaginationBaseTest extends TestCase
             HTML,
             GridView::widget()
                 ->columns(
-                    DataColumn::create()->attribute('id'),
-                    DataColumn::create()->attribute('name'),
-                    DataColumn::create()->attribute('description'),
+                    new DataColumn('id'),
+                    new DataColumn('name'),
+                    new DataColumn('description'),
                 )
                 ->id('w1-grid')
                 ->dataReader($keysetPaginator)
@@ -152,29 +152,29 @@ final class KeysetPaginationBaseTest extends TestCase
             </thead>
             <tbody>
             <tr>
-            <td data-label="id">6</td>
-            <td data-label="name">name6</td>
-            <td data-label="description">description6</td>
+            <td>6</td>
+            <td>name6</td>
+            <td>description6</td>
             </tr>
             <tr>
-            <td data-label="id">7</td>
-            <td data-label="name">name7</td>
-            <td data-label="description">description7</td>
+            <td>7</td>
+            <td>name7</td>
+            <td>description7</td>
             </tr>
             <tr>
-            <td data-label="id">8</td>
-            <td data-label="name">name8</td>
-            <td data-label="description">description8</td>
+            <td>8</td>
+            <td>name8</td>
+            <td>description8</td>
             </tr>
             <tr>
-            <td data-label="id">9</td>
-            <td data-label="name">name9</td>
-            <td data-label="description">description9</td>
+            <td>9</td>
+            <td>name9</td>
+            <td>description9</td>
             </tr>
             <tr>
-            <td data-label="id">10</td>
-            <td data-label="name">name10</td>
-            <td data-label="description">description10</td>
+            <td>10</td>
+            <td>name10</td>
+            <td>description10</td>
             </tr>
             </tbody>
             </table>
@@ -188,9 +188,9 @@ final class KeysetPaginationBaseTest extends TestCase
             HTML,
             GridView::widget()
                 ->columns(
-                    DataColumn::create()->attribute('id'),
-                    DataColumn::create()->attribute('name'),
-                    DataColumn::create()->attribute('description'),
+                    new DataColumn('id'),
+                    new DataColumn('name'),
+                    new DataColumn('description'),
                 )
                 ->id('w1-grid')
                 ->dataReader($keysetPaginator)
@@ -214,14 +214,14 @@ final class KeysetPaginationBaseTest extends TestCase
             </thead>
             <tbody>
             <tr>
-            <td data-label="id">11</td>
-            <td data-label="name">name11</td>
-            <td data-label="description">description11</td>
+            <td>11</td>
+            <td>name11</td>
+            <td>description11</td>
             </tr>
             <tr>
-            <td data-label="id">12</td>
-            <td data-label="name">name12</td>
-            <td data-label="description">description12</td>
+            <td>12</td>
+            <td>name12</td>
+            <td>description12</td>
             </tr>
             </tbody>
             </table>
@@ -235,9 +235,9 @@ final class KeysetPaginationBaseTest extends TestCase
             HTML,
             GridView::widget()
                 ->columns(
-                    DataColumn::create()->attribute('id'),
-                    DataColumn::create()->attribute('name'),
-                    DataColumn::create()->attribute('description'),
+                    new DataColumn('id'),
+                    new DataColumn('name'),
+                    new DataColumn('description'),
                 )
                 ->id('w1-grid')
                 ->dataReader($keysetPaginator)
@@ -261,29 +261,29 @@ final class KeysetPaginationBaseTest extends TestCase
             </thead>
             <tbody>
             <tr>
-            <td data-label="id">6</td>
-            <td data-label="name">name6</td>
-            <td data-label="description">description6</td>
+            <td>6</td>
+            <td>name6</td>
+            <td>description6</td>
             </tr>
             <tr>
-            <td data-label="id">7</td>
-            <td data-label="name">name7</td>
-            <td data-label="description">description7</td>
+            <td>7</td>
+            <td>name7</td>
+            <td>description7</td>
             </tr>
             <tr>
-            <td data-label="id">8</td>
-            <td data-label="name">name8</td>
-            <td data-label="description">description8</td>
+            <td>8</td>
+            <td>name8</td>
+            <td>description8</td>
             </tr>
             <tr>
-            <td data-label="id">9</td>
-            <td data-label="name">name9</td>
-            <td data-label="description">description9</td>
+            <td>9</td>
+            <td>name9</td>
+            <td>description9</td>
             </tr>
             <tr>
-            <td data-label="id">10</td>
-            <td data-label="name">name10</td>
-            <td data-label="description">description10</td>
+            <td>10</td>
+            <td>name10</td>
+            <td>description10</td>
             </tr>
             </tbody>
             </table>
@@ -297,9 +297,9 @@ final class KeysetPaginationBaseTest extends TestCase
             HTML,
             GridView::widget()
                 ->columns(
-                    DataColumn::create()->attribute('id'),
-                    DataColumn::create()->attribute('name'),
-                    DataColumn::create()->attribute('description'),
+                    new DataColumn('id'),
+                    new DataColumn('name'),
+                    new DataColumn('description'),
                 )
                 ->id('w1-grid')
                 ->dataReader($keysetPaginator)
@@ -323,29 +323,29 @@ final class KeysetPaginationBaseTest extends TestCase
             </thead>
             <tbody>
             <tr>
-            <td data-label="id">1</td>
-            <td data-label="name">name1</td>
-            <td data-label="description">description1</td>
+            <td>1</td>
+            <td>name1</td>
+            <td>description1</td>
             </tr>
             <tr>
-            <td data-label="id">2</td>
-            <td data-label="name">name2</td>
-            <td data-label="description">description2</td>
+            <td>2</td>
+            <td>name2</td>
+            <td>description2</td>
             </tr>
             <tr>
-            <td data-label="id">3</td>
-            <td data-label="name">name3</td>
-            <td data-label="description">description3</td>
+            <td>3</td>
+            <td>name3</td>
+            <td>description3</td>
             </tr>
             <tr>
-            <td data-label="id">4</td>
-            <td data-label="name">name4</td>
-            <td data-label="description">description4</td>
+            <td>4</td>
+            <td>name4</td>
+            <td>description4</td>
             </tr>
             <tr>
-            <td data-label="id">5</td>
-            <td data-label="name">name5</td>
-            <td data-label="description">description5</td>
+            <td>5</td>
+            <td>name5</td>
+            <td>description5</td>
             </tr>
             </tbody>
             </table>
@@ -359,9 +359,9 @@ final class KeysetPaginationBaseTest extends TestCase
             HTML,
             GridView::widget()
                 ->columns(
-                    DataColumn::create()->attribute('id'),
-                    DataColumn::create()->attribute('name'),
-                    DataColumn::create()->attribute('description'),
+                    new DataColumn('id'),
+                    new DataColumn('name'),
+                    new DataColumn('description'),
                 )
                 ->id('w1-grid')
                 ->dataReader($keysetPaginator)

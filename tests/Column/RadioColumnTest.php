@@ -9,6 +9,8 @@ use Yiisoft\Definitions\Exception\CircularReferenceException;
 use Yiisoft\Definitions\Exception\InvalidConfigException;
 use Yiisoft\Definitions\Exception\NotInstantiableException;
 use Yiisoft\Factory\NotFoundException;
+use Yiisoft\Html\Tag\Input\Radio;
+use Yiisoft\Yii\DataView\Column\Base\DataContext;
 use Yiisoft\Yii\DataView\Column\DataColumn;
 use Yiisoft\Yii\DataView\Column\RadioColumn;
 use Yiisoft\Yii\DataView\GridView;
@@ -45,13 +47,13 @@ final class RadioColumnTest extends TestCase
             </thead>
             <tbody>
             <tr>
-            <td data-label="id">1</td>
-            <td data-label="name">John</td>
+            <td>1</td>
+            <td>John</td>
             <td><input name="radio-selection" type="radio" value="0"></td>
             </tr>
             <tr>
-            <td data-label="id">2</td>
-            <td data-label="name">Mary</td>
+            <td>2</td>
+            <td>Mary</td>
             <td><input name="radio-selection" type="radio" value="1"></td>
             </tr>
             </tbody>
@@ -61,12 +63,14 @@ final class RadioColumnTest extends TestCase
             HTML,
             GridView::widget()
                 ->columns(
-                    DataColumn::create()->attribute('id'),
-                    DataColumn::create()->attribute('name'),
-                    RadioColumn::create()
-                        ->content(
-                            static fn (array $data, mixed $key, int $index): string => '<input name="radio-selection" type="radio" value="' . $index . '">'
-                        ),
+                    new DataColumn('id'),
+                    new DataColumn('name'),
+                    new RadioColumn(
+                        content: static fn(
+                            Radio $input,
+                            DataContext $context
+                        ): string => '<input name="radio-selection" type="radio" value="' . $context->getIndex() . '">'
+                    ),
                 )
                 ->id('w1-grid')
                 ->dataReader($this->createOffsetPaginator($this->data, 10))
@@ -95,13 +99,13 @@ final class RadioColumnTest extends TestCase
             </thead>
             <tbody>
             <tr>
-            <td data-label="id">1</td>
-            <td data-label="name">John</td>
+            <td>1</td>
+            <td>John</td>
             <td class="test-class"><input name="radio-selection" type="radio" value="0"></td>
             </tr>
             <tr>
-            <td data-label="id">2</td>
-            <td data-label="name">Mary</td>
+            <td>2</td>
+            <td>Mary</td>
             <td class="test-class"><input name="radio-selection" type="radio" value="1"></td>
             </tr>
             </tbody>
@@ -111,60 +115,15 @@ final class RadioColumnTest extends TestCase
             HTML,
             GridView::widget()
                 ->columns(
-                    DataColumn::create()->attribute('id'),
-                    DataColumn::create()->attribute('name'),
-                    RadioColumn::create()
-                        ->content(
-                            static fn (array $data, mixed $key, int $index): string => '<input name="radio-selection" type="radio" value="' . $index . '">'
-                        )
-                        ->contentAttributes(['class' => 'test-class']),
-                )
-                ->id('w1-grid')
-                ->dataReader($this->createOffsetPaginator($this->data, 10))
-                ->render()
-        );
-    }
-
-    /**
-     * @throws InvalidConfigException
-     * @throws NotFoundException
-     * @throws NotInstantiableException
-     * @throws CircularReferenceException
-     */
-    public function testDataLabel(): void
-    {
-        Assert::equalsWithoutLE(
-            <<<HTML
-            <div id="w1-grid">
-            <table>
-            <thead>
-            <tr>
-            <th>Id</th>
-            <th>Name</th>
-            <th>&nbsp;</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr>
-            <td data-label="id">1</td>
-            <td data-label="name">John</td>
-            <td data-label="test.label"><input type="radio" name="radio-selection" value="0" data-label="test.label"></td>
-            </tr>
-            <tr>
-            <td data-label="id">2</td>
-            <td data-label="name">Mary</td>
-            <td data-label="test.label"><input type="radio" name="radio-selection" value="1" data-label="test.label"></td>
-            </tr>
-            </tbody>
-            </table>
-            <div>Page <b>1</b> of <b>1</b></div>
-            </div>
-            HTML,
-            GridView::widget()
-                ->columns(
-                    DataColumn::create()->attribute('id'),
-                    DataColumn::create()->attribute('name'),
-                    RadioColumn::create()->dataLabel('test.label'),
+                    new DataColumn('id'),
+                    new DataColumn('name'),
+                    new RadioColumn(
+                        content: static fn(
+                            Radio $input,
+                            DataContext $context
+                        ): string => '<input name="radio-selection" type="radio" value="' . $context->getIndex() . '">',
+                        bodyAttributes: ['class' => 'test-class']
+                    ),
                 )
                 ->id('w1-grid')
                 ->dataReader($this->createOffsetPaginator($this->data, 10))
@@ -193,14 +152,14 @@ final class RadioColumnTest extends TestCase
             </thead>
             <tbody>
             <tr>
-            <td data-label="id">1</td>
-            <td data-label="name">John</td>
-            <td data-label="test.label"><input type="radio" name="radio-selection" value="0"></td>
+            <td>1</td>
+            <td>John</td>
+            <td><input type="radio" name="radio-selection" value="0"></td>
             </tr>
             <tr>
-            <td data-label="id">2</td>
-            <td data-label="name">Mary</td>
-            <td data-label="test.label"><input type="radio" name="radio-selection" value="1"></td>
+            <td>2</td>
+            <td>Mary</td>
+            <td><input type="radio" name="radio-selection" value="1"></td>
             </tr>
             </tbody>
             </table>
@@ -209,9 +168,9 @@ final class RadioColumnTest extends TestCase
             HTML,
             GridView::widget()
                 ->columns(
-                    DataColumn::create()->attribute('id'),
-                    DataColumn::create()->attribute('name'),
-                    RadioColumn::create()->label('test.label'),
+                    new DataColumn('id'),
+                    new DataColumn('name'),
+                    new RadioColumn(header: 'test.label'),
                 )
                 ->id('w1-grid')
                 ->dataReader($this->createOffsetPaginator($this->data, 10))
@@ -219,12 +178,6 @@ final class RadioColumnTest extends TestCase
         );
     }
 
-    /**
-     * @throws InvalidConfigException
-     * @throws NotFoundException
-     * @throws NotInstantiableException
-     * @throws CircularReferenceException
-     */
     public function testLabelMbString(): void
     {
         Assert::equalsWithoutLE(
@@ -240,14 +193,14 @@ final class RadioColumnTest extends TestCase
             </thead>
             <tbody>
             <tr>
-            <td data-label="id">1</td>
-            <td data-label="name">John</td>
-            <td data-label="ραδιόφωνο"><input type="radio" name="radio-selection" value="0"></td>
+            <td>1</td>
+            <td>John</td>
+            <td><input type="radio" name="radio-selection" value="0"></td>
             </tr>
             <tr>
-            <td data-label="id">2</td>
-            <td data-label="name">Mary</td>
-            <td data-label="ραδιόφωνο"><input type="radio" name="radio-selection" value="1"></td>
+            <td>2</td>
+            <td>Mary</td>
+            <td><input type="radio" name="radio-selection" value="1"></td>
             </tr>
             </tbody>
             </table>
@@ -256,9 +209,9 @@ final class RadioColumnTest extends TestCase
             HTML,
             GridView::widget()
                 ->columns(
-                    DataColumn::create()->attribute('id'),
-                    DataColumn::create()->attribute('name'),
-                    RadioColumn::create()->label('Ραδιόφωνο'),
+                    new DataColumn('id'),
+                    new DataColumn('name'),
+                    new RadioColumn(header: 'Ραδιόφωνο'),
                 )
                 ->id('w1-grid')
                 ->dataReader($this->createOffsetPaginator($this->data, 10))
@@ -266,12 +219,6 @@ final class RadioColumnTest extends TestCase
         );
     }
 
-    /**
-     * @throws InvalidConfigException
-     * @throws NotFoundException
-     * @throws NotInstantiableException
-     * @throws CircularReferenceException
-     */
     public function testLabelAttributes(): void
     {
         Assert::equalsWithoutLE(
@@ -287,14 +234,14 @@ final class RadioColumnTest extends TestCase
             </thead>
             <tbody>
             <tr>
-            <td data-label="id">1</td>
-            <td data-label="name">John</td>
-            <td data-label="test.label"><input type="radio" name="radio-selection" value="0"></td>
+            <td>1</td>
+            <td>John</td>
+            <td><input type="radio" name="radio-selection" value="0"></td>
             </tr>
             <tr>
-            <td data-label="id">2</td>
-            <td data-label="name">Mary</td>
-            <td data-label="test.label"><input type="radio" name="radio-selection" value="1"></td>
+            <td>2</td>
+            <td>Mary</td>
+            <td><input type="radio" name="radio-selection" value="1"></td>
             </tr>
             </tbody>
             </table>
@@ -303,9 +250,9 @@ final class RadioColumnTest extends TestCase
             HTML,
             GridView::widget()
                 ->columns(
-                    DataColumn::create()->attribute('id'),
-                    DataColumn::create()->attribute('name'),
-                    RadioColumn::create()->label('test.label')->labelAttributes(['class' => 'test-class']),
+                    new DataColumn('id'),
+                    new DataColumn('name'),
+                    new RadioColumn(header: 'test.label', headerAttributes: ['class' => 'test-class']),
                 )
                 ->id('w1-grid')
                 ->dataReader($this->createOffsetPaginator($this->data, 10))
@@ -334,14 +281,14 @@ final class RadioColumnTest extends TestCase
             </thead>
             <tbody>
             <tr>
-            <td data-label="id">1</td>
-            <td data-label="name">John</td>
-            <td name="test.radio"><input type="radio" name="test.radio" value="0"></td>
+            <td>1</td>
+            <td>John</td>
+            <td><input type="radio" name="test.radio" value="0"></td>
             </tr>
             <tr>
-            <td data-label="id">2</td>
-            <td data-label="name">Mary</td>
-            <td name="test.radio"><input type="radio" name="test.radio" value="1"></td>
+            <td>2</td>
+            <td>Mary</td>
+            <td><input type="radio" name="test.radio" value="1"></td>
             </tr>
             </tbody>
             </table>
@@ -350,9 +297,9 @@ final class RadioColumnTest extends TestCase
             HTML,
             GridView::widget()
                 ->columns(
-                    DataColumn::create()->attribute('id'),
-                    DataColumn::create()->attribute('name'),
-                    RadioColumn::create()->name('test.radio'),
+                    new DataColumn('id'),
+                    new DataColumn('name'),
+                    new RadioColumn(name: 'test.radio'),
                 )
                 ->id('w1-grid')
                 ->dataReader($this->createOffsetPaginator($this->data, 10))
@@ -380,12 +327,12 @@ final class RadioColumnTest extends TestCase
             </thead>
             <tbody>
             <tr>
-            <td data-label="id">1</td>
-            <td data-label="name">John</td>
+            <td>1</td>
+            <td>John</td>
             </tr>
             <tr>
-            <td data-label="id">2</td>
-            <td data-label="name">Mary</td>
+            <td>2</td>
+            <td>Mary</td>
             </tr>
             </tbody>
             </table>
@@ -394,9 +341,9 @@ final class RadioColumnTest extends TestCase
             HTML,
             GridView::widget()
                 ->columns(
-                    DataColumn::create()->attribute('id'),
-                    DataColumn::create()->attribute('name'),
-                    RadioColumn::create()->visible(false),
+                    new DataColumn('id'),
+                    new DataColumn('name'),
+                    new RadioColumn(visible: false),
                 )
                 ->id('w1-grid')
                 ->dataReader($this->createOffsetPaginator($this->data, 10))
@@ -410,7 +357,7 @@ final class RadioColumnTest extends TestCase
      * @throws NotInstantiableException
      * @throws CircularReferenceException
      */
-    public function testRender(): void
+    public function testRender1(): void
     {
         Assert::equalsWithoutLE(
             <<<HTML
@@ -425,13 +372,13 @@ final class RadioColumnTest extends TestCase
             </thead>
             <tbody>
             <tr>
-            <td data-label="id">1</td>
-            <td data-label="name">John</td>
+            <td>1</td>
+            <td>John</td>
             <td><input type="radio" name="radio-selection" value="0"></td>
             </tr>
             <tr>
-            <td data-label="id">2</td>
-            <td data-label="name">Mary</td>
+            <td>2</td>
+            <td>Mary</td>
             <td><input type="radio" name="radio-selection" value="1"></td>
             </tr>
             </tbody>
@@ -441,9 +388,9 @@ final class RadioColumnTest extends TestCase
             HTML,
             GridView::widget()
                 ->columns(
-                    DataColumn::create()->attribute('id'),
-                    DataColumn::create()->attribute('name'),
-                    RadioColumn::create(),
+                    new DataColumn('id'),
+                    new DataColumn('name'),
+                    new RadioColumn(),
                 )
                 ->id('w1-grid')
                 ->dataReader($this->createOffsetPaginator($this->data, 10))

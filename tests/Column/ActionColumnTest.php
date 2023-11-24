@@ -9,8 +9,9 @@ use Yiisoft\Definitions\Exception\CircularReferenceException;
 use Yiisoft\Definitions\Exception\InvalidConfigException;
 use Yiisoft\Definitions\Exception\NotInstantiableException;
 use Yiisoft\Factory\NotFoundException;
-use Yiisoft\Html\Tag\A;
+use Yiisoft\Html\Html;
 use Yiisoft\Yii\DataView\Column\ActionColumn;
+use Yiisoft\Yii\DataView\Column\Base\DataContext;
 use Yiisoft\Yii\DataView\Column\DataColumn;
 use Yiisoft\Yii\DataView\GridView;
 use Yiisoft\Yii\DataView\Tests\Support\Assert;
@@ -44,10 +45,14 @@ final class ActionColumnTest extends TestCase
             </thead>
             <tbody>
             <tr>
-            <td data-label="actions"><a class="text-decoration-none" href="/admin/view?id=1" title="View">🔎</a></td>
+            <td>
+            <a class="text-decoration-none" href="/admin/view?id=1" title="View">🔎</a>
+            </td>
             </tr>
             <tr>
-            <td data-label="actions"><a class="text-decoration-none" href="/admin/view?id=2" title="View">🔎</a></td>
+            <td>
+            <a class="text-decoration-none" href="/admin/view?id=2" title="View">🔎</a>
+            </td>
             </tr>
             </tbody>
             </table>
@@ -56,16 +61,14 @@ final class ActionColumnTest extends TestCase
             HTML,
             GridView::widget()
                 ->columns(
-                    ActionColumn::create()
-                        ->content(
-                            /** @psalm-param string[] $data */
-                            static fn (array $data): string => A::tag()
-                                ->addAttributes(['class' => 'text-decoration-none', 'title' => 'View'])
-                                ->content('🔎')
-                                ->encode(false)
-                                ->href('/admin/view?id=' . $data['id'])
-                                ->render(),
-                        ),
+                    new ActionColumn(
+                        content: static fn(DataContext $context): string => Html::a()
+                            ->addAttributes(['class' => 'text-decoration-none', 'title' => 'View'])
+                            ->content('🔎')
+                            ->encode(false)
+                            ->href('/admin/view?id=' . $context->getData()['id'])
+                            ->render(),
+                    )
                 )
                 ->id('w1-grid')
                 ->dataReader($this->createOffsetPaginator($this->data, 10))
@@ -92,10 +95,14 @@ final class ActionColumnTest extends TestCase
             </thead>
             <tbody>
             <tr>
-            <td class="text-decoration-none test.class" data-label="actions"><a href="/admin/view?id=1" title="View">🔎</a></td>
+            <td class="text-decoration-none test.class">
+            <a href="/admin/view?id=1" title="View">🔎</a>
+            </td>
             </tr>
             <tr>
-            <td class="text-decoration-none test.class" data-label="actions"><a href="/admin/view?id=2" title="View">🔎</a></td>
+            <td class="text-decoration-none test.class">
+            <a href="/admin/view?id=2" title="View">🔎</a>
+            </td>
             </tr>
             </tbody>
             </table>
@@ -104,17 +111,15 @@ final class ActionColumnTest extends TestCase
             HTML,
             GridView::widget()
                 ->columns(
-                    ActionColumn::create()
-                        ->content(
-                            /** @psalm-param string[] $data */
-                            static fn (array $data): string => A::tag()
-                                ->addAttributes(['title' => 'View'])
-                                ->content('🔎')
-                                ->encode(false)
-                                ->href('/admin/view?id=' . $data['id'])
-                                ->render(),
-                        )
-                        ->contentAttributes(['class' => 'text-decoration-none test.class']),
+                    new ActionColumn(
+                        content: static fn(DataContext $context): string => Html::a()
+                            ->addAttributes(['title' => 'View'])
+                            ->content('🔎')
+                            ->encode(false)
+                            ->href('/admin/view?id=' . $context->getData()['id'])
+                            ->render(),
+                        bodyAttributes: ['class' => 'text-decoration-none test.class']
+                    ),
                 )
                 ->id('w1-grid')
                 ->dataReader($this->createOffsetPaginator($this->data, 10))
@@ -141,12 +146,12 @@ final class ActionColumnTest extends TestCase
             </thead>
             <tbody>
             <tr>
-            <td data-label="actions">
+            <td>
             <a class="text-decoration-none" href="/admin/manage/resend-password?id=1" title="Resend password">&#128274;</a>
             </td>
             </tr>
             <tr>
-            <td data-label="actions">
+            <td>
             <a class="text-decoration-none" href="/admin/manage/resend-password?id=2" title="Resend password">&#128274;</a>
             </td>
             </tr>
@@ -157,19 +162,18 @@ final class ActionColumnTest extends TestCase
             HTML,
             GridView::widget()
                 ->columns(
-                    ActionColumn::create()
-                        ->buttons(
-                            [
-                                'resend-password' => static fn (string $url): string => A::tag()
-                                    ->addAttributes(['class' => 'text-decoration-none', 'title' => 'Resend password'])
-                                    ->content('&#128274;')
-                                    ->encode(false)
-                                    ->href($url)
-                                    ->render(),
-                            ],
-                        )
-                        ->template('{resend-password}')
-                        ->visibleButtons(['resend-password' => true]),
+                    new ActionColumn(
+                        buttons: [
+                            'resend-password' => static fn(string $url): string => Html::a()
+                                ->addAttributes(['class' => 'text-decoration-none', 'title' => 'Resend password'])
+                                ->content('&#128274;')
+                                ->encode(false)
+                                ->href($url)
+                                ->render(),
+                        ],
+                        template: '{resend-password}',
+                        visibleButtons: ['resend-password' => true]
+                    ),
                 )
                 ->id('w1-grid')
                 ->dataReader($this->createOffsetPaginator($this->data, 10))
@@ -177,57 +181,6 @@ final class ActionColumnTest extends TestCase
         );
     }
 
-    /**
-     * @throws InvalidConfigException
-     * @throws NotFoundException
-     * @throws NotInstantiableException
-     * @throws CircularReferenceException
-     */
-    public function testDataLabel(): void
-    {
-        Assert::equalsWithoutLE(
-            <<<HTML
-            <div id="w1-grid">
-            <table>
-            <thead>
-            <tr>
-            <th>Actions</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr>
-            <td data-label="test.label">
-            <a name="view" href="/admin/manage/view?id=1" title="View" role="button" style="text-decoration: none!important;"><span>🔎</span></a>
-            <a name="update" href="/admin/manage/update?id=1" title="Update" role="button" style="text-decoration: none!important;"><span>✎</span></a>
-            <a name="delete" href="/admin/manage/delete?id=1" title="Delete" role="button" style="text-decoration: none!important;"><span>❌</span></a>
-            </td>
-            </tr>
-            <tr>
-            <td data-label="test.label">
-            <a name="view" href="/admin/manage/view?id=2" title="View" role="button" style="text-decoration: none!important;"><span>🔎</span></a>
-            <a name="update" href="/admin/manage/update?id=2" title="Update" role="button" style="text-decoration: none!important;"><span>✎</span></a>
-            <a name="delete" href="/admin/manage/delete?id=2" title="Delete" role="button" style="text-decoration: none!important;"><span>❌</span></a>
-            </td>
-            </tr>
-            </tbody>
-            </table>
-            <div>Page <b>1</b> of <b>1</b></div>
-            </div>
-            HTML,
-            GridView::widget()
-                ->columns(ActionColumn::create()->dataLabel('test.label'))
-                ->id('w1-grid')
-                ->dataReader($this->createOffsetPaginator($this->data, 10))
-                ->render()
-        );
-    }
-
-    /**
-     * @throws InvalidConfigException
-     * @throws NotFoundException
-     * @throws NotInstantiableException
-     * @throws CircularReferenceException
-     */
     public function testFooterAttributes(): void
     {
         Assert::equalsWithoutLE(
@@ -246,14 +199,14 @@ final class ActionColumnTest extends TestCase
             </tfoot>
             <tbody>
             <tr>
-            <td data-label="actions">
+            <td>
             <a name="view" href="/admin/manage/view?id=1" title="View" role="button" style="text-decoration: none!important;"><span>🔎</span></a>
             <a name="update" href="/admin/manage/update?id=1" title="Update" role="button" style="text-decoration: none!important;"><span>✎</span></a>
             <a name="delete" href="/admin/manage/delete?id=1" title="Delete" role="button" style="text-decoration: none!important;"><span>❌</span></a>
             </td>
             </tr>
             <tr>
-            <td data-label="actions">
+            <td>
             <a name="view" href="/admin/manage/view?id=2" title="View" role="button" style="text-decoration: none!important;"><span>🔎</span></a>
             <a name="update" href="/admin/manage/update?id=2" title="Update" role="button" style="text-decoration: none!important;"><span>✎</span></a>
             <a name="delete" href="/admin/manage/delete?id=2" title="Delete" role="button" style="text-decoration: none!important;"><span>❌</span></a>
@@ -266,7 +219,10 @@ final class ActionColumnTest extends TestCase
             HTML,
             GridView::widget()
                 ->columns(
-                    ActionColumn::create()->footer('test.footer')->footerAttributes(['class' => 'test.class']),
+                    new ActionColumn(
+                        footer: 'test.footer',
+                        footerAttributes: ['class' => 'test.class'],
+                    ),
                 )
                 ->footerEnabled(true)
                 ->id('w1-grid')
@@ -275,12 +231,6 @@ final class ActionColumnTest extends TestCase
         );
     }
 
-    /**
-     * @throws InvalidConfigException
-     * @throws NotFoundException
-     * @throws NotInstantiableException
-     * @throws CircularReferenceException
-     */
     public function testLabel(): void
     {
         Assert::equalsWithoutLE(
@@ -294,14 +244,14 @@ final class ActionColumnTest extends TestCase
             </thead>
             <tbody>
             <tr>
-            <td data-label="test.label">
+            <td>
             <a name="view" href="/admin/manage/view?id=1" title="View" role="button" style="text-decoration: none!important;"><span>🔎</span></a>
             <a name="update" href="/admin/manage/update?id=1" title="Update" role="button" style="text-decoration: none!important;"><span>✎</span></a>
             <a name="delete" href="/admin/manage/delete?id=1" title="Delete" role="button" style="text-decoration: none!important;"><span>❌</span></a>
             </td>
             </tr>
             <tr>
-            <td data-label="test.label">
+            <td>
             <a name="view" href="/admin/manage/view?id=2" title="View" role="button" style="text-decoration: none!important;"><span>🔎</span></a>
             <a name="update" href="/admin/manage/update?id=2" title="Update" role="button" style="text-decoration: none!important;"><span>✎</span></a>
             <a name="delete" href="/admin/manage/delete?id=2" title="Delete" role="button" style="text-decoration: none!important;"><span>❌</span></a>
@@ -313,7 +263,7 @@ final class ActionColumnTest extends TestCase
             </div>
             HTML,
             GridView::widget()
-                ->columns(ActionColumn::create()->label('test.label'))
+                ->columns(new ActionColumn(header: 'test.label'))
                 ->id('w1-grid')
                 ->dataReader($this->createOffsetPaginator($this->data, 10))
                 ->render()
@@ -339,14 +289,14 @@ final class ActionColumnTest extends TestCase
             </thead>
             <tbody>
             <tr>
-            <td data-label="ενέργειες">
+            <td>
             <a name="view" href="/admin/manage/view?id=1" title="View" role="button" style="text-decoration: none!important;"><span>🔎</span></a>
             <a name="update" href="/admin/manage/update?id=1" title="Update" role="button" style="text-decoration: none!important;"><span>✎</span></a>
             <a name="delete" href="/admin/manage/delete?id=1" title="Delete" role="button" style="text-decoration: none!important;"><span>❌</span></a>
             </td>
             </tr>
             <tr>
-            <td data-label="ενέργειες">
+            <td>
             <a name="view" href="/admin/manage/view?id=2" title="View" role="button" style="text-decoration: none!important;"><span>🔎</span></a>
             <a name="update" href="/admin/manage/update?id=2" title="Update" role="button" style="text-decoration: none!important;"><span>✎</span></a>
             <a name="delete" href="/admin/manage/delete?id=2" title="Delete" role="button" style="text-decoration: none!important;"><span>❌</span></a>
@@ -358,7 +308,7 @@ final class ActionColumnTest extends TestCase
             </div>
             HTML,
             GridView::widget()
-                ->columns(ActionColumn::create()->label('Ενέργειες'))
+                ->columns(new ActionColumn(header: 'Ενέργειες'))
                 ->id('w1-grid')
                 ->dataReader($this->createOffsetPaginator($this->data, 10))
                 ->render()
@@ -384,14 +334,14 @@ final class ActionColumnTest extends TestCase
             </thead>
             <tbody>
             <tr>
-            <td data-label="test.label">
+            <td>
             <a name="view" href="/admin/manage/view?id=1" title="View" role="button" style="text-decoration: none!important;"><span>🔎</span></a>
             <a name="update" href="/admin/manage/update?id=1" title="Update" role="button" style="text-decoration: none!important;"><span>✎</span></a>
             <a name="delete" href="/admin/manage/delete?id=1" title="Delete" role="button" style="text-decoration: none!important;"><span>❌</span></a>
             </td>
             </tr>
             <tr>
-            <td data-label="test.label">
+            <td>
             <a name="view" href="/admin/manage/view?id=2" title="View" role="button" style="text-decoration: none!important;"><span>🔎</span></a>
             <a name="update" href="/admin/manage/update?id=2" title="Update" role="button" style="text-decoration: none!important;"><span>✎</span></a>
             <a name="delete" href="/admin/manage/delete?id=2" title="Delete" role="button" style="text-decoration: none!important;"><span>❌</span></a>
@@ -403,64 +353,18 @@ final class ActionColumnTest extends TestCase
             </div>
             HTML,
             GridView::widget()
-                ->columns(ActionColumn::create()->label('test.label')->labelAttributes(['class' => 'test.class']))
+                ->columns(
+                    new ActionColumn(
+                        header: 'test.label',
+                        headerAttributes: ['class' => 'test.class'],
+                    ),
+                )
                 ->id('w1-grid')
                 ->dataReader($this->createOffsetPaginator($this->data, 10))
                 ->render()
         );
     }
 
-    /**
-     * @throws InvalidConfigException
-     * @throws NotFoundException
-     * @throws NotInstantiableException
-     * @throws CircularReferenceException
-     */
-    public function testName(): void
-    {
-        Assert::equalsWithoutLE(
-            <<<HTML
-            <div id="w1-grid">
-            <table>
-            <thead>
-            <tr>
-            <th>Actions</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr>
-            <td name="test.name" data-label="actions">
-            <a name="view" href="/admin/manage/view?id=1" title="View" role="button" style="text-decoration: none!important;"><span>🔎</span></a>
-            <a name="update" href="/admin/manage/update?id=1" title="Update" role="button" style="text-decoration: none!important;"><span>✎</span></a>
-            <a name="delete" href="/admin/manage/delete?id=1" title="Delete" role="button" style="text-decoration: none!important;"><span>❌</span></a>
-            </td>
-            </tr>
-            <tr>
-            <td name="test.name" data-label="actions">
-            <a name="view" href="/admin/manage/view?id=2" title="View" role="button" style="text-decoration: none!important;"><span>🔎</span></a>
-            <a name="update" href="/admin/manage/update?id=2" title="Update" role="button" style="text-decoration: none!important;"><span>✎</span></a>
-            <a name="delete" href="/admin/manage/delete?id=2" title="Delete" role="button" style="text-decoration: none!important;"><span>❌</span></a>
-            </td>
-            </tr>
-            </tbody>
-            </table>
-            <div>Page <b>1</b> of <b>1</b></div>
-            </div>
-            HTML,
-            GridView::widget()
-                ->columns(ActionColumn::create()->name('test.name'))
-                ->id('w1-grid')
-                ->dataReader($this->createOffsetPaginator($this->data, 10))
-                ->render()
-        );
-    }
-
-    /**
-     * @throws InvalidConfigException
-     * @throws NotFoundException
-     * @throws NotInstantiableException
-     * @throws CircularReferenceException
-     */
     public function testNotVisible(): void
     {
         Assert::equalsWithoutLE(
@@ -479,7 +383,7 @@ final class ActionColumnTest extends TestCase
             </div>
             HTML,
             GridView::widget()
-                ->columns(ActionColumn::create()->visible(false))
+                ->columns(new ActionColumn(visible: false))
                 ->id('w1-grid')
                 ->dataReader($this->createOffsetPaginator($this->data, 10))
                 ->render()
@@ -505,14 +409,14 @@ final class ActionColumnTest extends TestCase
             </thead>
             <tbody>
             <tr>
-            <td data-label="actions">
+            <td>
             <a name="view" href="/admin/manage/view?identity_id=1" title="View" role="button" style="text-decoration: none!important;"><span>🔎</span></a>
             <a name="update" href="/admin/manage/update?identity_id=1" title="Update" role="button" style="text-decoration: none!important;"><span>✎</span></a>
             <a name="delete" href="/admin/manage/delete?identity_id=1" title="Delete" role="button" style="text-decoration: none!important;"><span>❌</span></a>
             </td>
             </tr>
             <tr>
-            <td data-label="actions">
+            <td>
             <a name="view" href="/admin/manage/view?identity_id=2" title="View" role="button" style="text-decoration: none!important;"><span>🔎</span></a>
             <a name="update" href="/admin/manage/update?identity_id=2" title="Update" role="button" style="text-decoration: none!important;"><span>✎</span></a>
             <a name="delete" href="/admin/manage/delete?identity_id=2" title="Delete" role="button" style="text-decoration: none!important;"><span>❌</span></a>
@@ -524,7 +428,7 @@ final class ActionColumnTest extends TestCase
             </div>
             HTML,
             GridView::widget()
-                ->columns(ActionColumn::create()->primaryKey('identity_id'))
+                ->columns(new ActionColumn(primaryKey: 'identity_id'))
                 ->id('w1-grid')
                 ->dataReader(
                     $this->createOffsetPaginator(
@@ -560,18 +464,18 @@ final class ActionColumnTest extends TestCase
             </thead>
             <tbody>
             <tr>
-            <td data-label="id">1</td>
-            <td data-label="name">John</td>
-            <td data-label="actions">
+            <td>1</td>
+            <td>John</td>
+            <td>
             <a name="view" href="/admin/manage/view?id=1" title="View" role="button" style="text-decoration: none!important;"><span>🔎</span></a>
             <a name="update" href="/admin/manage/update?id=1" title="Update" role="button" style="text-decoration: none!important;"><span>✎</span></a>
             <a name="delete" href="/admin/manage/delete?id=1" title="Delete" role="button" style="text-decoration: none!important;"><span>❌</span></a>
             </td>
             </tr>
             <tr>
-            <td data-label="id">2</td>
-            <td data-label="name">Mary</td>
-            <td data-label="actions">
+            <td>2</td>
+            <td>Mary</td>
+            <td>
             <a name="view" href="/admin/manage/view?id=2" title="View" role="button" style="text-decoration: none!important;"><span>🔎</span></a>
             <a name="update" href="/admin/manage/update?id=2" title="Update" role="button" style="text-decoration: none!important;"><span>✎</span></a>
             <a name="delete" href="/admin/manage/delete?id=2" title="Delete" role="button" style="text-decoration: none!important;"><span>❌</span></a>
@@ -584,9 +488,9 @@ final class ActionColumnTest extends TestCase
             HTML,
             GridView::widget()
                 ->columns(
-                    DataColumn::create()->attribute('id'),
-                    DataColumn::create()->attribute('name'),
-                    ActionColumn::create(),
+                    new DataColumn('id'),
+                    new DataColumn('name'),
+                    new ActionColumn(),
                 )
                 ->id('w1-grid')
                 ->dataReader($this->createOffsetPaginator($this->data, 10))
@@ -613,14 +517,14 @@ final class ActionColumnTest extends TestCase
             </thead>
             <tbody>
             <tr>
-            <td data-label="actions">
+            <td>
             <a name="view" href="/admin/manage/view?test-arguments=test.arguments&amp;id=1" title="View" role="button" style="text-decoration: none!important;"><span>🔎</span></a>
             <a name="update" href="/admin/manage/update?test-arguments=test.arguments&amp;id=1" title="Update" role="button" style="text-decoration: none!important;"><span>✎</span></a>
             <a name="delete" href="/admin/manage/delete?test-arguments=test.arguments&amp;id=1" title="Delete" role="button" style="text-decoration: none!important;"><span>❌</span></a>
             </td>
             </tr>
             <tr>
-            <td data-label="actions">
+            <td>
             <a name="view" href="/admin/manage/view?test-arguments=test.arguments&amp;id=2" title="View" role="button" style="text-decoration: none!important;"><span>🔎</span></a>
             <a name="update" href="/admin/manage/update?test-arguments=test.arguments&amp;id=2" title="Update" role="button" style="text-decoration: none!important;"><span>✎</span></a>
             <a name="delete" href="/admin/manage/delete?test-arguments=test.arguments&amp;id=2" title="Delete" role="button" style="text-decoration: none!important;"><span>❌</span></a>
@@ -632,7 +536,7 @@ final class ActionColumnTest extends TestCase
             </div>
             HTML,
             GridView::widget()
-                ->columns(ActionColumn::create()->urlArguments(['test-arguments' => 'test.arguments']))
+                ->columns(new ActionColumn(urlArguments: ['test-arguments' => 'test.arguments']))
                 ->id('w1-grid')
                 ->dataReader($this->createOffsetPaginator($this->data, 10))
                 ->render()
@@ -658,14 +562,14 @@ final class ActionColumnTest extends TestCase
             </thead>
             <tbody>
             <tr>
-            <td data-label="actions">
+            <td>
             <a name="view" href="https://test.com/view?id=1" title="View" role="button" style="text-decoration: none!important;"><span>🔎</span></a>
             <a name="update" href="https://test.com/update?id=1" title="Update" role="button" style="text-decoration: none!important;"><span>✎</span></a>
             <a name="delete" href="https://test.com/delete?id=1" title="Delete" role="button" style="text-decoration: none!important;"><span>❌</span></a>
             </td>
             </tr>
             <tr>
-            <td data-label="actions">
+            <td>
             <a name="view" href="https://test.com/view?id=2" title="View" role="button" style="text-decoration: none!important;"><span>🔎</span></a>
             <a name="update" href="https://test.com/update?id=2" title="Update" role="button" style="text-decoration: none!important;"><span>✎</span></a>
             <a name="delete" href="https://test.com/delete?id=2" title="Delete" role="button" style="text-decoration: none!important;"><span>❌</span></a>
@@ -678,11 +582,12 @@ final class ActionColumnTest extends TestCase
             HTML,
             GridView::widget()
                 ->columns(
-                    ActionColumn::create()
-                    ->urlCreator(
-                        /** @psalm-param string[] $data */
-                        static fn (string $action, array $data): string => 'https://test.com/' . $action . '?id=' . $data['id'],
-                    ),
+                    new ActionColumn(
+                        urlCreator: static fn(
+                            string $action,
+                            array $data
+                        ): string => 'https://test.com/' . $action . '?id=' . $data['id'],
+                    )
                 )
                 ->id('w1-grid')
                 ->dataReader($this->createOffsetPaginator($this->data, 10))
@@ -690,12 +595,6 @@ final class ActionColumnTest extends TestCase
         );
     }
 
-    /**
-     * @throws InvalidConfigException
-     * @throws NotFoundException
-     * @throws NotInstantiableException
-     * @throws CircularReferenceException
-     */
     public function testUrlQueryParameters(): void
     {
         Assert::equalsWithoutLE(
@@ -709,14 +608,14 @@ final class ActionColumnTest extends TestCase
             </thead>
             <tbody>
             <tr>
-            <td data-label="actions">
+            <td>
             <a name="view" href="/admin/manage/view?test-param=test.param&amp;id=1" title="View" role="button" style="text-decoration: none!important;"><span>🔎</span></a>
             <a name="update" href="/admin/manage/update?test-param=test.param&amp;id=1" title="Update" role="button" style="text-decoration: none!important;"><span>✎</span></a>
             <a name="delete" href="/admin/manage/delete?test-param=test.param&amp;id=1" title="Delete" role="button" style="text-decoration: none!important;"><span>❌</span></a>
             </td>
             </tr>
             <tr>
-            <td data-label="actions">
+            <td>
             <a name="view" href="/admin/manage/view?test-param=test.param&amp;id=2" title="View" role="button" style="text-decoration: none!important;"><span>🔎</span></a>
             <a name="update" href="/admin/manage/update?test-param=test.param&amp;id=2" title="Update" role="button" style="text-decoration: none!important;"><span>✎</span></a>
             <a name="delete" href="/admin/manage/delete?test-param=test.param&amp;id=2" title="Delete" role="button" style="text-decoration: none!important;"><span>❌</span></a>
@@ -728,19 +627,13 @@ final class ActionColumnTest extends TestCase
             </div>
             HTML,
             GridView::widget()
-                ->columns(ActionColumn::create()->urlQueryParameters(['test-param' => 'test.param']))
+                ->columns(new ActionColumn(urlQueryParameters: ['test-param' => 'test.param']))
                 ->id('w1-grid')
                 ->dataReader($this->createOffsetPaginator($this->data, 10))
                 ->render()
         );
     }
 
-    /**
-     * @throws InvalidConfigException
-     * @throws NotFoundException
-     * @throws NotInstantiableException
-     * @throws CircularReferenceException
-     */
     public function testUrlParamsConfig(): void
     {
         Assert::equalsWithoutLE(
@@ -754,14 +647,14 @@ final class ActionColumnTest extends TestCase
             </thead>
             <tbody>
             <tr>
-            <td data-label="actions">
+            <td>
             <a name="view" href="/admin/manage/view?test-param=test.param&amp;id=1" title="View" role="button" style="text-decoration: none!important;"><span>🔎</span></a>
             <a name="update" href="/admin/manage/update?test-param=test.param&amp;id=1" title="Update" role="button" style="text-decoration: none!important;"><span>✎</span></a>
             <a name="delete" href="/admin/manage/delete?test-param=test.param&amp;id=1" title="Delete" role="button" style="text-decoration: none!important;"><span>❌</span></a>
             </td>
             </tr>
             <tr>
-            <td data-label="actions">
+            <td>
             <a name="view" href="/admin/manage/view?test-param=test.param&amp;id=2" title="View" role="button" style="text-decoration: none!important;"><span>🔎</span></a>
             <a name="update" href="/admin/manage/update?test-param=test.param&amp;id=2" title="Update" role="button" style="text-decoration: none!important;"><span>✎</span></a>
             <a name="delete" href="/admin/manage/delete?test-param=test.param&amp;id=2" title="Delete" role="button" style="text-decoration: none!important;"><span>❌</span></a>
@@ -773,19 +666,13 @@ final class ActionColumnTest extends TestCase
             </div>
             HTML,
             GridView::widget()
-                ->columns(ActionColumn::create()->urlParamsConfig(['test-param' => 'test.param']))
+                ->columns(new ActionColumn(urlParamsConfig: ['test-param' => 'test.param']))
                 ->id('w1-grid')
                 ->dataReader($this->createOffsetPaginator($this->data, 10))
                 ->render()
         );
     }
 
-    /**
-     * @throws InvalidConfigException
-     * @throws NotFoundException
-     * @throws NotInstantiableException
-     * @throws CircularReferenceException
-     */
     public function testVisibleButtonsClosure(): void
     {
         Assert::equalsWithoutLE(
@@ -799,12 +686,12 @@ final class ActionColumnTest extends TestCase
             </thead>
             <tbody>
             <tr>
-            <td data-label="actions">
+            <td>
             <a name="view" href="/admin/manage/view?id=1" title="View" role="button" style="text-decoration: none!important;"><span>🔎</span></a>
             </td>
             </tr>
             <tr>
-            <td data-label="actions">
+            <td>
             <a name="update" href="/admin/manage/update?id=2" title="Update" role="button" style="text-decoration: none!important;"><span>✎</span></a>
             </td>
             </tr>
@@ -815,8 +702,8 @@ final class ActionColumnTest extends TestCase
             HTML,
             GridView::widget()
                 ->columns(
-                    ActionColumn::create()->visibleButtons(
-                        [
+                    new ActionColumn(
+                        visibleButtons: [
                             'view' => static fn (array $data): bool => $data['id'] === 1,
                             'update' => static fn (array $data): bool => $data['id'] !== 1,
                         ],

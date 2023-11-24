@@ -46,7 +46,7 @@ abstract class BaseListView extends Widget
     private string $layoutGridTable = "{items}\n{summary}\n{pager}";
     private string $pagination = '';
     protected ?ReadableDataInterface $dataReader = null;
-    private array $sortLinkAttributes = [];
+    protected array $sortLinkAttributes = [];
     private ?string $summary = null;
     private array $summaryAttributes = [];
     private string $toolbar = '';

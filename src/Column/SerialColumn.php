@@ -5,24 +5,46 @@ declare(strict_types=1);
 namespace Yiisoft\Yii\DataView\Column;
 
 /**
- * SerialColumn displays a column of row numbers (1-based).
+ * `SerialColumn` displays a column of row numbers (1-based).
  */
-final class SerialColumn extends AbstractColumn
+final class SerialColumn implements ColumnInterface
 {
-    protected function getLabel(): string
-    {
-        return parent::getLabel() !== '' ? parent::getLabel() : '#';
+    public function __construct(
+        private ?string $header = null,
+        private ?string $footer = null,
+        private array $columnAttributes = [],
+        private array $bodyAttributes = [],
+        private bool $visible = true,
+    ) {
     }
 
-    /**
-     * Renders the data cell content.
-     *
-     * @param array|object $data The data.
-     * @param mixed $key The key associated with the data.
-     * @param int $index The zero-based index of the data in the data provider. {@see GridView::dataProvider}.
-     */
-    protected function renderDataCellContent(array|object $data, mixed $key, int $index): string
+    public function getHeader(): ?string
     {
-        return (string) ($index + 1);
+        return $this->header;
+    }
+
+    public function getFooter(): ?string
+    {
+        return $this->footer;
+    }
+
+    public function getColumnAttributes(): array
+    {
+        return $this->columnAttributes;
+    }
+
+    public function getBodyAttributes(): array
+    {
+        return $this->bodyAttributes;
+    }
+
+    public function isVisible(): bool
+    {
+        return $this->visible;
+    }
+
+    public function getRenderer(): string
+    {
+        return SerialColumnRenderer::class;
     }
 }
