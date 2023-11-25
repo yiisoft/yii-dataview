@@ -16,20 +16,20 @@ final class RadioColumnRenderer implements ColumnRendererInterface
     public function renderColumn(ColumnInterface $column, Cell $cell, GlobalContext $context): Cell
     {
         $this->checkColumn($column);
-        return $cell->addAttributes($column->getColumnAttributes());
+        return $cell->addAttributes($column->columnAttributes);
     }
 
     public function renderHeader(ColumnInterface $column, Cell $cell, GlobalContext $context): ?Cell
     {
         $this->checkColumn($column);
 
-        $header = $column->getHeader();
+        $header = $column->header;
         if ($header === null) {
             return null;
         }
 
         return $cell
-            ->addAttributes($column->getHeaderAttributes())
+            ->addAttributes($column->headerAttributes)
             ->content($header);
     }
 
@@ -42,7 +42,7 @@ final class RadioColumnRenderer implements ColumnRendererInterface
     {
         $this->checkColumn($column);
 
-        $inputAttributes = $column->getInputAttributes();
+        $inputAttributes = $column->inputAttributes;
         $name = null;
         $value = null;
 
@@ -51,7 +51,7 @@ final class RadioColumnRenderer implements ColumnRendererInterface
         }
 
         if (!array_key_exists('value', $inputAttributes)) {
-            $key = $context->getKey();
+            $key = $context->key;
             $value = is_array($key)
                 ? json_encode($key, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE)
                 : (string)$key;
@@ -59,12 +59,12 @@ final class RadioColumnRenderer implements ColumnRendererInterface
 
         $input = Html::radio($name, $value, $inputAttributes);
 
-        $contentClosure = $column->getContent();
+        $contentClosure = $column->content;
         /** @var string|Stringable $content */
         $content = $contentClosure === null ? $input : $contentClosure($input, $context);
 
         return $cell
-            ->addAttributes($column->getBodyAttributes())
+            ->addAttributes($column->bodyAttributes)
             ->content($content)
             ->encode(false);
     }
@@ -73,8 +73,8 @@ final class RadioColumnRenderer implements ColumnRendererInterface
     {
         $this->checkColumn($column);
 
-        if ($column->getFooter() !== null) {
-            $cell = $cell->content($column->getFooter());
+        if ($column->footer !== null) {
+            $cell = $cell->content($column->footer);
         }
 
         return $cell;

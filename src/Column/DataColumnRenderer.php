@@ -18,27 +18,43 @@ use Yiisoft\Yii\DataView\LinkSorter;
 
 final class DataColumnRenderer implements ColumnRendererInterface
 {
+    private const FILTER_TYPES = [
+        'date' => 'date',
+        'datetime' => 'datetime-local',
+        'email' => 'email',
+        'month' => 'month',
+        'number' => 'number',
+        'range' => 'range',
+        'search' => 'search',
+        'select' => 'select',
+        'tel' => 'tel',
+        'text' => 'text',
+        'time' => 'time',
+        'url' => 'url',
+        'week' => 'week',
+    ];
+
     public function renderColumn(ColumnInterface $column, Cell $cell, GlobalContext $context): Cell
     {
         $this->checkColumn($column);
-        return $cell->addAttributes($column->getColumnAttributes());
+        return $cell->addAttributes($column->columnAttributes);
     }
 
     public function renderHeader(ColumnInterface $column, Cell $cell, GlobalContext $context): Cell
     {
         $this->checkColumn($column);
 
-        $label = $column->getHeader() ?? ($column->getProperty() === null ? '' : ucfirst($column->getProperty()));
+        $label = $column->header ?? ($column->property === null ? '' : ucfirst($column->property));
 
-        if ($column->getProperty() !== null && $column->isWithSorting()) {
-            $linkSorter = $this->renderLinkSorter($context, $column->getProperty(), $label);
+        if ($column->property !== null && $column->withSorting) {
+            $linkSorter = $this->renderLinkSorter($context, $column->property, $label);
             if (!empty($linkSorter)) {
                 return $cell->content($linkSorter)->encode(false);
             }
         }
 
         return $cell
-            ->addAttributes($column->getHeaderAttributes())
+            ->addAttributes($column->headerAttributes)
             ->content($label);
     }
 
@@ -46,10 +62,14 @@ final class DataColumnRenderer implements ColumnRendererInterface
     {
         $this->checkColumn($column);
 
-        if ($column->getFilter() !== null) {
-            $content = $column->getFilter();
-        } elseif ($column->getFilterProperty() !== null) {
-            $content = match ($column->getFilterType()) {
+        if (!isset(self::FILTER_TYPES[$column->filterType])) {
+            throw new InvalidArgumentException(sprintf('Invalid filter type "%s".', $column->filterType));
+        }
+
+        if ($column->filter !== null) {
+            $content = $column->filter;
+        } elseif ($column->filterProperty !== null) {
+            $content = match (self::FILTER_TYPES[$column->filterType]) {
                 'select' => $this->renderFilterSelect($column, $context),
                 default => $this->renderFilterInput($column, $context),
             };
@@ -59,7 +79,7 @@ final class DataColumnRenderer implements ColumnRendererInterface
 
         return $cell
             ->content($content)
-            ->addAttributes($column->getFilterAttributes())
+            ->addAttributes($column->filterAttributes)
             ->encode(false);
     }
 
@@ -67,18 +87,18 @@ final class DataColumnRenderer implements ColumnRendererInterface
     {
         $this->checkColumn($column);
 
-        $contentSource = $column->getContent();
+        $contentSource = $column->content;
 
         if ($contentSource !== null) {
             $content = (string)(is_callable($contentSource) ? $contentSource($context) : $contentSource);
-        } elseif ($column->getProperty() !== null) {
-            $content = (string)ArrayHelper::getValue($context->getData(), $column->getProperty());
+        } elseif ($column->property !== null) {
+            $content = (string)ArrayHelper::getValue($context->data, $column->property);
         } else {
             $content = '';
         }
 
         return $cell
-            ->addAttributes($column->getBodyAttributes())
+            ->addAttributes($column->bodyAttributes)
             ->content($content);
     }
 
@@ -86,8 +106,8 @@ final class DataColumnRenderer implements ColumnRendererInterface
     {
         $this->checkColumn($column);
 
-        if ($column->getFooter() !== null) {
-            $cell = $cell->content($column->getFooter());
+        if ($column->footer !== null) {
+            $cell = $cell->content($column->footer);
         }
 
         return $cell;
@@ -95,7 +115,7 @@ final class DataColumnRenderer implements ColumnRendererInterface
 
     private function renderLinkSorter(GlobalContext $context, string $property, string $label): string
     {
-        $dataReader = $context->getDataReader();
+        $dataReader = $context->dataReader;
         if (!$dataReader instanceof PaginatorInterface) {
             return '';
         }
@@ -116,59 +136,59 @@ final class DataColumnRenderer implements ColumnRendererInterface
             ->iconAscClass('bi bi-sort-alpha-up')
             ->iconDescClass('bi bi-sort-alpha-down')
             ->label($label)
-            ->linkAttributes($context->getSortLinkAttributes())
+            ->linkAttributes($context->sortLinkAttributes)
             ->pageSize($dataReader->getPageSize())
-            ->urlArguments($context->getUrlArguments())
-            ->urlQueryParameters($context->getUrlQueryParameters())
+            ->urlArguments($context->urlArguments)
+            ->urlQueryParameters($context->urlQueryParameters)
             ->render();
     }
 
     private function renderFilterInput(DataColumn $column, GlobalContext $context): string
     {
-        $filterInputAttributes = $column->getFilterInputAttributes();
+        $filterInputAttributes = $column->filterInputAttributes;
         $filterInputTag = Input::tag();
 
         if (!array_key_exists('name', $filterInputAttributes)) {
             $filterInputTag = $filterInputTag->name(
                 Attribute::getInputName(
-                    (string)($column->getFilterModelName() ?? $context->getFilterModelName()),
-                    $column->getFilterProperty() ?? ''
+                    (string)($column->filterModelName ?? $context->filterModelName),
+                    $column->filterProperty ?? ''
                 ),
             );
         }
 
-        if (!array_key_exists('value', $filterInputAttributes) && $column->getFilterValueDefault() !== '') {
-            $filterInputTag = $filterInputTag->value($column->getFilterValueDefault());
+        if (!array_key_exists('value', $filterInputAttributes) && $column->filterValueDefault !== '') {
+            $filterInputTag = $filterInputTag->value($column->filterValueDefault);
         }
 
         return $filterInputTag
             ->addAttributes($filterInputAttributes)
-            ->type($column->getFilterType())
+            ->type(self::FILTER_TYPES[$column->filterType])
             ->render();
     }
 
     private function renderFilterSelect(DataColumn $column, GlobalContext $context): string
     {
-        $filterInputAttributes = $column->getFilterInputAttributes();
+        $filterInputAttributes = $column->filterInputAttributes;
         $filterSelectTag = Select::tag();
 
         if (!array_key_exists('name', $filterInputAttributes)) {
             $filterSelectTag = $filterSelectTag->name(
                 Attribute::getInputName(
-                    (string)($column->getFilterModelName() ?? $context->getFilterModelName()),
-                    $column->getFilterProperty() ?? ''
+                    (string)($column->filterModelName ?? $context->filterModelName),
+                    $column->filterProperty ?? ''
                 ),
             );
         }
 
-        if ($column->getFilterValueDefault() !== null) {
-            $filterSelectTag = $filterSelectTag->value($column->getFilterValueDefault());
+        if ($column->filterValueDefault !== null) {
+            $filterSelectTag = $filterSelectTag->value($column->filterValueDefault);
         }
 
         return $filterSelectTag
             ->addAttributes($filterInputAttributes)
-            ->optionsData($column->getFilterInputSelectItems())
-            ->prompt($column->getFilterInputSelectPrompt())
+            ->optionsData($column->filterInputSelectItems)
+            ->prompt($column->filterInputSelectPrompt)
             ->render();
     }
 

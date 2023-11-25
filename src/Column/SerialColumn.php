@@ -10,32 +10,12 @@ namespace Yiisoft\Yii\DataView\Column;
 final class SerialColumn implements ColumnInterface
 {
     public function __construct(
-        private ?string $header = null,
-        private ?string $footer = null,
-        private array $columnAttributes = [],
-        private array $bodyAttributes = [],
-        private bool $visible = true,
+        public readonly ?string $header = null,
+        public readonly ?string $footer = null,
+        public readonly array $columnAttributes = [],
+        public readonly array $bodyAttributes = [],
+        private readonly bool $visible = true,
     ) {
-    }
-
-    public function getHeader(): ?string
-    {
-        return $this->header;
-    }
-
-    public function getFooter(): ?string
-    {
-        return $this->footer;
-    }
-
-    public function getColumnAttributes(): array
-    {
-        return $this->columnAttributes;
-    }
-
-    public function getBodyAttributes(): array
-    {
-        return $this->bodyAttributes;
     }
 
     public function isVisible(): bool

@@ -65,7 +65,7 @@ final class CheckboxColumnTest extends TestCase
                 ->columns(
                     new DataColumn('id'),
                     new DataColumn('name'),
-                    new CheckboxColumn(content: static fn(Checkbox $input, DataContext $context): string => '<input name="checkbox-selection" type="checkbox" value="' . $context->getIndex() . '">'),
+                    new CheckboxColumn(content: static fn(Checkbox $input, DataContext $context): string => '<input name="checkbox-selection" type="checkbox" value="' . $context->index . '">'),
                 )
                 ->id('w1-grid')
                 ->dataReader($this->createOffsetPaginator($this->data, 10))
@@ -114,7 +114,7 @@ final class CheckboxColumnTest extends TestCase
                     new DataColumn('name'),
                     new CheckboxColumn(
                         content: static fn(Checkbox $input, DataContext $context): string => '<input name="checkbox-selection" type="checkbox" value="'
-                            . $context->getIndex() . '">',
+                            . $context->index . '">',
                         bodyAttributes: ['class' => 'test.class'],
                     ),
                 )
