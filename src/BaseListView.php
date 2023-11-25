@@ -35,7 +35,7 @@ abstract class BaseListView extends Widget
      * @var TranslatorInterface A translator instance used for translations of messages. If it was not set
      * explicitly in the constructor, a default one created automatically in {@see createDefaultTranslator()}.
      */
-    private TranslatorInterface $translator;
+    protected readonly TranslatorInterface $translator;
 
     private array $attributes = [];
     protected ?string $emptyText = null;
@@ -57,7 +57,7 @@ abstract class BaseListView extends Widget
     public function __construct(
         TranslatorInterface|null $translator = null,
         private UrlGeneratorInterface|null $urlGenerator = null,
-        private string $translationCategory = self::DEFAULT_TRANSLATION_CATEGORY,
+        protected readonly string $translationCategory = self::DEFAULT_TRANSLATION_CATEGORY,
     ) {
         $this->translator = $translator ?? $this->createDefaultTranslator();
     }

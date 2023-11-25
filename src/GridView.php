@@ -389,6 +389,8 @@ final class GridView extends BaseListView
             $this->urlArguments,
             $this->urlQueryParameters,
             $this->filterModelName,
+            $this->translator,
+            $this->translationCategory,
         );
 
         if ($this->columnsGroupEnabled) {
