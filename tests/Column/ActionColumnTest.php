@@ -62,11 +62,11 @@ final class ActionColumnTest extends TestCase
             GridView::widget()
                 ->columns(
                     new ActionColumn(
-                        content: static fn(DataContext $context): string => Html::a()
+                        content: static fn(array $data): string => Html::a()
                             ->addAttributes(['class' => 'text-decoration-none', 'title' => 'View'])
                             ->content('🔎')
                             ->encode(false)
-                            ->href('/admin/view?id=' . $context->data['id'])
+                            ->href('/admin/view?id=' . $data['id'])
                             ->render(),
                     )
                 )
@@ -112,11 +112,11 @@ final class ActionColumnTest extends TestCase
             GridView::widget()
                 ->columns(
                     new ActionColumn(
-                        content: static fn(DataContext $context): string => Html::a()
+                        content: static fn(array $data): string => Html::a()
                             ->addAttributes(['title' => 'View'])
                             ->content('🔎')
                             ->encode(false)
-                            ->href('/admin/view?id=' . $context->data['id'])
+                            ->href('/admin/view?id=' . $data['id'])
                             ->render(),
                         bodyAttributes: ['class' => 'text-decoration-none test.class']
                     ),

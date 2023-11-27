@@ -47,7 +47,7 @@ final class ActionColumnRenderer implements ColumnRendererInterface
         $contentSource = $column->content;
 
         if ($contentSource !== null) {
-            $content = (string)(is_callable($contentSource) ? $contentSource($context) : $contentSource);
+            $content = (string)(is_callable($contentSource) ? $contentSource($context->data, $context) : $contentSource);
         } else {
             $buttons = empty($column->buttons) ? $this->getDefaultButtons() : $column->buttons;
             $content = preg_replace_callback(

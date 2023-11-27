@@ -90,7 +90,7 @@ final class DataColumnRenderer implements ColumnRendererInterface
         $contentSource = $column->content;
 
         if ($contentSource !== null) {
-            $content = (string)(is_callable($contentSource) ? $contentSource($context) : $contentSource);
+            $content = (string)(is_callable($contentSource) ? $contentSource($context->data, $context) : $contentSource);
         } elseif ($column->property !== null) {
             $content = (string)ArrayHelper::getValue($context->data, $column->property);
         } else {

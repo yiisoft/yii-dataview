@@ -60,11 +60,11 @@ final class DataColumnTest extends TestCase
                 ->columns(
                     new DataColumn(
                         'id',
-                        content: static fn(DataContext $context): int => (int)$context->data['id'],
+                        content: static fn(array $data): int => (int)$data['id'],
                     ),
                     new DataColumn(
                         'name',
-                        content: static fn(DataContext $context): string => (string)$context->data['name'],
+                        content: static fn(array $data): string => (string)$data['name'],
                     ),
                 )
                 ->id('w1-grid')
@@ -109,12 +109,12 @@ final class DataColumnTest extends TestCase
                 ->columns(
                     new DataColumn(
                         'id',
-                        content: static fn(DataContext $context): int => (int)$context->data['id'],
+                        content: static fn(array $data): int => (int)$data['id'],
                         bodyAttributes: ['class' => 'test.class'],
                     ),
                     new DataColumn(
                         'name',
-                        content: static fn(DataContext $context): string => (string)$context->data['name'],
+                        content: static fn(array $data): string => (string)$data['name'],
                         bodyAttributes: ['class' => 'test.class'],
                     ),
                 )
@@ -489,11 +489,11 @@ final class DataColumnTest extends TestCase
                 ->columns(
                     new DataColumn(
                         'id',
-                        content: static fn(DataContext $context): string => (string)$context->data['id']
+                        content: static fn(array $data): string => (string)$data['id']
                     ),
                     new DataColumn(
                         'name',
-                        content: static fn(DataContext $context): string => (string)$context->data['name']
+                        content: static fn(array $data): string => (string)$data['name']
                     ),
                 )
                 ->id('w1-grid')
