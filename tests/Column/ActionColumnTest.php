@@ -718,10 +718,10 @@ final class ActionColumnTest extends TestCase
     public function testObjectsWithPrimaryKey(): void
     {
         $dataReader = new IterableDataReader([
-            new class() {
+            new class () {
                 public int $id = 23;
             },
-            new class() {
+            new class () {
                 public int $id = 78;
             },
         ]);
