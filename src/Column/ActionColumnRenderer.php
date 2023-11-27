@@ -31,7 +31,7 @@ final class ActionColumnRenderer implements ColumnRendererInterface
     {
         $this->checkColumn($column);
         return $cell
-            ->content($column->header ?? 'Actions')
+            ->content($column->header ?? $context->translate('Actions'))
             ->addAttributes($column->headerAttributes);
     }
 
