@@ -528,9 +528,9 @@ final class GridView extends BaseListView
             : Html::tbody($this->tbodyAttributes)->rows(...$rows)->render();
 
         return Html::tag('table', attributes: $this->tableAttributes)->open()
-            . PHP_EOL
-            . implode(PHP_EOL, $blocks)
-            . PHP_EOL
+            . "\n"
+            . implode("\n", $blocks)
+            . "\n"
             . '</table>';
     }
 

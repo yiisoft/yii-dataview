@@ -460,13 +460,13 @@ abstract class BaseListView extends Widget
 
         return match ($this->withContainer) {
             true => trim(
-                $contentGrid . PHP_EOL . Div::tag()
+                $contentGrid . "\n" . Div::tag()
                     ->attributes($attributes)
-                    ->content(PHP_EOL . $this->renderGridTable() . PHP_EOL)
+                    ->content("\n" . $this->renderGridTable() . "\n")
                     ->encode(false)
                     ->render()
             ),
-            false => trim($contentGrid . PHP_EOL . $this->renderGridTable()),
+            false => trim($contentGrid . "\n" . $this->renderGridTable()),
         };
     }
 

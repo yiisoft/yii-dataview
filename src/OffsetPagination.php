@@ -217,13 +217,13 @@ final class OffsetPagination extends BasePagination
             Nav::tag()
                 ->attributes($attributes)
                 ->content(
-                    PHP_EOL .
+                    "\n" .
                     Menu::widget()
                         ->class($this->getMenuClass())
                         ->items(array_filter($items))
                         ->itemsContainerClass($this->getMenuItemContainerClass())
                         ->linkClass($this->getMenuItemLinkClass()) .
-                    PHP_EOL
+                    "\n"
                 )
                 ->encode(false)
                 ->render();

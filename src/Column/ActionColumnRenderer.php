@@ -80,7 +80,7 @@ final class ActionColumnRenderer implements ColumnRendererInterface
 
         return $cell
             ->addAttributes($column->bodyAttributes)
-            ->content(PHP_EOL . $content . PHP_EOL)
+            ->content("\n" . $content . "\n")
             ->encode(false);
     }
 
