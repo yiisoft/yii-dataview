@@ -371,9 +371,13 @@ abstract class BaseListView extends Widget
             return '';
         }
 
-        $linkSorter = $dataReader instanceof OffsetPaginator
-            ? LinkSorter::widget()->currentPage($dataReader->getCurrentPage())
-            : LinkSorter::widget();
+        if ($dataReader instanceof OffsetPaginator) {
+            $linkSorter = LinkSorter::widget()->currentPage($dataReader->getCurrentPage());
+        } elseif ($dataReader instanceof KeysetPaginator) {
+            $linkSorter = LinkSorter::widget();
+        } else {
+            return '';
+        }
 
         return $linkSorter
             ->attribute($attribute)
@@ -419,14 +423,12 @@ abstract class BaseListView extends Widget
 
     private function renderSummary(): string
     {
-        if ($this->getDataReader() instanceof KeysetPaginator) {
+        $dataReader = $this->getDataReader();
+        if (!$dataReader instanceof OffsetPaginator) {
             return '';
         }
 
-        /** @var OffsetPaginator $paginator */
-        $paginator = $this->getDataReader();
-
-        $data = iterator_to_array($paginator->read());
+        $data = iterator_to_array($dataReader->read());
         $pageCount = count($data);
 
         if ($pageCount <= 0) {
@@ -436,8 +438,8 @@ abstract class BaseListView extends Widget
         $summary = $this->translator->translate(
             $this->summary ?? 'Page <b>{currentPage}</b> of <b>{totalPages}</b>',
             [
-                'currentPage' => $paginator->getCurrentPage(),
-                'totalPages' => $paginator->getTotalPages(),
+                'currentPage' => $dataReader->getCurrentPage(),
+                'totalPages' => $dataReader->getTotalPages(),
             ],
             $this->translationCategory,
         );
@@ -458,13 +460,13 @@ abstract class BaseListView extends Widget
 
         return match ($this->withContainer) {
             true => trim(
-                $contentGrid . PHP_EOL . Div::tag()
+                $contentGrid . "\n" . Div::tag()
                     ->attributes($attributes)
-                    ->content(PHP_EOL . $this->renderGridTable() . PHP_EOL)
+                    ->content("\n" . $this->renderGridTable() . "\n")
                     ->encode(false)
                     ->render()
             ),
-            false => trim($contentGrid . PHP_EOL . $this->renderGridTable()),
+            false => trim($contentGrid . "\n" . $this->renderGridTable()),
         };
     }
 

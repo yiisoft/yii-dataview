@@ -13,6 +13,8 @@ use Yiisoft\Yii\DataView\Column\Base\Cell;
 use Yiisoft\Yii\DataView\Column\Base\GlobalContext;
 use Yiisoft\Yii\DataView\Column\Base\DataContext;
 
+use function is_object;
+
 final class ActionColumnRenderer implements ColumnRendererInterface
 {
     public function __construct(
@@ -78,7 +80,7 @@ final class ActionColumnRenderer implements ColumnRendererInterface
 
         return $cell
             ->addAttributes($column->bodyAttributes)
-            ->content(PHP_EOL . $content . PHP_EOL)
+            ->content("\n" . $content . "\n")
             ->encode(false);
     }
 
@@ -103,7 +105,7 @@ final class ActionColumnRenderer implements ColumnRendererInterface
         $routeName = $column->routeName;
 
         if ($primaryKey !== '') {
-            $key = $data[$primaryKey] ?? $key;
+            $key = (is_object($data) ? $data->$primaryKey : $data[$primaryKey]) ?? $key;
         }
 
         $currentRouteName = $this->currentRoute->getName() ?? '';
@@ -111,7 +113,6 @@ final class ActionColumnRenderer implements ColumnRendererInterface
         $route = $routeName === null
             ? $currentRouteName . '/' . $action
             : $routeName . '/' . $action;
-
 
         $urlParamsConfig = array_merge(
             $column->urlParamsConfig,

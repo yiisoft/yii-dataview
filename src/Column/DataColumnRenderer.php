@@ -6,6 +6,7 @@ namespace Yiisoft\Yii\DataView\Column;
 
 use InvalidArgumentException;
 use Yiisoft\Arrays\ArrayHelper;
+use Yiisoft\Data\Paginator\KeysetPaginator;
 use Yiisoft\Data\Paginator\OffsetPaginator;
 use Yiisoft\Data\Paginator\PaginatorInterface;
 use Yiisoft\Html\Html;
@@ -127,9 +128,13 @@ final class DataColumnRenderer implements ColumnRendererInterface
             return '';
         }
 
-        $linkSorter = $dataReader instanceof OffsetPaginator
-            ? LinkSorter::widget()->currentPage($dataReader->getCurrentPage())
-            : LinkSorter::widget();
+        if ($dataReader instanceof OffsetPaginator) {
+            $linkSorter = LinkSorter::widget()->currentPage($dataReader->getCurrentPage());
+        } elseif ($dataReader instanceof KeysetPaginator) {
+            $linkSorter = LinkSorter::widget();
+        } else {
+            return '';
+        }
 
         return $linkSorter
             ->attribute($property)

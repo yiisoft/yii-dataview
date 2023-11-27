@@ -384,7 +384,7 @@ final class DetailView extends Widget
             ]);
         }
 
-        return implode(PHP_EOL, $rows);
+        return implode("\n", $rows);
     }
 
     private function renderValue(string $attribute, mixed $value): mixed
@@ -421,6 +421,6 @@ final class DetailView extends Widget
      */
     private function removeDoubleLinesBreaks(string $string): string
     {
-        return preg_replace("/([\r\n]{4,}|[\n]{2,}|[\r]{2,})/", PHP_EOL, $string);
+        return preg_replace("/([\r\n]{4,}|[\n]{2,}|[\r]{2,})/", "\n", $string);
     }
 }
