@@ -8,6 +8,7 @@ use InvalidArgumentException;
 use Yiisoft\Arrays\ArrayHelper;
 use Yiisoft\Data\Paginator\OffsetPaginator;
 use Yiisoft\Data\Paginator\PaginatorInterface;
+use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\Input;
 use Yiisoft\Html\Tag\Select;
 use Yiisoft\Yii\DataView\Column\Base\Cell;
@@ -92,14 +93,15 @@ final class DataColumnRenderer implements ColumnRendererInterface
         if ($contentSource !== null) {
             $content = (string)(is_callable($contentSource) ? $contentSource($context->data, $context) : $contentSource);
         } elseif ($column->property !== null) {
-            $content = (string)ArrayHelper::getValue($context->data, $column->property);
+            $content = Html::encode((string)ArrayHelper::getValue($context->data, $column->property));
         } else {
             $content = '';
         }
 
         return $cell
             ->addAttributes($column->bodyAttributes)
-            ->content($content);
+            ->content($content)
+            ->encode(false);
     }
 
     public function renderFooter(ColumnInterface $column, Cell $cell, GlobalContext $context): Cell
