@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Yiisoft\Yii\DataView\Tests\Column;
 
 use PHPUnit\Framework\TestCase;
+use Yiisoft\Data\Reader\Iterable\IterableDataReader;
 use Yiisoft\Definitions\Exception\CircularReferenceException;
 use Yiisoft\Definitions\Exception\InvalidConfigException;
 use Yiisoft\Definitions\Exception\NotInstantiableException;
@@ -711,6 +712,54 @@ final class ActionColumnTest extends TestCase
                 ->id('w1-grid')
                 ->dataReader($this->createOffsetPaginator($this->data, 10))
                 ->render()
+        );
+    }
+
+    public function testObjectsWithPrimaryKey(): void
+    {
+        $dataReader = new IterableDataReader([
+            new class() {
+                public int $id = 23;
+            },
+            new class() {
+                public int $id = 78;
+            },
+        ]);
+
+        $html = GridView::widget()
+            ->columns(new ActionColumn(primaryKey: 'id'))
+            ->dataReader($dataReader)
+            ->render();
+
+        $this->assertSame(
+            <<<HTML
+            <div>
+            <table>
+            <thead>
+            <tr>
+            <th>Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+            <td>
+            <a name="view" href="/admin/manage/view?id=23" title="View" role="button" style="text-decoration: none!important;"><span>🔎</span></a>
+            <a name="update" href="/admin/manage/update?id=23" title="Update" role="button" style="text-decoration: none!important;"><span>✎</span></a>
+            <a name="delete" href="/admin/manage/delete?id=23" title="Delete" role="button" style="text-decoration: none!important;"><span>❌</span></a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a name="view" href="/admin/manage/view?id=78" title="View" role="button" style="text-decoration: none!important;"><span>🔎</span></a>
+            <a name="update" href="/admin/manage/update?id=78" title="Update" role="button" style="text-decoration: none!important;"><span>✎</span></a>
+            <a name="delete" href="/admin/manage/delete?id=78" title="Delete" role="button" style="text-decoration: none!important;"><span>❌</span></a>
+            </td>
+            </tr>
+            </tbody>
+            </table>
+            </div>
+            HTML,
+            $html
         );
     }
 }
