@@ -11,7 +11,6 @@ use Yiisoft\Definitions\Exception\NotInstantiableException;
 use Yiisoft\Factory\NotFoundException;
 use Yiisoft\Html\Html;
 use Yiisoft\Yii\DataView\Column\ActionColumn;
-use Yiisoft\Yii\DataView\Column\Base\DataContext;
 use Yiisoft\Yii\DataView\Column\DataColumn;
 use Yiisoft\Yii\DataView\GridView;
 use Yiisoft\Yii\DataView\Tests\Support\Assert;
@@ -62,11 +61,11 @@ final class ActionColumnTest extends TestCase
             GridView::widget()
                 ->columns(
                     new ActionColumn(
-                        content: static fn(DataContext $context): string => Html::a()
+                        content: static fn(array $data): string => Html::a()
                             ->addAttributes(['class' => 'text-decoration-none', 'title' => 'View'])
                             ->content('🔎')
                             ->encode(false)
-                            ->href('/admin/view?id=' . $context->data['id'])
+                            ->href('/admin/view?id=' . $data['id'])
                             ->render(),
                     )
                 )
@@ -112,11 +111,11 @@ final class ActionColumnTest extends TestCase
             GridView::widget()
                 ->columns(
                     new ActionColumn(
-                        content: static fn(DataContext $context): string => Html::a()
+                        content: static fn(array $data): string => Html::a()
                             ->addAttributes(['title' => 'View'])
                             ->content('🔎')
                             ->encode(false)
-                            ->href('/admin/view?id=' . $context->data['id'])
+                            ->href('/admin/view?id=' . $data['id'])
                             ->render(),
                         bodyAttributes: ['class' => 'text-decoration-none test.class']
                     ),
