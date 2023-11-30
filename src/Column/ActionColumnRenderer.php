@@ -6,32 +6,38 @@ namespace Yiisoft\Yii\DataView\Column;
 
 use Closure;
 use InvalidArgumentException;
+use LogicException;
 use Yiisoft\Html\Html;
-use Yiisoft\Router\CurrentRoute;
-use Yiisoft\Router\UrlGeneratorInterface;
 use Yiisoft\Yii\DataView\Column\Base\Cell;
 use Yiisoft\Yii\DataView\Column\Base\GlobalContext;
 use Yiisoft\Yii\DataView\Column\Base\DataContext;
 
-use function is_object;
-
+/**
+ * @psalm-import-type UrlCreator from ActionColumn
+ */
 final class ActionColumnRenderer implements ColumnRendererInterface
 {
+    /**
+     * @var UrlCreator|null
+     */
+    private $defaultUrlCreator;
+
     /**
      * @psalm-var array<string,Closure>
      */
     private readonly array $defaultButtons;
 
     /**
+     * @psalm-param UrlCreator|null $defaultUrlCreator
      * @psalm-param array<string,Closure> $defaultButtons
      */
     public function __construct(
-        private readonly UrlGeneratorInterface $urlGenerator,
-        private readonly CurrentRoute $currentRoute,
-        private readonly ?string $defaultPrimaryKey = 'id',
+        ?callable $defaultUrlCreator = null,
         private readonly string $defaultTemplate = "{view}\n{update}\n{delete}",
         ?array $defaultButtons = null,
     ) {
+        $this->defaultUrlCreator = $defaultUrlCreator;
+
         $this->defaultButtons = $defaultButtons ?? [
             'view' => static fn(string $url): string => Html::a(
                 Html::span('🔎'),
@@ -110,7 +116,7 @@ final class ActionColumnRenderer implements ColumnRendererInterface
                         ) &&
                         isset($buttons[$name])
                     ) {
-                        $url = $this->createUrl($column, $name, $context->data, $context->key);
+                        $url = $this->createUrl($name, $context);
                         return (string)$buttons[$name]($url);
                     }
 
@@ -138,40 +144,17 @@ final class ActionColumnRenderer implements ColumnRendererInterface
         return $cell->addAttributes($column->footerAttributes);
     }
 
-    private function createUrl(ActionColumn $column, string $action, array|object $data, mixed $key): string
+    private function createUrl(string $action, DataContext $context): string
     {
-        if ($column->urlCreator !== null) {
-            return (string) ($column->urlCreator)($action, $data, $key);
+        /** @var ActionColumn $column */
+        $column = $context->column;
+
+        $urlCreator = $column->getUrlCreator() ?? $this->defaultUrlCreator;
+        if ($urlCreator === null) {
+            throw new LogicException('Do not set URL creator.');
         }
 
-        $primaryKey = $column->primaryKey ?? $this->defaultPrimaryKey;
-        $routeName = $column->routeName;
-
-        if (!empty($primaryKey)) {
-            $key = (is_object($data) ? $data->$primaryKey : $data[$primaryKey]) ?? $key;
-        }
-
-        $currentRouteName = $this->currentRoute->getName() ?? '';
-
-        $route = $routeName === null
-            ? $currentRouteName . '/' . $action
-            : $routeName . '/' . $action;
-
-        $urlParamsConfig = array_merge(
-            $column->urlParamsConfig,
-            is_array($key) ? $key : [$primaryKey => $key]
-        );
-
-        if ($column->urlArguments !== null) {
-            /** @psalm-var array<string,string> */
-            $urlArguments = array_merge($column->urlArguments, $urlParamsConfig);
-            $urlQueryParameters = [];
-        } else {
-            $urlArguments = [];
-            $urlQueryParameters = array_merge($column->urlQueryParameters, $urlParamsConfig);
-        }
-
-        return $this->urlGenerator->generate($route, $urlArguments, $urlQueryParameters);
+        return $urlCreator($action, $context);
     }
 
     private function isVisibleButton(

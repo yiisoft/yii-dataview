@@ -2,15 +2,23 @@
 
 declare(strict_types=1);
 
+use Yiisoft\Definitions\Reference;
 use Yiisoft\Translator\CategorySource;
 use Yiisoft\Translator\IdMessageReader;
 use Yiisoft\Translator\IntlMessageFormatter;
 use Yiisoft\Translator\Message\Php\MessageSource;
 use Yiisoft\Translator\SimpleMessageFormatter;
+use Yiisoft\Yii\DataView\Column\ActionColumnRenderer;
+use Yiisoft\Yii\DataView\Column\ActionColumnUrlCreator;
 
 /** @var array $params */
 
 return [
+    ActionColumnRenderer::class => [
+        '__construct()' => [
+            'defaultUrlCreator' => Reference::to(ActionColumnUrlCreator::class),
+        ],
+    ],
     'yii.dataview.categorySource' => [
         'definition' => static function () use ($params): CategorySource {
             $reader = class_exists(MessageSource::class)

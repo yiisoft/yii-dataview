@@ -9,12 +9,15 @@ use Yiisoft\Data\Paginator\OffsetPaginator;
 use Yiisoft\Data\Reader\Iterable\IterableDataReader;
 use Yiisoft\Data\Reader\Sort;
 use Yiisoft\Definitions\Exception\InvalidConfigException;
+use Yiisoft\Definitions\Reference;
 use Yiisoft\Di\Container;
 use Yiisoft\Di\ContainerConfig;
 use Yiisoft\Router\CurrentRoute;
 use Yiisoft\Router\Route;
 use Yiisoft\Router\UrlGeneratorInterface;
 use Yiisoft\Widget\WidgetFactory;
+use Yiisoft\Yii\DataView\Column\ActionColumnRenderer;
+use Yiisoft\Yii\DataView\Column\ActionColumnUrlCreator;
 
 trait TestTrait
 {
@@ -64,6 +67,11 @@ trait TestTrait
         return [
             CurrentRoute::class => $currentRoute,
             UrlGeneratorInterface::class => Mock::urlGenerator([], $currentRoute),
+            ActionColumnRenderer::class => [
+                '__construct()' => [
+                    'defaultUrlCreator' => Reference::to(ActionColumnUrlCreator::class),
+                ],
+            ],
         ];
     }
 }
