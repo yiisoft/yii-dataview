@@ -73,7 +73,7 @@ final class ActionColumnRenderer implements ColumnRendererInterface
 
                     return '';
                 },
-                $column->template
+                $column->template ?? "{view}\n{update}\n{delete}"
             );
             $content = trim($content);
         }

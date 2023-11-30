@@ -18,7 +18,7 @@ final class ActionColumn implements ColumnInterface
      */
     public function __construct(
         public readonly string $primaryKey = 'id',
-        public readonly string $template = "{view}\n{update}\n{delete}",
+        public readonly ?string $template = null,
         public readonly ?string $routeName = null,
         public readonly array $urlParamsConfig = [],
         public readonly ?array $urlArguments = null,
