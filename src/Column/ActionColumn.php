@@ -13,11 +13,13 @@ use Closure;
 final class ActionColumn implements ColumnInterface
 {
     /**
+     * @param ?string $primaryKey The primary key of the data to be used to generate an URL automatically.
+     *
      * @psalm-param array<string,Closure> $buttons
      * @psalm-param array<string,bool|Closure>|null $visibleButtons
      */
     public function __construct(
-        public readonly string $primaryKey = 'id',
+        public readonly ?string $primaryKey = null,
         public readonly ?string $template = null,
         public readonly ?string $routeName = null,
         public readonly array $urlParamsConfig = [],

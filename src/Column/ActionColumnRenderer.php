@@ -28,6 +28,7 @@ final class ActionColumnRenderer implements ColumnRendererInterface
     public function __construct(
         private readonly UrlGeneratorInterface $urlGenerator,
         private readonly CurrentRoute $currentRoute,
+        private readonly ?string $defaultPrimaryKey = 'id',
         private readonly string $defaultTemplate = "{view}\n{update}\n{delete}",
         ?array $defaultButtons = null,
     ) {
@@ -143,10 +144,10 @@ final class ActionColumnRenderer implements ColumnRendererInterface
             return (string) ($column->urlCreator)($action, $data, $key);
         }
 
-        $primaryKey = $column->primaryKey;
+        $primaryKey = $column->primaryKey ?? $this->defaultPrimaryKey;
         $routeName = $column->routeName;
 
-        if ($primaryKey !== '') {
+        if (!empty($primaryKey)) {
             $key = (is_object($data) ? $data->$primaryKey : $data[$primaryKey]) ?? $key;
         }
 
