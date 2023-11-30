@@ -29,7 +29,7 @@ final class ActionColumnUrlCreator
 
         $config = $column->urlConfig ?? new UrlConfig();
         if (!$config instanceof UrlConfig) {
-            throw new LogicException(ActionColumnUrlCreator::class . ' supports ' . UrlConfig::class . ' only.');
+            throw new LogicException(self::class . ' supports ' . UrlConfig::class . ' only.');
         }
 
         $primaryKey = $column->primaryKey ?? $this->defaultPrimaryKey;
