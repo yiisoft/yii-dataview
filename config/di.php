@@ -9,7 +9,7 @@ use Yiisoft\Translator\IntlMessageFormatter;
 use Yiisoft\Translator\Message\Php\MessageSource;
 use Yiisoft\Translator\SimpleMessageFormatter;
 use Yiisoft\Yii\DataView\Column\ActionColumnRenderer;
-use Yiisoft\Yii\DataView\Column\ActionColumnUrlCreator;
+use Yiisoft\Yii\DataView\YiiRouter\ActionColumnUrlCreator;
 
 /** @var array $params */
 

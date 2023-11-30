@@ -31,10 +31,7 @@ final class ActionColumn implements ColumnInterface
     public function __construct(
         public readonly ?string $primaryKey = null,
         public readonly ?string $template = null,
-        public readonly ?string $routeName = null,
-        public readonly array $urlParamsConfig = [],
-        public readonly ?array $urlArguments = null,
-        public readonly array $urlQueryParameters = [],
+        public readonly mixed $urlConfig = null,
         ?callable $urlCreator = null,
         public readonly ?string $header = null,
         public readonly ?string $footer = null,

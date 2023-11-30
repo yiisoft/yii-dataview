@@ -17,7 +17,7 @@ use Yiisoft\Router\Route;
 use Yiisoft\Router\UrlGeneratorInterface;
 use Yiisoft\Widget\WidgetFactory;
 use Yiisoft\Yii\DataView\Column\ActionColumnRenderer;
-use Yiisoft\Yii\DataView\Column\ActionColumnUrlCreator;
+use Yiisoft\Yii\DataView\YiiRouter\ActionColumnUrlCreator;
 
 trait TestTrait
 {
