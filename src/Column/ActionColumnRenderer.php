@@ -182,7 +182,7 @@ final class ActionColumnRenderer implements ColumnRendererInterface
     ): bool {
         $visibleButtons = $column->visibleButtons;
 
-        if (empty($visibleButtons)) {
+        if ($visibleButtons === null) {
             return true;
         }
 

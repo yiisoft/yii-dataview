@@ -14,7 +14,7 @@ final class ActionColumn implements ColumnInterface
 {
     /**
      * @psalm-param array<string,Closure> $buttons
-     * @psalm-param array<string,bool|Closure> $visibleButtons
+     * @psalm-param array<string,bool|Closure>|null $visibleButtons
      */
     public function __construct(
         public readonly string $primaryKey = 'id',
@@ -28,7 +28,7 @@ final class ActionColumn implements ColumnInterface
         public readonly ?string $footer = null,
         public readonly mixed $content = null,
         public readonly array $buttons = [],
-        public readonly array $visibleButtons = [],
+        public readonly ?array $visibleButtons = null,
         public readonly array $columnAttributes = [],
         public readonly array $headerAttributes = [],
         public readonly array $bodyAttributes = [],
