@@ -17,10 +17,52 @@ use function is_object;
 
 final class ActionColumnRenderer implements ColumnRendererInterface
 {
+    /**
+     * @psalm-var array<string,Closure>
+     */
+    private readonly array $defaultButtons;
+
+    /**
+     * @psalm-param array<string,Closure> $defaultButtons
+     */
     public function __construct(
         private readonly UrlGeneratorInterface $urlGenerator,
         private readonly CurrentRoute $currentRoute,
+        private readonly string $defaultTemplate = "{view}\n{update}\n{delete}",
+        ?array $defaultButtons = null,
     ) {
+        $this->defaultButtons = $defaultButtons ?? [
+            'view' => static fn(string $url): string => Html::a(
+                Html::span('🔎'),
+                $url,
+                [
+                    'name' => 'view',
+                    'role' => 'button',
+                    'style' => 'text-decoration: none!important;',
+                    'title' => 'View',
+                ],
+            )->render(),
+            'update' => static fn(string $url): string => Html::a(
+                Html::span('✎'),
+                $url,
+                [
+                    'name' => 'update',
+                    'role' => 'button',
+                    'style' => 'text-decoration: none!important;',
+                    'title' => 'Update',
+                ],
+            )->render(),
+            'delete' => static fn(string $url): string => Html::a(
+                Html::span('❌'),
+                $url,
+                [
+                    'name' => 'delete',
+                    'role' => 'button',
+                    'style' => 'text-decoration: none!important;',
+                    'title' => 'Delete',
+                ],
+            )->render(),
+        ];
     }
 
     public function renderColumn(ColumnInterface $column, Cell $cell, GlobalContext $context): Cell
@@ -51,7 +93,7 @@ final class ActionColumnRenderer implements ColumnRendererInterface
         if ($contentSource !== null) {
             $content = (string)(is_callable($contentSource) ? $contentSource($context->data, $context) : $contentSource);
         } else {
-            $buttons = empty($column->buttons) ? $this->getDefaultButtons() : $column->buttons;
+            $buttons = empty($column->buttons) ? $this->defaultButtons : $column->buttons;
             $content = preg_replace_callback(
                 '/{([\w\-\/]+)}/',
                 function (array $matches) use ($column, $buttons, $context): string {
@@ -73,7 +115,7 @@ final class ActionColumnRenderer implements ColumnRendererInterface
 
                     return '';
                 },
-                $column->template ?? "{view}\n{update}\n{delete}"
+                $column->template ?? $this->defaultTemplate
             );
             $content = trim($content);
         }
@@ -151,46 +193,6 @@ final class ActionColumnRenderer implements ColumnRendererInterface
 
         /** @var bool */
         return $visibleValue($data, $key, $index);
-    }
-
-    /**
-     * Initializes the default button rendering callback for single button.
-     * @psalm-return array<string,Closure>
-     */
-    private function getDefaultButtons(): array
-    {
-        return [
-            'view' => static fn(string $url): string => Html::a(
-                Html::span('🔎'),
-                $url,
-                [
-                    'name' => 'view',
-                    'role' => 'button',
-                    'style' => 'text-decoration: none!important;',
-                    'title' => 'View',
-                ],
-            )->render(),
-            'update' => static fn(string $url): string => Html::a(
-                Html::span('✎'),
-                $url,
-                [
-                    'name' => 'update',
-                    'role' => 'button',
-                    'style' => 'text-decoration: none!important;',
-                    'title' => 'Update',
-                ],
-            )->render(),
-            'delete' => static fn(string $url): string => Html::a(
-                Html::span('❌'),
-                $url,
-                [
-                    'name' => 'delete',
-                    'role' => 'button',
-                    'style' => 'text-decoration: none!important;',
-                    'title' => 'Delete',
-                ],
-            )->render(),
-        ];
     }
 
     /**
