@@ -12,10 +12,12 @@ use Yiisoft\Definitions\Exception\NotInstantiableException;
 use Yiisoft\Factory\NotFoundException;
 use Yiisoft\Html\Html;
 use Yiisoft\Yii\DataView\Column\ActionColumn;
+use Yiisoft\Yii\DataView\Column\Base\DataContext;
 use Yiisoft\Yii\DataView\Column\DataColumn;
 use Yiisoft\Yii\DataView\GridView;
 use Yiisoft\Yii\DataView\Tests\Support\Assert;
 use Yiisoft\Yii\DataView\Tests\Support\TestTrait;
+use Yiisoft\Yii\DataView\YiiRouter\UrlConfig;
 
 final class ActionColumnTest extends TestCase
 {
@@ -536,7 +538,7 @@ final class ActionColumnTest extends TestCase
             </div>
             HTML,
             GridView::widget()
-                ->columns(new ActionColumn(urlArguments: ['test-arguments' => 'test.arguments']))
+                ->columns(new ActionColumn(urlConfig: new UrlConfig(arguments: ['test-arguments' => 'test.arguments'])))
                 ->id('w1-grid')
                 ->dataReader($this->createOffsetPaginator($this->data, 10))
                 ->render()
@@ -585,8 +587,8 @@ final class ActionColumnTest extends TestCase
                     new ActionColumn(
                         urlCreator: static fn(
                             string $action,
-                            array $data
-                        ): string => 'https://test.com/' . $action . '?id=' . $data['id'],
+                            DataContext $context
+                        ): string => 'https://test.com/' . $action . '?id=' . $context->data['id'],
                     )
                 )
                 ->id('w1-grid')
@@ -627,46 +629,14 @@ final class ActionColumnTest extends TestCase
             </div>
             HTML,
             GridView::widget()
-                ->columns(new ActionColumn(urlQueryParameters: ['test-param' => 'test.param']))
-                ->id('w1-grid')
-                ->dataReader($this->createOffsetPaginator($this->data, 10))
-                ->render()
-        );
-    }
-
-    public function testUrlParamsConfig(): void
-    {
-        Assert::equalsWithoutLE(
-            <<<HTML
-            <div id="w1-grid">
-            <table>
-            <thead>
-            <tr>
-            <th>Actions</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr>
-            <td>
-            <a name="view" href="/admin/manage/view?test-param=test.param&amp;id=1" title="View" role="button" style="text-decoration: none!important;"><span>🔎</span></a>
-            <a name="update" href="/admin/manage/update?test-param=test.param&amp;id=1" title="Update" role="button" style="text-decoration: none!important;"><span>✎</span></a>
-            <a name="delete" href="/admin/manage/delete?test-param=test.param&amp;id=1" title="Delete" role="button" style="text-decoration: none!important;"><span>❌</span></a>
-            </td>
-            </tr>
-            <tr>
-            <td>
-            <a name="view" href="/admin/manage/view?test-param=test.param&amp;id=2" title="View" role="button" style="text-decoration: none!important;"><span>🔎</span></a>
-            <a name="update" href="/admin/manage/update?test-param=test.param&amp;id=2" title="Update" role="button" style="text-decoration: none!important;"><span>✎</span></a>
-            <a name="delete" href="/admin/manage/delete?test-param=test.param&amp;id=2" title="Delete" role="button" style="text-decoration: none!important;"><span>❌</span></a>
-            </td>
-            </tr>
-            </tbody>
-            </table>
-            <div>Page <b>1</b> of <b>1</b></div>
-            </div>
-            HTML,
-            GridView::widget()
-                ->columns(new ActionColumn(urlParamsConfig: ['test-param' => 'test.param']))
+                ->columns(
+                    new ActionColumn(
+                        urlConfig: new UrlConfig(
+                            queryParameters: ['test-param' => 'test.param'],
+                            primaryKeyPlace: UrlConfig::QUERY_PARAMETERS,
+                        ),
+                    ),
+                )
                 ->id('w1-grid')
                 ->dataReader($this->createOffsetPaginator($this->data, 10))
                 ->render()

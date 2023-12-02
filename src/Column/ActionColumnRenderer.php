@@ -6,160 +6,39 @@ namespace Yiisoft\Yii\DataView\Column;
 
 use Closure;
 use InvalidArgumentException;
+use LogicException;
 use Yiisoft\Html\Html;
-use Yiisoft\Router\CurrentRoute;
-use Yiisoft\Router\UrlGeneratorInterface;
 use Yiisoft\Yii\DataView\Column\Base\Cell;
 use Yiisoft\Yii\DataView\Column\Base\GlobalContext;
 use Yiisoft\Yii\DataView\Column\Base\DataContext;
 
-use function is_object;
-
+/**
+ * @psalm-import-type UrlCreator from ActionColumn
+ */
 final class ActionColumnRenderer implements ColumnRendererInterface
 {
-    public function __construct(
-        private readonly UrlGeneratorInterface $urlGenerator,
-        private readonly CurrentRoute $currentRoute,
-    ) {
-    }
-
-    public function renderColumn(ColumnInterface $column, Cell $cell, GlobalContext $context): Cell
-    {
-        $this->checkColumn($column);
-        return $cell->addAttributes($column->columnAttributes);
-    }
-
-    public function renderHeader(ColumnInterface $column, Cell $cell, GlobalContext $context): Cell
-    {
-        $this->checkColumn($column);
-        return $cell
-            ->content($column->header ?? $context->translate('Actions'))
-            ->addAttributes($column->headerAttributes);
-    }
-
-    public function renderFilter(ColumnInterface $column, Cell $cell, GlobalContext $context): ?Cell
-    {
-        return null;
-    }
-
-    public function renderBody(ColumnInterface $column, Cell $cell, DataContext $context): Cell
-    {
-        $this->checkColumn($column);
-
-        $contentSource = $column->content;
-
-        if ($contentSource !== null) {
-            $content = (string)(is_callable($contentSource) ? $contentSource($context->data, $context) : $contentSource);
-        } else {
-            $buttons = empty($column->buttons) ? $this->getDefaultButtons() : $column->buttons;
-            $content = preg_replace_callback(
-                '/{([\w\-\/]+)}/',
-                function (array $matches) use ($column, $buttons, $context): string {
-                    $name = $matches[1];
-
-                    if (
-                        $this->isVisibleButton(
-                            $column,
-                            $name,
-                            $context->data,
-                            $context->key,
-                            $context->index,
-                        ) &&
-                        isset($buttons[$name])
-                    ) {
-                        $url = $this->createUrl($column, $name, $context->data, $context->key);
-                        return (string)$buttons[$name]($url);
-                    }
-
-                    return '';
-                },
-                $column->template
-            );
-            $content = trim($content);
-        }
-
-        return $cell
-            ->addAttributes($column->bodyAttributes)
-            ->content("\n" . $content . "\n")
-            ->encode(false);
-    }
-
-    public function renderFooter(ColumnInterface $column, Cell $cell, GlobalContext $context): Cell
-    {
-        $this->checkColumn($column);
-
-        if ($column->footer !== null) {
-            $cell = $cell->content($column->footer);
-        }
-
-        return $cell->addAttributes($column->footerAttributes);
-    }
-
-    private function createUrl(ActionColumn $column, string $action, array|object $data, mixed $key): string
-    {
-        if ($column->urlCreator !== null) {
-            return (string) ($column->urlCreator)($action, $data, $key);
-        }
-
-        $primaryKey = $column->primaryKey;
-        $routeName = $column->routeName;
-
-        if ($primaryKey !== '') {
-            $key = (is_object($data) ? $data->$primaryKey : $data[$primaryKey]) ?? $key;
-        }
-
-        $currentRouteName = $this->currentRoute->getName() ?? '';
-
-        $route = $routeName === null
-            ? $currentRouteName . '/' . $action
-            : $routeName . '/' . $action;
-
-        $urlParamsConfig = array_merge(
-            $column->urlParamsConfig,
-            is_array($key) ? $key : [$primaryKey => $key]
-        );
-
-        if ($column->urlArguments !== null) {
-            /** @psalm-var array<string,string> */
-            $urlArguments = array_merge($column->urlArguments, $urlParamsConfig);
-            $urlQueryParameters = [];
-        } else {
-            $urlArguments = [];
-            $urlQueryParameters = array_merge($column->urlQueryParameters, $urlParamsConfig);
-        }
-
-        return $this->urlGenerator->generate($route, $urlArguments, $urlQueryParameters);
-    }
-
-    private function isVisibleButton(
-        ActionColumn $column,
-        string $name,
-        array|object $data,
-        mixed $key,
-        int $index
-    ): bool {
-        $visibleButtons = $column->visibleButtons;
-
-        if (empty($visibleButtons)) {
-            return true;
-        }
-
-        $visibleValue = $visibleButtons[$name] ?? false;
-        if (is_bool($visibleValue)) {
-            return $visibleValue;
-        }
-
-        /** @var bool */
-        return $visibleValue($data, $key, $index);
-    }
+    /**
+     * @var UrlCreator|null
+     */
+    private $defaultUrlCreator;
 
     /**
-     * Initializes the default button rendering callback for single button.
-     * @psalm-return array<string,Closure>
+     * @psalm-var array<string,Closure>
      */
-    private function getDefaultButtons(): array
-    {
-        return [
+    private readonly array $defaultButtons;
+
+    /**
+     * @psalm-param UrlCreator|null $defaultUrlCreator
+     * @psalm-param array<string,Closure> $defaultButtons
+     */
+    public function __construct(
+        ?callable $defaultUrlCreator = null,
+        private readonly string $defaultTemplate = "{view}\n{update}\n{delete}",
+        ?array $defaultButtons = null,
+    ) {
+        $this->defaultUrlCreator = $defaultUrlCreator;
+
+        $this->defaultButtons = $defaultButtons ?? [
             'view' => static fn(string $url): string => Html::a(
                 Html::span('🔎'),
                 $url,
@@ -191,6 +70,113 @@ final class ActionColumnRenderer implements ColumnRendererInterface
                 ],
             )->render(),
         ];
+    }
+
+    public function renderColumn(ColumnInterface $column, Cell $cell, GlobalContext $context): Cell
+    {
+        $this->checkColumn($column);
+        return $cell->addAttributes($column->columnAttributes);
+    }
+
+    public function renderHeader(ColumnInterface $column, Cell $cell, GlobalContext $context): Cell
+    {
+        $this->checkColumn($column);
+        return $cell
+            ->content($column->header ?? $context->translate('Actions'))
+            ->addAttributes($column->headerAttributes);
+    }
+
+    public function renderFilter(ColumnInterface $column, Cell $cell, GlobalContext $context): ?Cell
+    {
+        return null;
+    }
+
+    public function renderBody(ColumnInterface $column, Cell $cell, DataContext $context): Cell
+    {
+        $this->checkColumn($column);
+
+        $contentSource = $column->content;
+
+        if ($contentSource !== null) {
+            $content = (string)(is_callable($contentSource) ? $contentSource($context->data, $context) : $contentSource);
+        } else {
+            $buttons = empty($column->buttons) ? $this->defaultButtons : $column->buttons;
+            $content = preg_replace_callback(
+                '/{([\w\-\/]+)}/',
+                function (array $matches) use ($column, $buttons, $context): string {
+                    $name = $matches[1];
+
+                    if (
+                        $this->isVisibleButton(
+                            $column,
+                            $name,
+                            $context->data,
+                            $context->key,
+                            $context->index,
+                        ) &&
+                        isset($buttons[$name])
+                    ) {
+                        $url = $this->createUrl($name, $context);
+                        return (string)$buttons[$name]($url);
+                    }
+
+                    return '';
+                },
+                $column->template ?? $this->defaultTemplate
+            );
+            $content = trim($content);
+        }
+
+        return $cell
+            ->addAttributes($column->bodyAttributes)
+            ->content("\n" . $content . "\n")
+            ->encode(false);
+    }
+
+    public function renderFooter(ColumnInterface $column, Cell $cell, GlobalContext $context): Cell
+    {
+        $this->checkColumn($column);
+
+        if ($column->footer !== null) {
+            $cell = $cell->content($column->footer);
+        }
+
+        return $cell->addAttributes($column->footerAttributes);
+    }
+
+    private function createUrl(string $action, DataContext $context): string
+    {
+        /** @var ActionColumn $column */
+        $column = $context->column;
+
+        $urlCreator = $column->getUrlCreator() ?? $this->defaultUrlCreator;
+        if ($urlCreator === null) {
+            throw new LogicException('Do not set URL creator.');
+        }
+
+        return $urlCreator($action, $context);
+    }
+
+    private function isVisibleButton(
+        ActionColumn $column,
+        string $name,
+        array|object $data,
+        mixed $key,
+        int $index
+    ): bool {
+        $visibleButtons = $column->visibleButtons;
+
+        if ($visibleButtons === null) {
+            return true;
+        }
+
+        $visibleValue = $visibleButtons[$name] ?? false;
+        if (is_bool($visibleValue)) {
+            return $visibleValue;
+        }
+
+        /** @var bool */
+        return $visibleValue($data, $key, $index);
     }
 
     /**

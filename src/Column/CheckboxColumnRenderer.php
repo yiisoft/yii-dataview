@@ -54,10 +54,7 @@ final class CheckboxColumnRenderer implements ColumnRendererInterface
         }
 
         if (!array_key_exists('value', $inputAttributes)) {
-            $key = $context->key;
-            $value = is_array($key)
-                ? json_encode($key, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE)
-                : (string)$key;
+            $value = $context->key;
         }
 
         $input = Html::checkbox($name, $value, $inputAttributes);

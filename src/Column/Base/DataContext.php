@@ -11,7 +11,7 @@ final class DataContext
     public function __construct(
         public readonly ColumnInterface $column,
         public readonly array|object $data,
-        public readonly mixed $key,
+        public readonly int|string $key,
         public readonly int $index,
     ) {
     }
