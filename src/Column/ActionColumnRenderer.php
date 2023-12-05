@@ -190,7 +190,7 @@ final class ActionColumnRenderer implements ColumnRendererInterface
             $class = $button->class;
         }
 
-        /** @var string|array<array-key,string|null>|null $buttonClass */
+        /** @var array<array-key,string|null>|string|null $buttonClass */
         $buttonClass = $context->columnsConfigs[ActionColumn::class]['buttonClass'] ?? null;
         if ($class === false) {
             Html::addCssClass($attributes, $buttonClass);

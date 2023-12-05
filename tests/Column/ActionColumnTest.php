@@ -1021,7 +1021,7 @@ final class ActionColumnTest extends TestCase
         $html = GridView::widget()
             ->columns($actionColumn)
             ->columnsConfigs([
-                ActionColumn::class => $columnConfig
+                ActionColumn::class => $columnConfig,
             ])
             ->dataReader($dataReader)
             ->render();
