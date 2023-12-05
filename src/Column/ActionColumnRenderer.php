@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Yiisoft\Yii\DataView\Column;
 
 use InvalidArgumentException;
-use LogicException;
 use Yiisoft\Html\Html;
 use Yiisoft\Yii\DataView\Column\Base\Cell;
 use Yiisoft\Yii\DataView\Column\Base\GlobalContext;
@@ -18,7 +17,7 @@ use Yiisoft\Yii\DataView\Column\Base\DataContext;
 final class ActionColumnRenderer implements ColumnRendererInterface
 {
     /**
-     * @var UrlCreator|null
+     * @var UrlCreator
      */
     private $defaultUrlCreator;
 
@@ -36,7 +35,7 @@ final class ActionColumnRenderer implements ColumnRendererInterface
         private readonly ?string $defaultTemplate = null,
         ?array $defaultButtons = null,
     ) {
-        $this->defaultUrlCreator = $defaultUrlCreator;
+        $this->defaultUrlCreator = $defaultUrlCreator ?? static fn(): string => '#';
 
         $this->defaultButtons = $defaultButtons ?? [
             'view' => static fn(string $url): string => Html::a(
@@ -150,9 +149,6 @@ final class ActionColumnRenderer implements ColumnRendererInterface
         $column = $context->column;
 
         $urlCreator = $column->getUrlCreator() ?? $this->defaultUrlCreator;
-        if ($urlCreator === null) {
-            throw new LogicException('Do not set URL creator.');
-        }
 
         return $urlCreator($action, $context);
     }

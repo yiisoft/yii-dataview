@@ -9,7 +9,6 @@ use Yiisoft\Data\Reader\Iterable\IterableDataReader;
 use Yiisoft\Definitions\Exception\CircularReferenceException;
 use Yiisoft\Definitions\Exception\InvalidConfigException;
 use Yiisoft\Definitions\Exception\NotInstantiableException;
-use Yiisoft\Definitions\Reference;
 use Yiisoft\Di\Container;
 use Yiisoft\Di\ContainerConfig;
 use Yiisoft\Factory\NotFoundException;
@@ -26,7 +25,6 @@ use Yiisoft\Yii\DataView\GridView;
 use Yiisoft\Yii\DataView\Tests\Support\Assert;
 use Yiisoft\Yii\DataView\Tests\Support\Mock;
 use Yiisoft\Yii\DataView\Tests\Support\TestTrait;
-use Yiisoft\Yii\DataView\YiiRouter\ActionColumnUrlCreator;
 use Yiisoft\Yii\DataView\YiiRouter\UrlConfig;
 
 final class ActionColumnTest extends TestCase
@@ -396,12 +394,6 @@ final class ActionColumnTest extends TestCase
         );
     }
 
-    /**
-     * @throws InvalidConfigException
-     * @throws NotFoundException
-     * @throws NotInstantiableException
-     * @throws CircularReferenceException
-     */
     public function testPrimaryKey(): void
     {
         Assert::equalsWithoutLE(
@@ -434,7 +426,7 @@ final class ActionColumnTest extends TestCase
             </div>
             HTML,
             GridView::widget()
-                ->columns(new ActionColumn(primaryKey: 'identity_id'))
+                ->columns(new ActionColumn(urlConfig: new UrlConfig('identity_id')))
                 ->id('w1-grid')
                 ->dataReader(
                     $this->createOffsetPaginator(
@@ -701,7 +693,7 @@ final class ActionColumnTest extends TestCase
         ]);
 
         $html = GridView::widget()
-            ->columns(new ActionColumn(primaryKey: 'id'))
+            ->columns(new ActionColumn(urlConfig: new UrlConfig('id')))
             ->dataReader($dataReader)
             ->render();
 
@@ -739,14 +731,14 @@ final class ActionColumnTest extends TestCase
 
     public function testDefaultTemplateGeneration(): void
     {
+        $this->initialize();
+
         $dataReader = new IterableDataReader([
             ['id' => 1],
             ['id' => 2],
         ]);
 
         $actionColumn = new ActionColumn(
-            primaryKey: 'id',
-            urlCreator: static fn() => '#',
             buttons: [
                 'one' => static fn(string $url) => Html::a('1', $url)->render(),
                 'two' => static fn(string $url) => Html::a('2', $url)->render(),
@@ -790,7 +782,7 @@ final class ActionColumnTest extends TestCase
 
     public function testDefaultTemplate(): void
     {
-        $this->initialize('!{one}!');
+        $this->initialize(defaultTemplate: '!{one}!');
 
         $dataReader = new IterableDataReader([
             ['id' => 1],
@@ -798,8 +790,6 @@ final class ActionColumnTest extends TestCase
         ]);
 
         $actionColumn = new ActionColumn(
-            primaryKey: 'id',
-            urlCreator: static fn() => '#',
             buttons: [
                 'one' => static fn(string $url) => Html::a('1', $url)->render(),
                 'two' => static fn(string $url) => Html::a('2', $url)->render(),
@@ -839,23 +829,73 @@ final class ActionColumnTest extends TestCase
         );
     }
 
-    private function initialize(?string $defaultTemplate = null): void
+    public function testDefaultUrlCreator(): void
     {
+        $this->initialize();
+
+        $dataReader = new IterableDataReader([
+            ['id' => 1],
+            ['id' => 2],
+        ]);
+
+        $actionColumn = new ActionColumn(
+            buttons: [
+                'one' => static fn(string $url) => Html::a('1', $url)->render(),
+            ]
+        );
+
+        $html = GridView::widget()
+            ->columns($actionColumn)
+            ->dataReader($dataReader)
+            ->render();
+
+        $this->assertSame(
+            <<<HTML
+            <div>
+            <table>
+            <thead>
+            <tr>
+            <th>Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+            <td>
+            <a href="#">1</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="#">1</a>
+            </td>
+            </tr>
+            </tbody>
+            </table>
+            </div>
+            HTML,
+            $html
+        );
+    }
+
+    private function initialize(
+        ?string $defaultTemplate = null,
+        mixed $defaultUrlCreator = null,
+    ): void {
         $currentRoute = new CurrentRoute();
         $currentRoute->setRouteWithArguments(Route::get('/admin/manage')->name('admin/manage'), []);
 
         $config = [
             CurrentRoute::class => $currentRoute,
             UrlGeneratorInterface::class => Mock::urlGenerator([], $currentRoute),
-            ActionColumnRenderer::class => [
+            ActionColumnRenderer::class => $rendererDefinition ?? [
                 '__construct()' => [
-                    'defaultUrlCreator' => Reference::to(ActionColumnUrlCreator::class),
+                    'defaultUrlCreator' => $defaultUrlCreator,
                     'defaultTemplate' => $defaultTemplate,
                 ],
             ],
         ];
 
         $container = new Container(ContainerConfig::create()->withDefinitions($config));
-        WidgetFactory::initialize($container, []);
+        WidgetFactory::initialize($container);
     }
 }

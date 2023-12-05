@@ -22,7 +22,6 @@ final class ActionColumn implements ColumnInterface
     private $urlCreator;
 
     /**
-     * @param ?string $primaryKey The primary key of the data to be used to generate an URL automatically.
      * @param ?callable $urlCreator A callback that creates a button URL using the specified data information.
      *
      * @psalm-param UrlCreator|null $urlCreator
@@ -30,7 +29,6 @@ final class ActionColumn implements ColumnInterface
      * @psalm-param array<string,bool|Closure>|null $visibleButtons
      */
     public function __construct(
-        public readonly ?string $primaryKey = null,
         public readonly ?string $template = null,
         public readonly mixed $urlConfig = null,
         ?callable $urlCreator = null,

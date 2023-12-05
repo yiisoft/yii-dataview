@@ -32,7 +32,7 @@ final class ActionColumnUrlCreator
             throw new LogicException(self::class . ' supports ' . UrlConfig::class . ' only.');
         }
 
-        $primaryKey = $column->primaryKey ?? $this->defaultPrimaryKey;
+        $primaryKey = $config->primaryKey ?? $this->defaultPrimaryKey;
         $primaryKeyPlace = $config->primaryKeyPlace ?? $this->defaultPrimaryKeyPlace;
 
         $primaryKeyValue = is_object($context->data)
