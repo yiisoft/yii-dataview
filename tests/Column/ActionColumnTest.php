@@ -129,12 +129,6 @@ final class ActionColumnTest extends TestCase
         );
     }
 
-    /**
-     * @throws InvalidConfigException
-     * @throws NotFoundException
-     * @throws NotInstantiableException
-     * @throws CircularReferenceException
-     */
     public function testCustomButton(): void
     {
         Assert::equalsWithoutLE(
@@ -723,6 +717,57 @@ final class ActionColumnTest extends TestCase
             <a name="view" href="/admin/manage/view?id=78" title="View" role="button" style="text-decoration: none!important;"><span>🔎</span></a>
             <a name="update" href="/admin/manage/update?id=78" title="Update" role="button" style="text-decoration: none!important;"><span>✎</span></a>
             <a name="delete" href="/admin/manage/delete?id=78" title="Delete" role="button" style="text-decoration: none!important;"><span>❌</span></a>
+            </td>
+            </tr>
+            </tbody>
+            </table>
+            </div>
+            HTML,
+            $html
+        );
+    }
+
+    public function testDefaultTemplateGeneration(): void
+    {
+        $dataReader = new IterableDataReader([
+            ['id' => 1],
+            ['id' => 2],
+        ]);
+
+        $actionColumn = new ActionColumn(
+            primaryKey: 'id',
+            urlCreator: static fn() => '#',
+            buttons: [
+                'one' => static fn(string $url) => Html::a('1', $url)->render(),
+                'two' => static fn(string $url) => Html::a('2', $url)->render(),
+            ]
+        );
+
+        $html = GridView::widget()
+            ->columns($actionColumn)
+            ->dataReader($dataReader)
+            ->render();
+
+        $this->assertSame(
+            <<<HTML
+            <div>
+            <table>
+            <thead>
+            <tr>
+            <th>Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+            <td>
+            <a href="#">1</a>
+            <a href="#">2</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="#">1</a>
+            <a href="#">2</a>
             </td>
             </tr>
             </tbody>
