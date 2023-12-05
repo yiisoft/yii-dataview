@@ -12,7 +12,7 @@ use Yiisoft\Yii\DataView\Column\Base\DataContext;
  * the items.
  *
  * @psalm-type UrlCreator = callable(string,DataContext):string
- * @psalm-type ButtonRenderer = callable(string):string
+ * @psalm-type ButtonRenderer = ActionButton|callable(string):string
  */
 final class ActionColumn implements ColumnInterface
 {

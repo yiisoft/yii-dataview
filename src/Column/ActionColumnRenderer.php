@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Yiisoft\Yii\DataView\Column;
 
+use Closure;
 use InvalidArgumentException;
 use Yiisoft\Html\Html;
 use Yiisoft\Yii\DataView\Column\Base\Cell;
@@ -115,8 +116,7 @@ final class ActionColumnRenderer implements ColumnRendererInterface
                         ) &&
                         isset($buttons[$name])
                     ) {
-                        $url = $this->createUrl($name, $context);
-                        return $buttons[$name]($url);
+                        return $this->renderButton($buttons[$name], $name, $context);
                     }
 
                     return '';
@@ -141,6 +141,50 @@ final class ActionColumnRenderer implements ColumnRendererInterface
         }
 
         return $cell->addAttributes($column->footerAttributes);
+    }
+
+    /**
+     * @psalm-param ButtonRenderer $button
+     */
+    private function renderButton(ActionButton|callable $button, string $name, DataContext $context): string
+    {
+        if (is_callable($button)) {
+            $url = $this->createUrl($name, $context);
+            return $button($url);
+        }
+
+        if ($button->content instanceof Closure) {
+            $closure = $button->content;
+            $content = $closure($context->data, $context);
+        } else {
+            $content = $button->content;
+        }
+
+        if ($button->url === null) {
+            $url = $this->createUrl($name, $context);
+        } elseif ($button->url instanceof Closure) {
+            $closure = $button->url;
+            $url = $closure($context->data, $context);
+        } else {
+            $url = $button->url;
+        }
+
+        if ($button->attributes instanceof Closure) {
+            $closure = $button->attributes;
+            $attributes = $closure($context->data, $context);
+        } else {
+            $attributes = $button->attributes ?? [];
+        }
+
+        if ($button->class instanceof Closure) {
+            $closure = $button->class;
+            $class = $closure($context->data, $context);
+        } else {
+            $class = $button->class ?? [];
+        }
+        Html::addCssClass($attributes, $class);
+
+        return (string)Html::a($content, $url, $attributes);
     }
 
     private function createUrl(string $action, DataContext $context): string
