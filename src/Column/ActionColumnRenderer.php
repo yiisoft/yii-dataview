@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Yiisoft\Yii\DataView\Column;
 
+use Closure;
 use InvalidArgumentException;
 use Yiisoft\Html\Html;
 use Yiisoft\Yii\DataView\Column\Base\Cell;
@@ -32,7 +33,6 @@ final class ActionColumnRenderer implements ColumnRendererInterface
      */
     public function __construct(
         ?callable $defaultUrlCreator = null,
-        private readonly ?string $defaultTemplate = null,
         ?array $defaultButtons = null,
     ) {
         $this->defaultUrlCreator = $defaultUrlCreator ?? static fn(): string => '#';
@@ -115,13 +115,12 @@ final class ActionColumnRenderer implements ColumnRendererInterface
                         ) &&
                         isset($buttons[$name])
                     ) {
-                        $url = $this->createUrl($name, $context);
-                        return $buttons[$name]($url);
+                        return $this->renderButton($buttons[$name], $name, $context);
                     }
 
                     return '';
                 },
-                $this->getTemplate($column, $buttons),
+                $this->getTemplate($column, $buttons, $context),
             );
             $content = trim($content);
         }
@@ -141,6 +140,68 @@ final class ActionColumnRenderer implements ColumnRendererInterface
         }
 
         return $cell->addAttributes($column->footerAttributes);
+    }
+
+    /**
+     * @psalm-param ButtonRenderer $button
+     */
+    private function renderButton(ActionButton|callable $button, string $name, DataContext $context): string
+    {
+        if (is_callable($button)) {
+            $url = $this->createUrl($name, $context);
+            return $button($url);
+        }
+
+        if ($button->content instanceof Closure) {
+            $closure = $button->content;
+            /** @var string $content */
+            $content = $closure($context->data, $context);
+        } else {
+            $content = $button->content;
+        }
+
+        if ($button->url === null) {
+            $url = $this->createUrl($name, $context);
+        } elseif ($button->url instanceof Closure) {
+            $closure = $button->url;
+            $url = $closure($context->data, $context);
+        } else {
+            $url = $button->url;
+        }
+
+        if ($button->attributes instanceof Closure) {
+            $closure = $button->attributes;
+            $attributes = $closure($context->data, $context);
+        } else {
+            $attributes = $button->attributes ?? [];
+        }
+        if (!$button->overrideAttributes) {
+            /** @var array $buttonAttributes */
+            $buttonAttributes = $context->columnsConfigs[ActionColumn::class]['buttonAttributes'] ?? [];
+            if (!empty($buttonAttributes)) {
+                $attributes = array_merge($buttonAttributes, $attributes);
+            }
+        }
+
+        if ($button->class instanceof Closure) {
+            $closure = $button->class;
+            $class = $closure($context->data, $context);
+        } else {
+            $class = $button->class;
+        }
+
+        /** @var array<array-key,string|null>|string|null $buttonClass */
+        $buttonClass = $context->columnsConfigs[ActionColumn::class]['buttonClass'] ?? null;
+        if ($class === false) {
+            Html::addCssClass($attributes, $buttonClass);
+        } else {
+            if (!$button->overrideAttributes) {
+                Html::addCssClass($attributes, $buttonClass);
+            }
+            Html::addCssClass($attributes, $class);
+        }
+
+        return (string)Html::a($content, $url, $attributes);
     }
 
     private function createUrl(string $action, DataContext $context): string
@@ -178,14 +239,16 @@ final class ActionColumnRenderer implements ColumnRendererInterface
     /**
      * @psalm-param array<string,ButtonRenderer> $buttons
      */
-    private function getTemplate(ActionColumn $column, array $buttons): string
+    private function getTemplate(ActionColumn $column, array $buttons, DataContext $context): string
     {
         if ($column->template !== null) {
             return $column->template;
         }
 
-        if ($this->defaultTemplate !== null) {
-            return $this->defaultTemplate;
+        /** @var string|null $defaultTemplate */
+        $defaultTemplate = $context->columnsConfigs[ActionColumn::class]['template'] ?? null;
+        if ($defaultTemplate !== null) {
+            return $defaultTemplate;
         }
 
         $tokens = [];

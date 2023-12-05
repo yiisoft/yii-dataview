@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Yiisoft\Yii\DataView\Tests\Column;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Yiisoft\Data\Reader\Iterable\IterableDataReader;
 use Yiisoft\Definitions\Exception\CircularReferenceException;
@@ -17,6 +18,7 @@ use Yiisoft\Router\CurrentRoute;
 use Yiisoft\Router\Route;
 use Yiisoft\Router\UrlGeneratorInterface;
 use Yiisoft\Widget\WidgetFactory;
+use Yiisoft\Yii\DataView\Column\ActionButton;
 use Yiisoft\Yii\DataView\Column\ActionColumn;
 use Yiisoft\Yii\DataView\Column\ActionColumnRenderer;
 use Yiisoft\Yii\DataView\Column\Base\DataContext;
@@ -24,6 +26,7 @@ use Yiisoft\Yii\DataView\Column\DataColumn;
 use Yiisoft\Yii\DataView\GridView;
 use Yiisoft\Yii\DataView\Tests\Support\Assert;
 use Yiisoft\Yii\DataView\Tests\Support\Mock;
+use Yiisoft\Yii\DataView\Tests\Support\StringableObject;
 use Yiisoft\Yii\DataView\Tests\Support\TestTrait;
 use Yiisoft\Yii\DataView\YiiRouter\UrlConfig;
 
@@ -782,7 +785,7 @@ final class ActionColumnTest extends TestCase
 
     public function testDefaultTemplate(): void
     {
-        $this->initialize(defaultTemplate: '!{one}!');
+        $this->initialize();
 
         $dataReader = new IterableDataReader([
             ['id' => 1],
@@ -798,6 +801,11 @@ final class ActionColumnTest extends TestCase
 
         $html = GridView::widget()
             ->columns($actionColumn)
+            ->columnsConfigs([
+                ActionColumn::class => [
+                    'template' => '!{one}!',
+                ],
+            ])
             ->dataReader($dataReader)
             ->render();
 
@@ -877,8 +885,171 @@ final class ActionColumnTest extends TestCase
         );
     }
 
+    public static function dataActionButtons(): array
+    {
+        return [
+            'empty' => [
+                '<a href="#"></a>',
+                new ActionButton(),
+            ],
+            'content-string' => [
+                '<a href="#">hello</a>',
+                new ActionButton(content: 'hello'),
+            ],
+            'content-stringable' => [
+                '<a href="#">hello</a>',
+                new ActionButton(content: new StringableObject('hello')),
+            ],
+            'content-closure-data' => [
+                '<a href="#">hello-1</a>',
+                new ActionButton(
+                    content: static fn(array $data) => new StringableObject('hello-' . $data['id']),
+                ),
+            ],
+            'content-closure-context' => [
+                '<a href="#">hello-0</a>',
+                new ActionButton(
+                    content: static fn(array $data, DataContext $context) => 'hello-' . $context->key,
+                ),
+            ],
+            'url-string' => [
+                '<a href="#1"></a>',
+                new ActionButton(url: '#1'),
+            ],
+            'url-closure-data' => [
+                '<a href="#id-1">test</a>',
+                new ActionButton(
+                    content: 'test',
+                    url: static fn(array $data) => '#id-' . $data['id'],
+                ),
+            ],
+            'url-closure-context' => [
+                '<a href="#id-0">test</a>',
+                new ActionButton(
+                    content: 'test',
+                    url: static fn(array $data, DataContext $context) => '#id-' . $context->key,
+                ),
+            ],
+            'attributes-array' => [
+                '<a href="#" data-test="hello">test</a>',
+                new ActionButton(
+                    content: 'test',
+                    attributes: ['data-test' => 'hello']
+                ),
+            ],
+            'attributes-closure' => [
+                '<a href="#" data-t1="h1" data-t2="h0">test</a>',
+                new ActionButton(
+                    content: 'test',
+                    attributes: static fn(array $data, DataContext $context) => [
+                        'data-t1' => 'h' . $data['id'],
+                        'data-t2' => 'h' . $context->key,
+                    ]
+                ),
+            ],
+            'class-string' => [
+                '<a class="red" href="#"></a>',
+                new ActionButton(class: 'red'),
+            ],
+            'class-closure' => [
+                '<a class="h1 h0" href="#">test</a>',
+                new ActionButton(
+                    content: 'test',
+                    class: static fn(array $data, DataContext $context) => [
+                        'h' . $data['id'],
+                        'h' . $context->key,
+                    ]
+                ),
+            ],
+            'add-class' => [
+                '<a class="red green" href="#"></a>',
+                new ActionButton(class: 'green'),
+                ['buttonClass' => 'red'],
+            ],
+            'override-class' => [
+                '<a class="green" href="#"></a>',
+                new ActionButton(class: 'green', overrideAttributes: true),
+                ['buttonClass' => 'red'],
+            ],
+            'add-attributes' => [
+                '<a href="#" data-id="5" data-key="6"></a>',
+                new ActionButton(attributes: ['data-key' => 6]),
+                ['buttonAttributes' => ['data-id' => 5]],
+            ],
+            'override-attributes' => [
+                '<a href="#" data-key="6"></a>',
+                new ActionButton(attributes: ['data-key' => 6], overrideAttributes: true),
+                ['buttonAttributes' => ['data-id' => 5]],
+            ],
+            'override-attributes-without-class' => [
+                '<a class="red" href="#" data-key="6"></a>',
+                new ActionButton(attributes: ['data-key' => 6], overrideAttributes: true),
+                [
+                    'buttonAttributes' => ['data-id' => 5],
+                    'buttonClass' => 'red',
+                ],
+            ],
+            'override-attributes-with-class' => [
+                '<a class="green" href="#" data-key="6"></a>',
+                new ActionButton(attributes: ['data-key' => 6], class: 'green', overrideAttributes: true),
+                [
+                    'buttonAttributes' => ['data-id' => 5],
+                    'buttonClass' => 'red',
+                ],
+            ],
+        ];
+    }
+
+    #[DataProvider('dataActionButtons')]
+    public function testActionButtons(
+        string $expected,
+        ActionButton $button,
+        array $columnConfig = [],
+    ): void {
+        $this->initialize();
+
+        $dataReader = new IterableDataReader([
+            ['id' => 1],
+        ]);
+
+        $actionColumn = new ActionColumn(
+            buttons: [
+                'button' => $button,
+            ]
+        );
+
+        $html = GridView::widget()
+            ->columns($actionColumn)
+            ->columnsConfigs([
+                ActionColumn::class => $columnConfig,
+            ])
+            ->dataReader($dataReader)
+            ->render();
+
+        $this->assertSame(
+            <<<HTML
+            <div>
+            <table>
+            <thead>
+            <tr>
+            <th>Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+            <td>
+            $expected
+            </td>
+            </tr>
+            </tbody>
+            </table>
+            </div>
+            HTML,
+            $html
+        );
+    }
+
     private function initialize(
-        ?string $defaultTemplate = null,
         mixed $defaultUrlCreator = null,
     ): void {
         $currentRoute = new CurrentRoute();
@@ -890,7 +1061,6 @@ final class ActionColumnTest extends TestCase
             ActionColumnRenderer::class => $rendererDefinition ?? [
                 '__construct()' => [
                     'defaultUrlCreator' => $defaultUrlCreator,
-                    'defaultTemplate' => $defaultTemplate,
                 ],
             ],
         ];
