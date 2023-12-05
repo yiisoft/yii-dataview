@@ -5,12 +5,13 @@ declare(strict_types=1);
 namespace Yiisoft\Yii\DataView\Tests\Helper;
 
 use InvalidArgumentException;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Yiisoft\Yii\DataView\Helper\Attribute;
 
 final class AttributeTest extends TestCase
 {
-    public function dataGetInputName(): array
+    public static function dataGetInputName(): array
     {
         return [
             ['', 'age', 'age'],
@@ -24,12 +25,11 @@ final class AttributeTest extends TestCase
     }
 
     /**
-     * @dataProvider dataGetInputName
-     *
      * @param string $formModelName The form model name.
      * @param string $attribute The attribute name.
      * @param string $expected The expected input name.
      */
+    #[DataProvider('dataGetInputName')]
     public function testGetInputName(string $formModelName, string $attribute, string $expected): void
     {
         $this->assertSame($expected, Attribute::getInputName($formModelName, $attribute));
