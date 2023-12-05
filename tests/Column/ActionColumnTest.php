@@ -9,7 +9,6 @@ use Yiisoft\Data\Reader\Iterable\IterableDataReader;
 use Yiisoft\Definitions\Exception\CircularReferenceException;
 use Yiisoft\Definitions\Exception\InvalidConfigException;
 use Yiisoft\Definitions\Exception\NotInstantiableException;
-use Yiisoft\Definitions\Reference;
 use Yiisoft\Di\Container;
 use Yiisoft\Di\ContainerConfig;
 use Yiisoft\Factory\NotFoundException;
@@ -26,7 +25,6 @@ use Yiisoft\Yii\DataView\GridView;
 use Yiisoft\Yii\DataView\Tests\Support\Assert;
 use Yiisoft\Yii\DataView\Tests\Support\Mock;
 use Yiisoft\Yii\DataView\Tests\Support\TestTrait;
-use Yiisoft\Yii\DataView\YiiRouter\ActionColumnUrlCreator;
 use Yiisoft\Yii\DataView\YiiRouter\UrlConfig;
 
 final class ActionColumnTest extends TestCase
@@ -882,8 +880,7 @@ final class ActionColumnTest extends TestCase
     private function initialize(
         ?string $defaultTemplate = null,
         mixed $defaultUrlCreator = null,
-    ): void
-    {
+    ): void {
         $currentRoute = new CurrentRoute();
         $currentRoute->setRouteWithArguments(Route::get('/admin/manage')->name('admin/manage'), []);
 
