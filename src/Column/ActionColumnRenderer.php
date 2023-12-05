@@ -30,11 +30,14 @@ final class ActionColumnRenderer implements ColumnRendererInterface
     /**
      * @psalm-param UrlCreator|null $defaultUrlCreator
      * @psalm-param array<string,ButtonRenderer>|null $defaultButtons
+     * @psalm-param string|array<array-key,string|null>|null $buttonClass
      */
     public function __construct(
         ?callable $defaultUrlCreator = null,
         private readonly ?string $defaultTemplate = null,
         ?array $defaultButtons = null,
+        private readonly array $buttonAttributes = [],
+        private readonly string|array|null $buttonClass = null
     ) {
         $this->defaultUrlCreator = $defaultUrlCreator ?? static fn(): string => '#';
 
@@ -155,6 +158,7 @@ final class ActionColumnRenderer implements ColumnRendererInterface
 
         if ($button->content instanceof Closure) {
             $closure = $button->content;
+            /** @var string $content */
             $content = $closure($context->data, $context);
         } else {
             $content = $button->content;
@@ -175,14 +179,24 @@ final class ActionColumnRenderer implements ColumnRendererInterface
         } else {
             $attributes = $button->attributes ?? [];
         }
+        if (!$button->overrideAttributes && !empty($this->buttonAttributes)) {
+            $attributes = array_merge($this->buttonAttributes, $attributes);
+        }
 
         if ($button->class instanceof Closure) {
             $closure = $button->class;
             $class = $closure($context->data, $context);
         } else {
-            $class = $button->class ?? [];
+            $class = $button->class;
         }
-        Html::addCssClass($attributes, $class);
+        if ($class === false) {
+            Html::addCssClass($attributes, $this->buttonClass);
+        } else {
+            if (!$button->overrideAttributes) {
+                Html::addCssClass($attributes, $this->buttonClass);
+            }
+            Html::addCssClass($attributes, $class);
+        }
 
         return (string)Html::a($content, $url, $attributes);
     }

@@ -956,13 +956,52 @@ final class ActionColumnTest extends TestCase
                     ]
                 ),
             ],
+            'add-class' => [
+                '<a class="red green" href="#"></a>',
+                new ActionButton(class: 'green'),
+                [],
+                'red',
+            ],
+            'override-class' => [
+                '<a class="green" href="#"></a>',
+                new ActionButton(class: 'green', overrideAttributes: true),
+                [],
+                'red',
+            ],
+            'add-attributes' => [
+                '<a href="#" data-id="5" data-key="6"></a>',
+                new ActionButton(attributes: ['data-key' => 6]),
+                ['data-id' => 5],
+            ],
+            'override-attributes' => [
+                '<a href="#" data-key="6"></a>',
+                new ActionButton(attributes: ['data-key' => 6], overrideAttributes: true),
+                ['data-id' => 5],
+            ],
+            'override-attributes-without-class' => [
+                '<a class="red" href="#" data-key="6"></a>',
+                new ActionButton(attributes: ['data-key' => 6], overrideAttributes: true),
+                ['data-id' => 5],
+                'red'
+            ],
+            'override-attributes-with-class' => [
+                '<a class="green" href="#" data-key="6"></a>',
+                new ActionButton(attributes: ['data-key' => 6], class: 'green', overrideAttributes: true),
+                ['data-id' => 5],
+                'red'
+            ],
         ];
     }
 
     #[DataProvider('dataActionButtons')]
-    public function testActionButtons(string $expected, ActionButton $button): void
+    public function testActionButtons(
+        string $expected,
+        ActionButton $button,
+        array $buttonAttributes = [],
+        array|string|null $buttonClass = null,
+    ): void
     {
-        $this->initialize();
+        $this->initialize(buttonAttributes: $buttonAttributes, buttonClass: $buttonClass);
 
         $dataReader = new IterableDataReader([
             ['id' => 1],
@@ -1005,6 +1044,8 @@ final class ActionColumnTest extends TestCase
     private function initialize(
         ?string $defaultTemplate = null,
         mixed $defaultUrlCreator = null,
+        array $buttonAttributes = [],
+        array|string|null $buttonClass = null,
     ): void {
         $currentRoute = new CurrentRoute();
         $currentRoute->setRouteWithArguments(Route::get('/admin/manage')->name('admin/manage'), []);
@@ -1016,6 +1057,8 @@ final class ActionColumnTest extends TestCase
                 '__construct()' => [
                     'defaultUrlCreator' => $defaultUrlCreator,
                     'defaultTemplate' => $defaultTemplate,
+                    'buttonAttributes' => $buttonAttributes,
+                    'buttonClass' => $buttonClass,
                 ],
             ],
         ];
