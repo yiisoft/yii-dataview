@@ -8,7 +8,7 @@ use Stringable;
 
 final class StringableObject implements Stringable
 {
-    public function __construct(private string $string)
+    public function __construct(private readonly string $string)
     {
     }
 
