@@ -33,7 +33,7 @@ final class ActionColumnRenderer implements ColumnRendererInterface
      */
     public function __construct(
         ?callable $defaultUrlCreator = null,
-        private readonly string $defaultTemplate = "{view}\n{update}\n{delete}",
+        private readonly ?string $defaultTemplate = null,
         ?array $defaultButtons = null,
     ) {
         $this->defaultUrlCreator = $defaultUrlCreator;
@@ -100,7 +100,7 @@ final class ActionColumnRenderer implements ColumnRendererInterface
         if ($contentSource !== null) {
             $content = (string)(is_callable($contentSource) ? $contentSource($context->data, $context) : $contentSource);
         } else {
-            $buttons = empty($column->buttons) ? $this->defaultButtons : $column->buttons;
+            $buttons = $column->buttons ?? $this->defaultButtons;
             $content = preg_replace_callback(
                 '/{([\w\-\/]+)}/',
                 function (array $matches) use ($column, $buttons, $context): string {
@@ -122,7 +122,7 @@ final class ActionColumnRenderer implements ColumnRendererInterface
 
                     return '';
                 },
-                $column->template ?? $this->defaultTemplate
+                $this->getTemplate($column, $buttons),
             );
             $content = trim($content);
         }
@@ -177,6 +177,27 @@ final class ActionColumnRenderer implements ColumnRendererInterface
 
         /** @var bool */
         return $visibleValue($data, $key, $index);
+    }
+
+    /**
+     * @psalm-param array<string,ButtonRenderer> $buttons
+     */
+    private function getTemplate(ActionColumn $column, array $buttons): string
+    {
+        if ($column->template !== null) {
+            return $column->template;
+        }
+
+        if ($this->defaultTemplate !== null) {
+            return $this->defaultTemplate;
+        }
+
+        $tokens = [];
+        foreach ($buttons as $name => $_renderer) {
+            $tokens[] = '{' . $name . '}';
+        }
+
+        return implode("\n", $tokens);
     }
 
     /**

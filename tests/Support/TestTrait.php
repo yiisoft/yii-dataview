@@ -30,18 +30,13 @@ trait TestTrait
         WidgetFactory::initialize($container, []);
     }
 
-    private function createIterableProvider(array $data): IterableDataReader
-    {
-        return new IterableDataReader($data);
-    }
-
     private function createOffsetPaginator(
         array $data,
         int $pageSize,
         int $currentPage = 1,
         bool $sort = false
     ): OffSetPaginator {
-        $data = $this->createIterableProvider($data);
+        $data = new IterableDataReader($data);
 
         if ($sort) {
             $data = $data->withSort(Sort::any()->withOrder(['id' => 'asc', 'name' => 'asc']));
@@ -52,8 +47,7 @@ trait TestTrait
 
     private function createKeysetPaginator(array $data, int $pageSize): KeySetPaginator
     {
-        $data = $this
-            ->createIterableProvider($data)
+        $data = (new IterableDataReader($data))
             ->withSort(Sort::any()->withOrder(['id' => 'asc', 'name' => 'asc']));
 
         return (new KeysetPaginator($data))->withPageSize($pageSize);

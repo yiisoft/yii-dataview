@@ -9,14 +9,24 @@ use Yiisoft\Data\Reader\Iterable\IterableDataReader;
 use Yiisoft\Definitions\Exception\CircularReferenceException;
 use Yiisoft\Definitions\Exception\InvalidConfigException;
 use Yiisoft\Definitions\Exception\NotInstantiableException;
+use Yiisoft\Definitions\Reference;
+use Yiisoft\Di\Container;
+use Yiisoft\Di\ContainerConfig;
 use Yiisoft\Factory\NotFoundException;
 use Yiisoft\Html\Html;
+use Yiisoft\Router\CurrentRoute;
+use Yiisoft\Router\Route;
+use Yiisoft\Router\UrlGeneratorInterface;
+use Yiisoft\Widget\WidgetFactory;
 use Yiisoft\Yii\DataView\Column\ActionColumn;
+use Yiisoft\Yii\DataView\Column\ActionColumnRenderer;
 use Yiisoft\Yii\DataView\Column\Base\DataContext;
 use Yiisoft\Yii\DataView\Column\DataColumn;
 use Yiisoft\Yii\DataView\GridView;
 use Yiisoft\Yii\DataView\Tests\Support\Assert;
+use Yiisoft\Yii\DataView\Tests\Support\Mock;
 use Yiisoft\Yii\DataView\Tests\Support\TestTrait;
+use Yiisoft\Yii\DataView\YiiRouter\ActionColumnUrlCreator;
 use Yiisoft\Yii\DataView\YiiRouter\UrlConfig;
 
 final class ActionColumnTest extends TestCase
@@ -129,12 +139,6 @@ final class ActionColumnTest extends TestCase
         );
     }
 
-    /**
-     * @throws InvalidConfigException
-     * @throws NotFoundException
-     * @throws NotInstantiableException
-     * @throws CircularReferenceException
-     */
     public function testCustomButton(): void
     {
         Assert::equalsWithoutLE(
@@ -731,5 +735,127 @@ final class ActionColumnTest extends TestCase
             HTML,
             $html
         );
+    }
+
+    public function testDefaultTemplateGeneration(): void
+    {
+        $dataReader = new IterableDataReader([
+            ['id' => 1],
+            ['id' => 2],
+        ]);
+
+        $actionColumn = new ActionColumn(
+            primaryKey: 'id',
+            urlCreator: static fn() => '#',
+            buttons: [
+                'one' => static fn(string $url) => Html::a('1', $url)->render(),
+                'two' => static fn(string $url) => Html::a('2', $url)->render(),
+            ]
+        );
+
+        $html = GridView::widget()
+            ->columns($actionColumn)
+            ->dataReader($dataReader)
+            ->render();
+
+        $this->assertSame(
+            <<<HTML
+            <div>
+            <table>
+            <thead>
+            <tr>
+            <th>Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+            <td>
+            <a href="#">1</a>
+            <a href="#">2</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="#">1</a>
+            <a href="#">2</a>
+            </td>
+            </tr>
+            </tbody>
+            </table>
+            </div>
+            HTML,
+            $html
+        );
+    }
+
+    public function testDefaultTemplate(): void
+    {
+        $this->initialize('!{one}!');
+
+        $dataReader = new IterableDataReader([
+            ['id' => 1],
+            ['id' => 2],
+        ]);
+
+        $actionColumn = new ActionColumn(
+            primaryKey: 'id',
+            urlCreator: static fn() => '#',
+            buttons: [
+                'one' => static fn(string $url) => Html::a('1', $url)->render(),
+                'two' => static fn(string $url) => Html::a('2', $url)->render(),
+            ]
+        );
+
+        $html = GridView::widget()
+            ->columns($actionColumn)
+            ->dataReader($dataReader)
+            ->render();
+
+        $this->assertSame(
+            <<<HTML
+            <div>
+            <table>
+            <thead>
+            <tr>
+            <th>Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+            <td>
+            !<a href="#">1</a>!
+            </td>
+            </tr>
+            <tr>
+            <td>
+            !<a href="#">1</a>!
+            </td>
+            </tr>
+            </tbody>
+            </table>
+            </div>
+            HTML,
+            $html
+        );
+    }
+
+    private function initialize(?string $defaultTemplate = null): void
+    {
+        $currentRoute = new CurrentRoute();
+        $currentRoute->setRouteWithArguments(Route::get('/admin/manage')->name('admin/manage'), []);
+
+        $config = [
+            CurrentRoute::class => $currentRoute,
+            UrlGeneratorInterface::class => Mock::urlGenerator([], $currentRoute),
+            ActionColumnRenderer::class => [
+                '__construct()' => [
+                    'defaultUrlCreator' => Reference::to(ActionColumnUrlCreator::class),
+                    'defaultTemplate' => $defaultTemplate,
+                ],
+            ],
+        ];
+
+        $container = new Container(ContainerConfig::create()->withDefinitions($config));
+        WidgetFactory::initialize($container, []);
     }
 }
