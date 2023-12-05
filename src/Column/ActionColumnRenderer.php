@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Yiisoft\Yii\DataView\Column;
 
-use Closure;
 use InvalidArgumentException;
 use LogicException;
 use Yiisoft\Html\Html;
@@ -14,6 +13,7 @@ use Yiisoft\Yii\DataView\Column\Base\DataContext;
 
 /**
  * @psalm-import-type UrlCreator from ActionColumn
+ * @psalm-import-type ButtonRenderer from ActionColumn
  */
 final class ActionColumnRenderer implements ColumnRendererInterface
 {
@@ -23,13 +23,13 @@ final class ActionColumnRenderer implements ColumnRendererInterface
     private $defaultUrlCreator;
 
     /**
-     * @psalm-var array<string,Closure>
+     * @psalm-var array<string,ButtonRenderer>
      */
     private readonly array $defaultButtons;
 
     /**
      * @psalm-param UrlCreator|null $defaultUrlCreator
-     * @psalm-param array<string,Closure> $defaultButtons
+     * @psalm-param array<string,ButtonRenderer>|null $defaultButtons
      */
     public function __construct(
         ?callable $defaultUrlCreator = null,
@@ -117,7 +117,7 @@ final class ActionColumnRenderer implements ColumnRendererInterface
                         isset($buttons[$name])
                     ) {
                         $url = $this->createUrl($name, $context);
-                        return (string)$buttons[$name]($url);
+                        return $buttons[$name]($url);
                     }
 
                     return '';

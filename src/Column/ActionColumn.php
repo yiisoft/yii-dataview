@@ -12,6 +12,7 @@ use Yiisoft\Yii\DataView\Column\Base\DataContext;
  * the items.
  *
  * @psalm-type UrlCreator = callable(string,DataContext):string
+ * @psalm-type ButtonRenderer = callable(string):string
  */
 final class ActionColumn implements ColumnInterface
 {
@@ -25,7 +26,7 @@ final class ActionColumn implements ColumnInterface
      * @param ?callable $urlCreator A callback that creates a button URL using the specified data information.
      *
      * @psalm-param UrlCreator|null $urlCreator
-     * @psalm-param array<string,Closure> $buttons
+     * @psalm-param array<string,ButtonRenderer> $buttons
      * @psalm-param array<string,bool|Closure>|null $visibleButtons
      */
     public function __construct(
