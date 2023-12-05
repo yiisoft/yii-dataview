@@ -188,6 +188,10 @@ final class ActionColumnRenderer implements ColumnRendererInterface
             return $column->template;
         }
 
+        if ($this->defaultTemplate !== null) {
+            return $this->defaultTemplate;
+        }
+
         $tokens = [];
         foreach ($buttons as $name => $_renderer) {
             $tokens[] = '{' . $name . '}';
