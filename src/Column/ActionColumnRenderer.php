@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Yiisoft\Yii\DataView\Column;
 
-use Closure;
 use InvalidArgumentException;
 use LogicException;
 use Yiisoft\Html\Html;
