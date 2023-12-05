@@ -982,13 +982,13 @@ final class ActionColumnTest extends TestCase
                 '<a class="red" href="#" data-key="6"></a>',
                 new ActionButton(attributes: ['data-key' => 6], overrideAttributes: true),
                 ['data-id' => 5],
-                'red'
+                'red',
             ],
             'override-attributes-with-class' => [
                 '<a class="green" href="#" data-key="6"></a>',
                 new ActionButton(attributes: ['data-key' => 6], class: 'green', overrideAttributes: true),
                 ['data-id' => 5],
-                'red'
+                'red',
             ],
         ];
     }
@@ -999,8 +999,7 @@ final class ActionColumnTest extends TestCase
         ActionButton $button,
         array $buttonAttributes = [],
         array|string|null $buttonClass = null,
-    ): void
-    {
+    ): void {
         $this->initialize(buttonAttributes: $buttonAttributes, buttonClass: $buttonClass);
 
         $dataReader = new IterableDataReader([
