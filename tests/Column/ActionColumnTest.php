@@ -790,7 +790,7 @@ final class ActionColumnTest extends TestCase
 
     public function testDefaultTemplate(): void
     {
-        $this->initialize('!{one}!');
+        $this->initialize(defaultTemplate: '!{one}!');
 
         $dataReader = new IterableDataReader([
             ['id' => 1],
@@ -839,7 +839,58 @@ final class ActionColumnTest extends TestCase
         );
     }
 
-    private function initialize(?string $defaultTemplate = null): void
+    public function testDefaultUrlCreator(): void
+    {
+        $this->initialize(rendererDefinition: []);
+
+        $dataReader = new IterableDataReader([
+            ['id' => 1],
+            ['id' => 2],
+        ]);
+
+        $actionColumn = new ActionColumn(
+            buttons: [
+                'one' => static fn(string $url) => Html::a('1', $url)->render(),
+            ]
+        );
+
+        $html = GridView::widget()
+            ->columns($actionColumn)
+            ->dataReader($dataReader)
+            ->render();
+
+        $this->assertSame(
+            <<<HTML
+            <div>
+            <table>
+            <thead>
+            <tr>
+            <th>Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+            <td>
+            <a href="#">1</a>
+            </td>
+            </tr>
+            <tr>
+            <td>
+            <a href="#">1</a>
+            </td>
+            </tr>
+            </tbody>
+            </table>
+            </div>
+            HTML,
+            $html
+        );
+    }
+
+    private function initialize(
+        ?string $defaultTemplate = null,
+        ?array $rendererDefinition = null,
+    ): void
     {
         $currentRoute = new CurrentRoute();
         $currentRoute->setRouteWithArguments(Route::get('/admin/manage')->name('admin/manage'), []);
@@ -847,7 +898,7 @@ final class ActionColumnTest extends TestCase
         $config = [
             CurrentRoute::class => $currentRoute,
             UrlGeneratorInterface::class => Mock::urlGenerator([], $currentRoute),
-            ActionColumnRenderer::class => [
+            ActionColumnRenderer::class => $rendererDefinition ?? [
                 '__construct()' => [
                     'defaultUrlCreator' => Reference::to(ActionColumnUrlCreator::class),
                     'defaultTemplate' => $defaultTemplate,
@@ -856,6 +907,6 @@ final class ActionColumnTest extends TestCase
         ];
 
         $container = new Container(ContainerConfig::create()->withDefinitions($config));
-        WidgetFactory::initialize($container, []);
+        WidgetFactory::initialize($container);
     }
 }
