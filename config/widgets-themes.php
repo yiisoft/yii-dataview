@@ -15,7 +15,7 @@ return [
                     ActionColumn::class => [
                         'buttonClass' => 'btn btn-outline-secondary',
                     ],
-                ]
+                ],
             ],
         ],
     ],
