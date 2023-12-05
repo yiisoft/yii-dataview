@@ -46,6 +46,7 @@ final class GridView extends BaseListView
      * @var ColumnInterface[]
      */
     private array $columns = [];
+    private array $columnsConfigs = [];
 
     private bool $columnsGroupEnabled = false;
     private string $emptyCell = '&nbsp;';
@@ -118,6 +119,13 @@ final class GridView extends BaseListView
     {
         $new = clone $this;
         $new->columns = $values;
+        return $new;
+    }
+
+    public function columnsConfigs(array $configs): self
+    {
+        $new = clone $this;
+        $new->columnsConfigs = $configs;
         return $new;
     }
 
@@ -389,6 +397,7 @@ final class GridView extends BaseListView
             $this->urlArguments,
             $this->urlQueryParameters,
             $this->filterModelName,
+            $this->columnsConfigs,
             $this->translator,
             $this->translationCategory,
         );
@@ -495,7 +504,7 @@ final class GridView extends BaseListView
 
             $tags = [];
             foreach ($columns as $i => $column) {
-                $context = new DataContext($column, $value, $key, $index);
+                $context = new DataContext($column, $value, $key, $index, $this->columnsConfigs);
                 $cell = $renderers[$i]->renderBody($column, new Cell(), $context);
                 $contentSource = $cell->getContent();
                 /** @var string|Stringable $content */

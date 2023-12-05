@@ -30,14 +30,10 @@ final class ActionColumnRenderer implements ColumnRendererInterface
     /**
      * @psalm-param UrlCreator|null $defaultUrlCreator
      * @psalm-param array<string,ButtonRenderer>|null $defaultButtons
-     * @psalm-param string|array<array-key,string|null>|null $buttonClass
      */
     public function __construct(
         ?callable $defaultUrlCreator = null,
-        private readonly ?string $defaultTemplate = null,
         ?array $defaultButtons = null,
-        private readonly array $buttonAttributes = [],
-        private readonly string|array|null $buttonClass = null
     ) {
         $this->defaultUrlCreator = $defaultUrlCreator ?? static fn(): string => '#';
 
@@ -124,7 +120,7 @@ final class ActionColumnRenderer implements ColumnRendererInterface
 
                     return '';
                 },
-                $this->getTemplate($column, $buttons),
+                $this->getTemplate($column, $buttons, $context),
             );
             $content = trim($content);
         }
@@ -179,8 +175,12 @@ final class ActionColumnRenderer implements ColumnRendererInterface
         } else {
             $attributes = $button->attributes ?? [];
         }
-        if (!$button->overrideAttributes && !empty($this->buttonAttributes)) {
-            $attributes = array_merge($this->buttonAttributes, $attributes);
+        if (!$button->overrideAttributes) {
+            /** @var array $buttonAttributes */
+            $buttonAttributes = $context->columnsConfigs[ActionColumn::class]['buttonAttributes'] ?? [];
+            if (!empty($buttonAttributes)) {
+                $attributes = array_merge($buttonAttributes, $attributes);
+            }
         }
 
         if ($button->class instanceof Closure) {
@@ -189,11 +189,14 @@ final class ActionColumnRenderer implements ColumnRendererInterface
         } else {
             $class = $button->class;
         }
+
+        /** @var string|array<array-key,string|null>|null $buttonClass */
+        $buttonClass = $context->columnsConfigs[ActionColumn::class]['buttonClass'] ?? null;
         if ($class === false) {
-            Html::addCssClass($attributes, $this->buttonClass);
+            Html::addCssClass($attributes, $buttonClass);
         } else {
             if (!$button->overrideAttributes) {
-                Html::addCssClass($attributes, $this->buttonClass);
+                Html::addCssClass($attributes, $buttonClass);
             }
             Html::addCssClass($attributes, $class);
         }
@@ -236,14 +239,16 @@ final class ActionColumnRenderer implements ColumnRendererInterface
     /**
      * @psalm-param array<string,ButtonRenderer> $buttons
      */
-    private function getTemplate(ActionColumn $column, array $buttons): string
+    private function getTemplate(ActionColumn $column, array $buttons, DataContext $context): string
     {
         if ($column->template !== null) {
             return $column->template;
         }
 
-        if ($this->defaultTemplate !== null) {
-            return $this->defaultTemplate;
+        /** @var string|null $defaultTemplate */
+        $defaultTemplate = $context->columnsConfigs[ActionColumn::class]['template'] ?? null;
+        if ($defaultTemplate !== null) {
+            return $defaultTemplate;
         }
 
         $tokens = [];

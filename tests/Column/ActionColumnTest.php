@@ -785,7 +785,7 @@ final class ActionColumnTest extends TestCase
 
     public function testDefaultTemplate(): void
     {
-        $this->initialize(defaultTemplate: '!{one}!');
+        $this->initialize();
 
         $dataReader = new IterableDataReader([
             ['id' => 1],
@@ -801,6 +801,11 @@ final class ActionColumnTest extends TestCase
 
         $html = GridView::widget()
             ->columns($actionColumn)
+            ->columnsConfigs([
+                ActionColumn::class => [
+                    'template' => '!{one}!',
+                ],
+            ])
             ->dataReader($dataReader)
             ->render();
 
@@ -959,36 +964,38 @@ final class ActionColumnTest extends TestCase
             'add-class' => [
                 '<a class="red green" href="#"></a>',
                 new ActionButton(class: 'green'),
-                [],
-                'red',
+                ['buttonClass' => 'red'],
             ],
             'override-class' => [
                 '<a class="green" href="#"></a>',
                 new ActionButton(class: 'green', overrideAttributes: true),
-                [],
-                'red',
+                ['buttonClass' => 'red'],
             ],
             'add-attributes' => [
                 '<a href="#" data-id="5" data-key="6"></a>',
                 new ActionButton(attributes: ['data-key' => 6]),
-                ['data-id' => 5],
+                ['buttonAttributes' => ['data-id' => 5]],
             ],
             'override-attributes' => [
                 '<a href="#" data-key="6"></a>',
                 new ActionButton(attributes: ['data-key' => 6], overrideAttributes: true),
-                ['data-id' => 5],
+                ['buttonAttributes' => ['data-id' => 5]],
             ],
             'override-attributes-without-class' => [
                 '<a class="red" href="#" data-key="6"></a>',
                 new ActionButton(attributes: ['data-key' => 6], overrideAttributes: true),
-                ['data-id' => 5],
-                'red',
+                [
+                    'buttonAttributes' => ['data-id' => 5],
+                    'buttonClass' => 'red',
+                ],
             ],
             'override-attributes-with-class' => [
                 '<a class="green" href="#" data-key="6"></a>',
                 new ActionButton(attributes: ['data-key' => 6], class: 'green', overrideAttributes: true),
-                ['data-id' => 5],
-                'red',
+                [
+                    'buttonAttributes' => ['data-id' => 5],
+                    'buttonClass' => 'red',
+                ],
             ],
         ];
     }
@@ -997,10 +1004,9 @@ final class ActionColumnTest extends TestCase
     public function testActionButtons(
         string $expected,
         ActionButton $button,
-        array $buttonAttributes = [],
-        array|string|null $buttonClass = null,
+        array $columnConfig = [],
     ): void {
-        $this->initialize(buttonAttributes: $buttonAttributes, buttonClass: $buttonClass);
+        $this->initialize();
 
         $dataReader = new IterableDataReader([
             ['id' => 1],
@@ -1014,6 +1020,9 @@ final class ActionColumnTest extends TestCase
 
         $html = GridView::widget()
             ->columns($actionColumn)
+            ->columnsConfigs([
+                ActionColumn::class => $columnConfig
+            ])
             ->dataReader($dataReader)
             ->render();
 
@@ -1041,10 +1050,7 @@ final class ActionColumnTest extends TestCase
     }
 
     private function initialize(
-        ?string $defaultTemplate = null,
         mixed $defaultUrlCreator = null,
-        array $buttonAttributes = [],
-        array|string|null $buttonClass = null,
     ): void {
         $currentRoute = new CurrentRoute();
         $currentRoute->setRouteWithArguments(Route::get('/admin/manage')->name('admin/manage'), []);
@@ -1055,9 +1061,6 @@ final class ActionColumnTest extends TestCase
             ActionColumnRenderer::class => $rendererDefinition ?? [
                 '__construct()' => [
                     'defaultUrlCreator' => $defaultUrlCreator,
-                    'defaultTemplate' => $defaultTemplate,
-                    'buttonAttributes' => $buttonAttributes,
-                    'buttonClass' => $buttonClass,
                 ],
             ],
         ];
