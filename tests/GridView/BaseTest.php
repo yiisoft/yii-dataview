@@ -195,9 +195,9 @@ final class BaseTest extends TestCase
             <td>John</td>
             <td>20</td>
             <td>
-            <a name="view" href="/admin/manage/view?id=1" title="View" role="button" style="text-decoration: none!important;"><span>🔎</span></a>
-            <a name="update" href="/admin/manage/update?id=1" title="Update" role="button" style="text-decoration: none!important;"><span>✎</span></a>
-            <a name="delete" href="/admin/manage/delete?id=1" title="Delete" role="button" style="text-decoration: none!important;"><span>❌</span></a>
+            <a href="/admin/manage/view?id=1" title="View">🔎</a>
+            <a href="/admin/manage/update?id=1" title="Update">✎</a>
+            <a href="/admin/manage/delete?id=1" title="Delete">❌</a>
             </td>
             </tr>
             <tr>
@@ -205,9 +205,9 @@ final class BaseTest extends TestCase
             <td>Mary</td>
             <td>21</td>
             <td>
-            <a name="view" href="/admin/manage/view?id=2" title="View" role="button" style="text-decoration: none!important;"><span>🔎</span></a>
-            <a name="update" href="/admin/manage/update?id=2" title="Update" role="button" style="text-decoration: none!important;"><span>✎</span></a>
-            <a name="delete" href="/admin/manage/delete?id=2" title="Delete" role="button" style="text-decoration: none!important;"><span>❌</span></a>
+            <a href="/admin/manage/view?id=2" title="View">🔎</a>
+            <a href="/admin/manage/update?id=2" title="Update">✎</a>
+            <a href="/admin/manage/delete?id=2" title="Delete">❌</a>
             </td>
             </tr>
             </tbody>

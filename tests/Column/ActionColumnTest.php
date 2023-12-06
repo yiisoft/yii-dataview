@@ -207,16 +207,16 @@ final class ActionColumnTest extends TestCase
             <tbody>
             <tr>
             <td>
-            <a name="view" href="/admin/manage/view?id=1" title="View" role="button" style="text-decoration: none!important;"><span>🔎</span></a>
-            <a name="update" href="/admin/manage/update?id=1" title="Update" role="button" style="text-decoration: none!important;"><span>✎</span></a>
-            <a name="delete" href="/admin/manage/delete?id=1" title="Delete" role="button" style="text-decoration: none!important;"><span>❌</span></a>
+            <a href="/admin/manage/view?id=1" title="View">🔎</a>
+            <a href="/admin/manage/update?id=1" title="Update">✎</a>
+            <a href="/admin/manage/delete?id=1" title="Delete">❌</a>
             </td>
             </tr>
             <tr>
             <td>
-            <a name="view" href="/admin/manage/view?id=2" title="View" role="button" style="text-decoration: none!important;"><span>🔎</span></a>
-            <a name="update" href="/admin/manage/update?id=2" title="Update" role="button" style="text-decoration: none!important;"><span>✎</span></a>
-            <a name="delete" href="/admin/manage/delete?id=2" title="Delete" role="button" style="text-decoration: none!important;"><span>❌</span></a>
+            <a href="/admin/manage/view?id=2" title="View">🔎</a>
+            <a href="/admin/manage/update?id=2" title="Update">✎</a>
+            <a href="/admin/manage/delete?id=2" title="Delete">❌</a>
             </td>
             </tr>
             </tbody>
@@ -252,16 +252,16 @@ final class ActionColumnTest extends TestCase
             <tbody>
             <tr>
             <td>
-            <a name="view" href="/admin/manage/view?id=1" title="View" role="button" style="text-decoration: none!important;"><span>🔎</span></a>
-            <a name="update" href="/admin/manage/update?id=1" title="Update" role="button" style="text-decoration: none!important;"><span>✎</span></a>
-            <a name="delete" href="/admin/manage/delete?id=1" title="Delete" role="button" style="text-decoration: none!important;"><span>❌</span></a>
+            <a href="/admin/manage/view?id=1" title="View">🔎</a>
+            <a href="/admin/manage/update?id=1" title="Update">✎</a>
+            <a href="/admin/manage/delete?id=1" title="Delete">❌</a>
             </td>
             </tr>
             <tr>
             <td>
-            <a name="view" href="/admin/manage/view?id=2" title="View" role="button" style="text-decoration: none!important;"><span>🔎</span></a>
-            <a name="update" href="/admin/manage/update?id=2" title="Update" role="button" style="text-decoration: none!important;"><span>✎</span></a>
-            <a name="delete" href="/admin/manage/delete?id=2" title="Delete" role="button" style="text-decoration: none!important;"><span>❌</span></a>
+            <a href="/admin/manage/view?id=2" title="View">🔎</a>
+            <a href="/admin/manage/update?id=2" title="Update">✎</a>
+            <a href="/admin/manage/delete?id=2" title="Delete">❌</a>
             </td>
             </tr>
             </tbody>
@@ -297,16 +297,16 @@ final class ActionColumnTest extends TestCase
             <tbody>
             <tr>
             <td>
-            <a name="view" href="/admin/manage/view?id=1" title="View" role="button" style="text-decoration: none!important;"><span>🔎</span></a>
-            <a name="update" href="/admin/manage/update?id=1" title="Update" role="button" style="text-decoration: none!important;"><span>✎</span></a>
-            <a name="delete" href="/admin/manage/delete?id=1" title="Delete" role="button" style="text-decoration: none!important;"><span>❌</span></a>
+            <a href="/admin/manage/view?id=1" title="View">🔎</a>
+            <a href="/admin/manage/update?id=1" title="Update">✎</a>
+            <a href="/admin/manage/delete?id=1" title="Delete">❌</a>
             </td>
             </tr>
             <tr>
             <td>
-            <a name="view" href="/admin/manage/view?id=2" title="View" role="button" style="text-decoration: none!important;"><span>🔎</span></a>
-            <a name="update" href="/admin/manage/update?id=2" title="Update" role="button" style="text-decoration: none!important;"><span>✎</span></a>
-            <a name="delete" href="/admin/manage/delete?id=2" title="Delete" role="button" style="text-decoration: none!important;"><span>❌</span></a>
+            <a href="/admin/manage/view?id=2" title="View">🔎</a>
+            <a href="/admin/manage/update?id=2" title="Update">✎</a>
+            <a href="/admin/manage/delete?id=2" title="Delete">❌</a>
             </td>
             </tr>
             </tbody>
@@ -342,16 +342,16 @@ final class ActionColumnTest extends TestCase
             <tbody>
             <tr>
             <td>
-            <a name="view" href="/admin/manage/view?id=1" title="View" role="button" style="text-decoration: none!important;"><span>🔎</span></a>
-            <a name="update" href="/admin/manage/update?id=1" title="Update" role="button" style="text-decoration: none!important;"><span>✎</span></a>
-            <a name="delete" href="/admin/manage/delete?id=1" title="Delete" role="button" style="text-decoration: none!important;"><span>❌</span></a>
+            <a href="/admin/manage/view?id=1" title="View">🔎</a>
+            <a href="/admin/manage/update?id=1" title="Update">✎</a>
+            <a href="/admin/manage/delete?id=1" title="Delete">❌</a>
             </td>
             </tr>
             <tr>
             <td>
-            <a name="view" href="/admin/manage/view?id=2" title="View" role="button" style="text-decoration: none!important;"><span>🔎</span></a>
-            <a name="update" href="/admin/manage/update?id=2" title="Update" role="button" style="text-decoration: none!important;"><span>✎</span></a>
-            <a name="delete" href="/admin/manage/delete?id=2" title="Delete" role="button" style="text-decoration: none!important;"><span>❌</span></a>
+            <a href="/admin/manage/view?id=2" title="View">🔎</a>
+            <a href="/admin/manage/update?id=2" title="Update">✎</a>
+            <a href="/admin/manage/delete?id=2" title="Delete">❌</a>
             </td>
             </tr>
             </tbody>
@@ -411,16 +411,16 @@ final class ActionColumnTest extends TestCase
             <tbody>
             <tr>
             <td>
-            <a name="view" href="/admin/manage/view?identity_id=1" title="View" role="button" style="text-decoration: none!important;"><span>🔎</span></a>
-            <a name="update" href="/admin/manage/update?identity_id=1" title="Update" role="button" style="text-decoration: none!important;"><span>✎</span></a>
-            <a name="delete" href="/admin/manage/delete?identity_id=1" title="Delete" role="button" style="text-decoration: none!important;"><span>❌</span></a>
+            <a href="/admin/manage/view?identity_id=1" title="View">🔎</a>
+            <a href="/admin/manage/update?identity_id=1" title="Update">✎</a>
+            <a href="/admin/manage/delete?identity_id=1" title="Delete">❌</a>
             </td>
             </tr>
             <tr>
             <td>
-            <a name="view" href="/admin/manage/view?identity_id=2" title="View" role="button" style="text-decoration: none!important;"><span>🔎</span></a>
-            <a name="update" href="/admin/manage/update?identity_id=2" title="Update" role="button" style="text-decoration: none!important;"><span>✎</span></a>
-            <a name="delete" href="/admin/manage/delete?identity_id=2" title="Delete" role="button" style="text-decoration: none!important;"><span>❌</span></a>
+            <a href="/admin/manage/view?identity_id=2" title="View">🔎</a>
+            <a href="/admin/manage/update?identity_id=2" title="Update">✎</a>
+            <a href="/admin/manage/delete?identity_id=2" title="Delete">❌</a>
             </td>
             </tr>
             </tbody>
@@ -468,18 +468,18 @@ final class ActionColumnTest extends TestCase
             <td>1</td>
             <td>John</td>
             <td>
-            <a name="view" href="/admin/manage/view?id=1" title="View" role="button" style="text-decoration: none!important;"><span>🔎</span></a>
-            <a name="update" href="/admin/manage/update?id=1" title="Update" role="button" style="text-decoration: none!important;"><span>✎</span></a>
-            <a name="delete" href="/admin/manage/delete?id=1" title="Delete" role="button" style="text-decoration: none!important;"><span>❌</span></a>
+            <a href="/admin/manage/view?id=1" title="View">🔎</a>
+            <a href="/admin/manage/update?id=1" title="Update">✎</a>
+            <a href="/admin/manage/delete?id=1" title="Delete">❌</a>
             </td>
             </tr>
             <tr>
             <td>2</td>
             <td>Mary</td>
             <td>
-            <a name="view" href="/admin/manage/view?id=2" title="View" role="button" style="text-decoration: none!important;"><span>🔎</span></a>
-            <a name="update" href="/admin/manage/update?id=2" title="Update" role="button" style="text-decoration: none!important;"><span>✎</span></a>
-            <a name="delete" href="/admin/manage/delete?id=2" title="Delete" role="button" style="text-decoration: none!important;"><span>❌</span></a>
+            <a href="/admin/manage/view?id=2" title="View">🔎</a>
+            <a href="/admin/manage/update?id=2" title="Update">✎</a>
+            <a href="/admin/manage/delete?id=2" title="Delete">❌</a>
             </td>
             </tr>
             </tbody>
@@ -519,16 +519,16 @@ final class ActionColumnTest extends TestCase
             <tbody>
             <tr>
             <td>
-            <a name="view" href="/admin/manage/view?test-arguments=test.arguments&amp;id=1" title="View" role="button" style="text-decoration: none!important;"><span>🔎</span></a>
-            <a name="update" href="/admin/manage/update?test-arguments=test.arguments&amp;id=1" title="Update" role="button" style="text-decoration: none!important;"><span>✎</span></a>
-            <a name="delete" href="/admin/manage/delete?test-arguments=test.arguments&amp;id=1" title="Delete" role="button" style="text-decoration: none!important;"><span>❌</span></a>
+            <a href="/admin/manage/view?test-arguments=test.arguments&amp;id=1" title="View">🔎</a>
+            <a href="/admin/manage/update?test-arguments=test.arguments&amp;id=1" title="Update">✎</a>
+            <a href="/admin/manage/delete?test-arguments=test.arguments&amp;id=1" title="Delete">❌</a>
             </td>
             </tr>
             <tr>
             <td>
-            <a name="view" href="/admin/manage/view?test-arguments=test.arguments&amp;id=2" title="View" role="button" style="text-decoration: none!important;"><span>🔎</span></a>
-            <a name="update" href="/admin/manage/update?test-arguments=test.arguments&amp;id=2" title="Update" role="button" style="text-decoration: none!important;"><span>✎</span></a>
-            <a name="delete" href="/admin/manage/delete?test-arguments=test.arguments&amp;id=2" title="Delete" role="button" style="text-decoration: none!important;"><span>❌</span></a>
+            <a href="/admin/manage/view?test-arguments=test.arguments&amp;id=2" title="View">🔎</a>
+            <a href="/admin/manage/update?test-arguments=test.arguments&amp;id=2" title="Update">✎</a>
+            <a href="/admin/manage/delete?test-arguments=test.arguments&amp;id=2" title="Delete">❌</a>
             </td>
             </tr>
             </tbody>
@@ -564,16 +564,16 @@ final class ActionColumnTest extends TestCase
             <tbody>
             <tr>
             <td>
-            <a name="view" href="https://test.com/view?id=1" title="View" role="button" style="text-decoration: none!important;"><span>🔎</span></a>
-            <a name="update" href="https://test.com/update?id=1" title="Update" role="button" style="text-decoration: none!important;"><span>✎</span></a>
-            <a name="delete" href="https://test.com/delete?id=1" title="Delete" role="button" style="text-decoration: none!important;"><span>❌</span></a>
+            <a href="https://test.com/view?id=1" title="View">🔎</a>
+            <a href="https://test.com/update?id=1" title="Update">✎</a>
+            <a href="https://test.com/delete?id=1" title="Delete">❌</a>
             </td>
             </tr>
             <tr>
             <td>
-            <a name="view" href="https://test.com/view?id=2" title="View" role="button" style="text-decoration: none!important;"><span>🔎</span></a>
-            <a name="update" href="https://test.com/update?id=2" title="Update" role="button" style="text-decoration: none!important;"><span>✎</span></a>
-            <a name="delete" href="https://test.com/delete?id=2" title="Delete" role="button" style="text-decoration: none!important;"><span>❌</span></a>
+            <a href="https://test.com/view?id=2" title="View">🔎</a>
+            <a href="https://test.com/update?id=2" title="Update">✎</a>
+            <a href="https://test.com/delete?id=2" title="Delete">❌</a>
             </td>
             </tr>
             </tbody>
@@ -610,16 +610,16 @@ final class ActionColumnTest extends TestCase
             <tbody>
             <tr>
             <td>
-            <a name="view" href="/admin/manage/view?test-param=test.param&amp;id=1" title="View" role="button" style="text-decoration: none!important;"><span>🔎</span></a>
-            <a name="update" href="/admin/manage/update?test-param=test.param&amp;id=1" title="Update" role="button" style="text-decoration: none!important;"><span>✎</span></a>
-            <a name="delete" href="/admin/manage/delete?test-param=test.param&amp;id=1" title="Delete" role="button" style="text-decoration: none!important;"><span>❌</span></a>
+            <a href="/admin/manage/view?test-param=test.param&amp;id=1" title="View">🔎</a>
+            <a href="/admin/manage/update?test-param=test.param&amp;id=1" title="Update">✎</a>
+            <a href="/admin/manage/delete?test-param=test.param&amp;id=1" title="Delete">❌</a>
             </td>
             </tr>
             <tr>
             <td>
-            <a name="view" href="/admin/manage/view?test-param=test.param&amp;id=2" title="View" role="button" style="text-decoration: none!important;"><span>🔎</span></a>
-            <a name="update" href="/admin/manage/update?test-param=test.param&amp;id=2" title="Update" role="button" style="text-decoration: none!important;"><span>✎</span></a>
-            <a name="delete" href="/admin/manage/delete?test-param=test.param&amp;id=2" title="Delete" role="button" style="text-decoration: none!important;"><span>❌</span></a>
+            <a href="/admin/manage/view?test-param=test.param&amp;id=2" title="View">🔎</a>
+            <a href="/admin/manage/update?test-param=test.param&amp;id=2" title="Update">✎</a>
+            <a href="/admin/manage/delete?test-param=test.param&amp;id=2" title="Delete">❌</a>
             </td>
             </tr>
             </tbody>
@@ -656,12 +656,12 @@ final class ActionColumnTest extends TestCase
             <tbody>
             <tr>
             <td>
-            <a name="view" href="/admin/manage/view?id=1" title="View" role="button" style="text-decoration: none!important;"><span>🔎</span></a>
+            <a href="/admin/manage/view?id=1" title="View">🔎</a>
             </td>
             </tr>
             <tr>
             <td>
-            <a name="update" href="/admin/manage/update?id=2" title="Update" role="button" style="text-decoration: none!important;"><span>✎</span></a>
+            <a href="/admin/manage/update?id=2" title="Update">✎</a>
             </td>
             </tr>
             </tbody>
@@ -712,16 +712,16 @@ final class ActionColumnTest extends TestCase
             <tbody>
             <tr>
             <td>
-            <a name="view" href="/admin/manage/view?id=23" title="View" role="button" style="text-decoration: none!important;"><span>🔎</span></a>
-            <a name="update" href="/admin/manage/update?id=23" title="Update" role="button" style="text-decoration: none!important;"><span>✎</span></a>
-            <a name="delete" href="/admin/manage/delete?id=23" title="Delete" role="button" style="text-decoration: none!important;"><span>❌</span></a>
+            <a href="/admin/manage/view?id=23" title="View">🔎</a>
+            <a href="/admin/manage/update?id=23" title="Update">✎</a>
+            <a href="/admin/manage/delete?id=23" title="Delete">❌</a>
             </td>
             </tr>
             <tr>
             <td>
-            <a name="view" href="/admin/manage/view?id=78" title="View" role="button" style="text-decoration: none!important;"><span>🔎</span></a>
-            <a name="update" href="/admin/manage/update?id=78" title="Update" role="button" style="text-decoration: none!important;"><span>✎</span></a>
-            <a name="delete" href="/admin/manage/delete?id=78" title="Delete" role="button" style="text-decoration: none!important;"><span>❌</span></a>
+            <a href="/admin/manage/view?id=78" title="View">🔎</a>
+            <a href="/admin/manage/update?id=78" title="Update">✎</a>
+            <a href="/admin/manage/delete?id=78" title="Delete">❌</a>
             </td>
             </tr>
             </tbody>
