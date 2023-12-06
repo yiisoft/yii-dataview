@@ -38,36 +38,9 @@ final class ActionColumnRenderer implements ColumnRendererInterface
         $this->defaultUrlCreator = $defaultUrlCreator ?? static fn(): string => '#';
 
         $this->defaultButtons = $defaultButtons ?? [
-            'view' => static fn(string $url): string => Html::a(
-                Html::span('🔎'),
-                $url,
-                [
-                    'name' => 'view',
-                    'role' => 'button',
-                    'style' => 'text-decoration: none!important;',
-                    'title' => 'View',
-                ],
-            )->render(),
-            'update' => static fn(string $url): string => Html::a(
-                Html::span('✎'),
-                $url,
-                [
-                    'name' => 'update',
-                    'role' => 'button',
-                    'style' => 'text-decoration: none!important;',
-                    'title' => 'Update',
-                ],
-            )->render(),
-            'delete' => static fn(string $url): string => Html::a(
-                Html::span('❌'),
-                $url,
-                [
-                    'name' => 'delete',
-                    'role' => 'button',
-                    'style' => 'text-decoration: none!important;',
-                    'title' => 'Delete',
-                ],
-            )->render(),
+            'view' => new ActionButton('🔎', attributes: ['title' => 'View']),
+            'update' => new ActionButton('✎', attributes: ['title' => 'Update']),
+            'delete' => new ActionButton('❌', attributes: ['title' => 'Delete']),
         ];
     }
 
