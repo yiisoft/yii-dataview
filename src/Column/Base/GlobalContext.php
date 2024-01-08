@@ -10,6 +10,9 @@ use Yiisoft\Translator\TranslatorInterface;
 
 final class GlobalContext
 {
+    /**
+     * @psalm-param array<string,scalar|Stringable|null> $urlArguments
+     */
     public function __construct(
         public readonly ReadableDataInterface $dataReader,
         public readonly array $sortLinkAttributes,

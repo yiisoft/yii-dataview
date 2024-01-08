@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Yiisoft\Yii\DataView;
 
+use Stringable;
 use Yiisoft\Data\Paginator\KeysetPaginator;
 use Yiisoft\Data\Paginator\OffsetPaginator;
 use Yiisoft\Data\Paginator\PaginatorInterface;
@@ -50,6 +51,10 @@ abstract class BaseListView extends Widget
     private ?string $summary = null;
     private array $summaryAttributes = [];
     private string $toolbar = '';
+
+    /**
+     * @psalm-var array<string,scalar|Stringable|null>
+     */
     protected array $urlArguments = [];
     protected array $urlQueryParameters = [];
     private bool $withContainer = true;
@@ -305,12 +310,13 @@ abstract class BaseListView extends Widget
      * Return a new instance with arguments of the route.
      *
      * @param array $value Arguments of the route.
+     *
+     * @psalm-param array<string,scalar|Stringable|null> $value
      */
     public function urlArguments(array $value): static
     {
         $new = clone $this;
         $new->urlArguments = $value;
-
         return $new;
     }
 
