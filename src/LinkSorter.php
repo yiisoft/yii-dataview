@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Yiisoft\Yii\DataView;
 
 use InvalidArgumentException;
+use Stringable;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\A;
 use Yiisoft\Html\Tag\I;
@@ -34,6 +35,10 @@ final class LinkSorter extends Widget
     private int $pageSize = 0;
     private string $pageName = 'page';
     private string $pageSizeName = 'pagesize';
+
+    /**
+     * @psalm-var array<string,scalar|Stringable|null>
+     */
     private array|null $urlArguments = null;
     private array $urlQueryParameters = [];
 
@@ -231,12 +236,13 @@ final class LinkSorter extends Widget
      * Return a new instance with arguments of the route.
      *
      * @param array $value Arguments of the route.
+     *
+     * @psalm-param array<string,scalar|Stringable|null> $value
      */
     public function urlArguments(array $value): self
     {
         $new = clone $this;
         $new->urlArguments = $value;
-
         return $new;
     }
 
@@ -322,20 +328,14 @@ final class LinkSorter extends Widget
             $pageConfig = [$this->pageName => $this->currentPage, $this->pageSizeName => $this->pageSize];
         }
 
-        if ($this->urlArguments !== null) {
-            /** @psalm-var array<string,string> */
-            $urlArguments = array_merge($this->urlArguments, $pageConfig);
-            $urlArguments['sort'] = $this->createSorterParam($attribute);
-        } else {
-            $urlArguments = [];
-            $urlQueryParameters = array_merge($urlQueryParameters, $pageConfig);
-            $urlQueryParameters['sort'] = $this->createSorterParam($attribute);
-        }
+        $urlArguments = $this->urlArguments ?? [];
+        $urlQueryParameters = array_merge($urlQueryParameters, $pageConfig);
+        $urlQueryParameters['sort'] = $this->createSorterParam($attribute);
 
         $urlName = $this->currentRoute->getName();
 
         return match ($urlName) {
-            null => $urlQueryParameters ? '?' . http_build_query($urlQueryParameters) : '',
+            null => '?' . http_build_query($urlQueryParameters),
             default => $this->urlGenerator->generate($urlName, $urlArguments, $urlQueryParameters),
         };
     }

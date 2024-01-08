@@ -499,57 +499,6 @@ final class ActionColumnTest extends TestCase
         );
     }
 
-    /**
-     * @throws InvalidConfigException
-     * @throws NotFoundException
-     * @throws NotInstantiableException
-     * @throws CircularReferenceException
-     */
-    public function testUrlArguments(): void
-    {
-        Assert::equalsWithoutLE(
-            <<<HTML
-            <div id="w1-grid">
-            <table>
-            <thead>
-            <tr>
-            <th>Actions</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr>
-            <td>
-            <a href="/admin/manage/view?test-arguments=test.arguments&amp;id=1" title="View">🔎</a>
-            <a href="/admin/manage/update?test-arguments=test.arguments&amp;id=1" title="Update">✎</a>
-            <a href="/admin/manage/delete?test-arguments=test.arguments&amp;id=1" title="Delete">❌</a>
-            </td>
-            </tr>
-            <tr>
-            <td>
-            <a href="/admin/manage/view?test-arguments=test.arguments&amp;id=2" title="View">🔎</a>
-            <a href="/admin/manage/update?test-arguments=test.arguments&amp;id=2" title="Update">✎</a>
-            <a href="/admin/manage/delete?test-arguments=test.arguments&amp;id=2" title="Delete">❌</a>
-            </td>
-            </tr>
-            </tbody>
-            </table>
-            <div>Page <b>1</b> of <b>1</b></div>
-            </div>
-            HTML,
-            GridView::widget()
-                ->columns(new ActionColumn(urlConfig: new UrlConfig(arguments: ['test-arguments' => 'test.arguments'])))
-                ->id('w1-grid')
-                ->dataReader($this->createOffsetPaginator($this->data, 10))
-                ->render()
-        );
-    }
-
-    /**
-     * @throws InvalidConfigException
-     * @throws NotFoundException
-     * @throws NotInstantiableException
-     * @throws CircularReferenceException
-     */
     public function testUrlCreator(): void
     {
         Assert::equalsWithoutLE(

@@ -287,7 +287,7 @@ final class LinkSorterTest extends TestCase
                 ->directions(['id' => 'asc', 'username' => 'desc'])
                 ->iconAscClass('bi bi-sort-alpha-up')
                 ->pageSize(5)
-                ->urlArguments(['test' => 'test'])
+                ->urlQueryParameters(['test' => 'test'])
                 ->render(),
         );
     }

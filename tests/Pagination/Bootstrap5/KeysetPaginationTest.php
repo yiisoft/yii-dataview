@@ -139,7 +139,6 @@ final class KeysetPaginationTest extends TestCase
                 ->iconNextPage('»')
                 ->iconPreviousPage('«')
                 ->paginator($this->createKeysetPaginator($this->data, 2))
-                ->urlArguments([])
                 ->render(),
         );
 
@@ -156,7 +155,6 @@ final class KeysetPaginationTest extends TestCase
                 ->iconClassNextPage('bi bi-chevron-double-right p-1')
                 ->iconClassPreviousPage('bi bi-chevron-double-left p-1')
                 ->paginator($this->createKeysetPaginator($this->data, 2))
-                ->urlArguments([])
                 ->render(),
         );
     }
