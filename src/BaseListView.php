@@ -418,7 +418,7 @@ abstract class BaseListView extends Widget
             return '';
         }
 
-        return $dataReader->isRequired() ? $this->pagination : '';
+        return $dataReader->isPaginationRequired() ? $this->pagination : '';
     }
 
     private function renderSummary(): string
