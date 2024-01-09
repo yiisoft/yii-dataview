@@ -64,7 +64,7 @@ abstract class BaseListView extends Widget
     protected array $urlArguments = [];
     protected array $urlQueryParameters = [];
 
-    private UrlParameterProviderInterface|null $urlParameterProvider;
+    private UrlParameterProviderInterface|null $urlParameterProvider = null;
 
     public function __construct(
         TranslatorInterface|null $translator = null,
