@@ -343,18 +343,13 @@ final class BaseTest extends TestCase
         );
     }
 
-    /**
-     * @throws InvalidConfigException
-     * @throws NotFoundException
-     * @throws NotInstantiableException
-     * @throws CircularReferenceException
-     */
     public function testHeader(): void
     {
         Assert::equalsWithoutLE(
             <<<HTML
-            <div>List of users</div>
             <div id="w1-grid">
+            <div>List of users</div>
+
             <table>
             <thead>
             <tr>
@@ -396,12 +391,6 @@ final class BaseTest extends TestCase
         );
     }
 
-    /**
-     * @throws InvalidConfigException
-     * @throws NotFoundException
-     * @throws NotInstantiableException
-     * @throws CircularReferenceException
-     */
     public function testHeaderIntoGrid(): void
     {
         Assert::equalsWithoutLE(
@@ -445,8 +434,7 @@ final class BaseTest extends TestCase
                 ->header('List of users')
                 ->id('w1-grid')
                 ->dataReader($this->createOffsetPaginator($this->data, 10))
-                ->layout('')
-                ->layoutGridTable("{header}\n{items}\n{summary}")
+                ->layout("{header}\n{items}\n{summary}")
                 ->render()
         );
     }

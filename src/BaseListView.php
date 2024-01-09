@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Yiisoft\Yii\DataView;
 
+use InvalidArgumentException;
 use Stringable;
 use Yiisoft\Data\Paginator\KeysetPaginator;
 use Yiisoft\Data\Paginator\OffsetPaginator;
@@ -13,6 +14,7 @@ use Yiisoft\Definitions\Exception\CircularReferenceException;
 use Yiisoft\Definitions\Exception\InvalidConfigException;
 use Yiisoft\Definitions\Exception\NotInstantiableException;
 use Yiisoft\Factory\NotFoundException;
+use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\Div;
 use Yiisoft\Html\Tag\Td;
 use Yiisoft\Router\UrlGeneratorInterface;
@@ -38,13 +40,17 @@ abstract class BaseListView extends Widget
      */
     protected readonly TranslatorInterface $translator;
 
-    private array $attributes = [];
+    /**
+     * @psalm-var non-empty-string|null
+     */
+    private ?string $containerTag = 'div';
+    private array $containerAttributes = [];
+
     protected ?string $emptyText = null;
     private array $emptyTextAttributes = [];
     private string $header = '';
     private array $headerAttributes = [];
-    private string $layout = "{header}\n{toolbar}";
-    private string $layoutGridTable = "{items}\n{summary}\n{pager}";
+    private string $layout = "{header}\n{toolbar}\n{items}\n{summary}\n{pager}";
     private string $pagination = '';
     protected ?ReadableDataInterface $dataReader = null;
     protected array $sortLinkAttributes = [];
@@ -57,7 +63,6 @@ abstract class BaseListView extends Widget
      */
     protected array $urlArguments = [];
     protected array $urlQueryParameters = [];
-    private bool $withContainer = true;
 
     public function __construct(
         TranslatorInterface|null $translator = null,
@@ -74,16 +79,26 @@ abstract class BaseListView extends Widget
      */
     abstract protected function renderItems(): string;
 
+    final public function containerTag(?string $tag): static
+    {
+        if ($tag === '') {
+            throw new InvalidArgumentException('Tag name cannot be empty.');
+        }
+
+        $new = clone $this;
+        $new->containerTag = $tag;
+        return $new;
+    }
+
     /**
-     * Returns a new instance with the HTML attributes. The following special options are recognized.
+     * Returns a new instance with the HTML attributes for container.
      *
-     * @param array $values Attribute values indexed by attribute names.
+     * @param array $attributes Attribute values indexed by attribute names.
      */
-    public function attributes(array $values): static
+    final public function containerAttributes(array $attributes): static
     {
         $new = clone $this;
-        $new->attributes = $values;
-
+        $new->containerAttributes = $attributes;
         return $new;
     }
 
@@ -167,13 +182,12 @@ abstract class BaseListView extends Widget
     /**
      * Returns a new instance with the id of the grid view, detail view, or list view.
      *
-     * @param string $value The id of the grid view, detail view, or list view.
+     * @param string $id The ID of the grid view, detail view, or list view.
      */
-    public function id(string $value): static
+    public function id(string $id): static
     {
         $new = clone $this;
-        $new->attributes['id'] = $value;
-
+        $new->containerAttributes['id'] = $id;
         return $new;
     }
 
@@ -192,26 +206,6 @@ abstract class BaseListView extends Widget
     {
         $new = clone $this;
         $new->layout = $value;
-
-        return $new;
-    }
-
-    /**
-     * Returns a new instance with the layout grid table.
-     *
-     * @param string $value The layout that determines how different sections of the grid view, list view. Should be
-     * organized.
-     *
-     * The following tokens will be replaced with the corresponding section contents:
-     *
-     * - `{items}`: The items section.
-     * - `{summary}`: The summary section.
-     * - `{pager}`: The pager section.
-     */
-    public function layoutGridTable(string $value): static
-    {
-        $new = clone $this;
-        $new->layoutGridTable = $value;
 
         return $new;
     }
@@ -296,7 +290,7 @@ abstract class BaseListView extends Widget
      *
      * @param string $value The toolbar content.
      *
-     * @psalm-param array<array-key,array> $toolbar
+     * @psalm-param array $toolbar
      */
     public function toolbar(string $value): self
     {
@@ -329,19 +323,6 @@ abstract class BaseListView extends Widget
     {
         $new = clone $this;
         $new->urlQueryParameters = $value;
-
-        return $new;
-    }
-
-    /**
-     * Returns a new instance whether container is enabled or not.
-     *
-     * @param bool $value Whether container is enabled or not.
-     */
-    public function withContainer(bool $value = true): static
-    {
-        $new = clone $this;
-        $new->withContainer = $value;
 
         return $new;
     }
@@ -405,7 +386,22 @@ abstract class BaseListView extends Widget
             throw new DataReaderNotSetException();
         }
 
-        return $this->renderGrid();
+        $content = trim(
+            strtr(
+                $this->layout,
+                [
+                    '{header}' => $this->renderHeader(),
+                    '{toolbar}' => $this->toolbar,
+                    '{items}' => $this->renderItems(),
+                    '{summary}' => $this->renderSummary(),
+                    '{pager}' => $this->renderPagination(),
+                ],
+            )
+        );
+
+        return $this->containerTag === null
+            ? $content
+            : Html::div("\n" . $content . "\n", $this->containerAttributes)->encode(false)->render();
     }
 
     /**
@@ -451,45 +447,6 @@ abstract class BaseListView extends Widget
         );
 
         return Div::tag()->attributes($this->summaryAttributes)->content($summary)->encode(false)->render();
-    }
-
-    private function renderGrid(): string
-    {
-        $attributes = $this->attributes;
-        $contentGrid = '';
-
-        if ($this->layout !== '') {
-            $contentGrid = trim(
-                strtr($this->layout, ['{header}' => $this->renderHeader(), '{toolbar}' => $this->toolbar])
-            );
-        }
-
-        return match ($this->withContainer) {
-            true => trim(
-                $contentGrid . "\n" . Div::tag()
-                    ->attributes($attributes)
-                    ->content("\n" . $this->renderGridTable() . "\n")
-                    ->encode(false)
-                    ->render()
-            ),
-            false => trim($contentGrid . "\n" . $this->renderGridTable()),
-        };
-    }
-
-    private function renderGridTable(): string
-    {
-        return trim(
-            strtr(
-                $this->layoutGridTable,
-                [
-                    '{header}' => $this->renderHeader(),
-                    '{toolbar}' => $this->toolbar,
-                    '{items}' => $this->renderItems(),
-                    '{summary}' => $this->renderSummary(),
-                    '{pager}' => $this->renderPagination(),
-                ],
-            )
-        );
     }
 
     private function renderHeader(): string

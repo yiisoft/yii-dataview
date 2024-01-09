@@ -57,12 +57,6 @@ final class BaseTest extends TestCase
         );
     }
 
-    /**
-     * @throws InvalidConfigException
-     * @throws NotFoundException
-     * @throws NotInstantiableException
-     * @throws CircularReferenceException
-     */
     public function testItemViewAttributes(): void
     {
         Assert::equalsWithoutLE(
@@ -86,12 +80,6 @@ final class BaseTest extends TestCase
         );
     }
 
-    /**
-     * @throws InvalidConfigException
-     * @throws NotFoundException
-     * @throws NotInstantiableException
-     * @throws CircularReferenceException
-     */
     public function testItemViewAsString(): void
     {
         Assert::equalsWithoutLE(

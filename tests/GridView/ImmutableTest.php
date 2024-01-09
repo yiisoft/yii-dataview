@@ -25,14 +25,14 @@ final class ImmutableTest extends TestCase
     public function testBaseListView(): void
     {
         $baseListView = $this->createBaseListView();
-        $this->assertNotSame($baseListView, $baseListView->attributes([]));
+        $this->assertNotSame($baseListView, $baseListView->containerTag(null));
+        $this->assertNotSame($baseListView, $baseListView->containerAttributes([]));
         $this->assertNotSame($baseListView, $baseListView->emptyText(''));
         $this->assertNotSame($baseListView, $baseListView->emptyTextAttributes([]));
         $this->assertNotSame($baseListView, $baseListView->header(''));
         $this->assertNotSame($baseListView, $baseListView->headerAttributes([]));
         $this->assertNotSame($baseListView, $baseListView->id(''));
         $this->assertNotSame($baseListView, $baseListView->layout(''));
-        $this->assertNotSame($baseListView, $baseListView->layoutGridTable(''));
         $this->assertNotSame($baseListView, $baseListView->pagination(''));
         $this->assertNotSame($baseListView, $baseListView->dataReader($this->createOffsetPaginator($this->data, 10)));
         $this->assertNotSame($baseListView, $baseListView->sortLinkAttributes([]));
@@ -41,7 +41,6 @@ final class ImmutableTest extends TestCase
         $this->assertNotSame($baseListView, $baseListView->toolbar(''));
         $this->assertNotSame($baseListView, $baseListView->urlArguments([]));
         $this->assertNotSame($baseListView, $baseListView->urlQueryParameters([]));
-        $this->assertNotSame($baseListView, $baseListView->withContainer(false));
     }
 
     /**
