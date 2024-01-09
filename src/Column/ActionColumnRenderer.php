@@ -18,7 +18,7 @@ use Yiisoft\Yii\DataView\Column\Base\DataContext;
 final class ActionColumnRenderer implements ColumnRendererInterface
 {
     /**
-     * @var UrlCreator
+     * @psalm-var UrlCreator
      */
     private $defaultUrlCreator;
 
