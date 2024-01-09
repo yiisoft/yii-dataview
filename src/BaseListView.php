@@ -64,12 +64,21 @@ abstract class BaseListView extends Widget
     protected array $urlArguments = [];
     protected array $urlQueryParameters = [];
 
+    private UrlParameterProviderInterface|null $urlParameterProvider;
+
     public function __construct(
         TranslatorInterface|null $translator = null,
         private UrlGeneratorInterface|null $urlGenerator = null,
         protected readonly string $translationCategory = self::DEFAULT_TRANSLATION_CATEGORY,
     ) {
         $this->translator = $translator ?? $this->createDefaultTranslator();
+    }
+
+    final public function urlParameterProvider(?UrlParameterProviderInterface $provider): static
+    {
+        $new = clone $this;
+        $new->urlParameterProvider = $provider;
+        return $new;
     }
 
     /**
@@ -427,7 +436,26 @@ abstract class BaseListView extends Widget
             return $this->pagination;
         }
 
-        return ($this->pagination ?? OffsetPagination::widget())
+        $pagination = $this->pagination ??
+            $dataReader instanceof KeysetPaginator ? KeysetPagination::widget() : OffsetPagination::widget();
+
+        $pageSize = $this->urlParameterProvider?->get(
+            $pagination->getPageSizeParameterName(),
+            $pagination->getPageSizeParameterPlace()
+        );
+        if ($pageSize !== null) {
+            $dataReader = $dataReader->withPageSize((int)$pageSize);
+        }
+
+        $page = $this->urlParameterProvider?->get(
+            $pagination->getPageParameterName(),
+            $pagination->getPageParameterPlace()
+        );
+        if ($page !== null) {
+            $dataReader = $dataReader->withNextPageToken($page);
+        }
+
+        return $pagination
             ->paginator($dataReader)
             ->render();
     }

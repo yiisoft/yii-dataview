@@ -18,8 +18,17 @@ abstract class BasePagination extends Widget
     private $urlCreator;
     private string $pageParameterName = 'page';
     private string $pageSizeParameterName = 'pagesize';
+
+    /**
+     * @psalm-var UrlParameterPlace::*
+     */
     private int $pageParameterPlace = UrlParameterPlace::QUERY;
+
+    /**
+     * @psalm-var UrlParameterPlace::*
+     */
     private int $pageSizeParameterPlace = UrlParameterPlace::QUERY;
+
     private array $queryParameters = [];
 
     private array $attributes = [];
@@ -37,8 +46,33 @@ abstract class BasePagination extends Widget
     private string $menuClass = 'pagination';
     private string $menuItemContainerClass = 'page-item';
     private string $menuItemLinkClass = 'page-link';
-    private array $pageConfig = [];
     private PaginatorInterface|null $paginator = null;
+
+    public function getPageParameterName(): string
+    {
+        return $this->pageParameterName;
+    }
+
+    public function getPageSizeParameterName(): string
+    {
+        return $this->pageSizeParameterName;
+    }
+
+    /**
+     * @psalm-return UrlParameterPlace::*
+     */
+    public function getPageParameterPlace(): int
+    {
+        return $this->pageParameterPlace;
+    }
+
+    /**
+     * @psalm-return UrlParameterPlace::*
+     */
+    public function getPageSizeParameterPlace(): int
+    {
+        return $this->pageSizeParameterPlace;
+    }
 
     /**
      * @psalm-param UrlCreator|null $urlCreator
@@ -244,19 +278,6 @@ abstract class BasePagination extends Widget
     {
         $new = clone $this;
         $new->menuItemContainerClass = $value;
-
-        return $new;
-    }
-
-    /**
-     * Return a new instance with page config for arguments or query parameters in url.
-     *
-     * @param array $value The page config for arguments or query parameters in url.
-     */
-    public function pageConfig(array $value): static
-    {
-        $new = clone $this;
-        $new->pageConfig = $value;
 
         return $new;
     }
