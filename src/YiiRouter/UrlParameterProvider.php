@@ -10,7 +10,7 @@ use Yiisoft\Yii\DataView\UrlParameterProviderInterface;
 
 final class UrlParameterProvider implements UrlParameterProviderInterface
 {
-    public function __construct(private CurrentRoute $currentRoute)
+    public function __construct(private readonly CurrentRoute $currentRoute)
     {
     }
 
