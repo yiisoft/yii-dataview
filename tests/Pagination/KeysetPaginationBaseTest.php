@@ -67,12 +67,6 @@ final class KeysetPaginationBaseTest extends TestCase
         );
     }
 
-    /**
-     * @throws InvalidConfigException
-     * @throws NotFoundException
-     * @throws NotInstantiableException
-     * @throws CircularReferenceException
-     */
     public function testRenderPaginationLinks(): void
     {
         $keysetPaginator = $this->createKeysetPaginator($this->data, 5);
@@ -118,8 +112,8 @@ final class KeysetPaginationBaseTest extends TestCase
             </table>
             <nav aria-label="Pagination">
             <ul class="pagination">
-            <li class="page-item"><a class="page-link disabled" href="/admin/manage?page=0&amp;pagesize=5">Previous</a></li>
-            <li class="page-item"><a class="page-link" href="/admin/manage?page=5&amp;pagesize=5">Next Page</a></li>
+            <li class="page-item"><a class="page-link disabled" href="#0">Previous</a></li>
+            <li class="page-item"><a class="page-link" href="#5">Next Page</a></li>
             </ul>
             </nav>
             </div>
@@ -180,8 +174,8 @@ final class KeysetPaginationBaseTest extends TestCase
             </table>
             <nav aria-label="Pagination">
             <ul class="pagination">
-            <li class="page-item"><a class="page-link" href="/admin/manage?page=0&amp;pagesize=5">Previous</a></li>
-            <li class="page-item"><a class="page-link" href="/admin/manage?page=10&amp;pagesize=5">Next Page</a></li>
+            <li class="page-item"><a class="page-link" href="#0">Previous</a></li>
+            <li class="page-item"><a class="page-link" href="#10">Next Page</a></li>
             </ul>
             </nav>
             </div>
@@ -227,8 +221,8 @@ final class KeysetPaginationBaseTest extends TestCase
             </table>
             <nav aria-label="Pagination">
             <ul class="pagination">
-            <li class="page-item"><a class="page-link" href="/admin/manage?page=5&amp;pagesize=5">Previous</a></li>
-            <li class="page-item"><a class="page-link disabled" href="/admin/manage?page=0&amp;pagesize=5">Next Page</a></li>
+            <li class="page-item"><a class="page-link" href="#5">Previous</a></li>
+            <li class="page-item"><a class="page-link disabled" href="#0">Next Page</a></li>
             </ul>
             </nav>
             </div>

@@ -32,11 +32,6 @@ final class KeysetPaginationTest extends TestCase
     /**
      * Change the alignment of pagination components with flexbox utilities. For example, with
      * `.justify-content-center`.
-     *
-     * @throws InvalidConfigException
-     * @throws NotFoundException
-     * @throws NotInstantiableException
-     * @throws CircularReferenceException
      */
     public function testAlignment(): void
     {
@@ -44,8 +39,8 @@ final class KeysetPaginationTest extends TestCase
             <<<HTML
             <nav aria-label="Pagination">
             <ul class="pagination justify-content-center">
-            <li class="page-item"><a class="page-link disabled" href="/admin/manage?page=0&amp;pagesize=2">Previous</a></li>
-            <li class="page-item"><a class="page-link" href="/admin/manage?page=2&amp;pagesize=2">Next Page</a></li>
+            <li class="page-item"><a class="page-link disabled" href="#0">Previous</a></li>
+            <li class="page-item"><a class="page-link" href="#2">Next Page</a></li>
             </ul>
             </nav>
             HTML,
@@ -77,8 +72,8 @@ final class KeysetPaginationTest extends TestCase
             <<<HTML
             <nav aria-label="Pagination">
             <ul class="pagination">
-            <li class="page-item"><a class="page-link disabled" href="/admin/manage?page=0&amp;pagesize=2">Previous</a></li>
-            <li class="page-item"><a class="page-link" href="/admin/manage?page=2&amp;pagesize=2">Next Page</a></li>
+            <li class="page-item"><a class="page-link disabled" href="#0">Previous</a></li>
+            <li class="page-item"><a class="page-link" href="#2">Next Page</a></li>
             </ul>
             </nav>
             HTML,
@@ -89,12 +84,6 @@ final class KeysetPaginationTest extends TestCase
         );
     }
 
-    /**
-     * @throws InvalidConfigException
-     * @throws NotFoundException
-     * @throws NotInstantiableException
-     * @throws CircularReferenceException
-     */
     public function testRenderWithUrlQueryParameters(): void
     {
         Assert::equalsWithoutLE(
@@ -130,8 +119,8 @@ final class KeysetPaginationTest extends TestCase
             <<<HTML
             <nav aria-label="Pagination">
             <ul class="pagination">
-            <li class="page-item"><a class="page-link disabled" href="/admin/manage?page=0&amp;pagesize=2"><span aria-hidden="true"><i>«</i></span></a></li>
-            <li class="page-item"><a class="page-link" href="/admin/manage?page=2&amp;pagesize=2"><span aria-hidden="true"><i>»</i></span></a></li>
+            <li class="page-item"><a class="page-link disabled" href="#0"><span aria-hidden="true"><i>«</i></span></a></li>
+            <li class="page-item"><a class="page-link" href="#2"><span aria-hidden="true"><i>»</i></span></a></li>
             </ul>
             </nav>
             HTML,
@@ -146,8 +135,8 @@ final class KeysetPaginationTest extends TestCase
             <<<HTML
             <nav aria-label="Pagination">
             <ul class="pagination">
-            <li class="page-item"><a class="page-link disabled" href="/admin/manage?page=0&amp;pagesize=2"><span aria-hidden="true"><i class="bi bi-chevron-double-left p-1"></i></span></a></li>
-            <li class="page-item"><a class="page-link" href="/admin/manage?page=2&amp;pagesize=2"><span aria-hidden="true"><i class="bi bi-chevron-double-right p-1"></i></span></a></li>
+            <li class="page-item"><a class="page-link disabled" href="#0"><span aria-hidden="true"><i class="bi bi-chevron-double-left p-1"></i></span></a></li>
+            <li class="page-item"><a class="page-link" href="#2"><span aria-hidden="true"><i class="bi bi-chevron-double-right p-1"></i></span></a></li>
             </ul>
             </nav>
             HTML,
