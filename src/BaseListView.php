@@ -50,7 +50,7 @@ abstract class BaseListView extends Widget
     private array $emptyTextAttributes = [];
     private string $header = '';
     private array $headerAttributes = [];
-    private string $layout = "{header}\n{toolbar}\n{items}\n{summary}\n{pager}";
+    private string $layout = "{header}\n{toolbar}\n{summary}\n{items}\n{pager}";
     private string|BasePagination|null $pagination = null;
     protected ?ReadableDataInterface $dataReader = null;
     protected array $sortLinkAttributes = [];
