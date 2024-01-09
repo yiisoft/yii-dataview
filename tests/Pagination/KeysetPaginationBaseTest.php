@@ -133,7 +133,7 @@ final class KeysetPaginationBaseTest extends TestCase
                 ->id('w1-grid')
                 ->dataReader($keysetPaginator)
                 ->pagination(KeysetPagination::widget()->paginator($keysetPaginator)->render())
-                ->layoutGridTable('{items}' . PHP_EOL . '{pager}')
+                ->layout('{items}' . PHP_EOL . '{pager}')
                 ->render(),
         );
 
@@ -195,7 +195,7 @@ final class KeysetPaginationBaseTest extends TestCase
                 ->id('w1-grid')
                 ->dataReader($keysetPaginator)
                 ->pagination(KeysetPagination::widget()->paginator($keysetPaginator)->render())
-                ->layoutGridTable('{items}' . PHP_EOL . '{pager}')
+                ->layout('{items}' . PHP_EOL . '{pager}')
                 ->render(),
         );
 
@@ -242,7 +242,7 @@ final class KeysetPaginationBaseTest extends TestCase
                 ->id('w1-grid')
                 ->dataReader($keysetPaginator)
                 ->pagination(KeysetPagination::widget()->paginator($keysetPaginator)->urlArguments([])->render())
-                ->layoutGridTable('{items}' . PHP_EOL . '{pager}')
+                ->layout('{items}' . PHP_EOL . '{pager}')
                 ->render(),
         );
 
@@ -304,7 +304,7 @@ final class KeysetPaginationBaseTest extends TestCase
                 ->id('w1-grid')
                 ->dataReader($keysetPaginator)
                 ->pagination(KeysetPagination::widget()->paginator($keysetPaginator)->urlArguments([])->render())
-                ->layoutGridTable('{items}' . PHP_EOL . '{pager}')
+                ->layout('{items}' . PHP_EOL . '{pager}')
                 ->render(),
         );
 
@@ -366,7 +366,7 @@ final class KeysetPaginationBaseTest extends TestCase
                 ->id('w1-grid')
                 ->dataReader($keysetPaginator)
                 ->pagination(KeysetPagination::widget()->paginator($keysetPaginator)->urlArguments([])->render())
-                ->layoutGridTable('{items}' . PHP_EOL . '{pager}')
+                ->layout('{items}' . PHP_EOL . '{pager}')
                 ->render(),
         );
     }
