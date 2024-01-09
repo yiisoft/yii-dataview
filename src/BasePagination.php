@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Yiisoft\Yii\DataView;
 
+use Stringable;
 use Yiisoft\Data\Paginator\PaginatorInterface;
 use Yiisoft\Router\CurrentRoute;
 use Yiisoft\Router\UrlGeneratorInterface;
@@ -33,6 +34,10 @@ abstract class BasePagination extends Widget
     private string $pageName = 'page';
     private string $pageSizeName = 'pagesize';
     private PaginatorInterface|null $paginator = null;
+
+    /**
+     * @psalm-var array<string,scalar|Stringable|null>
+     */
     private ?array $urlArguments = null;
     private array $urlQueryParameters = [];
 
@@ -284,12 +289,13 @@ abstract class BasePagination extends Widget
      * Return a new instance with arguments of the route.
      *
      * @param array $value Arguments of the route.
+     *
+     * @psalm-param array<string,scalar|Stringable|null> $value
      */
     public function urlArguments(array $value): static
     {
         $new = clone $this;
         $new->urlArguments = $value;
-
         return $new;
     }
 
@@ -319,7 +325,6 @@ abstract class BasePagination extends Widget
         }
 
         $pageConfig = $this->pageConfig;
-        $urlQueryParameters = $this->urlQueryParameters;
 
         if ($pageConfig === []) {
             $pageConfig = [
@@ -328,18 +333,13 @@ abstract class BasePagination extends Widget
             ];
         }
 
-        if ($this->urlArguments !== null) {
-            /** @psalm-var array<string,string> */
-            $urlArguments = array_merge($pageConfig, $this->urlArguments);
-        } else {
-            $urlArguments = [];
-            $urlQueryParameters = array_merge($pageConfig, $this->urlQueryParameters);
-        }
+        $urlArguments = $this->urlArguments ?? [];
+        $urlQueryParameters = array_merge($pageConfig, $this->urlQueryParameters);
 
         $urlName = $this->currentRoute->getName();
 
         return match ($urlName) {
-            null => $urlQueryParameters ? '?' . http_build_query($urlQueryParameters) : '',
+            null => '?' . http_build_query($urlQueryParameters),
             default => $this->urlGenerator->generate($urlName, $urlArguments, $urlQueryParameters),
         };
     }

@@ -127,7 +127,6 @@ final class OffsetPaginationTest extends TestCase
                 ->iconFirstPage('«')
                 ->iconLastPage('»')
                 ->paginator($this->createOffsetPaginator($this->data, 1))
-                ->urlArguments([])
                 ->render(),
         );
     }
@@ -160,7 +159,6 @@ final class OffsetPaginationTest extends TestCase
                 ->iconClassFirstPage('bi bi-chevron-double-left p-1')
                 ->iconClassLastPage('bi bi-chevron-double-right p-1')
                 ->paginator($this->createOffsetPaginator($this->data, 1))
-                ->urlArguments([])
                 ->render(),
         );
     }
@@ -193,7 +191,6 @@ final class OffsetPaginationTest extends TestCase
                 ->labelFirstPage('First')
                 ->labelLastPage('Last')
                 ->paginator($this->createOffsetPaginator($this->data, 1))
-                ->urlArguments([])
                 ->render(),
         );
     }
@@ -222,7 +219,7 @@ final class OffsetPaginationTest extends TestCase
             HTML,
             OffsetPagination::widget()
                 ->paginator($this->createOffsetPaginator($this->data, 1))
-                ->urlArguments(['filter' => 'test'])
+                ->urlQueryParameters(['filter' => 'test'])
                 ->render(),
         );
     }
@@ -267,7 +264,6 @@ final class OffsetPaginationTest extends TestCase
         $this->assertEmpty(
             OffsetPagination::widget()
                 ->paginator($this->createOffsetPaginator($this->data, 5))
-                ->urlArguments([])
                 ->render(),
         );
     }
@@ -307,7 +303,6 @@ final class OffsetPaginationTest extends TestCase
             HTML,
             OffsetPagination::widget()
                 ->paginator($this->createOffsetPaginator($this->data, 1))
-                ->urlArguments([])
                 ->render(),
         );
     }
@@ -341,7 +336,6 @@ final class OffsetPaginationTest extends TestCase
                 ->labelNextPage()
                 ->labelPreviousPage()
                 ->paginator($this->createOffsetPaginator($this->data, 1))
-                ->urlArguments([])
                 ->render(),
         );
 
@@ -362,7 +356,6 @@ final class OffsetPaginationTest extends TestCase
                 ->labelNextPage()
                 ->labelPreviousPage()
                 ->paginator($this->createOffsetPaginator($this->data, 1))
-                ->urlArguments([])
                 ->render(),
         );
     }
@@ -398,7 +391,6 @@ final class OffsetPaginationTest extends TestCase
                 ->iconNextPage('»')
                 ->iconPreviousPage('«')
                 ->paginator($this->createOffsetPaginator($this->data, 1))
-                ->urlArguments([])
                 ->render(),
         );
 
@@ -420,7 +412,6 @@ final class OffsetPaginationTest extends TestCase
                 ->iconClassNextPage('bi bi-chevron-double-right p-1')
                 ->iconClassPreviousPage('bi bi-chevron-double-left p-1')
                 ->paginator($this->createOffsetPaginator($this->data, 1))
-                ->urlArguments([])
                 ->render(),
         );
     }

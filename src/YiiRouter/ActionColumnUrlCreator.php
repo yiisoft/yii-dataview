@@ -18,7 +18,7 @@ final class ActionColumnUrlCreator
         private readonly UrlGeneratorInterface $urlGenerator,
         private readonly CurrentRoute $currentRoute,
         private readonly string $defaultPrimaryKey = 'id',
-        private readonly bool $defaultPrimaryKeyPlace = UrlConfig::ARGUMENTS,
+        private readonly bool $defaultPrimaryKeyPlace = UrlConfig::QUERY_PARAMETERS,
     ) {
     }
 
