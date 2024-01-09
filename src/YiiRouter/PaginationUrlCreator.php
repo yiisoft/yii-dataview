@@ -34,6 +34,6 @@ final class PaginationUrlCreator
             $queryParameters[$context->pageSizeParameterName] = $context->pageSize;
         }
 
-        $this->urlGenerator->generateFromCurrent($arguments, $queryParameters);
+        return $this->urlGenerator->generateFromCurrent($arguments, $queryParameters);
     }
 }

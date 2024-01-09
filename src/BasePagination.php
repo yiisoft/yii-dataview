@@ -299,7 +299,7 @@ abstract class BasePagination extends Widget
     protected function createUrl(int $page): string
     {
         return call_user_func(
-            $this->urlCreator ?? static fn($page, $pageSize): string => '#' . $page . '-' . $pageSize,
+            $this->urlCreator ?? static fn(PageContext $context): string => '#' . $context->page,
             new PageContext(
                 $page,
                 $this->getPaginator()->getPageSize(),
