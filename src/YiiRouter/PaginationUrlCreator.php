@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Yiisoft\Yii\DataView\YiiRouter;
 
-use Yiisoft\Router\CurrentRoute;
 use Yiisoft\Router\UrlGeneratorInterface;
 use Yiisoft\Yii\DataView\PageContext;
 use Yiisoft\Yii\DataView\UrlParameterPlace;

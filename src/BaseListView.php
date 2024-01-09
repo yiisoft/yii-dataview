@@ -213,7 +213,7 @@ abstract class BaseListView extends Widget
     /**
      * Returns a new instance with the pagination of the grid view, detail view, or list view.
      *
-     * @param string|BasePagination|null $pagination The pagination of the grid view, detail view, or list view.
+     * @param BasePagination|string|null $pagination The pagination of the grid view, detail view, or list view.
      */
     public function pagination(string|BasePagination|null $pagination): static
     {

@@ -4,12 +4,8 @@ declare(strict_types=1);
 
 namespace Yiisoft\Yii\DataView;
 
-use Stringable;
 use Yiisoft\Data\Paginator\PaginatorInterface;
 use Yiisoft\Widget\Widget;
-
-use function array_merge;
-use function http_build_query;
 
 /**
  * @psalm-type UrlCreator = callable(PageContext):string
