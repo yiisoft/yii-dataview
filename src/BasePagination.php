@@ -6,15 +6,25 @@ namespace Yiisoft\Yii\DataView;
 
 use Stringable;
 use Yiisoft\Data\Paginator\PaginatorInterface;
-use Yiisoft\Router\CurrentRoute;
-use Yiisoft\Router\UrlGeneratorInterface;
 use Yiisoft\Widget\Widget;
 
 use function array_merge;
 use function http_build_query;
 
+/**
+ * @psalm-type UrlCreator = callable(PageContext):string
+ */
 abstract class BasePagination extends Widget
 {
+    /**
+     * @psalm-var UrlCreator|null
+     */
+    private $urlCreator;
+    private string $pageParameterName = 'page';
+    private string $pageSizeParameterName = 'pagesize';
+    private int $pageParameterPlace = UrlParameterPlace::QUERY;
+    private int $pageSizeParameterPlace = UrlParameterPlace::QUERY;
+
     private array $attributes = [];
     private bool $disabledNextPage = false;
     private bool $disabledPreviousPage = false;
@@ -31,20 +41,16 @@ abstract class BasePagination extends Widget
     private string $menuItemContainerClass = 'page-item';
     private string $menuItemLinkClass = 'page-link';
     private array $pageConfig = [];
-    private string $pageName = 'page';
-    private string $pageSizeName = 'pagesize';
     private PaginatorInterface|null $paginator = null;
 
     /**
-     * @psalm-var array<string,scalar|Stringable|null>
+     * @psalm-param UrlCreator|null $urlCreator
      */
-    private ?array $urlArguments = null;
-    private array $urlQueryParameters = [];
-
-    public function __construct(
-        private CurrentRoute $currentRoute,
-        private UrlGeneratorInterface|null $urlGenerator = null
-    ) {
+    public function urlCreator(?callable $urlCreator): static
+    {
+        $new = clone $this;
+        $new->urlCreator = $urlCreator;
+        return $new;
     }
 
     /**
@@ -249,25 +255,24 @@ abstract class BasePagination extends Widget
     /**
      * Return a new instance with name of argument or query parameter for page.
      *
-     * @param string $value The name of argument or query parameter for page.
+     * @param string $name The name of argument or query parameter for page.
      */
-    public function pageName(string $value): static
+    public function pageParameterName(string $name): static
     {
         $new = clone $this;
-        $new->pageName = $value;
-
+        $new->pageParameterName = $name;
         return $new;
     }
 
     /**
      * Return a new instance with name of argument or query parameter for page size.
      *
-     * @param string $value The name of argument or query parameter for page size.
+     * @param string $name The name of argument or query parameter for page size.
      */
-    public function pageSizeName(string $value): static
+    public function pageSizeParameterName(string $name): static
     {
         $new = clone $this;
-        $new->pageSizeName = $value;
+        $new->pageSizeParameterName = $name;
 
         return $new;
     }
@@ -286,33 +291,6 @@ abstract class BasePagination extends Widget
     }
 
     /**
-     * Return a new instance with arguments of the route.
-     *
-     * @param array $value Arguments of the route.
-     *
-     * @psalm-param array<string,scalar|Stringable|null> $value
-     */
-    public function urlArguments(array $value): static
-    {
-        $new = clone $this;
-        $new->urlArguments = $value;
-        return $new;
-    }
-
-    /**
-     * Return a new instance with query parameters of the route.
-     *
-     * @param array $value The query parameters of the route.
-     */
-    public function urlQueryParameters(array $value): static
-    {
-        $new = clone $this;
-        $new->urlQueryParameters = $value;
-
-        return $new;
-    }
-
-    /**
      * Creates the URL suitable for pagination with the specified page number. This method is mainly called by pagers
      * when creating URLs used to perform pagination.
      *
@@ -320,28 +298,17 @@ abstract class BasePagination extends Widget
      */
     protected function createUrl(int $page): string
     {
-        if ($this->urlGenerator === null) {
-            throw new Exception\UrlGeneratorNotSetException();
-        }
-
-        $pageConfig = $this->pageConfig;
-
-        if ($pageConfig === []) {
-            $pageConfig = [
-                $this->pageName => $page,
-                $this->pageSizeName => $this->getPaginator()->getPageSize(),
-            ];
-        }
-
-        $urlArguments = $this->urlArguments ?? [];
-        $urlQueryParameters = array_merge($pageConfig, $this->urlQueryParameters);
-
-        $urlName = $this->currentRoute->getName();
-
-        return match ($urlName) {
-            null => '?' . http_build_query($urlQueryParameters),
-            default => $this->urlGenerator->generate($urlName, $urlArguments, $urlQueryParameters),
-        };
+        return call_user_func(
+            $this->urlCreator ?? static fn($page, $pageSize): string => '#' . $page . '-' . $pageSize,
+            new PageContext(
+                $page,
+                $this->getPaginator()->getPageSize(),
+                $this->pageParameterName,
+                $this->pageSizeParameterName,
+                $this->pageParameterPlace,
+                $this->pageSizeParameterPlace,
+            )
+        );
     }
 
     protected function getAttributes(): array
