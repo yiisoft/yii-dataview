@@ -2,38 +2,37 @@
 
 declare(strict_types=1);
 
-namespace Yiisoft\Yii\DataView\YiiRouter;
+namespace Yiisoft\Yii\DataView\Tests\Support;
 
-use Yiisoft\Router\CurrentRoute;
-use Yiisoft\Router\UrlGeneratorInterface;
 use Yiisoft\Yii\DataView\PageContext;
 use Yiisoft\Yii\DataView\UrlParameterPlace;
 
-final class PaginationUrlCreator
+final class SimplePaginationUrlCreator
 {
-    public function __construct(
-        private readonly UrlGeneratorInterface $urlGenerator,
-    ) {
-    }
-
     public function __invoke(PageContext $context): string
     {
+        $url = '/route';
+
         $arguments = [];
         if ($context->pageParameterPlace === UrlParameterPlace::PATH) {
-            $arguments[$context->pageParameterName] = $context->page;
+            $url .= '/' . $context->pageName . '/' . $context->page;
         }
         if ($context->pageSizeParameterPlace == UrlParameterPlace::PATH) {
-            $arguments[$context->pageSizeParameterName] = $context->pageSize;
+            $url .= '/' . $context->pageSizeParameterName . '/' . $context->pageSize;
         }
 
-        $queryParameters = $context->queryParameters;
+        $queryParameters = [];
         if ($context->pageParameterPlace === UrlParameterPlace::QUERY) {
             $queryParameters[$context->pageParameterName] = $context->page;
         }
         if ($context->pageSizeParameterPlace == UrlParameterPlace::QUERY) {
             $queryParameters[$context->pageSizeParameterName] = $context->pageSize;
         }
+        $queryParameters = array_merge($queryParameters, $context->queryParameters);
+        if (!empty($queryParameters)) {
+            $url .= '?' . http_build_query($queryParameters);
+        }
 
-        return $this->urlGenerator->generateFromCurrent($arguments, $queryParameters);
+        return $url;
     }
 }

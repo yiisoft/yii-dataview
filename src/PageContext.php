@@ -13,6 +13,7 @@ final class PageContext
         public readonly string $pageSizeParameterName,
         public readonly int $pageParameterPlace,
         public readonly int $pageSizeParameterPlace,
+        public readonly array $queryParameters,
     ) {
     }
 }

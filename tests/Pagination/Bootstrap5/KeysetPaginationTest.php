@@ -11,6 +11,7 @@ use Yiisoft\Definitions\Exception\NotInstantiableException;
 use Yiisoft\Factory\NotFoundException;
 use Yiisoft\Yii\DataView\KeysetPagination;
 use Yiisoft\Yii\DataView\Tests\Support\Assert;
+use Yiisoft\Yii\DataView\Tests\Support\SimplePaginationUrlCreator;
 use Yiisoft\Yii\DataView\Tests\Support\TestTrait;
 
 /**
@@ -90,14 +91,15 @@ final class KeysetPaginationTest extends TestCase
             <<<HTML
             <nav aria-label="Pagination">
             <ul class="pagination">
-            <li class="page-item"><a class="page-link disabled" href="/admin/manage?page=0&amp;pagesize=2&amp;filter=test">Previous</a></li>
-            <li class="page-item"><a class="page-link" href="/admin/manage?page=2&amp;pagesize=2&amp;filter=test">Next Page</a></li>
+            <li class="page-item"><a class="page-link disabled" href="/route?page=0&amp;pagesize=2&amp;filter=test">Previous</a></li>
+            <li class="page-item"><a class="page-link" href="/route?page=2&amp;pagesize=2&amp;filter=test">Next Page</a></li>
             </ul>
             </nav>
             HTML,
             KeysetPagination::widget()
                 ->paginator($this->createKeysetPaginator($this->data, 2))
-                ->urlQueryParameters(['filter' => 'test'])
+                ->urlCreator(new SimplePaginationUrlCreator())
+                ->queryParameters(['filter' => 'test'])
                 ->render(),
         );
     }

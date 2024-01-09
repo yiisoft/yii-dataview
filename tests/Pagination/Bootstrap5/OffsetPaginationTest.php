@@ -12,6 +12,7 @@ use Yiisoft\Factory\NotFoundException;
 use Yiisoft\Yii\DataView\OffsetPagination;
 use Yiisoft\Yii\DataView\PageContext;
 use Yiisoft\Yii\DataView\Tests\Support\Assert;
+use Yiisoft\Yii\DataView\Tests\Support\SimplePaginationUrlCreator;
 use Yiisoft\Yii\DataView\Tests\Support\TestTrait;
 
 /**
@@ -190,54 +191,26 @@ final class OffsetPaginationTest extends TestCase
      * @throws NotInstantiableException
      * @throws CircularReferenceException
      */
-    public function testRenderWithUrlArguments(): void
-    {
-        Assert::equalsWithoutLE(
-            <<<HTML
-            <nav aria-label="Pagination">
-            <ul class="pagination">
-            <li class="page-item"><a class="page-link disabled" href="#1&amp;filter=test">Previous</a></li>
-            <li class="page-item"><a class="page-link active" href="#1&amp;filter=test" aria-current="page">1</a></li>
-            <li class="page-item"><a class="page-link" href="/admin/manage?page=2&amp;pagesize=1&amp;filter=test">2</a></li>
-            <li class="page-item"><a class="page-link" href="/admin/manage?page=3&amp;pagesize=1&amp;filter=test">3</a></li>
-            <li class="page-item"><a class="page-link" href="/admin/manage?page=4&amp;pagesize=1&amp;filter=test">4</a></li>
-            <li class="page-item"><a class="page-link" href="#5&amp;filter=test">5</a></li>
-            <li class="page-item"><a class="page-link" href="/admin/manage?page=2&amp;pagesize=1&amp;filter=test">Next Page</a></li>
-            </ul>
-            </nav>
-            HTML,
-            OffsetPagination::widget()
-                ->paginator($this->createOffsetPaginator($this->data, 1))
-                ->urlQueryParameters(['filter' => 'test'])
-                ->render(),
-        );
-    }
-
-    /**
-     * @throws InvalidConfigException
-     * @throws NotFoundException
-     * @throws NotInstantiableException
-     * @throws CircularReferenceException
-     */
     public function testRenderWithUrlQueryParameters(): void
     {
         Assert::equalsWithoutLE(
             <<<HTML
             <nav aria-label="Pagination">
             <ul class="pagination">
-            <li class="page-item"><a class="page-link disabled" href="#1&amp;filter=test">Previous</a></li>
-            <li class="page-item"><a class="page-link active" href="#1&amp;filter=test" aria-current="page">1</a></li>
-            <li class="page-item"><a class="page-link" href="/admin/manage?page=2&amp;pagesize=1&amp;filter=test">2</a></li>
-            <li class="page-item"><a class="page-link" href="/admin/manage?page=3&amp;pagesize=1&amp;filter=test">3</a></li>
-            <li class="page-item"><a class="page-link" href="/admin/manage?page=4&amp;pagesize=1&amp;filter=test">4</a></li>
-            <li class="page-item"><a class="page-link" href="#5&amp;filter=test">5</a></li>
-            <li class="page-item"><a class="page-link" href="/admin/manage?page=2&amp;pagesize=1&amp;filter=test">Next Page</a></li>
+            <li class="page-item"><a class="page-link disabled" href="/route?page=1&amp;pagesize=1&amp;filter=test">Previous</a></li>
+            <li class="page-item"><a class="page-link active" href="/route?page=1&amp;pagesize=1&amp;filter=test" aria-current="page">1</a></li>
+            <li class="page-item"><a class="page-link" href="/route?page=2&amp;pagesize=1&amp;filter=test">2</a></li>
+            <li class="page-item"><a class="page-link" href="/route?page=3&amp;pagesize=1&amp;filter=test">3</a></li>
+            <li class="page-item"><a class="page-link" href="/route?page=4&amp;pagesize=1&amp;filter=test">4</a></li>
+            <li class="page-item"><a class="page-link" href="/route?page=5&amp;pagesize=1&amp;filter=test">5</a></li>
+            <li class="page-item"><a class="page-link" href="/route?page=2&amp;pagesize=1&amp;filter=test">Next Page</a></li>
             </ul>
             </nav>
             HTML,
             OffsetPagination::widget()
                 ->paginator($this->createOffsetPaginator($this->data, 1))
-                ->urlQueryParameters(['filter' => 'test'])
+                ->urlCreator(new SimplePaginationUrlCreator())
+                ->queryParameters(['filter' => 'test'])
                 ->render(),
         );
     }

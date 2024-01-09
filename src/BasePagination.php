@@ -24,6 +24,7 @@ abstract class BasePagination extends Widget
     private string $pageSizeParameterName = 'pagesize';
     private int $pageParameterPlace = UrlParameterPlace::QUERY;
     private int $pageSizeParameterPlace = UrlParameterPlace::QUERY;
+    private array $queryParameters = [];
 
     private array $attributes = [];
     private bool $disabledNextPage = false;
@@ -50,6 +51,18 @@ abstract class BasePagination extends Widget
     {
         $new = clone $this;
         $new->urlCreator = $urlCreator;
+        return $new;
+    }
+
+    /**
+     * Return a new instance with query parameters of the route.
+     *
+     * @param array $value The query parameters of the route.
+     */
+    public function queryParameters(array $value): static
+    {
+        $new = clone $this;
+        $new->queryParameters = $value;
         return $new;
     }
 
@@ -307,6 +320,7 @@ abstract class BasePagination extends Widget
                 $this->pageSizeParameterName,
                 $this->pageParameterPlace,
                 $this->pageSizeParameterPlace,
+                $this->queryParameters,
             )
         );
     }

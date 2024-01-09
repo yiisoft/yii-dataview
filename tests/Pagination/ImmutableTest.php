@@ -48,8 +48,7 @@ final class ImmutableTest extends TestCase
             $basePagination,
             $basePagination->paginator($this->createOffsetPaginator([], 10))
         );
-        $this->assertNotSame($basePagination, $basePagination->urlArguments([]));
-        $this->assertNotSame($basePagination, $basePagination->urlQueryParameters([]));
+        $this->assertNotSame($basePagination, $basePagination->queryParameters([]));
     }
 
     /**
