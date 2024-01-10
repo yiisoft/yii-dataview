@@ -14,6 +14,7 @@ final class PageContext
         public readonly int $pageParameterPlace,
         public readonly int $pageSizeParameterPlace,
         public readonly array $queryParameters,
+        public readonly int $defaultPageSize,
     ) {
     }
 }

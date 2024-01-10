@@ -29,6 +29,8 @@ abstract class BasePagination extends Widget
      */
     private int $pageSizeParameterPlace = UrlParameterPlace::QUERY;
 
+    private int $defaultPageSize = PaginatorInterface::DEFAULT_PAGE_SIZE;
+
     private array $queryParameters = [];
 
     private array $attributes = [];
@@ -48,32 +50,6 @@ abstract class BasePagination extends Widget
     private string $menuItemLinkClass = 'page-link';
     private PaginatorInterface|null $paginator = null;
 
-    public function getPageParameterName(): string
-    {
-        return $this->pageParameterName;
-    }
-
-    public function getPageSizeParameterName(): string
-    {
-        return $this->pageSizeParameterName;
-    }
-
-    /**
-     * @psalm-return UrlParameterPlace::*
-     */
-    public function getPageParameterPlace(): int
-    {
-        return $this->pageParameterPlace;
-    }
-
-    /**
-     * @psalm-return UrlParameterPlace::*
-     */
-    public function getPageSizeParameterPlace(): int
-    {
-        return $this->pageSizeParameterPlace;
-    }
-
     /**
      * @psalm-param UrlCreator|null $urlCreator
      */
@@ -81,6 +57,13 @@ abstract class BasePagination extends Widget
     {
         $new = clone $this;
         $new->urlCreator = $urlCreator;
+        return $new;
+    }
+
+    final public function defaultPageSize(int $size): static
+    {
+        $new = clone $this;
+        $new->defaultPageSize = $size;
         return $new;
     }
 
@@ -338,6 +321,7 @@ abstract class BasePagination extends Widget
                 $this->pageParameterPlace,
                 $this->pageSizeParameterPlace,
                 $this->queryParameters,
+                $this->defaultPageSize,
             )
         );
     }

@@ -27,8 +27,30 @@ use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\Widget\Widget;
 use Yiisoft\Yii\DataView\Exception\DataReaderNotSetException;
 
+/**
+ * @psalm-import-type UrlCreator from BasePagination
+ */
 abstract class BaseListView extends Widget
 {
+    private const DEFAULT_PAGE_SIZE = 2;
+
+    /**
+     * @psalm-var UrlCreator|null
+     */
+    private $paginationUrlCreator;
+    private string $pageParameterName = 'page';
+    private string $pageSizeParameterName = 'pagesize';
+
+    /**
+     * @psalm-var UrlParameterPlace::*
+     */
+    private int $pageParameterPlace = UrlParameterPlace::QUERY;
+
+    /**
+     * @psalm-var UrlParameterPlace::*
+     */
+    private int $pageSizeParameterPlace = UrlParameterPlace::QUERY;
+
     /**
      * A name for {@see CategorySource} used with translator ({@see TranslatorInterface}) by default.
      */
@@ -72,6 +94,40 @@ abstract class BaseListView extends Widget
         protected readonly string $translationCategory = self::DEFAULT_TRANSLATION_CATEGORY,
     ) {
         $this->translator = $translator ?? $this->createDefaultTranslator();
+    }
+
+    /**
+     * @psalm-param UrlCreator|null $urlCreator
+     */
+    final public function paginationUrlCreator(?callable $urlCreator): static
+    {
+        $new = clone $this;
+        $new->paginationUrlCreator = $urlCreator;
+        return $new;
+    }
+
+    /**
+     * Return a new instance with name of argument or query parameter for page.
+     *
+     * @param string $name The name of argument or query parameter for page.
+     */
+    final public function pageParameterName(string $name): static
+    {
+        $new = clone $this;
+        $new->pageParameterName = $name;
+        return $new;
+    }
+
+    /**
+     * Return a new instance with name of argument or query parameter for page size.
+     *
+     * @param string $name The name of argument or query parameter for page size.
+     */
+    final public function pageSizeParameterName(string $name): static
+    {
+        $new = clone $this;
+        $new->pageSizeParameterName = $name;
+        return $new;
     }
 
     final public function urlParameterProvider(?UrlParameterProviderInterface $provider): static
@@ -149,6 +205,35 @@ abstract class BaseListView extends Widget
         }
 
         return $this->dataReader;
+    }
+
+    private function getPreparedDataReader(): ReadableDataInterface
+    {
+        $dataReader = $this->getDataReader();
+
+        if (!$dataReader instanceof PaginatorInterface) {
+            $dataReader = new OffsetPaginator($dataReader);
+        }
+
+        if ($dataReader instanceof PaginatorInterface && $dataReader->isPaginationRequired()) {
+            $pageSize = $this->urlParameterProvider?->get(
+                $this->pageSizeParameterName,
+                $this->pageSizeParameterPlace,
+            );
+            if ($pageSize !== null) {
+                $dataReader = $dataReader->withPageSize((int)$pageSize);
+            }
+
+            $page = $this->urlParameterProvider?->get(
+                $this->pageParameterName,
+                $this->pageParameterPlace,
+            );
+            if ($page !== null) {
+                $dataReader = $dataReader->withNextPageToken($page);
+            }
+        }
+
+        return $dataReader;
     }
 
     public function getUrlGenerator(): UrlGeneratorInterface
@@ -417,52 +502,38 @@ abstract class BaseListView extends Widget
      */
     protected function getItems(): array
     {
-        $data = $this->getDataReader()->read();
+        $data = $this->getPreparedDataReader()->read();
         return is_array($data) ? $data : iterator_to_array($data);
     }
 
     private function renderPagination(): string
     {
-        $dataReader = $this->getDataReader();
-        if (!$dataReader instanceof PaginatorInterface) {
-            return '';
-        }
-
-        if (!$dataReader->isPaginationRequired()) {
-            return '';
-        }
-
         if (is_string($this->pagination)) {
             return $this->pagination;
         }
 
-        $pagination = $this->pagination ??
-            $dataReader instanceof KeysetPaginator ? KeysetPagination::widget() : OffsetPagination::widget();
-
-        $pageSize = $this->urlParameterProvider?->get(
-            $pagination->getPageSizeParameterName(),
-            $pagination->getPageSizeParameterPlace()
-        );
-        if ($pageSize !== null) {
-            $dataReader = $dataReader->withPageSize((int)$pageSize);
+        $preparedDataReader = $this->getPreparedDataReader();
+        if (!$preparedDataReader instanceof PaginatorInterface || !$preparedDataReader->isPaginationRequired()) {
+            return '';
         }
 
-        $page = $this->urlParameterProvider?->get(
-            $pagination->getPageParameterName(),
-            $pagination->getPageParameterPlace()
-        );
-        if ($page !== null) {
-            $dataReader = $dataReader->withNextPageToken($page);
+        $pagination = $this->pagination ??
+            $preparedDataReader instanceof KeysetPaginator ? KeysetPagination::widget() : OffsetPagination::widget();
+
+        $dataReader = $this->getDataReader();
+        if ($dataReader instanceof PaginatorInterface) {
+            $pagination = $pagination->defaultPageSize($dataReader->getPageSize());
         }
 
         return $pagination
-            ->paginator($dataReader)
+            ->paginator($preparedDataReader)
+            ->pageParameterName($this->pageParameterName)
             ->render();
     }
 
     private function renderSummary(): string
     {
-        $dataReader = $this->getDataReader();
+        $dataReader = $this->getPreparedDataReader();
         if (!$dataReader instanceof OffsetPaginator) {
             return '';
         }

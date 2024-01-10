@@ -26,11 +26,16 @@ final class PaginationUrlCreator
         }
 
         $queryParameters = $context->queryParameters;
-        if ($context->pageParameterPlace === UrlParameterPlace::QUERY) {
-            $queryParameters[$context->pageParameterName] = $context->page;
+        if ($context->pageParameterPlace === UrlParameterPlace::QUERY
+        ) {
+            $queryParameters[$context->pageParameterName] = $context->page === 1
+                ? null
+                : $context->page;
         }
         if ($context->pageSizeParameterPlace == UrlParameterPlace::QUERY) {
-            $queryParameters[$context->pageSizeParameterName] = $context->pageSize;
+            $queryParameters[$context->pageSizeParameterName] = $context->pageSize === $context->defaultPageSize
+                ? null
+                : $context->pageSize;
         }
 
         return $this->urlGenerator->generateFromCurrent($arguments, $queryParameters);
