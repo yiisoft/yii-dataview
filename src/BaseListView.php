@@ -37,8 +37,6 @@ use Yiisoft\Yii\DataView\Exception\DataReaderNotSetException;
  */
 abstract class BaseListView extends Widget
 {
-    private const DEFAULT_PAGE_SIZE = 2;
-
     /**
      * @psalm-var UrlCreator|null
      */
