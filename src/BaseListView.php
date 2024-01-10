@@ -525,13 +525,13 @@ abstract class BaseListView extends Widget
 
     private function renderPagination(): string
     {
-        if (is_string($this->pagination)) {
-            return $this->pagination;
-        }
-
         $preparedDataReader = $this->getPreparedDataReader();
         if (!$preparedDataReader instanceof PaginatorInterface || !$preparedDataReader->isPaginationRequired()) {
             return '';
+        }
+
+        if (is_string($this->pagination)) {
+            return $this->pagination;
         }
 
         if ($this->pagination === null) {
