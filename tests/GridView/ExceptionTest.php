@@ -13,7 +13,6 @@ use Yiisoft\Di\ContainerConfig;
 use Yiisoft\Factory\NotFoundException;
 use Yiisoft\Widget\WidgetFactory;
 use Yiisoft\Yii\DataView;
-use Yiisoft\Yii\DataView\Exception;
 use Yiisoft\Yii\DataView\Exception\DataReaderNotSetException;
 
 final class ExceptionTest extends TestCase
