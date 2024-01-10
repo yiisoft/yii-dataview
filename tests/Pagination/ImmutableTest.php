@@ -5,14 +5,9 @@ declare(strict_types=1);
 namespace Yiisoft\Yii\DataView\Tests\Pagination;
 
 use PHPUnit\Framework\TestCase;
-use Yiisoft\Definitions\Exception\CircularReferenceException;
-use Yiisoft\Definitions\Exception\InvalidConfigException;
-use Yiisoft\Definitions\Exception\NotInstantiableException;
-use Yiisoft\Factory\NotFoundException;
-use Yiisoft\Router\CurrentRoute;
+use Yiisoft\Data\Paginator\PaginatorInterface;
 use Yiisoft\Yii\DataView\BasePagination;
 use Yiisoft\Yii\DataView\OffsetPagination;
-use Yiisoft\Yii\DataView\Tests\Support\Mock;
 use Yiisoft\Yii\DataView\Tests\Support\TestTrait;
 
 final class ImmutableTest extends TestCase
@@ -21,10 +16,13 @@ final class ImmutableTest extends TestCase
 
     public function testBasePagination(): void
     {
-        $basePagination = new class (new CurrentRoute(), Mock::urlGenerator()) extends BasePagination {
+        $basePagination = new class () extends BasePagination {
             public function render(): string
             {
                 return '';
+            }
+            protected function getPaginator(): PaginatorInterface
+            {
             }
         };
         $this->assertNotSame($basePagination, $basePagination->attributes([]));
@@ -43,19 +41,9 @@ final class ImmutableTest extends TestCase
         $this->assertNotSame($basePagination, $basePagination->menuItemContainerClass(''));
         $this->assertNotSame($basePagination, $basePagination->pageParameterName(''));
         $this->assertNotSame($basePagination, $basePagination->pageSizeParameterName('next'));
-        $this->assertNotSame(
-            $basePagination,
-            $basePagination->paginator($this->createOffsetPaginator([], 10))
-        );
         $this->assertNotSame($basePagination, $basePagination->queryParameters([]));
     }
 
-    /**
-     * @throws InvalidConfigException
-     * @throws NotFoundException
-     * @throws NotInstantiableException
-     * @throws CircularReferenceException
-     */
     public function testOffsetPagination(): void
     {
         $offsetPagination = OffsetPagination::widget();

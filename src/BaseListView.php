@@ -75,7 +75,7 @@ abstract class BaseListView extends Widget
     private string $header = '';
     private array $headerAttributes = [];
     private string $layout = "{header}\n{toolbar}\n{items}\n{summary}\n{pager}";
-    private string|BasePagination|null $pagination = null;
+    private string|OffsetPagination|KeysetPagination|null $pagination = null;
     protected ?ReadableDataInterface $dataReader = null;
     protected array $sortLinkAttributes = [];
     private ?string $summary = null;
@@ -310,12 +310,7 @@ abstract class BaseListView extends Widget
         return $new;
     }
 
-    /**
-     * Returns a new instance with the pagination of the grid view, detail view, or list view.
-     *
-     * @param BasePagination|string|null $pagination The pagination of the grid view, detail view, or list view.
-     */
-    public function pagination(string|BasePagination|null $pagination): static
+    public function pagination(string|KeysetPagination|OffsetPagination|null $pagination): static
     {
         $new = clone $this;
         $new->pagination = $pagination;
@@ -535,6 +530,14 @@ abstract class BaseListView extends Widget
             $pagination = $this->pagination;
         }
 
+        if ($pagination instanceof OffsetPagination && $preparedDataReader instanceof OffsetPaginator) {
+            $pagination = $pagination->paginator($preparedDataReader);
+        } elseif ($pagination instanceof KeysetPagination && $preparedDataReader instanceof KeysetPaginator) {
+            $pagination = $pagination->paginator($preparedDataReader);
+        } else {
+            return '';
+        }
+
         if ($this->paginationUrlCreator !== null) {
             $pagination = $pagination->urlCreator($this->paginationUrlCreator);
         }
@@ -545,7 +548,6 @@ abstract class BaseListView extends Widget
         }
 
         return $pagination
-            ->paginator($preparedDataReader)
             ->pageParameterName($this->pageParameterName)
             ->render();
     }

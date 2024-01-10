@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Yiisoft\Yii\DataView;
 
+use Yiisoft\Data\Paginator\KeysetPaginator;
 use Yiisoft\Definitions\Exception\CircularReferenceException;
 use Yiisoft\Definitions\Exception\InvalidConfigException;
 use Yiisoft\Definitions\Exception\NotInstantiableException;
@@ -16,6 +17,15 @@ use function array_key_exists;
 
 final class KeysetPagination extends BasePagination
 {
+    private KeysetPaginator|null $paginator = null;
+
+    public function paginator(KeysetPaginator $paginator): self
+    {
+        $new = clone $this;
+        $new->paginator = $paginator;
+        return $new;
+    }
+
     /**
      * @throws InvalidConfigException
      * @throws NotFoundException
@@ -106,5 +116,12 @@ final class KeysetPagination extends BasePagination
             'label' => $this->getLabelNextPage(),
             'link' => $this->createUrl((int) $paginator->getNextPageToken()),
         ];
+    }
+
+    protected function getPaginator(): KeysetPaginator
+    {
+        return $this->paginator === null
+            ? throw new Exception\PaginatorNotSetException()
+            : $this->paginator;
     }
 }

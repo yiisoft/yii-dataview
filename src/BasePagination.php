@@ -48,7 +48,6 @@ abstract class BasePagination extends Widget
     private string $menuClass = 'pagination';
     private string $menuItemContainerClass = 'page-item';
     private string $menuItemLinkClass = 'page-link';
-    private PaginatorInterface|null $paginator = null;
 
     /**
      * @psalm-param UrlCreator|null $urlCreator
@@ -291,19 +290,6 @@ abstract class BasePagination extends Widget
     }
 
     /**
-     * Returns a new instance with the paginator interface of the grid view, detail view, or list view.
-     *
-     * @param PaginatorInterface $value The paginator interface of the grid view, detail view, or list view.
-     */
-    public function paginator(PaginatorInterface $value): static
-    {
-        $new = clone $this;
-        $new->paginator = $value;
-
-        return $new;
-    }
-
-    /**
      * Creates the URL suitable for pagination with the specified page number. This method is mainly called by pagers
      * when creating URLs used to perform pagination.
      *
@@ -405,12 +391,5 @@ abstract class BasePagination extends Widget
         return $this->menuItemLinkClass;
     }
 
-    protected function getPaginator(): PaginatorInterface
-    {
-        if ($this->paginator === null) {
-            throw new Exception\PaginatorNotSetException();
-        }
-
-        return $this->paginator;
-    }
+    abstract protected function getPaginator(): PaginatorInterface;
 }

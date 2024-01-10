@@ -21,6 +21,8 @@ use function min;
 
 final class OffsetPagination extends BasePagination
 {
+    private OffsetPaginator|null $paginator = null;
+
     private bool $disabledFirstPage = false;
     private bool $disabledLastPage = false;
     private bool $disabledPageNavLink = false;
@@ -31,6 +33,13 @@ final class OffsetPagination extends BasePagination
     private string $labelFirstPage = '';
     private string $labelLastPage = '';
     private int $maxNavLinkCount = 10;
+
+    public function paginator(OffsetPaginator $paginator): self
+    {
+        $new = clone $this;
+        $new->paginator = $paginator;
+        return $new;
+    }
 
     /**
      * Return a new instance with disabled first page.
@@ -347,5 +356,12 @@ final class OffsetPagination extends BasePagination
         }
 
         return $items;
+    }
+
+    protected function getPaginator(): OffsetPaginator
+    {
+        return $this->paginator === null
+            ? throw new Exception\PaginatorNotSetException()
+            : $this->paginator;
     }
 }
