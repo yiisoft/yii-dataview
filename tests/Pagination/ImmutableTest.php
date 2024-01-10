@@ -21,6 +21,7 @@ final class ImmutableTest extends TestCase
             {
                 return '';
             }
+
             protected function getPaginator(): PaginatorInterface
             {
             }
