@@ -9,7 +9,12 @@ use Stringable;
 use Yiisoft\Data\Paginator\KeysetPaginator;
 use Yiisoft\Data\Paginator\OffsetPaginator;
 use Yiisoft\Data\Paginator\PaginatorInterface;
+use Yiisoft\Data\Reader\CountableDataInterface;
+use Yiisoft\Data\Reader\FilterableDataInterface;
+use Yiisoft\Data\Reader\LimitableDataInterface;
+use Yiisoft\Data\Reader\OffsetableDataInterface;
 use Yiisoft\Data\Reader\ReadableDataInterface;
+use Yiisoft\Data\Reader\SortableDataInterface;
 use Yiisoft\Definitions\Exception\CircularReferenceException;
 use Yiisoft\Definitions\Exception\InvalidConfigException;
 use Yiisoft\Definitions\Exception\NotInstantiableException;
@@ -212,10 +217,24 @@ abstract class BaseListView extends Widget
         $dataReader = $this->getDataReader();
 
         if (!$dataReader instanceof PaginatorInterface) {
-            $dataReader = new OffsetPaginator($dataReader);
+            if (
+                $dataReader instanceof OffsetableDataInterface
+                && $dataReader instanceof CountableDataInterface
+                && $dataReader instanceof LimitableDataInterface
+            ) {
+                $dataReader = new OffsetPaginator($dataReader);
+            } elseif (
+                $dataReader instanceof FilterableDataInterface
+                && $dataReader instanceof SortableDataInterface
+                && $dataReader instanceof LimitableDataInterface
+            ) {
+                $dataReader = new KeysetPaginator($dataReader);
+            } else {
+                return $dataReader;
+            }
         }
 
-        if ($dataReader instanceof PaginatorInterface && $dataReader->isPaginationRequired()) {
+        if ($dataReader->isPaginationRequired()) {
             $pageSize = $this->urlParameterProvider?->get(
                 $this->pageSizeParameterName,
                 $this->pageSizeParameterType,
@@ -517,8 +536,17 @@ abstract class BaseListView extends Widget
             return '';
         }
 
-        $pagination = $this->pagination ??
-            $preparedDataReader instanceof KeysetPaginator ? KeysetPagination::widget() : OffsetPagination::widget();
+        if ($this->pagination === null) {
+            if ($preparedDataReader instanceof OffsetPaginator) {
+                $pagination = OffsetPagination::widget();
+            } elseif ($preparedDataReader instanceof KeysetPaginator) {
+                $pagination = KeysetPagination::widget();
+            } else {
+                return '';
+            }
+        } else {
+            $pagination = $this->pagination;
+        }
 
         $dataReader = $this->getDataReader();
         if ($dataReader instanceof PaginatorInterface) {
