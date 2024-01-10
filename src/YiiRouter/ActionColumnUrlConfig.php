@@ -6,7 +6,7 @@ namespace Yiisoft\Yii\DataView\YiiRouter;
 
 use Stringable;
 
-final class UrlConfig
+final class ActionColumnUrlConfig
 {
     public const ARGUMENTS = true;
     public const QUERY_PARAMETERS = false;

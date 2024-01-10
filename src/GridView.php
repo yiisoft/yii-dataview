@@ -13,7 +13,6 @@ use Yiisoft\Definitions\Exception\NotInstantiableException;
 use Yiisoft\Factory\NotFoundException;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\Tr;
-use Yiisoft\Router\UrlGeneratorInterface;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\Yii\DataView\Column\ActionColumn;
 use Yiisoft\Yii\DataView\Column\Base\Cell;
@@ -66,9 +65,8 @@ final class GridView extends BaseListView
     public function __construct(
         private ContainerInterface $columnRenderersContainer,
         TranslatorInterface|null $translator = null,
-        UrlGeneratorInterface|null $urlGenerator = null
     ) {
-        parent::__construct($translator, $urlGenerator);
+        parent::__construct($translator);
     }
 
     /**

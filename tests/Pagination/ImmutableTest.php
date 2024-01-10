@@ -41,15 +41,13 @@ final class ImmutableTest extends TestCase
         $this->assertNotSame($basePagination, $basePagination->labelPreviousPage());
         $this->assertNotSame($basePagination, $basePagination->menuClass(''));
         $this->assertNotSame($basePagination, $basePagination->menuItemContainerClass(''));
-        $this->assertNotSame($basePagination, $basePagination->pageConfig([]));
-        $this->assertNotSame($basePagination, $basePagination->pageName(''));
-        $this->assertNotSame($basePagination, $basePagination->pageSizeName('next'));
+        $this->assertNotSame($basePagination, $basePagination->pageParameterName(''));
+        $this->assertNotSame($basePagination, $basePagination->pageSizeParameterName('next'));
         $this->assertNotSame(
             $basePagination,
             $basePagination->paginator($this->createOffsetPaginator([], 10))
         );
-        $this->assertNotSame($basePagination, $basePagination->urlArguments([]));
-        $this->assertNotSame($basePagination, $basePagination->urlQueryParameters([]));
+        $this->assertNotSame($basePagination, $basePagination->queryParameters([]));
     }
 
     /**

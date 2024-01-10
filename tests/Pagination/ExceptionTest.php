@@ -72,17 +72,4 @@ final class ExceptionTest extends TestCase
         $this->expectExceptionMessage('Failed to create widget because "paginator" is not set.');
         Assert::invokeMethod($basePagination, 'getPaginator');
     }
-
-    /**
-     * @throws InvalidConfigException
-     * @throws NotFoundException
-     * @throws NotInstantiableException
-     * @throws CircularReferenceException
-     */
-    public function testNotSetUrlGenerator(): void
-    {
-        $this->expectException(Exception\UrlGeneratorNotSetException::class);
-        $this->expectExceptionMessage('Failed to create widget because "urlgenerator" is not set.');
-        OffsetPagination::widget()->paginator($this->createOffsetPaginator($this->data, 2))->render();
-    }
 }

@@ -13,7 +13,6 @@ use Yiisoft\Di\ContainerConfig;
 use Yiisoft\Factory\NotFoundException;
 use Yiisoft\Widget\WidgetFactory;
 use Yiisoft\Yii\DataView;
-use Yiisoft\Yii\DataView\Exception;
 use Yiisoft\Yii\DataView\Exception\DataReaderNotSetException;
 
 final class ExceptionTest extends TestCase
@@ -38,19 +37,6 @@ final class ExceptionTest extends TestCase
         $this->expectException(DataReaderNotSetException::class);
         $this->expectExceptionMessage('Failed to create widget because "dataReader" is not set.');
         DataView\GridView::widget()->getDataReader();
-    }
-
-    /**
-     * @throws InvalidConfigException
-     * @throws NotFoundException
-     * @throws NotInstantiableException
-     * @throws CircularReferenceException
-     */
-    public function testGetUrlGenerator(): void
-    {
-        $this->expectException(Exception\UrlGeneratorNotSetException::class);
-        $this->expectExceptionMessage('Failed to create widget because "urlgenerator" is not set.');
-        DataView\GridView::widget()->getUrlGenerator();
     }
 
     /**

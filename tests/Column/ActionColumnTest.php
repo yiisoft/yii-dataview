@@ -28,7 +28,7 @@ use Yiisoft\Yii\DataView\Tests\Support\Assert;
 use Yiisoft\Yii\DataView\Tests\Support\Mock;
 use Yiisoft\Yii\DataView\Tests\Support\StringableObject;
 use Yiisoft\Yii\DataView\Tests\Support\TestTrait;
-use Yiisoft\Yii\DataView\YiiRouter\UrlConfig;
+use Yiisoft\Yii\DataView\YiiRouter\ActionColumnUrlConfig;
 
 final class ActionColumnTest extends TestCase
 {
@@ -429,7 +429,7 @@ final class ActionColumnTest extends TestCase
             </div>
             HTML,
             GridView::widget()
-                ->columns(new ActionColumn(urlConfig: new UrlConfig('identity_id')))
+                ->columns(new ActionColumn(urlConfig: new ActionColumnUrlConfig('identity_id')))
                 ->id('w1-grid')
                 ->dataReader(
                     $this->createOffsetPaginator(
@@ -579,9 +579,9 @@ final class ActionColumnTest extends TestCase
             GridView::widget()
                 ->columns(
                     new ActionColumn(
-                        urlConfig: new UrlConfig(
+                        urlConfig: new ActionColumnUrlConfig(
                             queryParameters: ['test-param' => 'test.param'],
-                            primaryKeyPlace: UrlConfig::QUERY_PARAMETERS,
+                            primaryKeyPlace: ActionColumnUrlConfig::QUERY_PARAMETERS,
                         ),
                     ),
                 )
@@ -645,7 +645,8 @@ final class ActionColumnTest extends TestCase
         ]);
 
         $html = GridView::widget()
-            ->columns(new ActionColumn(urlConfig: new UrlConfig('id')))
+            ->layout('{items}')
+            ->columns(new ActionColumn(urlConfig: new ActionColumnUrlConfig('id')))
             ->dataReader($dataReader)
             ->render();
 
@@ -698,6 +699,7 @@ final class ActionColumnTest extends TestCase
         );
 
         $html = GridView::widget()
+            ->layout('{items}')
             ->columns($actionColumn)
             ->dataReader($dataReader)
             ->render();
@@ -749,6 +751,7 @@ final class ActionColumnTest extends TestCase
         );
 
         $html = GridView::widget()
+            ->layout('{items}')
             ->columns($actionColumn)
             ->columnsConfigs([
                 ActionColumn::class => [
@@ -802,6 +805,7 @@ final class ActionColumnTest extends TestCase
         );
 
         $html = GridView::widget()
+            ->layout('{items}')
             ->columns($actionColumn)
             ->dataReader($dataReader)
             ->render();
@@ -968,6 +972,7 @@ final class ActionColumnTest extends TestCase
         );
 
         $html = GridView::widget()
+            ->layout('{items}')
             ->columns($actionColumn)
             ->columnsConfigs([
                 ActionColumn::class => $columnConfig,

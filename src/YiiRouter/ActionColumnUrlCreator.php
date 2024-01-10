@@ -18,7 +18,7 @@ final class ActionColumnUrlCreator
         private readonly UrlGeneratorInterface $urlGenerator,
         private readonly CurrentRoute $currentRoute,
         private readonly string $defaultPrimaryKey = 'id',
-        private readonly bool $defaultPrimaryKeyPlace = UrlConfig::QUERY_PARAMETERS,
+        private readonly bool $defaultPrimaryKeyPlace = ActionColumnUrlConfig::QUERY_PARAMETERS,
     ) {
     }
 
@@ -27,9 +27,9 @@ final class ActionColumnUrlCreator
         /** @var ActionColumn $column */
         $column = $context->column;
 
-        $config = $column->urlConfig ?? new UrlConfig();
-        if (!$config instanceof UrlConfig) {
-            throw new LogicException(self::class . ' supports ' . UrlConfig::class . ' only.');
+        $config = $column->urlConfig ?? new ActionColumnUrlConfig();
+        if (!$config instanceof ActionColumnUrlConfig) {
+            throw new LogicException(self::class . ' supports ' . ActionColumnUrlConfig::class . ' only.');
         }
 
         $primaryKey = $config->primaryKey ?? $this->defaultPrimaryKey;
@@ -44,7 +44,7 @@ final class ActionColumnUrlCreator
 
         $arguments = $config->arguments;
         $queryParameters = $config->queryParameters;
-        if ($primaryKeyPlace === UrlConfig::ARGUMENTS) {
+        if ($primaryKeyPlace === ActionColumnUrlConfig::ARGUMENTS) {
             $arguments = array_merge($arguments, [$primaryKey => (string)$primaryKeyValue]);
         } else {
             $queryParameters = array_merge($queryParameters, [$primaryKey => (string)$primaryKeyValue]);

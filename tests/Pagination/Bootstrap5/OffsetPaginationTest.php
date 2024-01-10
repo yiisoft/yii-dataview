@@ -10,7 +10,9 @@ use Yiisoft\Definitions\Exception\InvalidConfigException;
 use Yiisoft\Definitions\Exception\NotInstantiableException;
 use Yiisoft\Factory\NotFoundException;
 use Yiisoft\Yii\DataView\OffsetPagination;
+use Yiisoft\Yii\DataView\PageContext;
 use Yiisoft\Yii\DataView\Tests\Support\Assert;
+use Yiisoft\Yii\DataView\Tests\Support\SimplePaginationUrlCreator;
 use Yiisoft\Yii\DataView\Tests\Support\TestTrait;
 
 /**
@@ -48,11 +50,11 @@ final class OffsetPaginationTest extends TestCase
             <<<HTML
             <nav aria-label="Pagination">
             <ul class="pagination justify-content-center">
-            <li class="page-item"><a class="page-link disabled" href="/admin/manage?page=1&amp;pagesize=2">Previous</a></li>
-            <li class="page-item"><a class="page-link active" href="/admin/manage?page=1&amp;pagesize=2" aria-current="page">1</a></li>
-            <li class="page-item"><a class="page-link" href="/admin/manage?page=2&amp;pagesize=2">2</a></li>
-            <li class="page-item"><a class="page-link" href="/admin/manage?page=3&amp;pagesize=2">3</a></li>
-            <li class="page-item"><a class="page-link" href="/admin/manage?page=2&amp;pagesize=2">Next Page</a></li>
+            <li class="page-item"><a class="page-link disabled" href="#1">Previous</a></li>
+            <li class="page-item"><a class="page-link active" href="#1" aria-current="page">1</a></li>
+            <li class="page-item"><a class="page-link" href="#2">2</a></li>
+            <li class="page-item"><a class="page-link" href="#3">3</a></li>
+            <li class="page-item"><a class="page-link" href="#2">Next Page</a></li>
             </ul>
             </nav>
             HTML,
@@ -84,11 +86,11 @@ final class OffsetPaginationTest extends TestCase
             <<<HTML
             <nav aria-label="Pagination">
             <ul class="pagination">
-            <li class="page-item"><a class="page-link disabled" href="/admin/manage?page=1&amp;pagesize=2">Previous</a></li>
-            <li class="page-item"><a class="page-link" href="/admin/manage?page=1&amp;pagesize=2">1</a></li>
-            <li class="page-item"><a class="page-link active" href="/admin/manage?page=2&amp;pagesize=2" aria-current="page">2</a></li>
-            <li class="page-item"><a class="page-link" href="/admin/manage?page=3&amp;pagesize=2">3</a></li>
-            <li class="page-item"><a class="page-link" href="/admin/manage?page=3&amp;pagesize=2">Next Page</a></li>
+            <li class="page-item"><a class="page-link disabled" href="#1">Previous</a></li>
+            <li class="page-item"><a class="page-link" href="#1">1</a></li>
+            <li class="page-item"><a class="page-link active" href="#2" aria-current="page">2</a></li>
+            <li class="page-item"><a class="page-link" href="#3">3</a></li>
+            <li class="page-item"><a class="page-link" href="#3">Next Page</a></li>
             </ul>
             </nav>
             HTML,
@@ -99,27 +101,21 @@ final class OffsetPaginationTest extends TestCase
         );
     }
 
-    /**
-     * @throws InvalidConfigException
-     * @throws NotFoundException
-     * @throws NotInstantiableException
-     * @throws CircularReferenceException
-     */
     public function testRenderWithIconFirstLastPage(): void
     {
         Assert::equalsWithoutLE(
             <<<HTML
             <nav aria-label="Pagination">
             <ul class="pagination">
-            <li class="page-item"><a class="page-link disabled" href="/admin/manage?page=1&amp;pagesize=1"><span aria-hidden="true"><i>«</i></span></a></li>
-            <li class="page-item"><a class="page-link disabled" href="/admin/manage?page=1&amp;pagesize=1">Previous</a></li>
-            <li class="page-item"><a class="page-link active" href="/admin/manage?page=1&amp;pagesize=1" aria-current="page">1</a></li>
-            <li class="page-item"><a class="page-link" href="/admin/manage?page=2&amp;pagesize=1">2</a></li>
-            <li class="page-item"><a class="page-link" href="/admin/manage?page=3&amp;pagesize=1">3</a></li>
-            <li class="page-item"><a class="page-link" href="/admin/manage?page=4&amp;pagesize=1">4</a></li>
-            <li class="page-item"><a class="page-link" href="/admin/manage?page=5&amp;pagesize=1">5</a></li>
-            <li class="page-item"><a class="page-link" href="/admin/manage?page=2&amp;pagesize=1">Next Page</a></li>
-            <li class="page-item"><a class="page-link" href="/admin/manage?page=5&amp;pagesize=1"><span aria-hidden="true"><i>»</i></span></a></li>
+            <li class="page-item"><a class="page-link disabled" href="#1"><span aria-hidden="true"><i>«</i></span></a></li>
+            <li class="page-item"><a class="page-link disabled" href="#1">Previous</a></li>
+            <li class="page-item"><a class="page-link active" href="#1" aria-current="page">1</a></li>
+            <li class="page-item"><a class="page-link" href="#2">2</a></li>
+            <li class="page-item"><a class="page-link" href="#3">3</a></li>
+            <li class="page-item"><a class="page-link" href="#4">4</a></li>
+            <li class="page-item"><a class="page-link" href="#5">5</a></li>
+            <li class="page-item"><a class="page-link" href="#2">Next Page</a></li>
+            <li class="page-item"><a class="page-link" href="#5"><span aria-hidden="true"><i>»</i></span></a></li>
             </ul>
             </nav>
             HTML,
@@ -131,27 +127,21 @@ final class OffsetPaginationTest extends TestCase
         );
     }
 
-    /**
-     * @throws InvalidConfigException
-     * @throws NotFoundException
-     * @throws NotInstantiableException
-     * @throws CircularReferenceException
-     */
     public function testRenderWithIconClassFirstLastPage(): void
     {
         Assert::equalsWithoutLE(
             <<<HTML
             <nav aria-label="Pagination">
             <ul class="pagination">
-            <li class="page-item"><a class="page-link disabled" href="/admin/manage?page=1&amp;pagesize=1"><span aria-hidden="true"><i class="bi bi-chevron-double-left p-1"></i></span></a></li>
-            <li class="page-item"><a class="page-link disabled" href="/admin/manage?page=1&amp;pagesize=1">Previous</a></li>
-            <li class="page-item"><a class="page-link active" href="/admin/manage?page=1&amp;pagesize=1" aria-current="page">1</a></li>
-            <li class="page-item"><a class="page-link" href="/admin/manage?page=2&amp;pagesize=1">2</a></li>
-            <li class="page-item"><a class="page-link" href="/admin/manage?page=3&amp;pagesize=1">3</a></li>
-            <li class="page-item"><a class="page-link" href="/admin/manage?page=4&amp;pagesize=1">4</a></li>
-            <li class="page-item"><a class="page-link" href="/admin/manage?page=5&amp;pagesize=1">5</a></li>
-            <li class="page-item"><a class="page-link" href="/admin/manage?page=2&amp;pagesize=1">Next Page</a></li>
-            <li class="page-item"><a class="page-link" href="/admin/manage?page=5&amp;pagesize=1"><span aria-hidden="true"><i class="bi bi-chevron-double-right p-1"></i></span></a></li>
+            <li class="page-item"><a class="page-link disabled" href="#1"><span aria-hidden="true"><i class="bi bi-chevron-double-left p-1"></i></span></a></li>
+            <li class="page-item"><a class="page-link disabled" href="#1">Previous</a></li>
+            <li class="page-item"><a class="page-link active" href="#1" aria-current="page">1</a></li>
+            <li class="page-item"><a class="page-link" href="#2">2</a></li>
+            <li class="page-item"><a class="page-link" href="#3">3</a></li>
+            <li class="page-item"><a class="page-link" href="#4">4</a></li>
+            <li class="page-item"><a class="page-link" href="#5">5</a></li>
+            <li class="page-item"><a class="page-link" href="#2">Next Page</a></li>
+            <li class="page-item"><a class="page-link" href="#5"><span aria-hidden="true"><i class="bi bi-chevron-double-right p-1"></i></span></a></li>
             </ul>
             </nav>
             HTML,
@@ -175,15 +165,15 @@ final class OffsetPaginationTest extends TestCase
             <<<HTML
             <nav aria-label="Pagination">
             <ul class="pagination">
-            <li class="page-item"><a class="page-link disabled" href="/admin/manage?page=1&amp;pagesize=1">First</a></li>
-            <li class="page-item"><a class="page-link disabled" href="/admin/manage?page=1&amp;pagesize=1">Previous</a></li>
-            <li class="page-item"><a class="page-link active" href="/admin/manage?page=1&amp;pagesize=1" aria-current="page">1</a></li>
-            <li class="page-item"><a class="page-link" href="/admin/manage?page=2&amp;pagesize=1">2</a></li>
-            <li class="page-item"><a class="page-link" href="/admin/manage?page=3&amp;pagesize=1">3</a></li>
-            <li class="page-item"><a class="page-link" href="/admin/manage?page=4&amp;pagesize=1">4</a></li>
-            <li class="page-item"><a class="page-link" href="/admin/manage?page=5&amp;pagesize=1">5</a></li>
-            <li class="page-item"><a class="page-link" href="/admin/manage?page=2&amp;pagesize=1">Next Page</a></li>
-            <li class="page-item"><a class="page-link" href="/admin/manage?page=5&amp;pagesize=1">Last</a></li>
+            <li class="page-item"><a class="page-link disabled" href="#1">First</a></li>
+            <li class="page-item"><a class="page-link disabled" href="#1">Previous</a></li>
+            <li class="page-item"><a class="page-link active" href="#1" aria-current="page">1</a></li>
+            <li class="page-item"><a class="page-link" href="#2">2</a></li>
+            <li class="page-item"><a class="page-link" href="#3">3</a></li>
+            <li class="page-item"><a class="page-link" href="#4">4</a></li>
+            <li class="page-item"><a class="page-link" href="#5">5</a></li>
+            <li class="page-item"><a class="page-link" href="#2">Next Page</a></li>
+            <li class="page-item"><a class="page-link" href="#5">Last</a></li>
             </ul>
             </nav>
             HTML,
@@ -201,54 +191,26 @@ final class OffsetPaginationTest extends TestCase
      * @throws NotInstantiableException
      * @throws CircularReferenceException
      */
-    public function testRenderWithUrlArguments(): void
-    {
-        Assert::equalsWithoutLE(
-            <<<HTML
-            <nav aria-label="Pagination">
-            <ul class="pagination">
-            <li class="page-item"><a class="page-link disabled" href="/admin/manage?page=1&amp;pagesize=1&amp;filter=test">Previous</a></li>
-            <li class="page-item"><a class="page-link active" href="/admin/manage?page=1&amp;pagesize=1&amp;filter=test" aria-current="page">1</a></li>
-            <li class="page-item"><a class="page-link" href="/admin/manage?page=2&amp;pagesize=1&amp;filter=test">2</a></li>
-            <li class="page-item"><a class="page-link" href="/admin/manage?page=3&amp;pagesize=1&amp;filter=test">3</a></li>
-            <li class="page-item"><a class="page-link" href="/admin/manage?page=4&amp;pagesize=1&amp;filter=test">4</a></li>
-            <li class="page-item"><a class="page-link" href="/admin/manage?page=5&amp;pagesize=1&amp;filter=test">5</a></li>
-            <li class="page-item"><a class="page-link" href="/admin/manage?page=2&amp;pagesize=1&amp;filter=test">Next Page</a></li>
-            </ul>
-            </nav>
-            HTML,
-            OffsetPagination::widget()
-                ->paginator($this->createOffsetPaginator($this->data, 1))
-                ->urlQueryParameters(['filter' => 'test'])
-                ->render(),
-        );
-    }
-
-    /**
-     * @throws InvalidConfigException
-     * @throws NotFoundException
-     * @throws NotInstantiableException
-     * @throws CircularReferenceException
-     */
     public function testRenderWithUrlQueryParameters(): void
     {
         Assert::equalsWithoutLE(
             <<<HTML
             <nav aria-label="Pagination">
             <ul class="pagination">
-            <li class="page-item"><a class="page-link disabled" href="/admin/manage?page=1&amp;pagesize=1&amp;filter=test">Previous</a></li>
-            <li class="page-item"><a class="page-link active" href="/admin/manage?page=1&amp;pagesize=1&amp;filter=test" aria-current="page">1</a></li>
-            <li class="page-item"><a class="page-link" href="/admin/manage?page=2&amp;pagesize=1&amp;filter=test">2</a></li>
-            <li class="page-item"><a class="page-link" href="/admin/manage?page=3&amp;pagesize=1&amp;filter=test">3</a></li>
-            <li class="page-item"><a class="page-link" href="/admin/manage?page=4&amp;pagesize=1&amp;filter=test">4</a></li>
-            <li class="page-item"><a class="page-link" href="/admin/manage?page=5&amp;pagesize=1&amp;filter=test">5</a></li>
-            <li class="page-item"><a class="page-link" href="/admin/manage?page=2&amp;pagesize=1&amp;filter=test">Next Page</a></li>
+            <li class="page-item"><a class="page-link disabled" href="/route?page=1&amp;pagesize=1&amp;filter=test">Previous</a></li>
+            <li class="page-item"><a class="page-link active" href="/route?page=1&amp;pagesize=1&amp;filter=test" aria-current="page">1</a></li>
+            <li class="page-item"><a class="page-link" href="/route?page=2&amp;pagesize=1&amp;filter=test">2</a></li>
+            <li class="page-item"><a class="page-link" href="/route?page=3&amp;pagesize=1&amp;filter=test">3</a></li>
+            <li class="page-item"><a class="page-link" href="/route?page=4&amp;pagesize=1&amp;filter=test">4</a></li>
+            <li class="page-item"><a class="page-link" href="/route?page=5&amp;pagesize=1&amp;filter=test">5</a></li>
+            <li class="page-item"><a class="page-link" href="/route?page=2&amp;pagesize=1&amp;filter=test">Next Page</a></li>
             </ul>
             </nav>
             HTML,
             OffsetPagination::widget()
                 ->paginator($this->createOffsetPaginator($this->data, 1))
-                ->urlQueryParameters(['filter' => 'test'])
+                ->urlCreator(new SimplePaginationUrlCreator())
+                ->queryParameters(['filter' => 'test'])
                 ->render(),
         );
     }
@@ -278,11 +240,6 @@ final class OffsetPaginationTest extends TestCase
      * aria-label for the <nav> to reflect its purpose. For example, if the pagination component is used to navigate
      * between a set of search results, an appropriate label could be aria-label="Search results pages".
      *
-     * @throws InvalidConfigException
-     * @throws NotFoundException
-     * @throws NotInstantiableException
-     * @throws CircularReferenceException
-     *
      * @link https://getbootstrap.com/docs/5.2/components/pagination/#overview
      */
     public function testOverview(): void
@@ -291,13 +248,13 @@ final class OffsetPaginationTest extends TestCase
             <<<HTML
             <nav aria-label="Pagination">
             <ul class="pagination">
-            <li class="page-item"><a class="page-link disabled" href="/admin/manage?page=1&amp;pagesize=1">Previous</a></li>
-            <li class="page-item"><a class="page-link active" href="/admin/manage?page=1&amp;pagesize=1" aria-current="page">1</a></li>
-            <li class="page-item"><a class="page-link" href="/admin/manage?page=2&amp;pagesize=1">2</a></li>
-            <li class="page-item"><a class="page-link" href="/admin/manage?page=3&amp;pagesize=1">3</a></li>
-            <li class="page-item"><a class="page-link" href="/admin/manage?page=4&amp;pagesize=1">4</a></li>
-            <li class="page-item"><a class="page-link" href="/admin/manage?page=5&amp;pagesize=1">5</a></li>
-            <li class="page-item"><a class="page-link" href="/admin/manage?page=2&amp;pagesize=1">Next Page</a></li>
+            <li class="page-item"><a class="page-link disabled" href="#1">Previous</a></li>
+            <li class="page-item"><a class="page-link active" href="#1" aria-current="page">1</a></li>
+            <li class="page-item"><a class="page-link" href="#2">2</a></li>
+            <li class="page-item"><a class="page-link" href="#3">3</a></li>
+            <li class="page-item"><a class="page-link" href="#4">4</a></li>
+            <li class="page-item"><a class="page-link" href="#5">5</a></li>
+            <li class="page-item"><a class="page-link" href="#2">Next Page</a></li>
             </ul>
             </nav>
             HTML,
@@ -310,11 +267,6 @@ final class OffsetPaginationTest extends TestCase
     /**
      * Fancy larger or smaller pagination? Add `.pagination-lg` or `.pagination-sm` for additional sizes.
      *
-     * @throws InvalidConfigException
-     * @throws NotFoundException
-     * @throws NotInstantiableException
-     * @throws CircularReferenceException
-     *
      * @link https://getbootstrap.com/docs/5.2/components/pagination/#sizing
      */
     public function testsSizing(): void
@@ -323,11 +275,11 @@ final class OffsetPaginationTest extends TestCase
             <<<HTML
             <nav aria-label="Pagination">
             <ul class="pagination pagination-lg">
-            <li class="page-item"><a class="page-link active" href="/admin/manage?page=1&amp;pagesize=1" aria-current="page">1</a></li>
-            <li class="page-item"><a class="page-link" href="/admin/manage?page=2&amp;pagesize=1">2</a></li>
-            <li class="page-item"><a class="page-link" href="/admin/manage?page=3&amp;pagesize=1">3</a></li>
-            <li class="page-item"><a class="page-link" href="/admin/manage?page=4&amp;pagesize=1">4</a></li>
-            <li class="page-item"><a class="page-link" href="/admin/manage?page=5&amp;pagesize=1">5</a></li>
+            <li class="page-item"><a class="page-link active" href="#1-1" aria-current="page">1</a></li>
+            <li class="page-item"><a class="page-link" href="#2-1">2</a></li>
+            <li class="page-item"><a class="page-link" href="#3-1">3</a></li>
+            <li class="page-item"><a class="page-link" href="#4-1">4</a></li>
+            <li class="page-item"><a class="page-link" href="#5-1">5</a></li>
             </ul>
             </nav>
             HTML,
@@ -335,6 +287,7 @@ final class OffsetPaginationTest extends TestCase
                 ->menuClass('pagination pagination-lg')
                 ->labelNextPage()
                 ->labelPreviousPage()
+                ->urlCreator(static fn(PageContext $context) => '#' . $context->page . '-' . $context->pageSize)
                 ->paginator($this->createOffsetPaginator($this->data, 1))
                 ->render(),
         );
@@ -343,11 +296,11 @@ final class OffsetPaginationTest extends TestCase
             <<<HTML
             <nav aria-label="Pagination">
             <ul class="pagination pagination-sm">
-            <li class="page-item"><a class="page-link active" href="/admin/manage?page=1&amp;pagesize=1" aria-current="page">1</a></li>
-            <li class="page-item"><a class="page-link" href="/admin/manage?page=2&amp;pagesize=1">2</a></li>
-            <li class="page-item"><a class="page-link" href="/admin/manage?page=3&amp;pagesize=1">3</a></li>
-            <li class="page-item"><a class="page-link" href="/admin/manage?page=4&amp;pagesize=1">4</a></li>
-            <li class="page-item"><a class="page-link" href="/admin/manage?page=5&amp;pagesize=1">5</a></li>
+            <li class="page-item"><a class="page-link active" href="#1-1" aria-current="page">1</a></li>
+            <li class="page-item"><a class="page-link" href="#2-1">2</a></li>
+            <li class="page-item"><a class="page-link" href="#3-1">3</a></li>
+            <li class="page-item"><a class="page-link" href="#4-1">4</a></li>
+            <li class="page-item"><a class="page-link" href="#5-1">5</a></li>
             </ul>
             </nav>
             HTML,
@@ -355,6 +308,7 @@ final class OffsetPaginationTest extends TestCase
                 ->menuClass('pagination pagination-sm')
                 ->labelNextPage()
                 ->labelPreviousPage()
+                ->urlCreator(static fn(PageContext $context) => '#' . $context->page . '-' . $context->pageSize)
                 ->paginator($this->createOffsetPaginator($this->data, 1))
                 ->render(),
         );
@@ -364,11 +318,6 @@ final class OffsetPaginationTest extends TestCase
      * Looking to use an icon or symbol in place of text for some pagination links? Be sure to provide proper screen
      * reader support with aria attributes.
      *
-     * @throws InvalidConfigException
-     * @throws NotFoundException
-     * @throws NotInstantiableException
-     * @throws CircularReferenceException
-     *
      * @link https://getbootstrap.com/docs/5.2/components/pagination/#working-with-icons
      */
     public function testWorkingWithIcons(): void
@@ -377,13 +326,13 @@ final class OffsetPaginationTest extends TestCase
             <<<HTML
             <nav aria-label="Pagination">
             <ul class="pagination">
-            <li class="page-item"><a class="page-link disabled" href="/admin/manage?page=1&amp;pagesize=1"><span aria-hidden="true"><i>«</i></span></a></li>
-            <li class="page-item"><a class="page-link active" href="/admin/manage?page=1&amp;pagesize=1" aria-current="page">1</a></li>
-            <li class="page-item"><a class="page-link" href="/admin/manage?page=2&amp;pagesize=1">2</a></li>
-            <li class="page-item"><a class="page-link" href="/admin/manage?page=3&amp;pagesize=1">3</a></li>
-            <li class="page-item"><a class="page-link" href="/admin/manage?page=4&amp;pagesize=1">4</a></li>
-            <li class="page-item"><a class="page-link" href="/admin/manage?page=5&amp;pagesize=1">5</a></li>
-            <li class="page-item"><a class="page-link" href="/admin/manage?page=2&amp;pagesize=1"><span aria-hidden="true"><i>»</i></span></a></li>
+            <li class="page-item"><a class="page-link disabled" href="#1"><span aria-hidden="true"><i>«</i></span></a></li>
+            <li class="page-item"><a class="page-link active" href="#1" aria-current="page">1</a></li>
+            <li class="page-item"><a class="page-link" href="#2">2</a></li>
+            <li class="page-item"><a class="page-link" href="#3">3</a></li>
+            <li class="page-item"><a class="page-link" href="#4">4</a></li>
+            <li class="page-item"><a class="page-link" href="#5">5</a></li>
+            <li class="page-item"><a class="page-link" href="#2"><span aria-hidden="true"><i>»</i></span></a></li>
             </ul>
             </nav>
             HTML,
@@ -398,13 +347,13 @@ final class OffsetPaginationTest extends TestCase
             <<<HTML
             <nav aria-label="Pagination">
             <ul class="pagination">
-            <li class="page-item"><a class="page-link disabled" href="/admin/manage?page=1&amp;pagesize=1"><span aria-hidden="true"><i class="bi bi-chevron-double-left p-1"></i></span></a></li>
-            <li class="page-item"><a class="page-link active" href="/admin/manage?page=1&amp;pagesize=1" aria-current="page">1</a></li>
-            <li class="page-item"><a class="page-link" href="/admin/manage?page=2&amp;pagesize=1">2</a></li>
-            <li class="page-item"><a class="page-link" href="/admin/manage?page=3&amp;pagesize=1">3</a></li>
-            <li class="page-item"><a class="page-link" href="/admin/manage?page=4&amp;pagesize=1">4</a></li>
-            <li class="page-item"><a class="page-link" href="/admin/manage?page=5&amp;pagesize=1">5</a></li>
-            <li class="page-item"><a class="page-link" href="/admin/manage?page=2&amp;pagesize=1"><span aria-hidden="true"><i class="bi bi-chevron-double-right p-1"></i></span></a></li>
+            <li class="page-item"><a class="page-link disabled" href="#1"><span aria-hidden="true"><i class="bi bi-chevron-double-left p-1"></i></span></a></li>
+            <li class="page-item"><a class="page-link active" href="#1" aria-current="page">1</a></li>
+            <li class="page-item"><a class="page-link" href="#2">2</a></li>
+            <li class="page-item"><a class="page-link" href="#3">3</a></li>
+            <li class="page-item"><a class="page-link" href="#4">4</a></li>
+            <li class="page-item"><a class="page-link" href="#5">5</a></li>
+            <li class="page-item"><a class="page-link" href="#2"><span aria-hidden="true"><i class="bi bi-chevron-double-right p-1"></i></span></a></li>
             </ul>
             </nav>
             HTML,
