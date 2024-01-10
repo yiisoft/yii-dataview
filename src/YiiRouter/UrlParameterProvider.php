@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Yiisoft\Yii\DataView\YiiRouter;
 
 use Yiisoft\Router\CurrentRoute;
-use Yiisoft\Yii\DataView\UrlParameterPlace;
+use Yiisoft\Yii\DataView\UrlParameterType;
 use Yiisoft\Yii\DataView\UrlParameterProviderInterface;
 
 final class UrlParameterProvider implements UrlParameterProviderInterface
@@ -14,12 +14,12 @@ final class UrlParameterProvider implements UrlParameterProviderInterface
     {
     }
 
-    public function get(string $name, int $place): ?string
+    public function get(string $name, int $type): ?string
     {
-        switch ($place) {
-            case UrlParameterPlace::PATH:
+        switch ($type) {
+            case UrlParameterType::PATH:
                 return $this->currentRoute->getArgument($name);
-            case UrlParameterPlace::QUERY:
+            case UrlParameterType::QUERY:
                 $value = $_GET[$name] ?? null;
                 return is_string($value) ? $value : null;
             default:

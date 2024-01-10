@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Yiisoft\Yii\DataView\Tests\Support;
 
 use Yiisoft\Yii\DataView\PageContext;
-use Yiisoft\Yii\DataView\UrlParameterPlace;
+use Yiisoft\Yii\DataView\UrlParameterType;
 
 final class SimplePaginationUrlCreator
 {
@@ -14,18 +14,18 @@ final class SimplePaginationUrlCreator
         $url = '/route';
 
         $arguments = [];
-        if ($context->pageParameterPlace === UrlParameterPlace::PATH) {
+        if ($context->pageParameterType === UrlParameterType::PATH) {
             $url .= '/' . $context->pageName . '/' . $context->page;
         }
-        if ($context->pageSizeParameterPlace == UrlParameterPlace::PATH) {
+        if ($context->pageSizeParameterType == UrlParameterType::PATH) {
             $url .= '/' . $context->pageSizeParameterName . '/' . $context->pageSize;
         }
 
         $queryParameters = [];
-        if ($context->pageParameterPlace === UrlParameterPlace::QUERY) {
+        if ($context->pageParameterType === UrlParameterType::QUERY) {
             $queryParameters[$context->pageParameterName] = $context->page;
         }
-        if ($context->pageSizeParameterPlace == UrlParameterPlace::QUERY) {
+        if ($context->pageSizeParameterType == UrlParameterType::QUERY) {
             $queryParameters[$context->pageSizeParameterName] = $context->pageSize;
         }
         $queryParameters = array_merge($queryParameters, $context->queryParameters);

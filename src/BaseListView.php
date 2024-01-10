@@ -42,14 +42,14 @@ abstract class BaseListView extends Widget
     private string $pageSizeParameterName = 'pagesize';
 
     /**
-     * @psalm-var UrlParameterPlace::*
+     * @psalm-var UrlParameterType::*
      */
-    private int $pageParameterPlace = UrlParameterPlace::QUERY;
+    private int $pageParameterType = UrlParameterType::QUERY;
 
     /**
-     * @psalm-var UrlParameterPlace::*
+     * @psalm-var UrlParameterType::*
      */
-    private int $pageSizeParameterPlace = UrlParameterPlace::QUERY;
+    private int $pageSizeParameterType = UrlParameterType::QUERY;
 
     /**
      * A name for {@see CategorySource} used with translator ({@see TranslatorInterface}) by default.
@@ -218,7 +218,7 @@ abstract class BaseListView extends Widget
         if ($dataReader instanceof PaginatorInterface && $dataReader->isPaginationRequired()) {
             $pageSize = $this->urlParameterProvider?->get(
                 $this->pageSizeParameterName,
-                $this->pageSizeParameterPlace,
+                $this->pageSizeParameterType,
             );
             if ($pageSize !== null) {
                 $dataReader = $dataReader->withPageSize((int)$pageSize);
@@ -226,7 +226,7 @@ abstract class BaseListView extends Widget
 
             $page = $this->urlParameterProvider?->get(
                 $this->pageParameterName,
-                $this->pageParameterPlace,
+                $this->pageParameterType,
             );
             if ($page !== null) {
                 $dataReader = $dataReader->withNextPageToken($page);

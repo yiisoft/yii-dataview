@@ -20,14 +20,14 @@ abstract class BasePagination extends Widget
     private string $pageSizeParameterName = 'pagesize';
 
     /**
-     * @psalm-var UrlParameterPlace::*
+     * @psalm-var UrlParameterType::*
      */
-    private int $pageParameterPlace = UrlParameterPlace::QUERY;
+    private int $pageParameterType = UrlParameterType::QUERY;
 
     /**
-     * @psalm-var UrlParameterPlace::*
+     * @psalm-var UrlParameterType::*
      */
-    private int $pageSizeParameterPlace = UrlParameterPlace::QUERY;
+    private int $pageSizeParameterType = UrlParameterType::QUERY;
 
     private int $defaultPageSize = PaginatorInterface::DEFAULT_PAGE_SIZE;
 
@@ -318,8 +318,8 @@ abstract class BasePagination extends Widget
                 $this->getPaginator()->getPageSize(),
                 $this->pageParameterName,
                 $this->pageSizeParameterName,
-                $this->pageParameterPlace,
-                $this->pageSizeParameterPlace,
+                $this->pageParameterType,
+                $this->pageSizeParameterType,
                 $this->queryParameters,
                 $this->defaultPageSize,
             )

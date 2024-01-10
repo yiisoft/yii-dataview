@@ -6,7 +6,7 @@ namespace Yiisoft\Yii\DataView\YiiRouter;
 
 use Yiisoft\Router\UrlGeneratorInterface;
 use Yiisoft\Yii\DataView\PageContext;
-use Yiisoft\Yii\DataView\UrlParameterPlace;
+use Yiisoft\Yii\DataView\UrlParameterType;
 
 final class PaginationUrlCreator
 {
@@ -18,21 +18,21 @@ final class PaginationUrlCreator
     public function __invoke(PageContext $context): string
     {
         $arguments = [];
-        if ($context->pageParameterPlace === UrlParameterPlace::PATH) {
+        if ($context->pageParameterType === UrlParameterType::PATH) {
             $arguments[$context->pageParameterName] = $context->page;
         }
-        if ($context->pageSizeParameterPlace == UrlParameterPlace::PATH) {
+        if ($context->pageSizeParameterType == UrlParameterType::PATH) {
             $arguments[$context->pageSizeParameterName] = $context->pageSize;
         }
 
         $queryParameters = $context->queryParameters;
-        if ($context->pageParameterPlace === UrlParameterPlace::QUERY
+        if ($context->pageParameterType === UrlParameterType::QUERY
         ) {
             $queryParameters[$context->pageParameterName] = $context->page === 1
                 ? null
                 : $context->page;
         }
-        if ($context->pageSizeParameterPlace == UrlParameterPlace::QUERY) {
+        if ($context->pageSizeParameterType == UrlParameterType::QUERY) {
             $queryParameters[$context->pageSizeParameterName] = $context->pageSize === $context->defaultPageSize
                 ? null
                 : $context->pageSize;
