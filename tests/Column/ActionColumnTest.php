@@ -645,6 +645,7 @@ final class ActionColumnTest extends TestCase
         ]);
 
         $html = GridView::widget()
+            ->layout('{items}')
             ->columns(new ActionColumn(urlConfig: new ActionColumnUrlConfig('id')))
             ->dataReader($dataReader)
             ->render();
@@ -698,6 +699,7 @@ final class ActionColumnTest extends TestCase
         );
 
         $html = GridView::widget()
+            ->layout('{items}')
             ->columns($actionColumn)
             ->dataReader($dataReader)
             ->render();
@@ -749,6 +751,7 @@ final class ActionColumnTest extends TestCase
         );
 
         $html = GridView::widget()
+            ->layout('{items}')
             ->columns($actionColumn)
             ->columnsConfigs([
                 ActionColumn::class => [
@@ -802,6 +805,7 @@ final class ActionColumnTest extends TestCase
         );
 
         $html = GridView::widget()
+            ->layout('{items}')
             ->columns($actionColumn)
             ->dataReader($dataReader)
             ->render();
@@ -968,6 +972,7 @@ final class ActionColumnTest extends TestCase
         );
 
         $html = GridView::widget()
+            ->layout('{items}')
             ->columns($actionColumn)
             ->columnsConfigs([
                 ActionColumn::class => $columnConfig,
