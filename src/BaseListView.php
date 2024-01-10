@@ -39,7 +39,7 @@ abstract class BaseListView extends Widget
     /**
      * @psalm-var UrlCreator|null
      */
-    private $paginationUrlCreator;
+    private $paginationUrlCreator = null;
     private string $pageParameterName = 'page';
     private string $pageSizeParameterName = 'pagesize';
 
@@ -533,6 +533,10 @@ abstract class BaseListView extends Widget
             }
         } else {
             $pagination = $this->pagination;
+        }
+
+        if ($this->paginationUrlCreator !== null) {
+            $pagination = $pagination->urlCreator($this->paginationUrlCreator);
         }
 
         $dataReader = $this->getDataReader();
