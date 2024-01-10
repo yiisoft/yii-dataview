@@ -22,7 +22,6 @@ use Yiisoft\Factory\NotFoundException;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\Div;
 use Yiisoft\Html\Tag\Td;
-use Yiisoft\Router\UrlGeneratorInterface;
 use Yiisoft\Translator\CategorySource;
 use Yiisoft\Translator\IdMessageReader;
 use Yiisoft\Translator\IntlMessageFormatter;
@@ -93,7 +92,6 @@ abstract class BaseListView extends Widget
 
     public function __construct(
         TranslatorInterface|null $translator = null,
-        private UrlGeneratorInterface|null $urlGenerator = null,
         protected readonly string $translationCategory = self::DEFAULT_TRANSLATION_CATEGORY,
     ) {
         $this->translator = $translator ?? $this->createDefaultTranslator();
@@ -251,15 +249,6 @@ abstract class BaseListView extends Widget
         }
 
         return $dataReader;
-    }
-
-    public function getUrlGenerator(): UrlGeneratorInterface
-    {
-        if ($this->urlGenerator === null) {
-            throw new Exception\UrlGeneratorNotSetException();
-        }
-
-        return $this->urlGenerator;
     }
 
     /**
