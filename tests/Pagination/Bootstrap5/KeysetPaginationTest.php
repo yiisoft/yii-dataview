@@ -5,10 +5,6 @@ declare(strict_types=1);
 namespace Yiisoft\Yii\DataView\Tests\Pagination\Bootstrap5;
 
 use PHPUnit\Framework\TestCase;
-use Yiisoft\Definitions\Exception\CircularReferenceException;
-use Yiisoft\Definitions\Exception\InvalidConfigException;
-use Yiisoft\Definitions\Exception\NotInstantiableException;
-use Yiisoft\Factory\NotFoundException;
 use Yiisoft\Yii\DataView\KeysetPagination;
 use Yiisoft\Yii\DataView\Tests\Support\Assert;
 use Yiisoft\Yii\DataView\Tests\Support\SimplePaginationUrlCreator;
