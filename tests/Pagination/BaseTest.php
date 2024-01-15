@@ -52,16 +52,16 @@ final class BaseTest extends TestCase
     {
         Assert::equalsWithoutLE(
             <<<HTML
-            <nav aria-label="Pagination">
-            <ul class="pagination">
-            <li class="page-item"><a class="page-link disabled" href="/route?page=1&amp;pagesize=1&amp;filter=test">Previous</a></li>
-            <li class="page-item"><a class="page-link active" href="/route?page=1&amp;pagesize=1&amp;filter=test" aria-current="page">1</a></li>
-            <li class="page-item"><a class="page-link" href="/route?page=2&amp;pagesize=1&amp;filter=test">2</a></li>
-            <li class="page-item"><a class="page-link" href="/route?page=3&amp;pagesize=1&amp;filter=test">3</a></li>
-            <li class="page-item"><a class="page-link" href="/route?page=4&amp;pagesize=1&amp;filter=test">4</a></li>
-            <li class="page-item"><a class="page-link" href="/route?page=5&amp;pagesize=1&amp;filter=test">5</a></li>
-            <li class="page-item"><a class="page-link" href="/route?page=2&amp;pagesize=1&amp;filter=test">Next Page</a></li>
-            </ul>
+            <nav>
+            <a href="/route?page=1&amp;pagesize=1&amp;filter=test">First</a>
+            <a href="/route?page=1&amp;pagesize=1&amp;filter=test">Previous</a>
+            <a href="/route?page=1&amp;pagesize=1&amp;filter=test">1</a>
+            <a href="/route?page=2&amp;pagesize=1&amp;filter=test">2</a>
+            <a href="/route?page=3&amp;pagesize=1&amp;filter=test">3</a>
+            <a href="/route?page=4&amp;pagesize=1&amp;filter=test">4</a>
+            <a href="/route?page=5&amp;pagesize=1&amp;filter=test">5</a>
+            <a href="/route?page=2&amp;pagesize=1&amp;filter=test">Next</a>
+            <a href="/route?page=5&amp;pagesize=1&amp;filter=test">Last</a>
             </nav>
             HTML,
             OffsetPagination::widget()

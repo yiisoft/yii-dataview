@@ -41,12 +41,18 @@ abstract class BaseListView extends Widget
      */
     private $paginationUrlCreator = null;
     private string $pageParameterName = 'page';
+    private string $previousPageParameterName = 'previous-page';
     private string $pageSizeParameterName = 'pagesize';
 
     /**
      * @psalm-var UrlParameterType::*
      */
     private int $pageParameterType = UrlParameterType::QUERY;
+
+    /**
+     * @psalm-var UrlParameterType::*
+     */
+    private int $previousPageParameterType = UrlParameterType::QUERY;
 
     /**
      * @psalm-var UrlParameterType::*
@@ -116,6 +122,13 @@ abstract class BaseListView extends Widget
     {
         $new = clone $this;
         $new->pageParameterName = $name;
+        return $new;
+    }
+
+    final public function previousPageParameterName(string $name): static
+    {
+        $new = clone $this;
+        $new->previousPageParameterName = $name;
         return $new;
     }
 
@@ -224,7 +237,11 @@ abstract class BaseListView extends Widget
                 && $dataReader instanceof SortableDataInterface
                 && $dataReader instanceof LimitableDataInterface
             ) {
-                $dataReader = new KeysetPaginator($dataReader);
+                if ($dataReader->getSort() !== null) {
+                    $dataReader = new KeysetPaginator($dataReader);
+                } else {
+                    return $dataReader;
+                }
             } else {
                 return $dataReader;
             }
@@ -245,6 +262,14 @@ abstract class BaseListView extends Widget
             );
             if ($page !== null) {
                 $dataReader = $dataReader->withNextPageToken($page);
+            } else {
+                $page = $this->urlParameterProvider?->get(
+                    $this->previousPageParameterName,
+                    $this->previousPageParameterType,
+                );
+                if ($page !== null) {
+                    $dataReader = $dataReader->withPreviousPageToken($page);
+                }
             }
         }
 
@@ -549,6 +574,7 @@ abstract class BaseListView extends Widget
 
         return $pagination
             ->pageParameterName($this->pageParameterName)
+            ->previousPageParameterName($this->previousPageParameterName)
             ->render();
     }
 

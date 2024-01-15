@@ -4,20 +4,15 @@ declare(strict_types=1);
 
 namespace Yiisoft\Yii\DataView;
 
+use Stringable;
 use Yiisoft\Data\Paginator\KeysetPaginator;
-use Yiisoft\Definitions\Exception\CircularReferenceException;
-use Yiisoft\Definitions\Exception\InvalidConfigException;
-use Yiisoft\Definitions\Exception\NotInstantiableException;
-use Yiisoft\Factory\NotFoundException;
-use Yiisoft\Html\Tag\Nav;
-use Yiisoft\Yii\Widgets\Menu;
-
-use function array_filter;
-use function array_key_exists;
 
 final class KeysetPagination extends BasePagination
 {
     private KeysetPaginator|null $paginator = null;
+
+    private string|Stringable $labelPrevious = 'Previous';
+    private string|Stringable $labelNext = 'Next';
 
     public function paginator(KeysetPaginator $paginator): self
     {
@@ -26,95 +21,25 @@ final class KeysetPagination extends BasePagination
         return $new;
     }
 
-    /**
-     * @throws InvalidConfigException
-     * @throws NotFoundException
-     * @throws NotInstantiableException
-     * @throws CircularReferenceException
-     */
-    public function render(): string
-    {
-        $attributes = $this->getAttributes();
-        $items = [];
-
-        $items[] = $this->renderPreviousPageNavLink();
-        $items[] = $this->renderNextPageNavLink();
-
-        if (!array_key_exists('aria-label', $attributes)) {
-            $attributes['aria-label'] = 'Pagination';
-        }
-
-        return
-            Nav::tag()
-                ->attributes($attributes)
-                ->content(
-                    "\n" .
-                    Menu::widget()
-                        ->class($this->getMenuClass())
-                        ->items(array_filter($items))
-                        ->itemsContainerClass($this->getMenuItemContainerClass())
-                        ->linkClass($this->getMenuItemLinkClass()) .
-                    "\n"
-                )
-                ->encode(false)
-                ->render();
-    }
-
-    private function renderPreviousPageNavLink(): array
-    {
-        $items = [];
-        $iconContainerAttributes = $this->getIconContainerAttributes();
-
-        if (!array_key_exists('aria-hidden', $iconContainerAttributes)) {
-            $iconContainerAttributes['aria-hidden'] = 'true';
-        }
-
-        if (
-            $this->getLabelPreviousPage() !== '' ||
-            $this->getIconPreviousPage() !== '' ||
-            $this->getIconClassPreviousPage() !== ''
-        ) {
-            $paginator = $this->getPaginator();
-            $token = (int) $paginator->getPreviousPageToken();
-
-            $disabled = $token === 0;
-
-            if ($token > 0) {
-                $paginator = $paginator->withPreviousPageToken((string) ($token - 1));
-            }
-
-            $items = [
-                'disabled' => $disabled,
-                'icon' => $this->getIconPreviousPage(),
-                'iconAttributes' => $this->getIconAttributes(),
-                'iconClass' => $this->getIconClassPreviousPage(),
-                'iconContainerAttributes' => $iconContainerAttributes,
-                'label' => $this->getLabelPreviousPage(),
-                'link' => $this->createUrl((int) $paginator->getPreviousPageToken()),
-            ];
-        }
-
-        return $items;
-    }
-
-    private function renderNextPageNavLink(): array
+    protected function getItems(): array
     {
         $paginator = $this->getPaginator();
-
-        $iconContainerAttributes = $this->getIconContainerAttributes();
-
-        if (!array_key_exists('aria-hidden', $iconContainerAttributes)) {
-            $iconContainerAttributes['aria-hidden'] = 'true';
-        }
+        $previousToken = $paginator->getPreviousPageToken();
+        $nextToken = $paginator->getNextPageToken();
 
         return [
-            'disabled' => $paginator->getNextPageToken() === null,
-            'icon' => $this->getIconNextPage(),
-            'iconAttributes' => $this->getIconAttributes(),
-            'iconClass' => $this->getIconClassNextPage(),
-            'iconContainerAttributes' => $iconContainerAttributes,
-            'label' => $this->getLabelNextPage(),
-            'link' => $this->createUrl((int) $paginator->getNextPageToken()),
+            new PaginationItem(
+                label: $this->labelPrevious,
+                url: $previousToken === null ? null : $this->createUrl($previousToken, true),
+                isCurrent: false,
+                isDisabled: $previousToken === null,
+            ),
+            new PaginationItem(
+                label: $this->labelNext,
+                url: $nextToken === null ? null : $this->createUrl($nextToken),
+                isCurrent: false,
+                isDisabled: $nextToken === null,
+            ),
         ];
     }
 

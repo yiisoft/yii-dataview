@@ -23,7 +23,14 @@ final class SimplePaginationUrlCreator
 
         $queryParameters = [];
         if ($context->pageParameterType === UrlParameterType::QUERY) {
-            $queryParameters[$context->pageParameterName] = $context->page;
+            $queryParameters[$context->pageParameterName] = $context->isPreviousPage
+                ? null
+                : $context->page;
+        }
+        if ($context->previousPageParameterType === UrlParameterType::QUERY) {
+            $queryParameters[$context->previousPageParameterName] = $context->isPreviousPage
+                ? $context->page
+                : null;
         }
         if ($context->pageSizeParameterType == UrlParameterType::QUERY) {
             $queryParameters[$context->pageSizeParameterName] = $context->pageSize;

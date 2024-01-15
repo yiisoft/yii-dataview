@@ -5,17 +5,9 @@ declare(strict_types=1);
 namespace Yiisoft\Yii\DataView;
 
 use InvalidArgumentException;
+use Stringable;
 use Yiisoft\Data\Paginator\OffsetPaginator;
-use Yiisoft\Definitions\Exception\CircularReferenceException;
-use Yiisoft\Definitions\Exception\InvalidConfigException;
-use Yiisoft\Definitions\Exception\NotInstantiableException;
-use Yiisoft\Factory\NotFoundException;
-use Yiisoft\Html\Tag\Nav;
-use Yiisoft\Yii\Widgets\Menu;
 
-use function array_filter;
-use function array_key_exists;
-use function array_merge;
 use function max;
 use function min;
 
@@ -23,138 +15,17 @@ final class OffsetPagination extends BasePagination
 {
     private OffsetPaginator|null $paginator = null;
 
-    private bool $disabledFirstPage = false;
-    private bool $disabledLastPage = false;
-    private bool $disabledPageNavLink = false;
-    private string $iconFirstPage = '';
-    private string $iconClassFirstPage = '';
-    private string $iconClassLastPage = '';
-    private string $iconLastPage = '';
-    private string $labelFirstPage = '';
-    private string $labelLastPage = '';
+    private string|Stringable|null $labelPrevious = 'Previous';
+    private string|Stringable|null $labelNext = 'Next';
+    private string|Stringable|null $labelFirst = 'First';
+    private string|Stringable|null $labelLast = 'Last';
+
     private int $maxNavLinkCount = 10;
 
     public function paginator(OffsetPaginator $paginator): self
     {
         $new = clone $this;
         $new->paginator = $paginator;
-        return $new;
-    }
-
-    /**
-     * Return a new instance with disabled first page.
-     */
-    public function disabledFirstPage(bool $value): self
-    {
-        $new = clone $this;
-        $new->disabledFirstPage = $value;
-
-        return $new;
-    }
-
-    /**
-     * Return a new instance with disabled last page.
-     */
-    public function disabledLastPage(bool $value): self
-    {
-        $new = clone $this;
-        $new->disabledLastPage = $value;
-
-        return $new;
-    }
-
-    /**
-     * Return a new instance with disabled page nav link.
-     *
-     * @param bool $value Disabled page nav link.
-     */
-    public function disabledPageNavLink(bool $value): self
-    {
-        $new = clone $this;
-        $new->disabledPageNavLink = $value;
-
-        return $new;
-    }
-
-    /**
-     * Returns a new instance with the icon class for icon attributes `<i>` for link first page.
-     *
-     * @param string $value The icon class.
-     */
-    public function iconClassFirstPage(string $value): self
-    {
-        $new = clone $this;
-        $new->iconClassFirstPage = $value;
-        $new->labelFirstPage = '';
-
-        return $new;
-    }
-
-    /**
-     * Returns a new instance with the icon class for icon attributes `<i>` for link last page.
-     *
-     * @param string $value The icon class.
-     */
-    public function iconClassLastPage(string $value): self
-    {
-        $new = clone $this;
-        $new->iconClassLastPage = $value;
-        $new->labelLastPage = '';
-
-        return $new;
-    }
-
-    /**
-     * Return a new instance with icon first page.
-     *
-     * @param string $value The icon first page.
-     */
-    public function iconFirstPage(string $value): self
-    {
-        $new = clone $this;
-        $new->iconFirstPage = $value;
-        $new->labelFirstPage = '';
-
-        return $new;
-    }
-
-    /**
-     * Return a new instance with icon last page.
-     *
-     * @param string $value The icon last page.
-     */
-    public function iconLastPage(string $value): self
-    {
-        $new = clone $this;
-        $new->iconLastPage = $value;
-        $new->labelLastPage = '';
-
-        return $new;
-    }
-
-    /**
-     * Return a new instance with label for first page.
-     *
-     * @param string $value The label for first page.
-     */
-    public function labelFirstPage(string $value = ''): self
-    {
-        $new = clone $this;
-        $new->labelFirstPage = $value;
-
-        return $new;
-    }
-
-    /**
-     * Return a new instance with label for last page.
-     *
-     * @param string $value The label for last page.
-     */
-    public function labelLastPage(string $value = ''): self
-    {
-        $new = clone $this;
-        $new->labelLastPage = $value;
-
         return $new;
     }
 
@@ -190,17 +61,8 @@ final class OffsetPagination extends BasePagination
         return [$beginPage, $endPage];
     }
 
-    /**
-     * @throws InvalidConfigException
-     * @throws NotFoundException
-     * @throws NotInstantiableException
-     * @throws CircularReferenceException
-     */
-    public function render(): string
+    protected function getItems(): array
     {
-        $attributes = $this->getAttributes();
-
-        /** @var OffsetPaginator */
         $paginator = $this->getPaginator();
         $currentPage = $paginator->getCurrentPage();
         $totalPages = $paginator->getTotalPages();
@@ -208,151 +70,50 @@ final class OffsetPagination extends BasePagination
 
         $items = [];
 
-        if ($this->getHideOnSinglePage() && $endPage < 2) {
-            return '';
+        if ($this->labelFirst !== null) {
+            $items[] = new PaginationItem(
+                label: $this->labelFirst,
+                url: $this->createUrl(1),
+                isCurrent: false,
+                isDisabled: $currentPage === 1,
+            );
         }
 
-        $items[] = $this->renderFirstsPageNavLink($currentPage);
-        $items[] = $this->renderPreviousPageNavLink($currentPage);
-        $items = array_merge($items, $this->renderPageNavLinks($currentPage, $beginPage, $endPage));
-        $items[] = $this->renderNextPageNavLink($currentPage, $endPage);
-        $items[] = $this->renderLastPageNavLink($currentPage, $endPage);
-
-        if (!array_key_exists('aria-label', $attributes)) {
-            $attributes['aria-label'] = 'Pagination';
+        if ($this->labelPrevious !== null) {
+            $items[] = new PaginationItem(
+                label: $this->labelPrevious,
+                url: $this->createUrl(max($currentPage - 1, 1)),
+                isCurrent: false,
+                isDisabled: $currentPage === 1,
+            );
         }
 
-        return
-            Nav::tag()
-                ->attributes($attributes)
-                ->content(
-                    "\n" .
-                    Menu::widget()
-                        ->class($this->getMenuClass())
-                        ->items(array_filter($items))
-                        ->itemsContainerClass($this->getMenuItemContainerClass())
-                        ->linkClass($this->getMenuItemLinkClass()) .
-                    "\n"
-                )
-                ->encode(false)
-                ->render();
-    }
-
-    private function renderFirstsPageNavLink(int $currentPage): array
-    {
-        $iconContainerAttributes = $this->getIconContainerAttributes();
-        $items = [];
-
-        if (!array_key_exists('aria-hidden', $iconContainerAttributes)) {
-            $iconContainerAttributes['aria-hidden'] = 'true';
-        }
-
-        if ($this->labelFirstPage !== '' || $this->iconFirstPage !== '' || $this->iconClassFirstPage !== '') {
-            $items = [
-                'disabled' => $currentPage === 1 || $this->disabledFirstPage,
-                'icon' => $this->iconFirstPage,
-                'iconAttributes' => $this->getIconAttributes(),
-                'iconClass' => $this->iconClassFirstPage,
-                'iconContainerAttributes' => $iconContainerAttributes,
-                'label' => $this->labelFirstPage,
-                'link' => $this->createUrl(1),
-            ];
-        }
-
-        return $items;
-    }
-
-    private function renderPreviousPageNavLink(int $currentPage): array
-    {
-        $iconContainerAttributes = $this->getIconContainerAttributes();
-        $items = [];
-
-        if (!array_key_exists('aria-hidden', $iconContainerAttributes)) {
-            $iconContainerAttributes['aria-hidden'] = 'true';
-        }
-
-        if (
-            $this->getLabelPreviousPage() !== '' ||
-            $this->getIconPreviousPage() !== '' ||
-            $this->getIconClassPreviousPage() !== ''
-        ) {
-            $items = [
-                'disabled' => $currentPage === 1 || $this->getDisabledPreviousPage(),
-                'icon' => $this->getIconPreviousPage(),
-                'iconAttributes' => $this->getIconAttributes(),
-                'iconClass' => $this->getIconClassPreviousPage(),
-                'iconContainerAttributes' => $iconContainerAttributes,
-                'label' => $this->getLabelPreviousPage(),
-                'link' => $this->createUrl(max($currentPage - 1, 1)),
-            ];
-        }
-
-        return $items;
-    }
-
-    private function renderPageNavLinks(int $currentPage, int $beginPage, int $endPage): array
-    {
-        $items = [];
-
+        $page = $beginPage;
         do {
-            $items[] = [
-                'active' => $beginPage === $currentPage,
-                'disabled' => $this->disabledPageNavLink && $beginPage === $currentPage,
-                'label' => (string) $beginPage,
-                'link' => $this->createUrl($beginPage),
-            ];
-        } while (++$beginPage <= $endPage);
+            $items[] = new PaginationItem(
+                label: (string)$page,
+                url: $this->createUrl($page),
+                isCurrent: $page === $currentPage,
+                isDisabled: false,
+            );
+        } while (++$page <= $endPage);
 
-        return $items;
-    }
-
-    private function renderNextPageNavLink(int $currentPage, int $pageCount): array
-    {
-        $iconContainerAttributes = $this->getIconContainerAttributes();
-        $items = [];
-
-        if (!array_key_exists('aria-hidden', $iconContainerAttributes)) {
-            $iconContainerAttributes['aria-hidden'] = 'true';
+        if ($this->labelNext !== null) {
+            $items[] = new PaginationItem(
+                label: $this->labelNext,
+                url: $this->createUrl(min($currentPage + 1, $totalPages)),
+                isCurrent: false,
+                isDisabled: $currentPage === $totalPages,
+            );
         }
 
-        if (
-            $this->getLabelNextPage() !== '' ||
-            $this->getIconNextPage() !== '' ||
-            $this->getIconClassNextPage() !== ''
-        ) {
-            $items = [
-                'disabled' => $currentPage === $pageCount || $this->getDisabledNextPage(),
-                'icon' => $this->getIconNextPage(),
-                'iconAttributes' => $this->getIconAttributes(),
-                'iconClass' => $this->getIconClassNextPage(),
-                'iconContainerAttributes' => $iconContainerAttributes,
-                'label' => $this->getLabelNextPage(),
-                'link' => $this->createUrl(min($currentPage + 1, $pageCount)),
-            ];
-        }
-
-        return $items;
-    }
-
-    private function renderLastPageNavLink(int $currentPage, int $pageCount): array
-    {
-        $iconContainerAttributes = $this->getIconContainerAttributes();
-        $items = [];
-
-        if (!array_key_exists('aria-hidden', $iconContainerAttributes)) {
-            $iconContainerAttributes['aria-hidden'] = 'true';
-        }
-
-        if ($this->labelLastPage !== '' || $this->iconLastPage !== '' || $this->iconClassLastPage !== '') {
-            $items = [
-                'disabled' => $currentPage === $pageCount || $this->disabledLastPage,
-                'icon' => $this->iconLastPage,
-                'iconAttributes' => $this->getIconAttributes(),
-                'iconClass' => $this->iconClassLastPage,
-                'iconContainerAttributes' => $iconContainerAttributes,
-                'label' => $this->labelLastPage,
-                'link' => $this->createUrl($pageCount),
-            ];
+        if ($this->labelLast !== null) {
+            $items[] = new PaginationItem(
+                label: $this->labelLast,
+                url: $this->createUrl($totalPages),
+                isCurrent: false,
+                isDisabled: $currentPage === $totalPages,
+            );
         }
 
         return $items;
