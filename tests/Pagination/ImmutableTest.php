@@ -20,6 +20,7 @@ final class ImmutableTest extends TestCase
             protected function getPaginator(): PaginatorInterface
             {
             }
+
             protected function getItems(): array
             {
                 return [];
