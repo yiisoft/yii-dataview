@@ -25,6 +25,11 @@ final class ImmutableTest extends TestCase
             {
                 return [];
             }
+
+            protected function isFirstPage(int|string $page, bool $isPrevious): bool
+            {
+                return false;
+            }
         };
         $this->assertNotSame($basePagination, $basePagination->pageParameterName(''));
         $this->assertNotSame($basePagination, $basePagination->pageSizeParameterName('next'));
