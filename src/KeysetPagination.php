@@ -49,4 +49,9 @@ final class KeysetPagination extends BasePagination
             ? throw new Exception\PaginatorNotSetException()
             : $this->paginator;
     }
+
+    protected function isFirstPage(int|string $page, bool $isPrevious): bool
+    {
+        return false;
+    }
 }

@@ -32,7 +32,7 @@ final class PaginationUrlCreator
                 : $context->page;
         }
         if ($context->previousPageParameterType === UrlParameterType::QUERY) {
-            $queryParameters[$context->previousPageParameterName] = $context->isPreviousPage
+            $queryParameters[$context->previousPageParameterName] = $context->isPreviousPage && !$context->isFirstPage
                 ? $context->page
                 : null;
         }

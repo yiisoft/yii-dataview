@@ -268,7 +268,7 @@ abstract class BasePagination extends Widget
                 $page,
                 $this->getPaginator()->getPageSize(),
                 $isPrevious,
-                $isPrevious ? false : $page === 1,
+                $this->isFirstPage($page, $isPrevious),
                 $this->pageParameterName,
                 $this->previousPageParameterName,
                 $this->pageSizeParameterName,
@@ -287,4 +287,6 @@ abstract class BasePagination extends Widget
     abstract protected function getItems(): array;
 
     abstract protected function getPaginator(): PaginatorInterface;
+
+    abstract protected function isFirstPage(int|string $page, bool $isPrevious): bool;
 }
