@@ -121,9 +121,7 @@ final class OffsetPagination extends BasePagination
 
     protected function getPaginator(): OffsetPaginator
     {
-        return $this->paginator === null
-            ? throw new Exception\PaginatorNotSetException()
-            : $this->paginator;
+        return $this->paginator ?? throw new Exception\PaginatorNotSetException();
     }
 
     protected function isFirstPage(int|string $page, bool $isPrevious): bool
