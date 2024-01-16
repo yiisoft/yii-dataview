@@ -10,6 +10,8 @@ use Yiisoft\Yii\DataView\OffsetPagination;
 return [
     'bootstrap5' => [
         GridView::class => [
+            'summaryTag()' => ['p'],
+            'summaryAttributes()' => [['class' => 'text-secondary']],
             'tableClass()' => ['table table-bordered'],
             'tbodyClass()' => ['table-group-divider'],
             'columnsConfigs()' => [

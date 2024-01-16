@@ -76,6 +76,13 @@ abstract class BaseListView extends Widget
     private ?string $containerTag = 'div';
     private array $containerAttributes = [];
 
+    /**
+     * @psalm-var non-empty-string|null
+     */
+    private ?string $summaryTag = 'div';
+    private array $summaryAttributes = [];
+    private ?string $summaryTemplate = 'Page <b>{currentPage}</b> of <b>{totalPages}</b>';
+
     protected ?string $emptyText = null;
     private array $emptyTextAttributes = [];
     private string $header = '';
@@ -84,8 +91,6 @@ abstract class BaseListView extends Widget
     private string|OffsetPagination|KeysetPagination|null $pagination = null;
     protected ?ReadableDataInterface $dataReader = null;
     protected array $sortLinkAttributes = [];
-    private ?string $summary = null;
-    private array $summaryAttributes = [];
     private string $toolbar = '';
 
     /**
@@ -367,40 +372,48 @@ abstract class BaseListView extends Widget
         return $new;
     }
 
-    /**
-     * Returns a new instance with the summary of the grid view, detail view, and list view.
-     *
-     * @param string $value the HTML content to be displayed as the summary of the list view.
-     *
-     * If you do not want to show the summary, you may set it with an empty string.
-     *
-     * The following tokens will be replaced with the corresponding values:
-     *
-     * - `{begin}`: the starting row number (1-based) currently being displayed.
-     * - `{end}`: the ending row number (1-based) currently being displayed.
-     * - `{count}`: the number of rows currently being displayed.
-     * - `{totalCount}`: the total number of rows available.
-     * - `{page}`: the page number (1-based) current being displayed.
-     * - `{pageCount}`: the number of pages available.
-     */
-    public function summary(?string $value): static
+    final public function summaryTag(?string $tag): static
     {
-        $new = clone $this;
-        $new->summary = $value;
+        if ($tag === '') {
+            throw new InvalidArgumentException('Tag name cannot be empty.');
+        }
 
+        $new = clone $this;
+        $new->summaryTag = $tag;
         return $new;
     }
 
     /**
-     * Returns a new instance with the HTML attributes for summary of grid view, detail view, and list view.
+     * Returns a new instance with the summary template.
+     *
+     * @param string|null $template The HTML content to be displayed as the summary. If you do not want to show
+     * the summary, you may set it with an empty string or null.
+     *
+     * The following tokens will be replaced with the corresponding values:
+     *
+     * - `{begin}` — the starting row number (1-based) currently being displayed.
+     * - `{end}` — the ending row number (1-based) currently being displayed.
+     * - `{count}` — the number of rows currently being displayed.
+     * - `{totalCount}` — the total number of rows available.
+     * - `{currentPage}` — the page number (1-based) current being displayed.
+     * - `{totalPages}` — the number of pages available.
+     */
+    final public function summaryTemplate(?string $template): static
+    {
+        $new = clone $this;
+        $new->summaryTemplate = $template;
+        return $new;
+    }
+
+    /**
+     * Returns a new instance with the HTML attributes for summary wrapper tag.
      *
      * @param array $values Attribute values indexed by attribute names.
      */
-    public function summaryAttributes(array $values): static
+    final public function summaryAttributes(array $values): static
     {
         $new = clone $this;
         $new->summaryAttributes = $values;
-
         return $new;
     }
 
@@ -520,7 +533,9 @@ abstract class BaseListView extends Widget
 
         return $this->containerTag === null
             ? $content
-            : Html::div("\n" . $content . "\n", $this->containerAttributes)->encode(false)->render();
+            : Html::tag($this->containerTag, "\n" . $content . "\n", $this->containerAttributes)
+                ->encode(false)
+                ->render();
     }
 
     /**
@@ -580,28 +595,52 @@ abstract class BaseListView extends Widget
 
     private function renderSummary(): string
     {
+        if (empty($this->summaryTemplate)) {
+            return '';
+        }
+
         $dataReader = $this->getPreparedDataReader();
         if (!$dataReader instanceof OffsetPaginator) {
             return '';
         }
 
-        $data = iterator_to_array($dataReader->read());
-        $pageCount = count($data);
-
-        if ($pageCount <= 0) {
+        // The total number of rows available
+        $totalCount = $dataReader->getTotalItems();
+        if ($totalCount === 0) {
             return '';
         }
 
-        $summary = $this->translator->translate(
-            $this->summary ?? 'Page <b>{currentPage}</b> of <b>{totalPages}</b>',
+        // The page number (1-based) current being displayed
+        $currentPage = $dataReader->getCurrentPage();
+
+        // The starting row number (1-based) currently being displayed
+        $begin = ($currentPage - 1) * $dataReader->getPageSize() + 1;
+
+        // The number of rows currently being displayed
+        $count = $dataReader->getCurrentPageSize();
+
+        // The ending row number (1-based) currently being displayed
+        $end = $begin + $count - 1;
+
+        // The number of pages available
+        $totalPages = $dataReader->getTotalPages();
+
+        $content = $this->translator->translate(
+            $this->summaryTemplate,
             [
-                'currentPage' => $dataReader->getCurrentPage(),
-                'totalPages' => $dataReader->getTotalPages(),
+                'begin' => $begin,
+                'end' => $end,
+                'count' => $count,
+                'totalCount' => $totalCount,
+                'currentPage' => $currentPage,
+                'totalPages' => $totalPages,
             ],
             $this->translationCategory,
         );
 
-        return Div::tag()->attributes($this->summaryAttributes)->content($summary)->encode(false)->render();
+        return $this->summaryTag === null
+            ? $content
+            : Html::tag($this->summaryTag, $content, $this->summaryAttributes)->encode(false)->render();
     }
 
     private function renderHeader(): string
