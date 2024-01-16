@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 use Yiisoft\Yii\DataView\Column\ActionColumn;
 use Yiisoft\Yii\DataView\GridView;
+use Yiisoft\Yii\DataView\KeysetPagination;
+use Yiisoft\Yii\DataView\OffsetPagination;
 
 return [
     'bootstrap5' => [
@@ -17,6 +19,24 @@ return [
                     ],
                 ],
             ],
+        ],
+        OffsetPagination::class => [
+            'listTag()' => ['ul'],
+            'listAttributes()' => [['class' => 'pagination']],
+            'itemTag()' => ['li'],
+            'itemAttributes()' => [['class' => 'page-item']],
+            'linkAttributes()' => [['class' => 'page-link']],
+            'currentItemClass()' => ['active'],
+            'disabledItemClass()' => ['disabled'],
+        ],
+        KeysetPagination::class => [
+            'listTag()' => ['ul'],
+            'listAttributes()' => [['class' => 'pagination']],
+            'itemTag()' => ['li'],
+            'itemAttributes()' => [['class' => 'page-item']],
+            'linkAttributes()' => [['class' => 'page-link']],
+            'currentItemClass()' => ['active'],
+            'disabledItemClass()' => ['disabled'],
         ],
     ],
 ];

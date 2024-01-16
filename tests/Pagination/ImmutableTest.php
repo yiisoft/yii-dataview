@@ -5,14 +5,9 @@ declare(strict_types=1);
 namespace Yiisoft\Yii\DataView\Tests\Pagination;
 
 use PHPUnit\Framework\TestCase;
-use Yiisoft\Definitions\Exception\CircularReferenceException;
-use Yiisoft\Definitions\Exception\InvalidConfigException;
-use Yiisoft\Definitions\Exception\NotInstantiableException;
-use Yiisoft\Factory\NotFoundException;
-use Yiisoft\Router\CurrentRoute;
+use Yiisoft\Data\Paginator\PaginatorInterface;
 use Yiisoft\Yii\DataView\BasePagination;
 use Yiisoft\Yii\DataView\OffsetPagination;
-use Yiisoft\Yii\DataView\Tests\Support\Mock;
 use Yiisoft\Yii\DataView\Tests\Support\TestTrait;
 
 final class ImmutableTest extends TestCase
@@ -21,53 +16,29 @@ final class ImmutableTest extends TestCase
 
     public function testBasePagination(): void
     {
-        $basePagination = new class (new CurrentRoute(), Mock::urlGenerator()) extends BasePagination {
-            public function render(): string
+        $basePagination = new class () extends BasePagination {
+            protected function getPaginator(): PaginatorInterface
             {
-                return '';
+            }
+
+            protected function getItems(): array
+            {
+                return [];
+            }
+
+            protected function isFirstPage(int|string $page, bool $isPrevious): bool
+            {
+                return false;
             }
         };
-        $this->assertNotSame($basePagination, $basePagination->attributes([]));
-        $this->assertNotSame($basePagination, $basePagination->disabledNextPage(false));
-        $this->assertNotSame($basePagination, $basePagination->disabledPreviousPage(false));
-        $this->assertNotSame($basePagination, $basePagination->hideOnSinglePage(false));
-        $this->assertNotSame($basePagination, $basePagination->iconAttributes([]));
-        $this->assertNotSame($basePagination, $basePagination->iconClassNextPage(''));
-        $this->assertNotSame($basePagination, $basePagination->iconClassPreviousPage(''));
-        $this->assertNotSame($basePagination, $basePagination->iconContainerAttributes([]));
-        $this->assertNotSame($basePagination, $basePagination->iconNextPage(''));
-        $this->assertNotSame($basePagination, $basePagination->iconPreviousPage(''));
-        $this->assertNotSame($basePagination, $basePagination->labelNextPage());
-        $this->assertNotSame($basePagination, $basePagination->labelPreviousPage());
-        $this->assertNotSame($basePagination, $basePagination->menuClass(''));
-        $this->assertNotSame($basePagination, $basePagination->menuItemContainerClass(''));
         $this->assertNotSame($basePagination, $basePagination->pageParameterName(''));
         $this->assertNotSame($basePagination, $basePagination->pageSizeParameterName('next'));
-        $this->assertNotSame(
-            $basePagination,
-            $basePagination->paginator($this->createOffsetPaginator([], 10))
-        );
         $this->assertNotSame($basePagination, $basePagination->queryParameters([]));
     }
 
-    /**
-     * @throws InvalidConfigException
-     * @throws NotFoundException
-     * @throws NotInstantiableException
-     * @throws CircularReferenceException
-     */
     public function testOffsetPagination(): void
     {
         $offsetPagination = OffsetPagination::widget();
-        $this->assertNotSame($offsetPagination, $offsetPagination->disabledFirstPage(false));
-        $this->assertNotSame($offsetPagination, $offsetPagination->disabledLastPage(false));
-        $this->assertNotSame($offsetPagination, $offsetPagination->disabledPageNavLink(false));
-        $this->assertNotSame($offsetPagination, $offsetPagination->iconClassFirstPage(''));
-        $this->assertNotSame($offsetPagination, $offsetPagination->iconClassLastPage(''));
-        $this->assertNotSame($offsetPagination, $offsetPagination->iconFirstPage(''));
-        $this->assertNotSame($offsetPagination, $offsetPagination->iconLastPage(''));
-        $this->assertNotSame($offsetPagination, $offsetPagination->labelFirstPage());
-        $this->assertNotSame($offsetPagination, $offsetPagination->labelLastPage());
         $this->assertNotSame($offsetPagination, $offsetPagination->maxNavLinkCount(10));
     }
 }

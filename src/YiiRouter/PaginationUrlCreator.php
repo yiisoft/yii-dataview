@@ -26,11 +26,15 @@ final class PaginationUrlCreator
         }
 
         $queryParameters = $context->queryParameters;
-        if ($context->pageParameterType === UrlParameterType::QUERY
-        ) {
-            $queryParameters[$context->pageParameterName] = $context->page === 1
+        if ($context->pageParameterType === UrlParameterType::QUERY) {
+            $queryParameters[$context->pageParameterName] = $context->isFirstPage || $context->isPreviousPage
                 ? null
                 : $context->page;
+        }
+        if ($context->previousPageParameterType === UrlParameterType::QUERY) {
+            $queryParameters[$context->previousPageParameterName] = $context->isPreviousPage && !$context->isFirstPage
+                ? $context->page
+                : null;
         }
         if ($context->pageSizeParameterType == UrlParameterType::QUERY) {
             $queryParameters[$context->pageSizeParameterName] = $context->pageSize === $context->defaultPageSize

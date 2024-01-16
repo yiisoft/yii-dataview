@@ -10,12 +10,13 @@ use Yiisoft\Definitions\Exception\InvalidConfigException;
 use Yiisoft\Definitions\Exception\NotInstantiableException;
 use Yiisoft\Factory\NotFoundException;
 use Yiisoft\Yii\DataView\Column\DataColumn;
+use Yiisoft\Yii\DataView\Exception\PaginatorNotSetException;
 use Yiisoft\Yii\DataView\GridView;
 use Yiisoft\Yii\DataView\KeysetPagination;
 use Yiisoft\Yii\DataView\Tests\Support\Assert;
 use Yiisoft\Yii\DataView\Tests\Support\TestTrait;
 
-final class KeysetPaginationBaseTest extends TestCase
+final class KeysetPaginationTest extends TestCase
 {
     use TestTrait;
 
@@ -110,11 +111,9 @@ final class KeysetPaginationBaseTest extends TestCase
             </tr>
             </tbody>
             </table>
-            <nav aria-label="Pagination">
-            <ul class="pagination">
-            <li class="page-item"><a class="page-link disabled" href="#0">Previous</a></li>
-            <li class="page-item"><a class="page-link" href="#5">Next Page</a></li>
-            </ul>
+            <nav>
+            <a>Previous</a>
+            <a href="#5">Next</a>
             </nav>
             </div>
             HTML,
@@ -172,11 +171,9 @@ final class KeysetPaginationBaseTest extends TestCase
             </tr>
             </tbody>
             </table>
-            <nav aria-label="Pagination">
-            <ul class="pagination">
-            <li class="page-item"><a class="page-link" href="#0">Previous</a></li>
-            <li class="page-item"><a class="page-link" href="#10">Next Page</a></li>
-            </ul>
+            <nav>
+            <a href="#6">Previous</a>
+            <a href="#10">Next</a>
             </nav>
             </div>
             HTML,
@@ -219,11 +216,9 @@ final class KeysetPaginationBaseTest extends TestCase
             </tr>
             </tbody>
             </table>
-            <nav aria-label="Pagination">
-            <ul class="pagination">
-            <li class="page-item"><a class="page-link" href="#5">Previous</a></li>
-            <li class="page-item"><a class="page-link disabled" href="#0">Next Page</a></li>
-            </ul>
+            <nav>
+            <a href="#11">Previous</a>
+            <a>Next</a>
             </nav>
             </div>
             HTML,
@@ -281,11 +276,9 @@ final class KeysetPaginationBaseTest extends TestCase
             </tr>
             </tbody>
             </table>
-            <nav aria-label="Pagination">
-            <ul class="pagination">
-            <li class="page-item"><a class="page-link" href="#0">Previous</a></li>
-            <li class="page-item"><a class="page-link" href="#10">Next Page</a></li>
-            </ul>
+            <nav>
+            <a href="#6">Previous</a>
+            <a href="#10">Next</a>
             </nav>
             </div>
             HTML,
@@ -343,11 +336,9 @@ final class KeysetPaginationBaseTest extends TestCase
             </tr>
             </tbody>
             </table>
-            <nav aria-label="Pagination">
-            <ul class="pagination">
-            <li class="page-item"><a class="page-link disabled" href="#0">Previous</a></li>
-            <li class="page-item"><a class="page-link" href="#5">Next Page</a></li>
-            </ul>
+            <nav>
+            <a>Previous</a>
+            <a href="#5">Next</a>
             </nav>
             </div>
             HTML,
@@ -363,5 +354,14 @@ final class KeysetPaginationBaseTest extends TestCase
                 ->layout('{items}' . PHP_EOL . '{pager}')
                 ->render(),
         );
+    }
+
+    public function testNotSetPaginator(): void
+    {
+        $pagination = KeysetPagination::widget();
+
+        $this->expectException(PaginatorNotSetException::class);
+        $this->expectExceptionMessage('Failed to create widget because "paginator" is not set.');
+        Assert::invokeMethod($pagination, 'getPaginator');
     }
 }

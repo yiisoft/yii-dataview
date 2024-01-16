@@ -41,12 +41,18 @@ abstract class BaseListView extends Widget
      */
     private $paginationUrlCreator = null;
     private string $pageParameterName = 'page';
+    private string $previousPageParameterName = 'previous-page';
     private string $pageSizeParameterName = 'pagesize';
 
     /**
      * @psalm-var UrlParameterType::*
      */
     private int $pageParameterType = UrlParameterType::QUERY;
+
+    /**
+     * @psalm-var UrlParameterType::*
+     */
+    private int $previousPageParameterType = UrlParameterType::QUERY;
 
     /**
      * @psalm-var UrlParameterType::*
@@ -75,7 +81,7 @@ abstract class BaseListView extends Widget
     private string $header = '';
     private array $headerAttributes = [];
     private string $layout = "{header}\n{toolbar}\n{items}\n{summary}\n{pager}";
-    private string|BasePagination|null $pagination = null;
+    private string|OffsetPagination|KeysetPagination|null $pagination = null;
     protected ?ReadableDataInterface $dataReader = null;
     protected array $sortLinkAttributes = [];
     private ?string $summary = null;
@@ -116,6 +122,13 @@ abstract class BaseListView extends Widget
     {
         $new = clone $this;
         $new->pageParameterName = $name;
+        return $new;
+    }
+
+    final public function previousPageParameterName(string $name): static
+    {
+        $new = clone $this;
+        $new->previousPageParameterName = $name;
         return $new;
     }
 
@@ -224,7 +237,11 @@ abstract class BaseListView extends Widget
                 && $dataReader instanceof SortableDataInterface
                 && $dataReader instanceof LimitableDataInterface
             ) {
-                $dataReader = new KeysetPaginator($dataReader);
+                if ($dataReader->getSort() !== null) {
+                    $dataReader = new KeysetPaginator($dataReader);
+                } else {
+                    return $dataReader;
+                }
             } else {
                 return $dataReader;
             }
@@ -245,6 +262,14 @@ abstract class BaseListView extends Widget
             );
             if ($page !== null) {
                 $dataReader = $dataReader->withNextPageToken($page);
+            } else {
+                $page = $this->urlParameterProvider?->get(
+                    $this->previousPageParameterName,
+                    $this->previousPageParameterType,
+                );
+                if ($page !== null) {
+                    $dataReader = $dataReader->withPreviousPageToken($page);
+                }
             }
         }
 
@@ -310,12 +335,7 @@ abstract class BaseListView extends Widget
         return $new;
     }
 
-    /**
-     * Returns a new instance with the pagination of the grid view, detail view, or list view.
-     *
-     * @param BasePagination|string|null $pagination The pagination of the grid view, detail view, or list view.
-     */
-    public function pagination(string|BasePagination|null $pagination): static
+    public function pagination(string|KeysetPagination|OffsetPagination|null $pagination): static
     {
         $new = clone $this;
         $new->pagination = $pagination;
@@ -535,6 +555,14 @@ abstract class BaseListView extends Widget
             $pagination = $this->pagination;
         }
 
+        if ($pagination instanceof OffsetPagination && $preparedDataReader instanceof OffsetPaginator) {
+            $pagination = $pagination->paginator($preparedDataReader);
+        } elseif ($pagination instanceof KeysetPagination && $preparedDataReader instanceof KeysetPaginator) {
+            $pagination = $pagination->paginator($preparedDataReader);
+        } else {
+            return '';
+        }
+
         if ($this->paginationUrlCreator !== null) {
             $pagination = $pagination->urlCreator($this->paginationUrlCreator);
         }
@@ -545,8 +573,8 @@ abstract class BaseListView extends Widget
         }
 
         return $pagination
-            ->paginator($preparedDataReader)
             ->pageParameterName($this->pageParameterName)
+            ->previousPageParameterName($this->previousPageParameterName)
             ->render();
     }
 
