@@ -15,10 +15,6 @@ use Yiisoft\Data\Reader\LimitableDataInterface;
 use Yiisoft\Data\Reader\OffsetableDataInterface;
 use Yiisoft\Data\Reader\ReadableDataInterface;
 use Yiisoft\Data\Reader\SortableDataInterface;
-use Yiisoft\Definitions\Exception\CircularReferenceException;
-use Yiisoft\Definitions\Exception\InvalidConfigException;
-use Yiisoft\Definitions\Exception\NotInstantiableException;
-use Yiisoft\Factory\NotFoundException;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\Div;
 use Yiisoft\Html\Tag\Td;
@@ -470,46 +466,6 @@ abstract class BaseListView extends Widget
         );
 
         return Td::tag()->attributes($emptyTextAttributes)->content($emptyText);
-    }
-
-    /**
-     * @throws InvalidConfigException
-     * @throws NotFoundException
-     * @throws NotInstantiableException
-     * @throws CircularReferenceException
-     */
-    protected function renderLinkSorter(string $attribute, string $label): string
-    {
-        $dataReader = $this->getDataReader();
-        if (!$dataReader instanceof PaginatorInterface) {
-            return '';
-        }
-
-        $sort = $dataReader->getSort();
-        if ($sort === null) {
-            return '';
-        }
-
-        if ($dataReader instanceof OffsetPaginator) {
-            $linkSorter = LinkSorter::widget()->currentPage($dataReader->getCurrentPage());
-        } elseif ($dataReader instanceof KeysetPaginator) {
-            $linkSorter = LinkSorter::widget();
-        } else {
-            return '';
-        }
-
-        return $linkSorter
-            ->attribute($attribute)
-            ->attributes($sort->getCriteria())
-            ->directions($sort->getOrder())
-            ->iconAscClass('bi bi-sort-alpha-up')
-            ->iconDescClass('bi bi-sort-alpha-down')
-            ->label($label)
-            ->linkAttributes($this->sortLinkAttributes)
-            ->pageSize($dataReader->getPageSize())
-            ->urlArguments($this->urlArguments)
-            ->urlQueryParameters($this->urlQueryParameters)
-            ->render();
     }
 
     public function render(): string

@@ -439,12 +439,10 @@ final class GridView extends BaseListView
             $tags = [];
             foreach ($columns as $i => $column) {
                 $cell = $renderers[$i]->renderHeader($column, new Cell($this->headerCellAttributes), $globalContext);
-                /** @var string|Stringable $content */
-                $content = $cell?->getContent();
                 $tags[] = $cell === null
                     ? Html::th('&nbsp;')->encode(false)
                     : Html::th(attributes: $cell->getAttributes())
-                        ->content($content)
+                        ->content($cell->getContent())
                         ->encode($cell->isEncode())
                         ->doubleEncode($cell->isDoubleEncode());
             }
