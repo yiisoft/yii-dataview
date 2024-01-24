@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Yiisoft\Yii\DataView\Column\Base;
 
 use Stringable;
+use Yiisoft\Html\Html;
 use Yiisoft\Html\NoEncodeStringableInterface;
 
 final class Cell
@@ -92,6 +93,13 @@ final class Cell
     {
         $new = clone $this;
         $new->attributes[$name] = $value;
+        return $new;
+    }
+
+    public function addClass(?string $class): self
+    {
+        $new = clone $this;
+        Html::addCssClass($new->attributes, $class);
         return $new;
     }
 
