@@ -17,8 +17,8 @@ use Yiisoft\Yii\DataView\Exception\WebViewNotSetException;
  */
 final class ListView extends BaseListView
 {
-    private Closure $afterItem;
-    private Closure $beforeItem;
+    private ?Closure $afterItem = null;
+    private ?Closure $beforeItem = null;
     /** @var callable|string|null */
     private $itemView = null;
     private array $itemViewAttributes = [];

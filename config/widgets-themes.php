@@ -14,6 +14,9 @@ return [
             'summaryAttributes()' => [['class' => 'text-secondary']],
             'tableClass()' => ['table table-bordered'],
             'tbodyClass()' => ['table-group-divider'],
+            'sortableHeaderPrepend()' => ['<div class="float-end text-secondary text-opacity-50">⭥</div>'],
+            'sortableHeaderAscPrepend()' => ['<div class="float-end fw-bold">⭡</div>'],
+            'sortableHeaderDescPrepend()' => ['<div class="float-end fw-bold">⭣</div>'],
             'columnsConfigs()' => [
                 [
                     ActionColumn::class => [

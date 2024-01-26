@@ -18,6 +18,7 @@ use Yiisoft\Yii\DataView\Tests\Support\Assert;
 use Yiisoft\Yii\DataView\Tests\Support\Mock;
 use Yiisoft\Yii\DataView\Tests\Support\SimplePaginationUrlCreator;
 use Yiisoft\Yii\DataView\Tests\Support\TestTrait;
+use Yiisoft\Yii\DataView\UrlConfig;
 
 final class BaseTest extends TestCase
 {
@@ -53,21 +54,21 @@ final class BaseTest extends TestCase
         Assert::equalsWithoutLE(
             <<<HTML
             <nav>
-            <a href="/route?page=1&amp;pagesize=1&amp;filter=test">First</a>
-            <a href="/route?page=1&amp;pagesize=1&amp;filter=test">Previous</a>
-            <a href="/route?page=1&amp;pagesize=1&amp;filter=test">1</a>
-            <a href="/route?page=2&amp;pagesize=1&amp;filter=test">2</a>
-            <a href="/route?page=3&amp;pagesize=1&amp;filter=test">3</a>
-            <a href="/route?page=4&amp;pagesize=1&amp;filter=test">4</a>
-            <a href="/route?page=5&amp;pagesize=1&amp;filter=test">5</a>
-            <a href="/route?page=2&amp;pagesize=1&amp;filter=test">Next</a>
-            <a href="/route?page=5&amp;pagesize=1&amp;filter=test">Last</a>
+            <a href="/route?filter=test&amp;pagesize=1">First</a>
+            <a href="/route?filter=test&amp;pagesize=1">Previous</a>
+            <a href="/route?filter=test&amp;pagesize=1">1</a>
+            <a href="/route?filter=test&amp;page=2&amp;pagesize=1">2</a>
+            <a href="/route?filter=test&amp;page=3&amp;pagesize=1">3</a>
+            <a href="/route?filter=test&amp;page=4&amp;pagesize=1">4</a>
+            <a href="/route?filter=test&amp;page=5&amp;pagesize=1">5</a>
+            <a href="/route?filter=test&amp;page=2&amp;pagesize=1">Next</a>
+            <a href="/route?filter=test&amp;page=5&amp;pagesize=1">Last</a>
             </nav>
             HTML,
             OffsetPagination::widget()
                 ->paginator($this->createOffsetPaginator($this->data, 1))
                 ->urlCreator(new SimplePaginationUrlCreator())
-                ->queryParameters(['filter' => 'test'])
+                ->urlConfig(new UrlConfig(queryParameters: ['filter' => 'test']))
                 ->render(),
         );
     }

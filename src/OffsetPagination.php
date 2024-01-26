@@ -6,6 +6,7 @@ namespace Yiisoft\Yii\DataView;
 
 use InvalidArgumentException;
 use Stringable;
+use Yiisoft\Data\Paginator\PageToken;
 use Yiisoft\Data\Paginator\OffsetPaginator;
 
 use function max;
@@ -73,7 +74,7 @@ final class OffsetPagination extends BasePagination
         if ($this->labelFirst !== null) {
             $items[] = new PaginationItem(
                 label: $this->labelFirst,
-                url: $this->createUrl(1),
+                url: $this->createUrl(PageToken::next('1')),
                 isCurrent: false,
                 isDisabled: $currentPage === 1,
             );
@@ -82,7 +83,7 @@ final class OffsetPagination extends BasePagination
         if ($this->labelPrevious !== null) {
             $items[] = new PaginationItem(
                 label: $this->labelPrevious,
-                url: $this->createUrl(max($currentPage - 1, 1)),
+                url: $this->createUrl(PageToken::next((string) max($currentPage - 1, 1))),
                 isCurrent: false,
                 isDisabled: $currentPage === 1,
             );
@@ -91,8 +92,8 @@ final class OffsetPagination extends BasePagination
         $page = $beginPage;
         do {
             $items[] = new PaginationItem(
-                label: (string)$page,
-                url: $this->createUrl($page),
+                label: (string) $page,
+                url: $this->createUrl(PageToken::next((string) $page)),
                 isCurrent: $page === $currentPage,
                 isDisabled: false,
             );
@@ -101,7 +102,7 @@ final class OffsetPagination extends BasePagination
         if ($this->labelNext !== null) {
             $items[] = new PaginationItem(
                 label: $this->labelNext,
-                url: $this->createUrl(min($currentPage + 1, $totalPages)),
+                url: $this->createUrl(PageToken::next((string) min($currentPage + 1, $totalPages))),
                 isCurrent: false,
                 isDisabled: $currentPage === $totalPages,
             );
@@ -110,7 +111,7 @@ final class OffsetPagination extends BasePagination
         if ($this->labelLast !== null) {
             $items[] = new PaginationItem(
                 label: $this->labelLast,
-                url: $this->createUrl($totalPages),
+                url: $this->createUrl(PageToken::next((string) $totalPages)),
                 isCurrent: false,
                 isDisabled: $currentPage === $totalPages,
             );
@@ -124,8 +125,8 @@ final class OffsetPagination extends BasePagination
         return $this->paginator ?? throw new Exception\PaginatorNotSetException();
     }
 
-    protected function isFirstPage(int|string $page, bool $isPrevious): bool
+    protected function isFirstPage(PageToken $token): bool
     {
-        return $page === 1;
+        return $token->value === '1';
     }
 }

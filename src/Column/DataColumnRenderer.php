@@ -6,17 +6,14 @@ namespace Yiisoft\Yii\DataView\Column;
 
 use InvalidArgumentException;
 use Yiisoft\Arrays\ArrayHelper;
-use Yiisoft\Data\Paginator\KeysetPaginator;
-use Yiisoft\Data\Paginator\OffsetPaginator;
-use Yiisoft\Data\Paginator\PaginatorInterface;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\Input;
 use Yiisoft\Html\Tag\Select;
 use Yiisoft\Yii\DataView\Column\Base\Cell;
 use Yiisoft\Yii\DataView\Column\Base\DataContext;
 use Yiisoft\Yii\DataView\Column\Base\GlobalContext;
+use Yiisoft\Yii\DataView\Column\Base\HeaderContext;
 use Yiisoft\Yii\DataView\Helper\Attribute;
-use Yiisoft\Yii\DataView\LinkSorter;
 
 final class DataColumnRenderer implements ColumnRendererInterface
 {
@@ -42,22 +39,31 @@ final class DataColumnRenderer implements ColumnRendererInterface
         return $cell->addAttributes($column->columnAttributes);
     }
 
-    public function renderHeader(ColumnInterface $column, Cell $cell, GlobalContext $context): Cell
+    public function renderHeader(ColumnInterface $column, Cell $cell, HeaderContext $context): Cell
     {
         $this->checkColumn($column);
 
-        $label = $column->header ?? ($column->property === null ? '' : ucfirst($column->property));
+        $cell = $cell
+            ->addAttributes($column->headerAttributes)
+            ->encode(false);
 
-        if ($column->property !== null && $column->withSorting) {
-            $linkSorter = $this->renderLinkSorter($context, $column->property, $label);
-            if (!empty($linkSorter)) {
-                return $cell->content($linkSorter)->encode(false);
-            }
+        if ($column->header === null) {
+            $label = $column->property === null ? '' : Html::encode(ucfirst($column->property));
+        } else {
+            $label = $column->encodeHeader ? Html::encode($column->header) : $column->header;
+        }
+        $cell = $cell->content($label);
+
+        if (!$column->withSorting || $column->property === null) {
+            return $cell;
         }
 
-        return $cell
-            ->addAttributes($column->headerAttributes)
-            ->content($label);
+        [$cell, $link, $prepend, $append] = $context->prepareSortable($cell, $column->property);
+        if ($link !== null) {
+            $link = $link->content($label)->encode(false);
+        }
+
+        return $cell->content($prepend . ($link ?? $label) . $append);
     }
 
     public function renderFilter(ColumnInterface $column, Cell $cell, GlobalContext $context): ?Cell
@@ -114,40 +120,6 @@ final class DataColumnRenderer implements ColumnRendererInterface
         }
 
         return $cell;
-    }
-
-    private function renderLinkSorter(GlobalContext $context, string $property, string $label): string
-    {
-        $dataReader = $context->dataReader;
-        if (!$dataReader instanceof PaginatorInterface) {
-            return '';
-        }
-
-        $sort = $dataReader->getSort();
-        if ($sort === null) {
-            return '';
-        }
-
-        if ($dataReader instanceof OffsetPaginator) {
-            $linkSorter = LinkSorter::widget()->currentPage($dataReader->getCurrentPage());
-        } elseif ($dataReader instanceof KeysetPaginator) {
-            $linkSorter = LinkSorter::widget();
-        } else {
-            return '';
-        }
-
-        return $linkSorter
-            ->attribute($property)
-            ->attributes($sort->getCriteria())
-            ->directions($sort->getOrder())
-            ->iconAscClass('bi bi-sort-alpha-up')
-            ->iconDescClass('bi bi-sort-alpha-down')
-            ->label($label)
-            ->linkAttributes($context->sortLinkAttributes)
-            ->pageSize($dataReader->getPageSize())
-            ->urlArguments($context->urlArguments)
-            ->urlQueryParameters($context->urlQueryParameters)
-            ->render();
     }
 
     private function renderFilterInput(DataColumn $column, GlobalContext $context): string

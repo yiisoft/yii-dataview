@@ -8,6 +8,7 @@ use InvalidArgumentException;
 use Stringable;
 use Yiisoft\Data\Paginator\KeysetPaginator;
 use Yiisoft\Data\Paginator\OffsetPaginator;
+use Yiisoft\Data\Paginator\PageToken;
 use Yiisoft\Data\Paginator\PaginatorInterface;
 use Yiisoft\Data\Reader\CountableDataInterface;
 use Yiisoft\Data\Reader\FilterableDataInterface;
@@ -28,32 +29,18 @@ use Yiisoft\Widget\Widget;
 use Yiisoft\Yii\DataView\Exception\DataReaderNotSetException;
 
 /**
- * @psalm-import-type UrlCreator from BasePagination
+ * @psalm-type UrlArguments = array<string,scalar|Stringable|null>
+ * @psalm-type UrlCreator = callable(UrlArguments,array):string
  */
 abstract class BaseListView extends Widget
 {
     /**
      * @psalm-var UrlCreator|null
      */
-    private $paginationUrlCreator = null;
-    private string $pageParameterName = 'page';
-    private string $previousPageParameterName = 'previous-page';
-    private string $pageSizeParameterName = 'pagesize';
+    protected $urlCreator = null;
+    protected UrlConfig $urlConfig;
 
-    /**
-     * @psalm-var UrlParameterType::*
-     */
-    private int $pageParameterType = UrlParameterType::QUERY;
-
-    /**
-     * @psalm-var UrlParameterType::*
-     */
-    private int $previousPageParameterType = UrlParameterType::QUERY;
-
-    /**
-     * @psalm-var UrlParameterType::*
-     */
-    private int $pageSizeParameterType = UrlParameterType::QUERY;
+    protected int $defaultPageSize = PaginatorInterface::DEFAULT_PAGE_SIZE;
 
     /**
      * A name for {@see CategorySource} used with translator ({@see TranslatorInterface}) by default.
@@ -86,7 +73,6 @@ abstract class BaseListView extends Widget
     private string $layout = "{header}\n{toolbar}\n{items}\n{summary}\n{pager}";
     private string|OffsetPagination|KeysetPagination|null $pagination = null;
     protected ?ReadableDataInterface $dataReader = null;
-    protected array $sortLinkAttributes = [];
     private string $toolbar = '';
 
     /**
@@ -102,15 +88,16 @@ abstract class BaseListView extends Widget
         protected readonly string $translationCategory = self::DEFAULT_TRANSLATION_CATEGORY,
     ) {
         $this->translator = $translator ?? $this->createDefaultTranslator();
+        $this->urlConfig = new UrlConfig();
     }
 
     /**
      * @psalm-param UrlCreator|null $urlCreator
      */
-    final public function paginationUrlCreator(?callable $urlCreator): static
+    final public function urlCreator(?callable $urlCreator): static
     {
         $new = clone $this;
-        $new->paginationUrlCreator = $urlCreator;
+        $new->urlCreator = $urlCreator;
         return $new;
     }
 
@@ -122,14 +109,14 @@ abstract class BaseListView extends Widget
     final public function pageParameterName(string $name): static
     {
         $new = clone $this;
-        $new->pageParameterName = $name;
+        $new->urlConfig = $this->urlConfig->withPageParameterName($name);
         return $new;
     }
 
     final public function previousPageParameterName(string $name): static
     {
         $new = clone $this;
-        $new->previousPageParameterName = $name;
+        $new->urlConfig = $this->urlConfig->withPreviousPageParameterName($name);
         return $new;
     }
 
@@ -141,7 +128,7 @@ abstract class BaseListView extends Widget
     final public function pageSizeParameterName(string $name): static
     {
         $new = clone $this;
-        $new->pageSizeParameterName = $name;
+        $new->urlConfig = $this->urlConfig->withPageSizeParameterName($name);
         return $new;
     }
 
@@ -222,7 +209,7 @@ abstract class BaseListView extends Widget
         return $this->dataReader;
     }
 
-    private function getPreparedDataReader(): ReadableDataInterface
+    final protected function getPreparedDataReader(): ReadableDataInterface
     {
         $dataReader = $this->getDataReader();
 
@@ -250,26 +237,39 @@ abstract class BaseListView extends Widget
 
         if ($dataReader->isPaginationRequired()) {
             $pageSize = $this->urlParameterProvider?->get(
-                $this->pageSizeParameterName,
-                $this->pageSizeParameterType,
+                $this->urlConfig->getPageSizeParameterName(),
+                $this->urlConfig->getPageSizeParameterType(),
             );
             if ($pageSize !== null) {
                 $dataReader = $dataReader->withPageSize((int)$pageSize);
             }
 
             $page = $this->urlParameterProvider?->get(
-                $this->pageParameterName,
-                $this->pageParameterType,
+                $this->urlConfig->getPageParameterName(),
+                $this->urlConfig->getPageParameterType()
             );
             if ($page !== null) {
-                $dataReader = $dataReader->withNextPageToken($page);
+                $dataReader = $dataReader->withToken(PageToken::next($page));
             } else {
                 $page = $this->urlParameterProvider?->get(
-                    $this->previousPageParameterName,
-                    $this->previousPageParameterType,
+                    $this->urlConfig->getPreviousPageParameterName(),
+                    $this->urlConfig->getPreviousPageParameterType(),
                 );
                 if ($page !== null) {
-                    $dataReader = $dataReader->withPreviousPageToken($page);
+                    $dataReader = $dataReader->withToken(PageToken::previous($page));
+                }
+            }
+        }
+
+        if ($dataReader->isSortable()) {
+            $orderString = $this->urlParameterProvider?->get(
+                $this->urlConfig->getSortParameterName(),
+                $this->urlConfig->getSortParameterType(),
+            );
+            if (!empty($orderString)) {
+                $sort = $dataReader->getSort();
+                if ($sort !== null) {
+                    $dataReader = $dataReader->withSort($sort->withOrderString($orderString));
                 }
             }
         }
@@ -352,19 +352,6 @@ abstract class BaseListView extends Widget
     {
         $new = clone $this;
         $new->dataReader = $dataReader;
-        return $new;
-    }
-
-    /**
-     * Return new instance with the HTML attributes for widget link sort.
-     *
-     * @param array $values Attribute values indexed by attribute names.
-     */
-    public function sortLinkAttributes(array $values): static
-    {
-        $new = clone $this;
-        $new->sortLinkAttributes = $values;
-
         return $new;
     }
 
@@ -503,6 +490,16 @@ abstract class BaseListView extends Widget
         return is_array($data) ? $data : iterator_to_array($data);
     }
 
+    protected function getDefaultPageSize(): int
+    {
+        $dataReader = $this->getDataReader();
+        if ($dataReader instanceof PaginatorInterface) {
+            return $dataReader->getPageSize();
+        }
+
+        return $this->defaultPageSize;
+    }
+
     private function renderPagination(): string
     {
         $preparedDataReader = $this->getPreparedDataReader();
@@ -534,18 +531,13 @@ abstract class BaseListView extends Widget
             return '';
         }
 
-        if ($this->paginationUrlCreator !== null) {
-            $pagination = $pagination->urlCreator($this->paginationUrlCreator);
-        }
-
-        $dataReader = $this->getDataReader();
-        if ($dataReader instanceof PaginatorInterface) {
-            $pagination = $pagination->defaultPageSize($dataReader->getPageSize());
+        if ($this->urlCreator !== null) {
+            $pagination = $pagination->urlCreator($this->urlCreator);
         }
 
         return $pagination
-            ->pageParameterName($this->pageParameterName)
-            ->previousPageParameterName($this->previousPageParameterName)
+            ->defaultPageSize($this->getDefaultPageSize())
+            ->urlConfig($this->urlConfig)
             ->render();
     }
 
