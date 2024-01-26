@@ -5,19 +5,17 @@ declare(strict_types=1);
 namespace Yiisoft\Yii\DataView\Column\Base;
 
 use Stringable;
+use Yiisoft\Html\Html;
 use Yiisoft\Html\NoEncodeStringableInterface;
 
 final class Cell
 {
     private bool $doubleEncode = true;
 
-    /**
-     * @param callable|string|Stringable $content
-     */
     public function __construct(
         private array $attributes = [],
         private ?bool $encode = null,
-        private mixed $content = '',
+        private string|Stringable $content = '',
     ) {
     }
 
@@ -48,9 +46,9 @@ final class Cell
     }
 
     /**
-     * @param callable|string|Stringable $content Tag content.
+     * @param string|Stringable $content Tag content.
      */
-    public function content(string|Stringable|callable $content): self
+    public function content(string|Stringable $content): self
     {
         $new = clone $this;
         $new->content = $content;
@@ -95,6 +93,13 @@ final class Cell
         return $new;
     }
 
+    public function addClass(?string $class): self
+    {
+        $new = clone $this;
+        Html::addCssClass($new->attributes, $class);
+        return $new;
+    }
+
     public function getAttributes(): array
     {
         return $this->attributes;
@@ -110,7 +115,7 @@ final class Cell
         return $this->doubleEncode;
     }
 
-    public function getContent(): string|Stringable|callable
+    public function getContent(): string|Stringable
     {
         return $this->content;
     }

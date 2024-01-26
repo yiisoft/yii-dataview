@@ -55,12 +55,6 @@ final class ExceptionTest extends TestCase
             ->render();
     }
 
-    /**
-     * @throws InvalidConfigException
-     * @throws NotFoundException
-     * @throws NotInstantiableException
-     * @throws CircularReferenceException
-     */
     public function testItemViewWithNull(): void
     {
         $this->expectException(InvalidArgumentException::class);

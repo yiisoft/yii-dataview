@@ -6,6 +6,7 @@ namespace Yiisoft\Yii\DataView;
 
 use Stringable;
 use Yiisoft\Data\Paginator\KeysetPaginator;
+use Yiisoft\Data\Paginator\PageToken;
 
 final class KeysetPagination extends BasePagination
 {
@@ -24,13 +25,13 @@ final class KeysetPagination extends BasePagination
     protected function getItems(): array
     {
         $paginator = $this->getPaginator();
-        $previousToken = $paginator->getPreviousPageToken();
-        $nextToken = $paginator->getNextPageToken();
+        $previousToken = $paginator->getPreviousToken();
+        $nextToken = $paginator->getNextToken();
 
         return [
             new PaginationItem(
                 label: $this->labelPrevious,
-                url: $previousToken === null ? null : $this->createUrl($previousToken, true),
+                url: $previousToken === null ? null : $this->createUrl($previousToken),
                 isCurrent: false,
                 isDisabled: $previousToken === null,
             ),
@@ -48,7 +49,7 @@ final class KeysetPagination extends BasePagination
         return $this->paginator ?? throw new Exception\PaginatorNotSetException();
     }
 
-    protected function isFirstPage(int|string $page, bool $isPrevious): bool
+    protected function isFirstPage(PageToken $token): bool
     {
         return false;
     }

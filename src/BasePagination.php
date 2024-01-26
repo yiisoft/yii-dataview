@@ -5,12 +5,13 @@ declare(strict_types=1);
 namespace Yiisoft\Yii\DataView;
 
 use InvalidArgumentException;
+use Yiisoft\Data\Paginator\PageToken;
 use Yiisoft\Data\Paginator\PaginatorInterface;
 use Yiisoft\Html\Html;
 use Yiisoft\Widget\Widget;
 
 /**
- * @psalm-type UrlCreator = callable(PageContext):string
+ * @psalm-import-type UrlCreator from BaseListView
  */
 abstract class BasePagination extends Widget
 {
@@ -18,24 +19,7 @@ abstract class BasePagination extends Widget
      * @psalm-var UrlCreator|null
      */
     private $urlCreator;
-    private string $pageParameterName = 'page';
-    private string $previousPageParameterName = 'previous-page';
-    private string $pageSizeParameterName = 'pagesize';
-
-    /**
-     * @psalm-var UrlParameterType::*
-     */
-    private int $pageParameterType = UrlParameterType::QUERY;
-
-    /**
-     * @psalm-var UrlParameterType::*
-     */
-    private int $previousPageParameterType = UrlParameterType::QUERY;
-
-    /**
-     * @psalm-var UrlParameterType::*
-     */
-    private int $pageSizeParameterType = UrlParameterType::QUERY;
+    private UrlConfig $urlConfig;
 
     private int $defaultPageSize = PaginatorInterface::DEFAULT_PAGE_SIZE;
 
@@ -62,8 +46,6 @@ abstract class BasePagination extends Widget
     private ?string $currentLinkClass = null;
     private ?string $disabledItemClass = null;
     private ?string $disabledLinkClass = null;
-
-    private array $queryParameters = [];
 
     final public function listTag(?string $tag): static
     {
@@ -208,47 +190,10 @@ abstract class BasePagination extends Widget
         return $new;
     }
 
-    /**
-     * Return a new instance with query parameters of the route.
-     *
-     * @param array $value The query parameters of the route.
-     */
-    public function queryParameters(array $value): static
+    public function urlConfig(UrlConfig $config): static
     {
         $new = clone $this;
-        $new->queryParameters = $value;
-        return $new;
-    }
-
-    /**
-     * Return a new instance with name of argument or query parameter for page.
-     *
-     * @param string $name The name of argument or query parameter for page.
-     */
-    public function pageParameterName(string $name): static
-    {
-        $new = clone $this;
-        $new->pageParameterName = $name;
-        return $new;
-    }
-
-    public function previousPageParameterName(string $name): static
-    {
-        $new = clone $this;
-        $new->previousPageParameterName = $name;
-        return $new;
-    }
-
-    /**
-     * Return a new instance with name of argument or query parameter for page size.
-     *
-     * @param string $name The name of argument or query parameter for page size.
-     */
-    public function pageSizeParameterName(string $name): static
-    {
-        $new = clone $this;
-        $new->pageSizeParameterName = $name;
-
+        $new->urlConfig = $config;
         return $new;
     }
 
@@ -256,27 +201,23 @@ abstract class BasePagination extends Widget
      * Creates the URL suitable for pagination with the specified page number. This method is mainly called by pagers
      * when creating URLs used to perform pagination.
      */
-    protected function createUrl(int|string $page, bool $isPrevious = false): string
+    protected function createUrl(PageToken $pageToken): string
     {
         if ($this->urlCreator === null) {
-            return '#' . $page;
+            return '#' . $pageToken->value;
         }
 
-        return call_user_func(
+        $paginator = $this->getPaginator();
+        $pageSize = $paginator->getPageSize();
+        $sort = $paginator->getSort()?->getOrderAsString();
+
+        return call_user_func_array(
             $this->urlCreator,
-            new PageContext(
-                $page,
-                $this->getPaginator()->getPageSize(),
-                $isPrevious,
-                $this->isFirstPage($page, $isPrevious),
-                $this->pageParameterName,
-                $this->previousPageParameterName,
-                $this->pageSizeParameterName,
-                $this->pageParameterType,
-                $this->previousPageParameterType,
-                $this->pageSizeParameterType,
-                $this->queryParameters,
-                $this->defaultPageSize,
+            UrlParametersFactory::create(
+                $this->isFirstPage($pageToken) ? null : $pageToken,
+                $pageSize === $this->defaultPageSize ? null : $pageSize,
+                empty($sort) ? null : $sort,
+                $this->urlConfig,
             )
         );
     }
@@ -288,5 +229,5 @@ abstract class BasePagination extends Widget
 
     abstract protected function getPaginator(): PaginatorInterface;
 
-    abstract protected function isFirstPage(int|string $page, bool $isPrevious): bool;
+    abstract protected function isFirstPage(PageToken $token): bool;
 }

@@ -31,6 +31,7 @@ final class DataColumn implements ColumnInterface
     public function __construct(
         public readonly ?string $property = null,
         public readonly ?string $header = null,
+        public readonly bool $encodeHeader = true,
         public readonly ?string $footer = null,
         public readonly array $columnAttributes = [],
         public readonly array $headerAttributes = [],

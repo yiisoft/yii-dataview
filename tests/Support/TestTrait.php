@@ -6,6 +6,7 @@ namespace Yiisoft\Yii\DataView\Tests\Support;
 
 use Yiisoft\Data\Paginator\KeysetPaginator;
 use Yiisoft\Data\Paginator\OffsetPaginator;
+use Yiisoft\Data\Paginator\PageToken;
 use Yiisoft\Data\Reader\Iterable\IterableDataReader;
 use Yiisoft\Data\Reader\Sort;
 use Yiisoft\Definitions\Exception\InvalidConfigException;
@@ -42,7 +43,7 @@ trait TestTrait
             $data = $data->withSort(Sort::any()->withOrder(['id' => 'asc', 'name' => 'asc']));
         }
 
-        return (new OffsetPaginator($data))->withNextPageToken((string) $currentPage)->withPageSize($pageSize);
+        return (new OffsetPaginator($data))->withToken(PageToken::next((string) $currentPage))->withPageSize($pageSize);
     }
 
     private function createKeysetPaginator(array $data, int $pageSize): KeySetPaginator

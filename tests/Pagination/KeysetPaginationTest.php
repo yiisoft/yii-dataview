@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Yiisoft\Yii\DataView\Tests\Pagination;
 
 use PHPUnit\Framework\TestCase;
+use Yiisoft\Data\Paginator\PageToken;
 use Yiisoft\Definitions\Exception\CircularReferenceException;
 use Yiisoft\Definitions\Exception\InvalidConfigException;
 use Yiisoft\Definitions\Exception\NotInstantiableException;
@@ -78,8 +79,8 @@ final class KeysetPaginationTest extends TestCase
             <table>
             <thead>
             <tr>
-            <th><a class="asc" href="/admin/manage?page=0&amp;pagesize=5&amp;sort=-id%2Cname" data-sort="-id,name">Id <i class="bi bi-sort-alpha-up"></i></a></th>
-            <th><a class="asc" href="/admin/manage?page=0&amp;pagesize=5&amp;sort=-name%2Cid" data-sort="-name,id">Name <i class="bi bi-sort-alpha-up"></i></a></th>
+            <th>Id</th>
+            <th>Name</th>
             <th>Description</th>
             </tr>
             </thead>
@@ -130,7 +131,7 @@ final class KeysetPaginationTest extends TestCase
                 ->render(),
         );
 
-        $keysetPaginator = $keysetPaginator->withNextPageToken('5');
+        $keysetPaginator = $keysetPaginator->withToken(PageToken::next('5'));
 
         Assert::equalsWithoutLE(
             <<<HTML
@@ -138,8 +139,8 @@ final class KeysetPaginationTest extends TestCase
             <table>
             <thead>
             <tr>
-            <th><a class="asc" href="/admin/manage?page=0&amp;pagesize=5&amp;sort=-id%2Cname" data-sort="-id,name">Id <i class="bi bi-sort-alpha-up"></i></a></th>
-            <th><a class="asc" href="/admin/manage?page=0&amp;pagesize=5&amp;sort=-name%2Cid" data-sort="-name,id">Name <i class="bi bi-sort-alpha-up"></i></a></th>
+            <th>Id</th>
+            <th>Name</th>
             <th>Description</th>
             </tr>
             </thead>
@@ -190,7 +191,7 @@ final class KeysetPaginationTest extends TestCase
                 ->render(),
         );
 
-        $keysetPaginator = $keysetPaginator->withNextPageToken('10');
+        $keysetPaginator = $keysetPaginator->withToken(PageToken::next('10'));
 
         Assert::equalsWithoutLE(
             <<<HTML
@@ -198,8 +199,8 @@ final class KeysetPaginationTest extends TestCase
             <table>
             <thead>
             <tr>
-            <th><a class="asc" href="/admin/manage?page=0&amp;pagesize=5&amp;sort=-id%2Cname" data-sort="-id,name">Id <i class="bi bi-sort-alpha-up"></i></a></th>
-            <th><a class="asc" href="/admin/manage?page=0&amp;pagesize=5&amp;sort=-name%2Cid" data-sort="-name,id">Name <i class="bi bi-sort-alpha-up"></i></a></th>
+            <th>Id</th>
+            <th>Name</th>
             <th>Description</th>
             </tr>
             </thead>
@@ -235,7 +236,7 @@ final class KeysetPaginationTest extends TestCase
                 ->render(),
         );
 
-        $keysetPaginator = $keysetPaginator->withNextPageToken('5');
+        $keysetPaginator = $keysetPaginator->withToken(PageToken::next('5'));
 
         Assert::equalsWithoutLE(
             <<<HTML
@@ -243,8 +244,8 @@ final class KeysetPaginationTest extends TestCase
             <table>
             <thead>
             <tr>
-            <th><a class="asc" href="/admin/manage?page=0&amp;pagesize=5&amp;sort=-id%2Cname" data-sort="-id,name">Id <i class="bi bi-sort-alpha-up"></i></a></th>
-            <th><a class="asc" href="/admin/manage?page=0&amp;pagesize=5&amp;sort=-name%2Cid" data-sort="-name,id">Name <i class="bi bi-sort-alpha-up"></i></a></th>
+            <th>Id</th>
+            <th>Name</th>
             <th>Description</th>
             </tr>
             </thead>
@@ -295,7 +296,7 @@ final class KeysetPaginationTest extends TestCase
                 ->render(),
         );
 
-        $keysetPaginator = $keysetPaginator->withNextPageToken('0');
+        $keysetPaginator = $keysetPaginator->withToken(PageToken::next('0'));
 
         Assert::equalsWithoutLE(
             <<<HTML
@@ -303,8 +304,8 @@ final class KeysetPaginationTest extends TestCase
             <table>
             <thead>
             <tr>
-            <th><a class="asc" href="/admin/manage?page=0&amp;pagesize=5&amp;sort=-id%2Cname" data-sort="-id,name">Id <i class="bi bi-sort-alpha-up"></i></a></th>
-            <th><a class="asc" href="/admin/manage?page=0&amp;pagesize=5&amp;sort=-name%2Cid" data-sort="-name,id">Name <i class="bi bi-sort-alpha-up"></i></a></th>
+            <th>Id</th>
+            <th>Name</th>
             <th>Description</th>
             </tr>
             </thead>

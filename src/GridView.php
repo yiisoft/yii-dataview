@@ -7,6 +7,7 @@ namespace Yiisoft\Yii\DataView;
 use Closure;
 use Psr\Container\ContainerInterface;
 use Stringable;
+use Yiisoft\Data\Paginator\PaginatorInterface;
 use Yiisoft\Definitions\Exception\CircularReferenceException;
 use Yiisoft\Definitions\Exception\InvalidConfigException;
 use Yiisoft\Definitions\Exception\NotInstantiableException;
@@ -18,6 +19,7 @@ use Yiisoft\Yii\DataView\Column\ActionColumn;
 use Yiisoft\Yii\DataView\Column\Base\Cell;
 use Yiisoft\Yii\DataView\Column\Base\GlobalContext;
 use Yiisoft\Yii\DataView\Column\Base\DataContext;
+use Yiisoft\Yii\DataView\Column\Base\HeaderContext;
 use Yiisoft\Yii\DataView\Column\ColumnInterface;
 use Yiisoft\Yii\DataView\Column\ColumnRendererInterface;
 use Yiisoft\Yii\DataView\Column\DataColumn;
@@ -31,6 +33,8 @@ use Yiisoft\Yii\DataView\Column\DataColumn;
  * {@see columns}.
  *
  * The look and feel of a grid view can be customized using the large amount of properties.
+ *
+ * @psalm-import-type UrlCreator from BaseListView
  */
 final class GridView extends BaseListView
 {
@@ -62,11 +66,40 @@ final class GridView extends BaseListView
     private array $headerCellAttributes = [];
     private array $bodyCellAttributes = [];
 
+    private bool $enableMultiSort = false;
+    private bool $keepPageOnSort = false;
+    private ?string $sortableHeaderClass = null;
+    private string|Stringable $sortableHeaderPrepend = '';
+    private string|Stringable $sortableHeaderAppend = '';
+    private ?string $sortableHeaderAscClass = null;
+    private string|Stringable $sortableHeaderAscPrepend = '';
+    private string|Stringable $sortableHeaderAscAppend = '';
+    private ?string $sortableHeaderDescClass = null;
+    private string|Stringable $sortableHeaderDescPrepend = '';
+    private string|Stringable $sortableHeaderDescAppend = '';
+    private array $sortableLinkAttributes = [];
+    private ?string $sortableLinkAscClass = null;
+    private ?string $sortableLinkDescClass = null;
+
     public function __construct(
         private ContainerInterface $columnRenderersContainer,
         TranslatorInterface|null $translator = null,
     ) {
         parent::__construct($translator);
+    }
+
+    public function enableMultiSort(bool $value = true): self
+    {
+        $new = clone $this;
+        $new->enableMultiSort = $value;
+        return $new;
+    }
+
+    public function keepPageOnSort(bool $value = true): self
+    {
+        $new = clone $this;
+        $new->keepPageOnSort = $value;
+        return $new;
     }
 
     /**
@@ -367,6 +400,60 @@ final class GridView extends BaseListView
     }
 
     /**
+     * Return new instance with the HTML attributes for link in sortable columns' headers.
+     *
+     * @param array $attributes The tag attributes in terms of name-value pairs.
+     */
+    public function sortableLinkAttributes(array $attributes): static
+    {
+        $new = clone $this;
+        $new->sortableLinkAttributes = $attributes;
+        return $new;
+    }
+
+    public function sortableHeaderPrepend(string|Stringable $content): self
+    {
+        $new = clone $this;
+        $new->sortableHeaderPrepend = $content;
+        return $new;
+    }
+
+    public function sortableHeaderAppend(string|Stringable $content): self
+    {
+        $new = clone $this;
+        $new->sortableHeaderAppend = $content;
+        return $new;
+    }
+
+    public function sortableHeaderAscPrepend(string|Stringable $content): self
+    {
+        $new = clone $this;
+        $new->sortableHeaderAscPrepend = $content;
+        return $new;
+    }
+
+    public function sortableHeaderAscAppend(string|Stringable $content): self
+    {
+        $new = clone $this;
+        $new->sortableHeaderAscAppend = $content;
+        return $new;
+    }
+
+    public function sortableHeaderDescPrepend(string|Stringable $content): self
+    {
+        $new = clone $this;
+        $new->sortableHeaderDescPrepend = $content;
+        return $new;
+    }
+
+    public function sortableHeaderDescAppend(string|Stringable $content): self
+    {
+        $new = clone $this;
+        $new->sortableHeaderDescAppend = $content;
+        return $new;
+    }
+
+    /**
      * Renders the data active record classes for the grid view.
      *
      * @throws InvalidConfigException
@@ -389,9 +476,9 @@ final class GridView extends BaseListView
 
         $blocks = [];
 
+        $dataReader = $this->getDataReader();
         $globalContext = new GlobalContext(
-            $this->getDataReader(),
-            $this->sortLinkAttributes,
+            $dataReader,
             $this->urlArguments,
             $this->urlQueryParameters,
             $this->filterModelName,
@@ -436,15 +523,47 @@ final class GridView extends BaseListView
         }
 
         if ($this->headerTableEnabled) {
+            $preparedDataReader = $this->getPreparedDataReader();
+            if ($preparedDataReader instanceof PaginatorInterface) {
+                $pageToken = $preparedDataReader->isOnFirstPage() ? null : $preparedDataReader->getToken();
+                $pageSize = $preparedDataReader->getPageSize();
+                if ($pageSize === $this->getDefaultPageSize()) {
+                    $pageSize = null;
+                }
+            } else {
+                $pageToken = null;
+                $pageSize = null;
+            }
+            $headerContext = new HeaderContext(
+                $dataReader,
+                $preparedDataReader,
+                $this->sortableHeaderClass,
+                $this->sortableHeaderPrepend,
+                $this->sortableHeaderAppend,
+                $this->sortableHeaderAscClass,
+                $this->sortableHeaderAscPrepend,
+                $this->sortableHeaderAscAppend,
+                $this->sortableHeaderDescClass,
+                $this->sortableHeaderDescPrepend,
+                $this->sortableHeaderDescAppend,
+                $this->sortableLinkAttributes,
+                $this->sortableLinkAscClass,
+                $this->sortableLinkDescClass,
+                $this->keepPageOnSort ? $pageToken : null,
+                $pageSize,
+                $this->enableMultiSort,
+                $this->urlConfig,
+                $this->urlCreator,
+                $this->translator,
+                $this->translationCategory,
+            );
             $tags = [];
             foreach ($columns as $i => $column) {
-                $cell = $renderers[$i]->renderHeader($column, new Cell($this->headerCellAttributes), $globalContext);
-                /** @var string|Stringable $content */
-                $content = $cell?->getContent();
+                $cell = $renderers[$i]->renderHeader($column, new Cell($this->headerCellAttributes), $headerContext);
                 $tags[] = $cell === null
                     ? Html::th('&nbsp;')->encode(false)
                     : Html::th(attributes: $cell->getAttributes())
-                        ->content($content)
+                        ->content($cell->getContent())
                         ->encode($cell->isEncode())
                         ->doubleEncode($cell->isDoubleEncode());
             }
@@ -504,11 +623,7 @@ final class GridView extends BaseListView
             foreach ($columns as $i => $column) {
                 $context = new DataContext($column, $value, $key, $index, $this->columnsConfigs);
                 $cell = $renderers[$i]->renderBody($column, new Cell(), $context);
-                $contentSource = $cell->getContent();
-                /** @var string|Stringable $content */
-                $content = $contentSource instanceof Closure
-                    ? $contentSource($context)
-                    : $contentSource;
+                $content = $cell->getContent();
                 $tags[] = empty($content)
                     ? Html::td()->content($this->emptyCell)->encode(false)
                     : Html::td(attributes: $this->prepareBodyAttributes($cell->getAttributes(), $context))

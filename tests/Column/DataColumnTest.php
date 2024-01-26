@@ -298,7 +298,7 @@ final class DataColumnTest extends TestCase
             <thead>
             <tr>
             <th>Id</th>
-            <th><a class="asc" href="/admin/manage?page=1&amp;pagesize=10&amp;sort=-name%2Cid" data-sort="-name,id">Name <i class="bi bi-sort-alpha-up"></i></a></th>
+            <th>Name</th>
             </tr>
             </thead>
             <tbody>
@@ -366,12 +366,6 @@ final class DataColumnTest extends TestCase
         );
     }
 
-    /**
-     * @throws InvalidConfigException
-     * @throws NotFoundException
-     * @throws NotInstantiableException
-     * @throws CircularReferenceException
-     */
     public function testSort(): void
     {
         Assert::equalsWithoutLE(
@@ -380,8 +374,8 @@ final class DataColumnTest extends TestCase
             <table>
             <thead>
             <tr>
-            <th><a class="asc" href="/admin/manage?page=1&amp;pagesize=10&amp;sort=-id%2Cname" data-sort="-id,name">Id <i class="bi bi-sort-alpha-up"></i></a></th>
-            <th><a class="asc" href="/admin/manage?page=1&amp;pagesize=10&amp;sort=-name%2Cid" data-sort="-name,id">Name <i class="bi bi-sort-alpha-up"></i></a></th>
+            <th>Id</th>
+            <th>Name</th>
             </tr>
             </thead>
             <tbody>

@@ -20,5 +20,6 @@
         <MixedAssignment errorLevel="suppress" />
         <PropertyNotSetInConstructor errorLevel="suppress" />
         <RedundantPropertyInitializationCheck errorLevel="suppress" />
+        <RiskyTruthyFalsyComparison errorLevel="suppress" />
     </issueHandlers>
 </psalm>
