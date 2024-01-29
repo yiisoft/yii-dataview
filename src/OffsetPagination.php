@@ -16,10 +16,10 @@ final class OffsetPagination extends BasePagination
 {
     private OffsetPaginator|null $paginator = null;
 
-    private string|Stringable|null $labelPrevious = 'Previous';
-    private string|Stringable|null $labelNext = 'Next';
-    private string|Stringable|null $labelFirst = 'First';
-    private string|Stringable|null $labelLast = 'Last';
+    private string|Stringable|null $labelPrevious = '⟨';
+    private string|Stringable|null $labelNext = '⟩';
+    private string|Stringable|null $labelFirst = '⟪';
+    private string|Stringable|null $labelLast = '⟫';
 
     private int $maxNavLinkCount = 10;
 

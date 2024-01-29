@@ -113,8 +113,8 @@ final class KeysetPaginationTest extends TestCase
             </tbody>
             </table>
             <nav>
-            <a>Previous</a>
-            <a href="#5">Next</a>
+            <a>⟨</a>
+            <a href="#5">⟩</a>
             </nav>
             </div>
             HTML,
@@ -173,8 +173,8 @@ final class KeysetPaginationTest extends TestCase
             </tbody>
             </table>
             <nav>
-            <a href="#6">Previous</a>
-            <a href="#10">Next</a>
+            <a href="#6">⟨</a>
+            <a href="#10">⟩</a>
             </nav>
             </div>
             HTML,
@@ -218,8 +218,8 @@ final class KeysetPaginationTest extends TestCase
             </tbody>
             </table>
             <nav>
-            <a href="#11">Previous</a>
-            <a>Next</a>
+            <a href="#11">⟨</a>
+            <a>⟩</a>
             </nav>
             </div>
             HTML,
@@ -278,8 +278,8 @@ final class KeysetPaginationTest extends TestCase
             </tbody>
             </table>
             <nav>
-            <a href="#6">Previous</a>
-            <a href="#10">Next</a>
+            <a href="#6">⟨</a>
+            <a href="#10">⟩</a>
             </nav>
             </div>
             HTML,
@@ -338,8 +338,8 @@ final class KeysetPaginationTest extends TestCase
             </tbody>
             </table>
             <nav>
-            <a>Previous</a>
-            <a href="#5">Next</a>
+            <a>⟨</a>
+            <a href="#5">⟩</a>
             </nav>
             </div>
             HTML,
