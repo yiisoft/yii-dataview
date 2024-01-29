@@ -15,6 +15,9 @@ use function is_object;
 
 final class ActionColumnUrlCreator
 {
+    /**
+     * @psalm-param UrlParameterType::* $defaultPrimaryKeyParameterType
+     */
     public function __construct(
         private readonly UrlGeneratorInterface $urlGenerator,
         private readonly CurrentRoute $currentRoute,
