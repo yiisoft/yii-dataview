@@ -28,6 +28,7 @@ use Yiisoft\Yii\DataView\Tests\Support\Assert;
 use Yiisoft\Yii\DataView\Tests\Support\Mock;
 use Yiisoft\Yii\DataView\Tests\Support\StringableObject;
 use Yiisoft\Yii\DataView\Tests\Support\TestTrait;
+use Yiisoft\Yii\DataView\UrlParameterType;
 use Yiisoft\Yii\DataView\YiiRouter\ActionColumnUrlConfig;
 
 final class ActionColumnTest extends TestCase
@@ -581,7 +582,7 @@ final class ActionColumnTest extends TestCase
                     new ActionColumn(
                         urlConfig: new ActionColumnUrlConfig(
                             queryParameters: ['test-param' => 'test.param'],
-                            primaryKeyPlace: ActionColumnUrlConfig::QUERY_PARAMETERS,
+                            primaryKeyParameterType: UrlParameterType::QUERY,
                         ),
                     ),
                 )
