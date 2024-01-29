@@ -8,20 +8,18 @@ use Stringable;
 
 final class ActionColumnUrlConfig
 {
-    public const ARGUMENTS = true;
-    public const QUERY_PARAMETERS = false;
-
     /**
      * @param string|null $primaryKey The primary key of the data to be used to generate a URL.
      *
      * @psalm-param array<string,scalar|Stringable|null> $arguments
+     * @psalm-param UrlParameterType::* $primaryKeyParameterType
      */
     public function __construct(
         public readonly ?string $primaryKey = null,
         public readonly ?string $baseRouteName = null,
         public readonly array $arguments = [],
         public readonly array $queryParameters = [],
-        public readonly ?bool $primaryKeyPlace = null,
+        public readonly ?int $primaryKeyParameterType = null,
     ) {
     }
 }

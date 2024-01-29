@@ -9,6 +9,7 @@ use Yiisoft\Router\CurrentRoute;
 use Yiisoft\Router\UrlGeneratorInterface;
 use Yiisoft\Yii\DataView\Column\ActionColumn;
 use Yiisoft\Yii\DataView\Column\Base\DataContext;
+use Yiisoft\Yii\DataView\UrlParameterType;
 
 use function is_object;
 
@@ -18,7 +19,7 @@ final class ActionColumnUrlCreator
         private readonly UrlGeneratorInterface $urlGenerator,
         private readonly CurrentRoute $currentRoute,
         private readonly string $defaultPrimaryKey = 'id',
-        private readonly bool $defaultPrimaryKeyPlace = ActionColumnUrlConfig::QUERY_PARAMETERS,
+        private readonly int $defaultPrimaryKeyParameterType = UrlParameterType::QUERY,
     ) {
     }
 
@@ -33,7 +34,7 @@ final class ActionColumnUrlCreator
         }
 
         $primaryKey = $config->primaryKey ?? $this->defaultPrimaryKey;
-        $primaryKeyPlace = $config->primaryKeyPlace ?? $this->defaultPrimaryKeyPlace;
+        $primaryKeyParameterType = $config->primaryKeyParameterType ?? $this->defaultPrimaryKeyParameterType;
 
         $primaryKeyValue = is_object($context->data)
             ? $context->data->$primaryKey
@@ -44,10 +45,13 @@ final class ActionColumnUrlCreator
 
         $arguments = $config->arguments;
         $queryParameters = $config->queryParameters;
-        if ($primaryKeyPlace === ActionColumnUrlConfig::ARGUMENTS) {
-            $arguments = array_merge($arguments, [$primaryKey => (string)$primaryKeyValue]);
-        } else {
-            $queryParameters = array_merge($queryParameters, [$primaryKey => (string)$primaryKeyValue]);
+        switch ($primaryKeyParameterType) {
+            case UrlParameterType::PATH:
+                $arguments = array_merge($arguments, [$primaryKey => (string) $primaryKeyValue]);
+                break;
+            case UrlParameterType::QUERY:
+                $queryParameters = array_merge($queryParameters, [$primaryKey => (string) $primaryKeyValue]);
+                break;
         }
 
         return $this->urlGenerator->generate($route, $arguments, $queryParameters);
