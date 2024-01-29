@@ -54,15 +54,15 @@ final class BaseTest extends TestCase
         Assert::equalsWithoutLE(
             <<<HTML
             <nav>
-            <a href="/route?filter=test&amp;pagesize=1">First</a>
-            <a href="/route?filter=test&amp;pagesize=1">Previous</a>
+            <a href="/route?filter=test&amp;pagesize=1">⟪</a>
+            <a href="/route?filter=test&amp;pagesize=1">⟨</a>
             <a href="/route?filter=test&amp;pagesize=1">1</a>
             <a href="/route?filter=test&amp;page=2&amp;pagesize=1">2</a>
             <a href="/route?filter=test&amp;page=3&amp;pagesize=1">3</a>
             <a href="/route?filter=test&amp;page=4&amp;pagesize=1">4</a>
             <a href="/route?filter=test&amp;page=5&amp;pagesize=1">5</a>
-            <a href="/route?filter=test&amp;page=2&amp;pagesize=1">Next</a>
-            <a href="/route?filter=test&amp;page=5&amp;pagesize=1">Last</a>
+            <a href="/route?filter=test&amp;page=2&amp;pagesize=1">⟩</a>
+            <a href="/route?filter=test&amp;page=5&amp;pagesize=1">⟫</a>
             </nav>
             HTML,
             OffsetPagination::widget()

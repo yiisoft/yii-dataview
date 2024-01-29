@@ -12,8 +12,8 @@ final class KeysetPagination extends BasePagination
 {
     private KeysetPaginator|null $paginator = null;
 
-    private string|Stringable $labelPrevious = 'Previous';
-    private string|Stringable $labelNext = 'Next';
+    private string|Stringable $labelPrevious = '⟨';
+    private string|Stringable $labelNext = '⟩';
 
     public function paginator(KeysetPaginator $paginator): self
     {
