@@ -85,10 +85,14 @@ abstract class BaseListView extends Widget
 
     private UrlParameterProviderInterface|null $urlParameterProvider = null;
 
+    private bool $resetPageOnPageNotFound = false;
+
     /**
      * @psalm-var PageNotFoundExceptionCallback|null
      */
     private $pageNotFoundExceptionCallback = null;
+
+    protected ?ReadableDataInterface $preparedDataReader = null;
 
     public function __construct(
         TranslatorInterface|null $translator = null,
@@ -105,6 +109,13 @@ abstract class BaseListView extends Widget
     {
         $new = clone $this;
         $new->urlCreator = $urlCreator;
+        return $new;
+    }
+
+    final public function resetPageOnPageNotFound(bool $reset = true): static
+    {
+        $new = clone $this;
+        $new->resetPageOnPageNotFound = $reset;
         return $new;
     }
 
@@ -228,8 +239,69 @@ abstract class BaseListView extends Widget
         return $this->dataReader;
     }
 
-    final protected function getPreparedDataReader(): ReadableDataInterface
+    /**
+     * @throws PageNotFoundException
+     *
+     * @psalm-return array<array-key, array|object>
+     */
+    private function prepareDataReaderAndGetItems(): array
     {
+        $page = $this->urlParameterProvider?->get(
+            $this->urlConfig->getPageParameterName(),
+            $this->urlConfig->getPageParameterType()
+        );
+        $previousPage = $this->urlParameterProvider?->get(
+            $this->urlConfig->getPreviousPageParameterName(),
+            $this->urlConfig->getPreviousPageParameterType(),
+        );
+        $pageSize = $this->urlParameterProvider?->get(
+            $this->urlConfig->getPageSizeParameterName(),
+            $this->urlConfig->getPageSizeParameterType(),
+        );
+        $sort = $this->urlParameterProvider?->get(
+            $this->urlConfig->getSortParameterName(),
+            $this->urlConfig->getSortParameterType(),
+        );
+
+        $this->preparedDataReader = $this->prepareDataReaderByParams($page, $previousPage, $pageSize, $sort);
+
+        try {
+            return $this->getItems($this->preparedDataReader);
+        } catch (PageNotFoundException $exception) {
+        }
+
+        if ($this->resetPageOnPageNotFound) {
+            $this->preparedDataReader = $this->prepareDataReaderByParams(null, null, $pageSize, $sort);
+            try {
+                return $this->getItems($this->preparedDataReader);
+            } catch (PageNotFoundException $exception) {
+            }
+        }
+
+        if ($this->pageNotFoundExceptionCallback !== null) {
+            ($this->pageNotFoundExceptionCallback)($exception);
+        }
+
+        throw $exception;
+    }
+
+    /**
+     * @throws PageNotFoundException
+     *
+     * @psalm-return array<array-key, array|object>
+     */
+    private function getItems(ReadableDataInterface $dataReader): array
+    {
+        $items = $dataReader->read();
+        return is_array($items) ? $items : iterator_to_array($items);
+    }
+
+    private function prepareDataReaderByParams(
+        ?string $page,
+        ?string $previousPage,
+        ?string $pageSize,
+        ?string $sort,
+    ): ReadableDataInterface {
         $dataReader = $this->getDataReader();
 
         if (!$dataReader instanceof PaginatorInterface) {
@@ -255,41 +327,21 @@ abstract class BaseListView extends Widget
         }
 
         if ($dataReader->isPaginationRequired()) {
-            $pageSize = $this->urlParameterProvider?->get(
-                $this->urlConfig->getPageSizeParameterName(),
-                $this->urlConfig->getPageSizeParameterType(),
-            );
             if ($pageSize !== null) {
-                $dataReader = $dataReader->withPageSize((int)$pageSize);
+                $dataReader = $dataReader->withPageSize((int) $pageSize);
             }
 
-            $page = $this->urlParameterProvider?->get(
-                $this->urlConfig->getPageParameterName(),
-                $this->urlConfig->getPageParameterType()
-            );
             if ($page !== null) {
                 $dataReader = $dataReader->withToken(PageToken::next($page));
-            } else {
-                $page = $this->urlParameterProvider?->get(
-                    $this->urlConfig->getPreviousPageParameterName(),
-                    $this->urlConfig->getPreviousPageParameterType(),
-                );
-                if ($page !== null) {
-                    $dataReader = $dataReader->withToken(PageToken::previous($page));
-                }
+            } elseif ($previousPage !== null) {
+                $dataReader = $dataReader->withToken(PageToken::previous($previousPage));
             }
         }
 
-        if ($dataReader->isSortable()) {
-            $orderString = $this->urlParameterProvider?->get(
-                $this->urlConfig->getSortParameterName(),
-                $this->urlConfig->getSortParameterType(),
-            );
-            if (!empty($orderString)) {
-                $sort = $dataReader->getSort();
-                if ($sort !== null) {
-                    $dataReader = $dataReader->withSort($sort->withOrderString($orderString));
-                }
+        if ($dataReader->isSortable() && !empty($sort)) {
+            $sortObject = $dataReader->getSort();
+            if ($sortObject !== null) {
+                $dataReader = $dataReader->withSort($sortObject->withOrderString($sort));
             }
         }
 
@@ -476,14 +528,7 @@ abstract class BaseListView extends Widget
 
     public function render(): string
     {
-        try {
-            $items = $this->getItems();
-        } catch (PageNotFoundException $e) {
-            if ($this->pageNotFoundExceptionCallback !== null) {
-                ($this->pageNotFoundExceptionCallback)($e);
-            }
-            throw $e;
-        }
+        $items = $this->prepareDataReaderAndGetItems();
 
         $content = trim(
             strtr(
@@ -505,17 +550,6 @@ abstract class BaseListView extends Widget
                 ->render();
     }
 
-    /**
-     * @throws PageNotFoundException
-     *
-     * @psalm-return array<array-key, array|object>
-     */
-    private function getItems(): array
-    {
-        $data = $this->getPreparedDataReader()->read();
-        return is_array($data) ? $data : iterator_to_array($data);
-    }
-
     protected function getDefaultPageSize(): int
     {
         $dataReader = $this->getDataReader();
@@ -528,7 +562,7 @@ abstract class BaseListView extends Widget
 
     private function renderPagination(): string
     {
-        $preparedDataReader = $this->getPreparedDataReader();
+        $preparedDataReader = $this->preparedDataReader;
         if (!$preparedDataReader instanceof PaginatorInterface || !$preparedDataReader->isPaginationRequired()) {
             return '';
         }
@@ -573,7 +607,7 @@ abstract class BaseListView extends Widget
             return '';
         }
 
-        $dataReader = $this->getPreparedDataReader();
+        $dataReader = $this->preparedDataReader;
         if (!$dataReader instanceof OffsetPaginator) {
             return '';
         }

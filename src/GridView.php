@@ -8,10 +8,9 @@ use Closure;
 use Psr\Container\ContainerInterface;
 use Stringable;
 use Yiisoft\Data\Paginator\PaginatorInterface;
-use Yiisoft\Definitions\Exception\CircularReferenceException;
-use Yiisoft\Definitions\Exception\InvalidConfigException;
-use Yiisoft\Definitions\Exception\NotInstantiableException;
-use Yiisoft\Factory\NotFoundException;
+use Yiisoft\Data\Reader\ReadableDataInterface;
+use Yiisoft\Data\Reader\Sort;
+use Yiisoft\Data\Reader\SortableDataInterface;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\Tr;
 use Yiisoft\Translator\TranslatorInterface;
@@ -518,10 +517,9 @@ final class GridView extends BaseListView
         }
 
         if ($this->headerTableEnabled) {
-            $preparedDataReader = $this->getPreparedDataReader();
-            if ($preparedDataReader instanceof PaginatorInterface) {
-                $pageToken = $preparedDataReader->isOnFirstPage() ? null : $preparedDataReader->getToken();
-                $pageSize = $preparedDataReader->getPageSize();
+            if ($this->preparedDataReader instanceof PaginatorInterface) {
+                $pageToken = $this->preparedDataReader->isOnFirstPage() ? null : $this->preparedDataReader->getToken();
+                $pageSize = $this->preparedDataReader->getPageSize();
                 if ($pageSize === $this->getDefaultPageSize()) {
                     $pageSize = null;
                 }
@@ -530,8 +528,7 @@ final class GridView extends BaseListView
                 $pageSize = null;
             }
             $headerContext = new HeaderContext(
-                $dataReader,
-                $preparedDataReader,
+                $this->getSort($this->preparedDataReader),
                 $this->sortableHeaderClass,
                 $this->sortableHeaderPrepend,
                 $this->sortableHeaderAppend,
@@ -695,5 +692,18 @@ final class GridView extends BaseListView
     {
         /** @var ColumnRendererInterface */
         return $this->columnRenderersContainer->get($column->getRenderer());
+    }
+
+    private function getSort(?ReadableDataInterface $dataReader): ?Sort
+    {
+        if ($dataReader instanceof PaginatorInterface && $dataReader->isSortable()) {
+            return $dataReader->getSort();
+        }
+
+        if ($dataReader instanceof SortableDataInterface) {
+            return $dataReader->getSort();
+        }
+
+        return null;
     }
 }
