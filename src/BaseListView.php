@@ -274,7 +274,7 @@ abstract class BaseListView extends Widget
             $this->preparedDataReader = $this->prepareDataReaderByParams(null, null, $pageSize, $sort);
             try {
                 return $this->getItems($this->preparedDataReader);
-            } catch (PageNotFoundException $exception) {
+            } catch (PageNotFoundException) {
             }
         }
 
