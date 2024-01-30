@@ -216,9 +216,8 @@ final class ListView extends BaseListView
      *
      * @throws Throwable|ViewNotFoundException
      */
-    protected function renderItems(): string
+    protected function renderItems(array $items): string
     {
-        $items = $this->getItems();
         $keys = array_keys($items);
         $rows = [];
 

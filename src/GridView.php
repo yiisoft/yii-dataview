@@ -455,15 +455,10 @@ final class GridView extends BaseListView
 
     /**
      * Renders the data active record classes for the grid view.
-     *
-     * @throws InvalidConfigException
-     * @throws NotFoundException
-     * @throws NotInstantiableException
-     * @throws CircularReferenceException
      */
-    protected function renderItems(): string
+    protected function renderItems(array $items): string
     {
-        $columns = empty($this->columns) ? $this->guessColumns() : $this->columns;
+        $columns = empty($this->columns) ? $this->guessColumns($items) : $this->columns;
         $columns = array_filter(
             $columns,
             static fn(ColumnInterface $column) => $column->isVisible()
@@ -610,7 +605,7 @@ final class GridView extends BaseListView
 
         $rows = [];
         $index = 0;
-        foreach ($this->getItems() as $key => $value) {
+        foreach ($items as $key => $value) {
             if ($this->beforeRow !== null) {
                 /** @var Tr|null $row */
                 $row = call_user_func($this->beforeRow, $value, $key, $index, $this);
@@ -662,10 +657,8 @@ final class GridView extends BaseListView
      *
      * @psalm-return list<ColumnInterface>
      */
-    private function guessColumns(): array
+    private function guessColumns(array $items): array
     {
-        $items = $this->getItems();
-
         $columns = [];
         foreach ($items as $item) {
             /**

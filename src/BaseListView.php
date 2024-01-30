@@ -8,6 +8,7 @@ use InvalidArgumentException;
 use Stringable;
 use Yiisoft\Data\Paginator\KeysetPaginator;
 use Yiisoft\Data\Paginator\OffsetPaginator;
+use Yiisoft\Data\Paginator\PageNotFoundException;
 use Yiisoft\Data\Paginator\PageToken;
 use Yiisoft\Data\Paginator\PaginatorInterface;
 use Yiisoft\Data\Reader\CountableDataInterface;
@@ -31,6 +32,7 @@ use Yiisoft\Yii\DataView\Exception\DataReaderNotSetException;
 /**
  * @psalm-type UrlArguments = array<string,scalar|Stringable|null>
  * @psalm-type UrlCreator = callable(UrlArguments,array):string
+ * @psalm-type PageNotFoundExceptionCallback = callable(PageNotFoundException):void
  */
 abstract class BaseListView extends Widget
 {
@@ -83,6 +85,11 @@ abstract class BaseListView extends Widget
 
     private UrlParameterProviderInterface|null $urlParameterProvider = null;
 
+    /**
+     * @psalm-var PageNotFoundExceptionCallback|null
+     */
+    private $pageNotFoundExceptionCallback = null;
+
     public function __construct(
         TranslatorInterface|null $translator = null,
         protected readonly string $translationCategory = self::DEFAULT_TRANSLATION_CATEGORY,
@@ -98,6 +105,16 @@ abstract class BaseListView extends Widget
     {
         $new = clone $this;
         $new->urlCreator = $urlCreator;
+        return $new;
+    }
+
+    /**
+     * @psalm-param PageNotFoundExceptionCallback|null $callback
+     */
+    final public function pageNotFoundExceptionCallback(?callable $callback): static
+    {
+        $new = clone $this;
+        $new->pageNotFoundExceptionCallback = $callback;
         return $new;
     }
 
@@ -143,8 +160,10 @@ abstract class BaseListView extends Widget
      * Renders the data models.
      *
      * @return string the rendering result.
+     *
+     * @psalm-param array<array-key, array|object> $items
      */
-    abstract protected function renderItems(): string;
+    abstract protected function renderItems(array $items): string;
 
     final public function containerTag(?string $tag): static
     {
@@ -457,8 +476,13 @@ abstract class BaseListView extends Widget
 
     public function render(): string
     {
-        if ($this->dataReader === null) {
-            throw new DataReaderNotSetException();
+        try {
+            $items = $this->getItems();
+        } catch (PageNotFoundException $e) {
+            if ($this->pageNotFoundExceptionCallback !== null) {
+                ($this->pageNotFoundExceptionCallback)($e);
+            }
+            throw $e;
         }
 
         $content = trim(
@@ -467,7 +491,7 @@ abstract class BaseListView extends Widget
                 [
                     '{header}' => $this->renderHeader(),
                     '{toolbar}' => $this->toolbar,
-                    '{items}' => $this->renderItems(),
+                    '{items}' => $this->renderItems($items),
                     '{summary}' => $this->renderSummary(),
                     '{pager}' => $this->renderPagination(),
                 ],
@@ -482,9 +506,11 @@ abstract class BaseListView extends Widget
     }
 
     /**
+     * @throws PageNotFoundException
+     *
      * @psalm-return array<array-key, array|object>
      */
-    protected function getItems(): array
+    private function getItems(): array
     {
         $data = $this->getPreparedDataReader()->read();
         return is_array($data) ? $data : iterator_to_array($data);
