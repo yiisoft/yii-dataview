@@ -26,8 +26,6 @@ use Yiisoft\Yii\DataView\Column\DataColumn;
 /**
  * The GridView widget is used to display data in a grid.
  *
- * It provides features like {@see sorter|sorting}, and {@see filterModel|filtering} the data.
- *
  * The columns of the grid table are configured in terms of {@see Column} classes, which are configured via
  * {@see columns}.
  *
@@ -37,10 +35,6 @@ use Yiisoft\Yii\DataView\Column\DataColumn;
  */
 final class GridView extends BaseListView
 {
-    public const FILTER_POS_HEADER = 'header';
-    public const FILTER_POS_FOOTER = 'footer';
-    public const FILTER_POS_BODY = 'body';
-
     private Closure|null $afterRow = null;
     private Closure|null $beforeRow = null;
 
@@ -52,9 +46,6 @@ final class GridView extends BaseListView
 
     private bool $columnsGroupEnabled = false;
     private string $emptyCell = '&nbsp;';
-    private ?string $filterModelName = null;
-    private string $filterPosition = self::FILTER_POS_BODY;
-    private array $filterRowAttributes = [];
     private bool $footerEnabled = false;
     private array $footerRowAttributes = [];
     private bool $headerTableEnabled = true;
@@ -136,11 +127,7 @@ final class GridView extends BaseListView
      * ```php
      * [
      *     SerialColumn::create(),
-     *     DetailColumn::create()
-     *         ->attribute('identity_id')
-     *         ->filterAttribute('identity_id')
-     *         ->filterValueDefault(0)
-     *         ->filterAttributes(['class' => 'text-center', 'maxlength' => '5', 'style' => 'width:60px']),
+     *     DetailColumn::create(),
      *     ActionColumn::create()->primaryKey('identity_id')->visibleButtons(['view' => true]),
      * ]
      * ```
@@ -176,61 +163,12 @@ final class GridView extends BaseListView
      * Return new instance with the HTML display when the content is empty.
      *
      * @param string $value The HTML display when the content of a cell is empty. This property is used to render cells
-     * that have no defined content, e.g. empty footer or filter cells.
+     * that have no defined content, e.g. empty footer.
      */
     public function emptyCell(string $value): self
     {
         $new = clone $this;
         $new->emptyCell = $value;
-
-        return $new;
-    }
-
-    /**
-     * Return new instance with the filter model name.
-     *
-     * @param string|null $value The form model name that keeps the user-entered filter data. When this property is set, the
-     * grid view will enable column-based filtering. Each data column by default will display a text field at the top
-     * that users can fill in to filter the data.
-     *
-     * Note that in order to show an input field for filtering, a column must have its {@see DataColumn::attribute}
-     * property set and the attribute should be active in the current scenario of $filterModelName or have
-     * {@see DataColumn::filter} set as the HTML code for the input field.
-     */
-    public function filterModelName(?string $value): self
-    {
-        $new = clone $this;
-        $new->filterModelName = $value;
-
-        return $new;
-    }
-
-    /**
-     * Return new instance with the filter position.
-     *
-     * @param string $filterPosition Whether the filters should be displayed in the grid view. Valid values include:
-     *
-     * - {@see FILTER_POS_HEADER}: The filters will be displayed on top of each column's header cell.
-     * - {@see FILTER_POS_BODY}: The filters will be displayed right below each column's header cell.
-     * - {@see FILTER_POS_FOOTER}: The filters will be displayed below each column's footer cell.
-     */
-    public function filterPosition(string $filterPosition): self
-    {
-        $new = clone $this;
-        $new->filterPosition = $filterPosition;
-
-        return $new;
-    }
-
-    /**
-     * Returns a new instance with the HTML attributes for filter row.
-     *
-     * @param array $values Attribute values indexed by attribute names.
-     */
-    public function filterRowAttributes(array $values): self
-    {
-        $new = clone $this;
-        $new->filterRowAttributes = $values;
 
         return $new;
     }
@@ -475,7 +413,6 @@ final class GridView extends BaseListView
             $dataReader,
             $this->urlArguments,
             $this->urlQueryParameters,
-            $this->filterModelName,
             $this->columnsConfigs,
             $this->translator,
             $this->translationCategory,
@@ -488,32 +425,6 @@ final class GridView extends BaseListView
                 $tags[] = Html::col($cell->getAttributes());
             }
             $blocks[] = Html::colgroup()->columns(...$tags)->render();
-        }
-
-        if ($this->filterPosition === self::FILTER_POS_BODY
-            || $this->filterPosition === self::FILTER_POS_HEADER
-            || $this->filterPosition === self::FILTER_POS_FOOTER
-        ) {
-            $tags = [];
-            $hasFilters = false;
-            foreach ($columns as $i => $column) {
-                $baseCell = new Cell(encode: false, content: '&nbsp;');
-                $cell = $renderers[$i]->renderFilter($column, $baseCell, $globalContext);
-                if ($cell === null) {
-                    $cell = $baseCell;
-                } else {
-                    $hasFilters = true;
-                }
-                /** @var string|Stringable $content */
-                $content = $cell->getContent();
-                $tags[] = Html::td(attributes: $cell->getAttributes())
-                    ->content($content)
-                    ->encode($cell->isEncode())
-                    ->doubleEncode($cell->isDoubleEncode());
-            }
-            $filterRow = $hasFilters ? Html::tr($this->filterRowAttributes)->cells(...$tags) : null;
-        } else {
-            $filterRow = null;
         }
 
         if ($this->headerTableEnabled) {
@@ -560,18 +471,7 @@ final class GridView extends BaseListView
                         ->doubleEncode($cell->isDoubleEncode());
             }
             $headerRow = Html::tr($this->headerRowAttributes)->cells(...$tags);
-
-            if ($filterRow === null) {
-                $rows = [$headerRow];
-            } elseif ($this->filterPosition === self::FILTER_POS_HEADER) {
-                $rows = [$filterRow, $headerRow];
-            } elseif ($this->filterPosition === self::FILTER_POS_BODY) {
-                $rows = [$headerRow, $filterRow];
-            } else {
-                $rows = [$headerRow];
-            }
-
-            $blocks[] = Html::thead()->rows(...$rows)->render();
+            $blocks[] = Html::thead()->rows($headerRow)->render();
         }
 
         if ($this->footerEnabled) {
@@ -590,14 +490,7 @@ final class GridView extends BaseListView
                     ->doubleEncode($cell->isDoubleEncode());
             }
             $footerRow = Html::tr($this->footerRowAttributes)->cells(...$tags);
-
-            $rows = [$footerRow];
-            if ($this->filterPosition === self::FILTER_POS_FOOTER) {
-                /** @var Tr */
-                $rows[] = $filterRow;
-            }
-
-            $blocks[] = Html::tfoot()->rows(...$rows)->render();
+            $blocks[] = Html::tfoot()->rows($footerRow)->render();
         }
 
         $rows = [];

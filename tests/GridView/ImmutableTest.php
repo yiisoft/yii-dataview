@@ -56,9 +56,6 @@ final class ImmutableTest extends TestCase
         $this->assertNotSame($gridView, $gridView->columns(new DataColumn()));
         $this->assertNotSame($gridView, $gridView->columnsGroupEnabled(false));
         $this->assertNotSame($gridView, $gridView->emptyCell(''));
-        $this->assertNotSame($gridView, $gridView->filterModelName(''));
-        $this->assertNotSame($gridView, $gridView->filterPosition(''));
-        $this->assertNotSame($gridView, $gridView->filterRowAttributes([]));
         $this->assertNotSame($gridView, $gridView->footerEnabled(false));
         $this->assertNotSame($gridView, $gridView->footerRowAttributes([]));
         $this->assertNotSame($gridView, $gridView->headerRowAttributes([]));
