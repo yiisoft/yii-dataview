@@ -6,10 +6,7 @@ namespace Yiisoft\Yii\DataView\Column\Base;
 
 use Stringable;
 use Yiisoft\Data\Paginator\PageToken;
-use Yiisoft\Data\Paginator\PaginatorInterface;
-use Yiisoft\Data\Reader\ReadableDataInterface;
 use Yiisoft\Data\Reader\Sort;
-use Yiisoft\Data\Reader\SortableDataInterface;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\A;
 use Yiisoft\Translator\TranslatorInterface;
@@ -28,8 +25,7 @@ final class HeaderContext
      * @psalm-param UrlCreator|null $urlCreator
      */
     public function __construct(
-        public readonly ReadableDataInterface $dataReader,
-        private readonly ReadableDataInterface $preparedDataReader,
+        private readonly ?Sort $sort,
         private readonly ?string $sortableHeaderClass,
         private string|Stringable $sortableHeaderPrepend,
         private string|Stringable $sortableHeaderAppend,
@@ -62,13 +58,12 @@ final class HeaderContext
      */
     public function prepareSortable(Cell $cell, string $property): array
     {
-        $sort = $this->getSort($this->preparedDataReader);
-        if ($sort === null || !$sort->hasFieldInConfig($property)) {
+        if ($this->sort === null || !$this->sort->hasFieldInConfig($property)) {
             return [$cell, null, '', ''];
         }
 
         $linkAttributes = [];
-        $propertyOrder = $sort->getOrder()[$property] ?? null;
+        $propertyOrder = $this->sort->getOrder()[$property] ?? null;
         if ($propertyOrder === null) {
             $cell = $cell->addClass($this->sortableHeaderClass);
             $prepend = $this->sortableHeaderPrepend;
@@ -89,7 +84,7 @@ final class HeaderContext
             UrlParametersFactory::create(
                 $this->pageToken,
                 $this->pageSize,
-                $this->getLinkSortValue($sort, $property),
+                $this->getLinkSortValue($this->sort, $property),
                 $this->urlConfig,
             )
         );
@@ -127,18 +122,5 @@ final class HeaderContext
         $result = $sort->withOrder($order)->getOrderAsString();
 
         return empty($result) ? null : $result;
-    }
-
-    private function getSort(ReadableDataInterface $dataReader): ?Sort
-    {
-        if ($dataReader instanceof PaginatorInterface && $dataReader->isSortable()) {
-            return $dataReader->getSort();
-        }
-
-        if ($dataReader instanceof SortableDataInterface) {
-            return $dataReader->getSort();
-        }
-
-        return null;
     }
 }

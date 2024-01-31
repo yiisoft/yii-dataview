@@ -70,7 +70,7 @@ final class ImmutableTest extends TestCase
     private function createBaseListView(): DataView\BaseListView
     {
         return new class () extends DataView\BaseListView {
-            public function renderItems(): string
+            public function renderItems(array $items): string
             {
                 return '';
             }

@@ -8,10 +8,9 @@ use Closure;
 use Psr\Container\ContainerInterface;
 use Stringable;
 use Yiisoft\Data\Paginator\PaginatorInterface;
-use Yiisoft\Definitions\Exception\CircularReferenceException;
-use Yiisoft\Definitions\Exception\InvalidConfigException;
-use Yiisoft\Definitions\Exception\NotInstantiableException;
-use Yiisoft\Factory\NotFoundException;
+use Yiisoft\Data\Reader\ReadableDataInterface;
+use Yiisoft\Data\Reader\Sort;
+use Yiisoft\Data\Reader\SortableDataInterface;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\Tr;
 use Yiisoft\Translator\TranslatorInterface;
@@ -455,15 +454,10 @@ final class GridView extends BaseListView
 
     /**
      * Renders the data active record classes for the grid view.
-     *
-     * @throws InvalidConfigException
-     * @throws NotFoundException
-     * @throws NotInstantiableException
-     * @throws CircularReferenceException
      */
-    protected function renderItems(): string
+    protected function renderItems(array $items): string
     {
-        $columns = empty($this->columns) ? $this->guessColumns() : $this->columns;
+        $columns = empty($this->columns) ? $this->guessColumns($items) : $this->columns;
         $columns = array_filter(
             $columns,
             static fn(ColumnInterface $column) => $column->isVisible()
@@ -523,10 +517,9 @@ final class GridView extends BaseListView
         }
 
         if ($this->headerTableEnabled) {
-            $preparedDataReader = $this->getPreparedDataReader();
-            if ($preparedDataReader instanceof PaginatorInterface) {
-                $pageToken = $preparedDataReader->isOnFirstPage() ? null : $preparedDataReader->getToken();
-                $pageSize = $preparedDataReader->getPageSize();
+            if ($this->preparedDataReader instanceof PaginatorInterface) {
+                $pageToken = $this->preparedDataReader->isOnFirstPage() ? null : $this->preparedDataReader->getToken();
+                $pageSize = $this->preparedDataReader->getPageSize();
                 if ($pageSize === $this->getDefaultPageSize()) {
                     $pageSize = null;
                 }
@@ -535,8 +528,7 @@ final class GridView extends BaseListView
                 $pageSize = null;
             }
             $headerContext = new HeaderContext(
-                $dataReader,
-                $preparedDataReader,
+                $this->getSort($this->preparedDataReader),
                 $this->sortableHeaderClass,
                 $this->sortableHeaderPrepend,
                 $this->sortableHeaderAppend,
@@ -610,7 +602,7 @@ final class GridView extends BaseListView
 
         $rows = [];
         $index = 0;
-        foreach ($this->getItems() as $key => $value) {
+        foreach ($items as $key => $value) {
             if ($this->beforeRow !== null) {
                 /** @var Tr|null $row */
                 $row = call_user_func($this->beforeRow, $value, $key, $index, $this);
@@ -662,10 +654,8 @@ final class GridView extends BaseListView
      *
      * @psalm-return list<ColumnInterface>
      */
-    private function guessColumns(): array
+    private function guessColumns(array $items): array
     {
-        $items = $this->getItems();
-
         $columns = [];
         foreach ($items as $item) {
             /**
@@ -702,5 +692,18 @@ final class GridView extends BaseListView
     {
         /** @var ColumnRendererInterface */
         return $this->columnRenderersContainer->get($column->getRenderer());
+    }
+
+    private function getSort(?ReadableDataInterface $dataReader): ?Sort
+    {
+        if ($dataReader instanceof PaginatorInterface && $dataReader->isSortable()) {
+            return $dataReader->getSort();
+        }
+
+        if ($dataReader instanceof SortableDataInterface) {
+            return $dataReader->getSort();
+        }
+
+        return null;
     }
 }
