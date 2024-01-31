@@ -4,14 +4,10 @@ declare(strict_types=1);
 
 namespace Yiisoft\Yii\DataView\Column;
 
-use Yiisoft\Yii\DataView\Helper\Attribute;
-
 /**
  * DetailColumn is the default column type for the {@see GridView} widget.
  *
  * A simple data column definition refers to an attribute in the data of the GridView's data provider.
- *
- * The name of the attribute is specified by {@see attribute}.
  *
  * By setting {@see value} and {@see label}, the label and cell content can be customized.
  *

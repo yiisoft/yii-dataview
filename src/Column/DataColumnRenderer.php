@@ -7,32 +7,13 @@ namespace Yiisoft\Yii\DataView\Column;
 use InvalidArgumentException;
 use Yiisoft\Arrays\ArrayHelper;
 use Yiisoft\Html\Html;
-use Yiisoft\Html\Tag\Input;
-use Yiisoft\Html\Tag\Select;
 use Yiisoft\Yii\DataView\Column\Base\Cell;
 use Yiisoft\Yii\DataView\Column\Base\DataContext;
 use Yiisoft\Yii\DataView\Column\Base\GlobalContext;
 use Yiisoft\Yii\DataView\Column\Base\HeaderContext;
-use Yiisoft\Yii\DataView\Helper\Attribute;
 
 final class DataColumnRenderer implements ColumnRendererInterface
 {
-    private const FILTER_TYPES = [
-        'date' => 'date',
-        'datetime' => 'datetime-local',
-        'email' => 'email',
-        'month' => 'month',
-        'number' => 'number',
-        'range' => 'range',
-        'search' => 'search',
-        'select' => 'select',
-        'tel' => 'tel',
-        'text' => 'text',
-        'time' => 'time',
-        'url' => 'url',
-        'week' => 'week',
-    ];
-
     public function renderColumn(ColumnInterface $column, Cell $cell, GlobalContext $context): Cell
     {
         $this->checkColumn($column);

@@ -11,8 +11,6 @@ use Closure;
  *
  * A simple data field definition refers to an attribute in the data of the `DetailView`.
  *
- * The name of the attribute is specified by {@see attribute}.
- *
  * By setting {@see value} and {@see label}, the label and column content can be customized.
  */
 final class DataField
