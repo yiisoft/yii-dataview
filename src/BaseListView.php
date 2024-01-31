@@ -85,7 +85,7 @@ abstract class BaseListView extends Widget
 
     private UrlParameterProviderInterface|null $urlParameterProvider = null;
 
-    private bool $resetPageOnPageNotFound = false;
+    private bool $ignoreMissingPage = true;
 
     /**
      * @psalm-var PageNotFoundExceptionCallback|null
@@ -112,10 +112,10 @@ abstract class BaseListView extends Widget
         return $new;
     }
 
-    final public function resetPageOnPageNotFound(bool $reset = true): static
+    final public function ignoreMissingPage(bool $value): static
     {
         $new = clone $this;
-        $new->resetPageOnPageNotFound = $reset;
+        $new->ignoreMissingPage = $value;
         return $new;
     }
 
@@ -270,7 +270,7 @@ abstract class BaseListView extends Widget
         } catch (PageNotFoundException $exception) {
         }
 
-        if ($this->resetPageOnPageNotFound) {
+        if ($this->ignoreMissingPage) {
             $this->preparedDataReader = $this->prepareDataReaderByParams(null, null, $pageSize, $sort);
             try {
                 return $this->getItems($this->preparedDataReader);
