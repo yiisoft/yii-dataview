@@ -17,7 +17,6 @@ final class GlobalContext
         public readonly ReadableDataInterface $dataReader,
         public readonly array $urlArguments,
         public readonly array $urlQueryParameters,
-        public readonly ?string $filterModelName,
         public readonly array $columnsConfigs,
         private readonly TranslatorInterface $translator,
         private readonly string $translationCategory,

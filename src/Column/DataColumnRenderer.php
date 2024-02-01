@@ -7,32 +7,13 @@ namespace Yiisoft\Yii\DataView\Column;
 use InvalidArgumentException;
 use Yiisoft\Arrays\ArrayHelper;
 use Yiisoft\Html\Html;
-use Yiisoft\Html\Tag\Input;
-use Yiisoft\Html\Tag\Select;
 use Yiisoft\Yii\DataView\Column\Base\Cell;
 use Yiisoft\Yii\DataView\Column\Base\DataContext;
 use Yiisoft\Yii\DataView\Column\Base\GlobalContext;
 use Yiisoft\Yii\DataView\Column\Base\HeaderContext;
-use Yiisoft\Yii\DataView\Helper\Attribute;
 
 final class DataColumnRenderer implements ColumnRendererInterface
 {
-    private const FILTER_TYPES = [
-        'date' => 'date',
-        'datetime' => 'datetime-local',
-        'email' => 'email',
-        'month' => 'month',
-        'number' => 'number',
-        'range' => 'range',
-        'search' => 'search',
-        'select' => 'select',
-        'tel' => 'tel',
-        'text' => 'text',
-        'time' => 'time',
-        'url' => 'url',
-        'week' => 'week',
-    ];
-
     public function renderColumn(ColumnInterface $column, Cell $cell, GlobalContext $context): Cell
     {
         $this->checkColumn($column);
@@ -66,31 +47,6 @@ final class DataColumnRenderer implements ColumnRendererInterface
         return $cell->content($prepend . ($link ?? $label) . $append);
     }
 
-    public function renderFilter(ColumnInterface $column, Cell $cell, GlobalContext $context): ?Cell
-    {
-        $this->checkColumn($column);
-
-        if (!isset(self::FILTER_TYPES[$column->filterType])) {
-            throw new InvalidArgumentException(sprintf('Invalid filter type "%s".', $column->filterType));
-        }
-
-        if ($column->filter !== null) {
-            $content = $column->filter;
-        } elseif ($column->filterProperty !== null) {
-            $content = match (self::FILTER_TYPES[$column->filterType]) {
-                'select' => $this->renderFilterSelect($column, $context),
-                default => $this->renderFilterInput($column, $context),
-            };
-        } else {
-            return null;
-        }
-
-        return $cell
-            ->content($content)
-            ->addAttributes($column->filterAttributes)
-            ->encode(false);
-    }
-
     public function renderBody(ColumnInterface $column, Cell $cell, DataContext $context): Cell
     {
         $this->checkColumn($column);
@@ -120,55 +76,6 @@ final class DataColumnRenderer implements ColumnRendererInterface
         }
 
         return $cell;
-    }
-
-    private function renderFilterInput(DataColumn $column, GlobalContext $context): string
-    {
-        $filterInputAttributes = $column->filterInputAttributes;
-        $filterInputTag = Input::tag();
-
-        if (!array_key_exists('name', $filterInputAttributes)) {
-            $filterInputTag = $filterInputTag->name(
-                Attribute::getInputName(
-                    (string)($column->filterModelName ?? $context->filterModelName),
-                    $column->filterProperty ?? ''
-                ),
-            );
-        }
-
-        if (!array_key_exists('value', $filterInputAttributes) && $column->filterValueDefault !== '') {
-            $filterInputTag = $filterInputTag->value($column->filterValueDefault);
-        }
-
-        return $filterInputTag
-            ->addAttributes($filterInputAttributes)
-            ->type(self::FILTER_TYPES[$column->filterType])
-            ->render();
-    }
-
-    private function renderFilterSelect(DataColumn $column, GlobalContext $context): string
-    {
-        $filterInputAttributes = $column->filterInputAttributes;
-        $filterSelectTag = Select::tag();
-
-        if (!array_key_exists('name', $filterInputAttributes)) {
-            $filterSelectTag = $filterSelectTag->name(
-                Attribute::getInputName(
-                    (string)($column->filterModelName ?? $context->filterModelName),
-                    $column->filterProperty ?? ''
-                ),
-            );
-        }
-
-        if ($column->filterValueDefault !== null) {
-            $filterSelectTag = $filterSelectTag->value($column->filterValueDefault);
-        }
-
-        return $filterSelectTag
-            ->addAttributes($filterInputAttributes)
-            ->optionsData($column->filterInputSelectItems)
-            ->prompt($column->filterInputSelectPrompt)
-            ->render();
     }
 
     /**

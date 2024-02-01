@@ -34,11 +34,6 @@ final class RadioColumnRenderer implements ColumnRendererInterface
             ->content($header);
     }
 
-    public function renderFilter(ColumnInterface $column, Cell $cell, GlobalContext $context): ?Cell
-    {
-        return null;
-    }
-
     public function renderBody(ColumnInterface $column, Cell $cell, DataContext $context): Cell
     {
         $this->checkColumn($column);

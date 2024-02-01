@@ -18,8 +18,6 @@ interface ColumnRendererInterface
 
     public function renderHeader(ColumnInterface $column, Cell $cell, HeaderContext $context): ?Cell;
 
-    public function renderFilter(ColumnInterface $column, Cell $cell, GlobalContext $context): ?Cell;
-
     public function renderBody(ColumnInterface $column, Cell $cell, DataContext $context): Cell;
 
     public function renderFooter(ColumnInterface $column, Cell $cell, GlobalContext $context): Cell;
