@@ -439,6 +439,7 @@ final class GridView extends BaseListView
                 $pageSize = null;
             }
             $headerContext = new HeaderContext(
+                $this->getSort($dataReader),
                 $this->getSort($this->preparedDataReader),
                 $this->sortableHeaderClass,
                 $this->sortableHeaderPrepend,
