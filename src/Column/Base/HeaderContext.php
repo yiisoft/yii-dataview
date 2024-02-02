@@ -59,7 +59,7 @@ final class HeaderContext
      */
     public function prepareSortable(Cell $cell, string $property): array
     {
-        if ($this->sort === null || !$this->sort->hasFieldInConfig($property)) {
+        if ($this->sort === null || $this->originalSort === null || !$this->sort->hasFieldInConfig($property)) {
             return [$cell, null, '', ''];
         }
 
