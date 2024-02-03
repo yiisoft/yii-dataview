@@ -31,7 +31,7 @@ trait TestTrait
         $container = new Container(ContainerConfig::create()->withDefinitions($this->config()));
         WidgetFactory::initialize($container, [
             GridView::class => [
-                'addRendererConstructorArguments()' => [
+                'addRendererConfigs()' => [
                     [
                         ActionColumnRenderer::class => [
                             'defaultUrlCreator' => Reference::to(ActionColumnUrlCreator::class),

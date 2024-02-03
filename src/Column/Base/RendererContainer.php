@@ -23,7 +23,7 @@ final class RendererContainer
     /**
      * @psalm-var array<string, array>
      */
-    private array $constructorArguments = [];
+    private array $configs = [];
 
     public function __construct(ContainerInterface $dependencyContainer)
     {
@@ -36,20 +36,20 @@ final class RendererContainer
     public function get(string $class): ColumnRendererInterface
     {
         if (!isset($this->cache[$class])) {
-            $this->cache[$class] = $this->injector->make($class, $this->constructorArguments[$class] ?? []);
+            $this->cache[$class] = $this->injector->make($class, $this->configs[$class] ?? []);
         }
 
         return $this->cache[$class];
     }
 
     /**
-     * @psalm-param array<string, array> $constructorArguments
+     * @psalm-param array<string, array> $configs
      */
-    public function addConstructorArguments(array $constructorArguments): self
+    public function addConfigs(array $configs): self
     {
         $new = clone $this;
-        foreach ($constructorArguments as $class => $arguments) {
-            $new->constructorArguments[$class] = $arguments;
+        foreach ($configs as $class => $config) {
+            $new->configs[$class] = $config;
             unset($new->cache[$class]);
         }
         return $new;

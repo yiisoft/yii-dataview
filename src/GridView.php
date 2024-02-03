@@ -83,12 +83,12 @@ final class GridView extends BaseListView
     }
 
     /**
-     * @psalm-param array<string, array> $arguments
+     * @psalm-param array<string, array> $configs
      */
-    public function addRendererConstructorArguments(array $arguments): self
+    public function addRendererConfigs(array $configs): self
     {
         $new = clone $this;
-        $new->rendererContainer = $this->rendererContainer->addConstructorArguments($arguments);
+        $new->rendererContainer = $this->rendererContainer->addConfigs($configs);
         return $new;
     }
 
