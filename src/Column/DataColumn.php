@@ -28,6 +28,7 @@ final class DataColumn implements ColumnInterface
         public readonly array $bodyAttributes = [],
         public readonly bool $withSorting = true,
         public readonly mixed $content = null,
+        public readonly ?string $dateTimeFormat = null,
         private readonly bool $visible = true,
     ) {
     }

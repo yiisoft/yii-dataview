@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Yiisoft\Yii\DataView\Column;
 
+use DateTimeInterface;
 use InvalidArgumentException;
 use Yiisoft\Arrays\ArrayHelper;
 use Yiisoft\Html\Html;
@@ -14,6 +15,11 @@ use Yiisoft\Yii\DataView\Column\Base\HeaderContext;
 
 final class DataColumnRenderer implements ColumnRendererInterface
 {
+    public function __construct(
+        private readonly string $dateTimeFormat = 'Y-m-d H:i:s',
+    ) {
+    }
+
     public function renderColumn(ColumnInterface $column, Cell $cell, GlobalContext $context): Cell
     {
         $this->checkColumn($column);
@@ -56,7 +62,9 @@ final class DataColumnRenderer implements ColumnRendererInterface
         if ($contentSource !== null) {
             $content = (string)(is_callable($contentSource) ? $contentSource($context->data, $context) : $contentSource);
         } elseif ($column->property !== null) {
-            $content = Html::encode((string)ArrayHelper::getValue($context->data, $column->property));
+            $value = ArrayHelper::getValue($context->data, $column->property);
+            $value = $this->castToString($value, $column);
+            $content = Html::encode($value);
         } else {
             $content = '';
         }
@@ -76,6 +84,19 @@ final class DataColumnRenderer implements ColumnRendererInterface
         }
 
         return $cell;
+    }
+
+    private function castToString(mixed $value, DataColumn $column): string
+    {
+        if ($value === null) {
+            return '';
+        }
+
+        if ($value instanceof DateTimeInterface) {
+            return $value->format($column->dateTimeFormat ?? $this->dateTimeFormat);
+        }
+
+        return (string) $value;
     }
 
     /**
