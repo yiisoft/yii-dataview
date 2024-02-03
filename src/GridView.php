@@ -13,7 +13,6 @@ use Yiisoft\Data\Reader\Sort;
 use Yiisoft\Data\Reader\SortableDataInterface;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\Tr;
-use Yiisoft\Injector\Injector;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\Yii\DataView\Column\ActionColumn;
 use Yiisoft\Yii\DataView\Column\Base\Cell;

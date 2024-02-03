@@ -25,7 +25,6 @@ final class RendererContainer
      */
     private array $constructorArguments = [];
 
-
     public function __construct(ContainerInterface $dependencyContainer)
     {
         $this->injector = new Injector($dependencyContainer);

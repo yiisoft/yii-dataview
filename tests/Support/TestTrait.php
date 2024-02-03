@@ -36,7 +36,7 @@ trait TestTrait
                         ActionColumnRenderer::class => [
                             'defaultUrlCreator' => Reference::to(ActionColumnUrlCreator::class),
                         ],
-                    ]
+                    ],
                 ],
             ],
         ]);
