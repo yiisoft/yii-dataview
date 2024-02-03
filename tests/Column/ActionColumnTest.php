@@ -40,12 +40,6 @@ final class ActionColumnTest extends TestCase
         ['id' => 2, 'name' => 'Mary', 'age' => 21],
     ];
 
-    /**
-     * @throws InvalidConfigException
-     * @throws NotFoundException
-     * @throws NotInstantiableException
-     * @throws CircularReferenceException
-     */
     public function testContent(): void
     {
         Assert::equalsWithoutLE(

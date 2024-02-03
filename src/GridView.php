@@ -13,12 +13,14 @@ use Yiisoft\Data\Reader\Sort;
 use Yiisoft\Data\Reader\SortableDataInterface;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\Tr;
+use Yiisoft\Injector\Injector;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\Yii\DataView\Column\ActionColumn;
 use Yiisoft\Yii\DataView\Column\Base\Cell;
 use Yiisoft\Yii\DataView\Column\Base\GlobalContext;
 use Yiisoft\Yii\DataView\Column\Base\DataContext;
 use Yiisoft\Yii\DataView\Column\Base\HeaderContext;
+use Yiisoft\Yii\DataView\Column\Base\RendererContainer;
 use Yiisoft\Yii\DataView\Column\ColumnInterface;
 use Yiisoft\Yii\DataView\Column\ColumnRendererInterface;
 use Yiisoft\Yii\DataView\Column\DataColumn;
@@ -71,11 +73,24 @@ final class GridView extends BaseListView
     private ?string $sortableLinkAscClass = null;
     private ?string $sortableLinkDescClass = null;
 
+    private RendererContainer $rendererContainer;
+
     public function __construct(
-        private ContainerInterface $columnRenderersContainer,
+        ContainerInterface $columnRenderersDependencyContainer,
         TranslatorInterface|null $translator = null,
     ) {
+        $this->rendererContainer = new RendererContainer($columnRenderersDependencyContainer);
         parent::__construct($translator);
+    }
+
+    /**
+     * @psalm-param array<string, array> $arguments
+     */
+    public function addRendererConstructorArguments(array $arguments): self
+    {
+        $new = clone $this;
+        $new->rendererContainer = $this->rendererContainer->addConstructorArguments($arguments);
+        return $new;
     }
 
     public function enableMultiSort(bool $value = true): self
@@ -584,8 +599,7 @@ final class GridView extends BaseListView
 
     private function getColumnRenderer(ColumnInterface $column): ColumnRendererInterface
     {
-        /** @var ColumnRendererInterface */
-        return $this->columnRenderersContainer->get($column->getRenderer());
+        return $this->rendererContainer->get($column->getRenderer());
     }
 
     private function getSort(?ReadableDataInterface $dataReader): ?Sort

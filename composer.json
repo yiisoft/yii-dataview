@@ -42,6 +42,7 @@
         "yiisoft/factory": "^1.0",
         "yiisoft/friendly-exception": "^1.0",
         "yiisoft/html": "^3.0",
+        "yiisoft/injector": "^1.2",
         "yiisoft/json": "^1.0",
         "yiisoft/router": "^3.0",
         "yiisoft/strings": "^2.0",
