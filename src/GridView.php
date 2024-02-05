@@ -71,23 +71,23 @@ final class GridView extends BaseListView
     private ?string $sortableLinkAscClass = null;
     private ?string $sortableLinkDescClass = null;
 
-    private RendererContainer $rendererContainer;
+    private RendererContainer $columnRendererContainer;
 
     public function __construct(
         ContainerInterface $columnRenderersDependencyContainer,
         TranslatorInterface|null $translator = null,
     ) {
-        $this->rendererContainer = new RendererContainer($columnRenderersDependencyContainer);
+        $this->columnRendererContainer = new RendererContainer($columnRenderersDependencyContainer);
         parent::__construct($translator);
     }
 
     /**
      * @psalm-param array<string, array> $configs
      */
-    public function addRendererConfigs(array $configs): self
+    public function addColumnRendererConfigs(array $configs): self
     {
         $new = clone $this;
-        $new->rendererContainer = $this->rendererContainer->addConfigs($configs);
+        $new->columnRendererContainer = $this->columnRendererContainer->addConfigs($configs);
         return $new;
     }
 
@@ -409,7 +409,7 @@ final class GridView extends BaseListView
 
         $renderers = [];
         foreach ($columns as $i => $column) {
-            $renderers[$i] = $this->getColumnRenderer($column);
+            $renderers[$i] = $this->columnRendererContainer->get($column->getRenderer());
         }
 
         $blocks = [];
@@ -585,11 +585,6 @@ final class GridView extends BaseListView
         }
 
         return $attributes;
-    }
-
-    private function getColumnRenderer(ColumnInterface $column): ColumnRendererInterface
-    {
-        return $this->rendererContainer->get($column->getRenderer());
     }
 
     private function getSort(?ReadableDataInterface $dataReader): ?Sort
