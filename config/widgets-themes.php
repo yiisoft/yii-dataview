@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use Yiisoft\Yii\DataView\Column\ActionColumn;
+use Yiisoft\Yii\DataView\Column\ActionColumnRenderer;
 use Yiisoft\Yii\DataView\GridView;
 use Yiisoft\Yii\DataView\KeysetPagination;
 use Yiisoft\Yii\DataView\OffsetPagination;
@@ -17,9 +17,9 @@ return [
             'sortableHeaderPrepend()' => ['<div class="float-end text-secondary text-opacity-50">⭥</div>'],
             'sortableHeaderAscPrepend()' => ['<div class="float-end fw-bold">⭡</div>'],
             'sortableHeaderDescPrepend()' => ['<div class="float-end fw-bold">⭣</div>'],
-            'columnsConfigs()' => [
+            'addColumnRendererConfigs()' => [
                 [
-                    ActionColumn::class => [
+                    ActionColumnRenderer::class => [
                         'buttonClass' => 'btn btn-outline-secondary',
                     ],
                 ],
