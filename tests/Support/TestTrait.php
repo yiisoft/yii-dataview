@@ -18,6 +18,7 @@ use Yiisoft\Router\Route;
 use Yiisoft\Router\UrlGeneratorInterface;
 use Yiisoft\Widget\WidgetFactory;
 use Yiisoft\Yii\DataView\Column\ActionColumnRenderer;
+use Yiisoft\Yii\DataView\GridView;
 use Yiisoft\Yii\DataView\YiiRouter\ActionColumnUrlCreator;
 
 trait TestTrait
@@ -28,7 +29,17 @@ trait TestTrait
     protected function setUp(): void
     {
         $container = new Container(ContainerConfig::create()->withDefinitions($this->config()));
-        WidgetFactory::initialize($container, []);
+        WidgetFactory::initialize($container, [
+            GridView::class => [
+                'addRendererConfigs()' => [
+                    [
+                        ActionColumnRenderer::class => [
+                            'defaultUrlCreator' => Reference::to(ActionColumnUrlCreator::class),
+                        ],
+                    ],
+                ],
+            ],
+        ]);
     }
 
     private function createOffsetPaginator(
@@ -62,11 +73,6 @@ trait TestTrait
         return [
             CurrentRoute::class => $currentRoute,
             UrlGeneratorInterface::class => Mock::urlGenerator([], $currentRoute),
-            ActionColumnRenderer::class => [
-                '__construct()' => [
-                    'defaultUrlCreator' => Reference::to(ActionColumnUrlCreator::class),
-                ],
-            ],
         ];
     }
 }
