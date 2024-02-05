@@ -34,7 +34,7 @@ trait TestTrait
                 'addRendererConfigs()' => [
                     [
                         ActionColumnRenderer::class => [
-                            'defaultUrlCreator' => Reference::to(ActionColumnUrlCreator::class),
+                            'urlCreator' => Reference::to(ActionColumnUrlCreator::class),
                         ],
                     ],
                 ],
