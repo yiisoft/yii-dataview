@@ -36,9 +36,9 @@ final class ActionColumnRenderer implements ColumnRendererInterface
     public function __construct(
         ?callable $urlCreator = null,
         ?array $buttons = null,
-        private array|string|null $buttonClass = null,
-        private array $buttonAttributes = [],
-        private ?string $template = null,
+        private readonly array|string|null $buttonClass = null,
+        private readonly array $buttonAttributes = [],
+        private readonly ?string $template = null,
     ) {
         $this->urlCreator = $urlCreator ?? static fn(): string => '#';
 
@@ -95,7 +95,7 @@ final class ActionColumnRenderer implements ColumnRendererInterface
                 },
                 $this->getTemplate($column, $buttons, $context),
             );
-            $content = trim($content);
+            $content = trim((string) $content);
         }
 
         return $cell
