@@ -5,6 +5,7 @@ declare(strict_types=1);
 use Rector\CodeQuality\Rector\Class_\InlineConstructorDefaultToPropertyRector;
 use Rector\Config\RectorConfig;
 use Rector\Php80\Rector\Catch_\RemoveUnusedVariableInCatchRector;
+use Rector\Php81\Rector\FuncCall\NullToStrictStringFuncCallArgRector;
 use Rector\Set\ValueObject\LevelSetList;
 
 return static function (RectorConfig $rectorConfig): void {
@@ -25,5 +26,6 @@ return static function (RectorConfig $rectorConfig): void {
         RemoveUnusedVariableInCatchRector::class => [
             __DIR__ . '/src/BaseListView.php',
         ],
+        NullToStrictStringFuncCallArgRector::class,
     ]);
 };

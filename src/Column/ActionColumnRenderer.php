@@ -95,7 +95,7 @@ final class ActionColumnRenderer implements ColumnRendererInterface
                 },
                 $this->getTemplate($column, $buttons, $context),
             );
-            $content = trim((string) $content);
+            $content = trim($content);
         }
 
         return $cell

@@ -35,7 +35,7 @@ final class DataColumnRenderer implements ColumnRendererInterface
             ->encode(false);
 
         if ($column->header === null) {
-            $label = $column->property === null ? '' : Html::encode(ucfirst((string) $column->property));
+            $label = $column->property === null ? '' : Html::encode(ucfirst($column->property));
         } else {
             $label = $column->encodeHeader ? Html::encode($column->header) : $column->header;
         }
