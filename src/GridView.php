@@ -21,7 +21,6 @@ use Yiisoft\Yii\DataView\Column\Base\DataContext;
 use Yiisoft\Yii\DataView\Column\Base\HeaderContext;
 use Yiisoft\Yii\DataView\Column\Base\RendererContainer;
 use Yiisoft\Yii\DataView\Column\ColumnInterface;
-use Yiisoft\Yii\DataView\Column\ColumnRendererInterface;
 use Yiisoft\Yii\DataView\Column\DataColumn;
 
 /**
