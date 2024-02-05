@@ -49,7 +49,9 @@ final class RendererContainer
     {
         $new = clone $this;
         foreach ($configs as $class => $config) {
-            $new->configs[$class] = $config;
+            $new->configs[$class] = isset($new->configs[$class])
+                ? array_merge($new->configs[$class], $config)
+                : $config;
             unset($new->cache[$class]);
         }
         return $new;
