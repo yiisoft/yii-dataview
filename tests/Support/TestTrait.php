@@ -31,10 +31,10 @@ trait TestTrait
         $container = new Container(ContainerConfig::create()->withDefinitions($this->config()));
         WidgetFactory::initialize($container, [
             GridView::class => [
-                'addRendererConfigs()' => [
+                'addColumnRendererConfigs()' => [
                     [
                         ActionColumnRenderer::class => [
-                            'defaultUrlCreator' => Reference::to(ActionColumnUrlCreator::class),
+                            'urlCreator' => Reference::to(ActionColumnUrlCreator::class),
                         ],
                     ],
                 ],

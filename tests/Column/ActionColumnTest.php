@@ -748,8 +748,8 @@ final class ActionColumnTest extends TestCase
         $html = GridView::widget()
             ->layout('{items}')
             ->columns($actionColumn)
-            ->columnsConfigs([
-                ActionColumn::class => [
+            ->addColumnRendererConfigs([
+                ActionColumnRenderer::class => [
                     'template' => '!{one}!',
                 ],
             ])
@@ -969,8 +969,8 @@ final class ActionColumnTest extends TestCase
         $html = GridView::widget()
             ->layout('{items}')
             ->columns($actionColumn)
-            ->columnsConfigs([
-                ActionColumn::class => $columnConfig,
+            ->addColumnRendererConfigs([
+                ActionColumnRenderer::class => $columnConfig,
             ])
             ->dataReader($dataReader)
             ->render();

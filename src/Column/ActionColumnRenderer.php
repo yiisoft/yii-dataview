@@ -21,24 +21,28 @@ final class ActionColumnRenderer implements ColumnRendererInterface
     /**
      * @psalm-var UrlCreator
      */
-    private $defaultUrlCreator;
+    private $urlCreator;
 
     /**
      * @psalm-var array<string,ButtonRenderer>
      */
-    private readonly array $defaultButtons;
+    private readonly array $buttons;
 
     /**
-     * @psalm-param UrlCreator|null $defaultUrlCreator
-     * @psalm-param array<string,ButtonRenderer>|null $defaultButtons
+     * @psalm-param UrlCreator|null $urlCreator
+     * @psalm-param array<string,ButtonRenderer>|null $buttons
+     * @psalm-param array<string, string>|string|null $buttonClass
      */
     public function __construct(
-        ?callable $defaultUrlCreator = null,
-        ?array $defaultButtons = null,
+        ?callable $urlCreator = null,
+        ?array $buttons = null,
+        private readonly array|string|null $buttonClass = null,
+        private readonly array $buttonAttributes = [],
+        private readonly ?string $template = null,
     ) {
-        $this->defaultUrlCreator = $defaultUrlCreator ?? static fn(): string => '#';
+        $this->urlCreator = $urlCreator ?? static fn(): string => '#';
 
-        $this->defaultButtons = $defaultButtons ?? [
+        $this->buttons = $buttons ?? [
             'view' => new ActionButton('🔎', attributes: ['title' => 'View']),
             'update' => new ActionButton('✎', attributes: ['title' => 'Update']),
             'delete' => new ActionButton('❌', attributes: ['title' => 'Delete']),
@@ -68,7 +72,7 @@ final class ActionColumnRenderer implements ColumnRendererInterface
         if ($contentSource !== null) {
             $content = (string)(is_callable($contentSource) ? $contentSource($context->data, $context) : $contentSource);
         } else {
-            $buttons = $column->buttons ?? $this->defaultButtons;
+            $buttons = $column->buttons ?? $this->buttons;
             $content = preg_replace_callback(
                 '/{([\w\-\/]+)}/',
                 function (array $matches) use ($column, $buttons, $context): string {
@@ -145,10 +149,8 @@ final class ActionColumnRenderer implements ColumnRendererInterface
             $attributes = $button->attributes ?? [];
         }
         if (!$button->overrideAttributes) {
-            /** @var array $buttonAttributes */
-            $buttonAttributes = $context->columnsConfigs[ActionColumn::class]['buttonAttributes'] ?? [];
-            if (!empty($buttonAttributes)) {
-                $attributes = array_merge($buttonAttributes, $attributes);
+            if (!empty($this->buttonAttributes)) {
+                $attributes = array_merge($this->buttonAttributes, $attributes);
             }
         }
 
@@ -159,13 +161,11 @@ final class ActionColumnRenderer implements ColumnRendererInterface
             $class = $button->class;
         }
 
-        /** @var array<array-key,string|null>|string|null $buttonClass */
-        $buttonClass = $context->columnsConfigs[ActionColumn::class]['buttonClass'] ?? null;
         if ($class === false) {
-            Html::addCssClass($attributes, $buttonClass);
+            Html::addCssClass($attributes, $this->buttonClass);
         } else {
             if (!$button->overrideAttributes) {
-                Html::addCssClass($attributes, $buttonClass);
+                Html::addCssClass($attributes, $this->buttonClass);
             }
             Html::addCssClass($attributes, $class);
         }
@@ -178,7 +178,7 @@ final class ActionColumnRenderer implements ColumnRendererInterface
         /** @var ActionColumn $column */
         $column = $context->column;
 
-        $urlCreator = $column->getUrlCreator() ?? $this->defaultUrlCreator;
+        $urlCreator = $column->getUrlCreator() ?? $this->urlCreator;
 
         return $urlCreator($action, $context);
     }
@@ -214,10 +214,8 @@ final class ActionColumnRenderer implements ColumnRendererInterface
             return $column->template;
         }
 
-        /** @var string|null $defaultTemplate */
-        $defaultTemplate = $context->columnsConfigs[ActionColumn::class]['template'] ?? null;
-        if ($defaultTemplate !== null) {
-            return $defaultTemplate;
+        if ($this->template !== null) {
+            return $this->template;
         }
 
         $tokens = [];
