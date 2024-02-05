@@ -13,7 +13,6 @@ final class DataContext
         public readonly array|object $data,
         public readonly int|string $key,
         public readonly int $index,
-        public readonly array $columnsConfigs,
     ) {
     }
 }
