@@ -18,8 +18,11 @@ namespace Yiisoft\Yii\DataView\Column;
  */
 final class DataColumn implements ColumnInterface
 {
+    public readonly ?string $queryProperty;
+
     public function __construct(
         public readonly ?string $property = null,
+        ?string $queryProperty = null,
         public readonly ?string $header = null,
         public readonly bool $encodeHeader = true,
         public readonly ?string $footer = null,
@@ -31,6 +34,7 @@ final class DataColumn implements ColumnInterface
         public readonly ?string $dateTimeFormat = null,
         private readonly bool $visible = true,
     ) {
+        $this->queryProperty = $queryProperty ?? $this->property;
     }
 
     public function isVisible(): bool
