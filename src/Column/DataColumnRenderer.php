@@ -41,11 +41,11 @@ final class DataColumnRenderer implements ColumnRendererInterface
         }
         $cell = $cell->content($label);
 
-        if (!$column->withSorting || $column->property === null) {
+        if (!$column->withSorting || $column->queryProperty === null) {
             return $cell;
         }
 
-        [$cell, $link, $prepend, $append] = $context->prepareSortable($cell, $column->property);
+        [$cell, $link, $prepend, $append] = $context->prepareSortable($cell, $column->queryProperty);
         if ($link !== null) {
             $link = $link->content($label)->encode(false);
         }
