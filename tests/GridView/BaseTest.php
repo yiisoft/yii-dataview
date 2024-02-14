@@ -175,53 +175,6 @@ final class BaseTest extends TestCase
         );
     }
 
-    public function testColumnGuess(): void
-    {
-        Assert::equalsWithoutLE(
-            <<<HTML
-            <div id="w1-grid">
-            <table>
-            <thead>
-            <tr>
-            <th>Id</th>
-            <th>Name</th>
-            <th>Age</th>
-            <th>Actions</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr>
-            <td>1</td>
-            <td>John</td>
-            <td>20</td>
-            <td>
-            <a href="/admin/manage/view?id=1" title="View">🔎</a>
-            <a href="/admin/manage/update?id=1" title="Update">✎</a>
-            <a href="/admin/manage/delete?id=1" title="Delete">❌</a>
-            </td>
-            </tr>
-            <tr>
-            <td>2</td>
-            <td>Mary</td>
-            <td>21</td>
-            <td>
-            <a href="/admin/manage/view?id=2" title="View">🔎</a>
-            <a href="/admin/manage/update?id=2" title="Update">✎</a>
-            <a href="/admin/manage/delete?id=2" title="Delete">❌</a>
-            </td>
-            </tr>
-            </tbody>
-            </table>
-            <div>Page <b>1</b> of <b>1</b></div>
-            </div>
-            HTML,
-            GridView::widget()
-                ->id('w1-grid')
-                ->dataReader($this->createOffsetPaginator($this->data, 10))
-                ->render()
-        );
-    }
-
     public function testEmptyCell(): void
     {
         Assert::equalsWithoutLE(

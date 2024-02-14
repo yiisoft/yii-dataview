@@ -21,7 +21,6 @@ use Yiisoft\Yii\DataView\Column\Base\DataContext;
 use Yiisoft\Yii\DataView\Column\Base\HeaderContext;
 use Yiisoft\Yii\DataView\Column\Base\RendererContainer;
 use Yiisoft\Yii\DataView\Column\ColumnInterface;
-use Yiisoft\Yii\DataView\Column\DataColumn;
 
 /**
  * The GridView widget is used to display data in a grid.
@@ -400,9 +399,8 @@ final class GridView extends BaseListView
      */
     protected function renderItems(array $items): string
     {
-        $columns = empty($this->columns) ? $this->guessColumns($items) : $this->columns;
         $columns = array_filter(
-            $columns,
+            $this->columns,
             static fn(ColumnInterface $column) => $column->isVisible()
         );
 
@@ -544,35 +542,6 @@ final class GridView extends BaseListView
             . implode("\n", $blocks)
             . "\n"
             . '</table>';
-    }
-
-    /**
-     * This function tries to guess the columns to show from the given data if {@see columns} are not explicitly
-     * specified.
-     *
-     * @psalm-return list<ColumnInterface>
-     */
-    private function guessColumns(array $items): array
-    {
-        $columns = [];
-        foreach ($items as $item) {
-            /**
-             * @var string $name
-             * @var mixed $value
-             */
-            foreach ($item as $name => $value) {
-                if ($value === null || is_scalar($value) || is_callable([$value, '__toString'])) {
-                    $columns[] = new DataColumn(property: $name);
-                }
-            }
-            break;
-        }
-
-        if (!empty($items)) {
-            $columns[] = new ActionColumn();
-        }
-
-        return $columns;
     }
 
     private function prepareBodyAttributes(array $attributes, DataContext $context): array
