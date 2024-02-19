@@ -32,6 +32,7 @@ final class DataColumn implements ColumnInterface
         public readonly bool $withSorting = true,
         public readonly mixed $content = null,
         public readonly ?string $dateTimeFormat = null,
+        public readonly ?bool $filter = null,
         private readonly bool $visible = true,
     ) {
         $this->queryProperty = $queryProperty ?? $this->property;

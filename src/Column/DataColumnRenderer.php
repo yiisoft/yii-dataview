@@ -7,13 +7,17 @@ namespace Yiisoft\Yii\DataView\Column;
 use DateTimeInterface;
 use InvalidArgumentException;
 use Yiisoft\Arrays\ArrayHelper;
+use Yiisoft\Data\Reader\Filter\Like;
+use Yiisoft\Data\Reader\FilterInterface;
 use Yiisoft\Html\Html;
 use Yiisoft\Yii\DataView\Column\Base\Cell;
 use Yiisoft\Yii\DataView\Column\Base\DataContext;
+use Yiisoft\Yii\DataView\Column\Base\FilterContext;
 use Yiisoft\Yii\DataView\Column\Base\GlobalContext;
 use Yiisoft\Yii\DataView\Column\Base\HeaderContext;
+use Yiisoft\Yii\DataView\UrlQueryReader;
 
-final class DataColumnRenderer implements ColumnRendererInterface
+final class DataColumnRenderer implements FilterableColumnRendererInterface
 {
     public function __construct(
         private readonly string $dateTimeFormat = 'Y-m-d H:i:s',
@@ -53,6 +57,22 @@ final class DataColumnRenderer implements ColumnRendererInterface
         return $cell->content($prepend . ($link ?? $label) . $append);
     }
 
+    public function renderFilter(ColumnInterface $column, Cell $cell, FilterContext $context): ?Cell
+    {
+        $this->checkColumn($column);
+
+        if ($column->queryProperty === null || $column->filter === null) {
+            return null;
+        }
+
+        return $cell->content(
+            Html::textInput(
+                $column->queryProperty,
+                $context->getQueryValue($column->queryProperty)
+            )->form($context->formId)
+        );
+    }
+
     public function renderBody(ColumnInterface $column, Cell $cell, DataContext $context): Cell
     {
         $this->checkColumn($column);
@@ -84,6 +104,21 @@ final class DataColumnRenderer implements ColumnRendererInterface
         }
 
         return $cell;
+    }
+
+    public function makeFilter(ColumnInterface $column, UrlQueryReader $urlQueryReader): ?FilterInterface
+    {
+        $this->checkColumn($column);
+        if ($column->queryProperty === null) {
+            return null;
+        }
+
+        $value = $urlQueryReader->get($column->queryProperty);
+        if (empty($value)) {
+            return null;
+        }
+
+        return new Like($column->queryProperty, $value);
     }
 
     private function castToString(mixed $value, DataColumn $column): string
