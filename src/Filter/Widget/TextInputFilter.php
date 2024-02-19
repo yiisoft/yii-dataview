@@ -19,7 +19,7 @@ final class TextInputFilter extends FilterWidget
      *
      * @see Input::addAttributes()
      */
-    final public function addAttributes(array $attributes): static
+    public function addAttributes(array $attributes): static
     {
         $new = clone $this;
         $new->input = $this->getInput()->addAttributes($attributes);
@@ -33,7 +33,7 @@ final class TextInputFilter extends FilterWidget
      *
      * @see Input::attributes()
      */
-    final public function attributes(array $attributes): self
+    public function attributes(array $attributes): self
     {
         $new = clone $this;
         $new->input = $this->getInput()->attributes($attributes);
