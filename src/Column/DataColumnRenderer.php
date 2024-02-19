@@ -15,9 +15,11 @@ use Yiisoft\Yii\DataView\Column\Base\DataContext;
 use Yiisoft\Yii\DataView\Column\Base\FilterContext;
 use Yiisoft\Yii\DataView\Column\Base\GlobalContext;
 use Yiisoft\Yii\DataView\Column\Base\HeaderContext;
+use Yiisoft\Yii\DataView\Filter\Factory\EqualsFilterFactory;
 use Yiisoft\Yii\DataView\Filter\Factory\LikeFilterFactory;
 use Yiisoft\Yii\DataView\Filter\Filter;
 use Yiisoft\Yii\DataView\Filter\Widget\Context;
+use Yiisoft\Yii\DataView\Filter\Widget\DropdownFilter;
 use Yiisoft\Yii\DataView\Filter\Widget\TextInputFilter;
 use Yiisoft\Yii\DataView\UrlQueryReader;
 
@@ -144,7 +146,18 @@ final class DataColumnRenderer implements FilterableColumnRendererInterface
 
     private function getColumnFilter(DataColumn $column): Filter
     {
-        return $column->filter === true ? new Filter() : $column->filter;
+        if ($column->filter === true) {
+            return new Filter();
+        }
+
+        if (is_array($column->filter)) {
+            return new Filter(
+                factory: EqualsFilterFactory::class,
+                widget: DropdownFilter::widget()->optionsData($column->filter),
+            );
+        }
+
+        return $column->filter;
     }
 
     private function castToString(mixed $value, DataColumn $column): string
