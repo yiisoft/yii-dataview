@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use Yiisoft\Yii\DataView\Column\ActionColumnRenderer;
+use Yiisoft\Yii\DataView\Filter\Widget\DropdownFilter;
 use Yiisoft\Yii\DataView\GridView;
 use Yiisoft\Yii\DataView\KeysetPagination;
 use Yiisoft\Yii\DataView\OffsetPagination;
@@ -24,6 +25,11 @@ return [
                     ],
                 ],
             ],
+        ],
+        DropdownFilter::class => [
+            'attributes()' => [[
+                'class' => 'form-select',
+            ]],
         ],
         OffsetPagination::class => [
             'listTag()' => ['ul'],

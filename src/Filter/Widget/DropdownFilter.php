@@ -22,28 +22,62 @@ final class DropdownFilter extends FilterWidget
      *
      * @psalm-param array<array-key, string|array<array-key,string>> $data
      */
-    public function withOptionsData(
+    public function optionsData(
         array $data,
         bool $encode = true,
         array $optionsAttributes = [],
         array $groupsAttributes = []
     ): self {
-        $this->select = $this->getSelect()->optionsData($data, $encode, $optionsAttributes, $groupsAttributes);
-        return $this;
+        $new = clone $this;
+        $new->select = $this->getSelect()->optionsData($data, $encode, $optionsAttributes, $groupsAttributes);
+        return $new;
+    }
+
+    /**
+     * Add a set of attributes to existing tag attributes.
+     * Same named attributes are replaced.
+     *
+     * @param array $attributes Name-value set of attributes.
+     *
+     * @see Select::addAttributes()
+     */
+    final public function addAttributes(array $attributes): static
+    {
+        $new = clone $this;
+        $new->select = $this->getSelect()->addAttributes($attributes);
+        return $new;
+    }
+
+    /**
+     * Replace attributes with a new set.
+     *
+     * @param array $attributes Name-value set of attributes.
+     *
+     * @see Select::attributes()
+     */
+    final public function attributes(array $attributes): self
+    {
+        $new = clone $this;
+        $new->select = $this->getSelect()->attributes($attributes);
+        return $new;
     }
 
     public function renderFilter(Context $context): string
     {
-        return $this->getSelect()
+        $select = $this->getSelect()
             ->name($context->property)
-            ->value($context->value)
             ->form($context->formId)
-            ->attribute('onChange', 'this.form.submit()')
-            ->render();
+            ->attribute('onChange', 'this.form.submit()');
+
+        if ($context->value !== null) {
+            $select = $select->value($context->value);
+        }
+
+        return $select->render();
     }
 
     private function getSelect(): Select
     {
-        return $this->select ?? Select::tag();
+        return $this->select ?? Select::tag()->prompt('');
     }
 }
