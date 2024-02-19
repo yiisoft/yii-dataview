@@ -6,8 +6,8 @@ namespace Yiisoft\Yii\DataView\Column;
 
 use DateTimeInterface;
 use InvalidArgumentException;
+use Psr\Container\ContainerInterface;
 use Yiisoft\Arrays\ArrayHelper;
-use Yiisoft\Data\Reader\Filter\Like;
 use Yiisoft\Data\Reader\FilterInterface;
 use Yiisoft\Html\Html;
 use Yiisoft\Yii\DataView\Column\Base\Cell;
@@ -15,12 +15,18 @@ use Yiisoft\Yii\DataView\Column\Base\DataContext;
 use Yiisoft\Yii\DataView\Column\Base\FilterContext;
 use Yiisoft\Yii\DataView\Column\Base\GlobalContext;
 use Yiisoft\Yii\DataView\Column\Base\HeaderContext;
+use Yiisoft\Yii\DataView\Filter\Factory\LikeFilterFactory;
+use Yiisoft\Yii\DataView\Filter\Filter;
+use Yiisoft\Yii\DataView\Filter\Widget\Context;
+use Yiisoft\Yii\DataView\Filter\Widget\TextInputFilter;
 use Yiisoft\Yii\DataView\UrlQueryReader;
 
 final class DataColumnRenderer implements FilterableColumnRendererInterface
 {
     public function __construct(
+        private readonly ContainerInterface $filterFactoryContainer,
         private readonly string $dateTimeFormat = 'Y-m-d H:i:s',
+        private readonly string $defaultFilterFactory = LikeFilterFactory::class,
     ) {
     }
 
@@ -61,16 +67,22 @@ final class DataColumnRenderer implements FilterableColumnRendererInterface
     {
         $this->checkColumn($column);
 
-        if ($column->queryProperty === null || $column->filter === null) {
+        if ($column->queryProperty === null || $column->filter === false) {
             return null;
         }
 
-        return $cell->content(
-            Html::textInput(
+        $filter = $this->getColumnFilter($column);
+
+        $widget = $filter->widget ?? TextInputFilter::widget();
+        $widget = $widget->withContext(
+            new Context(
                 $column->queryProperty,
-                $context->getQueryValue($column->queryProperty)
-            )->form($context->formId)
+                $context->getQueryValue($column->queryProperty),
+                $context->formId
+            )
         );
+
+        return $cell->content($widget)->encode(false);
     }
 
     public function renderBody(ColumnInterface $column, Cell $cell, DataContext $context): Cell
@@ -114,11 +126,25 @@ final class DataColumnRenderer implements FilterableColumnRendererInterface
         }
 
         $value = $urlQueryReader->get($column->queryProperty);
-        if (empty($value)) {
+        if ($value === null || $value === '') {
             return null;
         }
 
-        return new Like($column->queryProperty, $value);
+        $filter = $this->getColumnFilter($column);
+        if ($filter->factory === null) {
+            $factory = $this->filterFactoryContainer->get($this->defaultFilterFactory);
+        } elseif (is_string($filter->factory)) {
+            $factory = $this->filterFactoryContainer->get($filter->factory);
+        } else {
+            $factory = $filter->factory;
+        }
+
+        return $factory->create($column->queryProperty, $value);
+    }
+
+    private function getColumnFilter(DataColumn $column): Filter
+    {
+        return $column->filter === true ? new Filter() : $column->filter;
     }
 
     private function castToString(mixed $value, DataColumn $column): string
