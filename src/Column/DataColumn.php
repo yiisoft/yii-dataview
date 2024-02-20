@@ -23,6 +23,9 @@ final class DataColumn implements ColumnInterface
 {
     public readonly ?string $queryProperty;
 
+    /**
+     * @psalm-param bool|array<array-key,string|array<array-key,string>>|FilterWidget $filter
+     */
     public function __construct(
         public readonly ?string $property = null,
         ?string $queryProperty = null,

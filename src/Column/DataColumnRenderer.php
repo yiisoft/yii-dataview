@@ -16,6 +16,7 @@ use Yiisoft\Yii\DataView\Column\Base\FilterContext;
 use Yiisoft\Yii\DataView\Column\Base\GlobalContext;
 use Yiisoft\Yii\DataView\Column\Base\HeaderContext;
 use Yiisoft\Yii\DataView\Filter\Factory\EqualsFilterFactory;
+use Yiisoft\Yii\DataView\Filter\Factory\FilterFactoryInterface;
 use Yiisoft\Yii\DataView\Filter\Factory\LikeFilterFactory;
 use Yiisoft\Yii\DataView\Filter\Widget\Context;
 use Yiisoft\Yii\DataView\Filter\Widget\DropdownFilter;
@@ -138,10 +139,12 @@ final class DataColumnRenderer implements FilterableColumnRendererInterface
         }
 
         if ($column->filterFactory === null) {
+            /** @var FilterFactoryInterface $factory */
             $factory = $this->filterFactoryContainer->get(
                 is_array($column->filter) ? $this->defaultArrayFilterFactory : $this->defaultFilterFactory
             );
         } elseif (is_string($column->filterFactory)) {
+            /** @var FilterFactoryInterface $factory */
             $factory = $this->filterFactoryContainer->get($column->filterFactory);
         } else {
             $factory = $column->filterFactory;
