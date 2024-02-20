@@ -19,6 +19,7 @@ return [
             'sortableHeaderPrepend()' => ['<div class="float-end text-secondary text-opacity-50">⭥</div>'],
             'sortableHeaderAscPrepend()' => ['<div class="float-end fw-bold">⭡</div>'],
             'sortableHeaderDescPrepend()' => ['<div class="float-end fw-bold">⭣</div>'],
+            'filterCellAttributes()' => [['class' => 'align-top']],
             'addColumnRendererConfigs()' => [
                 [
                     ActionColumnRenderer::class => [

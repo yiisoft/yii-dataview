@@ -77,6 +77,8 @@ final class GridView extends BaseListView
     private ?string $sortableLinkAscClass = null;
     private ?string $sortableLinkDescClass = null;
 
+    private array $filterCellAttributes = [];
+
     private RendererContainer $columnRendererContainer;
 
     /**
@@ -99,6 +101,18 @@ final class GridView extends BaseListView
     {
         $new = clone $this;
         $new->columnRendererContainer = $this->columnRendererContainer->addConfigs($configs);
+        return $new;
+    }
+
+    /**
+     * Return new instance with the HTML attributes for the filter cell (`td`) tag.
+     *
+     * @param array $attributes The tag attributes in terms of name-value pairs.
+     */
+    public function filterCellAttributes(array $attributes): self
+    {
+        $new = clone $this;
+        $new->filterCellAttributes = $attributes;
         return $new;
     }
 
@@ -446,7 +460,7 @@ final class GridView extends BaseListView
         );
         foreach ($columns as $i => $column) {
             $cell = $renderers[$i] instanceof FilterableColumnRendererInterface
-                ? $renderers[$i]->renderFilter($column, new Cell(), $filterContext)
+                ? $renderers[$i]->renderFilter($column, new Cell(attributes: $this->filterCellAttributes), $filterContext)
                 : null;
             if ($cell === null) {
                 $tags[] = Html::td('&nbsp;')->encode(false);
