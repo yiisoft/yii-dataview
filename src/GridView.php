@@ -457,17 +457,28 @@ final class GridView extends BaseListView
             }
         }
         if ($hasFilters) {
+            $sort = $this->urlParameterProvider?->get(
+                $this->urlConfig->getSortParameterName(),
+                $this->urlConfig->getSortParameterType()
+            );
             $url = $this->urlCreator === null ? '' : call_user_func_array(
                 $this->urlCreator,
                 UrlParametersFactory::create(
                     null,
-                    $pageSize,
-                    null,
+                    $this->urlConfig->getPageSizeParameterType() === UrlParameterType::PATH ? $pageSize : null,
+                    $this->urlConfig->getSortParameterType() === UrlParameterType::PATH ? $sort : null,
                     $this->urlConfig,
                 )
             );
+            $content = [Html::submitButton()];
+            if ($this->urlConfig->getPageSizeParameterType() === UrlParameterType::QUERY && !empty($pageSize)) {
+                $content[] = Html::hiddenInput($this->urlConfig->getPageSizeParameterName(), $pageSize);
+            }
+            if ($this->urlConfig->getSortParameterType() === UrlParameterType::QUERY && !empty($sort)) {
+                $content[] = Html::hiddenInput($this->urlConfig->getSortParameterName(), $sort);
+            }
             $filtersForm = Html::form($url, 'GET', ['id' => $filterContext->formId, 'style' => 'display:none'])
-                ->content(Html::submitButton())
+                ->content(...$content)
                 ->render();
             $filterRow = Html::tr()->cells(...$tags);
         } else {
