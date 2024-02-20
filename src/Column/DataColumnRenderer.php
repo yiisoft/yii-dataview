@@ -17,7 +17,6 @@ use Yiisoft\Yii\DataView\Column\Base\GlobalContext;
 use Yiisoft\Yii\DataView\Column\Base\HeaderContext;
 use Yiisoft\Yii\DataView\Filter\Factory\EqualsFilterFactory;
 use Yiisoft\Yii\DataView\Filter\Factory\LikeFilterFactory;
-use Yiisoft\Yii\DataView\Filter\Filter;
 use Yiisoft\Yii\DataView\Filter\Widget\Context;
 use Yiisoft\Yii\DataView\Filter\Widget\DropdownFilter;
 use Yiisoft\Yii\DataView\Filter\Widget\TextInputFilter;
@@ -29,6 +28,7 @@ final class DataColumnRenderer implements FilterableColumnRendererInterface
         private readonly ContainerInterface $filterFactoryContainer,
         private readonly string $dateTimeFormat = 'Y-m-d H:i:s',
         private readonly string $defaultFilterFactory = LikeFilterFactory::class,
+        private readonly string $defaultArrayFilterFactory = EqualsFilterFactory::class,
     ) {
     }
 
@@ -73,9 +73,14 @@ final class DataColumnRenderer implements FilterableColumnRendererInterface
             return null;
         }
 
-        $filter = $this->getColumnFilter($column);
+        if ($column->filter === true) {
+            $widget = TextInputFilter::widget();
+        } elseif (is_array($column->filter)) {
+            $widget = DropdownFilter::widget()->optionsData($column->filter);
+        } else {
+            $widget = $column->filter;
+        }
 
-        $widget = $filter->widget ?? TextInputFilter::widget();
         $widget = $widget->withContext(
             new Context(
                 $column->queryProperty,
@@ -132,32 +137,17 @@ final class DataColumnRenderer implements FilterableColumnRendererInterface
             return null;
         }
 
-        $filter = $this->getColumnFilter($column);
-        if ($filter->factory === null) {
-            $factory = $this->filterFactoryContainer->get($this->defaultFilterFactory);
-        } elseif (is_string($filter->factory)) {
-            $factory = $this->filterFactoryContainer->get($filter->factory);
+        if ($column->filterFactory === null) {
+            $factory = $this->filterFactoryContainer->get(
+                is_array($column->filter) ? $this->defaultArrayFilterFactory : $this->defaultFilterFactory
+            );
+        } elseif (is_string($column->filterFactory)) {
+            $factory = $this->filterFactoryContainer->get($column->filterFactory);
         } else {
-            $factory = $filter->factory;
+            $factory = $column->filterFactory;
         }
 
         return $factory->create($column->queryProperty, $value);
-    }
-
-    private function getColumnFilter(DataColumn $column): Filter
-    {
-        if ($column->filter === true) {
-            return new Filter();
-        }
-
-        if (is_array($column->filter)) {
-            return new Filter(
-                factory: EqualsFilterFactory::class,
-                widget: DropdownFilter::widget()->optionsData($column->filter),
-            );
-        }
-
-        return $column->filter;
     }
 
     private function castToString(mixed $value, DataColumn $column): string

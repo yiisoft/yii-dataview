@@ -4,7 +4,8 @@ declare(strict_types=1);
 
 namespace Yiisoft\Yii\DataView\Column;
 
-use Yiisoft\Yii\DataView\Filter\Filter;
+use Yiisoft\Yii\DataView\Filter\Factory\FilterFactoryInterface;
+use Yiisoft\Yii\DataView\Filter\Widget\FilterWidget;
 
 /**
  * DetailColumn is the default column type for the {@see GridView} widget.
@@ -34,7 +35,8 @@ final class DataColumn implements ColumnInterface
         public readonly bool $withSorting = true,
         public readonly mixed $content = null,
         public readonly ?string $dateTimeFormat = null,
-        public readonly bool|array|Filter $filter = false,
+        public readonly bool|array|FilterWidget $filter = false,
+        public readonly string|FilterFactoryInterface|null $filterFactory = null,
         private readonly bool $visible = true,
     ) {
         $this->queryProperty = $queryProperty ?? $this->property;
