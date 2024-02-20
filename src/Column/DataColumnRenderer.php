@@ -10,6 +10,8 @@ use Psr\Container\ContainerInterface;
 use Yiisoft\Arrays\ArrayHelper;
 use Yiisoft\Data\Reader\FilterInterface;
 use Yiisoft\Html\Html;
+use Yiisoft\Validator\Result;
+use Yiisoft\Validator\ValidatorInterface;
 use Yiisoft\Yii\DataView\Column\Base\Cell;
 use Yiisoft\Yii\DataView\Column\Base\DataContext;
 use Yiisoft\Yii\DataView\Column\Base\FilterContext;
@@ -27,6 +29,7 @@ final class DataColumnRenderer implements FilterableColumnRendererInterface
 {
     public function __construct(
         private readonly ContainerInterface $filterFactoryContainer,
+        private readonly ValidatorInterface $validator,
         private readonly string $dateTimeFormat = 'Y-m-d H:i:s',
         private readonly string $defaultFilterFactory = LikeFilterFactory::class,
         private readonly string $defaultArrayFilterFactory = EqualsFilterFactory::class,
@@ -82,15 +85,65 @@ final class DataColumnRenderer implements FilterableColumnRendererInterface
             $widget = $column->filter;
         }
 
-        $widget = $widget->withContext(
-            new Context(
-                $column->queryProperty,
-                $context->getQueryValue($column->queryProperty),
-                $context->formId
-            )
-        );
+        $content = [
+            $widget->withContext(
+                new Context(
+                    $column->queryProperty,
+                    $context->getQueryValue($column->queryProperty),
+                    $context->formId
+                )
+            ),
+        ];
 
-        return $cell->content($widget)->encode(false);
+        $errors = $context->validationResult->getAttributeErrorMessages($column->queryProperty);
+        if (!empty($errors)) {
+            $content[] = Html::div()->content(...array_map(static fn(string $error) => Html::div($error), $errors));
+        }
+
+        return $cell->content(...$content)->encode(false);
+    }
+
+    public function makeFilter(
+        ColumnInterface $column,
+        UrlQueryReader $urlQueryReader,
+        Result $validationResult
+    ): ?FilterInterface {
+        $this->checkColumn($column);
+        if ($column->queryProperty === null) {
+            return null;
+        }
+
+        $value = $urlQueryReader->get($column->queryProperty);
+        if ($column->filterValidation !== null) {
+            $result = $this->validator->validate($value, $column->filterValidation);
+            if (!$result->isValid()) {
+                foreach ($result->getErrors() as $error) {
+                    $validationResult->addError(
+                        $error->getMessage(),
+                        $error->getParameters(),
+                        [$column->queryProperty]
+                    );
+                }
+                return null;
+            }
+        }
+        if ($value === null || $value === '') {
+            return null;
+        }
+
+        if ($column->filterFactory === null) {
+            /** @var FilterFactoryInterface $factory */
+            $factory = $this->filterFactoryContainer->get(
+                is_array($column->filter) ? $this->defaultArrayFilterFactory : $this->defaultFilterFactory
+            );
+        } elseif (is_string($column->filterFactory)) {
+            /** @var FilterFactoryInterface $factory */
+            $factory = $this->filterFactoryContainer->get($column->filterFactory);
+        } else {
+            $factory = $column->filterFactory;
+        }
+
+        return $factory->create($column->queryProperty, $value);
     }
 
     public function renderBody(ColumnInterface $column, Cell $cell, DataContext $context): Cell
@@ -124,33 +177,6 @@ final class DataColumnRenderer implements FilterableColumnRendererInterface
         }
 
         return $cell;
-    }
-
-    public function makeFilter(ColumnInterface $column, UrlQueryReader $urlQueryReader): ?FilterInterface
-    {
-        $this->checkColumn($column);
-        if ($column->queryProperty === null) {
-            return null;
-        }
-
-        $value = $urlQueryReader->get($column->queryProperty);
-        if ($value === null || $value === '') {
-            return null;
-        }
-
-        if ($column->filterFactory === null) {
-            /** @var FilterFactoryInterface $factory */
-            $factory = $this->filterFactoryContainer->get(
-                is_array($column->filter) ? $this->defaultArrayFilterFactory : $this->defaultFilterFactory
-            );
-        } elseif (is_string($column->filterFactory)) {
-            /** @var FilterFactoryInterface $factory */
-            $factory = $this->filterFactoryContainer->get($column->filterFactory);
-        } else {
-            $factory = $column->filterFactory;
-        }
-
-        return $factory->create($column->queryProperty, $value);
     }
 
     private function castToString(mixed $value, DataColumn $column): string

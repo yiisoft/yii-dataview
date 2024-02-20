@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Yiisoft\Yii\DataView\Column;
 
+use Yiisoft\Validator\RuleInterface;
 use Yiisoft\Yii\DataView\Filter\Factory\FilterFactoryInterface;
 use Yiisoft\Yii\DataView\Filter\Widget\FilterWidget;
 
@@ -25,6 +26,7 @@ final class DataColumn implements ColumnInterface
 
     /**
      * @psalm-param bool|array<array-key,string|array<array-key,string>>|FilterWidget $filter
+     * @psalm-param RuleInterface[]|RuleInterface|null $filterValidation
      */
     public function __construct(
         public readonly ?string $property = null,
@@ -40,6 +42,7 @@ final class DataColumn implements ColumnInterface
         public readonly ?string $dateTimeFormat = null,
         public readonly bool|array|FilterWidget $filter = false,
         public readonly string|FilterFactoryInterface|null $filterFactory = null,
+        public readonly array|RuleInterface|null $filterValidation = null,
         private readonly bool $visible = true,
     ) {
         $this->queryProperty = $queryProperty ?? $this->property;

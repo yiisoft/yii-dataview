@@ -14,6 +14,7 @@ use Yiisoft\Data\Reader\SortableDataInterface;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\Tr;
 use Yiisoft\Translator\TranslatorInterface;
+use Yiisoft\Validator\Result as ValidationResult;
 use Yiisoft\Yii\DataView\Column\Base\Cell;
 use Yiisoft\Yii\DataView\Column\Base\FilterContext;
 use Yiisoft\Yii\DataView\Column\Base\GlobalContext;
@@ -409,7 +410,7 @@ final class GridView extends BaseListView
     /**
      * Renders the data active record classes for the grid view.
      */
-    protected function renderItems(array $items): string
+    protected function renderItems(array $items, ValidationResult $filterValidationResult): string
     {
         $columns = $this->getColumns();
         $renderers = $this->getColumnRenderers();
@@ -441,6 +442,7 @@ final class GridView extends BaseListView
         $hasFilters = false;
         $filterContext = new FilterContext(
             formId: Html::generateId(),
+            validationResult: $filterValidationResult,
         );
         foreach ($columns as $i => $column) {
             $cell = $renderers[$i] instanceof FilterableColumnRendererInterface
@@ -450,7 +452,7 @@ final class GridView extends BaseListView
                 $tags[] = Html::td('&nbsp;')->encode(false);
             } else {
                 $tags[] = Html::td(attributes: $cell->getAttributes())
-                    ->content($cell->getContent())
+                    ->content(...$cell->getContent())
                     ->encode($cell->isEncode())
                     ->doubleEncode($cell->isDoubleEncode());
                 $hasFilters = true;
@@ -524,7 +526,7 @@ final class GridView extends BaseListView
                 $tags[] = $cell === null
                     ? Html::th('&nbsp;')->encode(false)
                     : Html::th(attributes: $cell->getAttributes())
-                        ->content($cell->getContent())
+                        ->content(...$cell->getContent())
                         ->encode($cell->isEncode())
                         ->doubleEncode($cell->isDoubleEncode());
             }
@@ -544,10 +546,8 @@ final class GridView extends BaseListView
                     (new Cell())->content('&nbsp;')->encode(false),
                     $globalContext
                 );
-                /** @var string|Stringable $content */
-                $content = $cell->getContent();
                 $tags[] = Html::td(attributes: $cell->getAttributes())
-                    ->content($content)
+                    ->content(...$cell->getContent())
                     ->encode($cell->isEncode())
                     ->doubleEncode($cell->isDoubleEncode());
             }
@@ -574,7 +574,7 @@ final class GridView extends BaseListView
                 $tags[] = empty($content)
                     ? Html::td()->content($this->emptyCell)->encode(false)
                     : Html::td(attributes: $this->prepareBodyAttributes($cell->getAttributes(), $context))
-                        ->content($content)
+                        ->content(...$content)
                         ->encode($cell->isEncode())
                         ->doubleEncode($cell->isDoubleEncode());
             }
@@ -611,17 +611,19 @@ final class GridView extends BaseListView
         $renderers = $this->getColumnRenderers();
         $urlQueryReader = new UrlQueryReader();
 
+        $validationResult = new ValidationResult();
+
         $filters = [];
         foreach ($columns as $i => $column) {
             if ($renderers[$i] instanceof FilterableColumnRendererInterface) {
-                $filter = $renderers[$i]->makeFilter($column, $urlQueryReader);
+                $filter = $renderers[$i]->makeFilter($column, $urlQueryReader, $validationResult);
                 if ($filter !== null) {
                     $filters[] = $filter;
                 }
             }
         }
 
-        return $filters;
+        return [$filters, $validationResult];
     }
 
     private function prepareBodyAttributes(array $attributes, DataContext $context): array

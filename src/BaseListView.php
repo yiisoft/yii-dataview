@@ -28,6 +28,7 @@ use Yiisoft\Translator\IntlMessageFormatter;
 use Yiisoft\Translator\SimpleMessageFormatter;
 use Yiisoft\Translator\Translator;
 use Yiisoft\Translator\TranslatorInterface;
+use Yiisoft\Validator\Result as ValidationResult;
 use Yiisoft\Widget\Widget;
 use Yiisoft\Yii\DataView\Exception\DataReaderNotSetException;
 
@@ -172,11 +173,11 @@ abstract class BaseListView extends Widget
     /**
      * Renders the data models.
      *
-     * @return string the rendering result.
+     * @return string The rendering result.
      *
      * @psalm-param array<array-key, array|object> $items
      */
-    abstract protected function renderItems(array $items): string;
+    abstract protected function renderItems(array $items, ValidationResult $filterValidationResult): string;
 
     final public function containerTag(?string $tag): static
     {
@@ -242,19 +243,21 @@ abstract class BaseListView extends Widget
     }
 
     /**
-     * @return FilterInterface[]
+     * @psalm-return list{FilterInterface[],ValidationResult}
      */
     protected function makeFilters(): array
     {
-        return [];
+        return [[], new ValidationResult()];
     }
 
     /**
+     * @param FilterInterface[] $filters
+     *
      * @throws PageNotFoundException
      *
      * @psalm-return array<array-key, array|object>
      */
-    private function prepareDataReaderAndGetItems(): array
+    private function prepareDataReaderAndGetItems(array $filters): array
     {
         $page = $this->urlParameterProvider?->get(
             $this->urlConfig->getPageParameterName(),
@@ -272,8 +275,6 @@ abstract class BaseListView extends Widget
             $this->urlConfig->getSortParameterName(),
             $this->urlConfig->getSortParameterType(),
         );
-
-        $filters = $this->makeFilters();
 
         $this->preparedDataReader = $this->prepareDataReaderByParams($page, $previousPage, $pageSize, $sort, $filters);
 
@@ -548,7 +549,8 @@ abstract class BaseListView extends Widget
 
     public function render(): string
     {
-        $items = $this->prepareDataReaderAndGetItems();
+        [$filters, $filterValidationResult] = $this->makeFilters();
+        $items = $this->prepareDataReaderAndGetItems($filters);
 
         $content = trim(
             strtr(
@@ -556,7 +558,7 @@ abstract class BaseListView extends Widget
                 [
                     '{header}' => $this->renderHeader(),
                     '{toolbar}' => $this->toolbar,
-                    '{items}' => $this->renderItems($items),
+                    '{items}' => $this->renderItems($items, $filterValidationResult),
                     '{summary}' => $this->renderSummary(),
                     '{pager}' => $this->renderPagination(),
                 ],
