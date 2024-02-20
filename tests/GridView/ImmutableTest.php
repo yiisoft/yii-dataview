@@ -67,7 +67,7 @@ final class ImmutableTest extends TestCase
     private function createBaseListView(): DataView\BaseListView
     {
         return new class () extends DataView\BaseListView {
-            public function renderItems(array $items): string
+            public function renderItems(array $items, \Yiisoft\Validator\Result $filterValidationResult): string
             {
                 return '';
             }
