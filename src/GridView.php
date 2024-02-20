@@ -602,11 +602,10 @@ final class GridView extends BaseListView
             foreach ($columns as $i => $column) {
                 $context = new DataContext($column, $value, $key, $index);
                 $cell = $renderers[$i]->renderBody($column, new Cell(), $context);
-                $content = $cell->getContent();
-                $tags[] = empty($content)
+                $tags[] = $cell->isEmptyContent()
                     ? Html::td()->content($this->emptyCell)->encode(false)
                     : Html::td(attributes: $this->prepareBodyAttributes($cell->getAttributes(), $context))
-                        ->content(...$content)
+                        ->content(...$cell->getContent())
                         ->encode($cell->isEncode())
                         ->doubleEncode($cell->isDoubleEncode());
             }

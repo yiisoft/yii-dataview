@@ -16,6 +16,8 @@ use Yiisoft\Di\ContainerConfig;
 use Yiisoft\Router\CurrentRoute;
 use Yiisoft\Router\Route;
 use Yiisoft\Router\UrlGeneratorInterface;
+use Yiisoft\Validator\Validator;
+use Yiisoft\Validator\ValidatorInterface;
 use Yiisoft\Widget\WidgetFactory;
 use Yiisoft\Yii\DataView\Column\ActionColumnRenderer;
 use Yiisoft\Yii\DataView\GridView;
@@ -73,6 +75,7 @@ trait TestTrait
         return [
             CurrentRoute::class => $currentRoute,
             UrlGeneratorInterface::class => Mock::urlGenerator([], $currentRoute),
+            ValidatorInterface::class => Validator::class,
         ];
     }
 }

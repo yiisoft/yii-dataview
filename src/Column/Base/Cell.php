@@ -128,4 +128,14 @@ final class Cell
     {
         return $this->content;
     }
+
+    public function isEmptyContent(): bool
+    {
+        foreach ($this->content as $content) {
+            if (!empty((string) $content)) {
+                return false;
+            }
+        }
+        return true;
+    }
 }
