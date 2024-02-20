@@ -20,6 +20,8 @@ return [
             'sortableHeaderAscPrepend()' => ['<div class="float-end fw-bold">⭡</div>'],
             'sortableHeaderDescPrepend()' => ['<div class="float-end fw-bold">⭣</div>'],
             'filterCellAttributes()' => [['class' => 'align-top']],
+            'filterCellInvalidClass()' => ['bg-danger bg-opacity-10'],
+            'filterErrorsContainerAttributes()' => [['class' => 'text-danger mt-1']],
             'addColumnRendererConfigs()' => [
                 [
                     ActionColumnRenderer::class => [

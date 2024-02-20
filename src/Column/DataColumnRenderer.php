@@ -97,7 +97,9 @@ final class DataColumnRenderer implements FilterableColumnRendererInterface
 
         $errors = $context->validationResult->getAttributeErrorMessages($column->queryProperty);
         if (!empty($errors)) {
-            $content[] = Html::div()->content(...array_map(static fn(string $error) => Html::div($error), $errors));
+            $cell = $cell->addClass($context->cellInvalidClass);
+            $content[] = Html::div(attributes: $context->errorsContainerAttributes)
+                ->content(...array_map(static fn(string $error) => Html::div($error), $errors));
         }
 
         return $cell->content(...$content)->encode(false);

@@ -78,6 +78,8 @@ final class GridView extends BaseListView
     private ?string $sortableLinkDescClass = null;
 
     private array $filterCellAttributes = [];
+    private ?string $filterCellInvalidClass = null;
+    private array $filterErrorsContainerAttributes = [];
 
     private RendererContainer $columnRendererContainer;
 
@@ -113,6 +115,20 @@ final class GridView extends BaseListView
     {
         $new = clone $this;
         $new->filterCellAttributes = $attributes;
+        return $new;
+    }
+
+    public function filterCellInvalidClass(?string $class): self
+    {
+        $new = clone $this;
+        $new->filterCellInvalidClass = $class;
+        return $new;
+    }
+
+    public function filterErrorsContainerAttributes(array $attributes): self
+    {
+        $new = clone $this;
+        $new->filterErrorsContainerAttributes = $attributes;
         return $new;
     }
 
@@ -457,6 +473,8 @@ final class GridView extends BaseListView
         $filterContext = new FilterContext(
             formId: Html::generateId(),
             validationResult: $filterValidationResult,
+            cellInvalidClass: $this->filterCellInvalidClass,
+            errorsContainerAttributes: $this->filterErrorsContainerAttributes,
         );
         foreach ($columns as $i => $column) {
             $cell = $renderers[$i] instanceof FilterableColumnRendererInterface

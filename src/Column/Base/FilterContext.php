@@ -11,12 +11,11 @@ final class FilterContext
 {
     private readonly UrlQueryReader $urlQueryReader;
 
-    /**
-     * @param string[] $errors
-     */
     public function __construct(
         public readonly string $formId,
         public readonly Result $validationResult,
+        public readonly ?string $cellInvalidClass,
+        public readonly array $errorsContainerAttributes,
     ) {
         $this->urlQueryReader = new UrlQueryReader();
     }
