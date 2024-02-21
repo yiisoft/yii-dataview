@@ -6,9 +6,13 @@ namespace Yiisoft\Yii\DataView;
 
 final class UrlQueryReader
 {
+    public function __construct(
+        private ?UrlParameterProviderInterface $urlParameterProvider,
+    ) {
+    }
+
     public function get(string $name): ?string
     {
-        $value = $_GET[$name] ?? null;
-        return is_string($value) ? $value : null;
+        return $this->urlParameterProvider?->get($name, UrlParameterType::QUERY);
     }
 }

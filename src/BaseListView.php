@@ -87,6 +87,7 @@ abstract class BaseListView extends Widget
     protected array $urlQueryParameters = [];
 
     protected UrlParameterProviderInterface|null $urlParameterProvider = null;
+    protected UrlQueryReader $urlQueryReader;
 
     private bool $ignoreMissingPage = true;
 
@@ -103,6 +104,7 @@ abstract class BaseListView extends Widget
     ) {
         $this->translator = $translator ?? $this->createDefaultTranslator();
         $this->urlConfig = new UrlConfig();
+        $this->urlQueryReader = new UrlQueryReader(null);
     }
 
     /**
@@ -167,6 +169,7 @@ abstract class BaseListView extends Widget
     {
         $new = clone $this;
         $new->urlParameterProvider = $provider;
+        $new->urlQueryReader = new UrlQueryReader($provider);
         return $new;
     }
 

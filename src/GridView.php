@@ -475,6 +475,7 @@ final class GridView extends BaseListView
             validationResult: $filterValidationResult,
             cellInvalidClass: $this->filterCellInvalidClass,
             errorsContainerAttributes: $this->filterErrorsContainerAttributes,
+            urlParameterProvider: $this->urlParameterProvider,
         );
         foreach ($columns as $i => $column) {
             $cell = $renderers[$i] instanceof FilterableColumnRendererInterface
@@ -640,14 +641,13 @@ final class GridView extends BaseListView
     {
         $columns = $this->getColumns();
         $renderers = $this->getColumnRenderers();
-        $urlQueryReader = new UrlQueryReader();
 
         $validationResult = new ValidationResult();
 
         $filters = [];
         foreach ($columns as $i => $column) {
             if ($renderers[$i] instanceof FilterableColumnRendererInterface) {
-                $filter = $renderers[$i]->makeFilter($column, $urlQueryReader, $validationResult);
+                $filter = $renderers[$i]->makeFilter($column, $this->urlQueryReader, $validationResult);
                 if ($filter !== null) {
                     $filters[] = $filter;
                 }
