@@ -20,6 +20,7 @@ use Yiisoft\Yii\DataView\Column\Base\FilterContext;
 use Yiisoft\Yii\DataView\Column\Base\GlobalContext;
 use Yiisoft\Yii\DataView\Column\Base\DataContext;
 use Yiisoft\Yii\DataView\Column\Base\HeaderContext;
+use Yiisoft\Yii\DataView\Column\Base\MakeFilterContext;
 use Yiisoft\Yii\DataView\Column\Base\RendererContainer;
 use Yiisoft\Yii\DataView\Column\ColumnInterface;
 use Yiisoft\Yii\DataView\Column\ColumnRendererInterface;
@@ -643,11 +644,12 @@ final class GridView extends BaseListView
         $renderers = $this->getColumnRenderers();
 
         $validationResult = new ValidationResult();
+        $context = new MakeFilterContext($validationResult, $this->urlParameterProvider);
 
         $filters = [];
         foreach ($columns as $i => $column) {
             if ($renderers[$i] instanceof FilterableColumnRendererInterface) {
-                $filter = $renderers[$i]->makeFilter($column, $this->urlQueryReader, $validationResult);
+                $filter = $renderers[$i]->makeFilter($column, $context);
                 if ($filter !== null) {
                     $filters[] = $filter;
                 }

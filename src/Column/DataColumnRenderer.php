@@ -10,20 +10,19 @@ use Psr\Container\ContainerInterface;
 use Yiisoft\Arrays\ArrayHelper;
 use Yiisoft\Data\Reader\FilterInterface;
 use Yiisoft\Html\Html;
-use Yiisoft\Validator\Result;
 use Yiisoft\Validator\ValidatorInterface;
 use Yiisoft\Yii\DataView\Column\Base\Cell;
 use Yiisoft\Yii\DataView\Column\Base\DataContext;
 use Yiisoft\Yii\DataView\Column\Base\FilterContext;
 use Yiisoft\Yii\DataView\Column\Base\GlobalContext;
 use Yiisoft\Yii\DataView\Column\Base\HeaderContext;
+use Yiisoft\Yii\DataView\Column\Base\MakeFilterContext;
 use Yiisoft\Yii\DataView\Filter\Factory\EqualsFilterFactory;
 use Yiisoft\Yii\DataView\Filter\Factory\FilterFactoryInterface;
 use Yiisoft\Yii\DataView\Filter\Factory\LikeFilterFactory;
 use Yiisoft\Yii\DataView\Filter\Widget\Context;
 use Yiisoft\Yii\DataView\Filter\Widget\DropdownFilter;
 use Yiisoft\Yii\DataView\Filter\Widget\TextInputFilter;
-use Yiisoft\Yii\DataView\UrlQueryReader;
 
 final class DataColumnRenderer implements FilterableColumnRendererInterface
 {
@@ -105,22 +104,18 @@ final class DataColumnRenderer implements FilterableColumnRendererInterface
         return $cell->content(...$content)->encode(false);
     }
 
-    public function makeFilter(
-        ColumnInterface $column,
-        UrlQueryReader $urlQueryReader,
-        Result $validationResult
-    ): ?FilterInterface {
+    public function makeFilter(ColumnInterface $column, MakeFilterContext $context): ?FilterInterface {
         $this->checkColumn($column);
         if ($column->queryProperty === null) {
             return null;
         }
 
-        $value = $urlQueryReader->get($column->queryProperty);
+        $value = $context->getQueryValue($column->queryProperty);
         if ($column->filterValidation !== null) {
             $result = $this->validator->validate($value, $column->filterValidation);
             if (!$result->isValid()) {
                 foreach ($result->getErrors() as $error) {
-                    $validationResult->addError(
+                    $context->validationResult->addError(
                         $error->getMessage(),
                         $error->getParameters(),
                         [$column->queryProperty]
