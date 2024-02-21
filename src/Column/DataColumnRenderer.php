@@ -104,7 +104,8 @@ final class DataColumnRenderer implements FilterableColumnRendererInterface
         return $cell->content(...$content)->encode(false);
     }
 
-    public function makeFilter(ColumnInterface $column, MakeFilterContext $context): ?FilterInterface {
+    public function makeFilter(ColumnInterface $column, MakeFilterContext $context): ?FilterInterface
+    {
         $this->checkColumn($column);
         if ($column->queryProperty === null) {
             return null;
