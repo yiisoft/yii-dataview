@@ -3,6 +3,8 @@
 declare(strict_types=1);
 
 use Yiisoft\Yii\DataView\Column\ActionColumnRenderer;
+use Yiisoft\Yii\DataView\Filter\Widget\DropdownFilter;
+use Yiisoft\Yii\DataView\Filter\Widget\TextInputFilter;
 use Yiisoft\Yii\DataView\GridView;
 use Yiisoft\Yii\DataView\KeysetPagination;
 use Yiisoft\Yii\DataView\OffsetPagination;
@@ -17,6 +19,9 @@ return [
             'sortableHeaderPrepend()' => ['<div class="float-end text-secondary text-opacity-50">⭥</div>'],
             'sortableHeaderAscPrepend()' => ['<div class="float-end fw-bold">⭡</div>'],
             'sortableHeaderDescPrepend()' => ['<div class="float-end fw-bold">⭣</div>'],
+            'filterCellAttributes()' => [['class' => 'align-top']],
+            'filterCellInvalidClass()' => ['bg-danger bg-opacity-10'],
+            'filterErrorsContainerAttributes()' => [['class' => 'text-danger mt-1']],
             'addColumnRendererConfigs()' => [
                 [
                     ActionColumnRenderer::class => [
@@ -24,6 +29,12 @@ return [
                     ],
                 ],
             ],
+        ],
+        DropdownFilter::class => [
+            'attributes()' => [['class' => 'form-select']],
+        ],
+        TextInputFilter::class => [
+            'attributes()' => [['class' => 'form-control']],
         ],
         OffsetPagination::class => [
             'listTag()' => ['ul'],

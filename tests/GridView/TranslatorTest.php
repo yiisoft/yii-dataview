@@ -11,9 +11,10 @@ use Yiisoft\Definitions\Exception\NotInstantiableException;
 use Yiisoft\Definitions\Reference;
 use Yiisoft\Di\Container;
 use Yiisoft\Di\ContainerConfig;
-use Yiisoft\Di\NotFoundException;
 use Yiisoft\Translator\Translator;
 use Yiisoft\Translator\TranslatorInterface;
+use Yiisoft\Validator\Validator;
+use Yiisoft\Validator\ValidatorInterface;
 use Yiisoft\Widget\WidgetFactory;
 use Yiisoft\Yii\DataView\Column\DataColumn;
 use Yiisoft\Yii\DataView\Column\SerialColumn;
@@ -33,12 +34,6 @@ final class TranslatorTest extends TestCase
     ];
     private TranslatorInterface $translator;
 
-    /**
-     * @throws CircularReferenceException
-     * @throws InvalidConfigException
-     * @throws NotInstantiableException
-     * @throws NotFoundException
-     */
     protected function setUp(): void
     {
         $container = new Container(ContainerConfig::create()->withDefinitions($this->config()));
@@ -329,6 +324,7 @@ final class TranslatorTest extends TestCase
                         'categories' => Reference::to('tag@translation.categorySource'),
                     ],
                 ],
+                ValidatorInterface::class => Validator::class,
             ],
             $containerDefinitions,
         );

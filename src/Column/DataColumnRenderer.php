@@ -6,17 +6,32 @@ namespace Yiisoft\Yii\DataView\Column;
 
 use DateTimeInterface;
 use InvalidArgumentException;
+use Psr\Container\ContainerInterface;
 use Yiisoft\Arrays\ArrayHelper;
+use Yiisoft\Data\Reader\FilterInterface;
 use Yiisoft\Html\Html;
+use Yiisoft\Validator\ValidatorInterface;
 use Yiisoft\Yii\DataView\Column\Base\Cell;
 use Yiisoft\Yii\DataView\Column\Base\DataContext;
+use Yiisoft\Yii\DataView\Column\Base\FilterContext;
 use Yiisoft\Yii\DataView\Column\Base\GlobalContext;
 use Yiisoft\Yii\DataView\Column\Base\HeaderContext;
+use Yiisoft\Yii\DataView\Column\Base\MakeFilterContext;
+use Yiisoft\Yii\DataView\Filter\Factory\EqualsFilterFactory;
+use Yiisoft\Yii\DataView\Filter\Factory\FilterFactoryInterface;
+use Yiisoft\Yii\DataView\Filter\Factory\LikeFilterFactory;
+use Yiisoft\Yii\DataView\Filter\Widget\Context;
+use Yiisoft\Yii\DataView\Filter\Widget\DropdownFilter;
+use Yiisoft\Yii\DataView\Filter\Widget\TextInputFilter;
 
-final class DataColumnRenderer implements ColumnRendererInterface
+final class DataColumnRenderer implements FilterableColumnRendererInterface
 {
     public function __construct(
+        private readonly ContainerInterface $filterFactoryContainer,
+        private readonly ValidatorInterface $validator,
         private readonly string $dateTimeFormat = 'Y-m-d H:i:s',
+        private readonly string $defaultFilterFactory = LikeFilterFactory::class,
+        private readonly string $defaultArrayFilterFactory = EqualsFilterFactory::class,
     ) {
     }
 
@@ -51,6 +66,82 @@ final class DataColumnRenderer implements ColumnRendererInterface
         }
 
         return $cell->content($prepend . ($link ?? $label) . $append);
+    }
+
+    public function renderFilter(ColumnInterface $column, Cell $cell, FilterContext $context): ?Cell
+    {
+        $this->checkColumn($column);
+
+        if ($column->queryProperty === null || $column->filter === false) {
+            return null;
+        }
+
+        if ($column->filter === true) {
+            $widget = TextInputFilter::widget();
+        } elseif (is_array($column->filter)) {
+            $widget = DropdownFilter::widget()->optionsData($column->filter);
+        } else {
+            $widget = $column->filter;
+        }
+
+        $content = [
+            $widget->withContext(
+                new Context(
+                    $column->queryProperty,
+                    $context->getQueryValue($column->queryProperty),
+                    $context->formId
+                )
+            ),
+        ];
+
+        $errors = $context->validationResult->getAttributeErrorMessages($column->queryProperty);
+        if (!empty($errors)) {
+            $cell = $cell->addClass($context->cellInvalidClass);
+            $content[] = Html::div(attributes: $context->errorsContainerAttributes)
+                ->content(...array_map(static fn(string $error) => Html::div($error), $errors));
+        }
+
+        return $cell->content(...$content)->encode(false);
+    }
+
+    public function makeFilter(ColumnInterface $column, MakeFilterContext $context): ?FilterInterface
+    {
+        $this->checkColumn($column);
+        if ($column->queryProperty === null) {
+            return null;
+        }
+
+        $value = $context->getQueryValue($column->queryProperty);
+        if ($column->filterValidation !== null) {
+            $result = $this->validator->validate($value, $column->filterValidation);
+            if (!$result->isValid()) {
+                foreach ($result->getErrors() as $error) {
+                    $context->validationResult->addError(
+                        $error->getMessage(),
+                        $error->getParameters(),
+                        [$column->queryProperty]
+                    );
+                }
+                return null;
+            }
+        }
+        if ($value === null || $value === '') {
+            return null;
+        }
+
+        if ($column->filterFactory === null) {
+            /** @var FilterFactoryInterface $factory */
+            $factory = $this->filterFactoryContainer->get(
+                is_array($column->filter) ? $this->defaultArrayFilterFactory : $this->defaultFilterFactory
+            );
+        } elseif (is_string($column->filterFactory)) {
+            /** @var FilterFactoryInterface $factory */
+            $factory = $this->filterFactoryContainer->get($column->filterFactory);
+        } else {
+            $factory = $column->filterFactory;
+        }
+
+        return $factory->create($column->queryProperty, $value);
     }
 
     public function renderBody(ColumnInterface $column, Cell $cell, DataContext $context): Cell

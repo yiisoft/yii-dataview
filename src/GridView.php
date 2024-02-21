@@ -14,13 +14,17 @@ use Yiisoft\Data\Reader\SortableDataInterface;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\Tr;
 use Yiisoft\Translator\TranslatorInterface;
-use Yiisoft\Yii\DataView\Column\ActionColumn;
+use Yiisoft\Validator\Result as ValidationResult;
 use Yiisoft\Yii\DataView\Column\Base\Cell;
+use Yiisoft\Yii\DataView\Column\Base\FilterContext;
 use Yiisoft\Yii\DataView\Column\Base\GlobalContext;
 use Yiisoft\Yii\DataView\Column\Base\DataContext;
 use Yiisoft\Yii\DataView\Column\Base\HeaderContext;
+use Yiisoft\Yii\DataView\Column\Base\MakeFilterContext;
 use Yiisoft\Yii\DataView\Column\Base\RendererContainer;
 use Yiisoft\Yii\DataView\Column\ColumnInterface;
+use Yiisoft\Yii\DataView\Column\ColumnRendererInterface;
+use Yiisoft\Yii\DataView\Column\FilterableColumnRendererInterface;
 
 /**
  * The GridView widget is used to display data in a grid.
@@ -41,6 +45,11 @@ final class GridView extends BaseListView
      * @var ColumnInterface[]
      */
     private array $columns = [];
+
+    /**
+     * @var ColumnInterface[]
+     */
+    private ?array $columnsCache = null;
 
     private bool $columnsGroupEnabled = false;
     private string $emptyCell = '&nbsp;';
@@ -69,7 +78,16 @@ final class GridView extends BaseListView
     private ?string $sortableLinkAscClass = null;
     private ?string $sortableLinkDescClass = null;
 
+    private array $filterCellAttributes = [];
+    private ?string $filterCellInvalidClass = null;
+    private array $filterErrorsContainerAttributes = [];
+
     private RendererContainer $columnRendererContainer;
+
+    /**
+     * @var ColumnRendererInterface[]
+     */
+    private ?array $columnRenderersCache = null;
 
     public function __construct(
         ContainerInterface $columnRenderersDependencyContainer,
@@ -86,6 +104,32 @@ final class GridView extends BaseListView
     {
         $new = clone $this;
         $new->columnRendererContainer = $this->columnRendererContainer->addConfigs($configs);
+        return $new;
+    }
+
+    /**
+     * Return new instance with the HTML attributes for the filter cell (`td`) tag.
+     *
+     * @param array $attributes The tag attributes in terms of name-value pairs.
+     */
+    public function filterCellAttributes(array $attributes): self
+    {
+        $new = clone $this;
+        $new->filterCellAttributes = $attributes;
+        return $new;
+    }
+
+    public function filterCellInvalidClass(?string $class): self
+    {
+        $new = clone $this;
+        $new->filterCellInvalidClass = $class;
+        return $new;
+    }
+
+    public function filterErrorsContainerAttributes(array $attributes): self
+    {
+        $new = clone $this;
+        $new->filterErrorsContainerAttributes = $attributes;
         return $new;
     }
 
@@ -397,19 +441,13 @@ final class GridView extends BaseListView
     /**
      * Renders the data active record classes for the grid view.
      */
-    protected function renderItems(array $items): string
+    protected function renderItems(array $items, ValidationResult $filterValidationResult): string
     {
-        $columns = array_filter(
-            $this->columns,
-            static fn(ColumnInterface $column) => $column->isVisible()
-        );
-
-        $renderers = [];
-        foreach ($columns as $i => $column) {
-            $renderers[$i] = $this->columnRendererContainer->get($column->getRenderer());
-        }
+        $columns = $this->getColumns();
+        $renderers = $this->getColumnRenderers();
 
         $blocks = [];
+        $filtersForm = '';
 
         $dataReader = $this->getDataReader();
         $globalContext = new GlobalContext(
@@ -419,6 +457,69 @@ final class GridView extends BaseListView
             $this->translator,
             $this->translationCategory,
         );
+
+        if ($this->preparedDataReader instanceof PaginatorInterface) {
+            $pageToken = $this->preparedDataReader->isOnFirstPage() ? null : $this->preparedDataReader->getToken();
+            $pageSize = $this->preparedDataReader->getPageSize();
+            if ($pageSize === $this->getDefaultPageSize()) {
+                $pageSize = null;
+            }
+        } else {
+            $pageToken = null;
+            $pageSize = null;
+        }
+
+        $tags = [];
+        $hasFilters = false;
+        $filterContext = new FilterContext(
+            formId: Html::generateId(),
+            validationResult: $filterValidationResult,
+            cellInvalidClass: $this->filterCellInvalidClass,
+            errorsContainerAttributes: $this->filterErrorsContainerAttributes,
+            urlParameterProvider: $this->urlParameterProvider,
+        );
+        foreach ($columns as $i => $column) {
+            $cell = $renderers[$i] instanceof FilterableColumnRendererInterface
+                ? $renderers[$i]->renderFilter($column, new Cell(attributes: $this->filterCellAttributes), $filterContext)
+                : null;
+            if ($cell === null) {
+                $tags[] = Html::td('&nbsp;')->encode(false);
+            } else {
+                $tags[] = Html::td(attributes: $cell->getAttributes())
+                    ->content(...$cell->getContent())
+                    ->encode($cell->isEncode())
+                    ->doubleEncode($cell->isDoubleEncode());
+                $hasFilters = true;
+            }
+        }
+        if ($hasFilters) {
+            $sort = $this->urlParameterProvider?->get(
+                $this->urlConfig->getSortParameterName(),
+                $this->urlConfig->getSortParameterType()
+            );
+            $url = $this->urlCreator === null ? '' : call_user_func_array(
+                $this->urlCreator,
+                UrlParametersFactory::create(
+                    null,
+                    $this->urlConfig->getPageSizeParameterType() === UrlParameterType::PATH ? $pageSize : null,
+                    $this->urlConfig->getSortParameterType() === UrlParameterType::PATH ? $sort : null,
+                    $this->urlConfig,
+                )
+            );
+            $content = [Html::submitButton()];
+            if ($this->urlConfig->getPageSizeParameterType() === UrlParameterType::QUERY && !empty($pageSize)) {
+                $content[] = Html::hiddenInput($this->urlConfig->getPageSizeParameterName(), $pageSize);
+            }
+            if ($this->urlConfig->getSortParameterType() === UrlParameterType::QUERY && !empty($sort)) {
+                $content[] = Html::hiddenInput($this->urlConfig->getSortParameterName(), $sort);
+            }
+            $filtersForm = Html::form($url, 'GET', ['id' => $filterContext->formId, 'style' => 'display:none'])
+                ->content(...$content)
+                ->render();
+            $filterRow = Html::tr()->cells(...$tags);
+        } else {
+            $filterRow = null;
+        }
 
         if ($this->columnsGroupEnabled) {
             $tags = [];
@@ -430,16 +531,6 @@ final class GridView extends BaseListView
         }
 
         if ($this->headerTableEnabled) {
-            if ($this->preparedDataReader instanceof PaginatorInterface) {
-                $pageToken = $this->preparedDataReader->isOnFirstPage() ? null : $this->preparedDataReader->getToken();
-                $pageSize = $this->preparedDataReader->getPageSize();
-                if ($pageSize === $this->getDefaultPageSize()) {
-                    $pageSize = null;
-                }
-            } else {
-                $pageToken = null;
-                $pageSize = null;
-            }
             $headerContext = new HeaderContext(
                 $this->getSort($dataReader),
                 $this->getSort($this->preparedDataReader),
@@ -469,12 +560,16 @@ final class GridView extends BaseListView
                 $tags[] = $cell === null
                     ? Html::th('&nbsp;')->encode(false)
                     : Html::th(attributes: $cell->getAttributes())
-                        ->content($cell->getContent())
+                        ->content(...$cell->getContent())
                         ->encode($cell->isEncode())
                         ->doubleEncode($cell->isDoubleEncode());
             }
             $headerRow = Html::tr($this->headerRowAttributes)->cells(...$tags);
-            $blocks[] = Html::thead()->rows($headerRow)->render();
+            $thead = Html::thead()->rows($headerRow);
+            if ($filterRow !== null) {
+                $thead = $thead->addRows($filterRow);
+            }
+            $blocks[] = $thead->render();
         }
 
         if ($this->footerEnabled) {
@@ -485,10 +580,8 @@ final class GridView extends BaseListView
                     (new Cell())->content('&nbsp;')->encode(false),
                     $globalContext
                 );
-                /** @var string|Stringable $content */
-                $content = $cell->getContent();
                 $tags[] = Html::td(attributes: $cell->getAttributes())
-                    ->content($content)
+                    ->content(...$cell->getContent())
                     ->encode($cell->isEncode())
                     ->doubleEncode($cell->isDoubleEncode());
             }
@@ -511,11 +604,10 @@ final class GridView extends BaseListView
             foreach ($columns as $i => $column) {
                 $context = new DataContext($column, $value, $key, $index);
                 $cell = $renderers[$i]->renderBody($column, new Cell(), $context);
-                $content = $cell->getContent();
-                $tags[] = empty($content)
+                $tags[] = $cell->isEmptyContent()
                     ? Html::td()->content($this->emptyCell)->encode(false)
                     : Html::td(attributes: $this->prepareBodyAttributes($cell->getAttributes(), $context))
-                        ->content($content)
+                        ->content(...$cell->getContent())
                         ->encode($cell->isEncode())
                         ->doubleEncode($cell->isDoubleEncode());
             }
@@ -537,11 +629,34 @@ final class GridView extends BaseListView
                 ->render()
             : Html::tbody($this->tbodyAttributes)->rows(...$rows)->render();
 
-        return Html::tag('table', attributes: $this->tableAttributes)->open()
+        return
+            $filtersForm .
+            Html::tag('table', attributes: $this->tableAttributes)->open()
             . "\n"
             . implode("\n", $blocks)
             . "\n"
             . '</table>';
+    }
+
+    protected function makeFilters(): array
+    {
+        $columns = $this->getColumns();
+        $renderers = $this->getColumnRenderers();
+
+        $validationResult = new ValidationResult();
+        $context = new MakeFilterContext($validationResult, $this->urlParameterProvider);
+
+        $filters = [];
+        foreach ($columns as $i => $column) {
+            if ($renderers[$i] instanceof FilterableColumnRendererInterface) {
+                $filter = $renderers[$i]->makeFilter($column, $context);
+                if ($filter !== null) {
+                    $filters[] = $filter;
+                }
+            }
+        }
+
+        return [$filters, $validationResult];
     }
 
     private function prepareBodyAttributes(array $attributes, DataContext $context): array
@@ -566,5 +681,35 @@ final class GridView extends BaseListView
         }
 
         return null;
+    }
+
+    /**
+     * @return ColumnInterface[]
+     */
+    private function getColumns(): array
+    {
+        if ($this->columnsCache === null) {
+            $this->columnsCache = array_filter(
+                $this->columns,
+                static fn(ColumnInterface $column) => $column->isVisible()
+            );
+        }
+
+        return $this->columnsCache;
+    }
+
+    /**
+     * @return ColumnRendererInterface[]
+     */
+    private function getColumnRenderers(): array
+    {
+        if ($this->columnRenderersCache === null) {
+            $this->columnRenderersCache = array_map(
+                fn(ColumnInterface $column) => $this->columnRendererContainer->get($column->getRenderer()),
+                $this->getColumns()
+            );
+        }
+
+        return $this->columnRenderersCache;
     }
 }

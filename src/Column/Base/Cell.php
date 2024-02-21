@@ -12,11 +12,17 @@ final class Cell
 {
     private bool $doubleEncode = true;
 
+    /**
+     * @psalm-var array<array-key,string|Stringable>
+     */
+    private array $content;
+
     public function __construct(
         private array $attributes = [],
         private ?bool $encode = null,
-        private string|Stringable $content = '',
+        string|Stringable ...$content,
     ) {
+        $this->content = $content;
     }
 
     /**
@@ -48,7 +54,7 @@ final class Cell
     /**
      * @param string|Stringable $content Tag content.
      */
-    public function content(string|Stringable $content): self
+    public function content(string|Stringable ...$content): self
     {
         $new = clone $this;
         $new->content = $content;
@@ -115,8 +121,21 @@ final class Cell
         return $this->doubleEncode;
     }
 
-    public function getContent(): string|Stringable
+    /**
+     * @psalm-return array<array-key,string|Stringable>
+     */
+    public function getContent(): array
     {
         return $this->content;
+    }
+
+    public function isEmptyContent(): bool
+    {
+        foreach ($this->content as $content) {
+            if (!empty((string) $content)) {
+                return false;
+            }
+        }
+        return true;
     }
 }

@@ -216,7 +216,7 @@ final class ListView extends BaseListView
      *
      * @throws Throwable|ViewNotFoundException
      */
-    protected function renderItems(array $items): string
+    protected function renderItems(array $items, \Yiisoft\Validator\Result $filterValidationResult): string
     {
         $keys = array_keys($items);
         $rows = [];
