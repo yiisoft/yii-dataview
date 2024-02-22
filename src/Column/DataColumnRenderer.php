@@ -10,6 +10,8 @@ use Psr\Container\ContainerInterface;
 use Yiisoft\Arrays\ArrayHelper;
 use Yiisoft\Data\Reader\FilterInterface;
 use Yiisoft\Html\Html;
+use Yiisoft\Validator\EmptyCondition\NeverEmpty;
+use Yiisoft\Validator\EmptyCondition\WhenEmpty;
 use Yiisoft\Validator\ValidatorInterface;
 use Yiisoft\Yii\DataView\Column\Base\Cell;
 use Yiisoft\Yii\DataView\Column\Base\DataContext;
@@ -24,15 +26,29 @@ use Yiisoft\Yii\DataView\Filter\Widget\Context;
 use Yiisoft\Yii\DataView\Filter\Widget\DropdownFilter;
 use Yiisoft\Yii\DataView\Filter\Widget\TextInputFilter;
 
+/**
+ * @psalm-import-type FilterEmptyCallable from DataColumn
+ */
 final class DataColumnRenderer implements FilterableColumnRendererInterface
 {
+    /**
+     * @var bool|callable
+     * @psalm-var bool|FilterEmptyCallable
+     */
+    private readonly mixed $defaultFilterEmpty;
+
+    /**
+     * @psalm-param bool|FilterEmptyCallable $defaultFilterEmpty
+     */
     public function __construct(
         private readonly ContainerInterface $filterFactoryContainer,
         private readonly ValidatorInterface $validator,
         private readonly string $dateTimeFormat = 'Y-m-d H:i:s',
         private readonly string $defaultFilterFactory = LikeFilterFactory::class,
         private readonly string $defaultArrayFilterFactory = EqualsFilterFactory::class,
+        bool|callable $defaultFilterEmpty = true,
     ) {
+        $this->defaultFilterEmpty = $defaultFilterEmpty;
     }
 
     public function renderColumn(ColumnInterface $column, Cell $cell, GlobalContext $context): Cell
@@ -112,6 +128,15 @@ final class DataColumnRenderer implements FilterableColumnRendererInterface
         }
 
         $value = $context->getQueryValue($column->queryProperty);
+        if ($value === null) {
+            return null;
+        }
+
+        $filterEmpty = $this->normalizeFilterEmpty($column->filterEmpty ?? $this->defaultFilterEmpty);
+        if ($filterEmpty($value)) {
+            return null;
+        }
+
         if ($column->filterValidation !== null) {
             $result = $this->validator->validate($value, $column->filterValidation);
             if (!$result->isValid()) {
@@ -124,9 +149,6 @@ final class DataColumnRenderer implements FilterableColumnRendererInterface
                 }
                 return null;
             }
-        }
-        if ($value === null || $value === '') {
-            return null;
         }
 
         if ($column->filterFactory === null) {
@@ -175,6 +197,23 @@ final class DataColumnRenderer implements FilterableColumnRendererInterface
         }
 
         return $cell;
+    }
+
+    /**
+     * @psalm-param bool|FilterEmptyCallable $value
+     * @psalm-return FilterEmptyCallable
+     */
+    private function normalizeFilterEmpty(bool|callable $value): callable
+    {
+        if ($value === false) {
+            return new NeverEmpty();
+        }
+
+        if ($value === true) {
+            return new WhenEmpty();
+        }
+
+        return $value;
     }
 
     private function castToString(mixed $value, DataColumn $column): string

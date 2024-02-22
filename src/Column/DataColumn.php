@@ -19,14 +19,23 @@ use Yiisoft\Yii\DataView\Filter\Widget\FilterWidget;
  * {@see renderDataCellContent|data cell content}. The cell value is an un-formatted value that may be used for
  * calculation, while the actual cell content is a {@see format|formatted} version of that value which may contain HTML
  * markup.
+ *
+ * @psalm-type FilterEmptyCallable = callable(mixed $value): bool
  */
 final class DataColumn implements ColumnInterface
 {
     public readonly ?string $queryProperty;
 
     /**
+     * @var bool|callable|null
+     * @psalm-var bool|FilterEmptyCallable|null
+     */
+    public readonly mixed $filterEmpty;
+
+    /**
      * @psalm-param bool|array<array-key,string|array<array-key,string>>|FilterWidget $filter
      * @psalm-param RuleInterface[]|RuleInterface|null $filterValidation
+     * @psalm-param bool|FilterEmptyCallable|null $filterEmpty
      */
     public function __construct(
         public readonly ?string $property = null,
@@ -43,9 +52,11 @@ final class DataColumn implements ColumnInterface
         public readonly bool|array|FilterWidget $filter = false,
         public readonly string|FilterFactoryInterface|null $filterFactory = null,
         public readonly array|RuleInterface|null $filterValidation = null,
+        bool|callable|null $filterEmpty = null,
         private readonly bool $visible = true,
     ) {
         $this->queryProperty = $queryProperty ?? $this->property;
+        $this->filterEmpty = $filterEmpty;
     }
 
     public function isVisible(): bool
