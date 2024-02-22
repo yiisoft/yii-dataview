@@ -38,11 +38,6 @@ final class DataColumnRenderer implements FilterableColumnRendererInterface
     private readonly mixed $defaultFilterEmpty;
 
     /**
-     * @param ContainerInterface $filterFactoryContainer
-     * @param ValidatorInterface $validator
-     * @param string $dateTimeFormat
-     * @param string $defaultFilterFactory
-     * @param string $defaultArrayFilterFactory
      *
      * @psalm-param bool|FilterEmptyCallable $defaultFilterEmpty
      */
