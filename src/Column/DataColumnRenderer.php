@@ -38,7 +38,6 @@ final class DataColumnRenderer implements FilterableColumnRendererInterface
     private readonly mixed $defaultFilterEmpty;
 
     /**
-     *
      * @psalm-param bool|FilterEmptyCallable $defaultFilterEmpty
      */
     public function __construct(
