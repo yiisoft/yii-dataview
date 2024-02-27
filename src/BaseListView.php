@@ -243,7 +243,7 @@ abstract class BaseListView extends Widget
     }
 
     /**
-     * @psalm-return list{FilterInterface[],ValidationResult}
+     * @psalm-return list{FilterInterface[]|null,ValidationResult}
      */
     protected function makeFilters(): array
     {
@@ -550,7 +550,7 @@ abstract class BaseListView extends Widget
     public function render(): string
     {
         [$filters, $filterValidationResult] = $this->makeFilters();
-        $items = $this->prepareDataReaderAndGetItems($filters);
+        $items = $filters === null ? [] : $this->prepareDataReaderAndGetItems($filters);
 
         $content = trim(
             strtr(

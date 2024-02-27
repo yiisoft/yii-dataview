@@ -8,5 +8,8 @@ use Yiisoft\Data\Reader\FilterInterface;
 
 interface FilterFactoryInterface
 {
+    /**
+     * @throws IncorrectValueException
+     */
     public function create(string $property, string $value): ?FilterInterface;
 }
