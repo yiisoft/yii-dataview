@@ -243,6 +243,14 @@ abstract class BaseListView extends Widget
     }
 
     /**
+     * @return array The array with format:
+     * ```
+     * [
+     *   FilterInterface[]|null, // Array of filters or `null` if there are definitely no entries for the current filter
+     *   ValidationResult, // Validation result of the filter
+     * ]
+     * ```
+     *
      * @psalm-return list{FilterInterface[]|null,ValidationResult}
      */
     protected function makeFilters(): array
