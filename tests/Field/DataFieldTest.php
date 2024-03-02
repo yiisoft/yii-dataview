@@ -35,20 +35,20 @@ final class DataFieldTest extends TestCase
         Assert::equalsWithoutLE(
             <<<HTML
             <div>
+            <dl>
             <div>
-            <div>
-            <span>id</span>
-            <div>1</div>
+            <dt>id</dt>
+            <dd>1</dd>
             </div>
             <div>
-            <span>username</span>
-            <div>admin</div>
+            <dt>username</dt>
+            <dd>admin</dd>
             </div>
             <div>
-            <span class="test-class">isAdmin</span>
-            <div>true</div>
+            <dt class="test-class">isAdmin</dt>
+            <dd>true</dd>
             </div>
-            </div>
+            </dl>
             </div>
             HTML,
             DetailView::widget()
@@ -73,20 +73,20 @@ final class DataFieldTest extends TestCase
         Assert::equalsWithoutLE(
             <<<HTML
             <div>
+            <dl>
             <div>
-            <div>
-            <span>id</span>
-            <div>1</div>
+            <dt>id</dt>
+            <dd>1</dd>
             </div>
             <div>
-            <span>username</span>
-            <div>admin</div>
+            <dt>username</dt>
+            <dd>admin</dd>
             </div>
             <div>
             <p>isAdmin</p>
-            <div>true</div>
+            <dd>true</dd>
             </div>
-            </div>
+            </dl>
             </div>
             HTML,
             DetailView::widget()
@@ -111,20 +111,20 @@ final class DataFieldTest extends TestCase
         Assert::equalsWithoutLE(
             <<<HTML
             <div>
+            <dl>
             <div>
-            <div>
-            <span>id</span>
-            <div>1</div>
+            <dt>id</dt>
+            <dd>1</dd>
             </div>
             <div>
-            <span>username</span>
-            <div>tests 1</div>
+            <dt>username</dt>
+            <dd>tests 1</dd>
             </div>
             <div>
-            <span>total</span>
-            <div class="text-success">10</div>
+            <dt>total</dt>
+            <dd class="text-success">10</dd>
             </div>
-            </div>
+            </dl>
             </div>
             HTML,
             DetailView::widget()
@@ -154,20 +154,20 @@ final class DataFieldTest extends TestCase
         Assert::equalsWithoutLE(
             <<<HTML
             <div>
+            <dl>
             <div>
-            <div>
-            <span>id</span>
-            <div>1</div>
+            <dt>id</dt>
+            <dd>1</dd>
             </div>
             <div>
-            <span>username</span>
-            <div>tests 1</div>
+            <dt>username</dt>
+            <dd>tests 1</dd>
             </div>
             <div>
-            <span>status</span>
-            <div>yes</div>
+            <dt>status</dt>
+            <dd>yes</dd>
             </div>
-            </div>
+            </dl>
             </div>
             HTML,
             DetailView::widget()
@@ -200,20 +200,20 @@ final class DataFieldTest extends TestCase
         Assert::equalsWithoutLE(
             <<<HTML
             <div>
+            <dl>
             <div>
-            <div>
-            <span>id</span>
-            <div>1</div>
+            <dt>id</dt>
+            <dd>1</dd>
             </div>
             <div>
-            <span>username</span>
-            <div>tests 1</div>
+            <dt>username</dt>
+            <dd>tests 1</dd>
             </div>
             <div>
-            <span>status</span>
-            <div>yes</div>
+            <dt>status</dt>
+            <dd>yes</dd>
             </div>
-            </div>
+            </dl>
             </div>
             HTML,
             DetailView::widget()
@@ -240,20 +240,20 @@ final class DataFieldTest extends TestCase
         Assert::equalsWithoutLE(
             <<<HTML
             <div>
+            <dl>
             <div>
-            <div>
-            <span>id</span>
-            <div>1</div>
+            <dt>id</dt>
+            <dd>1</dd>
             </div>
             <div>
-            <span>username</span>
-            <div>guess</div>
+            <dt>username</dt>
+            <dd>guess</dd>
             </div>
             <div>
-            <span>isAdmin</span>
-            <div>1</div>
+            <dt>isAdmin</dt>
+            <dd>1</dd>
             </div>
-            </div>
+            </dl>
             </div>
             HTML,
             DetailView::widget()
@@ -279,20 +279,20 @@ final class DataFieldTest extends TestCase
         Assert::equalsWithoutLE(
             <<<HTML
             <div>
+            <dl>
             <div>
-            <div>
-            <span>id</span>
-            <div>1</div>
+            <dt>id</dt>
+            <dd>1</dd>
             </div>
             <div>
-            <span>username</span>
-            <div>admin</div>
+            <dt>username</dt>
+            <dd>admin</dd>
             </div>
             <div>
-            <span>isAdmin</span>
+            <dt>isAdmin</dt>
             <p>true</p>
             </div>
-            </div>
+            </dl>
             </div>
             HTML,
             DetailView::widget()
