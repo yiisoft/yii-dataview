@@ -45,7 +45,7 @@ final class DetailView extends Widget
     private array|Closure $labelAttributes = [];
     private string $labelTag = 'dt';
     private string $labelTemplate = '<{labelTag}{labelAttributes}>{label}</{labelTag}>';
-    private string $template = "<div{attributes}>\n{header}<dl{containerAttributes}>\n{items}\n</dl>\n</div>";
+    private string $template = "<div{attributes}>\n{header}\n<dl{containerAttributes}>\n{items}\n</dl>\n</div>";
     private array|Closure $valueAttributes = [];
     private string $valueFalse = 'false';
     private string $valueTag = 'dd';
