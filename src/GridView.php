@@ -25,6 +25,7 @@ use Yiisoft\Yii\DataView\Column\Base\RendererContainer;
 use Yiisoft\Yii\DataView\Column\ColumnInterface;
 use Yiisoft\Yii\DataView\Column\ColumnRendererInterface;
 use Yiisoft\Yii\DataView\Column\FilterableColumnRendererInterface;
+use Yiisoft\Yii\DataView\Filter\Factory\IncorrectValueException;
 
 /**
  * The GridView widget is used to display data in a grid.
@@ -649,7 +650,12 @@ final class GridView extends BaseListView
         $filters = [];
         foreach ($columns as $i => $column) {
             if ($renderers[$i] instanceof FilterableColumnRendererInterface) {
-                $filter = $renderers[$i]->makeFilter($column, $context);
+                try {
+                    $filter = $renderers[$i]->makeFilter($column, $context);
+                } catch (IncorrectValueException) {
+                    $filters = null;
+                    break;
+                }
                 if ($filter !== null) {
                     $filters[] = $filter;
                 }

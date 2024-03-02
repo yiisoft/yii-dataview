@@ -243,7 +243,15 @@ abstract class BaseListView extends Widget
     }
 
     /**
-     * @psalm-return list{FilterInterface[],ValidationResult}
+     * @return array The array with format:
+     * ```
+     * [
+     *   FilterInterface[]|null, // Array of filters or `null` if there are definitely no entries for the current filter
+     *   ValidationResult, // Validation result of the filter
+     * ]
+     * ```
+     *
+     * @psalm-return list{FilterInterface[]|null,ValidationResult}
      */
     protected function makeFilters(): array
     {
@@ -550,7 +558,7 @@ abstract class BaseListView extends Widget
     public function render(): string
     {
         [$filters, $filterValidationResult] = $this->makeFilters();
-        $items = $this->prepareDataReaderAndGetItems($filters);
+        $items = $filters === null ? [] : $this->prepareDataReaderAndGetItems($filters);
 
         $content = trim(
             strtr(
