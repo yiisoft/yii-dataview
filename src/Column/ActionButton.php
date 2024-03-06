@@ -6,21 +6,14 @@ namespace Yiisoft\Yii\DataView\Column;
 
 use Closure;
 use Stringable;
-use Yiisoft\Yii\DataView\Column\Base\DataContext;
 
-/**
- * @psalm-type ContentClosure = Closure(array|object,DataContext):string|Stringable
- * @psalm-type UrlClosure = Closure(array|object,DataContext):string
- * @psalm-type AttributesClosure = Closure(array|object,DataContext):array
- * @psalm-type ClassClosure = Closure(array|object,DataContext):string|array<array-key,string|null>|null
- */
 final class ActionButton
 {
     /**
-     * @psalm-param ContentClosure|string|Stringable $content
-     * @psalm-param UrlClosure|string|null $url
-     * @psalm-param AttributesClosure|array|null $attributes
-     * @psalm-param ClassClosure|string|array<array-key,string|null>|null|false $class
+     * @param Closure|string|Stringable $content Closure signature: Closure(array|object,DataContext): string|Stringable
+     * @param Closure|string|null $url Closure signature: Closure(array|object, DataContext): string
+     * @param Closure|array|null $attributes Closure signature: Closure(array|object,DataContext):array
+     * @param Closure|string|array<array-key,string|null>|null|false $class Closure signature: Closure(array|object,DataContext):string|array<array-key,string|null>|null
      */
     public function __construct(
         public readonly Closure|string|Stringable $content = '',

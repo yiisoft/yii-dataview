@@ -137,6 +137,7 @@ final class ActionColumnRenderer implements ColumnRendererInterface
             $url = $this->createUrl($name, $context);
         } elseif ($button->url instanceof Closure) {
             $closure = $button->url;
+            /** @var string $url */
             $url = $closure($context->data, $context);
         } else {
             $url = $button->url;
@@ -144,6 +145,7 @@ final class ActionColumnRenderer implements ColumnRendererInterface
 
         if ($button->attributes instanceof Closure) {
             $closure = $button->attributes;
+            /** @var array $attributes */
             $attributes = $closure($context->data, $context);
         } else {
             $attributes = $button->attributes ?? [];
@@ -156,6 +158,7 @@ final class ActionColumnRenderer implements ColumnRendererInterface
 
         if ($button->class instanceof Closure) {
             $closure = $button->class;
+            /** @var string|array<array-key,string|null>|null $class */
             $class = $closure($context->data, $context);
         } else {
             $class = $button->class;
