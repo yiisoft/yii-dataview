@@ -158,7 +158,7 @@ final class ActionColumnRenderer implements ColumnRendererInterface
 
         if ($button->class instanceof Closure) {
             $closure = $button->class;
-            /** @var string|array<array-key,string|null>|null $class */
+            /** @var array<array-key,string|null>|string|null $class */
             $class = $closure($context->data, $context);
         } else {
             $class = $button->class;
