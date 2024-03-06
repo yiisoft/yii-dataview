@@ -24,13 +24,13 @@ final class ActionColumnRenderer implements ColumnRendererInterface
     private $urlCreator;
 
     /**
-     * @psalm-var array<string,ButtonRenderer>
+     * @psalm-var array<array-key, ButtonRenderer>
      */
     private readonly array $buttons;
 
     /**
      * @psalm-param UrlCreator|null $urlCreator
-     * @psalm-param array<string,ButtonRenderer>|null $buttons
+     * @psalm-param array<array-key, ButtonRenderer>|null $buttons
      * @psalm-param array<string, string>|string|null $buttonClass
      */
     public function __construct(
@@ -93,7 +93,7 @@ final class ActionColumnRenderer implements ColumnRendererInterface
 
                     return '';
                 },
-                $this->getTemplate($column, $buttons, $context),
+                $this->getTemplate($column, $buttons),
             );
             $content = trim($content);
         }
@@ -206,9 +206,9 @@ final class ActionColumnRenderer implements ColumnRendererInterface
     }
 
     /**
-     * @psalm-param array<string,ButtonRenderer> $buttons
+     * @psalm-param array<array-key, ButtonRenderer> $buttons
      */
-    private function getTemplate(ActionColumn $column, array $buttons, DataContext $context): string
+    private function getTemplate(ActionColumn $column, array $buttons): string
     {
         if ($column->template !== null) {
             return $column->template;
