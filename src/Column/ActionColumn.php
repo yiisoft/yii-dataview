@@ -25,8 +25,8 @@ final class ActionColumn implements ColumnInterface
      * @param ?callable $urlCreator A callback that creates a button URL using the specified data information.
      *
      * @psalm-param UrlCreator|null $urlCreator
-     * @psalm-param array<string,ButtonRenderer>|null $buttons
-     * @psalm-param array<string,bool|Closure>|null $visibleButtons
+     * @psalm-param array<array-key, ButtonRenderer>|null $buttons
+     * @psalm-param array<string, bool|Closure>|null $visibleButtons
      */
     public function __construct(
         public readonly ?string $template = null,
