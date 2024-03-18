@@ -22,7 +22,7 @@ return [
             'filterCellAttributes()' => [['class' => 'align-top']],
             'filterCellInvalidClass()' => ['bg-danger bg-opacity-10'],
             'filterErrorsContainerAttributes()' => [['class' => 'text-danger mt-1']],
-            'addColumnRendererConfigs()' => [
+            'addColumnRendererConfigs()-theme' => [
                 [
                     ActionColumnRenderer::class => [
                         'buttonClass' => 'btn btn-outline-secondary',
