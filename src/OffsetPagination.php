@@ -30,31 +30,31 @@ final class OffsetPagination extends BasePagination
         return $new;
     }
 
-    public function labelPrevious(string|Stringable|null $labelPrevious): self
+    public function labelPrevious(string|Stringable|null $label): self
     {
         $new = clone $this;
-        $new->labelPrevious = $labelPrevious;
+        $new->labelPrevious = $label;
         return $new;
     }
 
-    public function labelNext(string|Stringable|null $labelNext): self
+    public function labelNext(string|Stringable|null $label): self
     {
         $new = clone $this;
-        $new->labelNext = $labelNext;
+        $new->labelNext = $label;
         return $new;
     }
 
-    public function labelFirst(string|Stringable|null $labelFirst): self
+    public function labelFirst(string|Stringable|null $label): self
     {
         $new = clone $this;
-        $new->labelFirst = $labelFirst;
+        $new->labelFirst = $label;
         return $new;
     }
 
-    public function labelLast(string|Stringable|null $labelLast): self
+    public function labelLast(string|Stringable|null $label): self
     {
         $new = clone $this;
-        $new->labelLast = $labelLast;
+        $new->labelLast = $label;
         return $new;
     }
 
