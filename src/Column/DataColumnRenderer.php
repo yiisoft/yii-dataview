@@ -29,7 +29,7 @@ use Yiisoft\Yii\DataView\Filter\Widget\TextInputFilter;
 /**
  * @psalm-import-type FilterEmptyCallable from DataColumn
  */
-final class DataColumnRenderer implements FilterableColumnRendererInterface
+final class DataColumnRenderer implements FilterableColumnRendererInterface, OverrideOrderFieldsColumnInterface
 {
     /**
      * @var bool|callable
@@ -76,7 +76,7 @@ final class DataColumnRenderer implements FilterableColumnRendererInterface
             return $cell;
         }
 
-        [$cell, $link, $prepend, $append] = $context->prepareSortable($cell, $column->queryProperty);
+        [$cell, $link, $prepend, $append] = $context->prepareSortable($cell, $column->queryProperty->property);
         if ($link !== null) {
             $link = $link->content($label)->encode(false);
         }
@@ -103,14 +103,14 @@ final class DataColumnRenderer implements FilterableColumnRendererInterface
         $content = [
             $widget->withContext(
                 new Context(
-                    $column->queryProperty,
-                    $context->getQueryValue($column->queryProperty),
+                    $column->queryProperty->property,
+                    $context->getQueryValue($column->queryProperty->property),
                     $context->formId
                 )
             ),
         ];
 
-        $errors = $context->validationResult->getAttributeErrorMessages($column->queryProperty);
+        $errors = $context->validationResult->getAttributeErrorMessages($column->queryProperty->property);
         if (!empty($errors)) {
             $cell = $cell->addClass($context->cellInvalidClass);
             $content[] = Html::div(attributes: $context->errorsContainerAttributes)
@@ -127,7 +127,7 @@ final class DataColumnRenderer implements FilterableColumnRendererInterface
             return null;
         }
 
-        $value = $context->getQueryValue($column->queryProperty);
+        $value = $context->getQueryValue($column->queryProperty->property);
         if ($value === null) {
             return null;
         }
@@ -144,7 +144,7 @@ final class DataColumnRenderer implements FilterableColumnRendererInterface
                     $context->validationResult->addError(
                         $error->getMessage(),
                         $error->getParameters(),
-                        [$column->queryProperty]
+                        [$column->queryProperty->property]
                     );
                 }
                 return null;
@@ -163,7 +163,7 @@ final class DataColumnRenderer implements FilterableColumnRendererInterface
             $factory = $column->filterFactory;
         }
 
-        return $factory->create($column->queryProperty, $value);
+        return $factory->create($column->queryProperty->field, $value);
     }
 
     public function renderBody(ColumnInterface $column, Cell $cell, DataContext $context): Cell
@@ -243,5 +243,16 @@ final class DataColumnRenderer implements FilterableColumnRendererInterface
                 )
             );
         }
+    }
+
+    public function getOverrideOrderFields(ColumnInterface $column): array
+    {
+        $this->checkColumn($column);
+
+        if ($column->queryProperty === null || $column->queryProperty->hasEqualField()) {
+            return [];
+        }
+
+        return [$column->queryProperty->property => $column->queryProperty->field];
     }
 }

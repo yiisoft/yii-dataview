@@ -24,7 +24,7 @@ use Yiisoft\Yii\DataView\Filter\Widget\FilterWidget;
  */
 final class DataColumn implements ColumnInterface
 {
-    public readonly ?string $queryProperty;
+    public readonly ?QueryProperty $queryProperty;
 
     /**
      * @var bool|callable|null
@@ -40,6 +40,7 @@ final class DataColumn implements ColumnInterface
     public function __construct(
         public readonly ?string $property = null,
         ?string $queryProperty = null,
+        ?string $queryField = null,
         public readonly ?string $header = null,
         public readonly bool $encodeHeader = true,
         public readonly ?string $footer = null,
@@ -55,7 +56,11 @@ final class DataColumn implements ColumnInterface
         bool|callable|null $filterEmpty = null,
         private readonly bool $visible = true,
     ) {
-        $this->queryProperty = $queryProperty ?? $this->property;
+        $queryProperty ??= $property;
+        $this->queryProperty = $queryProperty === null
+            ? null
+            : new QueryProperty($queryProperty, $queryField ?? $queryProperty);
+
         $this->filterEmpty = $filterEmpty;
     }
 

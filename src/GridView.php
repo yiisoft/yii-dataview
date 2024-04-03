@@ -7,6 +7,7 @@ namespace Yiisoft\Yii\DataView;
 use Closure;
 use Psr\Container\ContainerInterface;
 use Stringable;
+use Yiisoft\Arrays\ArrayHelper;
 use Yiisoft\Data\Paginator\PaginatorInterface;
 use Yiisoft\Data\Reader\ReadableDataInterface;
 use Yiisoft\Data\Reader\Sort;
@@ -25,6 +26,7 @@ use Yiisoft\Yii\DataView\Column\Base\RendererContainer;
 use Yiisoft\Yii\DataView\Column\ColumnInterface;
 use Yiisoft\Yii\DataView\Column\ColumnRendererInterface;
 use Yiisoft\Yii\DataView\Column\FilterableColumnRendererInterface;
+use Yiisoft\Yii\DataView\Column\OverrideOrderFieldsColumnInterface;
 use Yiisoft\Yii\DataView\Filter\Factory\IncorrectValueException;
 
 /**
@@ -531,10 +533,18 @@ final class GridView extends BaseListView
             $blocks[] = Html::colgroup()->columns(...$tags)->render();
         }
 
+        $overrideOrderFields = [];
+        foreach ($columns as $i => $column) {
+            if ($renderers[$i] instanceof OverrideOrderFieldsColumnInterface) {
+                $overrideOrderFields = array_merge($overrideOrderFields, $renderers[$i]->getOverrideOrderFields($column));
+            }
+        }
+
         if ($this->headerTableEnabled) {
             $headerContext = new HeaderContext(
                 $this->getSort($dataReader),
                 $this->getSort($this->preparedDataReader),
+                $overrideOrderFields,
                 $this->sortableHeaderClass,
                 $this->sortableHeaderPrepend,
                 $this->sortableHeaderAppend,
@@ -663,6 +673,19 @@ final class GridView extends BaseListView
         }
 
         return [$filters, $validationResult];
+    }
+
+    protected function prepareOrder(array &$order): void
+    {
+        $columns = $this->getColumns();
+        $renderers = $this->getColumnRenderers();
+        foreach ($columns as $i => $column) {
+            if ($renderers[$i] instanceof OverrideOrderFieldsColumnInterface) {
+                foreach ($renderers[$i]->getOverrideOrderFields($column) as $from => $to) {
+                    $order = ArrayHelper::replaceKey($order, $from, $to);
+                }
+            }
+        }
     }
 
     private function prepareBodyAttributes(array $attributes, DataContext $context): array
