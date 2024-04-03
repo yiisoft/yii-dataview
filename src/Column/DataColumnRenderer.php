@@ -72,11 +72,11 @@ final class DataColumnRenderer implements FilterableColumnRendererInterface, Ove
         }
         $cell = $cell->content($label);
 
-        if (!$column->withSorting || $column->queryProperty === null) {
+        if (!$column->withSorting || $column->property === null) {
             return $cell;
         }
 
-        [$cell, $link, $prepend, $append] = $context->prepareSortable($cell, $column->queryProperty->property);
+        [$cell, $link, $prepend, $append] = $context->prepareSortable($cell, $column->property);
         if ($link !== null) {
             $link = $link->content($label)->encode(false);
         }
@@ -88,7 +88,7 @@ final class DataColumnRenderer implements FilterableColumnRendererInterface, Ove
     {
         $this->checkColumn($column);
 
-        if ($column->queryProperty === null || $column->filter === false) {
+        if ($column->property === null || $column->filter === false) {
             return null;
         }
 
@@ -103,14 +103,14 @@ final class DataColumnRenderer implements FilterableColumnRendererInterface, Ove
         $content = [
             $widget->withContext(
                 new Context(
-                    $column->queryProperty->property,
-                    $context->getQueryValue($column->queryProperty->property),
+                    $column->property,
+                    $context->getQueryValue($column->property),
                     $context->formId
                 )
             ),
         ];
 
-        $errors = $context->validationResult->getAttributeErrorMessages($column->queryProperty->property);
+        $errors = $context->validationResult->getAttributeErrorMessages($column->property);
         if (!empty($errors)) {
             $cell = $cell->addClass($context->cellInvalidClass);
             $content[] = Html::div(attributes: $context->errorsContainerAttributes)
@@ -123,11 +123,11 @@ final class DataColumnRenderer implements FilterableColumnRendererInterface, Ove
     public function makeFilter(ColumnInterface $column, MakeFilterContext $context): ?FilterInterface
     {
         $this->checkColumn($column);
-        if ($column->queryProperty === null) {
+        if ($column->property === null) {
             return null;
         }
 
-        $value = $context->getQueryValue($column->queryProperty->property);
+        $value = $context->getQueryValue($column->property);
         if ($value === null) {
             return null;
         }
@@ -144,7 +144,7 @@ final class DataColumnRenderer implements FilterableColumnRendererInterface, Ove
                     $context->validationResult->addError(
                         $error->getMessage(),
                         $error->getParameters(),
-                        [$column->queryProperty->property]
+                        [$column->property]
                     );
                 }
                 return null;
@@ -163,7 +163,7 @@ final class DataColumnRenderer implements FilterableColumnRendererInterface, Ove
             $factory = $column->filterFactory;
         }
 
-        return $factory->create($column->queryProperty->field, $value);
+        return $factory->create($column->field ?? $column->property, $value);
     }
 
     public function renderBody(ColumnInterface $column, Cell $cell, DataContext $context): Cell
@@ -249,10 +249,13 @@ final class DataColumnRenderer implements FilterableColumnRendererInterface, Ove
     {
         $this->checkColumn($column);
 
-        if ($column->queryProperty === null || $column->queryProperty->hasEqualField()) {
+        if ($column->property === null
+            || $column->field === null
+            || $column->property === $column->field
+        ) {
             return [];
         }
 
-        return [$column->queryProperty->property => $column->queryProperty->field];
+        return [$column->property => $column->field];
     }
 }
