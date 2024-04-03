@@ -109,8 +109,7 @@ final class HeaderContext
         Sort $sort,
         string $property,
         string $originalProperty
-    ): ?string
-    {
+    ): ?string {
         $originalOrder = $originalSort->getOrder();
         $order = $sort->getOrder();
 
