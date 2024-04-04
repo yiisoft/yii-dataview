@@ -682,7 +682,7 @@ final class GridView extends BaseListView
         foreach ($columns as $i => $column) {
             if ($renderers[$i] instanceof OverrideOrderFieldsColumnInterface) {
                 foreach ($renderers[$i]->getOverrideOrderFields($column) as $from => $to) {
-                    $order = ArrayHelper::replaceKey($order, $from, $to);
+                    $order = ArrayHelper::renameKey($order, $from, $to);
                 }
             }
         }

@@ -157,7 +157,7 @@ final class HeaderContext
         }
 
         return OrderHelper::arrayToString(
-            ArrayHelper::replaceKey($resultOrder, $property, $originalProperty)
+            ArrayHelper::renameKey($resultOrder, $property, $originalProperty)
         );
     }
 
