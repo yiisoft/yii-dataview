@@ -37,7 +37,7 @@
         "ext-json": "*",
         "ext-mbstring": "*",
         "psr/container": "^1.0|^2.0",
-        "yiisoft/arrays": "^2.0|^3.0",
+        "yiisoft/arrays": "^3.1",
         "yiisoft/data": "dev-master",
         "yiisoft/factory": "^1.0",
         "yiisoft/friendly-exception": "^1.0",

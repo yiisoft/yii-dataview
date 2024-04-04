@@ -29,7 +29,7 @@ use Yiisoft\Yii\DataView\Filter\Widget\TextInputFilter;
 /**
  * @psalm-import-type FilterEmptyCallable from DataColumn
  */
-final class DataColumnRenderer implements FilterableColumnRendererInterface
+final class DataColumnRenderer implements FilterableColumnRendererInterface, OverrideOrderFieldsColumnInterface
 {
     /**
      * @var bool|callable
@@ -72,11 +72,11 @@ final class DataColumnRenderer implements FilterableColumnRendererInterface
         }
         $cell = $cell->content($label);
 
-        if (!$column->withSorting || $column->queryProperty === null) {
+        if (!$column->withSorting || $column->property === null) {
             return $cell;
         }
 
-        [$cell, $link, $prepend, $append] = $context->prepareSortable($cell, $column->queryProperty);
+        [$cell, $link, $prepend, $append] = $context->prepareSortable($cell, $column->property);
         if ($link !== null) {
             $link = $link->content($label)->encode(false);
         }
@@ -88,7 +88,7 @@ final class DataColumnRenderer implements FilterableColumnRendererInterface
     {
         $this->checkColumn($column);
 
-        if ($column->queryProperty === null || $column->filter === false) {
+        if ($column->property === null || $column->filter === false) {
             return null;
         }
 
@@ -103,14 +103,14 @@ final class DataColumnRenderer implements FilterableColumnRendererInterface
         $content = [
             $widget->withContext(
                 new Context(
-                    $column->queryProperty,
-                    $context->getQueryValue($column->queryProperty),
+                    $column->property,
+                    $context->getQueryValue($column->property),
                     $context->formId
                 )
             ),
         ];
 
-        $errors = $context->validationResult->getAttributeErrorMessages($column->queryProperty);
+        $errors = $context->validationResult->getAttributeErrorMessages($column->property);
         if (!empty($errors)) {
             $cell = $cell->addClass($context->cellInvalidClass);
             $content[] = Html::div(attributes: $context->errorsContainerAttributes)
@@ -123,11 +123,11 @@ final class DataColumnRenderer implements FilterableColumnRendererInterface
     public function makeFilter(ColumnInterface $column, MakeFilterContext $context): ?FilterInterface
     {
         $this->checkColumn($column);
-        if ($column->queryProperty === null) {
+        if ($column->property === null) {
             return null;
         }
 
-        $value = $context->getQueryValue($column->queryProperty);
+        $value = $context->getQueryValue($column->property);
         if ($value === null) {
             return null;
         }
@@ -144,7 +144,7 @@ final class DataColumnRenderer implements FilterableColumnRendererInterface
                     $context->validationResult->addError(
                         $error->getMessage(),
                         $error->getParameters(),
-                        [$column->queryProperty]
+                        [$column->property]
                     );
                 }
                 return null;
@@ -163,7 +163,7 @@ final class DataColumnRenderer implements FilterableColumnRendererInterface
             $factory = $column->filterFactory;
         }
 
-        return $factory->create($column->queryProperty, $value);
+        return $factory->create($column->field ?? $column->property, $value);
     }
 
     public function renderBody(ColumnInterface $column, Cell $cell, DataContext $context): Cell
@@ -243,5 +243,19 @@ final class DataColumnRenderer implements FilterableColumnRendererInterface
                 )
             );
         }
+    }
+
+    public function getOverrideOrderFields(ColumnInterface $column): array
+    {
+        $this->checkColumn($column);
+
+        if ($column->property === null
+            || $column->field === null
+            || $column->property === $column->field
+        ) {
+            return [];
+        }
+
+        return [$column->property => $column->field];
     }
 }

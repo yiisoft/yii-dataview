@@ -18,6 +18,7 @@ use Yiisoft\Data\Reader\FilterInterface;
 use Yiisoft\Data\Reader\LimitableDataInterface;
 use Yiisoft\Data\Reader\OffsetableDataInterface;
 use Yiisoft\Data\Reader\ReadableDataInterface;
+use Yiisoft\Data\Reader\Sort;
 use Yiisoft\Data\Reader\SortableDataInterface;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\Div;
@@ -30,12 +31,14 @@ use Yiisoft\Translator\Translator;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\Validator\Result as ValidationResult;
 use Yiisoft\Widget\Widget;
+use Yiisoft\Data\Reader\OrderHelper;
 use Yiisoft\Yii\DataView\Exception\DataReaderNotSetException;
 
 /**
  * @psalm-type UrlArguments = array<string,scalar|Stringable|null>
  * @psalm-type UrlCreator = callable(UrlArguments,array):string
  * @psalm-type PageNotFoundExceptionCallback = callable(PageNotFoundException):void
+ * @psalm-import-type TOrder from Sort
  */
 abstract class BaseListView extends Widget
 {
@@ -366,7 +369,9 @@ abstract class BaseListView extends Widget
         if ($dataReader->isSortable() && !empty($sort)) {
             $sortObject = $dataReader->getSort();
             if ($sortObject !== null) {
-                $dataReader = $dataReader->withSort($sortObject->withOrderString($sort));
+                $order = OrderHelper::stringToArray($sort);
+                $this->prepareOrder($order);
+                $dataReader = $dataReader->withSort($sortObject->withOrder($order));
             }
         }
 
@@ -375,6 +380,13 @@ abstract class BaseListView extends Widget
         }
 
         return $dataReader;
+    }
+
+    /**
+     * @psalm-param TOrder $order
+     */
+    protected function prepareOrder(array &$order): void
+    {
     }
 
     /**
