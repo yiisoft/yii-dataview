@@ -173,7 +173,11 @@ final class ActionColumnRenderer implements ColumnRendererInterface
             Html::addCssClass($attributes, $class);
         }
 
-        return (string)Html::a($content, $url, $attributes);
+        if ($button->title !== null) {
+            $attributes['title'] = $button->title;
+        }
+
+        return (string) Html::a($content, $url, $attributes);
     }
 
     private function createUrl(string $action, DataContext $context): string
