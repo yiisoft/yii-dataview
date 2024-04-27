@@ -20,6 +20,7 @@ final class ActionButton
         public readonly Closure|string|null $url = null,
         public readonly Closure|array|null $attributes = null,
         public readonly Closure|string|array|null|false $class = false,
+        public readonly string|null $title = null,
         public readonly bool $overrideAttributes = false,
     ) {
     }
