@@ -24,21 +24,11 @@ This [Yii Framework] provides data displaying widgets:
 
 ## Installation
 
-The preferred way to install this extension is through [composer](https://getcomposer.org/download/).
-
-Either run
+The package could be installed with [Composer](https://getcomposer.org):
 
 ```shell
-php composer.phar require yiisoft/yii-dataview
+composer require yiisoft/yii-dataview
 ```
-
-or add
-
-```php
-"yiisoft/yii-dataview": "^3.0"
-```
-
-to the require section of your `composer.json`.
 
 ## Documentation
 
