@@ -12,7 +12,7 @@
 [![Code Coverage](https://codecov.io/gh/yiisoft/yii-dataview/graph/badge.svg?token=NCRXPFPX59)](https://codecov.io/gh/yiisoft/yii-dataview)
 [![Mutation testing badge](https://img.shields.io/endpoint?style=flat&url=https%3A%2F%2Fbadge-api.stryker-mutator.io%2Fgithub.com%2Fyiisoft%2Fyii-dataview%2Fmaster)](https://dashboard.stryker-mutator.io/reports/github.com/yiisoft/yii-dataview/master)
 
-This [Yii Framework](https://www.yiiframework.com/) provides data displaying widgets:
+This package provides data displaying widgets:
 
 - ListView
 - GridView
