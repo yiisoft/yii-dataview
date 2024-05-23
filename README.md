@@ -1,8 +1,8 @@
 <p align="center">
     <a href="https://github.com/yiisoft" target="_blank">
-        <img src="https://yiisoft.github.io/docs/images/yii_logo.svg" height="100px" alt="Yii Framework">
+        <img src="https://yiisoft.github.io/docs/images/yii_logo.svg" height="100px" alt="Yii">
     </a>
-    <h1 align="center">Yii Framework Data Displaying Extension</h1>
+    <h1 align="center">Yii Data Displaying Extension</h1>
     <br>
 </p>
 
@@ -12,7 +12,7 @@
 [![Code Coverage](https://codecov.io/gh/yiisoft/yii-dataview/graph/badge.svg?token=NCRXPFPX59)](https://codecov.io/gh/yiisoft/yii-dataview)
 [![Mutation testing badge](https://img.shields.io/endpoint?style=flat&url=https%3A%2F%2Fbadge-api.stryker-mutator.io%2Fgithub.com%2Fyiisoft%2Fyii-dataview%2Fmaster)](https://dashboard.stryker-mutator.io/reports/github.com/yiisoft/yii-dataview/master)
 
-This [Yii Framework] provides data displaying widgets:
+This [Yii Framework](https://www.yiiframework.com/) provides data displaying widgets:
 
 - ListView
 - GridView
@@ -39,7 +39,7 @@ that. You may also check out other [Yii Community Resources](https://www.yiifram
 
 ## License
 
-The Yii Framework Data Displaying Extension is free software. It is released under the terms of the BSD License.
+The Yii Data Displaying Extension is free software. It is released under the terms of the BSD License.
 Please see [`LICENSE`](./LICENSE.md) for more information.
 
 Maintained by [Yii Software](https://www.yiiframework.com/).
