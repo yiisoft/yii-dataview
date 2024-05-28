@@ -48,7 +48,7 @@
         "yiisoft/strings": "^2.0",
         "yiisoft/translator": "^3.0",
         "yiisoft/validator": "^1.2",
-        "yiisoft/view": "^8.0",
+        "yiisoft/view": "^9.0",
         "yiisoft/widget": "^2.0"
     },
     "require-dev": {
