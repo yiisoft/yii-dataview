@@ -21,7 +21,6 @@ use Yiisoft\Translator\Message\Php\MessageSource;
 use Yiisoft\Translator\SimpleMessageFormatter;
 use Yiisoft\Translator\Translator;
 use Yiisoft\Translator\TranslatorInterface;
-use Yiisoft\View\WebView;
 
 /**
  * @psalm-suppress PropertyNotSetInConstructor
@@ -64,11 +63,6 @@ final class Mock extends TestCase
         $routeCollection = self::routeCollection($routes);
 
         return new UrlGenerator($routeCollection, $currentRoute, $parser);
-    }
-
-    public static function webView(): WebView
-    {
-        return new WebView(__DIR__ . '/view', new SimpleEventDispatcher());
     }
 
     /**

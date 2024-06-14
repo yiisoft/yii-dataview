@@ -6,11 +6,9 @@ namespace Yiisoft\Yii\DataView;
 
 use Closure;
 use InvalidArgumentException;
-use Throwable;
 use Yiisoft\Html\Tag\Div;
 use Yiisoft\View\Exception\ViewNotFoundException;
-use Yiisoft\View\WebView;
-use Yiisoft\Yii\DataView\Exception\WebViewNotSetException;
+use Yiisoft\View\View;
 
 /**
  * The ListView widget is used to display data from data provider. Each data model is rendered using the view specified.
@@ -19,12 +17,16 @@ final class ListView extends BaseListView
 {
     private ?Closure $afterItem = null;
     private ?Closure $beforeItem = null;
-    /** @var callable|string|null */
+
+    /**
+     * @var callable|string|null
+     */
     private $itemView = null;
+
     private array $itemViewAttributes = [];
     private string $separator = "\n";
     private array $viewParams = [];
-    private WebView|null $webView = null;
+    private ?View $view = null;
 
     /**
      * Return new instance with afterItem closure.
@@ -77,21 +79,12 @@ final class ListView extends BaseListView
         return $new;
     }
 
-    public function getWebView(): WebView
-    {
-        if ($this->webView === null) {
-            throw new WebViewNotSetException();
-        }
-
-        return $this->webView;
-    }
-
     /**
      * Return new instance with itemView closure.
      *
-     * @param Closure|string $value the name of the view for rendering each data item, or a callback (e.g. an anonymous
-     * function) for rendering each data item. If it specifies a view name, the following variables will be available in
-     * the view:
+     * @param Closure|string $value the full path of the view for rendering each data item, or a callback (e.g.
+     * an anonymous function) for rendering each data item. If it specifies a view name, the following variables will be
+     * available in the view:
      *
      * - `$data`: The data model.
      * - `$key`: The key value associated with the data item.
@@ -110,7 +103,6 @@ final class ListView extends BaseListView
     {
         $new = clone $this;
         $new->itemView = $value;
-
         return $new;
     }
 
@@ -156,26 +148,13 @@ final class ListView extends BaseListView
     }
 
     /**
-     * Return new instance with the WebView object.
-     *
-     * @param WebView $value the WebView object.
-     */
-    public function webView(WebView $value): self
-    {
-        $new = clone $this;
-        $new->webView = $value;
-
-        return $new;
-    }
-
-    /**
      * Renders a single data model.
      *
      * @param array|object $data The data to be rendered.
      * @param mixed $key The key value associated with the data.
      * @param int $index The zero-based index of the data array.
      *
-     * @throws Throwable|ViewNotFoundException
+     * @throws ViewNotFoundException If the item view file does not exist.
      */
     protected function renderItem(array|object $data, mixed $key, int $index): string
     {
@@ -186,7 +165,7 @@ final class ListView extends BaseListView
         }
 
         if (is_string($this->itemView)) {
-            $content = $this->getWebView()->render(
+            $content = $this->getView()->renderFile(
                 $this->itemView,
                 array_merge(
                     [
@@ -214,7 +193,7 @@ final class ListView extends BaseListView
     /**
      * Renders all data models.
      *
-     * @throws Throwable|ViewNotFoundException
+     * @throws ViewNotFoundException If the item view file does not exist.
      */
     protected function renderItems(array $items, \Yiisoft\Validator\Result $filterValidationResult): string
     {
@@ -285,5 +264,13 @@ final class ListView extends BaseListView
         }
 
         return $result;
+    }
+
+    private function getView(): View
+    {
+        if ($this->view === null) {
+            $this->view = new View();
+        }
+        return $this->view;
     }
 }

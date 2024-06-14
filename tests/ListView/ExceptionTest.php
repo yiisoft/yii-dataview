@@ -39,22 +39,6 @@ final class ExceptionTest extends TestCase
             ->render();
     }
 
-    /**
-     * @throws InvalidConfigException
-     * @throws NotFoundException
-     * @throws NotInstantiableException
-     * @throws CircularReferenceException
-     */
-    public function testGetWebView(): void
-    {
-        $this->expectException(Exception\WebViewNotSetException::class);
-        $this->expectExceptionMessage('Failed to create widget because "webview" is not set.');
-        ListView::widget()
-            ->itemView('//_listview')
-            ->dataReader($this->createOffsetPaginator($this->data, 10))
-            ->render();
-    }
-
     public function testItemViewWithNull(): void
     {
         $this->expectException(InvalidArgumentException::class);

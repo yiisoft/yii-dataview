@@ -32,6 +32,5 @@ final class ImmutableTest extends TestCase
         $this->assertNotSame($listView, $listView->itemViewAttributes([]));
         $this->assertNotSame($listView, $listView->separator(''));
         $this->assertNotSame($listView, $listView->viewParams([]));
-        $this->assertNotSame($listView, $listView->webView(Mock::webView()));
     }
 }
