@@ -11,7 +11,6 @@ use Yiisoft\Definitions\Exception\NotInstantiableException;
 use Yiisoft\Factory\NotFoundException;
 use Yiisoft\Yii\DataView\ListView;
 use Yiisoft\Yii\DataView\Tests\Support\Assert;
-use Yiisoft\Yii\DataView\Tests\Support\Mock;
 use Yiisoft\Yii\DataView\Tests\Support\TestTrait;
 
 final class BaseTest extends TestCase
@@ -23,12 +22,6 @@ final class BaseTest extends TestCase
         ['id' => 2, 'name' => 'Mary', 'age' => 21],
     ];
 
-    /**
-     * @throws InvalidConfigException
-     * @throws NotFoundException
-     * @throws NotInstantiableException
-     * @throws CircularReferenceException
-     */
     public function testAfterItemBeforeItem(): void
     {
         Assert::equalsWithoutLE(
@@ -50,9 +43,8 @@ final class BaseTest extends TestCase
             ListView::widget()
                 ->afterItem(static fn () => '</span>')
                 ->beforeItem(static fn () => '<span class="testMe">')
-                ->itemView('//_listview')
+                ->itemView(dirname(__DIR__) . '/Support/view/_listview.php')
                 ->dataReader($this->createOffsetPaginator($this->data, 10))
-                ->webView(Mock::webView())
                 ->render(),
         );
     }
@@ -72,10 +64,9 @@ final class BaseTest extends TestCase
             </div>
             HTML,
             ListView::widget()
-                ->itemView('//_listview')
+                ->itemView(dirname(__DIR__) . '/Support/view/_listview.php')
                 ->itemViewAttributes(['class' => 'testMe'])
                 ->dataReader($this->createOffsetPaginator($this->data, 10))
-                ->webView(Mock::webView())
                 ->render(),
         );
     }
@@ -95,9 +86,8 @@ final class BaseTest extends TestCase
             </div>
             HTML,
             ListView::widget()
-                ->itemView('//_listview')
+                ->itemView(dirname(__DIR__) . '/Support/view/_listview.php')
                 ->dataReader($this->createOffsetPaginator($this->data, 10))
-                ->webView(Mock::webView())
                 ->render(),
         );
     }
@@ -127,7 +117,6 @@ final class BaseTest extends TestCase
                     fn (array $data) => '<div>' . $data['id'] . '</div><div>' . $data['name'] . '</div>' . PHP_EOL
                 )
                 ->dataReader($this->createOffsetPaginator($this->data, 10))
-                ->webView(Mock::webView())
                 ->render(),
         );
     }
@@ -153,10 +142,9 @@ final class BaseTest extends TestCase
             </div>
             HTML,
             ListView::widget()
-                ->itemView('//_listview')
+                ->itemView(dirname(__DIR__) . '/Support/view/_listview.php')
                 ->dataReader($this->createOffsetPaginator($this->data, 10))
                 ->separator(PHP_EOL)
-                ->webView(Mock::webView())
                 ->render(),
         );
     }
@@ -182,10 +170,9 @@ final class BaseTest extends TestCase
             </div>
             HTML,
             ListView::widget()
-                ->itemView('//_listviewparams')
+                ->itemView(dirname(__DIR__) . '/Support/view/_listviewparams.php')
                 ->dataReader($this->createOffsetPaginator($this->data, 10))
                 ->separator(PHP_EOL)
-                ->webView(Mock::webView())
                 ->viewParams(['itemClass' => 'text-success'])
                 ->render(),
         );

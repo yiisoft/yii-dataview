@@ -10,7 +10,6 @@ use Yiisoft\Definitions\Exception\InvalidConfigException;
 use Yiisoft\Definitions\Exception\NotInstantiableException;
 use Yiisoft\Factory\NotFoundException;
 use Yiisoft\Yii\DataView\ListView;
-use Yiisoft\Yii\DataView\Tests\Support\Mock;
 use Yiisoft\Yii\DataView\Tests\Support\TestTrait;
 
 final class ImmutableTest extends TestCase
@@ -32,6 +31,5 @@ final class ImmutableTest extends TestCase
         $this->assertNotSame($listView, $listView->itemViewAttributes([]));
         $this->assertNotSame($listView, $listView->separator(''));
         $this->assertNotSame($listView, $listView->viewParams([]));
-        $this->assertNotSame($listView, $listView->webView(Mock::webView()));
     }
 }
