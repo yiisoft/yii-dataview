@@ -52,6 +52,7 @@ abstract class BaseListView extends Widget
 
     /**
      * A name for {@see CategorySource} used with translator ({@see TranslatorInterface}) by default.
+     * @psalm-suppress MissingClassConstType
      */
     final public const DEFAULT_TRANSLATION_CATEGORY = 'yii-dataview';
 
