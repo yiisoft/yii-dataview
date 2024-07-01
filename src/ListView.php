@@ -165,7 +165,7 @@ final class ListView extends BaseListView
         }
 
         if (is_string($this->itemView)) {
-            $content = $this->getView()->renderFile(
+            $content = $this->getView()->render(
                 $this->itemView,
                 array_merge(
                     [
