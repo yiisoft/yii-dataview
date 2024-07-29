@@ -93,6 +93,7 @@ abstract class BaseListView extends Widget
     protected UrlParameterProviderInterface|null $urlParameterProvider = null;
 
     private bool $ignoreMissingPage = true;
+    protected bool $enableMultiSort = false;
 
     /**
      * @psalm-var PageNotFoundExceptionCallback|null
@@ -171,6 +172,13 @@ abstract class BaseListView extends Widget
     {
         $new = clone $this;
         $new->urlParameterProvider = $provider;
+        return $new;
+    }
+
+    final public function enableMultiSort(bool $value = true): self
+    {
+        $new = clone $this;
+        $new->enableMultiSort = $value;
         return $new;
     }
 
@@ -371,6 +379,9 @@ abstract class BaseListView extends Widget
             $sortObject = $dataReader->getSort();
             if ($sortObject !== null) {
                 $order = OrderHelper::stringToArray($sort);
+                if (!$this->enableMultiSort) {
+                    $order = array_slice($order, 0, 1, true);
+                }
                 $this->prepareOrder($order);
                 $dataReader = $dataReader->withSort($sortObject->withOrder($order));
             }
