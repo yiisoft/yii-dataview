@@ -66,7 +66,6 @@ final class GridView extends BaseListView
     private array $headerCellAttributes = [];
     private array $bodyCellAttributes = [];
 
-    private bool $enableMultiSort = false;
     private bool $keepPageOnSort = false;
     private ?string $sortableHeaderClass = null;
     private string|Stringable $sortableHeaderPrepend = '';
@@ -133,13 +132,6 @@ final class GridView extends BaseListView
     {
         $new = clone $this;
         $new->filterErrorsContainerAttributes = $attributes;
-        return $new;
-    }
-
-    public function enableMultiSort(bool $value = true): self
-    {
-        $new = clone $this;
-        $new->enableMultiSort = $value;
         return $new;
     }
 
