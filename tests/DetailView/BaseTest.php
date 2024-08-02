@@ -30,20 +30,20 @@ final class BaseTest extends TestCase
         Assert::equalsWithoutLE(
             <<<HTML
             <div class="test-class">
+            <dl>
             <div>
-            <div>
-            <span>id</span>
-            <div>1</div>
+            <dt>id</dt>
+            <dd>1</dd>
             </div>
             <div>
-            <span>username</span>
-            <div>tests 1</div>
+            <dt>username</dt>
+            <dd>tests 1</dd>
             </div>
             <div>
-            <span>total</span>
-            <div>10</div>
+            <dt>total</dt>
+            <dd>10</dd>
             </div>
-            </div>
+            </dl>
             </div>
             HTML,
             DetailView::widget()
@@ -69,20 +69,20 @@ final class BaseTest extends TestCase
         Assert::equalsWithoutLE(
             <<<HTML
             <div>
-            <div class="test-class">
+            <dl class="test-class">
             <div>
-            <span>id</span>
-            <div>1</div>
-            </div>
-            <div>
-            <span>username</span>
-            <div>tests 1</div>
+            <dt>id</dt>
+            <dd>1</dd>
             </div>
             <div>
-            <span>total</span>
-            <div>10</div>
+            <dt>username</dt>
+            <dd>tests 1</dd>
             </div>
+            <div>
+            <dt>total</dt>
+            <dd>10</dd>
             </div>
+            </dl>
             </div>
             HTML,
             DetailView::widget()
@@ -108,20 +108,20 @@ final class BaseTest extends TestCase
         Assert::equalsWithoutLE(
             <<<HTML
             <div>
-            <div>
+            <dl>
             <div class="test-class">
-            <span>id</span>
-            <div>1</div>
-            </div>
-            <div class="test-class">
-            <span>username</span>
-            <div>tests 1</div>
+            <dt>id</dt>
+            <dd>1</dd>
             </div>
             <div class="test-class">
-            <span>total</span>
-            <div>10</div>
+            <dt>username</dt>
+            <dd>tests 1</dd>
             </div>
+            <div class="test-class">
+            <dt>total</dt>
+            <dd>10</dd>
             </div>
+            </dl>
             </div>
             HTML,
             DetailView::widget()
@@ -147,21 +147,21 @@ final class BaseTest extends TestCase
         Assert::equalsWithoutLE(
             <<<HTML
             <div>
-            <div>
             Test header
+            <dl>
             <div>
-            <span>id</span>
-            <div>1</div>
-            </div>
-            <div>
-            <span>username</span>
-            <div>tests 1</div>
+            <dt>id</dt>
+            <dd>1</dd>
             </div>
             <div>
-            <span>total</span>
-            <div>10</div>
+            <dt>username</dt>
+            <dd>tests 1</dd>
             </div>
+            <div>
+            <dt>total</dt>
+            <dd>10</dd>
             </div>
+            </dl>
             </div>
             HTML,
             DetailView::widget()
@@ -187,20 +187,20 @@ final class BaseTest extends TestCase
         Assert::equalsWithoutLE(
             <<<HTML
             <div>
+            <dl>
             <div>
-            <div>
-            <span class="test-label">id</span>
-            <div>1</div>
+            <dt class="test-label">id</dt>
+            <dd>1</dd>
             </div>
             <div>
-            <span class="test-label">username</span>
-            <div>tests 1</div>
+            <dt class="test-label">username</dt>
+            <dd>tests 1</dd>
             </div>
             <div>
-            <span class="test-label">total</span>
-            <div>10</div>
+            <dt class="test-label">total</dt>
+            <dd>10</dd>
             </div>
-            </div>
+            </dl>
             </div>
             HTML,
             DetailView::widget()
@@ -226,20 +226,20 @@ final class BaseTest extends TestCase
         Assert::equalsWithoutLE(
             <<<HTML
             <div>
-            <div>
+            <dl>
             <div>
             <p>id</p>
-            <div>1</div>
+            <dd>1</dd>
             </div>
             <div>
             <p>username</p>
-            <div>tests 1</div>
+            <dd>tests 1</dd>
             </div>
             <div>
             <p>total</p>
-            <div>10</div>
+            <dd>10</dd>
             </div>
-            </div>
+            </dl>
             </div>
             HTML,
             DetailView::widget()
@@ -276,20 +276,20 @@ final class BaseTest extends TestCase
         Assert::equalsWithoutLE(
             <<<HTML
             <div>
+            <dl>
             <div>
-            <div>
-            <span>id</span>
-            <div class="test-value">1</div>
+            <dt>id</dt>
+            <dd class="test-value">1</dd>
             </div>
             <div>
-            <span>username</span>
-            <div class="test-value">tests 1</div>
+            <dt>username</dt>
+            <dd class="test-value">tests 1</dd>
             </div>
             <div>
-            <span>total</span>
-            <div class="test-value">10</div>
+            <dt>total</dt>
+            <dd class="test-value">10</dd>
             </div>
-            </div>
+            </dl>
             </div>
             HTML,
             DetailView::widget()
@@ -315,20 +315,20 @@ final class BaseTest extends TestCase
         Assert::equalsWithoutLE(
             <<<HTML
             <div>
+            <dl>
             <div>
-            <div>
-            <span>id</span>
-            <div>1</div>
+            <dt>id</dt>
+            <dd>1</dd>
             </div>
             <div>
-            <span>username</span>
-            <div>guess</div>
+            <dt>username</dt>
+            <dd>guess</dd>
             </div>
             <div>
-            <span>isAdmin</span>
-            <div>no</div>
+            <dt>isAdmin</dt>
+            <dd>no</dd>
             </div>
-            </div>
+            </dl>
             </div>
             HTML,
             DetailView::widget()
@@ -354,20 +354,20 @@ final class BaseTest extends TestCase
         Assert::equalsWithoutLE(
             <<<HTML
             <div>
+            <dl>
             <div>
-            <div>
-            <span>id</span>
-            <div>1</div>
+            <dt>id</dt>
+            <dd>1</dd>
             </div>
             <div>
-            <span>username</span>
-            <div>admin</div>
+            <dt>username</dt>
+            <dd>admin</dd>
             </div>
             <div>
-            <span>isAdmin</span>
-            <div>yes</div>
+            <dt>isAdmin</dt>
+            <dd>yes</dd>
             </div>
-            </div>
+            </dl>
             </div>
             HTML,
             DetailView::widget()
@@ -393,20 +393,20 @@ final class BaseTest extends TestCase
         Assert::equalsWithoutLE(
             <<<HTML
             <div>
+            <dl>
             <div>
-            <div>
-            <span>id</span>
-            <div>1</div>
+            <dt>id</dt>
+            <dd>1</dd>
             </div>
             <div>
-            <span>username</span>
-            <div>tests 1</div>
+            <dt>username</dt>
+            <dd>tests 1</dd>
             </div>
             <div>
-            <span>total</span>
-            <div>0</div>
+            <dt>total</dt>
+            <dd>0</dd>
             </div>
-            </div>
+            </dl>
             </div>
             HTML,
             DetailView::widget()
@@ -423,20 +423,20 @@ final class BaseTest extends TestCase
         Assert::equalsWithoutLE(
             <<<HTML
             <div>
+            <dl>
             <div>
-            <div>
-            <span>id</span>
-            <div>1</div>
+            <dt>id</dt>
+            <dd>1</dd>
             </div>
             <div>
-            <span>username</span>
-            <div>tests 1</div>
+            <dt>username</dt>
+            <dd>tests 1</dd>
             </div>
             <div>
-            <span>status</span>
-            <div>false</div>
+            <dt>status</dt>
+            <dd>false</dd>
             </div>
-            </div>
+            </dl>
             </div>
             HTML,
             DetailView::widget()
@@ -452,20 +452,20 @@ final class BaseTest extends TestCase
         Assert::equalsWithoutLE(
             <<<HTML
             <div>
+            <dl>
             <div>
-            <div>
-            <span>id</span>
-            <div>1</div>
+            <dt>id</dt>
+            <dd>1</dd>
             </div>
             <div>
-            <span>username</span>
-            <div>tests 1</div>
+            <dt>username</dt>
+            <dd>tests 1</dd>
             </div>
             <div>
-            <span>status</span>
-            <div>true</div>
+            <dt>status</dt>
+            <dd>true</dd>
             </div>
-            </div>
+            </dl>
             </div>
             HTML,
             DetailView::widget()
@@ -496,20 +496,20 @@ final class BaseTest extends TestCase
         Assert::equalsWithoutLE(
             <<<HTML
             <div>
+            <dl>
             <div>
-            <div>
-            <span>id</span>
-            <div>1</div>
+            <dt>id</dt>
+            <dd>1</dd>
             </div>
             <div>
-            <span>username</span>
-            <div>tests 1</div>
+            <dt>username</dt>
+            <dd>tests 1</dd>
             </div>
             <div>
-            <span>total</span>
-            <div>0</div>
+            <dt>total</dt>
+            <dd>0</dd>
             </div>
-            </div>
+            </dl>
             </div>
             HTML,
             DetailView::widget()
@@ -532,20 +532,20 @@ final class BaseTest extends TestCase
         Assert::equalsWithoutLE(
             <<<HTML
             <div>
+            <dl>
             <div>
-            <div>
-            <span>id</span>
-            <div>1</div>
+            <dt>id</dt>
+            <dd>1</dd>
             </div>
             <div>
-            <span>username</span>
-            <div>tests 1</div>
+            <dt>username</dt>
+            <dd>tests 1</dd>
             </div>
             <div>
-            <span>status</span>
-            <div>false</div>
+            <dt>status</dt>
+            <dd>false</dd>
             </div>
-            </div>
+            </dl>
             </div>
             HTML,
             DetailView::widget()
@@ -567,20 +567,20 @@ final class BaseTest extends TestCase
         Assert::equalsWithoutLE(
             <<<HTML
             <div>
+            <dl>
             <div>
-            <div>
-            <span>id</span>
-            <div>1</div>
+            <dt>id</dt>
+            <dd>1</dd>
             </div>
             <div>
-            <span>username</span>
-            <div>tests 1</div>
+            <dt>username</dt>
+            <dd>tests 1</dd>
             </div>
             <div>
-            <span>status</span>
-            <div>true</div>
+            <dt>status</dt>
+            <dd>true</dd>
             </div>
-            </div>
+            </dl>
             </div>
             HTML,
             DetailView::widget()

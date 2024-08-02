@@ -30,21 +30,21 @@ final class Bootstrap5Test extends TestCase
         Assert::equalsWithoutLE(
             <<<HTML
             <div class="container">
-            <div class="row flex-column justify-content-center align-items-center">
             <h2 class="text-center"><strong>Bootstrap 5</strong></h2>
+            <dl class="row flex-column justify-content-center align-items-center">
             <div class="col-xl-5">
-            <span class="fw-bold">Id</span>
-            <div class="alert alert-info">1</div>
-            </div>
-            <div class="col-xl-5">
-            <span class="fw-bold">login</span>
-            <div class="alert alert-info">test</div>
+            <dt class="fw-bold">Id</dt>
+            <dd class="alert alert-info">1</dd>
             </div>
             <div class="col-xl-5">
-            <span class="fw-bold">Created At</span>
-            <div class="alert alert-info">2020-01-01</div>
+            <dt class="fw-bold">login</dt>
+            <dd class="alert alert-info">test</dd>
             </div>
+            <div class="col-xl-5">
+            <dt class="fw-bold">Created At</dt>
+            <dd class="alert alert-info">2020-01-01</dd>
             </div>
+            </dl>
             </div>
             HTML,
             DetailView::widget()
