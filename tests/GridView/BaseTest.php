@@ -116,7 +116,7 @@ final class BaseTest extends TestCase
                     new DataColumn(property: 'id', columnAttributes: ['class' => 'bg-primary']),
                     new DataColumn(property: 'name', columnAttributes: ['class' => 'bg-success']),
                 )
-                ->columnsGroupEnabled(true)
+                ->columnGroupEnabled(true)
                 ->id('w1-grid')
                 ->dataReader($this->createOffsetPaginator($this->data, 10))
                 ->render()
@@ -168,7 +168,7 @@ final class BaseTest extends TestCase
                     new DataColumn(property: 'name'),
                     new DataColumn(property: 'age'),
                 )
-                ->columnsGroupEnabled(true)
+                ->columnGroupEnabled(true)
                 ->id('w1-grid')
                 ->dataReader($this->createOffsetPaginator($this->data, 10))
                 ->render()
