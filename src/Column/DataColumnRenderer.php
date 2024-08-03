@@ -26,7 +26,6 @@ use Yiisoft\Yii\DataView\Filter\Widget\Context;
 use Yiisoft\Yii\DataView\Filter\Widget\DropdownFilter;
 use Yiisoft\Yii\DataView\Filter\Widget\TextInputFilter;
 
-use function call_user_func;
 use function is_array;
 use function is_callable;
 
@@ -191,8 +190,7 @@ final class DataColumnRenderer implements FilterableColumnRendererInterface, Ove
             $attributes = $column->bodyAttributes;
         } else {
             /** @var array $attributes Remove annotation after fix https://github.com/vimeo/psalm/issues/11062 */
-            $attributes = call_user_func(
-                $column->bodyAttributes,
+            $attributes = ($column->bodyAttributes)(
                 $context->data,
                 $context,
             );
