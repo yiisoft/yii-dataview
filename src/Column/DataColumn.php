@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Yiisoft\Yii\DataView\Column;
 
 use Yiisoft\Validator\RuleInterface;
+use Yiisoft\Yii\DataView\Column\Base\DataContext;
 use Yiisoft\Yii\DataView\Filter\Factory\FilterFactoryInterface;
 use Yiisoft\Yii\DataView\Filter\Widget\FilterWidget;
 
@@ -21,6 +22,7 @@ use Yiisoft\Yii\DataView\Filter\Widget\FilterWidget;
  * markup.
  *
  * @psalm-type FilterEmptyCallable = callable(mixed $value): bool
+ * @psalm-type BodyAttributesCallable = callable(array|object,DataContext): array
  */
 final class DataColumn implements ColumnInterface
 {
@@ -31,6 +33,9 @@ final class DataColumn implements ColumnInterface
     public readonly mixed $filterEmpty;
 
     /**
+     * @param array|callable $bodyAttributes
+     *
+     * @psalm-param array|BodyAttributesCallable $bodyAttributes
      * @psalm-param bool|array<array-key,string|array<array-key,string>>|FilterWidget $filter
      * @psalm-param RuleInterface[]|RuleInterface|null $filterValidation
      * @psalm-param bool|FilterEmptyCallable|null $filterEmpty
@@ -43,7 +48,7 @@ final class DataColumn implements ColumnInterface
         public readonly ?string $footer = null,
         public readonly array $columnAttributes = [],
         public readonly array $headerAttributes = [],
-        public readonly array $bodyAttributes = [],
+        public readonly mixed $bodyAttributes = [],
         public readonly bool $withSorting = true,
         public readonly mixed $content = null,
         public readonly ?string $dateTimeFormat = null,
