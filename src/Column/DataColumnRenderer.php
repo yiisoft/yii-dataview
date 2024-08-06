@@ -186,14 +186,14 @@ final class DataColumnRenderer implements FilterableColumnRendererInterface, Ove
             $content = '';
         }
 
-        if (is_array($column->bodyAttributes)) {
-            $attributes = $column->bodyAttributes;
-        } else {
+        if (is_callable($column->bodyAttributes)) {
             /** @var array $attributes Remove annotation after fix https://github.com/vimeo/psalm/issues/11062 */
             $attributes = ($column->bodyAttributes)(
                 $context->data,
                 $context,
             );
+        } else {
+            $attributes = $column->bodyAttributes;
         }
 
         return $cell
