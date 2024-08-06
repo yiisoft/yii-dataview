@@ -110,7 +110,7 @@ final class DataColumnRenderer implements FilterableColumnRendererInterface, Ove
             ),
         ];
 
-        $errors = $context->validationResult->getAttributeErrorMessages($column->property);
+        $errors = $context->validationResult->getPropertyErrorMessages($column->property);
         if (!empty($errors)) {
             $cell = $cell->addClass($context->cellInvalidClass);
             $content[] = Html::div(attributes: $context->errorsContainerAttributes)
