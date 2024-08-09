@@ -217,7 +217,7 @@ abstract class BaseListView extends Widget
     /**
      * Return a new instance with the empty text.
      *
-     * @param string $emptyText the HTML content to be displayed when {@see dataProvider} does not have any data.
+     * @param ?string $emptyText The HTML content to be displayed when {@see dataProvider} does not have any data.
      *
      * The default value is the text "No results found." which will be translated to the current application language.
      *
@@ -375,7 +375,7 @@ abstract class BaseListView extends Widget
             }
         }
 
-        if ($dataReader->isSortable() && !empty($sort)) {
+        if (!empty($sort) && $dataReader->isSortable()) {
             $sortObject = $dataReader->getSort();
             if ($sortObject !== null) {
                 $order = OrderHelper::stringToArray($sort);
@@ -387,7 +387,7 @@ abstract class BaseListView extends Widget
             }
         }
 
-        if ($dataReader->isFilterable() && !empty($filters)) {
+        if (!empty($filters) && $dataReader->isFilterable()) {
             $dataReader = $dataReader->withFilter(new All(...$filters));
         }
 

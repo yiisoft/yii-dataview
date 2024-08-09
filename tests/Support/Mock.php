@@ -38,7 +38,7 @@ final class Mock extends TestCase
         string $fallbackLocale = null,
         EventDispatcherInterface $eventDispatcher = null
     ): TranslatorInterface {
-        return new Translator($locale, $fallbackLocale, $eventDispatcher);
+        return new Translator($locale, $fallbackLocale, 'app', $eventDispatcher);
     }
 
     /**

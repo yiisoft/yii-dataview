@@ -1007,7 +1007,7 @@ final class ActionColumnTest extends TestCase
         $config = [
             CurrentRoute::class => $currentRoute,
             UrlGeneratorInterface::class => Mock::urlGenerator([], $currentRoute),
-            ActionColumnRenderer::class => $rendererDefinition ?? [
+            ActionColumnRenderer::class => [
                 '__construct()' => [
                     'defaultUrlCreator' => $defaultUrlCreator,
                 ],
