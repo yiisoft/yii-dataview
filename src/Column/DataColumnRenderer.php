@@ -26,6 +26,9 @@ use Yiisoft\Yii\DataView\Filter\Widget\Context;
 use Yiisoft\Yii\DataView\Filter\Widget\DropdownFilter;
 use Yiisoft\Yii\DataView\Filter\Widget\TextInputFilter;
 
+use function is_array;
+use function is_callable;
+
 /**
  * @psalm-import-type FilterEmptyCallable from DataColumn
  */
@@ -169,6 +172,7 @@ final class DataColumnRenderer implements FilterableColumnRendererInterface, Ove
     public function renderBody(ColumnInterface $column, Cell $cell, DataContext $context): Cell
     {
         $this->checkColumn($column);
+        /** @var DataColumn $column This annotation need for IDE only */
 
         $contentSource = $column->content;
 
@@ -182,8 +186,18 @@ final class DataColumnRenderer implements FilterableColumnRendererInterface, Ove
             $content = '';
         }
 
+        if (is_callable($column->bodyAttributes)) {
+            /** @var array $attributes Remove annotation after fix https://github.com/vimeo/psalm/issues/11062 */
+            $attributes = ($column->bodyAttributes)(
+                $context->data,
+                $context,
+            );
+        } else {
+            $attributes = $column->bodyAttributes;
+        }
+
         return $cell
-            ->addAttributes($column->bodyAttributes)
+            ->addAttributes($attributes)
             ->content($content)
             ->encode(false);
     }
