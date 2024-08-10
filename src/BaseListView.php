@@ -18,6 +18,7 @@ use Yiisoft\Data\Reader\FilterInterface;
 use Yiisoft\Data\Reader\LimitableDataInterface;
 use Yiisoft\Data\Reader\OffsetableDataInterface;
 use Yiisoft\Data\Reader\ReadableDataInterface;
+use Yiisoft\Data\Reader\Sort;
 use Yiisoft\Data\Reader\SortableDataInterface;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\Div;
@@ -30,12 +31,14 @@ use Yiisoft\Translator\Translator;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\Validator\Result as ValidationResult;
 use Yiisoft\Widget\Widget;
+use Yiisoft\Data\Reader\OrderHelper;
 use Yiisoft\Yii\DataView\Exception\DataReaderNotSetException;
 
 /**
  * @psalm-type UrlArguments = array<string,scalar|Stringable|null>
  * @psalm-type UrlCreator = callable(UrlArguments,array):string
  * @psalm-type PageNotFoundExceptionCallback = callable(PageNotFoundException):void
+ * @psalm-import-type TOrder from Sort
  */
 abstract class BaseListView extends Widget
 {
@@ -49,6 +52,7 @@ abstract class BaseListView extends Widget
 
     /**
      * A name for {@see CategorySource} used with translator ({@see TranslatorInterface}) by default.
+     * @psalm-suppress MissingClassConstType
      */
     final public const DEFAULT_TRANSLATION_CATEGORY = 'yii-dataview';
 
@@ -89,6 +93,7 @@ abstract class BaseListView extends Widget
     protected UrlParameterProviderInterface|null $urlParameterProvider = null;
 
     private bool $ignoreMissingPage = true;
+    protected bool $enableMultiSort = false;
 
     /**
      * @psalm-var PageNotFoundExceptionCallback|null
@@ -170,6 +175,13 @@ abstract class BaseListView extends Widget
         return $new;
     }
 
+    final public function enableMultiSort(bool $value = true): self
+    {
+        $new = clone $this;
+        $new->enableMultiSort = $value;
+        return $new;
+    }
+
     /**
      * Renders the data models.
      *
@@ -205,7 +217,7 @@ abstract class BaseListView extends Widget
     /**
      * Return a new instance with the empty text.
      *
-     * @param string $emptyText the HTML content to be displayed when {@see dataProvider} does not have any data.
+     * @param ?string $emptyText The HTML content to be displayed when {@see dataProvider} does not have any data.
      *
      * The default value is the text "No results found." which will be translated to the current application language.
      *
@@ -363,18 +375,30 @@ abstract class BaseListView extends Widget
             }
         }
 
-        if ($dataReader->isSortable() && !empty($sort)) {
+        if (!empty($sort) && $dataReader->isSortable()) {
             $sortObject = $dataReader->getSort();
             if ($sortObject !== null) {
-                $dataReader = $dataReader->withSort($sortObject->withOrderString($sort));
+                $order = OrderHelper::stringToArray($sort);
+                if (!$this->enableMultiSort) {
+                    $order = array_slice($order, 0, 1, true);
+                }
+                $this->prepareOrder($order);
+                $dataReader = $dataReader->withSort($sortObject->withOrder($order));
             }
         }
 
-        if ($dataReader->isFilterable() && !empty($filters)) {
+        if (!empty($filters) && $dataReader->isFilterable()) {
             $dataReader = $dataReader->withFilter(new All(...$filters));
         }
 
         return $dataReader;
+    }
+
+    /**
+     * @psalm-param TOrder $order
+     */
+    protected function prepareOrder(array &$order): void
+    {
     }
 
     /**

@@ -24,13 +24,13 @@ final class ActionColumnRenderer implements ColumnRendererInterface
     private $urlCreator;
 
     /**
-     * @psalm-var array<string,ButtonRenderer>
+     * @psalm-var array<array-key, ButtonRenderer>
      */
     private readonly array $buttons;
 
     /**
      * @psalm-param UrlCreator|null $urlCreator
-     * @psalm-param array<string,ButtonRenderer>|null $buttons
+     * @psalm-param array<array-key, ButtonRenderer>|null $buttons
      * @psalm-param array<string, string>|string|null $buttonClass
      */
     public function __construct(
@@ -79,21 +79,21 @@ final class ActionColumnRenderer implements ColumnRendererInterface
                     $name = $matches[1];
 
                     if (
+                        isset($buttons[$name]) &&
                         $this->isVisibleButton(
                             $column,
                             $name,
                             $context->data,
                             $context->key,
                             $context->index,
-                        ) &&
-                        isset($buttons[$name])
+                        )
                     ) {
                         return $this->renderButton($buttons[$name], $name, $context);
                     }
 
                     return '';
                 },
-                $this->getTemplate($column, $buttons, $context),
+                $this->getTemplate($column, $buttons),
             );
             $content = trim($content);
         }
@@ -137,6 +137,7 @@ final class ActionColumnRenderer implements ColumnRendererInterface
             $url = $this->createUrl($name, $context);
         } elseif ($button->url instanceof Closure) {
             $closure = $button->url;
+            /** @var string $url */
             $url = $closure($context->data, $context);
         } else {
             $url = $button->url;
@@ -144,18 +145,18 @@ final class ActionColumnRenderer implements ColumnRendererInterface
 
         if ($button->attributes instanceof Closure) {
             $closure = $button->attributes;
+            /** @var array $attributes */
             $attributes = $closure($context->data, $context);
         } else {
             $attributes = $button->attributes ?? [];
         }
-        if (!$button->overrideAttributes) {
-            if (!empty($this->buttonAttributes)) {
-                $attributes = array_merge($this->buttonAttributes, $attributes);
-            }
+        if (!$button->overrideAttributes && !empty($this->buttonAttributes)) {
+            $attributes = array_merge($this->buttonAttributes, $attributes);
         }
 
         if ($button->class instanceof Closure) {
             $closure = $button->class;
+            /** @var array<array-key,string|null>|string|null $class */
             $class = $closure($context->data, $context);
         } else {
             $class = $button->class;
@@ -170,7 +171,11 @@ final class ActionColumnRenderer implements ColumnRendererInterface
             Html::addCssClass($attributes, $class);
         }
 
-        return (string)Html::a($content, $url, $attributes);
+        if ($button->title !== null) {
+            $attributes['title'] = $button->title;
+        }
+
+        return (string) Html::a($content, $url, $attributes);
     }
 
     private function createUrl(string $action, DataContext $context): string
@@ -206,9 +211,9 @@ final class ActionColumnRenderer implements ColumnRendererInterface
     }
 
     /**
-     * @psalm-param array<string,ButtonRenderer> $buttons
+     * @psalm-param array<array-key, ButtonRenderer> $buttons
      */
-    private function getTemplate(ActionColumn $column, array $buttons, DataContext $context): string
+    private function getTemplate(ActionColumn $column, array $buttons): string
     {
         if ($column->template !== null) {
             return $column->template;

@@ -10,7 +10,6 @@ use Yiisoft\Definitions\Exception\CircularReferenceException;
 use Yiisoft\Definitions\Exception\InvalidConfigException;
 use Yiisoft\Definitions\Exception\NotInstantiableException;
 use Yiisoft\Factory\NotFoundException;
-use Yiisoft\Yii\DataView\Exception;
 use Yiisoft\Yii\DataView\Exception\DataReaderNotSetException;
 use Yiisoft\Yii\DataView\ListView;
 use Yiisoft\Yii\DataView\Tests\Support\TestTrait;
@@ -36,22 +35,6 @@ final class ExceptionTest extends TestCase
         $this->expectExceptionMessage('Failed to create widget because "dataReader" is not set.');
         ListView::widget()
             ->itemView('//_listview')
-            ->render();
-    }
-
-    /**
-     * @throws InvalidConfigException
-     * @throws NotFoundException
-     * @throws NotInstantiableException
-     * @throws CircularReferenceException
-     */
-    public function testGetWebView(): void
-    {
-        $this->expectException(Exception\WebViewNotSetException::class);
-        $this->expectExceptionMessage('Failed to create widget because "webview" is not set.');
-        ListView::widget()
-            ->itemView('//_listview')
-            ->dataReader($this->createOffsetPaginator($this->data, 10))
             ->render();
     }
 

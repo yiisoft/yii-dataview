@@ -5,12 +5,14 @@ declare(strict_types=1);
 namespace Yiisoft\Yii\DataView\Column\Base;
 
 use Stringable;
+use Yiisoft\Arrays\ArrayHelper;
 use Yiisoft\Data\Paginator\PageToken;
 use Yiisoft\Data\Reader\Sort;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\A;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\Yii\DataView\BaseListView;
+use Yiisoft\Data\Reader\OrderHelper;
 use Yiisoft\Yii\DataView\UrlConfig;
 use Yiisoft\Yii\DataView\UrlParametersFactory;
 
@@ -22,14 +24,16 @@ final class HeaderContext
     /**
      * @internal
      *
+     * @psalm-param array<string,string> $overrideOrderFields
      * @psalm-param UrlCreator|null $urlCreator
      */
     public function __construct(
         private readonly ?Sort $originalSort,
         private readonly ?Sort $sort,
+        private readonly array $overrideOrderFields,
         private readonly ?string $sortableHeaderClass,
-        private string|Stringable $sortableHeaderPrepend,
-        private string|Stringable $sortableHeaderAppend,
+        private readonly string|Stringable $sortableHeaderPrepend,
+        private readonly string|Stringable $sortableHeaderAppend,
         private readonly ?string $sortableHeaderAscClass,
         private readonly string|Stringable $sortableHeaderAscPrepend,
         private readonly string|Stringable $sortableHeaderAscAppend,
@@ -59,6 +63,8 @@ final class HeaderContext
      */
     public function prepareSortable(Cell $cell, string $property): array
     {
+        $originalProperty = $property;
+        $property = $this->overrideOrderFields[$property] ?? $property;
         if ($this->sort === null || $this->originalSort === null || !$this->sort->hasFieldInConfig($property)) {
             return [$cell, null, '', ''];
         }
@@ -85,7 +91,7 @@ final class HeaderContext
             UrlParametersFactory::create(
                 $this->pageToken,
                 $this->pageSize,
-                $this->getLinkSortValue($this->originalSort, $this->sort, $property),
+                $this->getLinkSortValue($this->originalSort, $this->sort, $property, $originalProperty),
                 $this->urlConfig,
             )
         );
@@ -98,8 +104,12 @@ final class HeaderContext
         ];
     }
 
-    private function getLinkSortValue(Sort $originalSort, Sort $sort, string $property): ?string
-    {
+    private function getLinkSortValue(
+        Sort $originalSort,
+        Sort $sort,
+        string $property,
+        string $originalProperty
+    ): ?string {
         $originalOrder = $originalSort->getOrder();
         $order = $sort->getOrder();
 
@@ -107,46 +117,40 @@ final class HeaderContext
             if ($this->enableMultiSort) {
                 if ($order[$property] === 'asc') {
                     $order[$property] = 'desc';
+                } elseif (!empty($originalOrder) && count($order) === 1) {
+                    $order[$property] = 'asc';
                 } else {
-                    if (count($order) === 1 && !empty($originalOrder)) {
-                        $order[$property] = 'asc';
-                    } else {
-                        unset($order[$property]);
-                    }
+                    unset($order[$property]);
                 }
+            } elseif (isset($originalOrder[$property])) {
+                if ($order[$property] === $originalOrder[$property]) {
+                    $order = [$property => $originalOrder[$property] === 'asc' ? 'desc' : 'asc'];
+                } else {
+                    unset($order[$property]);
+                }
+            } elseif ($order[$property] === 'asc') {
+                $order = [$property => 'desc'];
             } else {
-                if (isset($originalOrder[$property])) {
-                    if ($order[$property] === $originalOrder[$property]) {
-                        $order = [$property => $originalOrder[$property] === 'asc' ? 'desc' : 'asc'];
-                    } else {
-                        unset($order[$property]);
-                    }
-                } else {
-                    if ($order[$property] === 'asc') {
-                        $order = [$property => 'desc'];
-                    } else {
-                        unset($order[$property]);
-                    }
-                }
+                unset($order[$property]);
             }
+        } elseif ($this->enableMultiSort) {
+            $order[$property] = 'asc';
         } else {
-            if ($this->enableMultiSort) {
-                $order[$property] = 'asc';
-            } else {
-                $order = [$property => 'asc'];
-            }
+            $order = [$property => 'asc'];
         }
 
         if ($this->isEqualOrders($order, $originalOrder)) {
             return null;
         }
 
-        $result = $sort->withOrder($order)->getOrderAsString();
-        if (empty($result)) {
+        $resultOrder = $sort->withOrder($order)->getOrder();
+        if (empty($resultOrder)) {
             return null;
         }
 
-        return $result;
+        return OrderHelper::arrayToString(
+            ArrayHelper::renameKey($resultOrder, $property, $originalProperty)
+        );
     }
 
     private function isEqualOrders(array $a, array $b): bool

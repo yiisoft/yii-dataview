@@ -52,7 +52,7 @@ final class Cell
     }
 
     /**
-     * @param string|Stringable $content Tag content.
+     * @param string|Stringable ...$content Tag content.
      */
     public function content(string|Stringable ...$content): self
     {

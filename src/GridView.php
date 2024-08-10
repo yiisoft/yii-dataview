@@ -7,6 +7,7 @@ namespace Yiisoft\Yii\DataView;
 use Closure;
 use Psr\Container\ContainerInterface;
 use Stringable;
+use Yiisoft\Arrays\ArrayHelper;
 use Yiisoft\Data\Paginator\PaginatorInterface;
 use Yiisoft\Data\Reader\ReadableDataInterface;
 use Yiisoft\Data\Reader\Sort;
@@ -25,6 +26,7 @@ use Yiisoft\Yii\DataView\Column\Base\RendererContainer;
 use Yiisoft\Yii\DataView\Column\ColumnInterface;
 use Yiisoft\Yii\DataView\Column\ColumnRendererInterface;
 use Yiisoft\Yii\DataView\Column\FilterableColumnRendererInterface;
+use Yiisoft\Yii\DataView\Column\OverrideOrderFieldsColumnInterface;
 use Yiisoft\Yii\DataView\Filter\Factory\IncorrectValueException;
 
 /**
@@ -52,7 +54,7 @@ final class GridView extends BaseListView
      */
     private ?array $columnsCache = null;
 
-    private bool $columnsGroupEnabled = false;
+    private bool $columnGroupEnabled = false;
     private string $emptyCell = '&nbsp;';
     private bool $footerEnabled = false;
     private array $footerRowAttributes = [];
@@ -64,7 +66,6 @@ final class GridView extends BaseListView
     private array $headerCellAttributes = [];
     private array $bodyCellAttributes = [];
 
-    private bool $enableMultiSort = false;
     private bool $keepPageOnSort = false;
     private ?string $sortableHeaderClass = null;
     private string|Stringable $sortableHeaderPrepend = '';
@@ -134,13 +135,6 @@ final class GridView extends BaseListView
         return $new;
     }
 
-    public function enableMultiSort(bool $value = true): self
-    {
-        $new = clone $this;
-        $new->enableMultiSort = $value;
-        return $new;
-    }
-
     public function keepPageOnSort(bool $value = true): self
     {
         $new = clone $this;
@@ -196,15 +190,17 @@ final class GridView extends BaseListView
     }
 
     /**
-     * Returns a new instance with the specified column group enabled.
+     * Returns a new instance with the column group enabled.
+     *
+     * @see ColumnRendererInterface::renderColumn()
+     * @see https://developer.mozilla.org/docs/Web/HTML/Element/colgroup
      *
      * @param bool $value Whether to enable the column group.
      */
-    public function columnsGroupEnabled(bool $value): self
+    public function columnGroupEnabled(bool $value = true): self
     {
         $new = clone $this;
-        $new->columnsGroupEnabled = $value;
-
+        $new->columnGroupEnabled = $value;
         return $new;
     }
 
@@ -318,7 +314,7 @@ final class GridView extends BaseListView
      *
      * @param string|null ...$class One or many CSS classes.
      */
-    public function tableClass(?string ...$class): static
+    public function tableClass(?string ...$class): self
     {
         $new = clone $this;
         $new->tableAttributes['class'] = array_filter($class, static fn ($c) => $c !== null);
@@ -354,7 +350,7 @@ final class GridView extends BaseListView
      *
      * @param string|null ...$class One or many CSS classes.
      */
-    public function tbodyClass(?string ...$class): static
+    public function tbodyClass(?string ...$class): self
     {
         $new = clone $this;
         $new->tbodyAttributes['class'] = array_filter($class, static fn ($c) => $c !== null);
@@ -390,7 +386,7 @@ final class GridView extends BaseListView
      *
      * @param array $attributes The tag attributes in terms of name-value pairs.
      */
-    public function sortableLinkAttributes(array $attributes): static
+    public function sortableLinkAttributes(array $attributes): self
     {
         $new = clone $this;
         $new->sortableLinkAttributes = $attributes;
@@ -508,10 +504,10 @@ final class GridView extends BaseListView
                 )
             );
             $content = [Html::submitButton()];
-            if ($this->urlConfig->getPageSizeParameterType() === UrlParameterType::QUERY && !empty($pageSize)) {
+            if (!empty($pageSize) && $this->urlConfig->getPageSizeParameterType() === UrlParameterType::QUERY) {
                 $content[] = Html::hiddenInput($this->urlConfig->getPageSizeParameterName(), $pageSize);
             }
-            if ($this->urlConfig->getSortParameterType() === UrlParameterType::QUERY && !empty($sort)) {
+            if (!empty($sort) && $this->urlConfig->getSortParameterType() === UrlParameterType::QUERY) {
                 $content[] = Html::hiddenInput($this->urlConfig->getSortParameterName(), $sort);
             }
             $filtersForm = Html::form($url, 'GET', ['id' => $filterContext->formId, 'style' => 'display:none'])
@@ -522,7 +518,7 @@ final class GridView extends BaseListView
             $filterRow = null;
         }
 
-        if ($this->columnsGroupEnabled) {
+        if ($this->columnGroupEnabled) {
             $tags = [];
             foreach ($columns as $i => $column) {
                 $cell = $renderers[$i]->renderColumn($column, new Cell(), $globalContext);
@@ -531,10 +527,20 @@ final class GridView extends BaseListView
             $blocks[] = Html::colgroup()->columns(...$tags)->render();
         }
 
+        $overrideOrderFields = [];
+        foreach ($columns as $i => $column) {
+            if ($renderers[$i] instanceof OverrideOrderFieldsColumnInterface) {
+                $overrideOrderFields[] = $renderers[$i]->getOverrideOrderFields($column);
+            }
+        }
+
+        $overrideOrderFields = array_merge(...$overrideOrderFields);
+
         if ($this->headerTableEnabled) {
             $headerContext = new HeaderContext(
                 $this->getSort($dataReader),
                 $this->getSort($this->preparedDataReader),
+                $overrideOrderFields,
                 $this->sortableHeaderClass,
                 $this->sortableHeaderPrepend,
                 $this->sortableHeaderAppend,
@@ -663,6 +669,19 @@ final class GridView extends BaseListView
         }
 
         return [$filters, $validationResult];
+    }
+
+    protected function prepareOrder(array &$order): void
+    {
+        $columns = $this->getColumns();
+        $renderers = $this->getColumnRenderers();
+        foreach ($columns as $i => $column) {
+            if ($renderers[$i] instanceof OverrideOrderFieldsColumnInterface) {
+                foreach ($renderers[$i]->getOverrideOrderFields($column) as $from => $to) {
+                    $order = ArrayHelper::renameKey($order, $from, $to);
+                }
+            }
+        }
     }
 
     private function prepareBodyAttributes(array $attributes, DataContext $context): array

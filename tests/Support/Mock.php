@@ -15,13 +15,11 @@ use Yiisoft\Router\RouteCollection;
 use Yiisoft\Router\RouteCollectionInterface;
 use Yiisoft\Router\RouteCollector;
 use Yiisoft\Router\UrlGeneratorInterface;
-use Yiisoft\Test\Support\EventDispatcher\SimpleEventDispatcher;
 use Yiisoft\Translator\CategorySource;
 use Yiisoft\Translator\Message\Php\MessageSource;
 use Yiisoft\Translator\SimpleMessageFormatter;
 use Yiisoft\Translator\Translator;
 use Yiisoft\Translator\TranslatorInterface;
-use Yiisoft\View\WebView;
 
 /**
  * @psalm-suppress PropertyNotSetInConstructor
@@ -40,7 +38,7 @@ final class Mock extends TestCase
         string $fallbackLocale = null,
         EventDispatcherInterface $eventDispatcher = null
     ): TranslatorInterface {
-        return new Translator($locale, $fallbackLocale, $eventDispatcher);
+        return new Translator($locale, $fallbackLocale, 'app', $eventDispatcher);
     }
 
     /**
@@ -64,11 +62,6 @@ final class Mock extends TestCase
         $routeCollection = self::routeCollection($routes);
 
         return new UrlGenerator($routeCollection, $currentRoute, $parser);
-    }
-
-    public static function webView(): WebView
-    {
-        return new WebView(__DIR__ . '/view', new SimpleEventDispatcher());
     }
 
     /**

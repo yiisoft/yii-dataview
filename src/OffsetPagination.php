@@ -30,6 +30,34 @@ final class OffsetPagination extends BasePagination
         return $new;
     }
 
+    public function labelPrevious(string|Stringable|null $label): self
+    {
+        $new = clone $this;
+        $new->labelPrevious = $label;
+        return $new;
+    }
+
+    public function labelNext(string|Stringable|null $label): self
+    {
+        $new = clone $this;
+        $new->labelNext = $label;
+        return $new;
+    }
+
+    public function labelFirst(string|Stringable|null $label): self
+    {
+        $new = clone $this;
+        $new->labelFirst = $label;
+        return $new;
+    }
+
+    public function labelLast(string|Stringable|null $label): self
+    {
+        $new = clone $this;
+        $new->labelLast = $label;
+        return $new;
+    }
+
     /**
      * Return a new instance with max nav link count.
      *
