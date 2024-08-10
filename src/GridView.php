@@ -314,7 +314,7 @@ final class GridView extends BaseListView
      *
      * @param string|null ...$class One or many CSS classes.
      */
-    public function tableClass(?string ...$class): static
+    public function tableClass(?string ...$class): self
     {
         $new = clone $this;
         $new->tableAttributes['class'] = array_filter($class, static fn ($c) => $c !== null);
@@ -350,7 +350,7 @@ final class GridView extends BaseListView
      *
      * @param string|null ...$class One or many CSS classes.
      */
-    public function tbodyClass(?string ...$class): static
+    public function tbodyClass(?string ...$class): self
     {
         $new = clone $this;
         $new->tbodyAttributes['class'] = array_filter($class, static fn ($c) => $c !== null);
@@ -386,7 +386,7 @@ final class GridView extends BaseListView
      *
      * @param array $attributes The tag attributes in terms of name-value pairs.
      */
-    public function sortableLinkAttributes(array $attributes): static
+    public function sortableLinkAttributes(array $attributes): self
     {
         $new = clone $this;
         $new->sortableLinkAttributes = $attributes;
@@ -504,10 +504,10 @@ final class GridView extends BaseListView
                 )
             );
             $content = [Html::submitButton()];
-            if ($this->urlConfig->getPageSizeParameterType() === UrlParameterType::QUERY && !empty($pageSize)) {
+            if (!empty($pageSize) && $this->urlConfig->getPageSizeParameterType() === UrlParameterType::QUERY) {
                 $content[] = Html::hiddenInput($this->urlConfig->getPageSizeParameterName(), $pageSize);
             }
-            if ($this->urlConfig->getSortParameterType() === UrlParameterType::QUERY && !empty($sort)) {
+            if (!empty($sort) && $this->urlConfig->getSortParameterType() === UrlParameterType::QUERY) {
                 $content[] = Html::hiddenInput($this->urlConfig->getSortParameterName(), $sort);
             }
             $filtersForm = Html::form($url, 'GET', ['id' => $filterContext->formId, 'style' => 'display:none'])
@@ -530,9 +530,11 @@ final class GridView extends BaseListView
         $overrideOrderFields = [];
         foreach ($columns as $i => $column) {
             if ($renderers[$i] instanceof OverrideOrderFieldsColumnInterface) {
-                $overrideOrderFields = array_merge($overrideOrderFields, $renderers[$i]->getOverrideOrderFields($column));
+                $overrideOrderFields[] = $renderers[$i]->getOverrideOrderFields($column);
             }
         }
+
+        $overrideOrderFields = array_merge(...$overrideOrderFields);
 
         if ($this->headerTableEnabled) {
             $headerContext = new HeaderContext(

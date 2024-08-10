@@ -41,7 +41,7 @@ final class DropdownFilter extends FilterWidget
      *
      * @see Select::addAttributes()
      */
-    public function addAttributes(array $attributes): static
+    public function addAttributes(array $attributes): self
     {
         $new = clone $this;
         $new->select = $this->getSelect()->addAttributes($attributes);

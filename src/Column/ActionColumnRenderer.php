@@ -79,14 +79,14 @@ final class ActionColumnRenderer implements ColumnRendererInterface
                     $name = $matches[1];
 
                     if (
+                        isset($buttons[$name]) &&
                         $this->isVisibleButton(
                             $column,
                             $name,
                             $context->data,
                             $context->key,
                             $context->index,
-                        ) &&
-                        isset($buttons[$name])
+                        )
                     ) {
                         return $this->renderButton($buttons[$name], $name, $context);
                     }
@@ -150,10 +150,8 @@ final class ActionColumnRenderer implements ColumnRendererInterface
         } else {
             $attributes = $button->attributes ?? [];
         }
-        if (!$button->overrideAttributes) {
-            if (!empty($this->buttonAttributes)) {
-                $attributes = array_merge($this->buttonAttributes, $attributes);
-            }
+        if (!$button->overrideAttributes && !empty($this->buttonAttributes)) {
+            $attributes = array_merge($this->buttonAttributes, $attributes);
         }
 
         if ($button->class instanceof Closure) {

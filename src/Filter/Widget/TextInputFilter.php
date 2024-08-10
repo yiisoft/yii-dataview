@@ -19,7 +19,7 @@ final class TextInputFilter extends FilterWidget
      *
      * @see Input::addAttributes()
      */
-    public function addAttributes(array $attributes): static
+    public function addAttributes(array $attributes): self
     {
         $new = clone $this;
         $new->input = $this->getInput()->addAttributes($attributes);

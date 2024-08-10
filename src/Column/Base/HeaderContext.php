@@ -32,8 +32,8 @@ final class HeaderContext
         private readonly ?Sort $sort,
         private readonly array $overrideOrderFields,
         private readonly ?string $sortableHeaderClass,
-        private string|Stringable $sortableHeaderPrepend,
-        private string|Stringable $sortableHeaderAppend,
+        private readonly string|Stringable $sortableHeaderPrepend,
+        private readonly string|Stringable $sortableHeaderAppend,
         private readonly ?string $sortableHeaderAscClass,
         private readonly string|Stringable $sortableHeaderAscPrepend,
         private readonly string|Stringable $sortableHeaderAscAppend,
@@ -117,34 +117,26 @@ final class HeaderContext
             if ($this->enableMultiSort) {
                 if ($order[$property] === 'asc') {
                     $order[$property] = 'desc';
+                } elseif (!empty($originalOrder) && count($order) === 1) {
+                    $order[$property] = 'asc';
                 } else {
-                    if (count($order) === 1 && !empty($originalOrder)) {
-                        $order[$property] = 'asc';
-                    } else {
-                        unset($order[$property]);
-                    }
+                    unset($order[$property]);
                 }
+            } elseif (isset($originalOrder[$property])) {
+                if ($order[$property] === $originalOrder[$property]) {
+                    $order = [$property => $originalOrder[$property] === 'asc' ? 'desc' : 'asc'];
+                } else {
+                    unset($order[$property]);
+                }
+            } elseif ($order[$property] === 'asc') {
+                $order = [$property => 'desc'];
             } else {
-                if (isset($originalOrder[$property])) {
-                    if ($order[$property] === $originalOrder[$property]) {
-                        $order = [$property => $originalOrder[$property] === 'asc' ? 'desc' : 'asc'];
-                    } else {
-                        unset($order[$property]);
-                    }
-                } else {
-                    if ($order[$property] === 'asc') {
-                        $order = [$property => 'desc'];
-                    } else {
-                        unset($order[$property]);
-                    }
-                }
+                unset($order[$property]);
             }
+        } elseif ($this->enableMultiSort) {
+            $order[$property] = 'asc';
         } else {
-            if ($this->enableMultiSort) {
-                $order[$property] = 'asc';
-            } else {
-                $order = [$property => 'asc'];
-            }
+            $order = [$property => 'asc'];
         }
 
         if ($this->isEqualOrders($order, $originalOrder)) {
