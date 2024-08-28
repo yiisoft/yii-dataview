@@ -23,7 +23,7 @@ final class ImmutableTest extends TestCase
      * @throws NotInstantiableException
      * @throws CircularReferenceException
      */
-    public function testInmutable(): void
+    public function testImmutable(): void
     {
         $detailView = DetailView::widget();
         $this->assertNotSame($detailView, $detailView->attributes([]));

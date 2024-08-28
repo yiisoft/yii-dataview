@@ -17,7 +17,7 @@ use function str_replace;
 final class Assert extends TestCase
 {
     /**
-     * Asserting two strings equality ignoring line endings.
+     * Asserting two strings are equal ignoring line endings.
      *
      * @param string $expected The expected string.
      * @param string $actual The actual string.

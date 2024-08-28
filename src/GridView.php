@@ -30,12 +30,12 @@ use Yiisoft\Yii\DataView\Column\OverrideOrderFieldsColumnInterface;
 use Yiisoft\Yii\DataView\Filter\Factory\IncorrectValueException;
 
 /**
- * The GridView widget is used to display data in a grid.
+ * The GridView widget displays data in a grid.
  *
- * The columns of the grid table are configured in terms of {@see Column} classes, which are configured via
+ * You can configure the columns of the grid table in terms of {@see Column} classes configured via
  * {@see columns}.
  *
- * The look and feel of a grid view can be customized using the large amount of properties.
+ * The look and feel of a grid view can be customized using many properties.
  *
  * @psalm-import-type UrlCreator from BaseListView
  */
@@ -208,7 +208,7 @@ final class GridView extends BaseListView
      * Return new instance with the HTML display when the content is empty.
      *
      * @param string $value The HTML display when the content of a cell is empty. This property is used to render cells
-     * that have no defined content, e.g. empty footer.
+     * that have no defined content, e.g., empty footer.
      */
     public function emptyCell(string $value): self
     {
@@ -382,7 +382,7 @@ final class GridView extends BaseListView
     }
 
     /**
-     * Return new instance with the HTML attributes for link in sortable columns' headers.
+     * Return new instance with the HTML attributes for a link in sortable columns' headers.
      *
      * @param array $attributes The tag attributes in terms of name-value pairs.
      */

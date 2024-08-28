@@ -14,7 +14,7 @@ final class DropdownFilter extends FilterWidget
      * @param array $data Options data. The array keys are option values, and the array values are the corresponding
      * option labels.
      *
-     * @param bool $encode Whether option content should be HTML-encoded.
+     * @param bool $encode Whether to HTML-encode option content.
      * @param array[] $optionsAttributes Array of option attribute sets indexed by option values from {@see $data}.
      * @param array[] $groupsAttributes Array of group attribute sets indexed by group labels from {@see $data}.
      *

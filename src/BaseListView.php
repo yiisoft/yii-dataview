@@ -57,7 +57,7 @@ abstract class BaseListView extends Widget
     final public const DEFAULT_TRANSLATION_CATEGORY = 'yii-dataview';
 
     /**
-     * @var TranslatorInterface A translator instance used for translations of messages. If it was not set
+     * @var TranslatorInterface A translator instance used for translations of messages. If it wasn't set
      * explicitly in the constructor, a default one created automatically in {@see createDefaultTranslator()}.
      */
     protected readonly TranslatorInterface $translator;
@@ -138,7 +138,7 @@ abstract class BaseListView extends Widget
     }
 
     /**
-     * Return a new instance with name of argument or query parameter for page.
+     * Return a new instance with the name of argument or query parameter for page.
      *
      * @param string $name The name of argument or query parameter for page.
      */
@@ -157,7 +157,7 @@ abstract class BaseListView extends Widget
     }
 
     /**
-     * Return a new instance with name of argument or query parameter for page size.
+     * Return a new instance with the name of argument or query parameter for page size.
      *
      * @param string $name The name of argument or query parameter for page size.
      */
@@ -217,7 +217,7 @@ abstract class BaseListView extends Widget
     /**
      * Return a new instance with the empty text.
      *
-     * @param ?string $emptyText The HTML content to be displayed when {@see dataProvider} does not have any data.
+     * @param ?string $emptyText The HTML content to be displayed when {@see dataProvider} doesn't have any data.
      *
      * The default value is the text "No results found." which will be translated to the current application language.
      *
@@ -493,7 +493,7 @@ abstract class BaseListView extends Widget
     /**
      * Returns a new instance with the summary template.
      *
-     * @param string|null $template The HTML content to be displayed as the summary. If you do not want to show
+     * @param string|null $template The HTML content to be displayed as the summary. If you don't want to show
      * the summary, you may set it with an empty string or null.
      *
      * The following tokens will be replaced with the corresponding values:
@@ -718,7 +718,7 @@ abstract class BaseListView extends Widget
     }
 
     /**
-     * Creates default translator to use if {@see $translator} was not set explicitly in the constructor. Depending on
+     * Creates default translator to use if {@see $translator} wasn't set explicitly in the constructor. Depending on
      * "intl" extension availability, either {@see IntlMessageFormatter} or {@see SimpleMessageFormatter} is used as
      * formatter.
      *

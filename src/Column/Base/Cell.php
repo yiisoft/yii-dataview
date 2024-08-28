@@ -27,7 +27,7 @@ final class Cell
 
     /**
      * @param bool|null $encode Whether to encode tag content. Supported values:
-     *  - `null`: stringable objects that implement interface {@see NoEncodeStringableInterface} are not encoded,
+     *  - `null`: stringable objects that implement interface {@see NoEncodeStringableInterface} aren't encoded,
      *    everything else is encoded;
      *  - `true`: any content is encoded;
      *  - `false`: nothing is encoded.

@@ -43,7 +43,7 @@ final class ActionColumnUrlCreator
             ? $context->data->$primaryKey
             : $context->data[$primaryKey];
 
-        /** @psalm-suppress PossiblyNullOperand We guess that current route is matched. */
+        /** @psalm-suppress PossiblyNullOperand Assume that the current route matches. */
         $route = ($config->baseRouteName ?? $this->currentRoute->getName()) . '/' . $action;
 
         $arguments = $config->arguments;
