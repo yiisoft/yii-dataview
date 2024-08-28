@@ -30,6 +30,8 @@ final class ActionColumn implements ColumnInterface
      */
     public function __construct(
         public readonly ?string $template = null,
+        public readonly ?string $before = null,
+        public readonly ?string $after = null,
         public readonly mixed $urlConfig = null,
         ?callable $urlCreator = null,
         public readonly ?string $header = null,
