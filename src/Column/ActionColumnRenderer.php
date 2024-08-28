@@ -39,6 +39,8 @@ final class ActionColumnRenderer implements ColumnRendererInterface
         private readonly array|string|null $buttonClass = null,
         private readonly array $buttonAttributes = [],
         private readonly ?string $template = null,
+        private readonly ?string $before = null,
+        private readonly ?string $after = null,
     ) {
         $this->urlCreator = $urlCreator ?? static fn(): string => '#';
 
@@ -98,9 +100,15 @@ final class ActionColumnRenderer implements ColumnRendererInterface
             $content = trim($content);
         }
 
+        $content = "\n"
+            . ($column->before ?? $this->before ?? '')
+            . $content
+            . ($column->after ?? $this->after ?? '')
+            . "\n";
+
         return $cell
             ->addAttributes($column->bodyAttributes)
-            ->content("\n" . $content . "\n")
+            ->content($content)
             ->encode(false);
     }
 
