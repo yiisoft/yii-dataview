@@ -59,7 +59,7 @@ final class OffsetPagination extends BasePagination
     }
 
     /**
-     * Return a new instance with max nav link count.
+     * Return a new instance with a max nav link count.
      *
      * @param int $value Max nav link count.
      */

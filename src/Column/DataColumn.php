@@ -17,7 +17,7 @@ use Yiisoft\Yii\DataView\Filter\Widget\FilterWidget;
  * By setting {@see value} and {@see label}, the label and cell content can be customized.
  *
  * A data column differentiates between the {@see getDataCellValue|data cell value} and the
- * {@see renderDataCellContent|data cell content}. The cell value is an un-formatted value that may be used for
+ * {@see renderDataCellContent|data cell content}. The cell value is an unformatted value that may be used for
  * calculation, while the actual cell content is a {@see format|formatted} version of that value which may contain HTML
  * markup.
  *

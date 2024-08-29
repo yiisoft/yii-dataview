@@ -12,13 +12,13 @@ use Yiisoft\Widget\Widget;
 use Yiisoft\Yii\DataView\Field\DataField;
 
 /**
- * DetailView displays the detail of a single data.
+ * DetailView displays the detail of single data.
  *
- * DetailView is best used for displaying a data in a regular format (e.g. each field is displayed using flexbox).
+ * DetailView is displaying data in a regular format (each field is displayed using flexbox).
  *
- * The data can be either object or an associative array.
+ * The data can be either an object or an associative array.
  *
- * DetailView uses the {@see data} property to determines which model should be displayed how they should be formatted.
+ * DetailView uses the {@see data} property to determine which model should be displayed how they should be formatted.
  *
  * A typical usage of DetailView is as follows:
  *
@@ -53,7 +53,7 @@ final class DetailView extends Widget
     private string $valueTrue = 'true';
 
     /**
-     * Returns a new instance with the HTML attributes. The following special options are recognized.
+     * Returns a new instance with the HTML attributes.
      *
      * @param array $values Attribute values indexed by attribute names.
      */
@@ -81,8 +81,8 @@ final class DetailView extends Widget
     /**
      * Return new instance with the data.
      *
-     * @param array|object $data the data model whose details are to be displayed. This can be an instance, an
-     * associative array, an object.
+     * @param array|object $data the data model whose details are to be displayed.
+     * This can be an instance, an associative array, an object.
      */
     public function data(array|object $data): self
     {

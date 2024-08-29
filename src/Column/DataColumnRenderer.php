@@ -172,7 +172,7 @@ final class DataColumnRenderer implements FilterableColumnRendererInterface, Ove
     public function renderBody(ColumnInterface $column, Cell $cell, DataContext $context): Cell
     {
         $this->checkColumn($column);
-        /** @var DataColumn $column This annotation need for IDE only */
+        /** @var DataColumn $column This annotation is for IDE only */
 
         $contentSource = $column->content;
 

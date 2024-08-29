@@ -11,7 +11,7 @@ use Yiisoft\View\Exception\ViewNotFoundException;
 use Yiisoft\View\View;
 
 /**
- * The ListView widget is used to display data from data provider. Each data model is rendered using the view specified.
+ * The ListView widget displays data from data provider. Each data model is rendered using the view specified.
  */
 final class ListView extends BaseListView
 {
@@ -31,7 +31,7 @@ final class ListView extends BaseListView
     /**
      * Return new instance with afterItem closure.
      *
-     * @param Closure $value an anonymous function that is called once after rendering each data.
+     * @param Closure $value An anonymous function that is called once after rendering each data.
      *
      * It should have the same signature as {@see beforeItem}.
      *
@@ -154,7 +154,7 @@ final class ListView extends BaseListView
      * @param mixed $key The key value associated with the data.
      * @param int $index The zero-based index of the data array.
      *
-     * @throws ViewNotFoundException If the item view file does not exist.
+     * @throws ViewNotFoundException If the item view file doesn't exist.
      */
     protected function renderItem(array|object $data, mixed $key, int $index): string
     {
@@ -193,7 +193,7 @@ final class ListView extends BaseListView
     /**
      * Renders all data models.
      *
-     * @throws ViewNotFoundException If the item view file does not exist.
+     * @throws ViewNotFoundException If the item view file doesn't exist.
      */
     protected function renderItems(array $items, \Yiisoft\Validator\Result $filterValidationResult): string
     {
