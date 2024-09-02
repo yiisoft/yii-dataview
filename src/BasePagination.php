@@ -10,6 +10,8 @@ use Yiisoft\Data\Paginator\PaginatorInterface;
 use Yiisoft\Html\Html;
 use Yiisoft\Widget\Widget;
 
+use function call_user_func_array;
+
 /**
  * @psalm-import-type UrlCreator from BaseListView
  */

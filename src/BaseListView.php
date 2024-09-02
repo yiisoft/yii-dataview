@@ -34,6 +34,9 @@ use Yiisoft\Widget\Widget;
 use Yiisoft\Data\Reader\OrderHelper;
 use Yiisoft\Yii\DataView\Exception\DataReaderNotSetException;
 
+use function is_array;
+use function is_string;
+
 /**
  * @psalm-type UrlArguments = array<string,scalar|Stringable|null>
  * @psalm-type UrlCreator = callable(UrlArguments,array):string
