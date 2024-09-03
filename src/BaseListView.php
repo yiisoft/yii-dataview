@@ -473,6 +473,12 @@ abstract class BaseListView extends Widget
         return $new;
     }
 
+    /**
+     * Set configuration for offset pagination widget.
+     *
+     * @param array $config Widget config.
+     * @return $this
+     */
     public function offsetPaginationConfig(array $config): static
     {
         $new = clone $this;
@@ -480,6 +486,12 @@ abstract class BaseListView extends Widget
         return $new;
     }
 
+    /**
+     * Set configuration for keyset pagination widget.
+     *
+     * @param array $config Widget config.
+     * @return $this
+     */
     public function keysetPaginationConfig(array $config): static
     {
         $new = clone $this;
