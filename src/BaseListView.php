@@ -83,6 +83,9 @@ abstract class BaseListView extends Widget
     private string $header = '';
     private array $headerAttributes = [];
     private string $layout = "{header}\n{toolbar}\n{items}\n{summary}\n{pager}";
+
+    private OffsetPagination|null $offsetPagination = null;
+    private KeysetPagination|null $keysetPagination = null;
     private string|OffsetPagination|KeysetPagination|null $pagination = null;
     protected ?ReadableDataInterface $dataReader = null;
     private string $toolbar = '';
@@ -463,7 +466,14 @@ abstract class BaseListView extends Widget
         return $new;
     }
 
-    public function pagination(string|KeysetPagination|OffsetPagination|null $pagination): static
+    public function offsetPagination(OffsetPagination|null $pagination): static
+    {
+        $new = clone $this;
+        $new->pagination = $pagination;
+        return $new;
+    }
+
+    public function keysetPagination(KeysetPagination|null $pagination): static
     {
         $new = clone $this;
         $new->pagination = $pagination;
@@ -630,9 +640,9 @@ abstract class BaseListView extends Widget
 
         if ($this->pagination === null) {
             if ($preparedDataReader instanceof OffsetPaginator) {
-                $pagination = OffsetPagination::widget();
+                $pagination = $this->offsetPagination ?? OffsetPagination::widget();
             } elseif ($preparedDataReader instanceof KeysetPaginator) {
-                $pagination = KeysetPagination::widget();
+                $pagination = $this->keysetPagination ?? KeysetPagination::widget();
             } else {
                 return '';
             }
