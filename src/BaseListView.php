@@ -83,6 +83,9 @@ abstract class BaseListView extends Widget
     private string $header = '';
     private array $headerAttributes = [];
     private string $layout = "{header}\n{toolbar}\n{items}\n{summary}\n{pager}";
+
+    private array $offsetPaginationConfig = [];
+    private array $keysetPaginationConfig = [];
     private string|OffsetPagination|KeysetPagination|null $pagination = null;
     protected ?ReadableDataInterface $dataReader = null;
     private string $toolbar = '';
@@ -470,6 +473,20 @@ abstract class BaseListView extends Widget
         return $new;
     }
 
+    public function offsetPaginationConfig(array $config): static
+    {
+        $new = clone $this;
+        $new->offsetPaginationConfig = $config;
+        return $new;
+    }
+
+    public function keysetPaginationConfig(array $config): static
+    {
+        $new = clone $this;
+        $new->keysetPaginationConfig = $config;
+        return $new;
+    }
+
     /**
      * Returns a new instance with the paginator interface of the grid view, detail view, or list view.
      *
@@ -630,9 +647,9 @@ abstract class BaseListView extends Widget
 
         if ($this->pagination === null) {
             if ($preparedDataReader instanceof OffsetPaginator) {
-                $pagination = OffsetPagination::widget();
+                $pagination = OffsetPagination::widget([], $this->offsetPaginationConfig);
             } elseif ($preparedDataReader instanceof KeysetPaginator) {
-                $pagination = KeysetPagination::widget();
+                $pagination = KeysetPagination::widget([], $this->keysetPaginationConfig);
             } else {
                 return '';
             }
