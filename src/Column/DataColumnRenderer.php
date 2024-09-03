@@ -28,6 +28,7 @@ use Yiisoft\Yii\DataView\Filter\Widget\TextInputFilter;
 
 use function is_array;
 use function is_callable;
+use function is_string;
 
 /**
  * @psalm-import-type FilterEmptyCallable from DataColumn
