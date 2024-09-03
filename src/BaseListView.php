@@ -466,17 +466,24 @@ abstract class BaseListView extends Widget
         return $new;
     }
 
-    public function offsetPagination(OffsetPagination|null $pagination): static
+    public function pagination(string|KeysetPagination|OffsetPagination|null $pagination): static
     {
         $new = clone $this;
         $new->pagination = $pagination;
         return $new;
     }
 
+    public function offsetPagination(OffsetPagination|null $pagination): static
+    {
+        $new = clone $this;
+        $new->offsetPagination = $pagination;
+        return $new;
+    }
+
     public function keysetPagination(KeysetPagination|null $pagination): static
     {
         $new = clone $this;
-        $new->pagination = $pagination;
+        $new->keysetPagination = $pagination;
         return $new;
     }
 
