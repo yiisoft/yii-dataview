@@ -659,9 +659,9 @@ abstract class BaseListView extends Widget
 
         if ($this->pagination === null) {
             if ($preparedDataReader instanceof OffsetPaginator) {
-                $pagination = OffsetPagination::widget([], $this->offsetPaginationConfig);
+                $pagination = OffsetPagination::widget(config: $this->offsetPaginationConfig);
             } elseif ($preparedDataReader instanceof KeysetPaginator) {
-                $pagination = KeysetPagination::widget([], $this->keysetPaginationConfig);
+                $pagination = KeysetPagination::widget(config: $this->keysetPaginationConfig);
             } else {
                 return '';
             }
