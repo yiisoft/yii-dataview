@@ -177,4 +177,78 @@ final class BaseTest extends TestCase
                 ->render(),
         );
     }
+
+    public function testOffsetPaginationConfig(): void
+    {
+        Assert::equalsWithoutLE(
+            <<<HTML
+            <div>
+            <div>
+            <div class=text-success>1</div>
+            </div>
+            <div>Page <b>1</b> of <b>2</b></div>
+            <nav>
+            <ul class="pagination">
+            <li class="page-item disabled"><a class="page-link" href="#1">⟪</a></li>
+            <li class="page-item disabled"><a class="page-link" href="#1">⟨</a></li>
+            <li class="page-item active"><a class="page-link" href="#1">1</a></li>
+            <li class="page-item"><a class="page-link" href="#2">2</a></li>
+            <li class="page-item"><a class="page-link" href="#2">⟩</a></li>
+            <li class="page-item"><a class="page-link" href="#2">⟫</a></li>
+            </ul>
+            </nav>
+            </div>
+            HTML,
+            ListView::widget()
+                ->itemView(dirname(__DIR__) . '/Support/view/_listviewparams.php')
+                ->dataReader($this->createOffsetPaginator($this->data, 1))
+                ->separator(PHP_EOL)
+                ->viewParams(['itemClass' => 'text-success'])
+                ->offsetPaginationConfig([
+                    'listTag()' => ['ul'],
+                    'listAttributes()' => [['class' => 'pagination']],
+                    'itemTag()' => ['li'],
+                    'itemAttributes()' => [['class' => 'page-item']],
+                    'linkAttributes()' => [['class' => 'page-link']],
+                    'currentItemClass()' => ['active'],
+                    'disabledItemClass()' => ['disabled'],
+                ])
+                ->render(),
+        );
+    }
+
+    public function testKeysetPaginationConfig(): void
+    {
+        Assert::equalsWithoutLE(
+            <<<HTML
+            <div>
+            <div>
+            <div class=text-success>1</div>
+            </div>
+
+            <nav>
+            <ul class="pagination">
+            <li class="page-item disabled"><a class="page-link">⟨</a></li>
+            <li class="page-item"><a class="page-link" href="#1">⟩</a></li>
+            </ul>
+            </nav>
+            </div>
+            HTML,
+            ListView::widget()
+                ->itemView(dirname(__DIR__) . '/Support/view/_listviewparams.php')
+                ->dataReader($this->createKeysetPaginator($this->data, 1))
+                ->separator(PHP_EOL)
+                ->viewParams(['itemClass' => 'text-success'])
+                ->keysetPaginationConfig([
+                    'listTag()' => ['ul'],
+                    'listAttributes()' => [['class' => 'pagination']],
+                    'itemTag()' => ['li'],
+                    'itemAttributes()' => [['class' => 'page-item']],
+                    'linkAttributes()' => [['class' => 'page-link']],
+                    'currentItemClass()' => ['active'],
+                    'disabledItemClass()' => ['disabled'],
+                ])
+                ->render(),
+        );
+    }
 }
