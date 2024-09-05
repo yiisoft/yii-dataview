@@ -229,7 +229,7 @@ final class GridView extends BaseListView
      *
      * @param array $attributes The HTML attributes for the empty cell.
      */
-    public function emptyCellAttributes(array $attributes): static
+    public function emptyCellAttributes(array $attributes): self
     {
         $new = clone $this;
         $new->emptyCellAttributes = $attributes;
