@@ -211,13 +211,13 @@ final class GridView extends BaseListView
     /**
      * Return new instance with the HTML display when the content is empty.
      *
-     * @param string $value The HTML display when the content of a cell is empty. Defaults to '&nbsp;'.
+     * @param string $content The HTML display when the content of a cell is empty. Defaults to '&nbsp;'.
      * @param array|null $attributes The HTML attributes for the empty cell.
      */
-    public function emptyCell(string $value, ?array $attributes = null): self
+    public function emptyCell(string $content, ?array $attributes = null): self
     {
         $new = clone $this;
-        $new->emptyCell = $value;
+        $new->emptyCell = $content;
         if ($attributes !== null) {
             $new->emptyCellAttributes = $attributes;
         }
@@ -227,7 +227,7 @@ final class GridView extends BaseListView
     /**
      * Returns a new instance with the HTML attributes for the empty cell.
      *
-     * @param array $values The HTML attributes for the empty cell.
+     * @param array $attributes The HTML attributes for the empty cell.
      */
     public function emptyCellAttributes(array $attributes): static
     {
