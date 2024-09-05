@@ -29,6 +29,9 @@ use Yiisoft\Yii\DataView\Column\FilterableColumnRendererInterface;
 use Yiisoft\Yii\DataView\Column\OverrideOrderFieldsColumnInterface;
 use Yiisoft\Yii\DataView\Filter\Factory\IncorrectValueException;
 
+use function call_user_func;
+use function is_callable;
+
 /**
  * The GridView widget displays data in a grid.
  *
@@ -56,6 +59,7 @@ final class GridView extends BaseListView
 
     private bool $columnGroupEnabled = false;
     private string $emptyCell = '&nbsp;';
+    private array $emptyCellAttributes = [];
     private bool $footerEnabled = false;
     private array $footerRowAttributes = [];
     private bool $headerTableEnabled = true;
@@ -207,14 +211,28 @@ final class GridView extends BaseListView
     /**
      * Return new instance with the HTML display when the content is empty.
      *
-     * @param string $value The HTML display when the content of a cell is empty. This property is used to render cells
-     * that have no defined content, e.g., empty footer.
+     * @param string $value The HTML display when the content of a cell is empty. Defaults to '&nbsp;'.
+     * @param array|null $attributes The HTML attributes for the empty cell.
      */
-    public function emptyCell(string $value): self
+    public function emptyCell(string $value, ?array $attributes = null): self
     {
         $new = clone $this;
         $new->emptyCell = $value;
+        if ($attributes !== null) {
+            $new->emptyCellAttributes = $attributes;
+        }
+        return $new;
+    }
 
+    /**
+     * Returns a new instance with the HTML attributes for the empty cell.
+     *
+     * @param array $values The HTML attributes for the empty cell.
+     */
+    public function emptyCellAttributes(array $attributes): static
+    {
+        $new = clone $this;
+        $new->emptyCellAttributes = $attributes;
         return $new;
     }
 
@@ -612,7 +630,9 @@ final class GridView extends BaseListView
                 $context = new DataContext($column, $value, $key, $index);
                 $cell = $renderers[$i]->renderBody($column, new Cell($this->bodyCellAttributes), $context);
                 $tags[] = $cell->isEmptyContent()
-                    ? Html::td()->content($this->emptyCell)->encode(false)
+                    ? Html::td(attributes: $this->emptyCellAttributes)
+                        ->content($this->emptyCell)
+                        ->encode(false)
                     : Html::td(attributes: $this->prepareBodyAttributes($cell->getAttributes(), $context))
                         ->content(...$cell->getContent())
                         ->encode($cell->isEncode())
