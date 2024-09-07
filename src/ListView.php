@@ -94,7 +94,7 @@ final class ListView extends BaseListView
     public function itemsWrapperTag(?string $tag): self
     {
         if ($tag === '') {
-            throw new InvalidArgumentException('Tag name cannot be empty.');
+            throw new InvalidArgumentException('The "itemsWrapperTag" property cannot be empty.');
         }
 
         $new = clone $this;
@@ -139,7 +139,7 @@ final class ListView extends BaseListView
     public function itemViewTag(?string $tag): self
     {
         if ($tag === '') {
-            throw new InvalidArgumentException('Tag name cannot be empty.');
+            throw new InvalidArgumentException('The "itemViewTag" property cannot be empty.');
         }
 
         $new = clone $this;
@@ -225,7 +225,7 @@ final class ListView extends BaseListView
         }
 
         return $this->itemViewTag === null
-            ? $content
+            ? trim($content)
             : Html::tag($this->itemViewTag)
                 ->attributes($this->itemViewAttributes)
                 ->content("\n" . $content)

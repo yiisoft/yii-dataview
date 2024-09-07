@@ -341,5 +341,68 @@ final class BaseTest extends TestCase
         );
     }
 
+    public function testNoItemsWrapperTag(): void
+    {
+        Assert::equalsWithoutLE(
+            <<<HTML
+            <div>
+            <div>
+            <div>Id: 1</div><div>Name: John</div><div>Age: 20</div>
+            </div>
+            <div>
+            <div>Id: 2</div><div>Name: Mary</div><div>Age: 21</div>
+            </div>
+            <div>Page <b>1</b> of <b>1</b></div>
+            </div>
+            HTML,
+            ListView::widget()
+                ->itemsWrapperTag(null)
+                ->itemViewTag('div')
+                ->itemView(dirname(__DIR__) . '/Support/view/_listview.php')
+                ->dataReader($this->createOffsetPaginator($this->data, 10))
+                ->render(),
+        );
+    }
+
+    public function testNoItemViewTag(): void
+    {
+        Assert::equalsWithoutLE(
+            <<<HTML
+            <div>
+            <div>
+            <div>Id: 1</div><div>Name: John</div><div>Age: 20</div>
+            <div>Id: 2</div><div>Name: Mary</div><div>Age: 21</div>
+            </div>
+            <div>Page <b>1</b> of <b>1</b></div>
+            </div>
+            HTML,
+            ListView::widget()
+                ->itemsWrapperTag('div')
+                ->itemViewTag(null)
+                ->itemView(dirname(__DIR__) . '/Support/view/_listview.php')
+                ->dataReader($this->createOffsetPaginator($this->data, 10))
+                ->render(),
+        );
+    }
+
+    public function testNoItemViewTagNoItemsWrapperTag(): void
+    {
+        Assert::equalsWithoutLE(
+            <<<HTML
+            <div>
+            <div>Id: 1</div><div>Name: John</div><div>Age: 20</div>
+            <div>Id: 2</div><div>Name: Mary</div><div>Age: 21</div>
+            <div>Page <b>1</b> of <b>1</b></div>
+            </div>
+            HTML,
+            ListView::widget()
+                ->itemsWrapperTag(null)
+                ->itemViewTag(null)
+                ->itemView(dirname(__DIR__) . '/Support/view/_listview.php')
+                ->dataReader($this->createOffsetPaginator($this->data, 10))
+                ->render(),
+        );
+    }
+
 
 }
