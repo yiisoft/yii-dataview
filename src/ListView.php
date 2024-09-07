@@ -7,7 +7,6 @@ namespace Yiisoft\Yii\DataView;
 use Closure;
 use InvalidArgumentException;
 use Yiisoft\Html\Html;
-use Yiisoft\Html\Tag\Li;
 use Yiisoft\View\Exception\ViewNotFoundException;
 use Yiisoft\View\View;
 use function is_string;

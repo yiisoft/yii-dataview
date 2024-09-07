@@ -403,6 +403,4 @@ final class BaseTest extends TestCase
                 ->render(),
         );
     }
-
-
 }
