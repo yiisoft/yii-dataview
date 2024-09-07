@@ -136,6 +136,13 @@ final class ListView extends BaseListView
         return $new;
     }
 
+    public function itemViewTag(?string $tag): self
+    {
+        $new = clone $this;
+        $new->itemViewTag= $tag;
+        return $new;
+    }
+
     /**
      * return new instance with the HTML attributes for the container of item view.
      *
