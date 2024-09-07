@@ -31,6 +31,10 @@ final class ListView extends BaseListView
      */
     private $itemView = null;
 
+    /**
+     * @psalm-var non-empty-string|null
+     */
+    private ?string $itemViewTag = 'li';
     private array $itemViewAttributes = [];
     private string $separator = "\n";
     private array $viewParams = [];
@@ -209,11 +213,13 @@ final class ListView extends BaseListView
             $content = (string)call_user_func($this->itemView, $data, $key, $index, $this);
         }
 
-        return Li::tag()
-            ->attributes($this->itemViewAttributes)
-            ->content("\n" . $content)
-            ->encode(false)
-            ->render();
+        return $this->itemViewTag === null
+            ? $content
+            : Html::tag($this->itemViewTag)
+                ->attributes($this->itemViewAttributes)
+                ->content("\n" . $content)
+                ->encode(false)
+                ->render();
     }
 
     /**
