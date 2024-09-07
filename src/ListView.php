@@ -138,8 +138,12 @@ final class ListView extends BaseListView
 
     public function itemViewTag(?string $tag): self
     {
+        if ($tag === '') {
+            throw new InvalidArgumentException('Tag name cannot be empty.');
+        }
+
         $new = clone $this;
-        $new->itemViewTag= $tag;
+        $new->itemViewTag = $tag;
         return $new;
     }
 
