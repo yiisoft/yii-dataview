@@ -267,4 +267,52 @@ final class BaseTest extends TestCase
                 ->render(),
         );
     }
+
+    public function testChangeItemsWrapperTag(): void
+    {
+        Assert::equalsWithoutLE(
+            <<<HTML
+            <div>
+            <ol>
+            <li>
+            <div>Id: 1</div><div>Name: John</div><div>Age: 20</div>
+            </li>
+            <li>
+            <div>Id: 2</div><div>Name: Mary</div><div>Age: 21</div>
+            </li>
+            </ol>
+            <div>Page <b>1</b> of <b>1</b></div>
+            </div>
+            HTML,
+            ListView::widget()
+                ->itemsWrapperTag('ol')
+                ->itemView(dirname(__DIR__) . '/Support/view/_listview.php')
+                ->dataReader($this->createOffsetPaginator($this->data, 10))
+                ->render(),
+        );
+    }
+
+    public function testChangeItemsWrapperTagAttributes(): void
+    {
+        Assert::equalsWithoutLE(
+            <<<HTML
+            <div>
+            <ul class="the-item-wrapper-class">
+            <li>
+            <div>Id: 1</div><div>Name: John</div><div>Age: 20</div>
+            </li>
+            <li>
+            <div>Id: 2</div><div>Name: Mary</div><div>Age: 21</div>
+            </li>
+            </ul>
+            <div>Page <b>1</b> of <b>1</b></div>
+            </div>
+            HTML,
+            ListView::widget()
+                ->itemsWrapperAttributes(['class' => 'the-item-wrapper-class'])
+                ->itemView(dirname(__DIR__) . '/Support/view/_listview.php')
+                ->dataReader($this->createOffsetPaginator($this->data, 10))
+                ->render(),
+        );
+    }
 }
