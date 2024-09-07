@@ -91,6 +91,12 @@ final class ListView extends BaseListView
         return $new;
     }
 
+    /**
+     * Set the HTML tag for the items wrapper.
+     *
+     * @param string|null $tag
+     * @return $this
+     */
     public function itemsWrapperTag(?string $tag): self
     {
         if ($tag === '') {
@@ -102,6 +108,12 @@ final class ListView extends BaseListView
         return $new;
     }
 
+    /**
+     * Set the HTML attributes for the container of the items wrapper.
+     *
+     * @param array $values
+     * @return $this
+     */
     public function itemsWrapperAttributes(array $values): self
     {
         $new = clone $this;
@@ -136,6 +148,12 @@ final class ListView extends BaseListView
         return $new;
     }
 
+    /**
+     * Set the HTML tag for the container of item view.
+     *
+     * @param string|null $tag
+     * @return $this
+     */
     public function itemViewTag(?string $tag): self
     {
         if ($tag === '') {
