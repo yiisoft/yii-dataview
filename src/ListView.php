@@ -36,6 +36,12 @@ final class ListView extends BaseListView
     private array $viewParams = [];
     private ?View $view = null;
 
+    public function __construct()
+    {
+        parent::__construct();
+        $this->containerTag('ul');
+    }
+
     /**
      * Return new instance with afterItem closure.
      *
