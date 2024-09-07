@@ -6,10 +6,10 @@ namespace Yiisoft\Yii\DataView;
 
 use Closure;
 use InvalidArgumentException;
-use Yiisoft\Html\Tag\Div;
+use Yiisoft\Html\Html;
+use Yiisoft\Html\Tag\Li;
 use Yiisoft\View\Exception\ViewNotFoundException;
 use Yiisoft\View\View;
-
 use function is_string;
 
 /**
@@ -19,6 +19,12 @@ final class ListView extends BaseListView
 {
     private ?Closure $afterItem = null;
     private ?Closure $beforeItem = null;
+
+    /**
+     * @psalm-var non-empty-string|null
+     */
+    private ?string $itemsWrapperTag = 'ul';
+    private array $itemsWrapperAttributes = [];
 
     /**
      * @var callable|string|null
@@ -78,6 +84,24 @@ final class ListView extends BaseListView
         $new = clone $this;
         $new->beforeItem = $value;
 
+        return $new;
+    }
+
+    public function itemsWrapperTag(?string $tag): self
+    {
+        if ($tag === '') {
+            throw new InvalidArgumentException('Tag name cannot be empty.');
+        }
+
+        $new = clone $this;
+        $new->itemsWrapperTag = $tag;
+        return $new;
+    }
+
+    public function itemsWrapperAttributes(array $values): self
+    {
+        $new = clone $this;
+        $new->itemsWrapperAttributes = $values;
         return $new;
     }
 
@@ -182,10 +206,10 @@ final class ListView extends BaseListView
         }
 
         if ($this->itemView instanceof Closure) {
-            $content = (string) call_user_func($this->itemView, $data, $key, $index, $this);
+            $content = (string)call_user_func($this->itemView, $data, $key, $index, $this);
         }
 
-        return Div::tag()
+        return Li::tag()
             ->attributes($this->itemViewAttributes)
             ->content("\n" . $content)
             ->encode(false)
@@ -217,7 +241,13 @@ final class ListView extends BaseListView
             }
         }
 
-        return implode($this->separator, $rows);
+        $content = implode($this->separator, $rows);
+
+        return $this->itemsWrapperTag === null
+            ? $content
+            : Html::tag($this->itemsWrapperTag, "\n" . $content . "\n", $this->itemsWrapperAttributes)
+                ->encode(false)
+                ->render();
     }
 
     /**
@@ -238,7 +268,7 @@ final class ListView extends BaseListView
         $result = '';
 
         if (!empty($this->afterItem)) {
-            $result = (string) call_user_func($this->afterItem, $data, $key, $index, $this);
+            $result = (string)call_user_func($this->afterItem, $data, $key, $index, $this);
         }
 
         return $result;
@@ -262,7 +292,7 @@ final class ListView extends BaseListView
         $result = '';
 
         if (!empty($this->beforeItem)) {
-            $result = (string) call_user_func($this->beforeItem, $data, $key, $index, $this);
+            $result = (string)call_user_func($this->beforeItem, $data, $key, $index, $this);
         }
 
         return $result;

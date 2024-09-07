@@ -27,16 +27,18 @@ final class BaseTest extends TestCase
         Assert::equalsWithoutLE(
             <<<HTML
             <div>
+            <ul>
             <span class="testMe">
-            <div>
+            <li>
             <div>Id: 1</div><div>Name: John</div><div>Age: 20</div>
-            </div>
+            </li>
             </span>
             <span class="testMe">
-            <div>
+            <li>
             <div>Id: 2</div><div>Name: Mary</div><div>Age: 21</div>
-            </div>
+            </li>
             </span>
+            </ul>
             <div>Page <b>1</b> of <b>1</b></div>
             </div>
             HTML,
@@ -54,12 +56,14 @@ final class BaseTest extends TestCase
         Assert::equalsWithoutLE(
             <<<HTML
             <div>
-            <div class="testMe">
+            <ul>
+            <li class="testMe">
             <div>Id: 1</div><div>Name: John</div><div>Age: 20</div>
-            </div>
-            <div class="testMe">
+            </li>
+            <li class="testMe">
             <div>Id: 2</div><div>Name: Mary</div><div>Age: 21</div>
-            </div>
+            </li>
+            </ul>
             <div>Page <b>1</b> of <b>1</b></div>
             </div>
             HTML,
@@ -76,12 +80,14 @@ final class BaseTest extends TestCase
         Assert::equalsWithoutLE(
             <<<HTML
             <div>
-            <div>
+            <ul>
+            <li>
             <div>Id: 1</div><div>Name: John</div><div>Age: 20</div>
-            </div>
-            <div>
+            </li>
+            <li>
             <div>Id: 2</div><div>Name: Mary</div><div>Age: 21</div>
-            </div>
+            </li>
+            </ul>
             <div>Page <b>1</b> of <b>1</b></div>
             </div>
             HTML,
@@ -103,12 +109,14 @@ final class BaseTest extends TestCase
         Assert::equalsWithoutLE(
             <<<HTML
             <div>
-            <div>
+            <ul>
+            <li>
             <div>1</div><div>John</div>
-            </div>
-            <div>
+            </li>
+            <li>
             <div>2</div><div>Mary</div>
-            </div>
+            </li>
+            </ul>
             <div>Page <b>1</b> of <b>1</b></div>
             </div>
             HTML,
@@ -132,12 +140,14 @@ final class BaseTest extends TestCase
         Assert::equalsWithoutLE(
             <<<HTML
             <div>
-            <div>
+            <ul>
+            <li>
             <div>Id: 1</div><div>Name: John</div><div>Age: 20</div>
-            </div>
-            <div>
+            </li>
+            <li>
             <div>Id: 2</div><div>Name: Mary</div><div>Age: 21</div>
-            </div>
+            </li>
+            </ul>
             <div>Page <b>1</b> of <b>1</b></div>
             </div>
             HTML,
@@ -160,12 +170,14 @@ final class BaseTest extends TestCase
         Assert::equalsWithoutLE(
             <<<HTML
             <div>
-            <div>
+            <ul>
+            <li>
             <div class=text-success>1</div>
-            </div>
-            <div>
+            </li>
+            <li>
             <div class=text-success>2</div>
-            </div>
+            </li>
+            </ul>
             <div>Page <b>1</b> of <b>1</b></div>
             </div>
             HTML,
@@ -183,9 +195,11 @@ final class BaseTest extends TestCase
         Assert::equalsWithoutLE(
             <<<HTML
             <div>
-            <div>
+            <ul>
+            <li>
             <div class=text-success>1</div>
-            </div>
+            </li>
+            </ul>
             <div>Page <b>1</b> of <b>2</b></div>
             <nav>
             <ul class="pagination">
@@ -222,9 +236,11 @@ final class BaseTest extends TestCase
         Assert::equalsWithoutLE(
             <<<HTML
             <div>
-            <div>
+            <ul>
+            <li>
             <div class=text-success>1</div>
-            </div>
+            </li>
+            </ul>
 
             <nav>
             <ul class="pagination">
