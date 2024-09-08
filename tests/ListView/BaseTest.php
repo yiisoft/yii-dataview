@@ -371,7 +371,9 @@ final class BaseTest extends TestCase
             <div>
             <div>
             <div>Id: 1</div><div>Name: John</div><div>Age: 20</div>
+
             <div>Id: 2</div><div>Name: Mary</div><div>Age: 21</div>
+
             </div>
             <div>Page <b>1</b> of <b>1</b></div>
             </div>
@@ -391,7 +393,9 @@ final class BaseTest extends TestCase
             <<<HTML
             <div>
             <div>Id: 1</div><div>Name: John</div><div>Age: 20</div>
+
             <div>Id: 2</div><div>Name: Mary</div><div>Age: 21</div>
+
             <div>Page <b>1</b> of <b>1</b></div>
             </div>
             HTML,

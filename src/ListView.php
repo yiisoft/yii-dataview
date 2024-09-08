@@ -243,7 +243,7 @@ final class ListView extends BaseListView
         }
 
         return $this->itemViewTag === null
-            ? trim($content)
+            ? $content
             : Html::tag($this->itemViewTag)
                 ->attributes($this->itemViewAttributes)
                 ->content("\n" . $content)
