@@ -25,7 +25,7 @@ final class ListView extends BaseListView
      */
     private $itemView = null;
 
-    private array $itemViewAttributes = [];
+    private array|Closure $itemViewAttributes = [];
     private string $separator = "\n";
     private array $viewParams = [];
     private ?View $view = null;
@@ -109,11 +109,18 @@ final class ListView extends BaseListView
     }
 
     /**
-     * return new instance with the HTML attributes for the container of item view.
+     * Return new instance with the HTML attributes for the container of item view.
+     * If this property is specified as a callback, it must return an array of attributes and have the following
+     * signature:
      *
-     * @param array $values Attribute values indexed by attribute names.
+     * ```php
+     * function ($data, $key, $index, $widget)
+     * ```
+     *
+     * @param array|Closure $values Attribute values indexed by attribute names.
+     * @return ListView
      */
-    public function itemViewAttributes(array $values): self
+    public function itemViewAttributes(array|Closure $values): self
     {
         $new = clone $this;
         $new->itemViewAttributes = $values;
@@ -185,8 +192,12 @@ final class ListView extends BaseListView
             $content = (string) call_user_func($this->itemView, $data, $key, $index, $this);
         }
 
+        $itemViewAttributes = is_callable($this->itemViewAttributes)
+            ? (array) call_user_func($this->itemViewAttributes, $data, $key, $index, $this)
+            : $this->itemViewAttributes;
+
         return Div::tag()
-            ->attributes($this->itemViewAttributes)
+            ->attributes($itemViewAttributes)
             ->content("\n" . $content)
             ->encode(false)
             ->render();

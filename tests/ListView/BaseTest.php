@@ -251,4 +251,31 @@ final class BaseTest extends TestCase
                 ->render(),
         );
     }
+
+    public function testClosureForItemViewAttributes(): void
+    {
+        Assert::equalsWithoutLE(
+            <<<HTML
+            <div>
+            <div data-item-id="1" data-item-key="0" data-item-index="0">
+            <div>Id: 1</div><div>Name: John</div><div>Age: 20</div>
+            </div>
+            <div data-item-id="2" data-item-key="1" data-item-index="1">
+            <div>Id: 2</div><div>Name: Mary</div><div>Age: 21</div>
+            </div>
+            <div>Page <b>1</b> of <b>1</b></div>
+            </div>
+            HTML,
+            ListView::widget()
+                ->itemView(dirname(__DIR__) . '/Support/view/_listview.php')
+                ->itemViewAttributes(static fn (array $data, $key, $index, $widget) => [
+                    'data-item-id' => $data['id'],
+                    'data-item-key' => $key,
+                    'data-item-index' => $index,
+                ])
+                ->dataReader($this->createOffsetPaginator($this->data, 10))
+                ->separator(PHP_EOL)
+                ->render(),
+        );
+    }
 }
