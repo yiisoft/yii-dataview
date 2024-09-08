@@ -193,8 +193,14 @@ final class ListView extends BaseListView
         }
 
         $itemViewAttributes = is_callable($this->itemViewAttributes)
-            ? (array) call_user_func($this->itemViewAttributes, $data, $key, $index, $this)
+            ? (array)call_user_func($this->itemViewAttributes, $data, $key, $index, $this)
             : $this->itemViewAttributes;
+
+        foreach ($itemViewAttributes as $i => $attribute) {
+            if (is_callable($attribute)) {
+                $itemViewAttributes[$i] = $attribute($data, $key, $index, $this);
+            }
+        }
 
         return Div::tag()
             ->attributes($itemViewAttributes)
