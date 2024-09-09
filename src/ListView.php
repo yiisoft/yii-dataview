@@ -167,7 +167,7 @@ final class ListView extends BaseListView
 
     /**
      * Return new instance with the HTML attributes for the container of item view.
-     * If this property is specified as a callback, it must return an array of attributes and have the following
+     * If this property is specified as a function, it must return an array of attributes and have the following
      * signature:
      *
      * ```php
