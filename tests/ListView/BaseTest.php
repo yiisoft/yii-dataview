@@ -413,12 +413,14 @@ final class BaseTest extends TestCase
         Assert::equalsWithoutLE(
             <<<HTML
             <div>
-            <div data-item-id="1" data-item-key="0" data-item-index="0">
+            <ul>
+            <li data-item-id="1" data-item-key="0" data-item-index="0">
             <div>Id: 1</div><div>Name: John</div><div>Age: 20</div>
-            </div>
-            <div data-item-id="2" data-item-key="1" data-item-index="1">
+            </li>
+            <li data-item-id="2" data-item-key="1" data-item-index="1">
             <div>Id: 2</div><div>Name: Mary</div><div>Age: 21</div>
-            </div>
+            </li>
+            </ul>
             <div>Page <b>1</b> of <b>1</b></div>
             </div>
             HTML,
@@ -440,12 +442,14 @@ final class BaseTest extends TestCase
         Assert::equalsWithoutLE(
             <<<HTML
             <div>
-            <div class="id-1-key-0-index-0">
+            <ul>
+            <li class="id-1-key-0-index-0">
             <div>Id: 1</div><div>Name: John</div><div>Age: 20</div>
-            </div>
-            <div class="id-2-key-1-index-1">
+            </li>
+            <li class="id-2-key-1-index-1">
             <div>Id: 2</div><div>Name: Mary</div><div>Age: 21</div>
-            </div>
+            </li>
+            </ul>
             <div>Page <b>1</b> of <b>1</b></div>
             </div>
             HTML,
@@ -465,12 +469,14 @@ final class BaseTest extends TestCase
         Assert::equalsWithoutLE(
             <<<HTML
             <div>
-            <div class="id-1-key-0-index-0">
+            <ul>
+            <li class="id-1-key-0-index-0">
             <div>Id: 1</div><div>Name: John</div><div>Age: 20</div>
-            </div>
-            <div class="id-2-key-1-index-1">
+            </li>
+            <li class="id-2-key-1-index-1">
             <div>Id: 2</div><div>Name: Mary</div><div>Age: 21</div>
-            </div>
+            </li>
+            </ul>
             <div>Page <b>1</b> of <b>1</b></div>
             </div>
             HTML,
