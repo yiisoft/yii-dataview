@@ -174,7 +174,7 @@ final class ListView extends BaseListView
      * function ($data, $key, $index, $widget)
      * ```
      *
-     * Also, each attribute value can be a closure too, with the same signature as in:
+     * Also, each attribute value can be a function too, with the same signature as in:
      *
      * ```php
      * [
