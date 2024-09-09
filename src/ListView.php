@@ -167,13 +167,14 @@ final class ListView extends BaseListView
 
     /**
      * Return new instance with the HTML attributes for the container of item view.
+     *
+     * @param array|Closure $values Attribute values indexed by attribute names.
      * If this property is specified as a function, it must return an array of attributes and have the following
      * signature:
      *
      * ```php
      * function ($data, $key, $index, $widget)
      * ```
-     *
      * Also, each attribute value can be a function too, with the same signature as in:
      *
      * ```php
@@ -181,7 +182,6 @@ final class ListView extends BaseListView
      *     'class' => static fn($data, $key, $index, $widget) => "custom-class-{$data['id']}",
      * ]
      * ```
-     * @param array|Closure $values Attribute values indexed by attribute names.
      * @return ListView
      */
     public function itemViewAttributes(array|Closure $values): self
