@@ -46,4 +46,26 @@ final class ExceptionTest extends TestCase
             ->dataReader($this->createOffsetPaginator($this->data, 10))
             ->render();
     }
+
+    public function testEmptyItemViewTag(): void
+    {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('The "itemViewTag" property cannot be empty.');
+        ListView::widget()
+            ->itemViewTag('')
+            ->itemView(dirname(__DIR__) . '/Support/view/_listview.php')
+            ->dataReader($this->createOffsetPaginator($this->data, 10))
+            ->render();
+    }
+
+    public function testEmptyItemsWrapperTag(): void
+    {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('The "itemsWrapperTag" property cannot be empty.');
+        ListView::widget()
+            ->itemsWrapperTag('')
+            ->itemView(dirname(__DIR__) . '/Support/view/_listview.php')
+            ->dataReader($this->createOffsetPaginator($this->data, 10))
+            ->render();
+    }
 }

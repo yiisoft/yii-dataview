@@ -6,7 +6,7 @@ namespace Yiisoft\Yii\DataView;
 
 use Closure;
 use InvalidArgumentException;
-use Yiisoft\Html\Tag\Div;
+use Yiisoft\Html\Html;
 use Yiisoft\View\Exception\ViewNotFoundException;
 use Yiisoft\View\View;
 
@@ -21,10 +21,20 @@ final class ListView extends BaseListView
     private ?Closure $beforeItem = null;
 
     /**
+     * @psalm-var non-empty-string|null
+     */
+    private ?string $itemsWrapperTag = 'ul';
+    private array $itemsWrapperAttributes = [];
+
+    /**
      * @var callable|string|null
      */
     private $itemView = null;
 
+    /**
+     * @psalm-var non-empty-string|null
+     */
+    private ?string $itemViewTag = 'li';
     private array|Closure $itemViewAttributes = [];
     private string $separator = "\n";
     private array $viewParams = [];
@@ -82,6 +92,36 @@ final class ListView extends BaseListView
     }
 
     /**
+     * Set the HTML tag for the items wrapper.
+     *
+     * @param string|null $tag
+     * @return $this
+     */
+    public function itemsWrapperTag(?string $tag): self
+    {
+        if ($tag === '') {
+            throw new InvalidArgumentException('The "itemsWrapperTag" property cannot be empty.');
+        }
+
+        $new = clone $this;
+        $new->itemsWrapperTag = $tag;
+        return $new;
+    }
+
+    /**
+     * Set the HTML attributes for the container of the items wrapper.
+     *
+     * @param array $values
+     * @return $this
+     */
+    public function itemsWrapperAttributes(array $values): self
+    {
+        $new = clone $this;
+        $new->itemsWrapperAttributes = $values;
+        return $new;
+    }
+
+    /**
      * Return new instance with itemView closure.
      *
      * @param Closure|string $value the full path of the view for rendering each data item, or a callback (e.g.
@@ -105,6 +145,23 @@ final class ListView extends BaseListView
     {
         $new = clone $this;
         $new->itemView = $value;
+        return $new;
+    }
+
+    /**
+     * Set the HTML tag for the container of item view.
+     *
+     * @param string|null $tag
+     * @return $this
+     */
+    public function itemViewTag(?string $tag): self
+    {
+        if ($tag === '') {
+            throw new InvalidArgumentException('The "itemViewTag" property cannot be empty.');
+        }
+
+        $new = clone $this;
+        $new->itemViewTag = $tag;
         return $new;
     }
 
@@ -196,7 +253,7 @@ final class ListView extends BaseListView
         }
 
         if ($this->itemView instanceof Closure) {
-            $content = (string) call_user_func($this->itemView, $data, $key, $index, $this);
+            $content = (string)call_user_func($this->itemView, $data, $key, $index, $this);
         }
 
         $itemViewAttributes = is_callable($this->itemViewAttributes)
@@ -209,11 +266,13 @@ final class ListView extends BaseListView
             }
         }
 
-        return Div::tag()
-            ->attributes($itemViewAttributes)
-            ->content("\n" . $content)
-            ->encode(false)
-            ->render();
+        return $this->itemViewTag === null
+            ? $content
+            : Html::tag($this->itemViewTag)
+                ->attributes($itemViewAttributes)
+                ->content("\n" . $content)
+                ->encode(false)
+                ->render();
     }
 
     /**
@@ -241,7 +300,13 @@ final class ListView extends BaseListView
             }
         }
 
-        return implode($this->separator, $rows);
+        $content = implode($this->separator, $rows);
+
+        return $this->itemsWrapperTag === null
+            ? $content
+            : Html::tag($this->itemsWrapperTag, "\n" . $content . "\n", $this->itemsWrapperAttributes)
+                ->encode(false)
+                ->render();
     }
 
     /**
@@ -262,7 +327,7 @@ final class ListView extends BaseListView
         $result = '';
 
         if (!empty($this->afterItem)) {
-            $result = (string) call_user_func($this->afterItem, $data, $key, $index, $this);
+            $result = (string)call_user_func($this->afterItem, $data, $key, $index, $this);
         }
 
         return $result;
@@ -286,7 +351,7 @@ final class ListView extends BaseListView
         $result = '';
 
         if (!empty($this->beforeItem)) {
-            $result = (string) call_user_func($this->beforeItem, $data, $key, $index, $this);
+            $result = (string)call_user_func($this->beforeItem, $data, $key, $index, $this);
         }
 
         return $result;
