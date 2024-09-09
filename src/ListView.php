@@ -117,6 +117,13 @@ final class ListView extends BaseListView
      * function ($data, $key, $index, $widget)
      * ```
      *
+     * Also, each attribute value can be a closure too, with the same signature as in:
+     *
+     * ```php
+     * [
+     *     'class' => static fn($data, $key, $index, $widget) => "custom-class-{$data['id']}",
+     * ]
+     * ```
      * @param array|Closure $values Attribute values indexed by attribute names.
      * @return ListView
      */
