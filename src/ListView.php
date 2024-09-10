@@ -246,11 +246,11 @@ final class ListView extends BaseListView
         }
 
         if ($this->itemView instanceof Closure) {
-            $content = (string)call_user_func($this->itemView, $context);
+            $content = (string)($this->itemView)($context);
         }
 
         $itemViewAttributes = is_callable($this->itemViewAttributes)
-            ? (array)call_user_func($this->itemViewAttributes, $context)
+            ? (array)($this->itemViewAttributes)($context)
             : $this->itemViewAttributes;
 
         foreach ($itemViewAttributes as $i => $attribute) {
@@ -320,7 +320,7 @@ final class ListView extends BaseListView
         $result = '';
 
         if (!empty($this->afterItem)) {
-            $result = (string)call_user_func($this->afterItem, $context);
+            $result = (string)($this->afterItem)($context);
         }
 
         return $result;
@@ -342,7 +342,7 @@ final class ListView extends BaseListView
         $result = '';
 
         if (!empty($this->beforeItem)) {
-            $result = (string)call_user_func($this->beforeItem, $context);
+            $result = (string)($this->beforeItem)($context);
         }
 
         return $result;
