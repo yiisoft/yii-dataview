@@ -69,13 +69,8 @@ final class ListView extends BaseListView
      * It should have the following signature:
      *
      * ```php
-     * function ($data, $key, $index, $widget)
+     * function (ListItemContext $context)
      * ```
-     *
-     * - `$data`: The current data being rendered.
-     * - `$key`: The key value associated with the current data.
-     * - `$index`: The zero-based index of the data in the array.
-     * - `$widget`: The list view object.
      *
      * The return result of the function will be rendered directly.
      *
@@ -325,7 +320,7 @@ final class ListView extends BaseListView
         $result = '';
 
         if (!empty($this->afterItem)) {
-            $result = (string)call_user_func($this->afterItem, $context->data, $context->key, $context->index, $context->widget);
+            $result = (string)call_user_func($this->afterItem, $context);
         }
 
         return $result;
@@ -347,7 +342,7 @@ final class ListView extends BaseListView
         $result = '';
 
         if (!empty($this->beforeItem)) {
-            $result = (string)call_user_func($this->beforeItem, $context->data, $context->key, $context->index, $context->widget);
+            $result = (string)call_user_func($this->beforeItem, $context);
         }
 
         return $result;
