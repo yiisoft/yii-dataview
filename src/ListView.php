@@ -35,7 +35,7 @@ final class ListView extends BaseListView
      * @psalm-var non-empty-string|null
      */
     private ?string $itemViewTag = 'li';
-    private array $itemViewAttributes = [];
+    private array|Closure $itemViewAttributes = [];
     private string $separator = "\n";
     private array $viewParams = [];
     private ?View $view = null;
@@ -166,11 +166,25 @@ final class ListView extends BaseListView
     }
 
     /**
-     * return new instance with the HTML attributes for the container of item view.
+     * Return new instance with the HTML attributes for the container of item view.
      *
-     * @param array $values Attribute values indexed by attribute names.
+     * @param array|Closure $values Attribute values indexed by attribute names.
+     * If this property is specified as a function, it must return an array of attributes and have the following
+     * signature:
+     *
+     * ```php
+     * function ($data, $key, $index, $widget)
+     * ```
+     * Also, each attribute value can be a function too, with the same signature as in:
+     *
+     * ```php
+     * [
+     *     'class' => static fn($data, $key, $index, $widget) => "custom-class-{$data['id']}",
+     * ]
+     * ```
+     * @return ListView
      */
-    public function itemViewAttributes(array $values): self
+    public function itemViewAttributes(array|Closure $values): self
     {
         $new = clone $this;
         $new->itemViewAttributes = $values;
@@ -242,10 +256,20 @@ final class ListView extends BaseListView
             $content = (string)call_user_func($this->itemView, $data, $key, $index, $this);
         }
 
+        $itemViewAttributes = is_callable($this->itemViewAttributes)
+            ? (array)call_user_func($this->itemViewAttributes, $data, $key, $index, $this)
+            : $this->itemViewAttributes;
+
+        foreach ($itemViewAttributes as $i => $attribute) {
+            if (is_callable($attribute)) {
+                $itemViewAttributes[$i] = $attribute($data, $key, $index, $this);
+            }
+        }
+
         return $this->itemViewTag === null
             ? $content
             : Html::tag($this->itemViewTag)
-                ->attributes($this->itemViewAttributes)
+                ->attributes($itemViewAttributes)
                 ->content("\n" . $content)
                 ->encode(false)
                 ->render();

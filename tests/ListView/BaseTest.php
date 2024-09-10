@@ -407,4 +407,87 @@ final class BaseTest extends TestCase
                 ->render(),
         );
     }
+
+    public function testClosureForItemViewAttributes(): void
+    {
+        Assert::equalsWithoutLE(
+            <<<HTML
+            <div>
+            <ul>
+            <li data-item-id="1" data-item-key="0" data-item-index="0">
+            <div>Id: 1</div><div>Name: John</div><div>Age: 20</div>
+            </li>
+            <li data-item-id="2" data-item-key="1" data-item-index="1">
+            <div>Id: 2</div><div>Name: Mary</div><div>Age: 21</div>
+            </li>
+            </ul>
+            <div>Page <b>1</b> of <b>1</b></div>
+            </div>
+            HTML,
+            ListView::widget()
+                ->itemView(dirname(__DIR__) . '/Support/view/_listview.php')
+                ->itemViewAttributes(static fn (array $data, $key, $index, $widget) => [
+                    'data-item-id' => $data['id'],
+                    'data-item-key' => $key,
+                    'data-item-index' => $index,
+                ])
+                ->dataReader($this->createOffsetPaginator($this->data, 10))
+                ->separator(PHP_EOL)
+                ->render(),
+        );
+    }
+
+    public function testItemViewAttributesWithClosure(): void
+    {
+        Assert::equalsWithoutLE(
+            <<<HTML
+            <div>
+            <ul>
+            <li class="id-1-key-0-index-0">
+            <div>Id: 1</div><div>Name: John</div><div>Age: 20</div>
+            </li>
+            <li class="id-2-key-1-index-1">
+            <div>Id: 2</div><div>Name: Mary</div><div>Age: 21</div>
+            </li>
+            </ul>
+            <div>Page <b>1</b> of <b>1</b></div>
+            </div>
+            HTML,
+            ListView::widget()
+                ->itemView(dirname(__DIR__) . '/Support/view/_listview.php')
+                ->itemViewAttributes([
+                    'class' => static fn(array $data, $key, $index) => "id-{$data['id']}-key-{$key}-index-{$index}",
+                ])
+                ->dataReader($this->createOffsetPaginator($this->data, 10))
+                ->separator(PHP_EOL)
+                ->render(),
+        );
+    }
+
+    public function testClosureForItemViewAttributesWithClosure(): void
+    {
+        Assert::equalsWithoutLE(
+            <<<HTML
+            <div>
+            <ul>
+            <li class="id-1-key-0-index-0">
+            <div>Id: 1</div><div>Name: John</div><div>Age: 20</div>
+            </li>
+            <li class="id-2-key-1-index-1">
+            <div>Id: 2</div><div>Name: Mary</div><div>Age: 21</div>
+            </li>
+            </ul>
+            <div>Page <b>1</b> of <b>1</b></div>
+            </div>
+            HTML,
+            ListView::widget()
+                ->itemView(dirname(__DIR__) . '/Support/view/_listview.php')
+                ->itemViewAttributes(static fn (array $data, $key, $index) => [
+                    'class' => static fn(array $data, $key, $index) => "id-{$data['id']}-key-{$key}-index-{$index}",
+                ])
+                ->dataReader($this->createOffsetPaginator($this->data, 10))
+                ->separator(PHP_EOL)
+                ->render(),
+        );
+    }
 }
