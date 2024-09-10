@@ -52,6 +52,36 @@ final class BaseTest extends TestCase
         );
     }
 
+    public function testAfterItemBeforeItemWithClosure(): void
+    {
+        Assert::equalsWithoutLE(
+            <<<HTML
+            <div>
+            <ul>
+            <span class="testMe" data-item-id="1">
+            <li>
+            <div>Id: 1</div><div>Name: John</div><div>Age: 20</div>
+            </li>
+            <span data-item-id="1">just for test</span></span>
+            <span class="testMe" data-item-id="2">
+            <li>
+            <div>Id: 2</div><div>Name: Mary</div><div>Age: 21</div>
+            </li>
+            <span data-item-id="2">just for test</span></span>
+            </ul>
+            <div>Page <b>1</b> of <b>1</b></div>
+            </div>
+            HTML,
+            ListView::widget()
+                ->afterItem(static fn (ListItemContext $context) => '<span data-item-id="' . $context->data['id'] . '">just for test</span></span>')
+                ->beforeItem(static fn (ListItemContext $context) => '<span class="testMe" data-item-id="' . $context->data['id'] . '">')
+                ->itemView(dirname(__DIR__) . '/Support/view/_listview.php')
+                ->dataReader($this->createOffsetPaginator($this->data, 10))
+                ->render(),
+        );
+    }
+
+
     public function testItemViewAttributes(): void
     {
         Assert::equalsWithoutLE(
