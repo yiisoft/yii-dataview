@@ -81,7 +81,6 @@ final class BaseTest extends TestCase
         );
     }
 
-
     public function testItemViewAttributes(): void
     {
         Assert::equalsWithoutLE(
