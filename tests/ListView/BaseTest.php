@@ -9,6 +9,7 @@ use Yiisoft\Definitions\Exception\CircularReferenceException;
 use Yiisoft\Definitions\Exception\InvalidConfigException;
 use Yiisoft\Definitions\Exception\NotInstantiableException;
 use Yiisoft\Factory\NotFoundException;
+use Yiisoft\Yii\DataView\ListItemContext;
 use Yiisoft\Yii\DataView\ListView;
 use Yiisoft\Yii\DataView\Tests\Support\Assert;
 use Yiisoft\Yii\DataView\Tests\Support\TestTrait;
@@ -45,6 +46,35 @@ final class BaseTest extends TestCase
             ListView::widget()
                 ->afterItem(static fn () => '</span>')
                 ->beforeItem(static fn () => '<span class="testMe">')
+                ->itemView(dirname(__DIR__) . '/Support/view/_listview.php')
+                ->dataReader($this->createOffsetPaginator($this->data, 10))
+                ->render(),
+        );
+    }
+
+    public function testAfterItemBeforeItemWithClosure(): void
+    {
+        Assert::equalsWithoutLE(
+            <<<HTML
+            <div>
+            <ul>
+            <span class="testMe" data-item-id="1">
+            <li>
+            <div>Id: 1</div><div>Name: John</div><div>Age: 20</div>
+            </li>
+            <span data-item-id="1">just for test</span></span>
+            <span class="testMe" data-item-id="2">
+            <li>
+            <div>Id: 2</div><div>Name: Mary</div><div>Age: 21</div>
+            </li>
+            <span data-item-id="2">just for test</span></span>
+            </ul>
+            <div>Page <b>1</b> of <b>1</b></div>
+            </div>
+            HTML,
+            ListView::widget()
+                ->afterItem(static fn (ListItemContext $context) => '<span data-item-id="' . $context->data['id'] . '">just for test</span></span>')
+                ->beforeItem(static fn (ListItemContext $context) => '<span class="testMe" data-item-id="' . $context->data['id'] . '">')
                 ->itemView(dirname(__DIR__) . '/Support/view/_listview.php')
                 ->dataReader($this->createOffsetPaginator($this->data, 10))
                 ->render(),
@@ -122,7 +152,7 @@ final class BaseTest extends TestCase
             HTML,
             ListView::widget()
                 ->itemView(
-                    fn (array $data) => '<div>' . $data['id'] . '</div><div>' . $data['name'] . '</div>' . PHP_EOL
+                    fn (ListItemContext $context) => '<div>' . $context->data['id'] . '</div><div>' . $context->data['name'] . '</div>' . PHP_EOL
                 )
                 ->dataReader($this->createOffsetPaginator($this->data, 10))
                 ->render(),
@@ -426,10 +456,10 @@ final class BaseTest extends TestCase
             HTML,
             ListView::widget()
                 ->itemView(dirname(__DIR__) . '/Support/view/_listview.php')
-                ->itemViewAttributes(static fn (array $data, $key, $index, $widget) => [
-                    'data-item-id' => $data['id'],
-                    'data-item-key' => $key,
-                    'data-item-index' => $index,
+                ->itemViewAttributes(static fn (ListItemContext $context) => [
+                    'data-item-id' => $context->data['id'],
+                    'data-item-key' => $context->key,
+                    'data-item-index' => $context->index,
                 ])
                 ->dataReader($this->createOffsetPaginator($this->data, 10))
                 ->separator(PHP_EOL)
@@ -456,7 +486,7 @@ final class BaseTest extends TestCase
             ListView::widget()
                 ->itemView(dirname(__DIR__) . '/Support/view/_listview.php')
                 ->itemViewAttributes([
-                    'class' => static fn(array $data, $key, $index) => "id-{$data['id']}-key-{$key}-index-{$index}",
+                    'class' => static fn(ListItemContext $context) => "id-{$context->data['id']}-key-{$context->key}-index-{$context->index}",
                 ])
                 ->dataReader($this->createOffsetPaginator($this->data, 10))
                 ->separator(PHP_EOL)
@@ -482,8 +512,8 @@ final class BaseTest extends TestCase
             HTML,
             ListView::widget()
                 ->itemView(dirname(__DIR__) . '/Support/view/_listview.php')
-                ->itemViewAttributes(static fn (array $data, $key, $index) => [
-                    'class' => static fn(array $data, $key, $index) => "id-{$data['id']}-key-{$key}-index-{$index}",
+                ->itemViewAttributes(static fn (ListItemContext $context) => [
+                    'class' => static fn(ListItemContext $context) => "id-{$context->data['id']}-key-{$context->key}-index-{$context->index}",
                 ])
                 ->dataReader($this->createOffsetPaginator($this->data, 10))
                 ->separator(PHP_EOL)

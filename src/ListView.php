@@ -69,13 +69,8 @@ final class ListView extends BaseListView
      * It should have the following signature:
      *
      * ```php
-     * function ($data, $key, $index, $widget)
+     * function (ListItemContext $context)
      * ```
-     *
-     * - `$data`: The current data being rendered.
-     * - `$key`: The key value associated with the current data.
-     * - `$index`: The zero-based index of the data in the array.
-     * - `$widget`: The list view object.
      *
      * The return result of the function will be rendered directly.
      *
@@ -173,13 +168,13 @@ final class ListView extends BaseListView
      * signature:
      *
      * ```php
-     * function ($data, $key, $index, $widget)
+     * function (ListItemContext $context)
      * ```
      * Also, each attribute value can be a function too, with the same signature as in:
      *
      * ```php
      * [
-     *     'class' => static fn($data, $key, $index, $widget) => "custom-class-{$data['id']}",
+     *     'class' => static fn(ListItemContext $context) => "custom-class-{$context->data['id']}",
      * ]
      * ```
      * @return ListView
@@ -223,13 +218,11 @@ final class ListView extends BaseListView
     /**
      * Renders a single data model.
      *
-     * @param array|object $data The data to be rendered.
-     * @param mixed $key The key value associated with the data.
-     * @param int $index The zero-based index of the data array.
+     * @param ListItemContext $context
      *
      * @throws ViewNotFoundException If the item view file doesn't exist.
      */
-    protected function renderItem(array|object $data, mixed $key, int $index): string
+    protected function renderItem(ListItemContext $context): string
     {
         $content = '';
 
@@ -242,9 +235,9 @@ final class ListView extends BaseListView
                 $this->itemView,
                 array_merge(
                     [
-                        'data' => $data,
-                        'index' => $index,
-                        'key' => $key,
+                        'data' => $context->data,
+                        'index' => $context->index,
+                        'key' => $context->key,
                         'widget' => $this,
                     ],
                     $this->viewParams
@@ -253,16 +246,16 @@ final class ListView extends BaseListView
         }
 
         if ($this->itemView instanceof Closure) {
-            $content = (string)call_user_func($this->itemView, $data, $key, $index, $this);
+            $content = (string)($this->itemView)($context);
         }
 
         $itemViewAttributes = is_callable($this->itemViewAttributes)
-            ? (array)call_user_func($this->itemViewAttributes, $data, $key, $index, $this)
+            ? (array)($this->itemViewAttributes)($context)
             : $this->itemViewAttributes;
 
         foreach ($itemViewAttributes as $i => $attribute) {
             if (is_callable($attribute)) {
-                $itemViewAttributes[$i] = $attribute($data, $key, $index, $this);
+                $itemViewAttributes[$i] = $attribute($context);
             }
         }
 
@@ -289,13 +282,15 @@ final class ListView extends BaseListView
         foreach (array_values($items) as $index => $value) {
             $key = $keys[$index];
 
-            if ('' !== ($before = $this->renderBeforeItem($value, $key, $index))) {
+            $itemContext = new ListItemContext($value, $key, $index, $this);
+
+            if ('' !== ($before = $this->renderBeforeItem($itemContext))) {
                 $rows[] = $before;
             }
 
-            $rows[] = $this->renderItem($value, $key, $index);
+            $rows[] = $this->renderItem($itemContext);
 
-            if ('' !== ($after = $this->renderAfterItem($value, $key, $index))) {
+            if ('' !== ($after = $this->renderAfterItem($itemContext))) {
                 $rows[] = $after;
             }
         }
@@ -314,20 +309,18 @@ final class ListView extends BaseListView
      *
      * If {@see afterItem} is not a closure, `null` will be returned.
      *
-     * @param array|object $data The data to be rendered.
-     * @param mixed $key The key value associated with the data.
-     * @param int $index The zero-based index of the data.
+     * @param ListItemContext $context context of the item to be rendered.
      *
      * @return string call result when {@see afterItem} is not a closure.
      *
      * {@see afterItem}
      */
-    private function renderAfterItem(array|object $data, mixed $key, int $index): string
+    private function renderAfterItem(ListItemContext $context): string
     {
         $result = '';
 
         if (!empty($this->afterItem)) {
-            $result = (string)call_user_func($this->afterItem, $data, $key, $index, $this);
+            $result = (string)($this->afterItem)($context);
         }
 
         return $result;
@@ -338,20 +331,18 @@ final class ListView extends BaseListView
      *
      * If {@see beforeItem} is not a closure, `null` will be returned.
      *
-     * @param array|object $data The data to be rendered.
-     * @param mixed $key The key value associated with the data.
-     * @param int $index The zero-based index of the data.
+     * @param ListItemContext $context context of the item to be rendered.
      *
      * @return string call result or `null` when {@see beforeItem} is not a closure.
      *
      * {@see beforeItem}
      */
-    private function renderBeforeItem(array|object $data, mixed $key, int $index): string
+    private function renderBeforeItem(ListItemContext $context): string
     {
         $result = '';
 
         if (!empty($this->beforeItem)) {
-            $result = (string)call_user_func($this->beforeItem, $data, $key, $index, $this);
+            $result = (string)($this->beforeItem)($context);
         }
 
         return $result;
