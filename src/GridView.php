@@ -5,10 +5,12 @@ declare(strict_types=1);
 namespace Yiisoft\Yii\DataView;
 
 use Closure;
+use InvalidArgumentException;
 use Psr\Container\ContainerInterface;
 use Stringable;
 use Yiisoft\Arrays\ArrayHelper;
 use Yiisoft\Data\Paginator\PaginatorInterface;
+use Yiisoft\Data\Reader\LimitableDataInterface;
 use Yiisoft\Data\Reader\ReadableDataInterface;
 use Yiisoft\Data\Reader\Sort;
 use Yiisoft\Data\Reader\SortableDataInterface;
@@ -754,5 +756,20 @@ final class GridView extends BaseListView
         }
 
         return $this->columnRenderersCache;
+    }
+
+    public function dataReader(ReadableDataInterface $dataReader): static
+    {
+        if (
+            $dataReader instanceof LimitableDataInterface
+            && $dataReader instanceof SortableDataInterface
+            && $dataReader->getLimit() !== null
+            && $dataReader->getSort() !== null
+        )
+        {
+            throw new InvalidArgumentException('GridView can\'t render both limited and sorted data at the same time.');
+        }
+
+        return parent::dataReader($dataReader);
     }
 }
