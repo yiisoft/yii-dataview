@@ -765,8 +765,7 @@ final class GridView extends BaseListView
             && $dataReader instanceof SortableDataInterface
             && $dataReader->getLimit() !== null
             && $dataReader->getSort() !== null
-        )
-        {
+        ) {
             throw new InvalidArgumentException('GridView can\'t render both limited and sorted data at the same time.');
         }
 
