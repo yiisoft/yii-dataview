@@ -717,6 +717,11 @@ final class GridView extends BaseListView
 
     private function getSort(?ReadableDataInterface $dataReader): ?Sort
     {
+        if ($dataReader instanceof LimitableDataInterface && $dataReader->getLimit() !== null) {
+            // Disable sorting for data reader with pre-defined limit.
+            return null;
+        }
+
         if ($dataReader instanceof PaginatorInterface && $dataReader->isSortable()) {
             return $dataReader->getSort();
         }
@@ -756,19 +761,5 @@ final class GridView extends BaseListView
         }
 
         return $this->columnRenderersCache;
-    }
-
-    public function dataReader(ReadableDataInterface $dataReader): static
-    {
-        if (
-            $dataReader instanceof LimitableDataInterface
-            && $dataReader instanceof SortableDataInterface
-            && $dataReader->getLimit() !== null
-            && $dataReader->getSort() !== null
-        ) {
-            throw new InvalidArgumentException('GridView can\'t render both limited and sorted data at the same time.');
-        }
-
-        return parent::dataReader($dataReader);
     }
 }
