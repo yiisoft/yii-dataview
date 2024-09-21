@@ -91,7 +91,7 @@ final class HeaderContext
             UrlParametersFactory::create(
                 $this->pageToken,
                 $this->pageSize,
-                $this->getLinkSortValue($this->originalSort, $this->sort, $property, $originalProperty),
+                $this->getLinkSortValue($this->originalSort, $this->sort, $property, $property),
                 $this->urlConfig,
             )
         );
