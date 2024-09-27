@@ -494,4 +494,42 @@ final class DataColumnTest extends TestCase
                 ->render()
         );
     }
+
+    public function testColumnClasses(): void
+    {
+        Assert::equalsWithoutLE(
+            <<<HTML
+            <div id="w1-grid">
+            <table>
+            <thead>
+            <tr>
+            <th class="headerClass">Name</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+            <td class="bodyClass">John</td>
+            </tr>
+            <tr>
+            <td class="bodyClass">Mary</td>
+            </tr>
+            </tbody>
+            </table>
+            <div>Page <b>1</b> of <b>1</b></div>
+            </div>
+            HTML,
+            GridView::widget()
+                ->columns(
+                    new DataColumn(
+                        'name',
+                        columnClass: 'columnClass',
+                        headerClass: 'headerClass',
+                        bodyClass: 'bodyClass'
+                    ),
+                )
+                ->id('w1-grid')
+                ->dataReader($this->createOffsetPaginator($this->data, 10))
+                ->render()
+        );
+    }
 }
