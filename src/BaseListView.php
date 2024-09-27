@@ -347,6 +347,11 @@ abstract class BaseListView extends Widget
     ): ReadableDataInterface {
         $dataReader = $this->getDataReader();
 
+        if ($dataReader instanceof LimitableDataInterface && $dataReader->getLimit() !== null) {
+            // Disable sorting for data reader with pre-defined limit.
+            $sort = null;
+        }
+
         if (!$dataReader instanceof PaginatorInterface) {
             if (
                 $dataReader instanceof OffsetableDataInterface
