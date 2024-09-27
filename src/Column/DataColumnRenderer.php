@@ -58,14 +58,20 @@ final class DataColumnRenderer implements FilterableColumnRendererInterface, Ove
     public function renderColumn(ColumnInterface $column, Cell $cell, GlobalContext $context): Cell
     {
         $this->checkColumn($column);
-        return $cell->addAttributes($column->columnAttributes);
+        /** @var DataColumn $column This annotation is for IDE only */
+
+        return $cell
+            ->addClass($column->columnClass)
+            ->addAttributes($column->columnAttributes);
     }
 
     public function renderHeader(ColumnInterface $column, Cell $cell, HeaderContext $context): Cell
     {
         $this->checkColumn($column);
+        /** @var DataColumn $column This annotation is for IDE only */
 
         $cell = $cell
+            ->addClass($column->headerClass)
             ->addAttributes($column->headerAttributes)
             ->encode(false);
 
@@ -91,6 +97,7 @@ final class DataColumnRenderer implements FilterableColumnRendererInterface, Ove
     public function renderFilter(ColumnInterface $column, Cell $cell, FilterContext $context): ?Cell
     {
         $this->checkColumn($column);
+        /** @var DataColumn $column This annotation is for IDE only */
 
         if ($column->property === null || $column->filter === false) {
             return null;
@@ -127,6 +134,8 @@ final class DataColumnRenderer implements FilterableColumnRendererInterface, Ove
     public function makeFilter(ColumnInterface $column, MakeFilterContext $context): ?FilterInterface
     {
         $this->checkColumn($column);
+        /** @var DataColumn $column This annotation is for IDE only */
+
         if ($column->property === null) {
             return null;
         }
@@ -198,6 +207,7 @@ final class DataColumnRenderer implements FilterableColumnRendererInterface, Ove
         }
 
         return $cell
+            ->addClass($column->bodyClass)
             ->addAttributes($attributes)
             ->content($content)
             ->encode(false);
@@ -206,6 +216,7 @@ final class DataColumnRenderer implements FilterableColumnRendererInterface, Ove
     public function renderFooter(ColumnInterface $column, Cell $cell, GlobalContext $context): Cell
     {
         $this->checkColumn($column);
+        /** @var DataColumn $column This annotation is for IDE only */
 
         if ($column->footer !== null) {
             $cell = $cell->content($column->footer);
@@ -263,6 +274,7 @@ final class DataColumnRenderer implements FilterableColumnRendererInterface, Ove
     public function getOverrideOrderFields(ColumnInterface $column): array
     {
         $this->checkColumn($column);
+        /** @var DataColumn $column This annotation is for IDE only */
 
         if ($column->property === null
             || $column->field === null
