@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Yiisoft\Yii\DataView\Tests\Column;
 
 use PHPUnit\Framework\TestCase;
+use Yiisoft\Data\Reader\Iterable\IterableDataReader;
 use Yiisoft\Definitions\Exception\CircularReferenceException;
 use Yiisoft\Definitions\Exception\InvalidConfigException;
 use Yiisoft\Definitions\Exception\NotInstantiableException;
@@ -499,19 +500,22 @@ final class DataColumnTest extends TestCase
     {
         Assert::equalsWithoutLE(
             <<<HTML
-            <div id="w1-grid">
+            <div>
             <table>
+            <colgroup>
+            <col class="columnClassAttr columnClass" custom="columnAttributes">
+            </colgroup>
             <thead>
             <tr>
-            <th class="headerClass" custom="headerAttributes">Name</th>
+            <th class="headerClassAttr headerClass" custom="headerAttributes">Name</th>
             </tr>
             </thead>
             <tbody>
             <tr>
-            <td class="bodyClass" custom="bodyAttributes">John</td>
+            <td class="bodyClassAttr bodyClass" custom="bodyAttributes">John</td>
             </tr>
             <tr>
-            <td class="bodyClass" custom="bodyAttributes">Mary</td>
+            <td class="bodyClassAttr bodyClass" custom="bodyAttributes">Mary</td>
             </tr>
             </tbody>
             </table>
@@ -524,20 +528,23 @@ final class DataColumnTest extends TestCase
                         'name',
                         columnAttributes: [
                             'custom' => 'columnAttributes',
+                            'class' => 'columnClassAttr',
                         ],
                         headerAttributes: [
                             'custom' => 'headerAttributes',
+                            'class' => 'headerClassAttr',
                         ],
                         bodyAttributes: [
                             'custom' => 'bodyAttributes',
+                            'class' => ['bodyClassAttr'],
                         ],
                         columnClass: 'columnClass',
                         headerClass: 'headerClass',
                         bodyClass: 'bodyClass'
                     ),
                 )
-                ->id('w1-grid')
-                ->dataReader($this->createOffsetPaginator($this->data, 10))
+                ->columnGroupEnabled()
+                ->dataReader(new IterableDataReader($this->data))
                 ->render()
         );
     }
