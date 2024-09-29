@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Yiisoft\Yii\DataView\Tests\Column;
 
 use PHPUnit\Framework\TestCase;
+use Yiisoft\Data\Reader\Iterable\IterableDataReader;
 use Yiisoft\Definitions\Exception\CircularReferenceException;
 use Yiisoft\Definitions\Exception\InvalidConfigException;
 use Yiisoft\Definitions\Exception\NotInstantiableException;
@@ -491,6 +492,59 @@ final class DataColumnTest extends TestCase
                 )
                 ->id('w1-grid')
                 ->dataReader($this->createOffsetPaginator($this->data, 10))
+                ->render()
+        );
+    }
+
+    public function testColumnClasses(): void
+    {
+        Assert::equalsWithoutLE(
+            <<<HTML
+            <div>
+            <table>
+            <colgroup>
+            <col class="columnClassAttr columnClass" custom="columnAttributes">
+            </colgroup>
+            <thead>
+            <tr>
+            <th class="headerClassAttr headerClass" custom="headerAttributes">Name</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+            <td class="bodyClassAttr bodyClass" custom="bodyAttributes">John</td>
+            </tr>
+            <tr>
+            <td class="bodyClassAttr bodyClass" custom="bodyAttributes">Mary</td>
+            </tr>
+            </tbody>
+            </table>
+            <div>Page <b>1</b> of <b>1</b></div>
+            </div>
+            HTML,
+            GridView::widget()
+                ->columns(
+                    new DataColumn(
+                        'name',
+                        columnAttributes: [
+                            'custom' => 'columnAttributes',
+                            'class' => 'columnClassAttr',
+                        ],
+                        headerAttributes: [
+                            'custom' => 'headerAttributes',
+                            'class' => 'headerClassAttr',
+                        ],
+                        bodyAttributes: [
+                            'custom' => 'bodyAttributes',
+                            'class' => ['bodyClassAttr'],
+                        ],
+                        columnClass: 'columnClass',
+                        headerClass: 'headerClass',
+                        bodyClass: 'bodyClass'
+                    ),
+                )
+                ->columnGroupEnabled()
+                ->dataReader(new IterableDataReader($this->data))
                 ->render()
         );
     }
