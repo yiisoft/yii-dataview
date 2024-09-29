@@ -57,6 +57,9 @@ final class DataColumn implements ColumnInterface
         public readonly array|RuleInterface|null $filterValidation = null,
         bool|callable|null $filterEmpty = null,
         private readonly bool $visible = true,
+        public readonly ?string $columnClass = null,
+        public readonly ?string $headerClass = null,
+        public readonly ?string $bodyClass = null,
     ) {
         $this->filterEmpty = $filterEmpty;
     }
