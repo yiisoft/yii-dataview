@@ -46,12 +46,20 @@ use function is_string;
 abstract class BaseListView extends Widget
 {
     /**
+     * Page size is fixed to {@see }
+     */
+    public const PAGE_SIZE_FIXED = true;
+    public const PAGE_SIZE_ANY = true;
+
+    /**
      * @psalm-var UrlCreator|null
      */
     protected $urlCreator = null;
     protected UrlConfig $urlConfig;
 
     protected int $defaultPageSize = PaginatorInterface::DEFAULT_PAGE_SIZE;
+
+    protected bool|int|array $pageSizeConstraint = true;
 
     /**
      * A name for {@see CategorySource} used with translator ({@see TranslatorInterface}) by default.
@@ -644,6 +652,28 @@ abstract class BaseListView extends Widget
         }
 
         return $this->defaultPageSize;
+    }
+
+    protected function getPageSizeConstraint(): array|int|bool
+    {
+        return $this->pageSizeConstraint;
+    }
+
+    /**
+     * Get a new instance with page size constraint set.
+     *
+     * @param array|int|bool $pageSizeConstraint Page size constraint.
+     * `true` - default only.
+     * `false` - no constraint.
+     * int - maximum page size.
+     * [int, int, ...] - a list of page sizes to choose from.
+     * @return static New instance.
+     */
+    public function withDefaultPageSizeConstraint(array|int|bool $pageSizeConstraint): static
+    {
+        $new = clone $this;
+        $new->pageSizeConstraint = $pageSizeConstraint;
+        return $new;
     }
 
     private function renderPagination(): string
