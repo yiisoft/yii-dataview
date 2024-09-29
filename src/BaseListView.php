@@ -662,7 +662,7 @@ abstract class BaseListView extends Widget
     /**
      * Get a new instance with page size constraint set.
      *
-     * @param array|int|bool $pageSizeConstraint Page size constraint.
+     * @param array|bool|int $pageSizeConstraint Page size constraint.
      * `true` - default only.
      * `false` - no constraint.
      * int - maximum page size.
