@@ -503,15 +503,15 @@ final class DataColumnTest extends TestCase
             <table>
             <thead>
             <tr>
-            <th class="headerClass">Name</th>
+            <th class="headerClass" custom="headerAttributes">Name</th>
             </tr>
             </thead>
             <tbody>
             <tr>
-            <td class="bodyClass">John</td>
+            <td class="bodyClass" custom="bodyAttributes">John</td>
             </tr>
             <tr>
-            <td class="bodyClass">Mary</td>
+            <td class="bodyClass" custom="bodyAttributes">Mary</td>
             </tr>
             </tbody>
             </table>
@@ -522,6 +522,15 @@ final class DataColumnTest extends TestCase
                 ->columns(
                     new DataColumn(
                         'name',
+                        columnAttributes: [
+                            'custom' => 'columnAttributes',
+                        ],
+                        headerAttributes: [
+                            'custom' => 'headerAttributes',
+                        ],
+                        bodyAttributes: [
+                            'custom' => 'bodyAttributes',
+                        ],
                         columnClass: 'columnClass',
                         headerClass: 'headerClass',
                         bodyClass: 'bodyClass'
