@@ -61,8 +61,8 @@ final class DataColumnRenderer implements FilterableColumnRendererInterface, Ove
         /** @var DataColumn $column This annotation is for IDE only */
 
         return $cell
-            ->addClass($column->columnClass)
-            ->addAttributes($column->columnAttributes);
+            ->addAttributes($column->columnAttributes)
+            ->addClass($column->columnClass);
     }
 
     public function renderHeader(ColumnInterface $column, Cell $cell, HeaderContext $context): Cell
@@ -71,8 +71,8 @@ final class DataColumnRenderer implements FilterableColumnRendererInterface, Ove
         /** @var DataColumn $column This annotation is for IDE only */
 
         $cell = $cell
-            ->addClass($column->headerClass)
             ->addAttributes($column->headerAttributes)
+            ->addClass($column->headerClass)
             ->encode(false);
 
         if ($column->header === null) {
@@ -207,8 +207,8 @@ final class DataColumnRenderer implements FilterableColumnRendererInterface, Ove
         }
 
         return $cell
-            ->addClass($column->bodyClass)
             ->addAttributes($attributes)
+            ->addClass($column->bodyClass)
             ->content($content)
             ->encode(false);
     }
