@@ -9,6 +9,7 @@ use Psr\Container\ContainerInterface;
 use Stringable;
 use Yiisoft\Arrays\ArrayHelper;
 use Yiisoft\Data\Paginator\PaginatorInterface;
+use Yiisoft\Data\Reader\LimitableDataInterface;
 use Yiisoft\Data\Reader\ReadableDataInterface;
 use Yiisoft\Data\Reader\Sort;
 use Yiisoft\Data\Reader\SortableDataInterface;
@@ -715,6 +716,11 @@ final class GridView extends BaseListView
 
     private function getSort(?ReadableDataInterface $dataReader): ?Sort
     {
+        if ($dataReader instanceof LimitableDataInterface && $dataReader->getLimit() !== null) {
+            // Disable sorting for data reader with pre-defined limit.
+            return null;
+        }
+
         if ($dataReader instanceof PaginatorInterface && $dataReader->isSortable()) {
             return $dataReader->getSort();
         }
