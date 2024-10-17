@@ -67,7 +67,7 @@ abstract class BaseListView extends Widget
     protected int $defaultPageSize = PaginatorInterface::DEFAULT_PAGE_SIZE;
 
     /**
-     * @var bool|int|array Page size constraint.
+     * @var array|bool|int Page size constraint.
      *  - `true` - default only.
      *  - `false` - no constraint.
      *  - int - maximum page size.
@@ -693,7 +693,7 @@ abstract class BaseListView extends Widget
     /**
      * Get page size constraint.
      *
-     * @return array|int|bool Page size constraint.
+     * @return array|bool|int Page size constraint.
      * - `true` - default only.
      * - `false` - no constraint.
      * - int - maximum page size.
