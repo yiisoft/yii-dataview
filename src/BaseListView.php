@@ -46,12 +46,34 @@ use function is_string;
 abstract class BaseListView extends Widget
 {
     /**
+     * Page size is fixed to default value.
+     */
+    public const PAGE_SIZE_FIXED = true;
+
+    /**
+     * Page size could be any value.
+     */
+    public const PAGE_SIZE_ANY = false;
+
+    /**
      * @psalm-var UrlCreator|null
      */
     protected $urlCreator = null;
     protected UrlConfig $urlConfig;
 
+    /**
+     * @var int Page size that is used in case it is not set explicitly.
+     */
     protected int $defaultPageSize = PaginatorInterface::DEFAULT_PAGE_SIZE;
+
+    /**
+     * @var array|bool|int Page size constraint.
+     *  - `true` - default only.
+     *  - `false` - no constraint.
+     *  - int - maximum page size.
+     *  -  [int, int, ...] - a list of page sizes to choose from.
+     */
+    protected bool|int|array $pageSizeConstraint = true;
 
     /**
      * A name for {@see CategorySource} used with translator ({@see TranslatorInterface}) by default.
@@ -345,6 +367,8 @@ abstract class BaseListView extends Widget
         ?string $sort,
         array $filters,
     ): ReadableDataInterface {
+        $this->assertPageSizeIsCorrect($pageSize);
+
         $dataReader = $this->getDataReader();
 
         if (!$dataReader instanceof PaginatorInterface) {
@@ -398,6 +422,26 @@ abstract class BaseListView extends Widget
         }
 
         return $dataReader;
+    }
+
+    private function assertPageSizeIsCorrect(?string $pageSize): void
+    {
+        if ($this->pageSizeConstraint === false) {
+            return;
+        }
+
+        if ($this->pageSizeConstraint && $pageSize !== null && (int)$pageSize !== $this->getDefaultPageSize()) {
+            throw new InvalidArgumentException('Page size can not be changed.');
+        }
+
+        if (is_int($this->pageSizeConstraint) && (int)$pageSize <= $this->pageSizeConstraint) {
+            throw new InvalidArgumentException("Maximum page size is $this->pageSizeConstraint.");
+        }
+
+        if (is_array($this->pageSizeConstraint) && !in_array($pageSize, $this->pageSizeConstraint, false)) {
+            $allowedSizes = implode(', ', $this->pageSizeConstraint);
+            throw new InvalidArgumentException("Page size must be one of $allowedSizes.");
+        }
     }
 
     /**
@@ -644,6 +688,37 @@ abstract class BaseListView extends Widget
         }
 
         return $this->defaultPageSize;
+    }
+
+    /**
+     * Get page size constraint.
+     *
+     * @return array|bool|int Page size constraint.
+     * - `true` - default only.
+     * - `false` - no constraint.
+     * - int - maximum page size.
+     * -  [int, int, ...] - a list of page sizes to choose from.
+     */
+    protected function getPageSizeConstraint(): array|int|bool
+    {
+        return $this->pageSizeConstraint;
+    }
+
+    /**
+     * Get a new instance with a page size constraint set.
+     *
+     * @param array|bool|int $pageSizeConstraint Page size constraint.
+     * `true` - default only.
+     * `false` - no constraint.
+     * int - maximum page size.
+     * [int, int, ...] - a list of page sizes to choose from.
+     * @return static New instance.
+     */
+    public function withPageSizeConstraint(array|int|bool $pageSizeConstraint): static
+    {
+        $new = clone $this;
+        $new->pageSizeConstraint = $pageSizeConstraint;
+        return $new;
     }
 
     private function renderPagination(): string
