@@ -706,6 +706,6 @@ final class BaseTest extends TestCase
             ->tableAttributes(['class' => 'table table-striped table-bordered'])
             ->render();
 
-            $this->assertStringNotContainsString('sort=', $output);
+        $this->assertStringNotContainsString('sort=', $output);
     }
 }
