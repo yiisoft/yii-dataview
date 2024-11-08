@@ -716,11 +716,6 @@ final class GridView extends BaseListView
 
     private function getSort(?ReadableDataInterface $dataReader): ?Sort
     {
-        if ($dataReader instanceof LimitableDataInterface && $dataReader->getLimit() !== null) {
-            // Disable sorting for data reader with pre-defined limit.
-            return null;
-        }
-
         if ($dataReader instanceof PaginatorInterface && $dataReader->isSortable()) {
             return $dataReader->getSort();
         }
