@@ -688,7 +688,6 @@ final class BaseTest extends TestCase
             ->withLimit(10);
 
         $paginator = (new OffsetPaginator($data))
-
             ->withPageSize(1);
 
         $output = GridView::widget()
