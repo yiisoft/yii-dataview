@@ -9,7 +9,6 @@ use Psr\Container\ContainerInterface;
 use Stringable;
 use Yiisoft\Arrays\ArrayHelper;
 use Yiisoft\Data\Paginator\PaginatorInterface;
-use Yiisoft\Data\Reader\LimitableDataInterface;
 use Yiisoft\Data\Reader\ReadableDataInterface;
 use Yiisoft\Data\Reader\Sort;
 use Yiisoft\Data\Reader\SortableDataInterface;
