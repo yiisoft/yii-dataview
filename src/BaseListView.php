@@ -430,11 +430,11 @@ abstract class BaseListView extends Widget
             return;
         }
 
-        if ($this->pageSizeConstraint && $pageSize !== null && (int)$pageSize !== $this->getDefaultPageSize()) {
+        if ($this->pageSizeConstraint === true && $pageSize !== null && (int)$pageSize !== $this->getDefaultPageSize()) {
             throw new InvalidArgumentException('Page size can not be changed.');
         }
 
-        if (is_int($this->pageSizeConstraint) && (int)$pageSize <= $this->pageSizeConstraint) {
+        if (is_int($this->pageSizeConstraint) && (int)$pageSize > $this->pageSizeConstraint) {
             throw new InvalidArgumentException("Maximum page size is $this->pageSizeConstraint.");
         }
 
@@ -714,7 +714,7 @@ abstract class BaseListView extends Widget
      * [int, int, ...] - a list of page sizes to choose from.
      * @return static New instance.
      */
-    public function withPageSizeConstraint(array|int|bool $pageSizeConstraint): static
+    public function pageSizeConstraint(array|int|bool $pageSizeConstraint): static
     {
         $new = clone $this;
         $new->pageSizeConstraint = $pageSizeConstraint;

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Yiisoft\Yii\DataView\Tests\ListView;
 
+use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 use Yiisoft\Definitions\Exception\CircularReferenceException;
 use Yiisoft\Definitions\Exception\InvalidConfigException;
@@ -12,6 +13,7 @@ use Yiisoft\Factory\NotFoundException;
 use Yiisoft\Yii\DataView\ListItemContext;
 use Yiisoft\Yii\DataView\ListView;
 use Yiisoft\Yii\DataView\Tests\Support\Assert;
+use Yiisoft\Yii\DataView\Tests\Support\SimpleUrlParameterProvider;
 use Yiisoft\Yii\DataView\Tests\Support\TestTrait;
 
 final class BaseTest extends TestCase
@@ -519,5 +521,46 @@ final class BaseTest extends TestCase
                 ->separator(PHP_EOL)
                 ->render(),
         );
+    }
+
+    public function testDefaultPageSizeConstraint(): void
+    {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Page size can not be changed');
+
+        $parameters = ['pagesize' => 10];
+
+        ListView::widget()
+            ->dataReader($this->createOffsetPaginator($this->data, 5))
+            ->urlParameterProvider(new SimpleUrlParameterProvider($parameters))
+            ->render();
+    }
+
+    public function testMaximumPageSizeConstraint(): void
+    {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Maximum page size is 3.');
+
+        $parameters = ['pagesize' => 10];
+
+        ListView::widget()
+            ->dataReader($this->createOffsetPaginator($this->data, 5))
+            ->urlParameterProvider(new SimpleUrlParameterProvider($parameters))
+            ->pageSizeConstraint(3)
+            ->render();
+    }
+
+    public function testListPageSizeConstraint(): void
+    {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Page size must be one of 3, 5, 7.');
+
+        $parameters = ['pagesize' => 10];
+
+        ListView::widget()
+            ->dataReader($this->createOffsetPaginator($this->data, 5))
+            ->urlParameterProvider(new SimpleUrlParameterProvider($parameters))
+            ->pageSizeConstraint([3, 5, 7])
+            ->render();
     }
 }
