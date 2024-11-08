@@ -36,7 +36,6 @@ use Yiisoft\Yii\DataView\Exception\DataReaderNotSetException;
 
 use function is_array;
 use function is_string;
-use function PHPUnit\Framework\returnArgument;
 
 /**
  * @psalm-type UrlArguments = array<string,scalar|Stringable|null>
