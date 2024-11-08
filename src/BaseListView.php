@@ -36,6 +36,7 @@ use Yiisoft\Yii\DataView\Exception\DataReaderNotSetException;
 
 use function is_array;
 use function is_string;
+use function PHPUnit\Framework\returnArgument;
 
 /**
  * @psalm-type UrlArguments = array<string,scalar|Stringable|null>
@@ -691,20 +692,6 @@ abstract class BaseListView extends Widget
     }
 
     /**
-     * Get page size constraint.
-     *
-     * @return array|bool|int Page size constraint.
-     * - `true` - default only.
-     * - `false` - no constraint.
-     * - int - maximum page size.
-     * -  [int, int, ...] - a list of page sizes to choose from.
-     */
-    protected function getPageSizeConstraint(): array|int|bool
-    {
-        return $this->pageSizeConstraint;
-    }
-
-    /**
      * Get a new instance with a page size constraint set.
      *
      * @param array|bool|int $pageSizeConstraint Page size constraint.
@@ -757,6 +744,7 @@ abstract class BaseListView extends Widget
         }
 
         return $pagination
+            ->pageSizeConstraint($this->pageSizeConstraint)
             ->defaultPageSize($this->getDefaultPageSize())
             ->urlConfig($this->urlConfig)
             ->render();

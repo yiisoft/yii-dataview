@@ -5,9 +5,11 @@ declare(strict_types=1);
 namespace Yiisoft\Yii\DataView;
 
 use InvalidArgumentException;
+use LogicException;
 use Yiisoft\Data\Paginator\PageToken;
 use Yiisoft\Data\Paginator\PaginatorInterface;
 use Yiisoft\Html\Html;
+use Yiisoft\Http\Method;
 use Yiisoft\Widget\Widget;
 
 use function call_user_func_array;
@@ -18,12 +20,23 @@ use function call_user_func_array;
 abstract class BasePagination extends Widget
 {
     /**
+     * @var array|bool|int Page size constraint.
+     *  - `true` - default only.
+     *  - `false` - no constraint.
+     *  - int - maximum page size.
+     *  -  [int, int, ...] - a list of page sizes to choose from.
+     */
+    private bool|int|array $pageSizeConstraint = true;
+
+    /**
      * @psalm-var UrlCreator|null
      */
     private $urlCreator;
     private UrlConfig $urlConfig;
 
     private int $defaultPageSize = PaginatorInterface::DEFAULT_PAGE_SIZE;
+
+
 
     /**
      * @psalm-var non-empty-string|null
@@ -172,7 +185,39 @@ abstract class BasePagination extends Widget
             $result .= "\n" . Html::closeTag($this->containerTag);
         }
 
+        $result .= $this->renderPageSize();
+
         return $result;
+    }
+
+    private function renderPageSize(): string
+    {
+        $out = Html::openTag('nav', ['class' => 'pageSize']);
+
+        $form = Html::form($this->getPageSizeItem()->url, Method::GET);
+        $out .= $form->open();
+
+        if (is_int($this->pageSizeConstraint)) {
+            $out .= Html::textInput(
+                $this->urlConfig->getPageSizeParameterName(),
+                $this->getPaginator()->getPageSize(),
+                ['class' => 'form-control']
+            );
+        } elseif (is_array($this->pageSizeConstraint)) {
+            $options = array_combine($this->pageSizeConstraint, $this->pageSizeConstraint);
+            $out .= Html::select($this->urlConfig->getPageSizeParameterName())
+                ->optionsData($options)
+                ->value($this->getPaginator()->getPageSize());
+        } else {
+            return '';
+        }
+
+        $out .= Html::submitButton();
+        $out .= $form->close();
+
+        $out .= Html::closeTag('nav');
+
+        return $out;
     }
 
     /**
@@ -202,15 +247,19 @@ abstract class BasePagination extends Widget
     /**
      * Creates the URL suitable for pagination with the specified page number. This method is mainly called by pagers
      * when creating URLs used to perform pagination.
+     *
+     * @param PageToken $pageToken Token for the page.
+     * @param int|null $pageSize Page size to change to.
+     * @return string Created URL.
      */
-    protected function createUrl(PageToken $pageToken): string
+    protected function createUrl(PageToken $pageToken, ?int $pageSize = null): string
     {
         if ($this->urlCreator === null) {
             return '#' . $pageToken->value;
         }
 
         $paginator = $this->getPaginator();
-        $pageSize = $paginator->getPageSize();
+        $pageSize = $pageSize ?? $paginator->getPageSize();
         $sort = $paginator->getSort()?->getOrderAsString();
 
         return call_user_func_array(
@@ -222,6 +271,55 @@ abstract class BasePagination extends Widget
                 $this->urlConfig,
             )
         );
+    }
+
+    private function getPageSizeItem(): PaginationItem
+    {
+        $first = null;
+        foreach ($this->getItems() as $item) {
+            if ($first === null) {
+                $first = $item;
+            }
+            if ($item->isCurrent) {
+                return $item;
+            }
+        }
+        if ($first !== null) {
+            return $first;
+        }
+
+        throw new LogicException('Page size item is missing.');
+    }
+
+    /**
+     * Get page size constraint.
+     *
+     * @return array|bool|int Page size constraint.
+     * - `true` - default only.
+     * - `false` - no constraint.
+     * - int - maximum page size.
+     * -  [int, int, ...] - a list of page sizes to choose from.
+     */
+    public function getPageSizeConstraint(): array|int|bool
+    {
+        return $this->pageSizeConstraint;
+    }
+
+    /**
+     * Get a new instance with a page size constraint set.
+     *
+     * @param array|bool|int $pageSizeConstraint Page size constraint.
+     * `true` - default only.
+     * `false` - no constraint.
+     * int - maximum page size.
+     * [int, int, ...] - a list of page sizes to choose from.
+     * @return static New instance.
+     */
+    public function pageSizeConstraint(array|int|bool $pageSizeConstraint): static
+    {
+        $new = clone $this;
+        $new->pageSizeConstraint = $pageSizeConstraint;
+        return $new;
     }
 
     /**

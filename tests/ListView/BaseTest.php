@@ -526,7 +526,7 @@ final class BaseTest extends TestCase
     public function testDefaultPageSizeConstraint(): void
     {
         $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage('Page size can not be changed');
+        $this->expectExceptionMessage('Page size can not be changed.');
 
         $parameters = ['pagesize' => 10];
 
