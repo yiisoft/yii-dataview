@@ -528,7 +528,7 @@ final class BaseTest extends TestCase
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('Page size can not be changed.');
 
-        $parameters = ['pagesize' => 10];
+        $parameters = ['pagesize' => '10'];
 
         ListView::widget()
             ->dataReader($this->createOffsetPaginator($this->data, 5))
@@ -541,7 +541,7 @@ final class BaseTest extends TestCase
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('Maximum page size is 3.');
 
-        $parameters = ['pagesize' => 10];
+        $parameters = ['pagesize' => '10'];
 
         ListView::widget()
             ->dataReader($this->createOffsetPaginator($this->data, 5))
@@ -555,7 +555,7 @@ final class BaseTest extends TestCase
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('Page size must be one of 3, 5, 7.');
 
-        $parameters = ['pagesize' => 10];
+        $parameters = ['pagesize' => '10'];
 
         ListView::widget()
             ->dataReader($this->createOffsetPaginator($this->data, 5))
