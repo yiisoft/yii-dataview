@@ -259,7 +259,7 @@ abstract class BasePagination extends Widget
         }
 
         $paginator = $this->getPaginator();
-        $pageSize = $pageSize ?? $paginator->getPageSize();
+        $pageSize ??= $paginator->getPageSize();
         $sort = $paginator->getSort()?->getOrderAsString();
 
         return call_user_func_array(
