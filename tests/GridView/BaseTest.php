@@ -682,13 +682,13 @@ final class BaseTest extends TestCase
 
     public function testNoSortInUrlWhenLimited(): void
     {
+        $sort = Sort::any()->withOrder(['id' => 'asc', 'name' => 'asc']);
         $data = (new IterableDataReader($this->data))
+            ->withSort($sort)
             ->withLimit(10);
 
-        $sort = Sort::any()->withOrder(['id' => 'asc', 'name' => 'asc']);
-
         $paginator = (new OffsetPaginator($data))
-            ->withSort($sort)
+
             ->withPageSize(1);
 
         $output = GridView::widget()
