@@ -159,14 +159,14 @@ abstract class BasePagination extends Widget
                 $html .= Html::openTag($this->itemTag, $attributes);
             }
 
-            $attributes = $this->linkAttributes;
+            $linkAttributes = $this->linkAttributes;
             if ($item->isDisabled) {
-                Html::addCssClass($attributes, $this->disabledLinkClass);
+                Html::addCssClass($linkAttributes, $this->disabledLinkClass);
             }
             if ($item->isCurrent) {
-                Html::addCssClass($attributes, $this->currentLinkClass);
+                Html::addCssClass($linkAttributes, $this->currentLinkClass);
             }
-            $html .= Html::a($item->label, $item->url, $attributes);
+            $html .= Html::a($item->label, $item->url, $linkAttributes);
 
             if ($this->itemTag !== null) {
                 $html .= Html::closeTag($this->itemTag);
@@ -260,7 +260,7 @@ abstract class BasePagination extends Widget
 
         $paginator = $this->getPaginator();
         $pageSize ??= $paginator->getPageSize();
-        $sort = $paginator->getSort()?->getOrderAsString();
+        $sort = $paginator->isSortable() ? $paginator->getSort()?->getOrderAsString() : null;
 
         return call_user_func_array(
             $this->urlCreator,
