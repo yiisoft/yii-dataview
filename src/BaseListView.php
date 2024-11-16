@@ -34,6 +34,7 @@ use Yiisoft\Widget\Widget;
 use Yiisoft\Data\Reader\OrderHelper;
 use Yiisoft\Yii\DataView\Exception\DataReaderNotSetException;
 
+use function extension_loaded;
 use function is_array;
 use function is_string;
 
@@ -646,6 +647,17 @@ abstract class BaseListView extends Widget
         return $this->defaultPageSize;
     }
 
+    /**
+     * Returns order field names that should be replaced in URL sort argument.
+     * Format: `['field_name_in_url' => 'real_field_name']`.
+     *
+     * @psalm-return array<string, string>
+     */
+    protected function getOverrideOrderFields(): array
+    {
+        return [];
+    }
+
     private function renderPagination(): string
     {
         $preparedDataReader = $this->preparedDataReader;
@@ -681,7 +693,12 @@ abstract class BaseListView extends Widget
             $pagination = $pagination->urlCreator($this->urlCreator);
         }
 
+        $context = new PaginationContext(
+            $this->getOverrideOrderFields(),
+        );
+
         return $pagination
+            ->context($context)
             ->defaultPageSize($this->getDefaultPageSize())
             ->urlConfig($this->urlConfig)
             ->render();
