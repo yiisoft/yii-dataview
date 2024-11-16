@@ -34,6 +34,7 @@ use Yiisoft\Widget\Widget;
 use Yiisoft\Data\Reader\OrderHelper;
 use Yiisoft\Yii\DataView\Exception\DataReaderNotSetException;
 
+use function array_slice;
 use function extension_loaded;
 use function is_array;
 use function is_string;
