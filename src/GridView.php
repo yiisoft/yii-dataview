@@ -545,20 +545,11 @@ final class GridView extends BaseListView
             $blocks[] = Html::colgroup()->columns(...$tags)->render();
         }
 
-        $overrideOrderFields = [];
-        foreach ($columns as $i => $column) {
-            if ($renderers[$i] instanceof OverrideOrderFieldsColumnInterface) {
-                $overrideOrderFields[] = $renderers[$i]->getOverrideOrderFields($column);
-            }
-        }
-
-        $overrideOrderFields = array_merge(...$overrideOrderFields);
-
         if ($this->headerTableEnabled) {
             $headerContext = new HeaderContext(
                 $this->getSort($dataReader),
                 $this->getSort($this->preparedDataReader),
-                $overrideOrderFields,
+                $this->getOverrideOrderFields(),
                 $this->sortableHeaderClass,
                 $this->sortableHeaderPrepend,
                 $this->sortableHeaderAppend,
@@ -700,6 +691,21 @@ final class GridView extends BaseListView
                 }
             }
         }
+    }
+
+    protected function getOverrideOrderFields(): array
+    {
+        $columns = $this->getColumns();
+        $renderers = $this->getColumnRenderers();
+
+        $overrideOrderFields = [];
+        foreach ($columns as $i => $column) {
+            if ($renderers[$i] instanceof OverrideOrderFieldsColumnInterface) {
+                $overrideOrderFields[] = $renderers[$i]->getOverrideOrderFields($column);
+            }
+        }
+
+        return array_merge(...$overrideOrderFields);
     }
 
     private function prepareBodyAttributes(array $attributes, DataContext $context): array

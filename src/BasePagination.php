@@ -8,10 +8,12 @@ use InvalidArgumentException;
 use LogicException;
 use Yiisoft\Data\Paginator\PageToken;
 use Yiisoft\Data\Paginator\PaginatorInterface;
+use Yiisoft\Data\Reader\OrderHelper;
 use Yiisoft\Html\Html;
 use Yiisoft\Http\Method;
 use Yiisoft\Widget\Widget;
 
+use function array_key_exists;
 use function call_user_func_array;
 
 /**
@@ -19,6 +21,8 @@ use function call_user_func_array;
  */
 abstract class BasePagination extends Widget
 {
+    private ?PaginationContext $context = null;
+
     /**
      * @var array|bool|int Page size constraint.
      *  - `true` - default only.
@@ -61,6 +65,13 @@ abstract class BasePagination extends Widget
     private ?string $currentLinkClass = null;
     private ?string $disabledItemClass = null;
     private ?string $disabledLinkClass = null;
+
+    final public function context(?PaginationContext $context): static
+    {
+        $new = clone $this;
+        $new->context = $context;
+        return $new;
+    }
 
     final public function listTag(?string $tag): static
     {
@@ -260,7 +271,7 @@ abstract class BasePagination extends Widget
 
         $paginator = $this->getPaginator();
         $pageSize ??= $paginator->getPageSize();
-        $sort = $paginator->isSortable() ? $paginator->getSort()?->getOrderAsString() : null;
+        $sort = $this->getSort($paginator, $this->context);
 
         return call_user_func_array(
             $this->urlCreator,
@@ -330,4 +341,31 @@ abstract class BasePagination extends Widget
     abstract protected function getPaginator(): PaginatorInterface;
 
     abstract protected function isFirstPage(PageToken $token): bool;
+
+    private function getSort(PaginatorInterface $paginator, ?PaginationContext $context): ?string
+    {
+        if (!$paginator->isSortable()) {
+            return null;
+        }
+
+        $sort = $paginator->getSort();
+        if ($sort === null) {
+            return null;
+        }
+
+        if ($context === null) {
+            return $sort->getOrderAsString();
+        }
+
+        $order = [];
+        $overrideOrderFields = array_flip($context->overrideOrderFields);
+        foreach ($sort->getOrder() as $name => $value) {
+            $key = array_key_exists($name, $overrideOrderFields)
+                ? $overrideOrderFields[$name]
+                : $name;
+            $order[$key] = $value;
+        }
+
+        return OrderHelper::arrayToString($order);
+    }
 }

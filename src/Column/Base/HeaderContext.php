@@ -16,6 +16,9 @@ use Yiisoft\Data\Reader\OrderHelper;
 use Yiisoft\Yii\DataView\UrlConfig;
 use Yiisoft\Yii\DataView\UrlParametersFactory;
 
+use function call_user_func_array;
+use function count;
+
 /**
  * @psalm-import-type UrlCreator from BaseListView
  */
@@ -24,7 +27,7 @@ final class HeaderContext
     /**
      * @internal
      *
-     * @psalm-param array<string,string> $overrideOrderFields
+     * @psalm-param array<string, string> $overrideOrderFields
      * @psalm-param UrlCreator|null $urlCreator
      */
     public function __construct(
