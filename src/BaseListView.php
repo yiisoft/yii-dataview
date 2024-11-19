@@ -36,13 +36,16 @@ use Yiisoft\Yii\DataView\Exception\DataReaderNotSetException;
 
 use function array_slice;
 use function extension_loaded;
+use function in_array;
 use function is_array;
+use function is_int;
 use function is_string;
 
 /**
  * @psalm-type UrlArguments = array<string,scalar|Stringable|null>
  * @psalm-type UrlCreator = callable(UrlArguments,array):string
  * @psalm-type PageNotFoundExceptionCallback = callable(PageNotFoundException):void
+ * @psalm-type PageSizeConstraint = list<positive-int>|positive-int|bool
  * @psalm-import-type TOrder from Sort
  */
 abstract class BaseListView extends Widget
@@ -65,6 +68,7 @@ abstract class BaseListView extends Widget
 
     /**
      * @var int Page size that is used in case it is not set explicitly.
+     * @psalm-var positive-int
      */
     protected int $defaultPageSize = PaginatorInterface::DEFAULT_PAGE_SIZE;
 
@@ -74,6 +78,7 @@ abstract class BaseListView extends Widget
      *  - `false` - no constraint.
      *  - int - maximum page size.
      *  -  [int, int, ...] - a list of page sizes to choose from.
+     * @psalm-var PageSizeConstraint
      */
     protected bool|int|array $pageSizeConstraint = true;
 
@@ -369,8 +374,6 @@ abstract class BaseListView extends Widget
         ?string $sort,
         array $filters,
     ): ReadableDataInterface {
-        $this->assertPageSizeIsCorrect($pageSize);
-
         $dataReader = $this->getDataReader();
 
         if (!$dataReader instanceof PaginatorInterface) {
@@ -396,9 +399,9 @@ abstract class BaseListView extends Widget
         }
 
         if ($dataReader->isPaginationRequired()) {
-            if ($pageSize !== null) {
-                $dataReader = $dataReader->withPageSize((int) $pageSize);
-            }
+            $dataReader = $dataReader->withPageSize(
+                $this->preparePageSize($pageSize) ?? $this->getDefaultPageSize()
+            );
 
             if ($page !== null) {
                 $dataReader = $dataReader->withToken(PageToken::next($page));
@@ -424,26 +427,6 @@ abstract class BaseListView extends Widget
         }
 
         return $dataReader;
-    }
-
-    private function assertPageSizeIsCorrect(?string $pageSize): void
-    {
-        if ($this->pageSizeConstraint === false) {
-            return;
-        }
-
-        if ($this->pageSizeConstraint === true && $pageSize !== null && (int)$pageSize !== $this->getDefaultPageSize()) {
-            throw new InvalidArgumentException('Page size can not be changed.');
-        }
-
-        if (is_int($this->pageSizeConstraint) && (int)$pageSize > $this->pageSizeConstraint) {
-            throw new InvalidArgumentException("Maximum page size is $this->pageSizeConstraint.");
-        }
-
-        if (is_array($this->pageSizeConstraint) && !in_array($pageSize, $this->pageSizeConstraint, false)) {
-            $allowedSizes = implode(', ', $this->pageSizeConstraint);
-            throw new InvalidArgumentException("Page size must be one of $allowedSizes.");
-        }
     }
 
     /**
@@ -682,14 +665,29 @@ abstract class BaseListView extends Widget
                 ->render();
     }
 
+    /**
+     * @psalm-return positive-int
+     */
     protected function getDefaultPageSize(): int
     {
         $dataReader = $this->getDataReader();
-        if ($dataReader instanceof PaginatorInterface) {
-            return $dataReader->getPageSize();
+        $pageSize = $dataReader instanceof PaginatorInterface
+            ? $dataReader->getPageSize()
+            : $this->defaultPageSize;
+
+        if (is_int($this->pageSizeConstraint)) {
+            return $pageSize <= $this->pageSizeConstraint
+                ? $pageSize
+                : $this->pageSizeConstraint;
         }
 
-        return $this->defaultPageSize;
+        if (is_array($this->pageSizeConstraint)) {
+            return in_array($pageSize, $this->pageSizeConstraint, true)
+                ? $pageSize
+                : $this->pageSizeConstraint[0];
+        }
+
+        return $pageSize;
     }
 
     /**
@@ -701,6 +699,8 @@ abstract class BaseListView extends Widget
      * int - maximum page size.
      * [int, int, ...] - a list of page sizes to choose from.
      * @return static New instance.
+     *
+     * @psalm-param PageSizeConstraint $pageSizeConstraint
      */
     public function pageSizeConstraint(array|int|bool $pageSizeConstraint): static
     {
@@ -761,7 +761,6 @@ abstract class BaseListView extends Widget
 
         return $pagination
             ->context($context)
-            ->pageSizeConstraint($this->pageSizeConstraint)
             ->defaultPageSize($this->getDefaultPageSize())
             ->urlConfig($this->urlConfig)
             ->render();
@@ -827,6 +826,39 @@ abstract class BaseListView extends Widget
                 ->encode(false)
                 ->render(),
         };
+    }
+
+    /**
+     * @psalm-return positive-int|null
+     */
+    private function preparePageSize(?string $rawPageSize): ?int
+    {
+        if ($this->pageSizeConstraint === true) {
+            return null;
+        }
+
+        if ($rawPageSize === null) {
+            return null;
+        }
+
+        $pageSize = (int) $rawPageSize;
+        if ($pageSize < 1) {
+            return null;
+        }
+
+        if ($this->pageSizeConstraint === false) {
+            return $pageSize;
+        }
+
+        if (is_int($this->pageSizeConstraint) && $pageSize <= $this->pageSizeConstraint) {
+            return $pageSize;
+        }
+
+        if (is_array($this->pageSizeConstraint) && in_array($pageSize, $this->pageSizeConstraint, true)) {
+            return $pageSize;
+        }
+
+        return null;
     }
 
     /**
