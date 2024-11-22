@@ -33,8 +33,14 @@ use Yiisoft\Validator\Result as ValidationResult;
 use Yiisoft\Widget\Widget;
 use Yiisoft\Data\Reader\OrderHelper;
 use Yiisoft\Yii\DataView\Exception\DataReaderNotSetException;
+use Yiisoft\Yii\DataView\PageSize\InputPageSize;
+use Yiisoft\Yii\DataView\PageSize\PageSizeContext;
+use Yiisoft\Yii\DataView\PageSize\PageSizeWidgetInterface;
+use Yiisoft\Yii\DataView\PageSize\SelectPageSize;
 
+use function array_key_exists;
 use function array_slice;
+use function call_user_func_array;
 use function extension_loaded;
 use function in_array;
 use function is_array;
@@ -111,7 +117,9 @@ abstract class BaseListView extends Widget
     private array $emptyTextAttributes = [];
     private string $header = '';
     private array $headerAttributes = [];
-    private string $layout = "{header}\n{toolbar}\n{items}\n{summary}\n{pager}";
+    private string $layout = "{header}\n{toolbar}\n{items}\n{summary}\n{pager}\n{pageSize}";
+
+    private PageSizeWidgetInterface|null $pageSizeWidget = null;
 
     private array $offsetPaginationConfig = [];
     private array $keysetPaginationConfig = [];
@@ -495,6 +503,13 @@ abstract class BaseListView extends Widget
         return $new;
     }
 
+    final public function pageSizeWidget(?PageSizeWidgetInterface $widget): static
+    {
+        $new = clone $this;
+        $new->pageSizeWidget = $widget;
+        return $new;
+    }
+
     public function pagination(string|KeysetPagination|OffsetPagination|null $pagination): static
     {
         $new = clone $this;
@@ -654,6 +669,7 @@ abstract class BaseListView extends Widget
                     '{items}' => $this->renderItems($items, $filterValidationResult),
                     '{summary}' => $this->renderSummary(),
                     '{pager}' => $this->renderPagination(),
+                    '{pageSize}' => $this->renderPageSize(),
                 ],
             )
         );
@@ -764,6 +780,54 @@ abstract class BaseListView extends Widget
             ->defaultPageSize($this->getDefaultPageSize())
             ->urlConfig($this->urlConfig)
             ->render();
+    }
+
+    private function renderPageSize(): string
+    {
+        $dataReader = $this->preparedDataReader;
+        if (!$dataReader instanceof PaginatorInterface) {
+            return '';
+        }
+
+        if ($this->pageSizeWidget === null) {
+            if ($this->pageSizeConstraint === false || is_int($this->pageSizeConstraint)) {
+                $widget = InputPageSize::widget();
+            } elseif (is_array($this->pageSizeConstraint)) {
+                $widget = SelectPageSize::widget();
+            } else {
+                return '';
+            }
+        } else {
+            $widget = $this->pageSizeWidget;
+        }
+
+        if ($this->urlCreator === null) {
+            $urlPattern = '#pagesize=' . PageSizeContext::URL_PLACEHOLDER;
+            $defaultUrl = '#';
+        } else {
+            $sort = $this->getSortValueForUrl($dataReader);
+            $urlPattern = call_user_func_array(
+                $this->urlCreator,
+                UrlParametersFactory::create(
+                    null,
+                    PageSizeContext::URL_PLACEHOLDER,
+                    $sort,
+                    $this->urlConfig
+                ),
+            );
+            $defaultUrl = call_user_func_array(
+                $this->urlCreator,
+                UrlParametersFactory::create(null, null, $sort, $this->urlConfig),
+            );
+        }
+        $context = new PageSizeContext(
+            $dataReader->getPageSize(),
+            $this->getDefaultPageSize(),
+            $this->pageSizeConstraint,
+            $urlPattern,
+            $defaultUrl,
+        );
+        return $widget->withContext($context)->render();
     }
 
     private function renderSummary(): string
@@ -879,5 +943,42 @@ abstract class BaseListView extends Widget
         $translator->addCategorySources($categorySource);
 
         return $translator;
+    }
+
+    private function getSortValueForUrl(PaginatorInterface $paginator): ?string
+    {
+        $sort = $this->getSort($paginator);
+        if ($sort === null) {
+            return null;
+        }
+
+        $originalSort = $this->getSort($this->dataReader);
+        if ($originalSort?->getOrderAsString() === $sort->getOrderAsString()) {
+            return null;
+        }
+
+        $order = [];
+        $overrideOrderFields = array_flip($this->getOverrideOrderFields());
+        foreach ($sort->getOrder() as $name => $value) {
+            $key = array_key_exists($name, $overrideOrderFields)
+                ? $overrideOrderFields[$name]
+                : $name;
+            $order[$key] = $value;
+        }
+
+        return OrderHelper::arrayToString($order);
+    }
+
+    private function getSort(?ReadableDataInterface $dataReader): ?Sort
+    {
+        if ($dataReader instanceof PaginatorInterface && $dataReader->isSortable()) {
+            return $dataReader->getSort();
+        }
+
+        if ($dataReader instanceof SortableDataInterface) {
+            return $dataReader->getSort();
+        }
+
+        return null;
     }
 }

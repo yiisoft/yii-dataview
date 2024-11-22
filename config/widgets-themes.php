@@ -8,10 +8,24 @@ use Yiisoft\Yii\DataView\Filter\Widget\TextInputFilter;
 use Yiisoft\Yii\DataView\GridView;
 use Yiisoft\Yii\DataView\KeysetPagination;
 use Yiisoft\Yii\DataView\OffsetPagination;
+use Yiisoft\Yii\DataView\PageSize\InputPageSize;
+use Yiisoft\Yii\DataView\PageSize\SelectPageSize;
 
 return [
     'bootstrap5' => [
         GridView::class => [
+            'layout()' => [
+                <<<HTML
+                {header}
+                {toolbar}
+                {items}
+                {summary}
+                <div class="row">
+                    <div class="col-md-8">{pager}</div>
+                    <div class="col-md-4 text-end">{pageSize}</div>
+                </div>
+                HTML
+            ],
             'summaryTag()' => ['p'],
             'summaryAttributes()' => [['class' => 'text-secondary']],
             'tableClass()' => ['table table-bordered'],
@@ -53,6 +67,12 @@ return [
             'linkAttributes()' => [['class' => 'page-link']],
             'currentItemClass()' => ['active'],
             'disabledItemClass()' => ['disabled'],
+        ],
+        InputPageSize::class => [
+            'attributes()' => [['class' => 'form-control d-inline text-center', 'style' => 'width:60px']],
+        ],
+        SelectPageSize::class => [
+            'attributes()' => [['class' => 'form-select w-auto d-inline']],
         ],
     ],
 ];
