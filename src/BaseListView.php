@@ -57,16 +57,6 @@ use function is_string;
 abstract class BaseListView extends Widget
 {
     /**
-     * Page size is fixed to default value.
-     */
-    public const PAGE_SIZE_FIXED = true;
-
-    /**
-     * Page size could be any value.
-     */
-    public const PAGE_SIZE_ANY = false;
-
-    /**
      * @psalm-var UrlCreator|null
      */
     protected $urlCreator = null;
@@ -84,6 +74,10 @@ abstract class BaseListView extends Widget
      *  - `false` - no constraint.
      *  - int - maximum page size.
      *  -  [int, int, ...] - a list of page sizes to choose from.
+     *
+     * @see PageSizeContext::FIXED_VALUE
+     * @see PageSizeContext::ANY_VALUE
+     *
      * @psalm-var PageSizeConstraint
      */
     protected bool|int|array $pageSizeConstraint = true;
