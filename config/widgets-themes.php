@@ -26,6 +26,7 @@ return [
                 </div>
                 HTML
             ],
+            'pageSizeTag()' => [null],
             'summaryTag()' => ['p'],
             'summaryAttributes()' => [['class' => 'text-secondary']],
             'tableClass()' => ['table table-bordered'],
@@ -69,10 +70,10 @@ return [
             'disabledItemClass()' => ['disabled'],
         ],
         InputPageSize::class => [
-            'attributes()' => [['class' => 'form-control d-inline text-center', 'style' => 'width:60px']],
+            'attributes()' => [['class' => 'form-control d-inline text-center mx-2', 'style' => 'width:60px']],
         ],
         SelectPageSize::class => [
-            'attributes()' => [['class' => 'form-select w-auto d-inline']],
+            'attributes()' => [['class' => 'form-select w-auto d-inline mx-2']],
         ],
     ],
 ];

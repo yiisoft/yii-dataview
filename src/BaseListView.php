@@ -83,6 +83,14 @@ abstract class BaseListView extends Widget
     protected bool|int|array $pageSizeConstraint = true;
 
     /**
+     * @psalm-var non-empty-string|null
+     */
+    private ?string $pageSizeTag = 'div';
+    private array $pageSizeAttributes = [];
+    private ?string $pageSizeTemplate = 'Results per page: {control}';
+    private PageSizeWidgetInterface|null $pageSizeWidget = null;
+
+    /**
      * A name for {@see CategorySource} used with translator ({@see TranslatorInterface}) by default.
      * @psalm-suppress MissingClassConstType
      */
@@ -112,8 +120,6 @@ abstract class BaseListView extends Widget
     private string $header = '';
     private array $headerAttributes = [];
     private string $layout = "{header}\n{toolbar}\n{items}\n{summary}\n{pager}\n{pageSize}";
-
-    private PageSizeWidgetInterface|null $pageSizeWidget = null;
 
     private array $offsetPaginationConfig = [];
     private array $keysetPaginationConfig = [];
@@ -497,6 +503,46 @@ abstract class BaseListView extends Widget
         return $new;
     }
 
+    final public function pageSizeTag(?string $tag): static
+    {
+        if ($tag === '') {
+            throw new InvalidArgumentException('Tag name cannot be empty.');
+        }
+
+        $new = clone $this;
+        $new->pageSizeTag = $tag;
+        return $new;
+    }
+
+    /**
+     * Returns a new instance with the HTML attributes for page size wrapper tag.
+     *
+     * @param array $values Attribute values indexed by attribute names.
+     */
+    final public function pageSizeAttributes(array $values): static
+    {
+        $new = clone $this;
+        $new->pageSizeAttributes = $values;
+        return $new;
+    }
+
+    /**
+     * Returns a new instance with the page size template.
+     *
+     * @param string|null $template The HTML content to be displayed as the page size control. If you don't want to show
+     * control, you may set it with an empty string or null.
+     *
+     * The following tokens will be replaced with the corresponding values:
+     *
+     * - `{control}` — page size control.
+     */
+    final public function pageSizeTemplate(?string $template): static
+    {
+        $new = clone $this;
+        $new->pageSizeTemplate = $template;
+        return $new;
+    }
+
     final public function pageSizeWidget(?PageSizeWidgetInterface $widget): static
     {
         $new = clone $this;
@@ -778,6 +824,10 @@ abstract class BaseListView extends Widget
 
     private function renderPageSize(): string
     {
+        if (empty($this->pageSizeTemplate)) {
+            return '';
+        }
+
         $dataReader = $this->preparedDataReader;
         if (!$dataReader instanceof PaginatorInterface) {
             return '';
@@ -814,6 +864,7 @@ abstract class BaseListView extends Widget
                 UrlParametersFactory::create(null, null, $sort, $this->urlConfig),
             );
         }
+
         $context = new PageSizeContext(
             $dataReader->getPageSize(),
             $this->getDefaultPageSize(),
@@ -821,7 +872,17 @@ abstract class BaseListView extends Widget
             $urlPattern,
             $defaultUrl,
         );
-        return $widget->withContext($context)->render();
+        $control = $widget->withContext($context)->render();
+
+        $content = $this->translator->translate(
+            $this->pageSizeTemplate,
+            ['control' => $control],
+            $this->translationCategory,
+        );
+
+        return $this->pageSizeTag === null
+            ? $content
+            : Html::tag($this->pageSizeTag, $content, $this->pageSizeAttributes)->encode(false)->render();
     }
 
     private function renderSummary(): string
