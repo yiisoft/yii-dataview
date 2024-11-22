@@ -35,7 +35,7 @@ use Yiisoft\Data\Reader\OrderHelper;
 use Yiisoft\Yii\DataView\Exception\DataReaderNotSetException;
 use Yiisoft\Yii\DataView\PageSize\InputPageSize;
 use Yiisoft\Yii\DataView\PageSize\PageSizeContext;
-use Yiisoft\Yii\DataView\PageSize\PageSizeWidgetInterface;
+use Yiisoft\Yii\DataView\PageSize\PageSizeControlInterface;
 use Yiisoft\Yii\DataView\PageSize\SelectPageSize;
 
 use function array_key_exists;
@@ -88,7 +88,7 @@ abstract class BaseListView extends Widget
     private ?string $pageSizeTag = 'div';
     private array $pageSizeAttributes = [];
     private ?string $pageSizeTemplate = 'Results per page: {control}';
-    private PageSizeWidgetInterface|null $pageSizeWidget = null;
+    private PageSizeControlInterface|null $pageSizeControl = null;
 
     /**
      * A name for {@see CategorySource} used with translator ({@see TranslatorInterface}) by default.
@@ -543,10 +543,10 @@ abstract class BaseListView extends Widget
         return $new;
     }
 
-    final public function pageSizeWidget(?PageSizeWidgetInterface $widget): static
+    final public function pageSizeControl(?PageSizeControlInterface $widget): static
     {
         $new = clone $this;
-        $new->pageSizeWidget = $widget;
+        $new->pageSizeControl = $widget;
         return $new;
     }
 
@@ -833,7 +833,7 @@ abstract class BaseListView extends Widget
             return '';
         }
 
-        if ($this->pageSizeWidget === null) {
+        if ($this->pageSizeControl === null) {
             if ($this->pageSizeConstraint === false || is_int($this->pageSizeConstraint)) {
                 $widget = InputPageSize::widget();
             } elseif (is_array($this->pageSizeConstraint)) {
@@ -842,7 +842,7 @@ abstract class BaseListView extends Widget
                 return '';
             }
         } else {
-            $widget = $this->pageSizeWidget;
+            $widget = $this->pageSizeControl;
         }
 
         if ($this->urlCreator === null) {

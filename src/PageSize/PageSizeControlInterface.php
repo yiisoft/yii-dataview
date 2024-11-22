@@ -6,7 +6,7 @@ namespace Yiisoft\Yii\DataView\PageSize;
 
 use Stringable;
 
-interface PageSizeWidgetInterface extends Stringable
+interface PageSizeControlInterface extends Stringable
 {
     public function withContext(PageSizeContext $context): static;
 
