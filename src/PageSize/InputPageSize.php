@@ -46,7 +46,7 @@ final class InputPageSize extends Widget implements PageSizeWidgetInterface
             'data-default-page-size' => $context->defaultValue,
             'data-url-pattern' => $context->urlPattern,
             'data-default-url' => $context->defaultUrl,
-            'onchange' => 'window.location.href = this.value == this.dataset.defaultPageSize ? this.dataset.defaultUrl : this.dataset.urlPattern.replace("' . PageSizeContext::URL_PLACEHOLDER . '", this.value)'
+            'onchange' => 'window.location.href = this.value == this.dataset.defaultPageSize ? this.dataset.defaultUrl : this.dataset.urlPattern.replace("' . PageSizeContext::URL_PLACEHOLDER . '", this.value)',
         ]);
 
         return Html::textInput(
