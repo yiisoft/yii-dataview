@@ -33,16 +33,25 @@ use Yiisoft\Validator\Result as ValidationResult;
 use Yiisoft\Widget\Widget;
 use Yiisoft\Data\Reader\OrderHelper;
 use Yiisoft\Yii\DataView\Exception\DataReaderNotSetException;
+use Yiisoft\Yii\DataView\PageSize\InputPageSize;
+use Yiisoft\Yii\DataView\PageSize\PageSizeContext;
+use Yiisoft\Yii\DataView\PageSize\PageSizeControlInterface;
+use Yiisoft\Yii\DataView\PageSize\SelectPageSize;
 
+use function array_key_exists;
 use function array_slice;
+use function call_user_func_array;
 use function extension_loaded;
+use function in_array;
 use function is_array;
+use function is_int;
 use function is_string;
 
 /**
  * @psalm-type UrlArguments = array<string,scalar|Stringable|null>
  * @psalm-type UrlCreator = callable(UrlArguments,array):string
  * @psalm-type PageNotFoundExceptionCallback = callable(PageNotFoundException):void
+ * @psalm-type PageSizeConstraint = list<positive-int>|positive-int|bool
  * @psalm-import-type TOrder from Sort
  */
 abstract class BaseListView extends Widget
@@ -53,7 +62,33 @@ abstract class BaseListView extends Widget
     protected $urlCreator = null;
     protected UrlConfig $urlConfig;
 
+    /**
+     * @var int Page size that is used in case it is not set explicitly.
+     * @psalm-var positive-int
+     */
     protected int $defaultPageSize = PaginatorInterface::DEFAULT_PAGE_SIZE;
+
+    /**
+     * @var array|bool|int Page size constraint.
+     *  - `true` - default only.
+     *  - `false` - no constraint.
+     *  - int - maximum page size.
+     *  -  [int, int, ...] - a list of page sizes to choose from.
+     *
+     * @see PageSizeContext::FIXED_VALUE
+     * @see PageSizeContext::ANY_VALUE
+     *
+     * @psalm-var PageSizeConstraint
+     */
+    protected bool|int|array $pageSizeConstraint = true;
+
+    /**
+     * @psalm-var non-empty-string|null
+     */
+    private ?string $pageSizeTag = 'div';
+    private array $pageSizeAttributes = [];
+    private ?string $pageSizeTemplate = 'Results per page {control}';
+    private PageSizeControlInterface|null $pageSizeControl = null;
 
     /**
      * A name for {@see CategorySource} used with translator ({@see TranslatorInterface}) by default.
@@ -84,7 +119,7 @@ abstract class BaseListView extends Widget
     private array $emptyTextAttributes = [];
     private string $header = '';
     private array $headerAttributes = [];
-    private string $layout = "{header}\n{toolbar}\n{items}\n{summary}\n{pager}";
+    private string $layout = "{header}\n{toolbar}\n{items}\n{summary}\n{pager}\n{pageSize}";
 
     private array $offsetPaginationConfig = [];
     private array $keysetPaginationConfig = [];
@@ -372,9 +407,9 @@ abstract class BaseListView extends Widget
         }
 
         if ($dataReader->isPaginationRequired()) {
-            if ($pageSize !== null) {
-                $dataReader = $dataReader->withPageSize((int) $pageSize);
-            }
+            $dataReader = $dataReader->withPageSize(
+                $this->preparePageSize($pageSize) ?? $this->getDefaultPageSize()
+            );
 
             if ($page !== null) {
                 $dataReader = $dataReader->withToken(PageToken::next($page));
@@ -465,6 +500,53 @@ abstract class BaseListView extends Widget
         $new = clone $this;
         $new->layout = $value;
 
+        return $new;
+    }
+
+    final public function pageSizeTag(?string $tag): static
+    {
+        if ($tag === '') {
+            throw new InvalidArgumentException('Tag name cannot be empty.');
+        }
+
+        $new = clone $this;
+        $new->pageSizeTag = $tag;
+        return $new;
+    }
+
+    /**
+     * Returns a new instance with the HTML attributes for page size wrapper tag.
+     *
+     * @param array $values Attribute values indexed by attribute names.
+     */
+    final public function pageSizeAttributes(array $values): static
+    {
+        $new = clone $this;
+        $new->pageSizeAttributes = $values;
+        return $new;
+    }
+
+    /**
+     * Returns a new instance with the page size template.
+     *
+     * @param string|null $template The HTML content to be displayed as the page size control. If you don't want to show
+     * control, you may set it with an empty string or null.
+     *
+     * The following tokens will be replaced with the corresponding values:
+     *
+     * - `{control}` — page size control.
+     */
+    final public function pageSizeTemplate(?string $template): static
+    {
+        $new = clone $this;
+        $new->pageSizeTemplate = $template;
+        return $new;
+    }
+
+    final public function pageSizeControl(?PageSizeControlInterface $widget): static
+    {
+        $new = clone $this;
+        $new->pageSizeControl = $widget;
         return $new;
     }
 
@@ -627,6 +709,7 @@ abstract class BaseListView extends Widget
                     '{items}' => $this->renderItems($items, $filterValidationResult),
                     '{summary}' => $this->renderSummary(),
                     '{pager}' => $this->renderPagination(),
+                    '{pageSize}' => $this->renderPageSize(),
                 ],
             )
         );
@@ -638,14 +721,48 @@ abstract class BaseListView extends Widget
                 ->render();
     }
 
+    /**
+     * @psalm-return positive-int
+     */
     protected function getDefaultPageSize(): int
     {
         $dataReader = $this->getDataReader();
-        if ($dataReader instanceof PaginatorInterface) {
-            return $dataReader->getPageSize();
+        $pageSize = $dataReader instanceof PaginatorInterface
+            ? $dataReader->getPageSize()
+            : $this->defaultPageSize;
+
+        if (is_int($this->pageSizeConstraint)) {
+            return $pageSize <= $this->pageSizeConstraint
+                ? $pageSize
+                : $this->pageSizeConstraint;
         }
 
-        return $this->defaultPageSize;
+        if (is_array($this->pageSizeConstraint)) {
+            return in_array($pageSize, $this->pageSizeConstraint, true)
+                ? $pageSize
+                : $this->pageSizeConstraint[0];
+        }
+
+        return $pageSize;
+    }
+
+    /**
+     * Get a new instance with a page size constraint set.
+     *
+     * @param array|bool|int $pageSizeConstraint Page size constraint.
+     * `true` - default only.
+     * `false` - no constraint.
+     * int - maximum page size.
+     * [int, int, ...] - a list of page sizes to choose from.
+     * @return static New instance.
+     *
+     * @psalm-param PageSizeConstraint $pageSizeConstraint
+     */
+    public function pageSizeConstraint(array|int|bool $pageSizeConstraint): static
+    {
+        $new = clone $this;
+        $new->pageSizeConstraint = $pageSizeConstraint;
+        return $new;
     }
 
     /**
@@ -703,6 +820,69 @@ abstract class BaseListView extends Widget
             ->defaultPageSize($this->getDefaultPageSize())
             ->urlConfig($this->urlConfig)
             ->render();
+    }
+
+    private function renderPageSize(): string
+    {
+        if (empty($this->pageSizeTemplate)) {
+            return '';
+        }
+
+        $dataReader = $this->preparedDataReader;
+        if (!$dataReader instanceof PaginatorInterface) {
+            return '';
+        }
+
+        if ($this->pageSizeControl === null) {
+            if ($this->pageSizeConstraint === false || is_int($this->pageSizeConstraint)) {
+                $widget = InputPageSize::widget();
+            } elseif (is_array($this->pageSizeConstraint)) {
+                $widget = SelectPageSize::widget();
+            } else {
+                return '';
+            }
+        } else {
+            $widget = $this->pageSizeControl;
+        }
+
+        if ($this->urlCreator === null) {
+            $urlPattern = '#pagesize=' . PageSizeContext::URL_PLACEHOLDER;
+            $defaultUrl = '#';
+        } else {
+            $sort = $this->getSortValueForUrl($dataReader);
+            $urlPattern = call_user_func_array(
+                $this->urlCreator,
+                UrlParametersFactory::create(
+                    null,
+                    PageSizeContext::URL_PLACEHOLDER,
+                    $sort,
+                    $this->urlConfig
+                ),
+            );
+            $defaultUrl = call_user_func_array(
+                $this->urlCreator,
+                UrlParametersFactory::create(null, null, $sort, $this->urlConfig),
+            );
+        }
+
+        $context = new PageSizeContext(
+            $dataReader->getPageSize(),
+            $this->getDefaultPageSize(),
+            $this->pageSizeConstraint,
+            $urlPattern,
+            $defaultUrl,
+        );
+        $control = $widget->withContext($context)->render();
+
+        $content = $this->translator->translate(
+            $this->pageSizeTemplate,
+            ['control' => $control],
+            $this->translationCategory,
+        );
+
+        return $this->pageSizeTag === null
+            ? $content
+            : Html::tag($this->pageSizeTag, $content, $this->pageSizeAttributes)->encode(false)->render();
     }
 
     private function renderSummary(): string
@@ -768,6 +948,39 @@ abstract class BaseListView extends Widget
     }
 
     /**
+     * @psalm-return positive-int|null
+     */
+    private function preparePageSize(?string $rawPageSize): ?int
+    {
+        if ($this->pageSizeConstraint === true) {
+            return null;
+        }
+
+        if ($rawPageSize === null) {
+            return null;
+        }
+
+        $pageSize = (int) $rawPageSize;
+        if ($pageSize < 1) {
+            return null;
+        }
+
+        if ($this->pageSizeConstraint === false) {
+            return $pageSize;
+        }
+
+        if (is_int($this->pageSizeConstraint) && $pageSize <= $this->pageSizeConstraint) {
+            return $pageSize;
+        }
+
+        if (is_array($this->pageSizeConstraint) && in_array($pageSize, $this->pageSizeConstraint, true)) {
+            return $pageSize;
+        }
+
+        return null;
+    }
+
+    /**
      * Creates default translator to use if {@see $translator} wasn't set explicitly in the constructor. Depending on
      * "intl" extension availability, either {@see IntlMessageFormatter} or {@see SimpleMessageFormatter} is used as
      * formatter.
@@ -785,5 +998,42 @@ abstract class BaseListView extends Widget
         $translator->addCategorySources($categorySource);
 
         return $translator;
+    }
+
+    private function getSortValueForUrl(PaginatorInterface $paginator): ?string
+    {
+        $sort = $this->getSort($paginator);
+        if ($sort === null) {
+            return null;
+        }
+
+        $originalSort = $this->getSort($this->dataReader);
+        if ($originalSort?->getOrderAsString() === $sort->getOrderAsString()) {
+            return null;
+        }
+
+        $order = [];
+        $overrideOrderFields = array_flip($this->getOverrideOrderFields());
+        foreach ($sort->getOrder() as $name => $value) {
+            $key = array_key_exists($name, $overrideOrderFields)
+                ? $overrideOrderFields[$name]
+                : $name;
+            $order[$key] = $value;
+        }
+
+        return OrderHelper::arrayToString($order);
+    }
+
+    private function getSort(?ReadableDataInterface $dataReader): ?Sort
+    {
+        if ($dataReader instanceof PaginatorInterface && $dataReader->isSortable()) {
+            return $dataReader->getSort();
+        }
+
+        if ($dataReader instanceof SortableDataInterface) {
+            return $dataReader->getSort();
+        }
+
+        return null;
     }
 }

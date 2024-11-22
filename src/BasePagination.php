@@ -213,6 +213,9 @@ abstract class BasePagination extends Widget
     /**
      * Creates the URL suitable for pagination with the specified page number. This method is mainly called by pagers
      * when creating URLs used to perform pagination.
+     *
+     * @param PageToken $pageToken Token for the page.
+     * @return string Created URL.
      */
     protected function createUrl(PageToken $pageToken): string
     {

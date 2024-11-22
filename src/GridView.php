@@ -30,6 +30,7 @@ use Yiisoft\Yii\DataView\Column\OverrideOrderFieldsColumnInterface;
 use Yiisoft\Yii\DataView\Filter\Factory\IncorrectValueException;
 
 use function call_user_func;
+use function call_user_func_array;
 use function is_callable;
 
 /**

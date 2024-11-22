@@ -18,7 +18,7 @@ final class UrlParametersFactory
      */
     public static function create(
         ?PageToken $pageToken,
-        int|null $pageSize,
+        int|string|null $pageSize,
         string|null $sort,
         UrlConfig $context,
     ): array {
