@@ -87,7 +87,7 @@ abstract class BaseListView extends Widget
      */
     private ?string $pageSizeTag = 'div';
     private array $pageSizeAttributes = [];
-    private ?string $pageSizeTemplate = 'Results per page: {control}';
+    private ?string $pageSizeTemplate = 'Results per page {control}';
     private PageSizeControlInterface|null $pageSizeControl = null;
 
     /**
