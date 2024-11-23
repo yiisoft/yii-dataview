@@ -6,8 +6,8 @@ use Yiisoft\Yii\DataView\Column\ActionColumnRenderer;
 use Yiisoft\Yii\DataView\Filter\Widget\DropdownFilter;
 use Yiisoft\Yii\DataView\Filter\Widget\TextInputFilter;
 use Yiisoft\Yii\DataView\GridView;
-use Yiisoft\Yii\DataView\KeysetPagination;
-use Yiisoft\Yii\DataView\OffsetPagination;
+use Yiisoft\Yii\DataView\Pagination\KeysetPagination;
+use Yiisoft\Yii\DataView\Pagination\OffsetPagination;
 use Yiisoft\Yii\DataView\PageSize\InputPageSize;
 use Yiisoft\Yii\DataView\PageSize\SelectPageSize;
 

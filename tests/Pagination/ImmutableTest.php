@@ -7,8 +7,8 @@ namespace Yiisoft\Yii\DataView\Tests\Pagination;
 use PHPUnit\Framework\TestCase;
 use Yiisoft\Data\Paginator\PageToken;
 use Yiisoft\Data\Paginator\PaginatorInterface;
-use Yiisoft\Yii\DataView\BasePagination;
-use Yiisoft\Yii\DataView\OffsetPagination;
+use Yiisoft\Yii\DataView\Pagination\BasePagination;
+use Yiisoft\Yii\DataView\Pagination\OffsetPagination;
 use Yiisoft\Yii\DataView\Tests\Support\TestTrait;
 use Yiisoft\Yii\DataView\UrlConfig;
 

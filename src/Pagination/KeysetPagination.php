@@ -2,11 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Yiisoft\Yii\DataView;
+namespace Yiisoft\Yii\DataView\Pagination;
 
 use Stringable;
 use Yiisoft\Data\Paginator\KeysetPaginator;
 use Yiisoft\Data\Paginator\PageToken;
+use Yiisoft\Yii\DataView\Exception;
 
 final class KeysetPagination extends BasePagination
 {
