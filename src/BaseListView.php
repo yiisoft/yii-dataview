@@ -37,6 +37,9 @@ use Yiisoft\Yii\DataView\PageSize\InputPageSize;
 use Yiisoft\Yii\DataView\PageSize\PageSizeContext;
 use Yiisoft\Yii\DataView\PageSize\PageSizeControlInterface;
 use Yiisoft\Yii\DataView\PageSize\SelectPageSize;
+use Yiisoft\Yii\DataView\Pagination\KeysetPagination;
+use Yiisoft\Yii\DataView\Pagination\OffsetPagination;
+use Yiisoft\Yii\DataView\Pagination\PaginationContext;
 
 use function array_key_exists;
 use function array_slice;

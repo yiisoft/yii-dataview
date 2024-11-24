@@ -2,12 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Yiisoft\Yii\DataView;
+namespace Yiisoft\Yii\DataView\Pagination;
 
 use InvalidArgumentException;
 use Stringable;
 use Yiisoft\Data\Paginator\PageToken;
 use Yiisoft\Data\Paginator\OffsetPaginator;
+use Yiisoft\Yii\DataView\Exception;
 
 use function max;
 use function min;

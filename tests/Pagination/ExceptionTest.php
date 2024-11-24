@@ -13,7 +13,7 @@ use Yiisoft\Di\Container;
 use Yiisoft\Di\ContainerConfig;
 use Yiisoft\Factory\NotFoundException;
 use Yiisoft\Widget\WidgetFactory;
-use Yiisoft\Yii\DataView\OffsetPagination;
+use Yiisoft\Yii\DataView\Pagination\OffsetPagination;
 use Yiisoft\Yii\DataView\Tests\Support\TestTrait;
 
 final class ExceptionTest extends TestCase

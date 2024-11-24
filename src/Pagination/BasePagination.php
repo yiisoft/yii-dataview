@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Yiisoft\Yii\DataView;
+namespace Yiisoft\Yii\DataView\Pagination;
 
 use InvalidArgumentException;
 use Yiisoft\Data\Paginator\PageToken;
@@ -10,6 +10,9 @@ use Yiisoft\Data\Paginator\PaginatorInterface;
 use Yiisoft\Data\Reader\OrderHelper;
 use Yiisoft\Html\Html;
 use Yiisoft\Widget\Widget;
+use Yiisoft\Yii\DataView\BaseListView;
+use Yiisoft\Yii\DataView\UrlConfig;
+use Yiisoft\Yii\DataView\UrlParametersFactory;
 
 use function array_key_exists;
 use function call_user_func_array;

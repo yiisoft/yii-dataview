@@ -13,7 +13,7 @@ use Yiisoft\Di\ContainerConfig;
 use Yiisoft\Factory\NotFoundException;
 use Yiisoft\Router\UrlGeneratorInterface;
 use Yiisoft\Widget\WidgetFactory;
-use Yiisoft\Yii\DataView\OffsetPagination;
+use Yiisoft\Yii\DataView\Pagination\OffsetPagination;
 use Yiisoft\Yii\DataView\Tests\Support\Assert;
 use Yiisoft\Yii\DataView\Tests\Support\Mock;
 use Yiisoft\Yii\DataView\Tests\Support\SimplePaginationUrlCreator;
