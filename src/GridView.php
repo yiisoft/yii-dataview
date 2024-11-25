@@ -42,6 +42,7 @@ use function is_callable;
  * The look and feel of a grid view can be customized using many properties.
  *
  * @psalm-import-type UrlCreator from BaseListView
+ * @psalm-type BodyRowAttributes = array|(Closure(array|object, BodyRowContext): array)|(array<array-key, Closure(array|object, BodyRowContext): mixed>)
  */
 final class GridView extends BaseListView
 {
@@ -65,7 +66,10 @@ final class GridView extends BaseListView
     private array $footerRowAttributes = [];
     private bool $headerTableEnabled = true;
     private array $headerRowAttributes = [];
-    private array $rowAttributes = [];
+    /**
+     * @psalm-var BodyRowAttributes
+     */
+    private Closure|array $bodyRowAttributes = [];
     private array $tableAttributes = [];
     private array $tbodyAttributes = [];
     private array $headerCellAttributes = [];
@@ -290,17 +294,28 @@ final class GridView extends BaseListView
     }
 
     /**
-     * Return new instance with the HTML attributes for row of the grid.
+     * Return new instance with the HTML attributes for body rows of the grid.
      *
-     * @param array $values Attribute values indexed by attribute names.
+     * @param Closure|array $attributes Attribute values indexed by attribute names or a callable that returns them. The
+     * signature of the callable should be:
      *
-     * This can be either an array specifying the common HTML attributes for all body rows.
+     * ```php
+     * function (array|object $data, BodyRowContext $context): array
+     * ```
+     *
+     * If an array passed, the attribute values also can be a callable that returns them. The signature of the callable
+     * should be:
+     *
+     * ```php
+     * function (array|object $data, BodyRowContext $context): mixed
+     * ```
+     *
+     * @psalm-param BodyRowAttributes $attributes
      */
-    public function rowAttributes(array $values): self
+    public function bodyRowAttributes(Closure|array $attributes): self
     {
         $new = clone $this;
-        $new->rowAttributes = $values;
-
+        $new->bodyRowAttributes = $attributes;
         return $new;
     }
 
@@ -628,7 +643,11 @@ final class GridView extends BaseListView
                         ->encode($cell->isEncode())
                         ->doubleEncode($cell->isDoubleEncode());
             }
-            $rows[] = Html::tr($this->rowAttributes)->cells(...$tags);
+            $bodyRowAttributes = $this->prepareBodyRowAttributes(
+                $this->bodyRowAttributes,
+                new BodyRowContext($value, $key, $index),
+            );
+            $rows[] = Html::tr($bodyRowAttributes)->cells(...$tags);
 
             if ($this->afterRow !== null) {
                 /** @var Tr|null $row */
@@ -707,6 +726,23 @@ final class GridView extends BaseListView
         }
 
         return array_merge(...$overrideOrderFields);
+    }
+
+    /**
+     * @psalm-param BodyRowAttributes $attributes
+     */
+    private function prepareBodyRowAttributes(array|Closure $attributes, BodyRowContext $context): array
+    {
+        if (is_callable($attributes)) {
+            return $attributes($context->data, $context);
+        }
+
+        return array_map(
+            static fn ($attribute): mixed => is_callable($attribute)
+                ? $attribute($context->data, $context)
+                : $attribute,
+            $attributes,
+        );
     }
 
     private function prepareBodyAttributes(array $attributes, DataContext $context): array
