@@ -580,7 +580,7 @@ final class BaseTest extends TestCase
                 )
                 ->id('w1-grid')
                 ->dataReader($this->createOffsetPaginator($this->data, 10))
-                ->rowAttributes(['class' => 'text-primary'])
+                ->bodyRowAttributes(['class' => 'text-primary'])
                 ->render()
         );
 
@@ -623,7 +623,7 @@ final class BaseTest extends TestCase
                 )
                 ->id('w1-grid')
                 ->dataReader($this->createOffsetPaginator($this->data, 10))
-                ->rowAttributes(['class' => 'text-primary'])
+                ->bodyRowAttributes(['class' => 'text-primary'])
                 ->render()
         );
     }
