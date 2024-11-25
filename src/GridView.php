@@ -296,7 +296,7 @@ final class GridView extends BaseListView
     /**
      * Return new instance with the HTML attributes for body rows of the grid.
      *
-     * @param Closure|array $attributes Attribute values indexed by attribute names or a callable that returns them. The
+     * @param array|Closure $attributes Attribute values indexed by attribute names or a callable that returns them. The
      * signature of the callable should be:
      *
      * ```php
