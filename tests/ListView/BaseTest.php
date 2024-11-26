@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Yiisoft\Yii\DataView\Tests\ListView;
 
-use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 use Yiisoft\Data\Paginator\PaginatorException;
 use Yiisoft\Definitions\Exception\CircularReferenceException;
