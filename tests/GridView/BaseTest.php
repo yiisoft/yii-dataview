@@ -699,9 +699,6 @@ final class BaseTest extends TestCase
             )
             ->id('w1-grid')
             ->dataReader($paginator)
-            ->offsetPaginationConfig([
-                'urlCreator()' => [new SimplePaginationUrlCreator()],
-            ])
             ->tableAttributes(['class' => 'table table-striped table-bordered'])
             ->render();
 

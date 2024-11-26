@@ -233,12 +233,12 @@ final class BaseTest extends TestCase
             <div>Page <b>1</b> of <b>2</b></div>
             <nav>
             <ul class="pagination">
-            <li class="page-item disabled"><a class="page-link" href="#1">⟪</a></li>
-            <li class="page-item disabled"><a class="page-link" href="#1">⟨</a></li>
-            <li class="page-item active"><a class="page-link" href="#1">1</a></li>
-            <li class="page-item"><a class="page-link" href="#2">2</a></li>
-            <li class="page-item"><a class="page-link" href="#2">⟩</a></li>
-            <li class="page-item"><a class="page-link" href="#2">⟫</a></li>
+            <li class="page-item disabled"><a class="page-link" href="#">⟪</a></li>
+            <li class="page-item disabled"><a class="page-link" href="#">⟨</a></li>
+            <li class="page-item active"><a class="page-link" href="#">1</a></li>
+            <li class="page-item"><a class="page-link" href="#page=2">2</a></li>
+            <li class="page-item"><a class="page-link" href="#page=2">⟩</a></li>
+            <li class="page-item"><a class="page-link" href="#page=2">⟫</a></li>
             </ul>
             </nav>
             </div>
@@ -275,7 +275,7 @@ final class BaseTest extends TestCase
             <nav>
             <ul class="pagination">
             <li class="page-item disabled"><a class="page-link">⟨</a></li>
-            <li class="page-item"><a class="page-link" href="#1">⟩</a></li>
+            <li class="page-item"><a class="page-link" href="#page=1">⟩</a></li>
             </ul>
             </nav>
             </div>

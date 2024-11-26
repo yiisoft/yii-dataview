@@ -40,6 +40,9 @@ use Yiisoft\Yii\DataView\PageSize\SelectPageSize;
 use Yiisoft\Yii\DataView\Pagination\KeysetPagination;
 use Yiisoft\Yii\DataView\Pagination\OffsetPagination;
 use Yiisoft\Yii\DataView\Pagination\PaginationContext;
+use Yiisoft\Yii\DataView\Pagination\PaginationControlInterface;
+
+use Yiisoft\Yii\DataView\Pagination\PaginatorNotSupportedException;
 
 use function array_key_exists;
 use function array_slice;
@@ -48,7 +51,6 @@ use function extension_loaded;
 use function in_array;
 use function is_array;
 use function is_int;
-use function is_string;
 
 /**
  * @psalm-type UrlArguments = array<string,scalar|Stringable|null>
@@ -126,7 +128,7 @@ abstract class BaseListView extends Widget
 
     private array $offsetPaginationConfig = [];
     private array $keysetPaginationConfig = [];
-    private string|OffsetPagination|KeysetPagination|null $pagination = null;
+    private PaginationControlInterface|null $paginationControl = null;
     protected ?ReadableDataInterface $dataReader = null;
     private string $toolbar = '';
 
@@ -553,10 +555,10 @@ abstract class BaseListView extends Widget
         return $new;
     }
 
-    public function pagination(string|KeysetPagination|OffsetPagination|null $pagination): static
+    public function paginationControl(PaginationControlInterface|null $widget): static
     {
         $new = clone $this;
-        $new->pagination = $pagination;
+        $new->paginationControl = $widget;
         return $new;
     }
 
@@ -781,48 +783,67 @@ abstract class BaseListView extends Widget
 
     private function renderPagination(): string
     {
-        $preparedDataReader = $this->preparedDataReader;
-        if (!$preparedDataReader instanceof PaginatorInterface || !$preparedDataReader->isPaginationRequired()) {
+        $dataReader = $this->preparedDataReader;
+        if (!$dataReader instanceof PaginatorInterface || !$dataReader->isPaginationRequired()) {
             return '';
         }
 
-        if (is_string($this->pagination)) {
-            return $this->pagination;
-        }
-
-        if ($this->pagination === null) {
-            if ($preparedDataReader instanceof OffsetPaginator) {
-                $pagination = OffsetPagination::widget(config: $this->offsetPaginationConfig);
-            } elseif ($preparedDataReader instanceof KeysetPaginator) {
-                $pagination = KeysetPagination::widget(config: $this->keysetPaginationConfig);
+        if ($this->paginationControl === null) {
+            if ($dataReader instanceof OffsetPaginator) {
+                $widget = OffsetPagination::widget(config: $this->offsetPaginationConfig);
+            } elseif ($dataReader instanceof KeysetPaginator) {
+                $widget = KeysetPagination::widget(config: $this->keysetPaginationConfig);
             } else {
                 return '';
             }
+            try {
+                $widget = $widget->withPaginator($dataReader);
+            } catch (PaginatorNotSupportedException) {
+                return '';
+            }
         } else {
-            $pagination = $this->pagination;
+            $widget = $this->paginationControl->withPaginator($dataReader);
         }
 
-        if ($pagination instanceof OffsetPagination && $preparedDataReader instanceof OffsetPaginator) {
-            $pagination = $pagination->paginator($preparedDataReader);
-        } elseif ($pagination instanceof KeysetPagination && $preparedDataReader instanceof KeysetPaginator) {
-            $pagination = $pagination->paginator($preparedDataReader);
+        if ($this->urlCreator === null) {
+            $nextUrlPattern = '#page=' . PaginationContext::URL_PLACEHOLDER;
+            $previousUrlPattern = '#previous-page=' . PaginationContext::URL_PLACEHOLDER;
+            $defaultUrl = '#';
         } else {
-            return '';
-        }
-
-        if ($this->urlCreator !== null) {
-            $pagination = $pagination->urlCreator($this->urlCreator);
+            $pageSize = $this->getPageSizeValueForUrl($dataReader);
+            $sort = $this->getSortValueForUrl($dataReader);
+            $nextUrlPattern = call_user_func_array(
+                $this->urlCreator,
+                UrlParametersFactory::create(
+                    PageToken::next(PaginationContext::URL_PLACEHOLDER),
+                    $pageSize,
+                    $sort,
+                    $this->urlConfig
+                ),
+            );
+            $previousUrlPattern = call_user_func_array(
+                $this->urlCreator,
+                UrlParametersFactory::create(
+                    PageToken::previous(PaginationContext::URL_PLACEHOLDER),
+                    $pageSize,
+                    $sort,
+                    $this->urlConfig
+                ),
+            );
+            $defaultUrl = call_user_func_array(
+                $this->urlCreator,
+                UrlParametersFactory::create(null, $pageSize, $sort, $this->urlConfig),
+            );
         }
 
         $context = new PaginationContext(
             $this->getOverrideOrderFields(),
+            $nextUrlPattern,
+            $previousUrlPattern,
+            $defaultUrl,
         );
 
-        return $pagination
-            ->context($context)
-            ->defaultPageSize($this->getDefaultPageSize())
-            ->urlConfig($this->urlConfig)
-            ->render();
+        return $widget->withContext($context)->render();
     }
 
     private function renderPageSize(): string
@@ -1001,6 +1022,14 @@ abstract class BaseListView extends Widget
         $translator->addCategorySources($categorySource);
 
         return $translator;
+    }
+
+    private function getPageSizeValueForUrl(PaginatorInterface $paginator): ?string
+    {
+        $pageSize = $paginator->getPageSize();
+        return $pageSize === $this->getDefaultPageSize()
+            ? null
+            : (string) $pageSize;
     }
 
     private function getSortValueForUrl(PaginatorInterface $paginator): ?string

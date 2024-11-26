@@ -7,7 +7,7 @@ namespace Yiisoft\Yii\DataView\Pagination;
 use Stringable;
 use Yiisoft\Data\Paginator\KeysetPaginator;
 use Yiisoft\Data\Paginator\PageToken;
-use Yiisoft\Yii\DataView\Exception;
+use Yiisoft\Data\Paginator\PaginatorInterface;
 
 final class KeysetPagination extends BasePagination
 {
@@ -16,8 +16,12 @@ final class KeysetPagination extends BasePagination
     private string|Stringable $labelPrevious = '⟨';
     private string|Stringable $labelNext = '⟩';
 
-    public function paginator(KeysetPaginator $paginator): self
+    public function withPaginator(PaginatorInterface $paginator): static
     {
+        if (!$paginator instanceof KeysetPaginator) {
+            throw new PaginatorNotSupportedException($paginator);
+        }
+
         $new = clone $this;
         $new->paginator = $paginator;
         return $new;
@@ -45,13 +49,13 @@ final class KeysetPagination extends BasePagination
         ];
     }
 
-    protected function getPaginator(): KeysetPaginator
-    {
-        return $this->paginator ?? throw new Exception\PaginatorNotSetException();
-    }
-
     protected function isFirstPage(PageToken $token): bool
     {
         return false;
+    }
+
+    private function getPaginator(): KeysetPaginator
+    {
+        return $this->paginator ?? throw new PaginatorNotSetException();
     }
 }

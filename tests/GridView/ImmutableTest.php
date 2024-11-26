@@ -11,6 +11,7 @@ use Yiisoft\Definitions\Exception\NotInstantiableException;
 use Yiisoft\Factory\NotFoundException;
 use Yiisoft\Yii\DataView;
 use Yiisoft\Yii\DataView\Column\DataColumn;
+use Yiisoft\Yii\DataView\Pagination\OffsetPagination;
 use Yiisoft\Yii\DataView\Tests\Support\TestTrait;
 
 final class ImmutableTest extends TestCase
@@ -33,7 +34,7 @@ final class ImmutableTest extends TestCase
         $this->assertNotSame($baseListView, $baseListView->headerAttributes([]));
         $this->assertNotSame($baseListView, $baseListView->id(''));
         $this->assertNotSame($baseListView, $baseListView->layout(''));
-        $this->assertNotSame($baseListView, $baseListView->pagination(''));
+        $this->assertNotSame($baseListView, $baseListView->paginationControl(OffsetPagination::widget()));
         $this->assertNotSame($baseListView, $baseListView->dataReader($this->createOffsetPaginator($this->data, 10)));
         $this->assertNotSame($baseListView, $baseListView->summaryTemplate(''));
         $this->assertNotSame($baseListView, $baseListView->summaryAttributes([]));

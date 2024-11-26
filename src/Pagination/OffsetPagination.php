@@ -8,6 +8,7 @@ use InvalidArgumentException;
 use Stringable;
 use Yiisoft\Data\Paginator\PageToken;
 use Yiisoft\Data\Paginator\OffsetPaginator;
+use Yiisoft\Data\Paginator\PaginatorInterface;
 use Yiisoft\Yii\DataView\Exception;
 
 use function max;
@@ -24,8 +25,12 @@ final class OffsetPagination extends BasePagination
 
     private int $maxNavLinkCount = 10;
 
-    public function paginator(OffsetPaginator $paginator): self
+    public function withPaginator(PaginatorInterface $paginator): static
     {
+        if (!$paginator instanceof OffsetPaginator) {
+            throw new PaginatorNotSupportedException($paginator);
+        }
+
         $new = clone $this;
         $new->paginator = $paginator;
         return $new;
@@ -149,13 +154,13 @@ final class OffsetPagination extends BasePagination
         return $items;
     }
 
-    protected function getPaginator(): OffsetPaginator
-    {
-        return $this->paginator ?? throw new Exception\PaginatorNotSetException();
-    }
-
     protected function isFirstPage(PageToken $token): bool
     {
         return $token->value === '1';
+    }
+
+    private function getPaginator(): OffsetPaginator
+    {
+        return $this->paginator ?? throw new PaginatorNotSetException();
     }
 }

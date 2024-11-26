@@ -6,31 +6,16 @@ namespace Yiisoft\Yii\DataView\Pagination;
 
 use InvalidArgumentException;
 use Yiisoft\Data\Paginator\PageToken;
-use Yiisoft\Data\Paginator\PaginatorInterface;
-use Yiisoft\Data\Reader\OrderHelper;
 use Yiisoft\Html\Html;
 use Yiisoft\Widget\Widget;
 use Yiisoft\Yii\DataView\BaseListView;
-use Yiisoft\Yii\DataView\UrlConfig;
-use Yiisoft\Yii\DataView\UrlParametersFactory;
-
-use function array_key_exists;
-use function call_user_func_array;
 
 /**
  * @psalm-import-type UrlCreator from BaseListView
  */
-abstract class BasePagination extends Widget
+abstract class BasePagination extends Widget implements PaginationControlInterface
 {
-    private ?PaginationContext $context = null;
-
-    /**
-     * @psalm-var UrlCreator|null
-     */
-    private $urlCreator;
-    private UrlConfig $urlConfig;
-
-    private int $defaultPageSize = PaginatorInterface::DEFAULT_PAGE_SIZE;
+    use PaginationContextTrait;
 
     /**
      * @psalm-var non-empty-string|null
@@ -55,13 +40,6 @@ abstract class BasePagination extends Widget
     private ?string $currentLinkClass = null;
     private ?string $disabledItemClass = null;
     private ?string $disabledLinkClass = null;
-
-    final public function context(?PaginationContext $context): static
-    {
-        $new = clone $this;
-        $new->context = $context;
-        return $new;
-    }
 
     final public function listTag(?string $tag): static
     {
@@ -190,30 +168,6 @@ abstract class BasePagination extends Widget
     }
 
     /**
-     * @psalm-param UrlCreator|null $urlCreator
-     */
-    public function urlCreator(?callable $urlCreator): static
-    {
-        $new = clone $this;
-        $new->urlCreator = $urlCreator;
-        return $new;
-    }
-
-    final public function defaultPageSize(int $size): static
-    {
-        $new = clone $this;
-        $new->defaultPageSize = $size;
-        return $new;
-    }
-
-    public function urlConfig(UrlConfig $config): static
-    {
-        $new = clone $this;
-        $new->urlConfig = $config;
-        return $new;
-    }
-
-    /**
      * Creates the URL suitable for pagination with the specified page number. This method is mainly called by pagers
      * when creating URLs used to perform pagination.
      *
@@ -222,22 +176,16 @@ abstract class BasePagination extends Widget
      */
     protected function createUrl(PageToken $pageToken): string
     {
-        if ($this->urlCreator === null) {
-            return '#' . $pageToken->value;
+        $context = $this->getContext();
+
+        if ($this->isFirstPage($pageToken)) {
+            return $context->defaultUrl;
         }
 
-        $paginator = $this->getPaginator();
-        $pageSize = $paginator->getPageSize();
-        $sort = $this->getSort($paginator, $this->context);
-
-        return call_user_func_array(
-            $this->urlCreator,
-            UrlParametersFactory::create(
-                $this->isFirstPage($pageToken) ? null : $pageToken,
-                $pageSize === $this->defaultPageSize ? null : $pageSize,
-                empty($sort) ? null : $sort,
-                $this->urlConfig,
-            )
+        return str_replace(
+            PaginationContext::URL_PLACEHOLDER,
+            $pageToken->value,
+            $pageToken->isPrevious ? $context->previousUrlPattern : $context->nextUrlPattern,
         );
     }
 
@@ -246,34 +194,5 @@ abstract class BasePagination extends Widget
      */
     abstract protected function getItems(): array;
 
-    abstract protected function getPaginator(): PaginatorInterface;
-
     abstract protected function isFirstPage(PageToken $token): bool;
-
-    private function getSort(PaginatorInterface $paginator, ?PaginationContext $context): ?string
-    {
-        if (!$paginator->isSortable()) {
-            return null;
-        }
-
-        $sort = $paginator->getSort();
-        if ($sort === null) {
-            return null;
-        }
-
-        if ($context === null) {
-            return $sort->getOrderAsString();
-        }
-
-        $order = [];
-        $overrideOrderFields = array_flip($context->overrideOrderFields);
-        foreach ($sort->getOrder() as $name => $value) {
-            $key = array_key_exists($name, $overrideOrderFields)
-                ? $overrideOrderFields[$name]
-                : $name;
-            $order[$key] = $value;
-        }
-
-        return OrderHelper::arrayToString($order);
-    }
 }
