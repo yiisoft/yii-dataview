@@ -10,6 +10,7 @@ use Yiisoft\Data\Paginator\KeysetPaginator;
 use Yiisoft\Data\Paginator\OffsetPaginator;
 use Yiisoft\Data\Paginator\PageNotFoundException;
 use Yiisoft\Data\Paginator\PageToken;
+use Yiisoft\Data\Paginator\PaginatorException;
 use Yiisoft\Data\Paginator\PaginatorInterface;
 use Yiisoft\Data\Reader\CountableDataInterface;
 use Yiisoft\Data\Reader\Filter\All;
@@ -342,11 +343,10 @@ abstract class BaseListView extends Widget
             $this->urlConfig->getSortParameterType(),
         );
 
-        $this->preparedDataReader = $this->prepareDataReaderByParams($page, $previousPage, $pageSize, $sort, $filters);
-
         try {
+            $this->preparedDataReader = $this->prepareDataReaderByParams($page, $previousPage, $pageSize, $sort, $filters);
             return $this->getItems($this->preparedDataReader);
-        } catch (PageNotFoundException $exception) {
+        } catch (PageNotFoundException|PaginatorException $exception) {
         }
 
         if ($this->ignoreMissingPage) {

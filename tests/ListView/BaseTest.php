@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace Yiisoft\Yii\DataView\Tests\ListView;
 
+use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
+use Yiisoft\Data\Paginator\PaginatorException;
 use Yiisoft\Definitions\Exception\CircularReferenceException;
 use Yiisoft\Definitions\Exception\InvalidConfigException;
 use Yiisoft\Definitions\Exception\NotInstantiableException;
@@ -12,6 +14,7 @@ use Yiisoft\Factory\NotFoundException;
 use Yiisoft\Yii\DataView\ListItemContext;
 use Yiisoft\Yii\DataView\ListView;
 use Yiisoft\Yii\DataView\Tests\Support\Assert;
+use Yiisoft\Yii\DataView\Tests\Support\SimpleUrlParameterProvider;
 use Yiisoft\Yii\DataView\Tests\Support\TestTrait;
 
 final class BaseTest extends TestCase
@@ -519,5 +522,39 @@ final class BaseTest extends TestCase
                 ->separator(PHP_EOL)
                 ->render(),
         );
+    }
+
+    public function testIgnoreMissingPageTrue(): void
+    {
+        $params = new SimpleUrlParameterProvider([
+            'page' => '-1',
+        ]);
+
+        $result = ListView::widget()
+            ->itemView(dirname(__DIR__) . '/Support/view/_listview.php')
+            ->dataReader($this->createOffsetPaginator($this->data, 1))
+            ->ignoreMissingPage(true)
+            ->urlParameterProvider($params)
+            ->render();
+
+        $this->assertIsString($result);
+    }
+
+    public function testIgnoreMissingPageFalse(): void
+    {
+        $params = new SimpleUrlParameterProvider([
+            'page' => '-1',
+        ]);
+
+        $listView = ListView::widget()
+            ->itemView(dirname(__DIR__) . '/Support/view/_listview.php')
+            ->dataReader($this->createOffsetPaginator($this->data, 1))
+            ->ignoreMissingPage(false)
+            ->urlParameterProvider($params);
+
+        $this->expectException(PaginatorException::class);
+        $this->expectExceptionMessage('Current page should be at least 1.');
+
+        $listView->render();
     }
 }
