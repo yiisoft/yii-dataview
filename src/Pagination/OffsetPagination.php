@@ -9,7 +9,6 @@ use Stringable;
 use Yiisoft\Data\Paginator\PageToken;
 use Yiisoft\Data\Paginator\OffsetPaginator;
 use Yiisoft\Data\Paginator\PaginatorInterface;
-use Yiisoft\Yii\DataView\Exception;
 
 use function max;
 use function min;
