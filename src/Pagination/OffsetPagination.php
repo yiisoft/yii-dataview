@@ -154,9 +154,16 @@ final class OffsetPagination extends BasePagination
         return $items;
     }
 
-    protected function isFirstPage(PageToken $token): bool
+    /**
+     * @param PageToken $pageToken Token for the page.
+     * @return string Created URL.
+     */
+    private function createUrl(PageToken $pageToken): string
     {
-        return $token->value === '1';
+        $context = $this->getContext();
+        return $pageToken->value === '1'
+            ? $context->defaultUrl
+            : $context->createUrl($pageToken);
     }
 
     private function getPaginator(): OffsetPaginator

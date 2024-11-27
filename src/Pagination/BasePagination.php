@@ -5,14 +5,9 @@ declare(strict_types=1);
 namespace Yiisoft\Yii\DataView\Pagination;
 
 use InvalidArgumentException;
-use Yiisoft\Data\Paginator\PageToken;
 use Yiisoft\Html\Html;
 use Yiisoft\Widget\Widget;
-use Yiisoft\Yii\DataView\BaseListView;
 
-/**
- * @psalm-import-type UrlCreator from BaseListView
- */
 abstract class BasePagination extends Widget implements PaginationControlInterface
 {
     use PaginationContextTrait;
@@ -168,31 +163,7 @@ abstract class BasePagination extends Widget implements PaginationControlInterfa
     }
 
     /**
-     * Creates the URL suitable for pagination with the specified page number. This method is mainly called by pagers
-     * when creating URLs used to perform pagination.
-     *
-     * @param PageToken $pageToken Token for the page.
-     * @return string Created URL.
-     */
-    protected function createUrl(PageToken $pageToken): string
-    {
-        $context = $this->getContext();
-
-        if ($this->isFirstPage($pageToken)) {
-            return $context->defaultUrl;
-        }
-
-        return str_replace(
-            PaginationContext::URL_PLACEHOLDER,
-            $pageToken->value,
-            $pageToken->isPrevious ? $context->previousUrlPattern : $context->nextUrlPattern,
-        );
-    }
-
-    /**
      * @return PaginationItem[]
      */
     abstract protected function getItems(): array;
-
-    abstract protected function isFirstPage(PageToken $token): bool;
 }

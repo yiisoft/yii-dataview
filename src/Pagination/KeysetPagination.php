@@ -29,6 +29,7 @@ final class KeysetPagination extends BasePagination
 
     protected function getItems(): array
     {
+        $context = $this->getContext();
         $paginator = $this->getPaginator();
         $previousToken = $paginator->getPreviousToken();
         $nextToken = $paginator->getNextToken();
@@ -36,22 +37,17 @@ final class KeysetPagination extends BasePagination
         return [
             new PaginationItem(
                 label: $this->labelPrevious,
-                url: $previousToken === null ? null : $this->createUrl($previousToken),
+                url: $previousToken === null ? null : $context->createUrl($previousToken),
                 isCurrent: false,
                 isDisabled: $previousToken === null,
             ),
             new PaginationItem(
                 label: $this->labelNext,
-                url: $nextToken === null ? null : $this->createUrl($nextToken),
+                url: $nextToken === null ? null : $context->createUrl($nextToken),
                 isCurrent: false,
                 isDisabled: $nextToken === null,
             ),
         ];
-    }
-
-    protected function isFirstPage(PageToken $token): bool
-    {
-        return false;
     }
 
     private function getPaginator(): KeysetPaginator
