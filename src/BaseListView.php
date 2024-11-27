@@ -377,6 +377,8 @@ abstract class BaseListView extends Widget
 
     /**
      * @param FilterInterface[] $filters
+     *
+     * @throws PaginatorException
      */
     private function prepareDataReaderByParams(
         ?string $page,
