@@ -6,7 +6,6 @@ namespace Yiisoft\Yii\DataView\Pagination;
 
 use Stringable;
 use Yiisoft\Data\Paginator\KeysetPaginator;
-use Yiisoft\Data\Paginator\PageToken;
 use Yiisoft\Data\Paginator\PaginatorInterface;
 
 final class KeysetPagination extends BasePagination
