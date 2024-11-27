@@ -193,7 +193,7 @@ final class OffsetPagination extends Widget implements PaginationControlInterfac
         return $new;
     }
 
-    final public function render(): string
+    public function render(): string
     {
         $result = '';
 
