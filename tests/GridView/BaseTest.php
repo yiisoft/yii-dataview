@@ -18,7 +18,6 @@ use Yiisoft\Yii\DataView\Tests\Support\TestTrait;
 use Yiisoft\Data\Paginator\OffsetPaginator;
 use Yiisoft\Data\Reader\Iterable\IterableDataReader;
 use Yiisoft\Data\Reader\Sort;
-use Yiisoft\Yii\DataView\Tests\Support\SimplePaginationUrlCreator;
 
 final class BaseTest extends TestCase
 {
