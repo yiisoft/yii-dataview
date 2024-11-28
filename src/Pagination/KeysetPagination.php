@@ -144,10 +144,10 @@ final class KeysetPagination extends Widget implements PaginationControlInterfac
         $previousToken = $paginator->getPreviousToken();
         $nextToken = $paginator->getNextToken();
         $result .= $this->renderItem(
-                $this->labelPrevious,
-                $previousToken === null ? null : $context->createUrl($previousToken),
-                $previousToken === null,
-            )
+            $this->labelPrevious,
+            $previousToken === null ? null : $context->createUrl($previousToken),
+            $previousToken === null,
+        )
             . "\n"
             . $this->renderItem(
                 $this->labelNext,
