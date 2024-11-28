@@ -38,12 +38,11 @@ final class OffsetPagination extends Widget implements PaginationControlInterfac
      */
     private ?string $itemTag = null;
     private array $itemAttributes = [];
+    private ?string $currentItemClass = null;
+    private ?string $disabledItemClass = null;
 
     private array $linkAttributes = [];
-
-    private ?string $currentItemClass = null;
     private ?string $currentLinkClass = null;
-    private ?string $disabledItemClass = null;
     private ?string $disabledLinkClass = null;
 
     private string|Stringable|null $labelPrevious = '⟨';
@@ -118,13 +117,6 @@ final class OffsetPagination extends Widget implements PaginationControlInterfac
         return $new;
     }
 
-    public function linkAttributes(array $attributes): self
-    {
-        $new = clone $this;
-        $new->linkAttributes = $attributes;
-        return $new;
-    }
-
     public function currentItemClass(?string $class): self
     {
         $new = clone $this;
@@ -132,17 +124,24 @@ final class OffsetPagination extends Widget implements PaginationControlInterfac
         return $new;
     }
 
-    public function currentLinkClass(?string $class): self
-    {
-        $new = clone $this;
-        $new->currentLinkClass = $class;
-        return $new;
-    }
-
     public function disabledItemClass(?string $class): self
     {
         $new = clone $this;
         $new->disabledItemClass = $class;
+        return $new;
+    }
+
+    public function linkAttributes(array $attributes): self
+    {
+        $new = clone $this;
+        $new->linkAttributes = $attributes;
+        return $new;
+    }
+
+    public function currentLinkClass(?string $class): self
+    {
+        $new = clone $this;
+        $new->currentLinkClass = $class;
         return $new;
     }
 
@@ -193,7 +192,7 @@ final class OffsetPagination extends Widget implements PaginationControlInterfac
         return $new;
     }
 
-    final public function render(): string
+    public function render(): string
     {
         $result = '';
 
@@ -204,39 +203,12 @@ final class OffsetPagination extends Widget implements PaginationControlInterfac
             $result .= Html::openTag($this->listTag, $this->listAttributes) . "\n";
         }
 
-        $renderedItems = [];
-        foreach ($this->getItems() as $item) {
-            $html = '';
-
-            if ($this->itemTag !== null) {
-                $attributes = $this->itemAttributes;
-                if ($item->isDisabled) {
-                    Html::addCssClass($attributes, $this->disabledItemClass);
-                }
-                if ($item->isCurrent) {
-                    Html::addCssClass($attributes, $this->currentItemClass);
-                }
-                $html .= Html::openTag($this->itemTag, $attributes);
-            }
-
-            $linkAttributes = $this->linkAttributes;
-            if ($item->isDisabled) {
-                Html::addCssClass($linkAttributes, $this->disabledLinkClass);
-            }
-            if ($item->isCurrent) {
-                Html::addCssClass($linkAttributes, $this->currentLinkClass);
-            }
-            $html .= Html::a($item->label, $item->url, $linkAttributes);
-
-            if ($this->itemTag !== null) {
-                $html .= Html::closeTag($this->itemTag);
-            }
-
-            $renderedItems[] = $html;
+        $items = $this->renderItems();
+        if ($items === []) {
+            return '';
         }
-        if (!empty($renderedItems)) {
-            $result .= implode("\n", $renderedItems);
-        }
+
+        $result .= implode("\n", $items);
 
         if ($this->listTag !== null) {
             $result .= "\n" . Html::closeTag($this->listTag);
@@ -249,9 +221,9 @@ final class OffsetPagination extends Widget implements PaginationControlInterfac
     }
 
     /**
-     * @psalm-return list<OffsetPaginationItem>
+     * @return list<Stringable>
      */
-    private function getItems(): array
+    private function renderItems(): array
     {
         $paginator = $this->getPaginator();
         $currentPage = $paginator->getCurrentPage();
@@ -261,7 +233,7 @@ final class OffsetPagination extends Widget implements PaginationControlInterfac
         $items = [];
 
         if ($this->labelFirst !== null) {
-            $items[] = new OffsetPaginationItem(
+            $items[] = $this->renderItem(
                 label: $this->labelFirst,
                 url: $this->createUrl(PageToken::next('1')),
                 isCurrent: false,
@@ -270,7 +242,7 @@ final class OffsetPagination extends Widget implements PaginationControlInterfac
         }
 
         if ($this->labelPrevious !== null) {
-            $items[] = new OffsetPaginationItem(
+            $items[] = $this->renderItem(
                 label: $this->labelPrevious,
                 url: $this->createUrl(PageToken::next((string) max($currentPage - 1, 1))),
                 isCurrent: false,
@@ -280,7 +252,7 @@ final class OffsetPagination extends Widget implements PaginationControlInterfac
 
         $page = $beginPage;
         do {
-            $items[] = new OffsetPaginationItem(
+            $items[] = $this->renderItem(
                 label: (string) $page,
                 url: $this->createUrl(PageToken::next((string) $page)),
                 isCurrent: $page === $currentPage,
@@ -289,7 +261,7 @@ final class OffsetPagination extends Widget implements PaginationControlInterfac
         } while (++$page <= $endPage);
 
         if ($this->labelNext !== null) {
-            $items[] = new OffsetPaginationItem(
+            $items[] = $this->renderItem(
                 label: $this->labelNext,
                 url: $this->createUrl(PageToken::next((string) min($currentPage + 1, $totalPages))),
                 isCurrent: false,
@@ -298,7 +270,7 @@ final class OffsetPagination extends Widget implements PaginationControlInterfac
         }
 
         if ($this->labelLast !== null) {
-            $items[] = new OffsetPaginationItem(
+            $items[] = $this->renderItem(
                 label: $this->labelLast,
                 url: $this->createUrl(PageToken::next((string) $totalPages)),
                 isCurrent: false,
@@ -307,6 +279,31 @@ final class OffsetPagination extends Widget implements PaginationControlInterfac
         }
 
         return $items;
+    }
+
+    private function renderItem(string|Stringable $label, string $url, bool $isCurrent, bool $isDisabled): Stringable
+    {
+        $linkAttributes = $this->linkAttributes;
+        if ($isDisabled) {
+            Html::addCssClass($linkAttributes, $this->disabledLinkClass);
+        }
+        if ($isCurrent) {
+            Html::addCssClass($linkAttributes, $this->currentLinkClass);
+        }
+        $link = Html::a($label, $url, $linkAttributes);
+
+        if ($this->itemTag === null) {
+            return $link;
+        }
+
+        $attributes = $this->itemAttributes;
+        if ($isDisabled) {
+            Html::addCssClass($attributes, $this->disabledItemClass);
+        }
+        if ($isCurrent) {
+            Html::addCssClass($attributes, $this->currentItemClass);
+        }
+        return Html::tag($this->itemTag, $link, $attributes);
     }
 
     /**

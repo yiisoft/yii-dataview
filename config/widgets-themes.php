@@ -66,7 +66,6 @@ return [
             'itemTag()' => ['li'],
             'itemAttributes()' => [['class' => 'page-item']],
             'linkAttributes()' => [['class' => 'page-link']],
-            'currentItemClass()' => ['active'],
             'disabledItemClass()' => ['disabled'],
         ],
         InputPageSize::class => [

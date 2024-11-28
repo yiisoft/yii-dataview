@@ -291,7 +291,6 @@ final class BaseTest extends TestCase
                     'itemTag()' => ['li'],
                     'itemAttributes()' => [['class' => 'page-item']],
                     'linkAttributes()' => [['class' => 'page-link']],
-                    'currentItemClass()' => ['active'],
                     'disabledItemClass()' => ['disabled'],
                 ])
                 ->render(),
