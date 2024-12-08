@@ -15,7 +15,7 @@ use Yiisoft\Widget\Widget;
 use function max;
 use function min;
 
-final class OffsetPagination extends Widget implements PaginationControlInterface
+final class OffsetPagination extends Widget implements PaginationWidgetInterface
 {
     use PaginationContextTrait;
 

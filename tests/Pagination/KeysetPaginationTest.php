@@ -64,7 +64,7 @@ final class KeysetPaginationTest extends TestCase
             GridView::widget()
                 ->id('w1-grid')
                 ->dataReader($keysetPaginator)
-                ->paginationControl(KeysetPagination::widget())
+                ->paginationWidget(KeysetPagination::widget())
                 ->render(),
         );
     }
@@ -126,7 +126,7 @@ final class KeysetPaginationTest extends TestCase
                 )
                 ->id('w1-grid')
                 ->dataReader($keysetPaginator)
-                ->paginationControl(KeysetPagination::widget()->withPaginator($keysetPaginator))
+                ->paginationWidget(KeysetPagination::widget()->withPaginator($keysetPaginator))
                 ->layout('{items}' . PHP_EOL . '{pager}')
                 ->render(),
         );
@@ -186,7 +186,7 @@ final class KeysetPaginationTest extends TestCase
                 )
                 ->id('w1-grid')
                 ->dataReader($keysetPaginator)
-                ->paginationControl(KeysetPagination::widget())
+                ->paginationWidget(KeysetPagination::widget())
                 ->layout('{items}' . PHP_EOL . '{pager}')
                 ->render(),
         );
@@ -231,7 +231,7 @@ final class KeysetPaginationTest extends TestCase
                 )
                 ->id('w1-grid')
                 ->dataReader($keysetPaginator)
-                ->paginationControl(KeysetPagination::widget())
+                ->paginationWidget(KeysetPagination::widget())
                 ->layout('{items}' . PHP_EOL . '{pager}')
                 ->render(),
         );
@@ -291,7 +291,7 @@ final class KeysetPaginationTest extends TestCase
                 )
                 ->id('w1-grid')
                 ->dataReader($keysetPaginator)
-                ->paginationControl(KeysetPagination::widget())
+                ->paginationWidget(KeysetPagination::widget())
                 ->layout('{items}' . PHP_EOL . '{pager}')
                 ->render(),
         );
@@ -351,7 +351,7 @@ final class KeysetPaginationTest extends TestCase
                 )
                 ->id('w1-grid')
                 ->dataReader($keysetPaginator)
-                ->paginationControl(KeysetPagination::widget())
+                ->paginationWidget(KeysetPagination::widget())
                 ->layout('{items}' . PHP_EOL . '{pager}')
                 ->render(),
         );

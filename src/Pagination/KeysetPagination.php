@@ -11,7 +11,7 @@ use Yiisoft\Data\Paginator\PaginatorInterface;
 use Yiisoft\Html\Html;
 use Yiisoft\Widget\Widget;
 
-final class KeysetPagination extends Widget implements PaginationControlInterface
+final class KeysetPagination extends Widget implements PaginationWidgetInterface
 {
     use PaginationContextTrait;
 

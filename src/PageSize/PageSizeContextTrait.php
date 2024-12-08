@@ -7,7 +7,7 @@ namespace Yiisoft\Yii\DataView\PageSize;
 use LogicException;
 
 /**
- * @psalm-require-implements PageSizeControlInterface
+ * @psalm-require-implements PageSizeWidgetInterface
  */
 trait PageSizeContextTrait
 {

@@ -7,7 +7,7 @@ namespace Yiisoft\Yii\DataView\Pagination;
 use LogicException;
 
 /**
- * @psalm-require-implements PaginationControlInterface
+ * @psalm-require-implements PaginationWidgetInterface
  */
 trait PaginationContextTrait
 {

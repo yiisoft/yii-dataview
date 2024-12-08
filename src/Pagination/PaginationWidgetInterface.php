@@ -7,7 +7,7 @@ namespace Yiisoft\Yii\DataView\Pagination;
 use Stringable;
 use Yiisoft\Data\Paginator\PaginatorInterface;
 
-interface PaginationControlInterface extends Stringable
+interface PaginationWidgetInterface extends Stringable
 {
     /**
      * @throws PaginatorNotSupportedException If the paginator is not supported.

@@ -35,12 +35,12 @@ use Yiisoft\Data\Reader\OrderHelper;
 use Yiisoft\Yii\DataView\Exception\DataReaderNotSetException;
 use Yiisoft\Yii\DataView\PageSize\InputPageSize;
 use Yiisoft\Yii\DataView\PageSize\PageSizeContext;
-use Yiisoft\Yii\DataView\PageSize\PageSizeControlInterface;
+use Yiisoft\Yii\DataView\PageSize\PageSizeWidgetInterface;
 use Yiisoft\Yii\DataView\PageSize\SelectPageSize;
 use Yiisoft\Yii\DataView\Pagination\KeysetPagination;
 use Yiisoft\Yii\DataView\Pagination\OffsetPagination;
 use Yiisoft\Yii\DataView\Pagination\PaginationContext;
-use Yiisoft\Yii\DataView\Pagination\PaginationControlInterface;
+use Yiisoft\Yii\DataView\Pagination\PaginationWidgetInterface;
 use Yiisoft\Yii\DataView\Pagination\PaginatorNotSupportedException;
 
 use function array_key_exists;
@@ -91,8 +91,8 @@ abstract class BaseListView extends Widget
      */
     private ?string $pageSizeTag = 'div';
     private array $pageSizeAttributes = [];
-    private ?string $pageSizeTemplate = 'Results per page {control}';
-    private PageSizeControlInterface|null $pageSizeControl = null;
+    private ?string $pageSizeTemplate = 'Results per page {widget}';
+    private PageSizeWidgetInterface|null $pageSizeWidget = null;
 
     /**
      * A name for {@see CategorySource} used with translator ({@see TranslatorInterface}) by default.
@@ -127,7 +127,7 @@ abstract class BaseListView extends Widget
 
     private array $offsetPaginationConfig = [];
     private array $keysetPaginationConfig = [];
-    private PaginationControlInterface|null $paginationControl = null;
+    private PaginationWidgetInterface|null $paginationWidget = null;
     protected ?ReadableDataInterface $dataReader = null;
     private string $toolbar = '';
 
@@ -538,7 +538,7 @@ abstract class BaseListView extends Widget
      *
      * The following tokens will be replaced with the corresponding values:
      *
-     * - `{control}` — page size control.
+     * - `{widget}` — page size widget.
      */
     final public function pageSizeTemplate(?string $template): static
     {
@@ -547,17 +547,17 @@ abstract class BaseListView extends Widget
         return $new;
     }
 
-    final public function pageSizeControl(?PageSizeControlInterface $widget): static
+    final public function pageSizeWidget(?PageSizeWidgetInterface $widget): static
     {
         $new = clone $this;
-        $new->pageSizeControl = $widget;
+        $new->pageSizeWidget = $widget;
         return $new;
     }
 
-    public function paginationControl(PaginationControlInterface|null $widget): static
+    public function paginationWidget(PaginationWidgetInterface|null $widget): static
     {
         $new = clone $this;
-        $new->paginationControl = $widget;
+        $new->paginationWidget = $widget;
         return $new;
     }
 
@@ -787,7 +787,7 @@ abstract class BaseListView extends Widget
             return '';
         }
 
-        if ($this->paginationControl === null) {
+        if ($this->paginationWidget === null) {
             if ($dataReader instanceof OffsetPaginator) {
                 $widget = OffsetPagination::widget(config: $this->offsetPaginationConfig);
             } elseif ($dataReader instanceof KeysetPaginator) {
@@ -801,7 +801,7 @@ abstract class BaseListView extends Widget
                 return '';
             }
         } else {
-            $widget = $this->paginationControl->withPaginator($dataReader);
+            $widget = $this->paginationWidget->withPaginator($dataReader);
         }
 
         if ($this->urlCreator === null) {
@@ -856,7 +856,7 @@ abstract class BaseListView extends Widget
             return '';
         }
 
-        if ($this->pageSizeControl === null) {
+        if ($this->pageSizeWidget === null) {
             if ($this->pageSizeConstraint === false || is_int($this->pageSizeConstraint)) {
                 $widget = InputPageSize::widget();
             } elseif (is_array($this->pageSizeConstraint)) {
@@ -865,7 +865,7 @@ abstract class BaseListView extends Widget
                 return '';
             }
         } else {
-            $widget = $this->pageSizeControl;
+            $widget = $this->pageSizeWidget;
         }
 
         if ($this->urlCreator === null) {
@@ -895,11 +895,11 @@ abstract class BaseListView extends Widget
             $urlPattern,
             $defaultUrl,
         );
-        $control = $widget->withContext($context)->render();
+        $renderedWidget = $widget->withContext($context)->render();
 
         $content = $this->translator->translate(
             $this->pageSizeTemplate,
-            ['control' => $control],
+            ['widget' => $renderedWidget],
             $this->translationCategory,
         );
 
