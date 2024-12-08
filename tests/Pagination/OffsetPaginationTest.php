@@ -9,7 +9,7 @@ use Yiisoft\Definitions\Exception\CircularReferenceException;
 use Yiisoft\Definitions\Exception\InvalidConfigException;
 use Yiisoft\Definitions\Exception\NotInstantiableException;
 use Yiisoft\Factory\NotFoundException;
-use Yiisoft\Yii\DataView\Exception\PaginatorNotSetException;
+use Yiisoft\Yii\DataView\Pagination\PaginatorNotSetException;
 use Yiisoft\Yii\DataView\GridView;
 use Yiisoft\Yii\DataView\Pagination\OffsetPagination;
 use Yiisoft\Yii\DataView\Tests\Support\Assert;
@@ -47,7 +47,7 @@ final class OffsetPaginationTest extends TestCase
             GridView::widget()
                 ->id('w1-grid')
                 ->dataReader($offsetPaginator)
-                ->pagination(OffsetPagination::widget()->paginator($offsetPaginator)->render())
+                ->paginationWidget(OffsetPagination::widget())
                 ->render(),
         );
     }

@@ -10,7 +10,7 @@ use Yiisoft\Widget\Widget;
 use function count;
 use function is_array;
 
-final class SelectPageSize extends Widget implements PageSizeControlInterface
+final class SelectPageSize extends Widget implements PageSizeWidgetInterface
 {
     use PageSizeContextTrait;
 

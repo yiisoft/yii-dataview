@@ -7,7 +7,7 @@ namespace Yiisoft\Yii\DataView\PageSize;
 use Yiisoft\Html\Html;
 use Yiisoft\Widget\Widget;
 
-final class InputPageSize extends Widget implements PageSizeControlInterface
+final class InputPageSize extends Widget implements PageSizeWidgetInterface
 {
     use PageSizeContextTrait;
 
