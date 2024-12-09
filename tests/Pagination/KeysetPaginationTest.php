@@ -11,7 +11,7 @@ use Yiisoft\Definitions\Exception\InvalidConfigException;
 use Yiisoft\Definitions\Exception\NotInstantiableException;
 use Yiisoft\Factory\NotFoundException;
 use Yiisoft\Yii\DataView\Column\DataColumn;
-use Yiisoft\Yii\DataView\Exception\PaginatorNotSetException;
+use Yiisoft\Yii\DataView\Pagination\PaginatorNotSetException;
 use Yiisoft\Yii\DataView\GridView;
 use Yiisoft\Yii\DataView\Pagination\KeysetPagination;
 use Yiisoft\Yii\DataView\Tests\Support\Assert;
@@ -64,7 +64,7 @@ final class KeysetPaginationTest extends TestCase
             GridView::widget()
                 ->id('w1-grid')
                 ->dataReader($keysetPaginator)
-                ->pagination(KeysetPagination::widget()->paginator($keysetPaginator)->render())
+                ->paginationWidget(KeysetPagination::widget())
                 ->render(),
         );
     }
@@ -114,7 +114,7 @@ final class KeysetPaginationTest extends TestCase
             </table>
             <nav>
             <a>⟨</a>
-            <a href="#5">⟩</a>
+            <a href="#page=5">⟩</a>
             </nav>
             </div>
             HTML,
@@ -126,7 +126,7 @@ final class KeysetPaginationTest extends TestCase
                 )
                 ->id('w1-grid')
                 ->dataReader($keysetPaginator)
-                ->pagination(KeysetPagination::widget()->paginator($keysetPaginator)->render())
+                ->paginationWidget(KeysetPagination::widget()->withPaginator($keysetPaginator))
                 ->layout('{items}' . PHP_EOL . '{pager}')
                 ->render(),
         );
@@ -173,8 +173,8 @@ final class KeysetPaginationTest extends TestCase
             </tbody>
             </table>
             <nav>
-            <a href="#6">⟨</a>
-            <a href="#10">⟩</a>
+            <a href="#previous-page=6">⟨</a>
+            <a href="#page=10">⟩</a>
             </nav>
             </div>
             HTML,
@@ -186,7 +186,7 @@ final class KeysetPaginationTest extends TestCase
                 )
                 ->id('w1-grid')
                 ->dataReader($keysetPaginator)
-                ->pagination(KeysetPagination::widget()->paginator($keysetPaginator)->render())
+                ->paginationWidget(KeysetPagination::widget())
                 ->layout('{items}' . PHP_EOL . '{pager}')
                 ->render(),
         );
@@ -218,7 +218,7 @@ final class KeysetPaginationTest extends TestCase
             </tbody>
             </table>
             <nav>
-            <a href="#11">⟨</a>
+            <a href="#previous-page=11">⟨</a>
             <a>⟩</a>
             </nav>
             </div>
@@ -231,7 +231,7 @@ final class KeysetPaginationTest extends TestCase
                 )
                 ->id('w1-grid')
                 ->dataReader($keysetPaginator)
-                ->pagination(KeysetPagination::widget()->paginator($keysetPaginator)->render())
+                ->paginationWidget(KeysetPagination::widget())
                 ->layout('{items}' . PHP_EOL . '{pager}')
                 ->render(),
         );
@@ -278,8 +278,8 @@ final class KeysetPaginationTest extends TestCase
             </tbody>
             </table>
             <nav>
-            <a href="#6">⟨</a>
-            <a href="#10">⟩</a>
+            <a href="#previous-page=6">⟨</a>
+            <a href="#page=10">⟩</a>
             </nav>
             </div>
             HTML,
@@ -291,7 +291,7 @@ final class KeysetPaginationTest extends TestCase
                 )
                 ->id('w1-grid')
                 ->dataReader($keysetPaginator)
-                ->pagination(KeysetPagination::widget()->paginator($keysetPaginator)->render())
+                ->paginationWidget(KeysetPagination::widget())
                 ->layout('{items}' . PHP_EOL . '{pager}')
                 ->render(),
         );
@@ -339,7 +339,7 @@ final class KeysetPaginationTest extends TestCase
             </table>
             <nav>
             <a>⟨</a>
-            <a href="#5">⟩</a>
+            <a href="#page=5">⟩</a>
             </nav>
             </div>
             HTML,
@@ -351,7 +351,7 @@ final class KeysetPaginationTest extends TestCase
                 )
                 ->id('w1-grid')
                 ->dataReader($keysetPaginator)
-                ->pagination(KeysetPagination::widget()->paginator($keysetPaginator)->render())
+                ->paginationWidget(KeysetPagination::widget())
                 ->layout('{items}' . PHP_EOL . '{pager}')
                 ->render(),
         );
