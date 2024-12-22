@@ -18,7 +18,6 @@ use Yiisoft\Yii\DataView\Tests\Support\TestTrait;
 use Yiisoft\Data\Paginator\OffsetPaginator;
 use Yiisoft\Data\Reader\Iterable\IterableDataReader;
 use Yiisoft\Data\Reader\Sort;
-use Yiisoft\Yii\DataView\Tests\Support\SimplePaginationUrlCreator;
 
 final class BaseTest extends TestCase
 {
@@ -699,9 +698,6 @@ final class BaseTest extends TestCase
             )
             ->id('w1-grid')
             ->dataReader($paginator)
-            ->offsetPaginationConfig([
-                'urlCreator()' => [new SimplePaginationUrlCreator()],
-            ])
             ->tableAttributes(['class' => 'table table-striped table-bordered'])
             ->render();
 
