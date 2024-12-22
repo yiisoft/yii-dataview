@@ -55,7 +55,7 @@ use function is_int;
 /**
  * @psalm-type UrlArguments = array<string,scalar|Stringable|null>
  * @psalm-type UrlCreator = callable(UrlArguments,array):string
- * @psalm-type PageNotFoundExceptionCallback = callable(PageNotFoundException):void
+ * @psalm-type PageNotFoundExceptionCallback = callable(PageNotFoundException|PaginatorException):void
  * @psalm-type PageSizeConstraint = list<positive-int>|positive-int|bool
  * @psalm-import-type TOrder from Sort
  */
@@ -729,6 +729,8 @@ abstract class BaseListView extends Widget
 
     /**
      * @psalm-return positive-int
+     * @psalm-suppress LessSpecificReturnStatement
+     * @psalm-suppress MoreSpecificReturnType
      */
     protected function getDefaultPageSize(): int
     {
