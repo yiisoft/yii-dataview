@@ -6,11 +6,11 @@ namespace Yiisoft\Yii\DataView;
 
 use InvalidArgumentException;
 use Stringable;
+use Yiisoft\Data\Paginator\InvalidPageException;
 use Yiisoft\Data\Paginator\KeysetPaginator;
 use Yiisoft\Data\Paginator\OffsetPaginator;
 use Yiisoft\Data\Paginator\PageNotFoundException;
 use Yiisoft\Data\Paginator\PageToken;
-use Yiisoft\Data\Paginator\PaginatorException;
 use Yiisoft\Data\Paginator\PaginatorInterface;
 use Yiisoft\Data\Reader\CountableDataInterface;
 use Yiisoft\Data\Reader\Filter\All;
@@ -55,7 +55,7 @@ use function is_int;
 /**
  * @psalm-type UrlArguments = array<string,scalar|Stringable|null>
  * @psalm-type UrlCreator = callable(UrlArguments,array):string
- * @psalm-type PageNotFoundExceptionCallback = callable(PageNotFoundException|PaginatorException):void
+ * @psalm-type PageNotFoundExceptionCallback = callable(InvalidPageException):void
  * @psalm-type PageSizeConstraint = list<positive-int>|positive-int|bool
  * @psalm-import-type TOrder from Sort
  */
@@ -347,14 +347,14 @@ abstract class BaseListView extends Widget
         try {
             $this->preparedDataReader = $this->prepareDataReaderByParams($page, $previousPage, $pageSize, $sort, $filters);
             return $this->getItems($this->preparedDataReader);
-        } catch (PageNotFoundException|PaginatorException $exception) {
+        } catch (InvalidPageException $exception) {
         }
 
         if ($this->ignoreMissingPage) {
             $this->preparedDataReader = $this->prepareDataReaderByParams(null, null, $pageSize, $sort, $filters);
             try {
                 return $this->getItems($this->preparedDataReader);
-            } catch (PageNotFoundException|PaginatorException $exception) {
+            } catch (InvalidPageException $exception) {
             }
         }
 
@@ -379,7 +379,7 @@ abstract class BaseListView extends Widget
     /**
      * @param FilterInterface[] $filters
      *
-     * @throws PaginatorException
+     * @throws InvalidPageException
      */
     private function prepareDataReaderByParams(
         ?string $page,
@@ -729,8 +729,6 @@ abstract class BaseListView extends Widget
 
     /**
      * @psalm-return positive-int
-     * @psalm-suppress LessSpecificReturnStatement
-     * @psalm-suppress MoreSpecificReturnType
      */
     protected function getDefaultPageSize(): int
     {

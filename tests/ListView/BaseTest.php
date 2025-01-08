@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Yiisoft\Yii\DataView\Tests\ListView;
 
 use PHPUnit\Framework\TestCase;
-use Yiisoft\Data\Paginator\PaginatorException;
+use Yiisoft\Data\Paginator\InvalidPageException;
 use Yiisoft\Definitions\Exception\CircularReferenceException;
 use Yiisoft\Definitions\Exception\InvalidConfigException;
 use Yiisoft\Definitions\Exception\NotInstantiableException;
@@ -15,6 +15,8 @@ use Yiisoft\Yii\DataView\ListView;
 use Yiisoft\Yii\DataView\Tests\Support\Assert;
 use Yiisoft\Yii\DataView\Tests\Support\SimpleUrlParameterProvider;
 use Yiisoft\Yii\DataView\Tests\Support\TestTrait;
+
+use function dirname;
 
 final class BaseTest extends TestCase
 {
@@ -550,7 +552,7 @@ final class BaseTest extends TestCase
             ->ignoreMissingPage(false)
             ->urlParameterProvider($params);
 
-        $this->expectException(PaginatorException::class);
+        $this->expectException(InvalidPageException::class);
         $this->expectExceptionMessage('Current page should be at least 1.');
 
         $listView->render();
