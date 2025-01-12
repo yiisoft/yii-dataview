@@ -838,7 +838,6 @@ abstract class BaseListView extends Widget
         }
 
         $context = new PaginationContext(
-            $this->getOverrideOrderFields(),
             $nextUrlPattern,
             $previousUrlPattern,
             $defaultUrl,
