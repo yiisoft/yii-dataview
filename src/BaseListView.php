@@ -782,7 +782,7 @@ abstract class BaseListView extends Widget
      *
      * @psalm-return array<string, string>
      */
-    protected function getOverrideOrderFields(): array
+    protected function getOrderProperties(): array
     {
         return [];
     }
@@ -1050,7 +1050,7 @@ abstract class BaseListView extends Widget
         }
 
         $order = [];
-        $overrideOrderFields = array_flip($this->getOverrideOrderFields());
+        $overrideOrderFields = array_flip($this->getOrderProperties());
         foreach ($sort->getOrder() as $name => $value) {
             $key = array_key_exists($name, $overrideOrderFields)
                 ? $overrideOrderFields[$name]

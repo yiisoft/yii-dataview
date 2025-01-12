@@ -33,7 +33,7 @@ use function is_string;
 /**
  * @psalm-import-type FilterEmptyCallable from DataColumn
  */
-final class DataColumnRenderer implements FilterableColumnRendererInterface, OverrideOrderFieldsColumnInterface
+final class DataColumnRenderer implements FilterableColumnRendererInterface, SortableColumnInterface
 {
     /**
      * @var bool|callable
@@ -271,18 +271,15 @@ final class DataColumnRenderer implements FilterableColumnRendererInterface, Ove
         }
     }
 
-    public function getOverrideOrderFields(ColumnInterface $column): array
+    public function getOrderProperties(ColumnInterface $column): array
     {
         $this->checkColumn($column);
         /** @var DataColumn $column This annotation is for IDE only */
 
-        if ($column->property === null
-            || $column->field === null
-            || $column->property === $column->field
-        ) {
+        if ($column->property === null) {
             return [];
         }
 
-        return [$column->property => $column->field];
+        return [$column->property => $column->field ?? $column->property];
     }
 }

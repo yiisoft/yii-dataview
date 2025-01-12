@@ -7,7 +7,6 @@ namespace Yiisoft\Yii\DataView;
 use Closure;
 use Psr\Container\ContainerInterface;
 use Stringable;
-use Yiisoft\Arrays\ArrayHelper;
 use Yiisoft\Data\Paginator\PaginatorInterface;
 use Yiisoft\Data\Reader\ReadableDataInterface;
 use Yiisoft\Data\Reader\Sort;
@@ -26,9 +25,10 @@ use Yiisoft\Yii\DataView\Column\Base\RendererContainer;
 use Yiisoft\Yii\DataView\Column\ColumnInterface;
 use Yiisoft\Yii\DataView\Column\ColumnRendererInterface;
 use Yiisoft\Yii\DataView\Column\FilterableColumnRendererInterface;
-use Yiisoft\Yii\DataView\Column\OverrideOrderFieldsColumnInterface;
+use Yiisoft\Yii\DataView\Column\SortableColumnInterface;
 use Yiisoft\Yii\DataView\Filter\Factory\IncorrectValueException;
 
+use function array_key_exists;
 use function call_user_func;
 use function call_user_func_array;
 use function is_callable;
@@ -565,7 +565,7 @@ final class GridView extends BaseListView
             $headerContext = new HeaderContext(
                 $this->getSort($dataReader),
                 $this->getSort($this->preparedDataReader),
-                $this->getOverrideOrderFields(),
+                $this->getOrderProperties(),
                 $this->sortableHeaderClass,
                 $this->sortableHeaderPrepend,
                 $this->sortableHeaderAppend,
@@ -704,29 +704,34 @@ final class GridView extends BaseListView
     {
         $columns = $this->getColumns();
         $renderers = $this->getColumnRenderers();
+
+        $result = [];
         foreach ($columns as $i => $column) {
-            if ($renderers[$i] instanceof OverrideOrderFieldsColumnInterface) {
-                foreach ($renderers[$i]->getOverrideOrderFields($column) as $from => $to) {
-                    $order = ArrayHelper::renameKey($order, $from, $to);
+            if ($renderers[$i] instanceof SortableColumnInterface) {
+                foreach ($renderers[$i]->getOrderProperties($column) as $from => $to) {
+                    if (array_key_exists($from, $order)) {
+                        $result[$to] = $order[$from];
+                    }
                 }
             }
         }
-        return $order;
+
+        return $result;
     }
 
-    protected function getOverrideOrderFields(): array
+    protected function getOrderProperties(): array
     {
         $columns = $this->getColumns();
         $renderers = $this->getColumnRenderers();
 
-        $overrideOrderFields = [];
+        $orderProperties = [];
         foreach ($columns as $i => $column) {
-            if ($renderers[$i] instanceof OverrideOrderFieldsColumnInterface) {
-                $overrideOrderFields[] = $renderers[$i]->getOverrideOrderFields($column);
+            if ($renderers[$i] instanceof SortableColumnInterface) {
+                $orderProperties[] = $renderers[$i]->getOrderProperties($column);
             }
         }
 
-        return array_merge(...$overrideOrderFields);
+        return array_merge(...$orderProperties);
     }
 
     /**
