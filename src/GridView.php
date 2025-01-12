@@ -700,7 +700,7 @@ final class GridView extends BaseListView
         return [$filters, $validationResult];
     }
 
-    protected function prepareOrder(array &$order): void
+    protected function prepareOrder(array $order): array
     {
         $columns = $this->getColumns();
         $renderers = $this->getColumnRenderers();
@@ -711,6 +711,7 @@ final class GridView extends BaseListView
                 }
             }
         }
+        return $order;
     }
 
     protected function getOverrideOrderFields(): array

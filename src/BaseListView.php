@@ -431,8 +431,11 @@ abstract class BaseListView extends Widget
                 if (!$this->enableMultiSort) {
                     $order = array_slice($order, 0, 1, true);
                 }
-                $this->prepareOrder($order);
-                $dataReader = $dataReader->withSort($sortObject->withOrder($order));
+                $dataReader = $dataReader->withSort(
+                    $sortObject->withOrder(
+                        $this->prepareOrder($order)
+                    )
+                );
             }
         }
 
@@ -445,9 +448,11 @@ abstract class BaseListView extends Widget
 
     /**
      * @psalm-param TOrder $order
+     * @psalm-return TOrder
      */
-    protected function prepareOrder(array &$order): void
+    protected function prepareOrder(array $order): array
     {
+        return [];
     }
 
     /**
