@@ -431,8 +431,11 @@ abstract class BaseListView extends Widget
                 if (!$this->enableMultiSort) {
                     $order = array_slice($order, 0, 1, true);
                 }
-                $this->prepareOrder($order);
-                $dataReader = $dataReader->withSort($sortObject->withOrder($order));
+                $dataReader = $dataReader->withSort(
+                    $sortObject->withOrder(
+                        $this->prepareOrder($order)
+                    )
+                );
             }
         }
 
@@ -445,9 +448,11 @@ abstract class BaseListView extends Widget
 
     /**
      * @psalm-param TOrder $order
+     * @psalm-return TOrder
      */
-    protected function prepareOrder(array &$order): void
+    protected function prepareOrder(array $order): array
     {
+        return [];
     }
 
     /**
@@ -777,7 +782,7 @@ abstract class BaseListView extends Widget
      *
      * @psalm-return array<string, string>
      */
-    protected function getOverrideOrderFields(): array
+    protected function getOrderProperties(): array
     {
         return [];
     }
@@ -838,7 +843,6 @@ abstract class BaseListView extends Widget
         }
 
         $context = new PaginationContext(
-            $this->getOverrideOrderFields(),
             $nextUrlPattern,
             $previousUrlPattern,
             $defaultUrl,
@@ -1046,7 +1050,7 @@ abstract class BaseListView extends Widget
         }
 
         $order = [];
-        $overrideOrderFields = array_flip($this->getOverrideOrderFields());
+        $overrideOrderFields = array_flip($this->getOrderProperties());
         foreach ($sort->getOrder() as $name => $value) {
             $key = array_key_exists($name, $overrideOrderFields)
                 ? $overrideOrderFields[$name]

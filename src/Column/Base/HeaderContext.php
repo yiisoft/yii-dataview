@@ -27,13 +27,13 @@ final class HeaderContext
     /**
      * @internal
      *
-     * @psalm-param array<string, string> $overrideOrderFields
+     * @psalm-param array<string, string> $orderProperties
      * @psalm-param UrlCreator|null $urlCreator
      */
     public function __construct(
         private readonly ?Sort $originalSort,
         private readonly ?Sort $sort,
-        private readonly array $overrideOrderFields,
+        private readonly array $orderProperties,
         private readonly ?string $sortableHeaderClass,
         private readonly string|Stringable $sortableHeaderPrepend,
         private readonly string|Stringable $sortableHeaderAppend,
@@ -67,8 +67,13 @@ final class HeaderContext
     public function prepareSortable(Cell $cell, string $property): array
     {
         $originalProperty = $property;
-        $property = $this->overrideOrderFields[$property] ?? $property;
-        if ($this->sort === null || $this->originalSort === null || !$this->sort->hasFieldInConfig($property)) {
+        $property = $this->orderProperties[$property] ?? '';
+        if (
+            $property === ''
+            || $this->sort === null
+            || $this->originalSort === null
+            || !$this->sort->hasFieldInConfig($property)
+        ) {
             return [$cell, null, '', ''];
         }
 

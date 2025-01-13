@@ -12,11 +12,8 @@ final class PaginationContext
 
     /**
      * @internal
-     *
-     * @param array<string, string> $overrideOrderFields
      */
     public function __construct(
-        public readonly array $overrideOrderFields,
         public readonly string $nextUrlPattern,
         public readonly string $previousUrlPattern,
         public readonly string $defaultUrl,
