@@ -48,13 +48,13 @@ final class Bootstrap5Test extends TestCase
             </div>
             HTML,
             DetailView::widget()
-                ->attributes(['class' => 'container'])
+                ->properties(['class' => 'container'])
                 ->fields(
                     DataField::create()->attribute('id')->label('Id'),
                     DataField::create()->attribute('login'),
                     DataField::create()->attribute('created_at')->label('Created At'),
                 )
-                ->containerAttributes(['class' => 'row flex-column justify-content-center align-items-center'])
+                ->containerProperties(['class' => 'row flex-column justify-content-center align-items-center'])
                 ->data(
                     [
                         'id' => 1,
@@ -67,7 +67,7 @@ final class Bootstrap5Test extends TestCase
                     H2::tag()->addClass('text-center')->content('<strong>Bootstrap 5</strong>')->encode(false)->render()
                 )
                 ->labelAttributes(['class' => 'fw-bold'])
-                ->valueAttributes(['class' => 'alert alert-info'])
+                ->valueProperties(['class' => 'alert alert-info'])
                 ->render(),
         );
     }
@@ -99,7 +99,7 @@ final class Bootstrap5Test extends TestCase
             </table>
             HTML,
             DetailView::widget()
-                ->attributes(['class' => 'table table-success table-striped'])
+                ->properties(['class' => 'table table-success table-striped'])
                 ->fields(
                     DataField::create()->attribute('id')->label('Id'),
                     DataField::create()->attribute('login'),

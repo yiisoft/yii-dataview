@@ -35,8 +35,8 @@ use Yiisoft\Yii\DataView\Field\DataField;
  */
 final class DetailView extends Widget
 {
-    private array $attributes = [];
-    private array $containerAttributes = [];
+    private array $properties = [];
+    private array $containerProperties = [];
     private array|object $data = [];
     private array $dataAttributes = [];
     private array $fields = [];
@@ -46,7 +46,7 @@ final class DetailView extends Widget
     private string $labelTag = 'dt';
     private string $labelTemplate = '<{labelTag}{labelAttributes}>{label}</{labelTag}>';
     private string $template = "<div{attributes}>\n{header}\n<dl{containerAttributes}>\n{items}\n</dl>\n</div>";
-    private array|Closure $valueAttributes = [];
+    private array|Closure $valueProperties = [];
     private string $valueFalse = 'false';
     private string $valueTag = 'dd';
     private string $valueTemplate = '<{valueTag}{valueAttributes}>{value}</{valueTag}>';
@@ -57,10 +57,10 @@ final class DetailView extends Widget
      *
      * @param array $values Attribute values indexed by attribute names.
      */
-    public function attributes(array $values): self
+    public function properties(array $values): self
     {
         $new = clone $this;
-        $new->attributes = $values;
+        $new->properties = $values;
 
         return $new;
     }
@@ -70,10 +70,10 @@ final class DetailView extends Widget
      *
      * @param array $values Attribute values indexed by attribute names.
      */
-    public function containerAttributes(array $values): self
+    public function containerProperties(array $values): self
     {
         $new = clone $this;
-        $new->containerAttributes = $values;
+        $new->containerProperties = $values;
 
         return $new;
     }
@@ -208,10 +208,10 @@ final class DetailView extends Widget
      *
      * @param array $values Attribute values indexed by attribute names.
      */
-    public function valueAttributes(array $values): self
+    public function valueProperties(array $values): self
     {
         $new = clone $this;
-        $new->valueAttributes = $values;
+        $new->valueProperties = $values;
 
         return $new;
     }
@@ -281,8 +281,8 @@ final class DetailView extends Widget
             strtr(
                 $this->template,
                 [
-                    '{attributes}' => Html::renderTagAttributes($this->attributes),
-                    '{containerAttributes}' => Html::renderTagAttributes($this->containerAttributes),
+                    '{attributes}' => Html::renderTagAttributes($this->properties),
+                    '{containerAttributes}' => Html::renderTagAttributes($this->containerProperties),
                     '{dataAttributes}' => Html::renderTagAttributes($this->dataAttributes),
                     '{header}' => $this->header,
                     '{items}' => $this->renderItems(),
@@ -323,7 +323,7 @@ final class DetailView extends Widget
             $labelTag = $field->getLabelTag() === '' ? $this->labelTag : $field->getLabelTag();
             $valueTag = $field->getValueTag() === '' ? $this->valueTag : $field->getValueTag();
             $valueAttributes = $field->getValueAttributes() === []
-                ? $this->valueAttributes : $field->getValueAttributes();
+                ? $this->valueProperties : $field->getValueAttributes();
 
             $normalized[] = [
                 'label' => Html::encode($field->getLabel()),

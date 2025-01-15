@@ -47,7 +47,7 @@ final class BaseTest extends TestCase
             </div>
             HTML,
             DetailView::widget()
-                ->attributes(['class' => 'test-class'])
+                ->properties(['class' => 'test-class'])
                 ->fields(
                     DataField::create()->attribute('id'),
                     DataField::create()->attribute('username'),
@@ -91,7 +91,7 @@ final class BaseTest extends TestCase
                     DataField::create()->attribute('username'),
                     DataField::create()->attribute('total'),
                 )
-                ->containerAttributes(['class' => 'test-class'])
+                ->containerProperties(['class' => 'test-class'])
                 ->data(['id' => 1, 'username' => 'tests 1', 'total' => '10'])
                 ->render(),
         );
@@ -299,7 +299,7 @@ final class BaseTest extends TestCase
                     DataField::create()->attribute('total'),
                 )
                 ->data(['id' => 1, 'username' => 'tests 1', 'total' => '10'])
-                ->valueAttributes(['class' => 'test-value'])
+                ->valueProperties(['class' => 'test-value'])
                 ->render(),
         );
     }

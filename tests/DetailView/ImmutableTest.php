@@ -26,9 +26,9 @@ final class ImmutableTest extends TestCase
     public function testImmutable(): void
     {
         $detailView = DetailView::widget();
-        $this->assertNotSame($detailView, $detailView->attributes([]));
+        $this->assertNotSame($detailView, $detailView->properties([]));
         $this->assertNotSame($detailView, $detailView->fields(DataField::create()));
-        $this->assertNotSame($detailView, $detailView->containerAttributes([]));
+        $this->assertNotSame($detailView, $detailView->containerProperties([]));
         $this->assertNotSame($detailView, $detailView->data([]));
         $this->assertNotSame($detailView, $detailView->dataAttributes([]));
         $this->assertNotSame($detailView, $detailView->header(''));
@@ -37,7 +37,7 @@ final class ImmutableTest extends TestCase
         $this->assertNotSame($detailView, $detailView->labelTag(''));
         $this->assertNotSame($detailView, $detailView->labelTemplate(''));
         $this->assertNotSame($detailView, $detailView->template(''));
-        $this->assertNotSame($detailView, $detailView->valueAttributes([]));
+        $this->assertNotSame($detailView, $detailView->valueProperties([]));
         $this->assertNotSame($detailView, $detailView->valueFalse(''));
         $this->assertNotSame($detailView, $detailView->valueTag(''));
         $this->assertNotSame($detailView, $detailView->valueTemplate(''));
