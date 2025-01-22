@@ -5,14 +5,18 @@ declare(strict_types=1);
 namespace Yiisoft\Yii\DataView\Column;
 
 use Closure;
-use InvalidArgumentException;
 use Yiisoft\Html\Html;
 use Yiisoft\Yii\DataView\Column\Base\Cell;
 use Yiisoft\Yii\DataView\Column\Base\GlobalContext;
 use Yiisoft\Yii\DataView\Column\Base\DataContext;
 use Yiisoft\Yii\DataView\Column\Base\HeaderContext;
 
+use function is_bool;
+use function is_callable;
+
 /**
+ * @implements ColumnRendererInterface<ActionColumn>
+ *
  * @psalm-import-type UrlCreator from ActionColumn
  * @psalm-import-type ButtonRenderer from ActionColumn
  */
@@ -53,13 +57,11 @@ final class ActionColumnRenderer implements ColumnRendererInterface
 
     public function renderColumn(ColumnInterface $column, Cell $cell, GlobalContext $context): Cell
     {
-        $this->checkColumn($column);
         return $cell->addAttributes($column->columnAttributes);
     }
 
     public function renderHeader(ColumnInterface $column, Cell $cell, HeaderContext $context): Cell
     {
-        $this->checkColumn($column);
         return $cell
             ->content($column->header ?? $context->translate('Actions'))
             ->addAttributes($column->headerAttributes);
@@ -67,8 +69,6 @@ final class ActionColumnRenderer implements ColumnRendererInterface
 
     public function renderBody(ColumnInterface $column, Cell $cell, DataContext $context): Cell
     {
-        $this->checkColumn($column);
-
         $contentSource = $column->content;
 
         if ($contentSource !== null) {
@@ -114,8 +114,6 @@ final class ActionColumnRenderer implements ColumnRendererInterface
 
     public function renderFooter(ColumnInterface $column, Cell $cell, GlobalContext $context): Cell
     {
-        $this->checkColumn($column);
-
         if ($column->footer !== null) {
             $cell = $cell->content($column->footer);
         }
@@ -237,21 +235,5 @@ final class ActionColumnRenderer implements ColumnRendererInterface
         }
 
         return implode("\n", $tokens);
-    }
-
-    /**
-     * @psalm-assert ActionColumn $column
-     */
-    private function checkColumn(ColumnInterface $column): void
-    {
-        if (!$column instanceof ActionColumn) {
-            throw new InvalidArgumentException(
-                sprintf(
-                    'Expected "%s", but "%s" given.',
-                    self::class,
-                    $column::class
-                )
-            );
-        }
     }
 }
