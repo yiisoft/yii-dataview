@@ -6,6 +6,7 @@ namespace Yiisoft\Yii\DataView;
 
 use Closure;
 use InvalidArgumentException;
+use Yiisoft\Data\Reader\ReadableDataInterface;
 use Yiisoft\Html\Html;
 use Yiisoft\View\Exception\ViewNotFoundException;
 use Yiisoft\View\View;
@@ -273,7 +274,11 @@ final class ListView extends BaseListView
      *
      * @throws ViewNotFoundException If the item view file doesn't exist.
      */
-    protected function renderItems(array $items, \Yiisoft\Validator\Result $filterValidationResult): string
+    protected function renderItems(
+        array $items,
+        \Yiisoft\Validator\Result $filterValidationResult,
+        ?ReadableDataInterface $preparedDataReader,
+    ): string
     {
         $keys = array_keys($items);
         $rows = [];

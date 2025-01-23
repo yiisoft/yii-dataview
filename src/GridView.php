@@ -472,7 +472,11 @@ final class GridView extends BaseListView
     /**
      * Renders the data active record classes for the grid view.
      */
-    protected function renderItems(array $items, ValidationResult $filterValidationResult): string
+    protected function renderItems(
+        array $items,
+        ValidationResult $filterValidationResult,
+        ?ReadableDataInterface $preparedDataReader,
+    ): string
     {
         $columns = $this->getColumns();
         $renderers = $this->getColumnRenderers();
@@ -489,9 +493,9 @@ final class GridView extends BaseListView
             $this->translationCategory,
         );
 
-        if ($this->preparedDataReader instanceof PaginatorInterface) {
-            $pageToken = $this->preparedDataReader->isOnFirstPage() ? null : $this->preparedDataReader->getToken();
-            $pageSize = $this->preparedDataReader->getPageSize();
+        if ($preparedDataReader instanceof PaginatorInterface) {
+            $pageToken = $preparedDataReader->isOnFirstPage() ? null : $preparedDataReader->getToken();
+            $pageSize = $preparedDataReader->getPageSize();
             if ($pageSize === $this->getDefaultPageSize()) {
                 $pageSize = null;
             }
@@ -564,7 +568,7 @@ final class GridView extends BaseListView
         if ($this->headerTableEnabled) {
             $headerContext = new HeaderContext(
                 $this->getSort($dataReader),
-                $this->getSort($this->preparedDataReader),
+                $this->getSort($preparedDataReader),
                 $this->getOrderProperties(),
                 $this->sortableHeaderClass,
                 $this->sortableHeaderPrepend,
