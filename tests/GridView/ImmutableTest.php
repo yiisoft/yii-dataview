@@ -73,8 +73,7 @@ final class ImmutableTest extends TestCase
                 array $items,
                 \Yiisoft\Validator\Result $filterValidationResult,
                 ?ReadableDataInterface $preparedDataReader,
-            ): string
-            {
+            ): string {
                 return '';
             }
         };

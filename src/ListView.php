@@ -278,8 +278,7 @@ final class ListView extends BaseListView
         array $items,
         \Yiisoft\Validator\Result $filterValidationResult,
         ?ReadableDataInterface $preparedDataReader,
-    ): string
-    {
+    ): string {
         $keys = array_keys($items);
         $rows = [];
 

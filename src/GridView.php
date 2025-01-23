@@ -476,8 +476,7 @@ final class GridView extends BaseListView
         array $items,
         ValidationResult $filterValidationResult,
         ?ReadableDataInterface $preparedDataReader,
-    ): string
-    {
+    ): string {
         $columns = $this->getColumns();
         $renderers = $this->getColumnRenderers();
 
