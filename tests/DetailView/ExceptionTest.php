@@ -27,9 +27,9 @@ final class ExceptionTest extends TestCase
     public function testColumnsWithoutAttributesAndLabel(): void
     {
         $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage('The "attribute" or "label" must be set.');
+        $this->expectExceptionMessage('Either DataField "name" or "label" must be set.');
         DetailView::widget()
-            ->fields(DataField::create())
+            ->fields(new DataField())
             ->data(['id' => 1, 'username' => 'tests 1', 'total' => '10'])
             ->render();
     }
@@ -44,6 +44,6 @@ final class ExceptionTest extends TestCase
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('The "data" must be set.');
-        DetailView::widget()->fields(DataField::create()->attribute('id'))->data([])->render();
+        DetailView::widget()->fields(new Datafield('id'))->data([])->render();
     }
 }
