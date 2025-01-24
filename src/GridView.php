@@ -637,7 +637,7 @@ final class GridView extends BaseListView
 
             $tags = [];
             foreach ($columns as $i => $column) {
-                $context = new DataContext($column, $value, $key, $index);
+                $context = new DataContext($preparedDataReader, $column, $value, $key, $index);
                 $cell = $renderers[$i]->renderBody($column, new Cell($this->bodyCellAttributes), $context);
                 $tags[] = $cell->isEmptyContent()
                     ? Html::td($this->emptyCell, $this->emptyCellAttributes)->encode(false)
