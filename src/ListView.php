@@ -11,8 +11,6 @@ use Yiisoft\Validator\Result;
 use Yiisoft\View\Exception\ViewNotFoundException;
 use Yiisoft\View\View;
 
-use function is_string;
-
 /**
  * The ListView widget displays data from data provider. Each data model is rendered using the view specified.
  */
