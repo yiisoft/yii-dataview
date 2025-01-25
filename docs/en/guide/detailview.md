@@ -3,6 +3,8 @@
 The `DetailView` widget is designed to display details about a single data item.
 It provides a flexible way to render detailed views with customizable attribute layouts.
 
+// TODO: add screenshot!
+
 ## Basic Usage
 
 The basic usage is the following:
