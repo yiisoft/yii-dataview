@@ -64,7 +64,7 @@ final class BaseTest extends TestCase
      * @throws NotInstantiableException
      * @throws CircularReferenceException
      */
-    public function testContainerAttributes(): void
+    public function testFieldListAttributes(): void
     {
         Assert::equalsWithoutLE(
             <<<HTML
@@ -103,7 +103,7 @@ final class BaseTest extends TestCase
      * @throws NotInstantiableException
      * @throws CircularReferenceException
      */
-    public function testDataAttributes(): void
+    public function testFieldAttributes(): void
     {
         Assert::equalsWithoutLE(
             <<<HTML

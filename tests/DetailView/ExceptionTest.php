@@ -24,7 +24,7 @@ final class ExceptionTest extends TestCase
      * @throws NotInstantiableException
      * @throws CircularReferenceException
      */
-    public function testColumnsWithoutAttributesAndLabel(): void
+    public function testFieldsWithoutAttributesAndLabel(): void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('Either DataField "name" or "label" must be set.');
