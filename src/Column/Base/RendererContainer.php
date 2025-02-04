@@ -16,12 +16,12 @@ final class RendererContainer
     private Injector $injector;
 
     /**
-     * @psalm-var array<string, ColumnRendererInterface>
+     * @psalm-var array<class-string, ColumnRendererInterface>
      */
     private array $cache = [];
 
     /**
-     * @psalm-var array<string, array>
+     * @psalm-var array<class-string, array>
      */
     private array $configs = [];
 
@@ -31,6 +31,8 @@ final class RendererContainer
     }
 
     /**
+     * Get an instance of colum renderer implementation configured with {@see addConfigs()}.
+     *
      * @psalm-param class-string<ColumnRendererInterface> $class
      */
     public function get(string $class): ColumnRendererInterface
@@ -43,7 +45,11 @@ final class RendererContainer
     }
 
     /**
-     * @psalm-param array<string, array> $configs
+     * Add configurations for a column renderers.
+     *
+     * @psalm-param array<class-string, array> $configs An array of configurations for {@see get()}. Keys are column
+     * renderer class names. Values are arrays of constructor arguments either indexed by argument name or having integer
+     * index if applied sequentially.
      */
     public function addConfigs(array $configs): self
     {

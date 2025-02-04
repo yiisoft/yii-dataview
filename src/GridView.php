@@ -34,20 +34,17 @@ use function call_user_func_array;
 use function is_callable;
 
 /**
- * The GridView widget displays data in a grid.
+ * The GridView widget displays data as a grid.
  *
- * You can configure the columns of the grid table in terms of {@see Column} classes configured via
- * {@see columns}.
- *
- * The look and feel of a grid view can be customized using many properties.
+ * You can configure the columns displayed by passing an array of {@see Column} instances to {@see GridView::columns()}.
  *
  * @psalm-import-type UrlCreator from BaseListView
  * @psalm-type BodyRowAttributes = array|(Closure(array|object, BodyRowContext): array)|(array<array-key, Closure(array|object, BodyRowContext): mixed>)
  */
 final class GridView extends BaseListView
 {
-    private Closure|null $afterRow = null;
-    private Closure|null $beforeRow = null;
+    private Closure|null $afterRowCallback = null;
+    private Closure|null $beforeRowCallback = null;
 
     /**
      * @var ColumnInterface[]
@@ -100,6 +97,11 @@ final class GridView extends BaseListView
      */
     private ?array $columnRenderersCache = null;
 
+    /**
+     * @param ContainerInterface $columnRenderersDependencyContainer Container used to resolve
+     * {@see ColumnRendererInterface column renderer} dependencies.
+     * @param TranslatorInterface|null $translator Translator instance or `null` if no translation is needed.
+     */
     public function __construct(
         ContainerInterface $columnRenderersDependencyContainer,
         TranslatorInterface|null $translator = null,
@@ -109,7 +111,11 @@ final class GridView extends BaseListView
     }
 
     /**
-     * @psalm-param array<string, array> $configs
+     * Add configurations for a column renderers.
+     *
+     * @psalm-param array<class-string, array> $configs An array of column renderer configurations. Keys are column
+     * renderer class names. Values are arrays of constructor arguments either indexed by argument name or having
+     * integer index if applied sequentially.
      */
     public function addColumnRendererConfigs(array $configs): self
     {
@@ -121,7 +127,7 @@ final class GridView extends BaseListView
     /**
      * Return new instance with the HTML attributes for the filter cell (`td`) tag.
      *
-     * @param array $attributes The tag attributes in terms of name-value pairs.
+     * @param array $attributes Attribute values indexed by attribute names.
      */
     public function filterCellAttributes(array $attributes): self
     {
@@ -137,6 +143,11 @@ final class GridView extends BaseListView
         return $new;
     }
 
+    /**
+     * TODO: docs
+     *
+     * @param array $attributes Attribute values indexed by attribute names.
+     */
     public function filterErrorsContainerAttributes(array $attributes): self
     {
         $new = clone $this;
@@ -144,80 +155,92 @@ final class GridView extends BaseListView
         return $new;
     }
 
-    public function keepPageOnSort(bool $value = true): self
-    {
-        $new = clone $this;
-        $new->keepPageOnSort = $value;
-        return $new;
-    }
-
     /**
-     * Returns a new instance with anonymous function that is called once AFTER rendering each data.
+     * Whether to keep the current page when sorting is changed.
      *
-     * @param Closure|null $value The anonymous function that is called once AFTER rendering each data.
+     * @param bool $enabled Whether to keep the current page.
      */
-    public function afterRow(Closure|null $value): self
+    public function keepPageOnSort(bool $enabled = true): self
     {
         $new = clone $this;
-        $new->afterRow = $value;
-
+        $new->keepPageOnSort = $enabled;
         return $new;
     }
 
     /**
-     * Return a new instance with anonymous function that is called once BEFORE rendering each data.
+     * Returns a new instance with a callback that is executed once AFTER rendering each data row.
      *
-     * @param Closure|null $value The anonymous function that is called once BEFORE rendering each data.
+     * @param Closure|null $callback The callback with the following signature:
+     *
+     * ```
+     *
+     * ```
      */
-    public function beforeRow(Closure|null $value): self
+    public function afterRow(Closure|null $callback): self
     {
         $new = clone $this;
-        $new->beforeRow = $value;
+        $new->afterRowCallback = $callback;
 
         return $new;
     }
 
     /**
-     * Return a new instance the specified columns.
+     * Return a new instance with a callback that is executed BEFORE rendering each data row.
      *
-     * @param ColumnInterface ...$values The grid column configuration. Each array element represents the configuration
+     * @param Closure|null $callback The callback with the following signature:
+     *
+     * ```
+     * ```
+     */
+    public function beforeRow(Closure|null $callback): self
+    {
+        $new = clone $this;
+        $new->beforeRowCallback = $callback;
+
+        return $new;
+    }
+
+    /**
+     * Return a new instance the specified column configurations.
+     *
+     * @param ColumnInterface ...$columns The grid column configuration. Each element represents the configuration
      * for one particular grid column. For example,
      *
      * ```php
      * [
-     *     SerialColumn::create(),
-     *     DetailColumn::create(),
-     *     ActionColumn::create()->primaryKey('identity_id')->visibleButtons(['view' => true]),
+     *     new SerialColumn(),
+     *     new DetailColumn(),
+     *     (new ActionColumn())->primaryKey('identity_id')->visibleButtons(['view' => true]),
      * ]
      * ```
      */
-    public function columns(ColumnInterface ...$values): self
+    public function columns(ColumnInterface ...$columns): self
     {
         $new = clone $this;
-        $new->columns = $values;
+        $new->columns = $columns;
         return $new;
     }
 
     /**
-     * Returns a new instance with the column group enabled.
+     * Returns a new instance with the column grouping enabled.
      *
-     * @see ColumnRendererInterface::renderColumn()
+     * @param bool $enabled Whether to enable the column grouping.
      * @see https://developer.mozilla.org/docs/Web/HTML/Element/colgroup
      *
-     * @param bool $value Whether to enable the column group.
+     * @see ColumnRendererInterface::renderColumn()
      */
-    public function columnGroupEnabled(bool $value = true): self
+    public function columnGroupEnabled(bool $enabled = true): self
     {
         $new = clone $this;
-        $new->columnGroupEnabled = $value;
+        $new->columnGroupEnabled = $enabled;
         return $new;
     }
 
     /**
-     * Return new instance with the HTML display when the content is empty.
+     * Return new instance with the HTML to display when the content is empty.
      *
-     * @param string $content The HTML display when the content of a cell is empty. Defaults to '&nbsp;'.
-     * @param array|null $attributes The HTML attributes for the empty cell.
+     * @param string $content HTML content. Defaults to `&nbsp;`.
+     * @param array|null $attributes The HTML attributes for the empty cell. Attribute values indexed by attribute names.
      */
     public function emptyCell(string $content, ?array $attributes = null): self
     {
@@ -232,7 +255,7 @@ final class GridView extends BaseListView
     /**
      * Returns a new instance with the HTML attributes for the empty cell.
      *
-     * @param array $attributes The HTML attributes for the empty cell.
+     * @param array $attributes The HTML attributes for the empty cell. Attribute values indexed by attribute names.
      */
     public function emptyCellAttributes(array $attributes): self
     {
@@ -242,14 +265,14 @@ final class GridView extends BaseListView
     }
 
     /**
-     * Return new instance whether to show the footer section of the grid.
+     * Whether to show the footer section of the grid.
      *
-     * @param bool $value Whether to show the footer section of the grid.
+     * @param bool $enabled Whether to show the footer section of the grid.
      */
-    public function footerEnabled(bool $value): self
+    public function footerEnabled(bool $enabled): self
     {
         $new = clone $this;
-        $new->footerEnabled = $value;
+        $new->footerEnabled = $enabled;
 
         return $new;
     }
@@ -257,12 +280,12 @@ final class GridView extends BaseListView
     /**
      * Returns a new instance with the HTML attributes for footer row.
      *
-     * @param array $values Attribute values indexed by attribute names.
+     * @param array $attributes Attribute values indexed by attribute names.
      */
-    public function footerRowAttributes(array $values): self
+    public function footerRowAttributes(array $attributes): self
     {
         $new = clone $this;
-        $new->footerRowAttributes = $values;
+        $new->footerRowAttributes = $attributes;
 
         return $new;
     }
@@ -270,12 +293,12 @@ final class GridView extends BaseListView
     /**
      * Return new instance whether to show the header table section of the grid.
      *
-     * @param bool $value Whether to show the header table section of the grid.
+     * @param bool $enabled Whether to show the header table section of the grid.
      */
-    public function headerTableEnabled(bool $value): self
+    public function headerTableEnabled(bool $enabled): self
     {
         $new = clone $this;
-        $new->headerTableEnabled = $value;
+        $new->headerTableEnabled = $enabled;
 
         return $new;
     }
@@ -283,12 +306,12 @@ final class GridView extends BaseListView
     /**
      * Return new instance with the HTML attributes for the header row.
      *
-     * @param array $values Attribute values indexed by attribute names.
+     * @param array $attributes Attribute values indexed by attribute names.
      */
-    public function headerRowAttributes(array $values): self
+    public function headerRowAttributes(array $attributes): self
     {
         $new = clone $this;
-        $new->headerRowAttributes = $values;
+        $new->headerRowAttributes = $attributes;
 
         return $new;
     }
@@ -624,9 +647,9 @@ final class GridView extends BaseListView
         $rows = [];
         $index = 0;
         foreach ($items as $key => $value) {
-            if ($this->beforeRow !== null) {
+            if ($this->beforeRowCallback !== null) {
                 /** @var Tr|null $row */
-                $row = call_user_func($this->beforeRow, $value, $key, $index, $this);
+                $row = call_user_func($this->beforeRowCallback, $value, $key, $index, $this);
                 if (!empty($row)) {
                     $rows[] = $row;
                 }
@@ -649,9 +672,9 @@ final class GridView extends BaseListView
             );
             $rows[] = Html::tr($bodyRowAttributes)->cells(...$tags);
 
-            if ($this->afterRow !== null) {
+            if ($this->afterRowCallback !== null) {
                 /** @var Tr|null $row */
-                $row = call_user_func($this->afterRow, $value, $key, $index, $this);
+                $row = call_user_func($this->afterRowCallback, $value, $key, $index, $this);
                 if (!empty($row)) {
                     $rows[] = $row;
                 }

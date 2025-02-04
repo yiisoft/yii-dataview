@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Yiisoft\Yii\DataView\Column;
 
 /**
- * An interface for columns.
+ * An interface for a grid column.
  */
 interface ColumnInterface
 {
     /**
-     * A matching renderer name or an instance used for rendering this column.
+     * A matching {@see ColumnRendererInterface renderer} name.
      *
      * @return string A column renderer name.
      *
@@ -18,5 +18,8 @@ interface ColumnInterface
      */
     public function getRenderer(): string;
 
+    /**
+     * @return bool Whether column should be displayed.
+     */
     public function isVisible(): bool;
 }

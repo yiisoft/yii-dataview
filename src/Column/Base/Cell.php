@@ -8,6 +8,9 @@ use Stringable;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\NoEncodeStringableInterface;
 
+/**
+ * Grid cell.
+ */
 final class Cell
 {
     private bool $doubleEncode = true;

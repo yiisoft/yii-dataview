@@ -17,7 +17,7 @@ use Yiisoft\Yii\DataView\Field\DataField;
  * Which fields should be displayed and how exactly is determined
  * by "fields":
  *
- * ```php
+ * ```
  * <?= DetailView::widget()
  *     ->data(['id' => 1, 'username' => 'tests 1', 'status' => true])
  *     ->fields(
