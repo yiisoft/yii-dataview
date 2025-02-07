@@ -12,8 +12,6 @@ use Yiisoft\Validator\Result as ValidationResult;
 use Yiisoft\View\Exception\ViewNotFoundException;
 use Yiisoft\View\View;
 
-use function is_string;
-
 /**
  * ListView is a flexible widget for displaying a list of data items with customizable rendering and layout.
  *
@@ -369,8 +367,7 @@ final class ListView extends BaseListView
         array $items,
         ValidationResult $filterValidationResult,
         ?ReadableDataInterface $preparedDataReader,
-    ): string
-    {
+    ): string {
         $keys = array_keys($items);
         $rows = [];
 

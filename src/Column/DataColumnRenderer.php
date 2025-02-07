@@ -336,6 +336,7 @@ final class DataColumnRenderer implements FilterableColumnRendererInterface, Sor
 
         return (string) $value;
     }
+
     public function getOrderProperties(ColumnInterface $column): array
     {
         /** @var DataColumn $column This annotation is for IDE only */
