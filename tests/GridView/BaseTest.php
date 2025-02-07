@@ -484,7 +484,7 @@ final class BaseTest extends TestCase
                     new DataColumn('name'),
                     new DataColumn('age'),
                 )
-                ->headerTableEnabled(false)
+                ->enableHeaderTable(false)
                 ->id('w1-grid')
                 ->dataReader($this->createOffsetPaginator($this->data, 10))
                 ->render()
