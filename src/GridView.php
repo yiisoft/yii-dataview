@@ -34,9 +34,100 @@ use function call_user_func_array;
 use function is_callable;
 
 /**
- * The GridView widget displays data as a grid.
+ * GridView is a powerful widget for displaying tabular data with advanced features for sorting, filtering, and customization.
  *
- * You can configure the columns displayed by passing an array of {@see Column} instances to {@see GridView::columns()}.
+ * The widget extends {@see BaseListView} and provides comprehensive functionality for displaying data in a table format:
+ *
+ * - Flexible column configuration with various column types
+ * - Advanced sorting capabilities with multi-column support
+ * - Built-in filtering system with validation
+ * - Customizable table structure and styling
+ * - Row-level customization through callbacks
+ * - Internationalization support
+ *
+ * Key Features:
+ *
+ * 1. Column System:
+ *    - Multiple built-in column types (Data, Serial, Action, etc.)
+ *    - Custom column renderers support
+ *    - Column grouping capabilities
+ *    - Header and footer customization
+ *    - Column-specific sorting and filtering
+ *
+ * 2. Sorting:
+ *    - Single and multi-column sorting
+ *    - Customizable sort indicators
+ *    - Sort direction control (ascending/descending)
+ *    - Optional page retention during sort changes
+ *
+ * 3. Filtering:
+ *    - Column-specific filter widgets
+ *    - Filter validation with error display
+ *    - Custom filter renderers
+ *    - Filter value persistence
+ *
+ * 4. Table Customization:
+ *    - HTML attributes for all table elements (table, thead, tbody, tr, th, td)
+ *    - Custom CSS classes for different states
+ *    - Empty cell content configuration
+ *    - Header and footer visibility control
+ *
+ * 5. Row-Level Features:
+ *    - Before/after row rendering callbacks
+ *    - Dynamic row attribute generation
+ *    - Row-specific styling
+ *
+ * Example usage:
+ *
+ * ```php
+ * // Basic usage
+ * echo GridView::widget()
+ *     ->dataReader($dataReader)
+ *     ->columns(
+ *         (new SerialColumn())->header('#'),
+ *         (new DataColumn())
+ *             ->header('Name')
+ *             ->content(fn ($model) => $model->name),
+ *         (new DataColumn())
+ *             ->header('Email')
+ *             ->content(fn ($model) => $model->email)
+ *             ->sortable(true),
+ *         (new ActionColumn())
+ *             ->buttons([
+ *                 'view' => true,
+ *                 'update' => true,
+ *                 'delete' => true,
+ *             ])
+ *     )
+ *     ->tableClass('table', 'table-striped')
+ *     ->enableHeaderTable(true)
+ *     ->render();
+ *
+ * // Advanced usage with filtering and callbacks
+ * echo GridView::widget()
+ *     ->dataReader($dataReader)
+ *     ->columns(
+ *         (new DataColumn())
+ *             ->header('Status')
+ *             ->content(fn ($model) => $model->status)
+ *             ->filter(
+ *                 (new SelectFilter())
+ *                     ->items(['active' => 'Active', 'inactive' => 'Inactive'])
+ *             ),
+ *         (new DataColumn())
+ *             ->header('Created At')
+ *             ->content(fn ($model) => $formatter->asDatetime($model->created_at))
+ *             ->sortable(true)
+ *     )
+ *     ->beforeRow(function ($model) {
+ *         return $model->isHighlighted
+ *             ? Tr::tag()->class('highlighted-row')
+ *             : null;
+ *     })
+ *     ->bodyRowAttributes(['class' => 'table-row'])
+ *     ->enableMultiSort()
+ *     ->render();
+ * ```
  *
  * @psalm-import-type UrlCreator from BaseListView
  * @psalm-type BodyRowAttributes = array|(Closure(array|object, BodyRowContext): array)|(array<array-key, Closure(array|object, BodyRowContext): mixed>)
@@ -66,7 +157,7 @@ final class GridView extends BaseListView
     /**
      * @var bool Whether column grouping is enabled.
      */
-    private bool $isColumnGroupEnabled = false;
+    private bool $isColumnGroupingEnabled = false;
 
     /**
      * @var string HTML content for empty cells.
@@ -91,7 +182,7 @@ final class GridView extends BaseListView
     /**
      * @var bool Whether the header table section is enabled.
      */
-    private bool $isHeaderTableEnabled = true;
+    private bool $isHeaderEnabled = true;
 
     /**
      * @var array HTML attributes for header row
@@ -389,10 +480,10 @@ final class GridView extends BaseListView
      *
      * @return self New instance with the column grouping enabled.
      */
-    public function enableColumnGroup(bool $enabled = true): self
+    public function enableColumnGrouping(bool $enabled = true): self
     {
         $new = clone $this;
-        $new->isColumnGroupEnabled = $enabled;
+        $new->isColumnGroupingEnabled = $enabled;
         return $new;
     }
 
@@ -457,16 +548,16 @@ final class GridView extends BaseListView
     }
 
     /**
-     * Return new instance whether to show the header table section of the grid.
+     * Return new instance whether to show the header section of the grid.
      *
-     * @param bool $enabled Whether to show the header table section of the grid.
+     * @param bool $enabled Whether to show the header section of the grid.
      *
-     * @return self New instance with the header table section visibility setting.
+     * @return self New instance with the header section visibility setting.
      */
-    public function enableHeaderTable(bool $enabled = true): self
+    public function enableHeader(bool $enabled = true): self
     {
         $new = clone $this;
-        $new->isHeaderTableEnabled = $enabled;
+        $new->isHeaderEnabled = $enabled;
         return $new;
     }
 
@@ -810,7 +901,7 @@ final class GridView extends BaseListView
             $filterRow = null;
         }
 
-        if ($this->isColumnGroupEnabled) {
+        if ($this->isColumnGroupingEnabled) {
             $tags = [];
             foreach ($columns as $i => $column) {
                 $cell = $renderers[$i]->renderColumn($column, new Cell(), $globalContext);
@@ -819,7 +910,7 @@ final class GridView extends BaseListView
             $blocks[] = Html::colgroup()->columns(...$tags)->render();
         }
 
-        if ($this->isHeaderTableEnabled) {
+        if ($this->isHeaderEnabled) {
             $headerContext = new HeaderContext(
                 $this->getSort($dataReader),
                 $this->getSort($this->preparedDataReader),

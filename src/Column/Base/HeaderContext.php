@@ -34,29 +34,49 @@ use function count;
 final class HeaderContext
 {
     /**
-     * @param Sort|null $originalSort Original sort configuration.
-     * @param Sort|null $sort Current sort configuration.
+     * Creates a new header context instance.
+     *
+     * This constructor configures all aspects of header rendering and sorting behavior.
+     * It is typically created by the grid widget and passed to column renderers.
+     *
+     * @param Sort|null $originalSort Original sort configuration before any modifications.
+     *                              Used as a reference point for toggling sort states.
+     * @param Sort|null $sort Current sort configuration that reflects the active sort state.
      * @param array<string, string> $overrideOrderFields Map of field names to their sort properties.
+     *                                                  Allows remapping of sort fields.
      * @param string|null $sortableHeaderClass CSS class for sortable headers.
+     *                                       Applied to headers that can be sorted.
      * @param string|Stringable $sortableHeaderPrepend Content to prepend to sortable headers.
+     *                                               Often used for sort indicators.
      * @param string|Stringable $sortableHeaderAppend Content to append to sortable headers.
+     *                                             Often used for sort indicators.
      * @param string|null $sortableHeaderAscClass CSS class for ascending sort headers.
+     *                                          Applied when column is sorted ascending.
      * @param string|Stringable $sortableHeaderAscPrepend Content to prepend to ascending sort headers.
      * @param string|Stringable $sortableHeaderAscAppend Content to append to ascending sort headers.
      * @param string|null $sortableHeaderDescClass CSS class for descending sort headers.
+     *                                           Applied when column is sorted descending.
      * @param string|Stringable $sortableHeaderDescPrepend Content to prepend to descending sort headers.
      * @param string|Stringable $sortableHeaderDescAppend Content to append to descending sort headers.
      * @param array $sortableLinkAttributes HTML attributes for sort links.
+     *                                    Applied to the anchor tag that triggers sorting.
      * @param string|null $sortableLinkAscClass CSS class for ascending sort links.
      * @param string|null $sortableLinkDescClass CSS class for descending sort links.
      * @param PageToken|null $pageToken Current page token for pagination.
+     *                                Used to maintain pagination state in sort URLs.
      * @param int|null $pageSize Number of items per page.
+     *                         Used to maintain pagination state in sort URLs.
      * @param bool $enableMultiSort Whether multiple column sorting is enabled.
+     *                            When true, allows sorting by multiple columns.
      * @param UrlConfig $urlConfig URL configuration settings.
+     *                           Controls how URLs are generated.
      * @param UrlCreator|null $urlCreator Callback for creating sort URLs.
+     *                                   Allows custom URL generation logic.
      * @param TranslatorInterface $translator Translator service for header content.
      * @param string $translationCategory Category for header translations.
+     *
      * @internal
+     *
      */
     public function __construct(
         private readonly ?Sort $originalSort,

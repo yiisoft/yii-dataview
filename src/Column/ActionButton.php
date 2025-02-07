@@ -7,13 +7,22 @@ namespace Yiisoft\Yii\DataView\Column;
 use Closure;
 use Stringable;
 
+/**
+ * ActionButton represents a button in an action column of a grid.
+ */
 final class ActionButton
 {
     /**
-     * @param Closure|string|Stringable $content Closure signature: Closure(array|object,DataContext): string|Stringable
-     * @param Closure|string|null $url Closure signature: Closure(array|object, DataContext): string
-     * @param array|Closure|null $attributes Closure signature: Closure(array|object,DataContext):array
-     * @param array<array-key,string|null>|Closure|false|string|null $class Closure signature: Closure(array|object,DataContext):string|array<array-key,string|null>|null
+     * @param Closure|string|Stringable $content Button content. If closure is used, its signature is:
+     * `function(array|object $data, DataContext $context): string|Stringable`.
+     * @param Closure|string|null $url Button URL. If closure is used, its signature is:
+     * `function(array|object $data, DataContext $context): string`.
+     * @param array|Closure|null $attributes HTML attributes. If closure is used, its signature is:
+     * `function(array|object $data, DataContext $context): array`.
+     * @param array<array-key,string|null>|Closure|false|string|null $class CSS class(es). If closure is used, its signature is:
+     * `function(array|object $data, DataContext $context): string|array<array-key,string|null>|null`.
+     * @param string|null $title Button title attribute.
+     * @param bool $overrideAttributes Whether to override default attributes with custom ones instead of merging.
      */
     public function __construct(
         public readonly Closure|string|Stringable $content = '',

@@ -12,6 +12,87 @@ use Yiisoft\View\Exception\ViewNotFoundException;
 use Yiisoft\View\View;
 
 /**
+ * ListView is a flexible widget for displaying a list of data items with customizable rendering and layout.
+ *
+ * The widget extends {@see BaseListView} and provides advanced features for displaying data in a list format:
+ *
+ * - Flexible item rendering using views or callbacks
+ * - Customizable list and item HTML containers
+ * - Support for before/after item rendering hooks
+ * - Customizable item attributes and separators
+ * - Built-in pagination, sorting, and filtering from BaseListView
+ *
+ * Key Features:
+ *
+ * 1. Item Rendering Options:
+ *    - View-based rendering with {@see itemView()}
+ *    - Callback-based rendering with {@see itemCallback()}
+ *    - Access to item data, key, index, and widget instance in views
+ *    - Additional view parameters support
+ *
+ * 2. HTML Structure Customization:
+ *    - Configurable list container tag (default: 'ul')
+ *    - Configurable item tag (default: 'li')
+ *    - Customizable HTML attributes for both list and items
+ *    - Dynamic item attributes through callbacks
+ *    - Customizable separator between items
+ *
+ * 3. Item Rendering Hooks:
+ *    - Before item rendering callback
+ *    - After item rendering callback
+ *    - Full access to item context in hooks
+ *
+ * Example usage:
+ *
+ * ```php
+ * // Basic usage with a view file
+ * echo ListView::widget()
+ *     ->dataReader($dataReader)
+ *     ->itemView('@app/views/item')
+ *     ->render();
+ *
+ * // Advanced usage with callbacks and customization
+ * echo ListView::widget()
+ *     ->dataReader($dataReader)
+ *     ->itemCallback(function ($data, $key, $index, $widget) {
+ *         return Html::tag('div', $data['name'], ['class' => 'item']);
+ *     })
+ *     ->itemTag('div')
+ *     ->itemAttributes(['class' => 'list-item'])
+ *     ->beforeItem(function ($context) {
+ *         return $context->index === 0 ? '<hr>' : '';
+ *     })
+ *     ->separator("\n<hr>\n")
+ *     ->render();
+ *
+ * // Using with custom view parameters
+ * echo ListView::widget()
+ *     ->dataReader($dataReader)
+ *     ->itemView('@app/views/item')
+ *     ->itemViewParameters([
+ *         'isAdmin' => Yii::$app->user->isAdmin,
+ *         'formatter' => Yii::$app->formatter,
+ *     ])
+ *     ->render();
+ * ```
+ *
+ * View file example (@app/views/item.php):
+ *
+ * ```php
+ * /** @var array $data Item data
+ * @var string|int $key Item key
+ * @var int $index Item index (zero-based)
+ * @var ListView $widget Widget instance
+ * @var bool $isAdmin From itemViewParameters
+ * @var Formatter $formatter From itemViewParameters
+
+ *
+ * echo Html::tag('div',
+ *     $formatter->asText($data['name']),
+ *     ['class' => $isAdmin ? 'admin-item' : 'user-item']
+ * );
+ * ```
+ *
  * The ListView widget displays data from data provider. Each data model is rendered using the view specified.
  */
 final class ListView extends BaseListView

@@ -31,17 +31,30 @@ use function is_callable;
 use function is_string;
 
 /**
+ * DataColumnRenderer handles rendering and filtering of data columns in a grid.
+ *
  * @psalm-import-type FilterEmptyCallable from DataColumn
  */
 final class DataColumnRenderer implements FilterableColumnRendererInterface, OverrideOrderFieldsColumnInterface
 {
     /**
+     * Default function to determine if a filter value is empty.
+     *
      * @var bool|callable
      * @psalm-var bool|FilterEmptyCallable
      */
     private readonly mixed $defaultFilterEmpty;
 
     /**
+     * Creates a new DataColumnRenderer instance.
+     *
+     * @param ContainerInterface $filterFactoryContainer Container for filter factory instances.
+     * @param ValidatorInterface $validator Validator for filter values.
+     * @param string $dateTimeFormat Default format for datetime values (e.g., 'Y-m-d H:i:s').
+     * @param string $defaultFilterFactory Default filter factory class for non-array filters.
+     * @param string $defaultArrayFilterFactory Default filter factory class for array filters.
+     * @param bool|callable $defaultFilterEmpty Default function to determine if a filter value is empty.
+     *
      * @psalm-param bool|FilterEmptyCallable $defaultFilterEmpty
      */
     public function __construct(
@@ -55,6 +68,17 @@ final class DataColumnRenderer implements FilterableColumnRendererInterface, Ove
         $this->defaultFilterEmpty = $defaultFilterEmpty;
     }
 
+    /**
+     * Render the column container with attributes and classes.
+     *
+     * @param ColumnInterface $column The column being rendered.
+     * @param Cell $cell The cell to render.
+     * @param GlobalContext $context Global rendering context.
+     *
+     * @return Cell The rendered cell.
+     *
+     * @throws InvalidArgumentException If the column is not a DataColumn.
+     */
     public function renderColumn(ColumnInterface $column, Cell $cell, GlobalContext $context): Cell
     {
         $this->checkColumn($column);
@@ -65,6 +89,17 @@ final class DataColumnRenderer implements FilterableColumnRendererInterface, Ove
             ->addClass($column->columnClass);
     }
 
+    /**
+     * Render the column header with optional sorting links.
+     *
+     * @param ColumnInterface $column The column being rendered.
+     * @param Cell $cell The cell to render.
+     * @param HeaderContext $context Header rendering context.
+     *
+     * @return Cell The rendered header cell.
+     *
+     * @throws InvalidArgumentException If the column is not a DataColumn.
+     */
     public function renderHeader(ColumnInterface $column, Cell $cell, HeaderContext $context): Cell
     {
         $this->checkColumn($column);
@@ -94,6 +129,17 @@ final class DataColumnRenderer implements FilterableColumnRendererInterface, Ove
         return $cell->content($prepend . ($link ?? $label) . $append);
     }
 
+    /**
+     * Render the filter cell with validation support.
+     *
+     * @param ColumnInterface $column The column being rendered.
+     * @param Cell $cell The cell to render.
+     * @param FilterContext $context Filter rendering context.
+     *
+     * @return Cell|null The rendered filter cell or null if filtering is disabled.
+     *
+     * @throws InvalidArgumentException If the column is not a DataColumn.
+     */
     public function renderFilter(ColumnInterface $column, Cell $cell, FilterContext $context): ?Cell
     {
         $this->checkColumn($column);
@@ -131,6 +177,16 @@ final class DataColumnRenderer implements FilterableColumnRendererInterface, Ove
         return $cell->content(...$content)->encode(false);
     }
 
+    /**
+     * Create a filter for the column based on query parameters.
+     *
+     * @param ColumnInterface $column The column being rendered.
+     * @param MakeFilterContext $context Filter creation context.
+     *
+     * @return FilterInterface|null The created filter or null if filtering is not applicable.
+     *
+     * @throws InvalidArgumentException If the column is not a DataColumn.
+     */
     public function makeFilter(ColumnInterface $column, MakeFilterContext $context): ?FilterInterface
     {
         $this->checkColumn($column);
@@ -179,6 +235,17 @@ final class DataColumnRenderer implements FilterableColumnRendererInterface, Ove
         return $factory->create($column->field ?? $column->property, $value);
     }
 
+    /**
+     * Render a data cell with formatted content.
+     *
+     * @param ColumnInterface $column The column being rendered.
+     * @param Cell $cell The cell to render.
+     * @param DataContext $context Data rendering context.
+     *
+     * @return Cell The rendered data cell.
+     *
+     * @throws InvalidArgumentException If the column is not a DataColumn.
+     */
     public function renderBody(ColumnInterface $column, Cell $cell, DataContext $context): Cell
     {
         $this->checkColumn($column);
@@ -213,6 +280,17 @@ final class DataColumnRenderer implements FilterableColumnRendererInterface, Ove
             ->encode(false);
     }
 
+    /**
+     * Render the column footer.
+     *
+     * @param ColumnInterface $column The column being rendered.
+     * @param Cell $cell The cell to render.
+     * @param GlobalContext $context Global rendering context.
+     *
+     * @return Cell The rendered footer cell.
+     *
+     * @throws InvalidArgumentException If the column is not a DataColumn.
+     */
     public function renderFooter(ColumnInterface $column, Cell $cell, GlobalContext $context): Cell
     {
         $this->checkColumn($column);
@@ -226,6 +304,12 @@ final class DataColumnRenderer implements FilterableColumnRendererInterface, Ove
     }
 
     /**
+     * Normalize a filter empty value to a callable.
+     *
+     * @param bool|callable $value The value to normalize.
+     *
+     * @return callable The normalized callable.
+     *
      * @psalm-param bool|FilterEmptyCallable $value
      * @psalm-return FilterEmptyCallable
      */
@@ -242,6 +326,14 @@ final class DataColumnRenderer implements FilterableColumnRendererInterface, Ove
         return $value;
     }
 
+    /**
+     * Cast a value to string with type-specific handling.
+     *
+     * @param mixed $value The value to cast.
+     * @param DataColumn $column The column containing format settings.
+     *
+     * @return string The string representation of the value.
+     */
     private function castToString(mixed $value, DataColumn $column): string
     {
         if ($value === null) {
@@ -256,6 +348,12 @@ final class DataColumnRenderer implements FilterableColumnRendererInterface, Ove
     }
 
     /**
+     * Verify that the column is a DataColumn.
+     *
+     * @param ColumnInterface $column The column to check.
+     *
+     * @throws InvalidArgumentException If the column is not a DataColumn.
+     *
      * @psalm-assert DataColumn $column
      */
     private function checkColumn(ColumnInterface $column): void
@@ -271,6 +369,15 @@ final class DataColumnRenderer implements FilterableColumnRendererInterface, Ove
         }
     }
 
+    /**
+     * Get the field name mappings for sorting override.
+     *
+     * @param ColumnInterface $column The column to get mappings for.
+     *
+     * @return array<string, string> The field name mappings.
+     *
+     * @throws InvalidArgumentException If the column is not a DataColumn.
+     */
     public function getOverrideOrderFields(ColumnInterface $column): array
     {
         $this->checkColumn($column);

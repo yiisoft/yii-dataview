@@ -13,22 +13,39 @@ use Yiisoft\Yii\DataView\Column\Base\DataContext;
 use Yiisoft\Yii\DataView\Column\Base\HeaderContext;
 
 /**
+ * ActionColumnRenderer renders action buttons in a grid column.
+ *
+ * This class is responsible for:
+ * - Rendering action buttons with customizable content and appearance
+ * - Managing button visibility and URL generation
+ * - Handling template-based button layout
+ *
  * @psalm-import-type UrlCreator from ActionColumn
  * @psalm-import-type ButtonRenderer from ActionColumn
  */
 final class ActionColumnRenderer implements ColumnRendererInterface
 {
     /**
+     * @var callable URL creator callback.
      * @psalm-var UrlCreator
      */
     private $urlCreator;
 
     /**
+     * @var array Default action buttons configuration.
      * @psalm-var array<array-key, ButtonRenderer>
      */
     private readonly array $buttons;
 
     /**
+     * @param callable|null $urlCreator Callback for generating button URLs.
+     * @param array|null $buttons Action buttons configuration.
+     * @param array|string|null $buttonClass CSS class(es) for buttons.
+     * @param array $buttonAttributes Default HTML attributes for buttons.
+     * @param string|null $template Template for rendering buttons.
+     * @param string|null $before Content to prepend to buttons.
+     * @param string|null $after Content to append to buttons.
+     *
      * @psalm-param UrlCreator|null $urlCreator
      * @psalm-param array<array-key, ButtonRenderer>|null $buttons
      * @psalm-param array<string, string>|string|null $buttonClass
@@ -51,12 +68,30 @@ final class ActionColumnRenderer implements ColumnRendererInterface
         ];
     }
 
+    /**
+     * Render the column container.
+     *
+     * @param ColumnInterface $column The column being rendered.
+     * @param Cell $cell The cell to render.
+     * @param GlobalContext $context Global rendering context.
+     *
+     * @return Cell The rendered cell.
+     */
     public function renderColumn(ColumnInterface $column, Cell $cell, GlobalContext $context): Cell
     {
         $this->checkColumn($column);
         return $cell->addAttributes($column->columnAttributes);
     }
 
+    /**
+     * Render the column header.
+     *
+     * @param ColumnInterface $column The column being rendered.
+     * @param Cell $cell The cell to render.
+     * @param HeaderContext $context Header rendering context.
+     *
+     * @return Cell The rendered header cell.
+     */
     public function renderHeader(ColumnInterface $column, Cell $cell, HeaderContext $context): Cell
     {
         $this->checkColumn($column);
@@ -65,6 +100,15 @@ final class ActionColumnRenderer implements ColumnRendererInterface
             ->addAttributes($column->headerAttributes);
     }
 
+    /**
+     * Render a data cell in the column.
+     *
+     * @param ColumnInterface $column The column being rendered.
+     * @param Cell $cell The cell to render.
+     * @param DataContext $context Data rendering context.
+     *
+     * @return Cell The rendered data cell.
+     */
     public function renderBody(ColumnInterface $column, Cell $cell, DataContext $context): Cell
     {
         $this->checkColumn($column);
@@ -112,6 +156,15 @@ final class ActionColumnRenderer implements ColumnRendererInterface
             ->encode(false);
     }
 
+    /**
+     * Render the column footer.
+     *
+     * @param ColumnInterface $column The column being rendered.
+     * @param Cell $cell The cell to render.
+     * @param GlobalContext $context Global rendering context.
+     *
+     * @return Cell The rendered footer cell.
+     */
     public function renderFooter(ColumnInterface $column, Cell $cell, GlobalContext $context): Cell
     {
         $this->checkColumn($column);
@@ -124,6 +177,14 @@ final class ActionColumnRenderer implements ColumnRendererInterface
     }
 
     /**
+     * Render a single action button.
+     *
+     * @param ActionButton|callable $button Button configuration or rendering callback.
+     * @param string $name Button identifier.
+     * @param DataContext $context Data rendering context.
+     *
+     * @return string The rendered button HTML.
+     *
      * @psalm-param ButtonRenderer $button
      */
     private function renderButton(ActionButton|callable $button, string $name, DataContext $context): string
@@ -186,6 +247,14 @@ final class ActionColumnRenderer implements ColumnRendererInterface
         return (string) Html::a($content, $url, $attributes);
     }
 
+    /**
+     * Create a URL for an action button.
+     *
+     * @param string $action The action identifier.
+     * @param DataContext $context Data rendering context.
+     *
+     * @return string The generated URL.
+     */
     private function createUrl(string $action, DataContext $context): string
     {
         /** @var ActionColumn $column */
@@ -196,6 +265,17 @@ final class ActionColumnRenderer implements ColumnRendererInterface
         return $urlCreator($action, $context);
     }
 
+    /**
+     * Check if a button should be visible.
+     *
+     * @param ActionColumn $column The action column.
+     * @param string $name Button identifier.
+     * @param array|object $data Current data item.
+     * @param mixed $key Current data key.
+     * @param int $index Current row index.
+     *
+     * @return bool Whether the button should be visible.
+     */
     private function isVisibleButton(
         ActionColumn $column,
         string $name,
@@ -219,6 +299,13 @@ final class ActionColumnRenderer implements ColumnRendererInterface
     }
 
     /**
+     * Get the template for rendering buttons.
+     *
+     * @param ActionColumn $column The action column.
+     * @param array $buttons Button configurations.
+     *
+     * @return string The template string.
+     *
      * @psalm-param array<array-key, ButtonRenderer> $buttons
      */
     private function getTemplate(ActionColumn $column, array $buttons): string
@@ -240,6 +327,12 @@ final class ActionColumnRenderer implements ColumnRendererInterface
     }
 
     /**
+     * Verify that the column is an ActionColumn.
+     *
+     * @param ColumnInterface $column The column to check.
+     *
+     * @throws InvalidArgumentException If the column is not an ActionColumn.
+     *
      * @psalm-assert ActionColumn $column
      */
     private function checkColumn(ColumnInterface $column): void

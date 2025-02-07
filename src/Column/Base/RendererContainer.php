@@ -36,11 +36,11 @@ final class RendererContainer
     private array $configs = [];
 
     /**
-     * @param ContainerInterface $dependencyContainer The dependency injection container for creating renderers.
+     * @param ContainerInterface $container The dependency injection container for creating renderers.
      */
-    public function __construct(ContainerInterface $dependencyContainer)
+    public function __construct(ContainerInterface $container)
     {
-        $this->injector = new Injector($dependencyContainer);
+        $this->injector = new Injector($container);
     }
 
     /**
