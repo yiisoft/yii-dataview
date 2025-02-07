@@ -43,7 +43,7 @@ final class PageSizeContext
      *
      * @param int $currentValue The current page size value.
      * @param int $defaultValue The default page size value.
-     * @param array|int|bool $constraint The page size constraint.
+     * @param array|bool|int $constraint The page size constraint.
      * Can be:
      * - FIXED_VALUE: page size is fixed to default
      * - ANY_VALUE: any page size is allowed

@@ -28,9 +28,8 @@ final class SerialColumnRenderer implements ColumnRendererInterface
      * @param Cell $cell The cell container to render into.
      * @param GlobalContext $context Global rendering context.
      *
-     * @return Cell The rendered cell.
-     *
      * @throws InvalidArgumentException If the column is not a SerialColumn.
+     * @return Cell The rendered cell.
      */
     public function renderColumn(ColumnInterface $column, Cell $cell, GlobalContext $context): Cell
     {
@@ -45,9 +44,8 @@ final class SerialColumnRenderer implements ColumnRendererInterface
      * @param Cell $cell The cell container to render into.
      * @param HeaderContext $context Header rendering context.
      *
-     * @return Cell The rendered header cell.
-     *
      * @throws InvalidArgumentException If the column is not a SerialColumn.
+     * @return Cell The rendered header cell.
      */
     public function renderHeader(ColumnInterface $column, Cell $cell, HeaderContext $context): Cell
     {
@@ -65,9 +63,8 @@ final class SerialColumnRenderer implements ColumnRendererInterface
      * @param Cell $cell The cell container to render into.
      * @param DataContext $context Data rendering context containing the row index.
      *
-     * @return Cell The rendered data cell.
-     *
      * @throws InvalidArgumentException If the column is not a SerialColumn.
+     * @return Cell The rendered data cell.
      */
     public function renderBody(ColumnInterface $column, Cell $cell, DataContext $context): Cell
     {
@@ -85,9 +82,8 @@ final class SerialColumnRenderer implements ColumnRendererInterface
      * @param Cell $cell The cell container to render into.
      * @param GlobalContext $context Global rendering context.
      *
-     * @return Cell The rendered footer cell.
-     *
      * @throws InvalidArgumentException If the column is not a SerialColumn.
+     * @return Cell The rendered footer cell.
      */
     public function renderFooter(ColumnInterface $column, Cell $cell, GlobalContext $context): Cell
     {

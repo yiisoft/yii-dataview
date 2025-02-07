@@ -76,7 +76,6 @@ final class HeaderContext
      * @param string $translationCategory Category for header translations.
      *
      * @internal
-     *
      */
     public function __construct(
         private readonly ?Sort $originalSort,

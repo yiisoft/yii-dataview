@@ -88,11 +88,11 @@ final class DataColumn implements ColumnInterface
      * @param mixed $content Custom content for data cells. Can be a callable with signature:
      * `function(array|object $data, DataContext $context): string|Stringable`.
      * @param string|null $dateTimeFormat Format string for datetime values (e.g., 'Y-m-d H:i:s').
-     * @param bool|array|FilterWidget $filter Filter configuration. Can be:
+     * @param array|bool|FilterWidget $filter Filter configuration. Can be:
      * - false (disabled)
      * - array (filter options)
      * - FilterWidget instance (custom filter widget)
-     * @param string|FilterFactoryInterface|null $filterFactory Factory for creating filter widgets.
+     * @param FilterFactoryInterface|string|null $filterFactory Factory for creating filter widgets.
      * @param array|RuleInterface|null $filterValidation Validation rules for filter values.
      * Can be a single rule or array of rules.
      * @param bool|callable|null $filterEmpty Function to determine if a filter value is empty. Can be:

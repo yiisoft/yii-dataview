@@ -47,9 +47,8 @@ interface FilterableColumnRendererInterface extends ColumnRendererInterface
      * @param ColumnInterface $column The column to create the filter for.
      * @param MakeFilterContext $context Context containing filter parameters and validation state.
      *
-     * @return FilterInterface|null The created filter condition, or null if no filter should be applied.
-     *
      * @throws IncorrectValueException When the filter value is invalid or cannot be processed.
+     * @return FilterInterface|null The created filter condition, or null if no filter should be applied.
      */
     public function makeFilter(ColumnInterface $column, MakeFilterContext $context): ?FilterInterface;
 }

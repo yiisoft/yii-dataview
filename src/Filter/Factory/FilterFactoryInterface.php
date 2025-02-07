@@ -23,10 +23,9 @@ interface FilterFactoryInterface
      * @param string $property The property name to filter on.
      * @param string $value The value to filter by.
      *
+     * @throws IncorrectValueException When the provided value is not valid for the filter type.
      * @return FilterInterface|null The created filter, or null if no filter should be applied
      * (e.g., when the value is empty).
-     *
-     * @throws IncorrectValueException When the provided value is not valid for the filter type.
      */
     public function create(string $property, string $value): ?FilterInterface;
 }

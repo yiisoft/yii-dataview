@@ -268,9 +268,8 @@ final class KeysetPagination extends Widget implements PaginationWidgetInterface
      * - Previous and Next links with appropriate tokens
      * - Disabled states for unavailable navigation
      *
-     * @return string The rendered HTML pagination controls.
-     *
      * @throws PaginatorNotSetException if paginator is not set.
+     * @return string The rendered HTML pagination controls.
      */
     public function render(): string
     {

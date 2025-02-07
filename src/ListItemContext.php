@@ -6,33 +6,33 @@ namespace Yiisoft\Yii\DataView;
 
 /**
  * ListItemContext provides contextual information about the current item being rendered in a ListView.
- * 
+ *
  * This class encapsulates all necessary information about a list item during the rendering process,
  * making it easier to access item-specific data and metadata when customizing item rendering.
- * 
+ *
  * The context includes:
  * - The current data item being rendered
  * - The unique key associated with the data item
  * - The zero-based index of the item in the data set
  * - A reference to the ListView widget instance
- * 
+ *
  * This context is particularly useful when:
  * - Customizing item rendering based on position (first, last, odd/even)
  * - Accessing item data and metadata in custom rendering functions
  * - Implementing conditional rendering logic
  * - Generating unique identifiers for items
- * 
+ *
  * Example usage:
  * ```php
  * // Custom item rendering using context
  * $listView->itemView(function (ListItemContext $context) {
  *     $isEven = $context->index % 2 === 0;
  *     $class = $isEven ? 'even' : 'odd';
- *     
+ *
  *     return Html::div()
  *         ->class($class)
  *         ->content(
- *             "Item #{$context->index}: " . 
+ *             "Item #{$context->index}: " .
  *             Html::encode($context->data->title)
  *         )
  *         ->render();

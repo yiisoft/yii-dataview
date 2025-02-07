@@ -75,9 +75,8 @@ final class DataColumnRenderer implements FilterableColumnRendererInterface, Ove
      * @param Cell $cell The cell to render.
      * @param GlobalContext $context Global rendering context.
      *
-     * @return Cell The rendered cell.
-     *
      * @throws InvalidArgumentException If the column is not a DataColumn.
+     * @return Cell The rendered cell.
      */
     public function renderColumn(ColumnInterface $column, Cell $cell, GlobalContext $context): Cell
     {
@@ -96,9 +95,8 @@ final class DataColumnRenderer implements FilterableColumnRendererInterface, Ove
      * @param Cell $cell The cell to render.
      * @param HeaderContext $context Header rendering context.
      *
-     * @return Cell The rendered header cell.
-     *
      * @throws InvalidArgumentException If the column is not a DataColumn.
+     * @return Cell The rendered header cell.
      */
     public function renderHeader(ColumnInterface $column, Cell $cell, HeaderContext $context): Cell
     {
@@ -136,9 +134,8 @@ final class DataColumnRenderer implements FilterableColumnRendererInterface, Ove
      * @param Cell $cell The cell to render.
      * @param FilterContext $context Filter rendering context.
      *
-     * @return Cell|null The rendered filter cell or null if filtering is disabled.
-     *
      * @throws InvalidArgumentException If the column is not a DataColumn.
+     * @return Cell|null The rendered filter cell or null if filtering is disabled.
      */
     public function renderFilter(ColumnInterface $column, Cell $cell, FilterContext $context): ?Cell
     {
@@ -183,9 +180,8 @@ final class DataColumnRenderer implements FilterableColumnRendererInterface, Ove
      * @param ColumnInterface $column The column being rendered.
      * @param MakeFilterContext $context Filter creation context.
      *
-     * @return FilterInterface|null The created filter or null if filtering is not applicable.
-     *
      * @throws InvalidArgumentException If the column is not a DataColumn.
+     * @return FilterInterface|null The created filter or null if filtering is not applicable.
      */
     public function makeFilter(ColumnInterface $column, MakeFilterContext $context): ?FilterInterface
     {
@@ -242,9 +238,8 @@ final class DataColumnRenderer implements FilterableColumnRendererInterface, Ove
      * @param Cell $cell The cell to render.
      * @param DataContext $context Data rendering context.
      *
-     * @return Cell The rendered data cell.
-     *
      * @throws InvalidArgumentException If the column is not a DataColumn.
+     * @return Cell The rendered data cell.
      */
     public function renderBody(ColumnInterface $column, Cell $cell, DataContext $context): Cell
     {
@@ -287,9 +282,8 @@ final class DataColumnRenderer implements FilterableColumnRendererInterface, Ove
      * @param Cell $cell The cell to render.
      * @param GlobalContext $context Global rendering context.
      *
-     * @return Cell The rendered footer cell.
-     *
      * @throws InvalidArgumentException If the column is not a DataColumn.
+     * @return Cell The rendered footer cell.
      */
     public function renderFooter(ColumnInterface $column, Cell $cell, GlobalContext $context): Cell
     {
@@ -374,9 +368,8 @@ final class DataColumnRenderer implements FilterableColumnRendererInterface, Ove
      *
      * @param ColumnInterface $column The column to get mappings for.
      *
-     * @return array<string, string> The field name mappings.
-     *
      * @throws InvalidArgumentException If the column is not a DataColumn.
+     * @return array<string, string> The field name mappings.
      */
     public function getOverrideOrderFields(ColumnInterface $column): array
     {

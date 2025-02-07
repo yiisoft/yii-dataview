@@ -80,7 +80,7 @@ use Yiisoft\View\View;
  *
  * ```php
  * /** @var array $data Item data
- * @var string|int $key Item key
+ * @var int|string $key Item key
  * @var int $index Item index (zero-based)
  * @var ListView $widget Widget instance
  * @var bool $isAdmin From itemViewParameters

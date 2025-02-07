@@ -31,12 +31,12 @@ namespace Yiisoft\Yii\DataView;
  *         if ($context->data->isHighlighted) {
  *             return ['class' => 'highlighted'];
  *         }
- *         
+ *
  *         // Add 'alternate' class for even rows
  *         if ($context->index % 2 === 0) {
  *             return ['class' => 'alternate'];
  *         }
- *         
+ *
  *         return [];
  *     });
  *
@@ -47,7 +47,7 @@ namespace Yiisoft\Yii\DataView;
  *         if (!$currentUser->canView($context->data)) {
  *             return ['style' => 'display: none'];
  *         }
- *         
+ *
  *         return [];
  *     });
  * ```
