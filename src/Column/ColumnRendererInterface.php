@@ -31,7 +31,7 @@ interface ColumnRendererInterface
      * @param ColumnInterface $column Column definition.
      * @param Cell $cell Cell to configure.
      * @param HeaderContext $context Context data and dependencies.
-     * @return Cell Configured cell.
+     * @return Cell|null Configured cell or `null` if header should not be rendered.
      */
     public function renderHeader(ColumnInterface $column, Cell $cell, HeaderContext $context): ?Cell;
 
