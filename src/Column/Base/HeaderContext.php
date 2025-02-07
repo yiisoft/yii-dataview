@@ -20,15 +20,44 @@ use function call_user_func_array;
 use function count;
 
 /**
+ * HeaderContext provides context for rendering and handling grid column headers.
+ *
+ * This class manages header-related functionality including:
+ *
+ * - Sorting configuration and state
+ * - Header styling and appearance
+ * - URL generation for sortable headers
+ * - Translation of header content
+ *
  * @psalm-import-type UrlCreator from BaseListView
  */
 final class HeaderContext
 {
     /**
+     * @param Sort|null $originalSort Original sort configuration.
+     * @param Sort|null $sort Current sort configuration.
+     * @param array<string, string> $overrideOrderFields Map of field names to their sort properties.
+     * @param string|null $sortableHeaderClass CSS class for sortable headers.
+     * @param string|Stringable $sortableHeaderPrepend Content to prepend to sortable headers.
+     * @param string|Stringable $sortableHeaderAppend Content to append to sortable headers.
+     * @param string|null $sortableHeaderAscClass CSS class for ascending sort headers.
+     * @param string|Stringable $sortableHeaderAscPrepend Content to prepend to ascending sort headers.
+     * @param string|Stringable $sortableHeaderAscAppend Content to append to ascending sort headers.
+     * @param string|null $sortableHeaderDescClass CSS class for descending sort headers.
+     * @param string|Stringable $sortableHeaderDescPrepend Content to prepend to descending sort headers.
+     * @param string|Stringable $sortableHeaderDescAppend Content to append to descending sort headers.
+     * @param array $sortableLinkAttributes HTML attributes for sort links.
+     * @param string|null $sortableLinkAscClass CSS class for ascending sort links.
+     * @param string|null $sortableLinkDescClass CSS class for descending sort links.
+     * @param PageToken|null $pageToken Current page token for pagination.
+     * @param int|null $pageSize Number of items per page.
+     * @param bool $enableMultiSort Whether multiple column sorting is enabled.
+     * @param UrlConfig $urlConfig URL configuration settings.
+     * @param UrlCreator|null $urlCreator Callback for creating sort URLs.
+     * @param TranslatorInterface $translator Translator service for header content.
+     * @param string $translationCategory Category for header translations.
      * @internal
      *
-     * @psalm-param array<string, string> $overrideOrderFields
-     * @psalm-param UrlCreator|null $urlCreator
      */
     public function __construct(
         private readonly ?Sort $originalSort,
@@ -56,13 +85,30 @@ final class HeaderContext
     ) {
     }
 
+    /**
+     * Translate a message using the header's translation category.
+     *
+     * @param string|Stringable $id Message ID to translate.
+     *
+     * @return string Translated message.
+     */
     public function translate(string|Stringable $id): string
     {
         return $this->translator->translate($id, category: $this->translationCategory);
     }
 
     /**
-     * @psalm-return list{Cell,?A,string,string}
+     * Prepare a sortable header cell with appropriate styling and links.
+     *
+     * @param Cell $cell The header cell to prepare.
+     * @param string $property The property name for sorting.
+     *
+     * @psalm-return array{Cell,?A,string,string}
+     * @return array Array containing:
+     *  - Modified cell
+     *  - Sort link (or null)
+     *  - Content to prepend
+     *  - Content to append
      */
     public function prepareSortable(Cell $cell, string $property): array
     {
@@ -102,11 +148,21 @@ final class HeaderContext
         return [
             $cell,
             A::tag()->attributes($linkAttributes)->url($url),
-            (string) $prepend,
-            (string) $append,
+            (string)$prepend,
+            (string)$append,
         ];
     }
 
+    /**
+     * Get the sort value for a link based on the current sort state.
+     *
+     * @param Sort $originalSort Original sort configuration.
+     * @param Sort $sort Current sort configuration.
+     * @param string $property Property name for sorting.
+     * @param string $originalProperty Original property name before an override.
+     *
+     * @return string|null Sort value for the link or `null` if unchanged.
+     */
     private function getLinkSortValue(
         Sort $originalSort,
         Sort $sort,
@@ -156,6 +212,14 @@ final class HeaderContext
         );
     }
 
+    /**
+     * Compare two sort orders for equality.
+     *
+     * @param array $a First sort order.
+     * @param array $b Second sort order.
+     *
+     * @return bool Whether the sort orders are equal.
+     */
     private function isEqualOrders(array $a, array $b): bool
     {
         ksort($a);

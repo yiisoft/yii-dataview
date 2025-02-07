@@ -9,10 +9,13 @@ use Yiisoft\Html\Html;
 use Yiisoft\Html\NoEncodeStringableInterface;
 
 /**
- * Grid cell.
+ * Cell represents a single grid cell with content and attributes.
  */
 final class Cell
 {
+    /**
+     * @var bool Whether to double encode HTML entities in content.
+     */
     private bool $doubleEncode = true;
 
     /**
@@ -20,6 +23,11 @@ final class Cell
      */
     private array $content;
 
+    /**
+     * @param array $attributes HTML attributes for the cell.
+     * @param bool|null $encode Whether to encode content. See {@see encode()} for details.
+     * @param string|Stringable ...$content Cell content items.
+     */
     public function __construct(
         private array $attributes = [],
         private ?bool $encode = null,
@@ -29,12 +37,15 @@ final class Cell
     }
 
     /**
+     * Set content encoding behavior.
+     *
      * @param bool|null $encode Whether to encode tag content. Supported values:
-     *  - `null`: stringable objects that implement interface {@see NoEncodeStringableInterface} aren't encoded,
-     *    everything else is encoded;
-     *  - `true`: any content is encoded;
-     *  - `false`: nothing is encoded.
-     * Defaults to `null`.
+     *  - `null`: stringable objects implementing {@see NoEncodeStringableInterface} aren't encoded,
+     *    everything else is encoded
+     *  - `true`: any content is encoded
+     *  - `false`: nothing is encoded
+     *
+     * @return self New instance with updated encoding setting.
      */
     public function encode(?bool $encode): self
     {
@@ -44,8 +55,11 @@ final class Cell
     }
 
     /**
-     * @param bool $doubleEncode Whether already encoded HTML entities in tag content should be encoded.
-     * Defaults to `true`.
+     * Set whether to double-encode HTML entities in content.
+     *
+     * @param bool $doubleEncode Whether to double encode HTML entities.
+     *
+     * @return self New instance with updated double encode setting.
      */
     public function doubleEncode(bool $doubleEncode): self
     {
@@ -65,10 +79,12 @@ final class Cell
     }
 
     /**
-     * Add a set of attributes to existing cell attributes.
-     * Same named attributes are replaced.
+     * Add attributes to existing cell attributes.
+     * Attributes with the same name are replaced.
      *
-     * @param array $attributes Name-value set of attributes.
+     * @param array $attributes HTML attributes as name-value pairs.
+     *
+     * @return self New instance with merged attributes
      */
     public function addAttributes(array $attributes): self
     {
@@ -78,9 +94,11 @@ final class Cell
     }
 
     /**
-     * Replace attributes with a new set.
+     * Replace all attributes with a new set.
      *
-     * @param array $attributes Name-value set of attributes.
+     * @param array $attributes HTML attributes as name-value pairs.
+     *
+     * @return self New instance with replaced attributes.
      */
     public function attributes(array $attributes): self
     {
@@ -90,10 +108,12 @@ final class Cell
     }
 
     /**
-     * Set attribute value.
+     * Set a single attribute value.
      *
-     * @param string $name Name of the attribute.
-     * @param mixed $value Value of the attribute.
+     * @param string $name Attribute name.
+     * @param mixed $value Attribute value.
+     *
+     * @return self New instance with updated attribute.
      */
     public function attribute(string $name, mixed $value): self
     {
@@ -102,6 +122,13 @@ final class Cell
         return $new;
     }
 
+    /**
+     * Add a CSS class to the cell.
+     *
+     * @param string|null $class CSS class name to add.
+     *
+     * @return self New instance with added CSS class.
+     */
     public function addClass(?string $class): self
     {
         $new = clone $this;
@@ -109,16 +136,31 @@ final class Cell
         return $new;
     }
 
+    /**
+     * Get cell HTML attributes.
+     *
+     * @return array HTML attributes as name-value pairs
+     */
     public function getAttributes(): array
     {
         return $this->attributes;
     }
 
+    /**
+     * Get content encoding setting.
+     *
+     * @return bool|null Current encoding setting.
+     */
     public function isEncode(): ?bool
     {
         return $this->encode;
     }
 
+    /**
+     * Get double encode setting.
+     *
+     * @return bool Whether HTML entities in content should be double encoded.
+     */
     public function isDoubleEncode(): bool
     {
         return $this->doubleEncode;
@@ -132,6 +174,11 @@ final class Cell
         return $this->content;
     }
 
+    /**
+     * Check if cell content is empty.
+     *
+     * @return bool Whether all content items are empty strings.
+     */
     public function isEmptyContent(): bool
     {
         foreach ($this->content as $content) {
