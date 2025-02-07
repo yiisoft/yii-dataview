@@ -4,8 +4,6 @@ The `ListView` widget is designed to display a list of data items.
 It provides a flexible way to render data in a list format,
 with support for pagination, sorting, and custom item rendering.
 
-// TODO: add screenshot!
-
 ## Basic Usage
 
 The basic usage is the following:

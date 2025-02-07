@@ -30,7 +30,8 @@ final class ActionColumn implements ColumnInterface
      * @param string|null $header The header cell content.
      * @param string|null $footer The footer cell content.
      * @param mixed $content The content to be rendered in each data cell.
-     * @param array|null $buttons Array of action buttons. Keys are button IDs, values are button renderers.
+     * @param array|null $buttons Array of buttons. Keys are button names. Values are either instances
+     * of {@see ActionButton} or a callable with the following signature: `function(string $url): string`.
      * @param array|null $visibleButtons Array of button visibility rules.
      * @param array $columnAttributes HTML attributes for the column cells.
      * @param array $headerAttributes HTML attributes for the header cell.
@@ -39,7 +40,7 @@ final class ActionColumn implements ColumnInterface
      * @param bool $visible Whether the column is visible.
      *
      * @psalm-param UrlCreator|null $urlCreator
-     * @psalm-param array<array-key, ButtonRenderer>|null $buttons
+     * @psalm-param array<string, ButtonRenderer>|null $buttons
      * @psalm-param array<string, bool|Closure>|null $visibleButtons
      */
     public function __construct(
@@ -88,6 +89,7 @@ final class ActionColumn implements ColumnInterface
      * Get the renderer class for this column.
      *
      * @return string The fully qualified class name of the renderer.
+     * @psalm-return class-string<ColumnRendererInterface>
      */
     public function getRenderer(): string
     {

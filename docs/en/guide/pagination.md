@@ -1,212 +1,93 @@
-# Pagination
+# Pagination and page sizes
 
-The Yii DataView component provides two types of pagination: offset-based and keyset-based. Each type has its own advantages and use cases.
-
-## Overview
-
-Pagination in Yii DataView is implemented through dedicated widgets that work with corresponding paginators:
-
-- `OffsetPagination` widget with `OffsetPaginator`
-- `KeysetPagination` widget with `KeysetPaginator`
-
-Both widgets implement the `PaginationWidgetInterface` and provide a fluent interface for configuration.
+The [yiisoft/data](https://github.com/yiisoft/data), which is the source of data for data view widgets, provides two types of pagination:
+offset-based and keyset-based. There are two corresponding widgets for rendering these: `OffsetPagination` and
+`KeysetPagination`.
 
 ## Offset Pagination
 
-Offset pagination is the traditional pagination method that uses page numbers. It's suitable for relatively static data where the total number of items is known and doesn't change frequently.
-
-### Basic Usage
-
-```php
-use Yiisoft\Yii\DataView\Pagination\OffsetPagination;
-
-echo OffsetPagination::widget()
-    ->withPaginator($offsetPaginator)
-    ->withContext($paginationContext);
-```
-
-### Customization
-
-The widget is highly customizable:
+[Offset pagination](https://github.com/yiisoft/data#offset-pagination) is the traditional pagination method that
+uses page numbers and is the best suitable for not that many pages and not that many data changes. 
 
 ```php
-echo OffsetPagination::widget()
-    // HTML structure
-    ->containerTag('nav')
-    ->listTag('ul')
-    ->itemTag('li')
-    
-    // HTML attributes
-    ->containerAttributes(['aria-label' => 'Page navigation'])
-    ->listAttributes(['class' => 'pagination'])
-    ->itemAttributes(['class' => 'page-item'])
-    ->linkAttributes(['class' => 'page-link'])
-    
-    // Styling classes
-    ->currentItemClass('active')
-    ->disabledItemClass('disabled')
-    ->currentLinkClass('current')
-    ->disabledLinkClass('disabled')
-    
-    // Navigation labels
-    ->labelPrevious('Previous')
-    ->labelNext('Next')
-    ->labelFirst('First')
-    ->labelLast('Last')
-    
-    // Maximum number of navigation links
-    ->maxNavLinkCount(5)
-    
-    // Set paginator and context
-    ->withPaginator($offsetPaginator)
-    ->withContext($paginationContext);
+<?php
+use Yiisoft\Yii\DataView\GridView;
+?>
+
+<?= GridView::widget()
+    ->dataReader($paginator)
+    ->offsetPaginationConfig([
+        'listTag()' => ['ul'],
+        'listAttributes()' => [['class' => 'pagination']],
+        'itemTag()' => ['li'],
+        'itemAttributes()' => [['class' => 'page-item']],
+        'linkAttributes()' => [['class' => 'page-link']],
+        'currentItemClass()' => ['active'],
+        'disabledItemClass()' => ['disabled'],
+    ])
+?>
 ```
 
-This will generate HTML like:
-
-```html
-<nav aria-label="Page navigation">
-    <ul class="pagination">
-        <li class="page-item disabled">
-            <a class="page-link disabled" href="#">First</a>
-        </li>
-        <li class="page-item disabled">
-            <a class="page-link disabled" href="#">Previous</a>
-        </li>
-        <li class="page-item active">
-            <a class="page-link current" href="#">1</a>
-        </li>
-        <li class="page-item">
-            <a class="page-link" href="/items?page=2">2</a>
-        </li>
-        <li class="page-item">
-            <a class="page-link" href="/items?page=3">3</a>
-        </li>
-        <li class="page-item">
-            <a class="page-link" href="/items?page=2">Next</a>
-        </li>
-        <li class="page-item">
-            <a class="page-link" href="/items?page=10">Last</a>
-        </li>
-    </ul>
-</nav>
-```
+See `OffsetPagination` class methods for possible configuration options. 
 
 ## Keyset Pagination
 
-Keyset pagination (also known as cursor pagination) uses unique keys or tokens to navigate through data. It's more efficient for large datasets and provides consistent results even when data changes between page loads.
-
-### Basic Usage
-
-```php
-use Yiisoft\Yii\DataView\Pagination\KeysetPagination;
-
-echo KeysetPagination::widget()
-    ->withPaginator($keysetPaginator)
-    ->withContext($paginationContext);
-```
-
-### Customization
-
-The widget supports similar customization options:
+[Keyset pagination](https://github.com/yiisoft/data#keyset-pagination) (also known as cursor pagination) uses
+unique keys or tokens to navigate through data. It's more efficient for large datasets and provides consistent results
+even when data changes between page loads.
 
 ```php
-echo KeysetPagination::widget()
-    // HTML structure
-    ->containerTag('nav')
-    ->listTag('ul')
-    ->itemTag('li')
-    
-    // HTML attributes
-    ->containerAttributes(['aria-label' => 'Navigation'])
-    ->listAttributes(['class' => 'pagination'])
-    ->itemAttributes(['class' => 'page-item'])
-    ->linkAttributes(['class' => 'page-link'])
-    
-    // Styling classes
-    ->disabledItemClass('disabled')
-    ->disabledLinkClass('disabled')
-    
-    // Navigation labels
-    ->labelPrevious('Previous')
-    ->labelNext('Next')
-    
-    // Set paginator and context
-    ->withPaginator($keysetPaginator)
-    ->withContext($paginationContext);
-```
-
-This will generate HTML like:
-
-```html
-<nav aria-label="Navigation">
-    <ul class="pagination">
-        <li class="page-item">
-            <a class="page-link" href="/items?prev=token123">Previous</a>
-        </li>
-        <li class="page-item">
-            <a class="page-link" href="/items?next=token456">Next</a>
-        </li>
-    </ul>
-</nav>
-```
-
-### When to Use Keyset Pagination
-
-Keyset pagination is recommended when:
-- Working with large datasets where offset-based pagination becomes slow
-- Dealing with frequently changing data where page contents might shift
-- Building infinite scroll or "Load More" interfaces
-- Performance and consistency are critical
-
-## Integration with GridView
-
-Both pagination widgets can be used with GridView:
-
-```php
+<?php
 use Yiisoft\Yii\DataView\GridView;
-use Yiisoft\Yii\DataView\Pagination\OffsetPagination;
-// or use KeysetPagination
+?>
 
-echo GridView::widget()
+<?= GridView::widget()
     ->dataReader($paginator)
-    ->paginationWidget(
-        OffsetPagination::widget()
-            ->containerAttributes(['class' => 'my-pagination'])
-    )
-    ->render();
+    ->keysetPaginationConfig([
+        'listTag()' => ['ul'],
+        'listAttributes()' => [['class' => 'pagination']],
+        'itemTag()' => ['li'],
+        'itemAttributes()' => [['class' => 'page-item']],
+        'linkAttributes()' => [['class' => 'page-link']],
+        'disabledItemClass()' => ['disabled'],
+    ])
+?>
 ```
 
-## URL Configuration
+See `KeysetPagination` class methods for possible configuration options. 
 
-Pagination URLs can be customized using the `UrlConfig` class:
+## Page sizes
+
+By default, page size is fixed, but you can configure it to be dynamic:
 
 ```php
-use Yiisoft\Yii\DataView\UrlConfig;
+<?php
+use Yiisoft\Yii\DataView\GridView;
+use Yiisoft\Yii\DataView\PageSize\SelectPageSize;
+?>
 
-$urlConfig = (new UrlConfig())
-    // Configure page parameters
-    ->withPageParameterName('p')
-    ->withPageParameterType(UrlParameterType::PATH)
-    ->withPreviousPageParameterName('prev')
-    ->withPreviousPageParameterType(UrlParameterType::QUERY)
-    
-    // Configure page size
-    ->withPageSizeParameterName('limit')
-    ->withPageSizeParameterType(UrlParameterType::QUERY)
-    
-    // Add additional parameters
-    ->withArguments(['category' => 'books'])
-    ->withQueryParameters(['filter' => 'active']);
-
-// Use with GridView
-echo GridView::widget()
+<?= GridView::widget()
     ->dataReader($paginator)
-    ->urlConfig($urlConfig)
-    ->render();
+    // Configure page size
+    ->pageSizeConstraint([10, 20, 50, 100])
+    ->pageSizeWidget(
+        SelectPageSize::widget()
+            ->addAttributes([
+                'class' => 'form-select',
+                'aria-label' => 'Items per page'
+            ])
+    )
+    // Configure wrapper
+    ->pageSizeTag('div')
+    ->pageSizeAttributes([
+        'class' => 'page-size-wrapper',
+        'id' => 'page-size-control'
+    ])
+    // Configure template
+    ->pageSizeTemplate(<<<HTML
+        <label for="page-size-control">
+            Show {widget} items per page
+        </label>
+    HTML)
+?>
 ```
-
-This configuration would generate URLs like:
-- `/books/p/2?limit=20&filter=active` (for offset pagination)
-- `/books?prev=token123&limit=20&filter=active` (for keyset pagination)
-

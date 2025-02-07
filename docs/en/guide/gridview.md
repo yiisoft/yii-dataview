@@ -1,6 +1,7 @@
 # Grid View
 
-GridView is a powerful data presentation widget that displays data in a highly customizable grid format. It supports features such as:
+GridView is a powerful data presentation widget that displays data in a highly customizable grid format.
+It supports features such as:
 
 - Pagination
 - Sorting
@@ -35,9 +36,11 @@ $dataReader = new DataReader($query);
 ?>
 ```
 
+It is getting data from data reader and rendering it according to configuration passed in `columns()`.
+
 ## Column Types
 
-GridView supports several types of columns out of the box:
+GridView supports several types of columns out of the box.
 
 ### Data Column
 
@@ -59,12 +62,22 @@ ActionColumn displays action buttons (e.g., view, edit, delete):
 
 ```php
 use Yiisoft\Yii\DataView\Column\ActionColumn;
+use Yiisoft\Html\Html;
 
 $column = new ActionColumn(
     buttons: [
-        'view' => true,
-        'edit' => true,
-        'delete' => true,
+        'view' => new \Yiisoft\Yii\DataView\Column\ActionButton(
+            'View',
+            static function (array|object $data, DataContext $context) { 
+                return '/posts/view' . $data->id; 
+            }
+        ),
+        'edit' => function (string $url): string {
+            return (string) Html::a('Edit', $url);
+        },
+        'delete' => function (string $url): string {
+            return (string) Html::a('Delete', $url);
+        },
     ],
     urlCreator: function ($action, $model) {
         return "/posts/$action/" . $model->getId();
@@ -174,6 +187,7 @@ use Yiisoft\Yii\DataView\GridView;
 ```php
 <?php
 use Yiisoft\Yii\DataView\GridView;
+use Yiisoft\Html\Html;
 ?>
 
 <?= GridView::widget()
