@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Yiisoft\Yii\DataView\Column;
 
-use InvalidArgumentException;
 use Stringable;
 use Yiisoft\Html\Html;
 use Yiisoft\Yii\DataView\Column\Base\Cell;
@@ -20,6 +19,8 @@ use Yiisoft\Yii\DataView\Column\Base\HeaderContext;
  * - Supporting both single and multiple selection modes
  * - Managing header, body, and footer cell content
  * - Handling custom content generation
+ *
+ * @implements ColumnRendererInterface<CheckboxColumn>
  */
 final class CheckboxColumnRenderer implements ColumnRendererInterface
 {
@@ -35,27 +36,23 @@ final class CheckboxColumnRenderer implements ColumnRendererInterface
      */
     public function renderColumn(ColumnInterface $column, Cell $cell, GlobalContext $context): Cell
     {
-        $this->checkColumn($column);
         return $cell->addAttributes($column->columnAttributes);
     }
 
     /**
      * Render the column header.
      *
-     * For multiple selection mode, renders a "select all" checkbox if no header content is specified.
-     * For single selection mode, returns null if no header content is specified.
+     * For multiple selection mode, render a "select all" checkbox if no header content is specified.
+     * For single selection mode, return `null` if no header content is specified.
      *
      * @param ColumnInterface $column The column being rendered.
      * @param Cell $cell The cell to render.
      * @param HeaderContext $context Header rendering context.
      *
-     * @throws InvalidArgumentException If the column is not a CheckboxColumn.
      * @return Cell|null The rendered header cell or null for empty single-selection headers.
      */
     public function renderHeader(ColumnInterface $column, Cell $cell, HeaderContext $context): ?Cell
     {
-        $this->checkColumn($column);
-
         $header = $column->header;
         if ($header === null) {
             if (!$column->multiple) {
@@ -82,13 +79,10 @@ final class CheckboxColumnRenderer implements ColumnRendererInterface
      * @param Cell $cell The cell to render.
      * @param DataContext $context Data rendering context.
      *
-     * @throws InvalidArgumentException If the column is not a CheckboxColumn.
      * @return Cell The rendered data cell.
      */
     public function renderBody(ColumnInterface $column, Cell $cell, DataContext $context): Cell
     {
-        $this->checkColumn($column);
-
         $inputAttributes = $column->inputAttributes;
         $name = null;
         $value = null;
@@ -120,39 +114,14 @@ final class CheckboxColumnRenderer implements ColumnRendererInterface
      * @param Cell $cell The cell to render.
      * @param GlobalContext $context Global rendering context.
      *
-     * @throws InvalidArgumentException If the column is not a CheckboxColumn.
      * @return Cell The rendered footer cell.
      */
     public function renderFooter(ColumnInterface $column, Cell $cell, GlobalContext $context): Cell
     {
-        $this->checkColumn($column);
-
         if ($column->footer !== null) {
             $cell = $cell->content($column->footer);
         }
 
         return $cell;
-    }
-
-    /**
-     * Verify that the column is a CheckboxColumn.
-     *
-     * @param ColumnInterface $column The column to check.
-     *
-     * @throws InvalidArgumentException If the column is not a CheckboxColumn.
-     *
-     * @psalm-assert CheckboxColumn $column
-     */
-    private function checkColumn(ColumnInterface $column): void
-    {
-        if (!$column instanceof CheckboxColumn) {
-            throw new InvalidArgumentException(
-                sprintf(
-                    'Expected "%s", but "%s" given.',
-                    CheckboxColumn::class,
-                    $column::class
-                )
-            );
-        }
     }
 }

@@ -18,6 +18,8 @@ use Yiisoft\Yii\DataView\Column\Base\HeaderContext;
  * - Managing column and cell attributes
  * - Providing default header ('#') and footer content
  * - Ensuring proper type checking and validation
+ *
+ * @implements ColumnRendererInterface<SerialColumn>
  */
 final class SerialColumnRenderer implements ColumnRendererInterface
 {
@@ -33,7 +35,6 @@ final class SerialColumnRenderer implements ColumnRendererInterface
      */
     public function renderColumn(ColumnInterface $column, Cell $cell, GlobalContext $context): Cell
     {
-        $this->checkColumn($column);
         return $cell->addAttributes($column->columnAttributes);
     }
 
@@ -49,7 +50,6 @@ final class SerialColumnRenderer implements ColumnRendererInterface
      */
     public function renderHeader(ColumnInterface $column, Cell $cell, HeaderContext $context): Cell
     {
-        $this->checkColumn($column);
         return $cell->content($column->header ?? '#');
     }
 
@@ -68,11 +68,13 @@ final class SerialColumnRenderer implements ColumnRendererInterface
      */
     public function renderBody(ColumnInterface $column, Cell $cell, DataContext $context): Cell
     {
-        $this->checkColumn($column);
+        $index = $context->preparedDataReader instanceof OffsetPaginator
+            ? $context->preparedDataReader->getOffset() + $context->index + 1
+            : $context->index + 1;
 
         return $cell
             ->addAttributes($column->bodyAttributes)
-            ->content((string)($context->index + 1));
+            ->content((string) $index);
     }
 
     /**
@@ -87,29 +89,6 @@ final class SerialColumnRenderer implements ColumnRendererInterface
      */
     public function renderFooter(ColumnInterface $column, Cell $cell, GlobalContext $context): Cell
     {
-        $this->checkColumn($column);
         return $cell->content($column->footer ?? '');
-    }
-
-    /**
-     * Verifies that the column is a SerialColumn instance.
-     *
-     * @param ColumnInterface $column The column to check.
-     *
-     * @throws InvalidArgumentException If the column is not a SerialColumn.
-     *
-     * @psalm-assert SerialColumn $column
-     */
-    private function checkColumn(ColumnInterface $column): void
-    {
-        if (!$column instanceof SerialColumn) {
-            throw new InvalidArgumentException(
-                sprintf(
-                    'Expected "%s", but "%s" given.',
-                    SerialColumn::class,
-                    $column::class
-                )
-            );
-        }
     }
 }

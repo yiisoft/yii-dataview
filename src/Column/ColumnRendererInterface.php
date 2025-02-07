@@ -51,6 +51,8 @@ use Yiisoft\Yii\DataView\Column\Base\HeaderContext;
  *
  * @see Cell The cell object that gets configured by the renderer
  * @see ColumnInterface The column definition interface
+ *
+ * @template TColumn as ColumnInterface
  */
 interface ColumnRendererInterface
 {
@@ -64,6 +66,7 @@ interface ColumnRendererInterface
      * - Configure column-specific behavior
      *
      * @param ColumnInterface $column The column definition to render.
+     * @psalm-param TColumn $column
      * @param Cell $cell The cell container to configure.
      * @param GlobalContext $context Global grid rendering context.
      *
@@ -81,6 +84,7 @@ interface ColumnRendererInterface
      * - Header-specific styling
      *
      * @param ColumnInterface $column The column definition to render.
+     * @psalm-param TColumn $column
      * @param Cell $cell The header cell to configure.
      * @param HeaderContext $context Header-specific rendering context.
      *
@@ -99,6 +103,7 @@ interface ColumnRendererInterface
      * - Dynamic content based on data context
      *
      * @param ColumnInterface $column The column definition to render.
+     * @psalm-param TColumn $column
      * @param Cell $cell The body cell to configure.
      * @param DataContext $context Row-specific data and rendering context.
      *
@@ -116,6 +121,7 @@ interface ColumnRendererInterface
      * - Aggregated information
      *
      * @param ColumnInterface $column The column definition to render.
+     * @psalm-param TColumn $column
      * @param Cell $cell The footer cell to configure.
      * @param GlobalContext $context Global grid rendering context.
      *

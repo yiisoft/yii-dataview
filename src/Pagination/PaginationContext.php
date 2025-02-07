@@ -43,8 +43,6 @@ final class PaginationContext
      * @internal This constructor is not meant to be used directly.
      * Use the appropriate factory method or dependency injection instead.
      *
-     * @param array<string, string> $overrideOrderFields Field ordering overrides.
-     * Example: `['id' => 'DESC', 'created_at' => 'ASC']`
      * @param string $nextUrlPattern URL pattern for next page links.
      * Must contain {@see URL_PLACEHOLDER}.
      * @param string $previousUrlPattern URL pattern for previous page links.
@@ -52,7 +50,6 @@ final class PaginationContext
      * @param string $defaultUrl Default URL used when no pagination is needed.
      */
     public function __construct(
-        public readonly array $overrideOrderFields,
         public readonly string $nextUrlPattern,
         public readonly string $previousUrlPattern,
         public readonly string $defaultUrl,

@@ -7,9 +7,10 @@ namespace Yiisoft\Yii\DataView;
 use Closure;
 use InvalidArgumentException;
 use Yiisoft\Html\Html;
-use Yiisoft\Validator\Result;
 use Yiisoft\View\Exception\ViewNotFoundException;
 use Yiisoft\View\View;
+
+use function is_string;
 
 /**
  * ListView is a flexible widget for displaying a list of data items with customizable rendering and layout.
@@ -313,9 +314,13 @@ final class ListView extends BaseListView
      */
     protected function renderItem(ListItemContext $context): string
     {
-        if ($this->itemCallback !== null) {
-            $content = (string)($this->itemCallback)($context);
-        } elseif ($this->itemView !== null) {
+        $content = '';
+
+        if ($this->itemView === null) {
+            throw new InvalidArgumentException('The "itemView" property must be set.');
+        }
+
+        if (is_string($this->itemView)) {
             $content = $this->getView()->render(
                 $this->itemView,
                 array_merge(
@@ -325,16 +330,18 @@ final class ListView extends BaseListView
                         'key' => $context->key,
                         'widget' => $this,
                     ],
-                    $this->itemViewParameters
+                    $this->viewParams
                 )
             );
-        } else {
-            throw new InvalidArgumentException('Either "itemView" or "itemCallback" must be set.');
         }
 
-        $itemViewAttributes = is_callable($this->itemAttributes)
-            ? (array)($this->itemAttributes)($context)
-            : $this->itemAttributes;
+        if ($this->itemView instanceof Closure) {
+            $content = (string)($this->itemView)($context);
+        }
+
+        $itemViewAttributes = is_callable($this->itemViewAttributes)
+            ? (array)($this->itemViewAttributes)($context)
+            : $this->itemViewAttributes;
 
         foreach ($itemViewAttributes as $i => $attribute) {
             if (is_callable($attribute)) {
@@ -342,9 +349,9 @@ final class ListView extends BaseListView
             }
         }
 
-        return $this->itemTag === null
+        return $this->itemViewTag === null
             ? $content
-            : Html::tag($this->itemTag)
+            : Html::tag($this->itemViewTag)
                 ->attributes($itemViewAttributes)
                 ->content("\n" . $content)
                 ->encode(false)
@@ -352,12 +359,15 @@ final class ListView extends BaseListView
     }
 
     /**
-     * Renders all items.
+     * Renders all data models.
      *
      * @throws ViewNotFoundException If the item view file doesn't exist.
      */
-    protected function renderItems(array $items, Result $filterValidationResult): string
-    {
+    protected function renderItems(
+        array $items,
+        \Yiisoft\Validator\Result $filterValidationResult,
+        ?ReadableDataInterface $preparedDataReader,
+    ): string {
         $keys = array_keys($items);
         $rows = [];
 

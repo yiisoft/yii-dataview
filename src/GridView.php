@@ -7,7 +7,6 @@ namespace Yiisoft\Yii\DataView;
 use Closure;
 use Psr\Container\ContainerInterface;
 use Stringable;
-use Yiisoft\Arrays\ArrayHelper;
 use Yiisoft\Data\Paginator\PaginatorInterface;
 use Yiisoft\Data\Reader\ReadableDataInterface;
 use Yiisoft\Data\Reader\Sort;
@@ -26,108 +25,21 @@ use Yiisoft\Yii\DataView\Column\Base\RendererContainer;
 use Yiisoft\Yii\DataView\Column\ColumnInterface;
 use Yiisoft\Yii\DataView\Column\ColumnRendererInterface;
 use Yiisoft\Yii\DataView\Column\FilterableColumnRendererInterface;
-use Yiisoft\Yii\DataView\Column\OverrideOrderFieldsColumnInterface;
+use Yiisoft\Yii\DataView\Column\SortableColumnInterface;
 use Yiisoft\Yii\DataView\Filter\Factory\IncorrectValueException;
 
+use function array_key_exists;
 use function call_user_func;
 use function call_user_func_array;
 use function is_callable;
 
 /**
- * GridView is a powerful widget for displaying tabular data with advanced features for sorting, filtering, and customization.
+ * The GridView widget displays data in a grid.
  *
- * The widget extends {@see BaseListView} and provides comprehensive functionality for displaying data in a table format:
+ * You can configure the columns of the grid table in terms of {@see Column} classes configured via
+ * {@see columns}.
  *
- * - Flexible column configuration with various column types
- * - Advanced sorting capabilities with multi-column support
- * - Built-in filtering system with validation
- * - Customizable table structure and styling
- * - Row-level customization through callbacks
- * - Internationalization support
- *
- * Key Features:
- *
- * 1. Column System:
- *    - Multiple built-in column types (Data, Serial, Action, etc.)
- *    - Custom column renderers support
- *    - Column grouping capabilities
- *    - Header and footer customization
- *    - Column-specific sorting and filtering
- *
- * 2. Sorting:
- *    - Single and multi-column sorting
- *    - Customizable sort indicators
- *    - Sort direction control (ascending/descending)
- *    - Optional page retention during sort changes
- *
- * 3. Filtering:
- *    - Column-specific filter widgets
- *    - Filter validation with error display
- *    - Custom filter renderers
- *    - Filter value persistence
- *
- * 4. Table Customization:
- *    - HTML attributes for all table elements (table, thead, tbody, tr, th, td)
- *    - Custom CSS classes for different states
- *    - Empty cell content configuration
- *    - Header and footer visibility control
- *
- * 5. Row-Level Features:
- *    - Before/after row rendering callbacks
- *    - Dynamic row attribute generation
- *    - Row-specific styling
- *
- * Example usage:
- *
- * ```php
- * // Basic usage
- * echo GridView::widget()
- *     ->dataReader($dataReader)
- *     ->columns(
- *         (new SerialColumn())->header('#'),
- *         (new DataColumn())
- *             ->header('Name')
- *             ->content(fn ($model) => $model->name),
- *         (new DataColumn())
- *             ->header('Email')
- *             ->content(fn ($model) => $model->email)
- *             ->sortable(true),
- *         (new ActionColumn())
- *             ->buttons([
- *                 'view' => true,
- *                 'update' => true,
- *                 'delete' => true,
- *             ])
- *     )
- *     ->tableClass('table', 'table-striped')
- *     ->enableHeaderTable(true)
- *     ->render();
- *
- * // Advanced usage with filtering and callbacks
- * echo GridView::widget()
- *     ->dataReader($dataReader)
- *     ->columns(
- *         (new DataColumn())
- *             ->header('Status')
- *             ->content(fn ($model) => $model->status)
- *             ->filter(
- *                 (new SelectFilter())
- *                     ->items(['active' => 'Active', 'inactive' => 'Inactive'])
- *             ),
- *         (new DataColumn())
- *             ->header('Created At')
- *             ->content(fn ($model) => $formatter->asDatetime($model->created_at))
- *             ->sortable(true)
- *     )
- *     ->beforeRow(function ($model) {
- *         return $model->isHighlighted
- *             ? Tr::tag()->class('highlighted-row')
- *             : null;
- *     })
- *     ->bodyRowAttributes(['class' => 'table-row'])
- *     ->enableMultiSort()
- *     ->render();
- * ```
+ * The look and feel of a grid view can be customized using many properties.
  *
  * @psalm-import-type UrlCreator from BaseListView
  * @psalm-type BodyRowAttributes = array|(Closure(array|object, BodyRowContext): array)|(array<array-key, Closure(array|object, BodyRowContext): mixed>)
@@ -821,8 +733,11 @@ final class GridView extends BaseListView
      *
      * @return string The rendered HTML content.
      */
-    protected function renderItems(array $items, ValidationResult $filterValidationResult): string
-    {
+    protected function renderItems(
+        array $items,
+        ValidationResult $filterValidationResult,
+        ?ReadableDataInterface $preparedDataReader,
+    ): string {
         $columns = $this->getColumns();
         $renderers = $this->getColumnRenderers();
 
@@ -838,9 +753,9 @@ final class GridView extends BaseListView
             $this->translationCategory,
         );
 
-        if ($this->preparedDataReader instanceof PaginatorInterface) {
-            $pageToken = $this->preparedDataReader->isOnFirstPage() ? null : $this->preparedDataReader->getToken();
-            $pageSize = $this->preparedDataReader->getPageSize();
+        if ($preparedDataReader instanceof PaginatorInterface) {
+            $pageToken = $preparedDataReader->isOnFirstPage() ? null : $preparedDataReader->getToken();
+            $pageSize = $preparedDataReader->getPageSize();
             if ($pageSize === $this->getDefaultPageSize()) {
                 $pageSize = null;
             }
@@ -913,8 +828,8 @@ final class GridView extends BaseListView
         if ($this->isHeaderEnabled) {
             $headerContext = new HeaderContext(
                 $this->getSort($dataReader),
-                $this->getSort($this->preparedDataReader),
-                $this->getOverrideOrderFields(),
+                $this->getSort($preparedDataReader),
+                $this->getOrderProperties(),
                 $this->sortableHeaderClass,
                 $this->sortableHeaderPrepend,
                 $this->sortableHeaderAppend,
@@ -983,7 +898,7 @@ final class GridView extends BaseListView
 
             $tags = [];
             foreach ($columns as $i => $column) {
-                $context = new DataContext($column, $value, $key, $index);
+                $context = new DataContext($preparedDataReader, $column, $value, $key, $index);
                 $cell = $renderers[$i]->renderBody($column, new Cell($this->bodyCellAttributes), $context);
                 $tags[] = $cell->isEmptyContent()
                     ? Html::td($this->emptyCell, $this->emptyCellAttributes)->encode(false)
@@ -1059,37 +974,38 @@ final class GridView extends BaseListView
      *
      * @param array $order The order configuration to prepare.
      */
-    protected function prepareOrder(array &$order): void
+    protected function prepareOrder(array $order): array
     {
         $columns = $this->getColumns();
         $renderers = $this->getColumnRenderers();
+
+        $result = [];
         foreach ($columns as $i => $column) {
-            if ($renderers[$i] instanceof OverrideOrderFieldsColumnInterface) {
-                foreach ($renderers[$i]->getOverrideOrderFields($column) as $from => $to) {
-                    $order = ArrayHelper::renameKey($order, $from, $to);
+            if ($renderers[$i] instanceof SortableColumnInterface) {
+                foreach ($renderers[$i]->getOrderProperties($column) as $from => $to) {
+                    if (array_key_exists($from, $order)) {
+                        $result[$to] = $order[$from];
+                    }
                 }
             }
         }
+
+        return $result;
     }
 
-    /**
-     * Gets the override order fields.
-     *
-     * @return array The override order fields.
-     */
-    protected function getOverrideOrderFields(): array
+    protected function getOrderProperties(): array
     {
         $columns = $this->getColumns();
         $renderers = $this->getColumnRenderers();
 
-        $overrideOrderFields = [];
+        $orderProperties = [];
         foreach ($columns as $i => $column) {
-            if ($renderers[$i] instanceof OverrideOrderFieldsColumnInterface) {
-                $overrideOrderFields[] = $renderers[$i]->getOverrideOrderFields($column);
+            if ($renderers[$i] instanceof SortableColumnInterface) {
+                $orderProperties[] = $renderers[$i]->getOrderProperties($column);
             }
         }
 
-        return array_merge(...$overrideOrderFields);
+        return array_merge(...$orderProperties);
     }
 
     /**

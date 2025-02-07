@@ -42,7 +42,7 @@ final class HeaderContext
      * @param Sort|null $originalSort Original sort configuration before any modifications.
      *                              Used as a reference point for toggling sort states.
      * @param Sort|null $sort Current sort configuration that reflects the active sort state.
-     * @param array<string, string> $overrideOrderFields Map of field names to their sort properties.
+     * @param array<string, string> $orderProperties Map of field names to their sort properties.
      *                                                  Allows remapping of sort fields.
      * @param string|null $sortableHeaderClass CSS class for sortable headers.
      *                                       Applied to headers that can be sorted.
@@ -76,11 +76,14 @@ final class HeaderContext
      * @param string $translationCategory Category for header translations.
      *
      * @internal
+     *
+     * @psalm-param array<string, string> $orderProperties
+     * @psalm-param UrlCreator|null $urlCreator
      */
     public function __construct(
         private readonly ?Sort $originalSort,
         private readonly ?Sort $sort,
-        private readonly array $overrideOrderFields,
+        private readonly array $orderProperties,
         private readonly ?string $sortableHeaderClass,
         private readonly string|Stringable $sortableHeaderPrepend,
         private readonly string|Stringable $sortableHeaderAppend,
@@ -121,18 +124,24 @@ final class HeaderContext
      * @param Cell $cell The header cell to prepare.
      * @param string $property The property name for sorting.
      *
-     * @psalm-return array{Cell,?A,string,string}
-     * @return array Array containing:
-     *  - Modified cell
-     *  - Sort link (or null)
-     *  - Content to prepend
-     *  - Content to append
+     * @psalm-return list{Cell,?A,string,string}
+     *
+     *  @return array Array containing:
+     *   - Modified cell
+     *   - Sort link (or null)
+     *   - Content to prepend
+     *   - Content to append
      */
     public function prepareSortable(Cell $cell, string $property): array
     {
         $originalProperty = $property;
-        $property = $this->overrideOrderFields[$property] ?? $property;
-        if ($this->sort === null || $this->originalSort === null || !$this->sort->hasFieldInConfig($property)) {
+        $property = $this->orderProperties[$property] ?? '';
+        if (
+            $property === ''
+            || $this->sort === null
+            || $this->originalSort === null
+            || !$this->sort->hasFieldInConfig($property)
+        ) {
             return [$cell, null, '', ''];
         }
 
@@ -166,8 +175,8 @@ final class HeaderContext
         return [
             $cell,
             A::tag()->attributes($linkAttributes)->url($url),
-            (string)$prepend,
-            (string)$append,
+            (string) $prepend,
+            (string) $append,
         ];
     }
 

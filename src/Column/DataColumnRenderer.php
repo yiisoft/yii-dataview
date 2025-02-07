@@ -31,11 +31,13 @@ use function is_callable;
 use function is_string;
 
 /**
- * DataColumnRenderer handles rendering and filtering of data columns in a grid.
+ *  DataColumnRenderer handles rendering and filtering of data columns in a grid.
  *
- * @psalm-import-type FilterEmptyCallable from DataColumn
+ * @template TColumn as DataColumn
+ * @implements FilterableColumnRendererInterface<TColumn>
+ * @implements SortableColumnInterface<TColumn>
  */
-final class DataColumnRenderer implements FilterableColumnRendererInterface, OverrideOrderFieldsColumnInterface
+final class DataColumnRenderer implements FilterableColumnRendererInterface, SortableColumnInterface
 {
     /**
      * Default function to determine if a filter value is empty.
@@ -80,7 +82,6 @@ final class DataColumnRenderer implements FilterableColumnRendererInterface, Ove
      */
     public function renderColumn(ColumnInterface $column, Cell $cell, GlobalContext $context): Cell
     {
-        $this->checkColumn($column);
         /** @var DataColumn $column This annotation is for IDE only */
 
         return $cell
@@ -100,7 +101,6 @@ final class DataColumnRenderer implements FilterableColumnRendererInterface, Ove
      */
     public function renderHeader(ColumnInterface $column, Cell $cell, HeaderContext $context): Cell
     {
-        $this->checkColumn($column);
         /** @var DataColumn $column This annotation is for IDE only */
 
         $cell = $cell
@@ -139,7 +139,6 @@ final class DataColumnRenderer implements FilterableColumnRendererInterface, Ove
      */
     public function renderFilter(ColumnInterface $column, Cell $cell, FilterContext $context): ?Cell
     {
-        $this->checkColumn($column);
         /** @var DataColumn $column This annotation is for IDE only */
 
         if ($column->property === null || $column->filter === false) {
@@ -185,7 +184,6 @@ final class DataColumnRenderer implements FilterableColumnRendererInterface, Ove
      */
     public function makeFilter(ColumnInterface $column, MakeFilterContext $context): ?FilterInterface
     {
-        $this->checkColumn($column);
         /** @var DataColumn $column This annotation is for IDE only */
 
         if ($column->property === null) {
@@ -243,7 +241,6 @@ final class DataColumnRenderer implements FilterableColumnRendererInterface, Ove
      */
     public function renderBody(ColumnInterface $column, Cell $cell, DataContext $context): Cell
     {
-        $this->checkColumn($column);
         /** @var DataColumn $column This annotation is for IDE only */
 
         $contentSource = $column->content;
@@ -287,7 +284,6 @@ final class DataColumnRenderer implements FilterableColumnRendererInterface, Ove
      */
     public function renderFooter(ColumnInterface $column, Cell $cell, GlobalContext $context): Cell
     {
-        $this->checkColumn($column);
         /** @var DataColumn $column This annotation is for IDE only */
 
         if ($column->footer !== null) {
@@ -340,49 +336,14 @@ final class DataColumnRenderer implements FilterableColumnRendererInterface, Ove
 
         return (string) $value;
     }
-
-    /**
-     * Verify that the column is a DataColumn.
-     *
-     * @param ColumnInterface $column The column to check.
-     *
-     * @throws InvalidArgumentException If the column is not a DataColumn.
-     *
-     * @psalm-assert DataColumn $column
-     */
-    private function checkColumn(ColumnInterface $column): void
+    public function getOrderProperties(ColumnInterface $column): array
     {
-        if (!$column instanceof DataColumn) {
-            throw new InvalidArgumentException(
-                sprintf(
-                    'Expected "%s", but "%s" given.',
-                    DataColumn::class,
-                    $column::class
-                )
-            );
-        }
-    }
-
-    /**
-     * Get the field name mappings for sorting override.
-     *
-     * @param ColumnInterface $column The column to get mappings for.
-     *
-     * @throws InvalidArgumentException If the column is not a DataColumn.
-     * @return array<string, string> The field name mappings.
-     */
-    public function getOverrideOrderFields(ColumnInterface $column): array
-    {
-        $this->checkColumn($column);
         /** @var DataColumn $column This annotation is for IDE only */
 
-        if ($column->property === null
-            || $column->field === null
-            || $column->property === $column->field
-        ) {
+        if ($column->property === null) {
             return [];
         }
 
-        return [$column->property => $column->field];
+        return [$column->property => $column->field ?? $column->property];
     }
 }

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Yiisoft\Yii\DataView\Column\Base;
 
+use Yiisoft\Data\Reader\ReadableDataInterface;
 use Yiisoft\Yii\DataView\Column\ColumnInterface;
 
 /**
@@ -51,8 +52,8 @@ use Yiisoft\Yii\DataView\Column\ColumnInterface;
 final class DataContext
 {
     /**
-     * Creates a new data context instance.
-     *
+     * @param ReadableDataInterface|null $preparedDataReader The prepared data reader with applied filters, paginating
+     * and sorting. `null` means that there is no data.
      * @param ColumnInterface $column The column being rendered. This provides access to
      * the column configuration and behavior definitions.
      * @param array|object $data The data item being displayed. This can be either an array
@@ -63,6 +64,7 @@ final class DataContext
      * used for implementing alternate row styling or position-based logic.
      */
     public function __construct(
+        public readonly ?ReadableDataInterface $preparedDataReader,
         public readonly ColumnInterface $column,
         public readonly array|object $data,
         public readonly int|string $key,

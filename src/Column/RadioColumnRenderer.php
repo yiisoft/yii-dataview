@@ -12,6 +12,8 @@ use Yiisoft\Yii\DataView\Column\Base\DataContext;
 use Yiisoft\Yii\DataView\Column\Base\GlobalContext;
 use Yiisoft\Yii\DataView\Column\Base\HeaderContext;
 
+use function array_key_exists;
+
 /**
  * RadioColumnRenderer handles the rendering of radio button columns in a grid.
  *
@@ -25,6 +27,8 @@ use Yiisoft\Yii\DataView\Column\Base\HeaderContext;
  * - Use a default name 'radio-selection' if none provided
  * - Use the row key as the radio value if none specified
  * - Support custom content generation via closure
+ *
+ * @implements ColumnRendererInterface<RadioColumn>
  */
 final class RadioColumnRenderer implements ColumnRendererInterface
 {
@@ -56,8 +60,6 @@ final class RadioColumnRenderer implements ColumnRendererInterface
      */
     public function renderHeader(ColumnInterface $column, Cell $cell, HeaderContext $context): ?Cell
     {
-        $this->checkColumn($column);
-
         $header = $column->header;
         if ($header === null) {
             return null;
@@ -86,8 +88,6 @@ final class RadioColumnRenderer implements ColumnRendererInterface
      */
     public function renderBody(ColumnInterface $column, Cell $cell, DataContext $context): Cell
     {
-        $this->checkColumn($column);
-
         $inputAttributes = $column->inputAttributes;
         $name = null;
         $value = null;
@@ -124,34 +124,10 @@ final class RadioColumnRenderer implements ColumnRendererInterface
      */
     public function renderFooter(ColumnInterface $column, Cell $cell, GlobalContext $context): Cell
     {
-        $this->checkColumn($column);
-
         if ($column->footer !== null) {
             $cell = $cell->content($column->footer);
         }
 
         return $cell;
-    }
-
-    /**
-     * Verifies that the column is a RadioColumn instance.
-     *
-     * @param ColumnInterface $column The column to check.
-     *
-     * @throws InvalidArgumentException If the column is not a RadioColumn.
-     *
-     * @psalm-assert RadioColumn $column
-     */
-    private function checkColumn(ColumnInterface $column): void
-    {
-        if (!$column instanceof RadioColumn) {
-            throw new InvalidArgumentException(
-                sprintf(
-                    'Expected "%s", but "%s" given.',
-                    RadioColumn::class,
-                    $column::class
-                )
-            );
-        }
     }
 }

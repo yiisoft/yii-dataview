@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Yiisoft\Yii\DataView\Tests\GridView;
 
 use PHPUnit\Framework\TestCase;
+use Yiisoft\Data\Reader\ReadableDataInterface;
 use Yiisoft\Definitions\Exception\CircularReferenceException;
 use Yiisoft\Definitions\Exception\InvalidConfigException;
 use Yiisoft\Definitions\Exception\NotInstantiableException;
@@ -68,8 +69,11 @@ final class ImmutableTest extends TestCase
     private function createBaseListView(): DataView\BaseListView
     {
         return new class () extends DataView\BaseListView {
-            public function renderItems(array $items, \Yiisoft\Validator\Result $filterValidationResult): string
-            {
+            public function renderItems(
+                array $items,
+                \Yiisoft\Validator\Result $filterValidationResult,
+                ?ReadableDataInterface $preparedDataReader,
+            ): string {
                 return '';
             }
         };

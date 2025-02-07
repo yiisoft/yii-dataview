@@ -16,6 +16,9 @@ use Yiisoft\Yii\DataView\Filter\Factory\IncorrectValueException;
  * This interface extends the base ColumnRendererInterface to add filtering capabilities
  * to grid columns. Implementations handle both the rendering of filter inputs in the grid
  * and the creation of filter conditions based on user input.
+ *
+ * @template TColumn as ColumnInterface
+ * @extends ColumnRendererInterface<TColumn>
  */
 interface FilterableColumnRendererInterface extends ColumnRendererInterface
 {
@@ -28,6 +31,7 @@ interface FilterableColumnRendererInterface extends ColumnRendererInterface
      * - Applying filter-specific styling and attributes
      *
      * @param ColumnInterface $column The column to render the filter for.
+     * @psalm-param TColumn $column
      * @param Cell $cell The cell container to render into.
      * @param FilterContext $context Context containing filter state and validation results.
      *
@@ -45,6 +49,7 @@ interface FilterableColumnRendererInterface extends ColumnRendererInterface
      * - Creating the appropriate filter type (e.g., equals, like, range)
      *
      * @param ColumnInterface $column The column to create the filter for.
+     * @psalm-param TColumn $column
      * @param MakeFilterContext $context Context containing filter parameters and validation state.
      *
      * @throws IncorrectValueException When the filter value is invalid or cannot be processed.

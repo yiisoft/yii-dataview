@@ -5,12 +5,14 @@ declare(strict_types=1);
 namespace Yiisoft\Yii\DataView\Column;
 
 use Closure;
-use InvalidArgumentException;
 use Yiisoft\Html\Html;
 use Yiisoft\Yii\DataView\Column\Base\Cell;
 use Yiisoft\Yii\DataView\Column\Base\GlobalContext;
 use Yiisoft\Yii\DataView\Column\Base\DataContext;
 use Yiisoft\Yii\DataView\Column\Base\HeaderContext;
+
+use function is_bool;
+use function is_callable;
 
 /**
  * ActionColumnRenderer renders action buttons in a grid column.
@@ -22,6 +24,8 @@ use Yiisoft\Yii\DataView\Column\Base\HeaderContext;
  *
  * @psalm-import-type UrlCreator from ActionColumn
  * @psalm-import-type ButtonRenderer from ActionColumn
+ *
+ * @implements ColumnRendererInterface<ActionColumn>
  */
 final class ActionColumnRenderer implements ColumnRendererInterface
 {
@@ -79,7 +83,6 @@ final class ActionColumnRenderer implements ColumnRendererInterface
      */
     public function renderColumn(ColumnInterface $column, Cell $cell, GlobalContext $context): Cell
     {
-        $this->checkColumn($column);
         return $cell->addAttributes($column->columnAttributes);
     }
 
@@ -94,7 +97,6 @@ final class ActionColumnRenderer implements ColumnRendererInterface
      */
     public function renderHeader(ColumnInterface $column, Cell $cell, HeaderContext $context): Cell
     {
-        $this->checkColumn($column);
         return $cell
             ->content($column->header ?? $context->translate('Actions'))
             ->addAttributes($column->headerAttributes);
@@ -111,8 +113,6 @@ final class ActionColumnRenderer implements ColumnRendererInterface
      */
     public function renderBody(ColumnInterface $column, Cell $cell, DataContext $context): Cell
     {
-        $this->checkColumn($column);
-
         $contentSource = $column->content;
 
         if ($contentSource !== null) {
@@ -167,8 +167,6 @@ final class ActionColumnRenderer implements ColumnRendererInterface
      */
     public function renderFooter(ColumnInterface $column, Cell $cell, GlobalContext $context): Cell
     {
-        $this->checkColumn($column);
-
         if ($column->footer !== null) {
             $cell = $cell->content($column->footer);
         }
@@ -324,27 +322,5 @@ final class ActionColumnRenderer implements ColumnRendererInterface
         }
 
         return implode("\n", $tokens);
-    }
-
-    /**
-     * Verify that the column is an ActionColumn.
-     *
-     * @param ColumnInterface $column The column to check.
-     *
-     * @throws InvalidArgumentException If the column is not an ActionColumn.
-     *
-     * @psalm-assert ActionColumn $column
-     */
-    private function checkColumn(ColumnInterface $column): void
-    {
-        if (!$column instanceof ActionColumn) {
-            throw new InvalidArgumentException(
-                sprintf(
-                    'Expected "%s", but "%s" given.',
-                    self::class,
-                    $column::class
-                )
-            );
-        }
     }
 }
