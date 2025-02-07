@@ -1,59 +1,224 @@
-# Grid view
+# Grid View
 
-Grid view is the most powerful data widget provided by Yii. 
-It provides a flexible way to render data in a grid format, with support for pagination,
-sorting, custom item rendering, sorting, extra action buttons, and more.
+GridView is a powerful data presentation widget that displays data in a highly customizable grid format. It supports features such as:
 
-// TODO: add screenshot!
+- Pagination
+- Sorting
+- Filtering
+- Custom column rendering
+- Action buttons
+- Row customization
+- Header and footer sections
 
 ## Basic Usage
 
-The basic usage is the following:
+Here's a basic example of using GridView:
 
 ```php
+<?php
+use Yiisoft\Yii\DataView\GridView;
+use Yiisoft\Yii\DataView\Column\DataColumn;
+use Yiisoft\Yii\DataView\Column\ActionColumn;
+use Yiisoft\Yii\DataView\DataReader\DataReaderInterface;
 
+$dataReader = new DataReader($query);
+?>
+
+
+<?= GridView::widget()
+    ->data($dataReader)
+    ->columns(
+        new DataColumn(property: 'id'),
+        new DataColumn(property: 'title', header: 'Post Title'),
+        new DataColumn(property: 'created_at')
+    )
+?>
 ```
 
+## Column Types
 
-## Data columns
+GridView supports several types of columns out of the box:
 
+### Data Column
 
+DataColumn is the most commonly used column type. It displays model attribute values:
 
-## Action buttons
+```php
+use Yiisoft\Yii\DataView\Column\DataColumn;
 
-## Checkboxes
+$column = new DataColumn(
+    property: 'title',
+    header: 'Post Title',
+    withSorting: true
+)
+```
 
+### Action Column
 
-## Filters
+ActionColumn displays action buttons (e.g., view, edit, delete):
 
-filterCellAttributes
-filterCellInvalidClass
-filterErrorsContainerAttributes
+```php
+use Yiisoft\Yii\DataView\Column\ActionColumn;
+
+$column = new ActionColumn(
+    buttons: [
+        'view' => true,
+        'edit' => true,
+        'delete' => true,
+    ],
+    urlCreator: function ($action, $model) {
+        return "/posts/$action/" . $model->getId();
+    },
+);
+```
+
+### Checkbox Column
+
+CheckboxColumn adds checkboxes for row selection:
+
+```php
+use Yiisoft\Yii\DataView\Column\CheckboxColumn;
+
+$column = new CheckboxColumn(
+    name: 'selection',
+    multiple: true,
+);
+```
+
+## Filtering
+
+// TODO: fix it!
+
+GridView supports filtering data through several configuration options:
+
+```php
+<?php
+use Yiisoft\Yii\DataView\GridView;
+?>
+
+<?= GridView::widget()
+    // Set attributes for filter cells
+    ->filterCellAttributes(['class' => 'filter-cell'])
+    
+    // Set class for cells with invalid filter values
+    ->filterCellInvalidClass('invalid-filter')
+    
+    // Configure filter error container
+    ->filterErrorsContainerAttributes(['class' => 'filter-errors'])
+?>
+```
 
 ## Sorting
 
-keepPageOnSort
+You can customize sorting behavior and rendering:
+
+```php
+<?php
+use Yiisoft\Yii\DataView\GridView;
+?>
+
+<?= GridView::widget()
+    // Keep current page when sorting
+    ->keepPageOnSort(true) 
+    
+    // Add sort indicators
+    ->sortableHeaderAscAppend('↑')
+    ->sortableHeaderDescAppend('↓')
+?>
+```
+
+## Layout Customization
+
+GridView offers extensive layout customization.
+
+### Header and Footer
+
+```php
+<?php
+use Yiisoft\Yii\DataView\GridView;
+?>
+
+<?= GridView::widget()
+    // Enable/disable header and footer
+    ->enableHeaderTable(true)
+    ->enableFooter(true)
+    
+    // Customize attributes
+    ->headerRowAttributes(['class' => 'header-row'])
+    ->footerRowAttributes(['class' => 'footer-row'])
+?>
+```
+
+### Table Structure
+
+```php
+<?php
+use Yiisoft\Yii\DataView\GridView;
+?>
+
+<?= GridView::widget()
+    // Table attributes
+    ->tableAttributes(['class' => 'grid-table'])
+    
+    // Body attributes
+    ->tbodyAttributes(['class' => 'grid-body'])
+    
+    // Cell attributes
+    ->headerCellAttributes(['class' => 'header-cell'])
+    ->bodyCellAttributes(['class' => 'body-cell'])
+?>
+```
+
+### Row Customization
+
+```php
+<?php
+use Yiisoft\Yii\DataView\GridView;
+?>
+
+<?= GridView::widget()
+    // Customize body row attributes
+    ->bodyRowAttributes(function ($model, $key, $index) {
+        return ['class' => $index % 2 === 0 ? 'even' : 'odd'];
+    })
+    
+    // Add content before/after rows
+    ->beforeRow(function ($model, $key, $index) {
+        return $model->hasCategory() 
+            ? Html::tr()->content(Html::td($model->getCategory())->colspan(6))
+            : null;
+    })
+    ->afterRow(function ($model, $key, $index) {
+        return $model->hasDetails()
+            ? Html::tr()->content(Html::td($model->getDetails())->colspan(6))
+            : null;
+    })
+?>
+```
+
+## Custom Column Renderers
+
+You can add custom column renderers for special rendering needs:
+
+```php
+<?php
+use Yiisoft\Yii\DataView\GridView;
+?>
 
 
+<?= GridView::widget()
+    ->addColumnRendererConfigs([
+        CustomColumnRenderer::class => [
+            'optionA' => 'valueA',
+            'optionB' => 'valueB',
+        ],
+    ])
+?>
+```
 
-## Defining your own columns
+## Additional Features
 
-column renderers
-
-
-addColumnRendererConfigs
-ContainerInterface $columnRenderersDependencyContainer,
-$this->columnRendererContainer = new RendererContainer($columnRenderersDependencyContainer);
-
-public function addColumnRendererConfigs(array $configs): self
-
-## Rendering options
-
-The widget rendering could be customized.
-
-### Additional customization
-
-As for every data widget that renders a set of data, you can additionally customize it with:
+There are additional features common among all list widgets:
 
 - [Pagination](pagination.md)
 - [URLs](urls.md)

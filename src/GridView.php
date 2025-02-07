@@ -79,7 +79,7 @@ final class GridView extends BaseListView
     private array $emptyCellAttributes = [];
 
     /**
-     * @var bool Whether footer section is enabled.
+     * @var bool Whether the footer section is enabled.
      */
     private bool $isFooterEnabled = false;
 
@@ -89,7 +89,7 @@ final class GridView extends BaseListView
     private array $footerRowAttributes = [];
 
     /**
-     * @var bool Whether header table section is enabled.
+     * @var bool Whether the header table section is enabled.
      */
     private bool $isHeaderTableEnabled = true;
 
@@ -435,7 +435,7 @@ final class GridView extends BaseListView
      *
      * @return self New instance with the footer section visibility setting.
      */
-    public function footerEnabled(bool $enabled): self
+    public function enableFooter(bool $enabled): self
     {
         $new = clone $this;
         $new->isFooterEnabled = $enabled;
@@ -1069,7 +1069,7 @@ final class GridView extends BaseListView
      *
      * @return ColumnInterface[] The columns.
      */
-    protected function getColumns(): array
+    private function getColumns(): array
     {
         if ($this->columnsCache === null) {
             $this->columnsCache = array_filter(
@@ -1086,7 +1086,7 @@ final class GridView extends BaseListView
      *
      * @return ColumnRendererInterface[] The column renderers.
      */
-    protected function getColumnRenderers(): array
+    private function getColumnRenderers(): array
     {
         if ($this->columnRenderersCache === null) {
             $this->columnRenderersCache = array_map(
