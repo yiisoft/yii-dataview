@@ -56,7 +56,7 @@ final class GridView extends BaseListView
      */
     private ?array $columnsCache = null;
 
-    private bool $columnGroupEnabled = false;
+    private bool $isColumnGroupEnabled = false;
     private string $emptyCell = '&nbsp;';
     private array $emptyCellAttributes = [];
     private bool $footerEnabled = false;
@@ -229,10 +229,10 @@ final class GridView extends BaseListView
      *
      * @see ColumnRendererInterface::renderColumn()
      */
-    public function columnGroupEnabled(bool $enabled = true): self
+    public function enableColumnGroup(bool $enabled = true): self
     {
         $new = clone $this;
-        $new->columnGroupEnabled = $enabled;
+        $new->isColumnGroupEnabled = $enabled;
         return $new;
     }
 
@@ -575,7 +575,7 @@ final class GridView extends BaseListView
             $filterRow = null;
         }
 
-        if ($this->columnGroupEnabled) {
+        if ($this->isColumnGroupEnabled) {
             $tags = [];
             foreach ($columns as $i => $column) {
                 $cell = $renderers[$i]->renderColumn($column, new Cell(), $globalContext);
