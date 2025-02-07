@@ -6,7 +6,9 @@ namespace Yiisoft\Yii\DataView;
 
 use Closure;
 use InvalidArgumentException;
+use Yiisoft\Data\Reader\ReadableDataInterface;
 use Yiisoft\Html\Html;
+use Yiisoft\Validator\Result as ValidationResult;
 use Yiisoft\View\Exception\ViewNotFoundException;
 use Yiisoft\View\View;
 
@@ -316,11 +318,11 @@ final class ListView extends BaseListView
     {
         $content = '';
 
-        if ($this->itemView === null) {
-            throw new InvalidArgumentException('The "itemView" property must be set.');
+        if ($this->itemView === null && $this->itemCallback === null) {
+            throw new InvalidArgumentException('Either "itemView" or "itemCallback" must be set.');
         }
 
-        if (is_string($this->itemView)) {
+        if ($this->itemView !== null) {
             $content = $this->getView()->render(
                 $this->itemView,
                 array_merge(
@@ -330,29 +332,29 @@ final class ListView extends BaseListView
                         'key' => $context->key,
                         'widget' => $this,
                     ],
-                    $this->viewParams
+                    $this->itemViewParameters
                 )
             );
         }
 
-        if ($this->itemView instanceof Closure) {
-            $content = (string)($this->itemView)($context);
+        if ($this->itemCallback !== null) {
+            $content = (string)($this->itemCallback)($context);
         }
 
-        $itemViewAttributes = is_callable($this->itemViewAttributes)
-            ? (array)($this->itemViewAttributes)($context)
-            : $this->itemViewAttributes;
+        $itemAttributes = is_callable($this->itemAttributes)
+            ? (array)($this->itemAttributes)($context)
+            : $this->itemAttributes;
 
-        foreach ($itemViewAttributes as $i => $attribute) {
+        foreach ($itemAttributes as $i => $attribute) {
             if (is_callable($attribute)) {
-                $itemViewAttributes[$i] = $attribute($context);
+                $itemAttributes[$i] = $attribute($context);
             }
         }
 
-        return $this->itemViewTag === null
+        return $this->itemTag === null
             ? $content
-            : Html::tag($this->itemViewTag)
-                ->attributes($itemViewAttributes)
+            : Html::tag($this->itemTag)
+                ->attributes($itemAttributes)
                 ->content("\n" . $content)
                 ->encode(false)
                 ->render();
@@ -365,9 +367,10 @@ final class ListView extends BaseListView
      */
     protected function renderItems(
         array $items,
-        \Yiisoft\Validator\Result $filterValidationResult,
+        ValidationResult $filterValidationResult,
         ?ReadableDataInterface $preparedDataReader,
-    ): string {
+    ): string
+    {
         $keys = array_keys($items);
         $rows = [];
 
