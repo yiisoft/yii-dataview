@@ -57,7 +57,6 @@ final class HeaderContext
      * @param TranslatorInterface $translator Translator service for header content.
      * @param string $translationCategory Category for header translations.
      * @internal
-     *
      */
     public function __construct(
         private readonly ?Sort $originalSort,
