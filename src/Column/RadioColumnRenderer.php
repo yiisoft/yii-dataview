@@ -44,7 +44,6 @@ final class RadioColumnRenderer implements ColumnRendererInterface
      */
     public function renderColumn(ColumnInterface $column, Cell $cell, GlobalContext $context): Cell
     {
-        $this->checkColumn($column);
         return $cell->addAttributes($column->columnAttributes);
     }
 

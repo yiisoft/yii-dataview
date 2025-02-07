@@ -31,7 +31,6 @@ final class CheckboxColumnRenderer implements ColumnRendererInterface
      * @param Cell $cell The cell to render.
      * @param GlobalContext $context Global rendering context.
      *
-     * @throws InvalidArgumentException If the column is not a CheckboxColumn.
      * @return Cell The rendered cell.
      */
     public function renderColumn(ColumnInterface $column, Cell $cell, GlobalContext $context): Cell
