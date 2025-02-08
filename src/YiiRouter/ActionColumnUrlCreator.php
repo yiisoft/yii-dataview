@@ -13,9 +13,20 @@ use Yiisoft\Yii\DataView\UrlParameterType;
 
 use function is_object;
 
+/**
+ * URL creator for action columns in `GridView`.
+ */
 final class ActionColumnUrlCreator
 {
     /**
+     * Creates a new URL creator instance.
+     *
+     * @param UrlGeneratorInterface $urlGenerator The URL generator service.
+     * @param CurrentRoute $currentRoute The current route service.
+     * @param string $defaultPrimaryKey The default primary key field name.
+     * Used when not specified in the URL config.
+     * @param int $defaultPrimaryKeyParameterType The default parameter type for
+     * primary key values. Used when not specified in the URL config.
      * @psalm-param UrlParameterType::* $defaultPrimaryKeyParameterType
      */
     public function __construct(
@@ -26,6 +37,16 @@ final class ActionColumnUrlCreator
     ) {
     }
 
+    /**
+     * Generates a URL for an action button.
+     *
+     * @param string $action The action name (e.g., 'view', 'edit', 'delete').
+     * @param DataContext $context The data context containing the row data and column.
+     *
+     * @throws LogicException if the URL config is not an instance of `ActionColumnUrlConfig`.
+     *
+     * @return string The generated URL for the action.
+     */
     public function __invoke(string $action, DataContext $context): string
     {
         /** @var ActionColumn $column */

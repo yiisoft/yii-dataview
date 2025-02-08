@@ -6,12 +6,24 @@ namespace Yiisoft\Yii\DataView\Pagination;
 
 use Yiisoft\Data\Paginator\PageToken;
 
+/**
+ * Context class for pagination widgets that provides URL generation and configuration.
+ */
 final class PaginationContext
 {
+    /**
+     * Placeholder used in URL patterns that will be replaced with the actual page token.
+     */
     public const URL_PLACEHOLDER = 'YII-DATAVIEW-PAGE-PLACEHOLDER';
 
     /**
-     * @internal
+     * @internal This constructor is not meant to be used directly.
+     *
+     * @param string $nextUrlPattern URL pattern for next page links.
+     * Must contain {@see URL_PLACEHOLDER}.
+     * @param string $previousUrlPattern URL pattern for previous page links.
+     * Must contain {@see URL_PLACEHOLDER}.
+     * @param string $defaultUrl Default URL used when no pagination is needed.
      */
     public function __construct(
         public readonly string $nextUrlPattern,
@@ -21,8 +33,14 @@ final class PaginationContext
     }
 
     /**
+     * Creates a URL for the given page token.
+     *
+     * This method replaces the URL_PLACEHOLDER in either the next or previous
+     * URL pattern (depending on the token type) with the URL-encoded token value.
+     *
      * @param PageToken $pageToken Token for the page.
-     * @return string Created URL.
+     *
+     * @return string The generated URL with the token value properly encoded.
      */
     public function createUrl(PageToken $pageToken): string
     {

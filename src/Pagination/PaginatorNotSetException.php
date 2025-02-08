@@ -7,8 +7,16 @@ namespace Yiisoft\Yii\DataView\Pagination;
 use RuntimeException;
 use Yiisoft\FriendlyException\FriendlyExceptionInterface;
 
+/**
+ * Exception thrown when attempting to use a pagination widget without setting a paginator.
+ */
 final class PaginatorNotSetException extends RuntimeException implements FriendlyExceptionInterface
 {
+    /**
+     * Creates a new instance with an optional custom message.
+     *
+     * @param string $message Custom error message. If empty, use the default message.
+     */
     public function __construct(string $message = '')
     {
         $message = $message === '' ? $this->getName() : $message;

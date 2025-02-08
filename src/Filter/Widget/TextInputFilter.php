@@ -7,6 +7,9 @@ namespace Yiisoft\Yii\DataView\Filter\Widget;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\Input;
 
+/**
+ * Filter widget that renders a text input for filtering data.
+ */
 final class TextInputFilter extends FilterWidget
 {
     private Input $input;
@@ -16,6 +19,8 @@ final class TextInputFilter extends FilterWidget
      * Same named attributes are replaced.
      *
      * @param array $attributes Name-value set of attributes.
+     *
+     * @return self New instance with added attributes.
      *
      * @see Input::addAttributes()
      */
@@ -31,6 +36,8 @@ final class TextInputFilter extends FilterWidget
      *
      * @param array $attributes Name-value set of attributes.
      *
+     * @return self New instance with replaced attributes.
+     *
      * @see Input::attributes()
      */
     public function attributes(array $attributes): self
@@ -40,6 +47,13 @@ final class TextInputFilter extends FilterWidget
         return $new;
     }
 
+    /**
+     * Renders the text input filter with the given context.
+     *
+     * @param Context $context The filter context.
+     *
+     * @return string The rendered HTML input element.
+     */
     public function renderFilter(Context $context): string
     {
         return $this->getInput()
@@ -49,6 +63,11 @@ final class TextInputFilter extends FilterWidget
             ->render();
     }
 
+    /**
+     * Gets the input instance, creating a new one if not set.
+     *
+     * @return Input The HTML input instance.
+     */
     private function getInput(): Input
     {
         return $this->input ?? Html::textInput();

@@ -30,6 +30,8 @@ use function is_callable;
 use function is_string;
 
 /**
+ * `DataColumnRenderer` handles rendering and filtering of data columns in a grid.
+ *
  * @template TColumn as DataColumn
  * @implements FilterableColumnRendererInterface<TColumn>
  * @implements SortableColumnInterface<TColumn>
@@ -39,12 +41,23 @@ use function is_string;
 final class DataColumnRenderer implements FilterableColumnRendererInterface, SortableColumnInterface
 {
     /**
+     * Default function to determine if a filter value is empty.
+     *
      * @var bool|callable
      * @psalm-var bool|FilterEmptyCallable
      */
     private readonly mixed $defaultFilterEmpty;
 
     /**
+     * Creates a new `DataColumnRenderer` instance.
+     *
+     * @param ContainerInterface $filterFactoryContainer Container for filter factory instances.
+     * @param ValidatorInterface $validator Validator for filter values.
+     * @param string $dateTimeFormat Default format for datetime values (e.g., 'Y-m-d H:i:s').
+     * @param string $defaultFilterFactory Default filter factory class for non-array filters.
+     * @param string $defaultArrayFilterFactory Default filter factory class for array filters.
+     * @param bool|callable $defaultFilterEmpty Default function to determine if a filter value is empty.
+     *
      * @psalm-param bool|FilterEmptyCallable $defaultFilterEmpty
      */
     public function __construct(
@@ -223,6 +236,12 @@ final class DataColumnRenderer implements FilterableColumnRendererInterface, Sor
     }
 
     /**
+     * Normalize a filter empty value to a callable.
+     *
+     * @param bool|callable $value The value to normalize.
+     *
+     * @return callable The normalized callable.
+     *
      * @psalm-param bool|FilterEmptyCallable $value
      * @psalm-return FilterEmptyCallable
      */
@@ -239,6 +258,14 @@ final class DataColumnRenderer implements FilterableColumnRendererInterface, Sor
         return $value;
     }
 
+    /**
+     * Cast a value to string with type-specific handling.
+     *
+     * @param mixed $value The value to cast.
+     * @param DataColumn $column The column containing format settings.
+     *
+     * @return string The string representation of the value.
+     */
     private function castToString(mixed $value, DataColumn $column): string
     {
         if ($value === null) {

@@ -53,6 +53,8 @@ use function is_array;
 use function is_int;
 
 /**
+ * `BaseListView` is an abstract base class for widgets that display data items in terms of a list or grid.
+ *
  * @psalm-type UrlArguments = array<string,scalar|Stringable|null>
  * @psalm-type UrlCreator = callable(UrlArguments,array):string
  * @psalm-type PageNotFoundExceptionCallback = callable(InvalidPageException):void
@@ -166,10 +168,10 @@ abstract class BaseListView extends Widget
         return $new;
     }
 
-    final public function ignoreMissingPage(bool $value): static
+    final public function ignoreMissingPage(bool $enabled): static
     {
         $new = clone $this;
-        $new->ignoreMissingPage = $value;
+        $new->ignoreMissingPage = $enabled;
         return $new;
     }
 
@@ -221,10 +223,10 @@ abstract class BaseListView extends Widget
         return $new;
     }
 
-    final public function enableMultiSort(bool $value = true): self
+    final public function enableMultiSort(bool $enable = true): self
     {
         $new = clone $this;
-        $new->enableMultiSort = $value;
+        $new->enableMultiSort = $enable;
         return $new;
     }
 
@@ -285,12 +287,12 @@ abstract class BaseListView extends Widget
     /**
      * Returns a new instance with the HTML attributes for the empty text.
      *
-     * @param array $values Attribute values indexed by attribute names.
+     * @param array $attributes Attribute values indexed by attribute names.
      */
-    public function emptyTextAttributes(array $values): static
+    public function emptyTextAttributes(array $attributes): static
     {
         $new = clone $this;
-        $new->emptyTextAttributes = $values;
+        $new->emptyTextAttributes = $attributes;
 
         return $new;
     }
@@ -460,14 +462,14 @@ abstract class BaseListView extends Widget
     /**
      * Return new instance with the header for the grid.
      *
-     * @param string $value The header of the grid.
+     * @param string $content The header of the grid.
      *
      * {@see headerAttributes}
      */
-    public function header(string $value): self
+    public function header(string $content): self
     {
         $new = clone $this;
-        $new->header = $value;
+        $new->header = $content;
 
         return $new;
     }
@@ -475,12 +477,12 @@ abstract class BaseListView extends Widget
     /**
      * Return new instance with the HTML attributes for the header.
      *
-     * @param array $values Attribute values indexed by attribute names.
+     * @param array $attributes Attribute values indexed by attribute names.
      */
-    public function headerAttributes(array $values): self
+    public function headerAttributes(array $attributes): self
     {
         $new = clone $this;
-        $new->headerAttributes = $values;
+        $new->headerAttributes = $attributes;
 
         return $new;
     }
@@ -500,7 +502,7 @@ abstract class BaseListView extends Widget
     /**
      * Returns a new instance with the layout of the grid view, and list view.
      *
-     * @param string $value The template that determines how different sections of the grid view, list view. Should be
+     * @param string $view The template that determines how different sections of the grid view, list view. Should be
      * organized.
      *
      * The following tokens will be replaced with the corresponding section contents:
@@ -508,10 +510,10 @@ abstract class BaseListView extends Widget
      * - `{header}`: The header section.
      * - `{toolbar}`: The toolbar section.
      */
-    public function layout(string $value): static
+    public function layout(string $view): static
     {
         $new = clone $this;
-        $new->layout = $value;
+        $new->layout = $view;
 
         return $new;
     }
@@ -530,12 +532,12 @@ abstract class BaseListView extends Widget
     /**
      * Returns a new instance with the HTML attributes for page size wrapper tag.
      *
-     * @param array $values Attribute values indexed by attribute names.
+     * @param array $attributes Attribute values indexed by attribute names.
      */
-    final public function pageSizeAttributes(array $values): static
+    final public function pageSizeAttributes(array $attributes): static
     {
         $new = clone $this;
-        $new->pageSizeAttributes = $values;
+        $new->pageSizeAttributes = $attributes;
         return $new;
     }
 
@@ -644,26 +646,26 @@ abstract class BaseListView extends Widget
     /**
      * Returns a new instance with the HTML attributes for summary wrapper tag.
      *
-     * @param array $values Attribute values indexed by attribute names.
+     * @param array $attributes Attribute values indexed by attribute names.
      */
-    final public function summaryAttributes(array $values): static
+    final public function summaryAttributes(array $attributes): static
     {
         $new = clone $this;
-        $new->summaryAttributes = $values;
+        $new->summaryAttributes = $attributes;
         return $new;
     }
 
     /**
      * Return new instance with toolbar content.
      *
-     * @param string $value The toolbar content.
+     * @param string $content The toolbar content.
      *
      * @psalm-param array $toolbar
      */
-    public function toolbar(string $value): self
+    public function toolbar(string $content): self
     {
         $new = clone $this;
-        $new->toolbar = $value;
+        $new->toolbar = $content;
 
         return $new;
     }
@@ -671,26 +673,26 @@ abstract class BaseListView extends Widget
     /**
      * Return a new instance with arguments of the route.
      *
-     * @param array $value Arguments of the route.
+     * @param array $arguments Arguments of the route.
      *
-     * @psalm-param array<string,scalar|Stringable|null> $value
+     * @psalm-param array<string,scalar|Stringable|null> $arguments
      */
-    public function urlArguments(array $value): static
+    public function urlArguments(array $arguments): static
     {
         $new = clone $this;
-        $new->urlArguments = $value;
+        $new->urlArguments = $arguments;
         return $new;
     }
 
     /**
      * Return a new instance with query parameters of the route.
      *
-     * @param array $value The query parameters of the route.
+     * @param array $parameters The query parameters of the route.
      */
-    public function urlQueryParameters(array $value): static
+    public function urlQueryParameters(array $parameters): static
     {
         $new = clone $this;
-        $new->urlQueryParameters = $value;
+        $new->urlQueryParameters = $parameters;
 
         return $new;
     }

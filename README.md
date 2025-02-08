@@ -14,9 +14,11 @@
 
 This package provides data displaying widgets:
 
-- ListView
-- GridView
-- DetailView
+- [ListView](docs/en/guide/listview.md)
+- [GridView](docs/en/guide/gridview.md)
+- [DetailView](docs/en/guide/detailview.md)
+
+Each widget has pagination, theming and translation built-in.
 
 ## Requirements
 
@@ -32,6 +34,7 @@ composer require yiisoft/yii-dataview
 
 ## Documentation
 
+- [Guide](docs/en/guide/README.md)
 - [Internals](docs/internals.md)
 
 If you need help or have a question, the [Yii Forum](https://forum.yiiframework.com/c/yii-3-0/63) is a good place for

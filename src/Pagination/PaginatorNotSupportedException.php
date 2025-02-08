@@ -9,8 +9,16 @@ use Yiisoft\Data\Paginator\PaginatorInterface;
 
 use function sprintf;
 
+/**
+ * Exception thrown when a pagination widget receives an unsupported paginator type.
+ */
 final class PaginatorNotSupportedException extends LogicException
 {
+    /**
+     * Creates a new instance for the given unsupported paginator.
+     *
+     * @param PaginatorInterface $paginator The unsupported paginator instance.
+     */
     public function __construct(PaginatorInterface $paginator)
     {
         parent::__construct(

@@ -8,182 +8,191 @@ use Closure;
 use InvalidArgumentException;
 use Yiisoft\Data\Reader\ReadableDataInterface;
 use Yiisoft\Html\Html;
+use Yiisoft\Validator\Result as ValidationResult;
 use Yiisoft\View\Exception\ViewNotFoundException;
 use Yiisoft\View\View;
 
-use function is_string;
-
 /**
- * The ListView widget displays data from data provider. Each data model is rendered using the view specified.
+ * `ListView` is a flexible widget for displaying a list of data items with customizable rendering and layout.
  */
 final class ListView extends BaseListView
 {
-    private ?Closure $afterItem = null;
-    private ?Closure $beforeItem = null;
+    private ?Closure $afterItemCallback = null;
+    private ?Closure $beforeItemCallback = null;
 
     /**
      * @psalm-var non-empty-string|null
      */
-    private ?string $itemsWrapperTag = 'ul';
-    private array $itemsWrapperAttributes = [];
-
-    /**
-     * @var callable|string|null
-     */
-    private $itemView = null;
+    private ?string $itemListTag = 'ul';
+    private array $itemListAttributes = [];
+    private ?string $itemView = null;
+    private ?Closure $itemCallback = null;
 
     /**
      * @psalm-var non-empty-string|null
      */
-    private ?string $itemViewTag = 'li';
-    private array|Closure $itemViewAttributes = [];
+    private ?string $itemTag = 'li';
+    private array|Closure $itemAttributes = [];
     private string $separator = "\n";
-    private array $viewParams = [];
+    private array $itemViewParameters = [];
     private ?View $view = null;
 
     /**
-     * Return new instance with afterItem closure.
+     * Return new instance with a function that is called after rendering each item..
      *
-     * @param Closure $value An anonymous function that is called once after rendering each data.
+     * @param Closure $callback A callback with the following signature:
      *
-     * It should have the same signature as {@see beforeItem}.
+     * ```php
+     * function (ListItemContext $context): ?string
+     * ```
      *
      * The return result of the function will be rendered directly.
-     *
-     * Note: If the function returns `null`, nothing will be rendered after the item.
+     * If the result is `null`, nothing is rendered.
      *
      * {@see renderAfterItem}
      */
-    public function afterItem(Closure $value): self
+    public function afterItem(Closure $callback): self
     {
         $new = clone $this;
-        $new->afterItem = $value;
+        $new->afterItemCallback = $callback;
 
         return $new;
     }
 
     /**
-     * Return new instance with beforeItem closure.
+     * Return new instance with a function that is called before rendering each item.
      *
-     * @param Closure $value an anonymous function that is called once before rendering each data.
+     * @param Closure $callback A callback with the following signature:
      *
-     * It should have the following signature:
+     *  ```php
+     *  function (ListItemContext $context): ?string
+     *  ```
      *
-     * ```php
-     * function (ListItemContext $context)
-     * ```
-     *
-     * The return result of the function will be rendered directly.
-     *
-     * Note: If the function returns `null`, nothing will be rendered before the item.
+     *  The return result of the function will be rendered directly.
+     *  If the result is `null`, nothing is rendered.
      *
      * {@see renderBeforeItem}
      */
-    public function beforeItem(Closure $value): self
+    public function beforeItem(Closure $callback): self
     {
         $new = clone $this;
-        $new->beforeItem = $value;
+        $new->beforeItemCallback = $callback;
 
         return $new;
     }
 
     /**
-     * Set the HTML tag for the items wrapper.
+     * Set the HTML tag for the item list.
      *
      * @param string|null $tag
      * @return $this
      */
-    public function itemsWrapperTag(?string $tag): self
+    public function itemListTag(?string $tag): self
     {
         if ($tag === '') {
-            throw new InvalidArgumentException('The "itemsWrapperTag" property cannot be empty.');
+            throw new InvalidArgumentException('The "itemListTag" cannot be empty.');
         }
 
         $new = clone $this;
-        $new->itemsWrapperTag = $tag;
+        $new->itemListTag = $tag;
         return $new;
     }
 
     /**
-     * Set the HTML attributes for the container of the items wrapper.
+     * Set the HTML attributes for the item list.
      *
-     * @param array $values
+     * @param array $attributes Attribute values indexed by attribute names.
      * @return $this
      */
-    public function itemsWrapperAttributes(array $values): self
+    public function itemListAttributes(array $attributes): self
     {
         $new = clone $this;
-        $new->itemsWrapperAttributes = $values;
+        $new->itemListAttributes = $attributes;
         return $new;
     }
 
     /**
-     * Return new instance with itemView closure.
+     * Return new instance with item view defined.
      *
-     * @param Closure|string $value the full path of the view for rendering each data item, or a callback (e.g.
-     * an anonymous function) for rendering each data item. If it specifies a view name, the following variables will be
-     * available in the view:
+     * @param string $view A full path of the view to use for each list item.
      *
-     * - `$data`: The data model.
-     * - `$key`: The key value associated with the data item.
-     * - `$index`: The zero-based index of the data item in the items array.
-     * - `$widget`: The list view widget instance.
+     * The following variables are available within the view:
      *
-     * Note that the view name is resolved into the view file by the current context of the {@see view} object.
+     * - `$data`: A data item.
+     * - `$key`: Key associated with the item.
+     * - `$index`: Zero-based index of the item.
+     * - `$widget`: List view widget instance.
      *
-     * If this property is specified as a callback, it should have the following signature:
-     *
-     * ```php
-     * function ($data, $key, $index, $widget)
-     * ```
+     * The view name is resolved into the view file by the current context of the {@see view} object.
      */
-    public function itemView(string|Closure $value): self
+    public function itemView(string $view): self
     {
         $new = clone $this;
-        $new->itemView = $value;
+        $new->itemView = $view;
         return $new;
     }
 
     /**
-     * Set the HTML tag for the container of item view.
+     * Return new instance with item callback defined.
+     *
+     * @param Closure $callback A callback for to use for each list item rendering.
+     *
+     * The callback signature should be the following:
+     *
+     *  ```php
+     *  function ($data, $key, int $index, ListView $widget): string
+     *  ```
+     *
+     *  The returned string is the rendered item markup.
+     */
+    public function itemCallback(Closure $callback): self
+    {
+        $new = clone $this;
+        $new->itemCallback = $callback;
+        return $new;
+    }
+
+    /**
+     * Set the HTML tag for the list item.
      *
      * @param string|null $tag
      * @return $this
      */
-    public function itemViewTag(?string $tag): self
+    public function itemTag(?string $tag): self
     {
         if ($tag === '') {
-            throw new InvalidArgumentException('The "itemViewTag" property cannot be empty.');
+            throw new InvalidArgumentException('The "itemTag" cannot be empty.');
         }
 
         $new = clone $this;
-        $new->itemViewTag = $tag;
+        $new->itemTag = $tag;
         return $new;
     }
 
     /**
-     * Return new instance with the HTML attributes for the container of item view.
+     * Returns a new instance with the HTML attributes for list item.
      *
-     * @param array|Closure $values Attribute values indexed by attribute names.
-     * If this property is specified as a function, it must return an array of attributes and have the following
-     * signature:
+     * @param array|Closure $attributes Attribute values/callbacks indexed by attribute names or a callback
+     * with the following signature:
      *
      * ```php
-     * function (ListItemContext $context)
+     * function (ListItemContext $context): array
      * ```
-     * Also, each attribute value can be a function too, with the same signature as in:
+     *
+     * Returned is an array of attributes.
+     *
+     * In the array of attributes, each attribute value can be a callback like the following:
      *
      * ```php
      * [
      *     'class' => static fn(ListItemContext $context) => "custom-class-{$context->data['id']}",
      * ]
      * ```
-     * @return ListView
      */
-    public function itemViewAttributes(array|Closure $values): self
+    public function itemAttributes(array|Closure $attributes): self
     {
         $new = clone $this;
-        $new->itemViewAttributes = $values;
+        $new->itemAttributes = $attributes;
 
         return $new;
     }
@@ -191,7 +200,7 @@ final class ListView extends BaseListView
     /**
      * Return new instance with the separator between the items.
      *
-     * @param string $separator the HTML code to be displayed between any two consecutive items.
+     * @param string $separator The HTML code to be displayed between any two consecutive items.
      */
     public function separator(string $separator): self
     {
@@ -202,36 +211,37 @@ final class ListView extends BaseListView
     }
 
     /**
-     * Return new instance with the parameters for the view.
+     * Return new instance with the additional parameters for the view.
      *
-     * @param array $viewParams additional parameters to be passed to {@see itemView} when it is being rendered.
-     *
-     * This property is used only when {@see itemView} is a string representing a view name.
+     * @param array $parameters Additional parameters to be passed to the view set in {@see itemView()} when it is
+     * being rendered.
      */
-    public function viewParams(array $viewParams): self
+    public function itemViewParameters(array $parameters): self
     {
         $new = clone $this;
-        $new->viewParams = $viewParams;
+        $new->itemViewParameters = $parameters;
 
         return $new;
     }
 
     /**
-     * Renders a single data model.
+     * Renders a single list item.
      *
-     * @param ListItemContext $context
+     * @param ListItemContext $context The context to take into account when rendering.
      *
      * @throws ViewNotFoundException If the item view file doesn't exist.
+     * @throws InvalidArgumentException If both itemView and itemCallback aren't set.
+     * @return string Rendered HTML.
      */
     protected function renderItem(ListItemContext $context): string
     {
         $content = '';
 
-        if ($this->itemView === null) {
-            throw new InvalidArgumentException('The "itemView" property must be set.');
+        if ($this->itemView === null && $this->itemCallback === null) {
+            throw new InvalidArgumentException('Either "itemView" or "itemCallback" must be set.');
         }
 
-        if (is_string($this->itemView)) {
+        if ($this->itemView !== null) {
             $content = $this->getView()->render(
                 $this->itemView,
                 array_merge(
@@ -241,29 +251,29 @@ final class ListView extends BaseListView
                         'key' => $context->key,
                         'widget' => $this,
                     ],
-                    $this->viewParams
+                    $this->itemViewParameters
                 )
             );
         }
 
-        if ($this->itemView instanceof Closure) {
-            $content = (string)($this->itemView)($context);
+        if ($this->itemCallback !== null) {
+            $content = (string)($this->itemCallback)($context);
         }
 
-        $itemViewAttributes = is_callable($this->itemViewAttributes)
-            ? (array)($this->itemViewAttributes)($context)
-            : $this->itemViewAttributes;
+        $itemAttributes = is_callable($this->itemAttributes)
+            ? (array)($this->itemAttributes)($context)
+            : $this->itemAttributes;
 
-        foreach ($itemViewAttributes as $i => $attribute) {
+        foreach ($itemAttributes as $i => $attribute) {
             if (is_callable($attribute)) {
-                $itemViewAttributes[$i] = $attribute($context);
+                $itemAttributes[$i] = $attribute($context);
             }
         }
 
-        return $this->itemViewTag === null
+        return $this->itemTag === null
             ? $content
-            : Html::tag($this->itemViewTag)
-                ->attributes($itemViewAttributes)
+            : Html::tag($this->itemTag)
+                ->attributes($itemAttributes)
                 ->content("\n" . $content)
                 ->encode(false)
                 ->render();
@@ -276,7 +286,7 @@ final class ListView extends BaseListView
      */
     protected function renderItems(
         array $items,
-        \Yiisoft\Validator\Result $filterValidationResult,
+        ValidationResult $filterValidationResult,
         ?ReadableDataInterface $preparedDataReader,
     ): string {
         $keys = array_keys($items);
@@ -301,52 +311,46 @@ final class ListView extends BaseListView
 
         $content = implode($this->separator, $rows);
 
-        return $this->itemsWrapperTag === null
+        return $this->itemListTag === null
             ? $content
-            : Html::tag($this->itemsWrapperTag, "\n" . $content . "\n", $this->itemsWrapperAttributes)
+            : Html::tag($this->itemListTag, "\n" . $content . "\n", $this->itemListAttributes)
                 ->encode(false)
                 ->render();
     }
 
     /**
-     * Calls {@see afterItem} closure, returns execution result.
+     * Calls {@see afterItem()} callback and returns execution result or an empty string
+     * if callback is not defined.
      *
-     * If {@see afterItem} is not a closure, `null` will be returned.
+     * @param ListItemContext $context Context of the item to be rendered.
      *
-     * @param ListItemContext $context context of the item to be rendered.
-     *
-     * @return string call result when {@see afterItem} is not a closure.
-     *
-     * {@see afterItem}
+     * @return string Call result.
      */
     private function renderAfterItem(ListItemContext $context): string
     {
         $result = '';
 
-        if (!empty($this->afterItem)) {
-            $result = (string)($this->afterItem)($context);
+        if (!empty($this->afterItemCallback)) {
+            $result = (string)($this->afterItemCallback)($context);
         }
 
         return $result;
     }
 
     /**
-     * Calls {@see beforeItem} closure, returns execution result.
+     * Calls {@see beforeItem} callback and returns execution result or an empty string
+     *  if callback is not defined.
      *
-     * If {@see beforeItem} is not a closure, `null` will be returned.
+     * @param ListItemContext $context Context of the item to be rendered.
      *
-     * @param ListItemContext $context context of the item to be rendered.
-     *
-     * @return string call result or `null` when {@see beforeItem} is not a closure.
-     *
-     * {@see beforeItem}
+     * @return string Call result.
      */
     private function renderBeforeItem(ListItemContext $context): string
     {
         $result = '';
 
-        if (!empty($this->beforeItem)) {
-            $result = (string)($this->beforeItem)($context);
+        if (!empty($this->beforeItemCallback)) {
+            $result = (string)($this->beforeItemCallback)($context);
         }
 
         return $result;

@@ -226,7 +226,7 @@ final class ActionColumnTest extends TestCase
                         footerAttributes: ['class' => 'test.class'],
                     ),
                 )
-                ->footerEnabled(true)
+                ->enableFooter(true)
                 ->id('w1-grid')
                 ->dataReader($this->createOffsetPaginator($this->data, 10))
                 ->render()

@@ -41,29 +41,29 @@ final class ExceptionTest extends TestCase
     public function testItemViewWithNull(): void
     {
         $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage('The "itemView" property must be set.');
+        $this->expectExceptionMessage('Either "itemView" or "itemCallback" must be set.');
         ListView::widget()
             ->dataReader($this->createOffsetPaginator($this->data, 10))
             ->render();
     }
 
-    public function testEmptyItemViewTag(): void
+    public function testEmptyItemTag(): void
     {
         $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage('The "itemViewTag" property cannot be empty.');
+        $this->expectExceptionMessage('The "itemTag" cannot be empty.');
         ListView::widget()
-            ->itemViewTag('')
+            ->itemTag('')
             ->itemView(dirname(__DIR__) . '/Support/view/_listview.php')
             ->dataReader($this->createOffsetPaginator($this->data, 10))
             ->render();
     }
 
-    public function testEmptyItemsWrapperTag(): void
+    public function testEmptyItemListTag(): void
     {
         $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage('The "itemsWrapperTag" property cannot be empty.');
+        $this->expectExceptionMessage('The "itemListTag" cannot be empty.');
         ListView::widget()
-            ->itemsWrapperTag('')
+            ->itemListTag('')
             ->itemView(dirname(__DIR__) . '/Support/view/_listview.php')
             ->dataReader($this->createOffsetPaginator($this->data, 10))
             ->render();

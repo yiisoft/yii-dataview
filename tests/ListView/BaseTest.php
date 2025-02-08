@@ -85,7 +85,7 @@ final class BaseTest extends TestCase
         );
     }
 
-    public function testItemViewAttributes(): void
+    public function testItemAttributes(): void
     {
         Assert::equalsWithoutLE(
             <<<HTML
@@ -103,13 +103,13 @@ final class BaseTest extends TestCase
             HTML,
             ListView::widget()
                 ->itemView(dirname(__DIR__) . '/Support/view/_listview.php')
-                ->itemViewAttributes(['class' => 'testMe'])
+                ->itemAttributes(['class' => 'testMe'])
                 ->dataReader($this->createOffsetPaginator($this->data, 10))
                 ->render(),
         );
     }
 
-    public function testItemViewAsString(): void
+    public function testItemView(): void
     {
         Assert::equalsWithoutLE(
             <<<HTML
@@ -138,7 +138,7 @@ final class BaseTest extends TestCase
      * @throws NotInstantiableException
      * @throws CircularReferenceException
      */
-    public function testItemViewAsCallable(): void
+    public function testItemCallback(): void
     {
         Assert::equalsWithoutLE(
             <<<HTML
@@ -155,7 +155,7 @@ final class BaseTest extends TestCase
             </div>
             HTML,
             ListView::widget()
-                ->itemView(
+                ->itemCallback(
                     fn (ListItemContext $context) => '<div>' . $context->data['id'] . '</div><div>' . $context->data['name'] . '</div>' . PHP_EOL
                 )
                 ->dataReader($this->createOffsetPaginator($this->data, 10))
@@ -199,7 +199,7 @@ final class BaseTest extends TestCase
      * @throws NotInstantiableException
      * @throws CircularReferenceException
      */
-    public function testViewParams(): void
+    public function testViewParameters(): void
     {
         Assert::equalsWithoutLE(
             <<<HTML
@@ -219,7 +219,7 @@ final class BaseTest extends TestCase
                 ->itemView(dirname(__DIR__) . '/Support/view/_listviewparams.php')
                 ->dataReader($this->createOffsetPaginator($this->data, 10))
                 ->separator(PHP_EOL)
-                ->viewParams(['itemClass' => 'text-success'])
+                ->itemViewParameters(['itemClass' => 'text-success'])
                 ->render(),
         );
     }
@@ -251,7 +251,7 @@ final class BaseTest extends TestCase
                 ->itemView(dirname(__DIR__) . '/Support/view/_listviewparams.php')
                 ->dataReader($this->createOffsetPaginator($this->data, 1))
                 ->separator(PHP_EOL)
-                ->viewParams(['itemClass' => 'text-success'])
+                ->itemViewParameters(['itemClass' => 'text-success'])
                 ->offsetPaginationConfig([
                     'listTag()' => ['ul'],
                     'listAttributes()' => [['class' => 'pagination']],
@@ -288,7 +288,7 @@ final class BaseTest extends TestCase
                 ->itemView(dirname(__DIR__) . '/Support/view/_listviewparams.php')
                 ->dataReader($this->createKeysetPaginator($this->data, 1))
                 ->separator(PHP_EOL)
-                ->viewParams(['itemClass' => 'text-success'])
+                ->itemViewParameters(['itemClass' => 'text-success'])
                 ->keysetPaginationConfig([
                     'listTag()' => ['ul'],
                     'listAttributes()' => [['class' => 'pagination']],
@@ -301,7 +301,7 @@ final class BaseTest extends TestCase
         );
     }
 
-    public function testChangeItemsWrapperTag(): void
+    public function testItemListTag(): void
     {
         Assert::equalsWithoutLE(
             <<<HTML
@@ -318,14 +318,14 @@ final class BaseTest extends TestCase
             </div>
             HTML,
             ListView::widget()
-                ->itemsWrapperTag('ol')
+                ->itemListTag('ol')
                 ->itemView(dirname(__DIR__) . '/Support/view/_listview.php')
                 ->dataReader($this->createOffsetPaginator($this->data, 10))
                 ->render(),
         );
     }
 
-    public function testChangeItemsAndItemWrapperTag(): void
+    public function testItemAndItemListTag(): void
     {
         Assert::equalsWithoutLE(
             <<<HTML
@@ -342,15 +342,15 @@ final class BaseTest extends TestCase
             </div>
             HTML,
             ListView::widget()
-                ->itemsWrapperTag('div')
-                ->itemViewTag('div')
+                ->itemListTag('div')
+                ->itemTag('div')
                 ->itemView(dirname(__DIR__) . '/Support/view/_listview.php')
                 ->dataReader($this->createOffsetPaginator($this->data, 10))
                 ->render(),
         );
     }
 
-    public function testChangeItemsWrapperTagAttributes(): void
+    public function testItemListAttributes(): void
     {
         Assert::equalsWithoutLE(
             <<<HTML
@@ -367,14 +367,14 @@ final class BaseTest extends TestCase
             </div>
             HTML,
             ListView::widget()
-                ->itemsWrapperAttributes(['class' => 'the-item-wrapper-class'])
+                ->itemListAttributes(['class' => 'the-item-wrapper-class'])
                 ->itemView(dirname(__DIR__) . '/Support/view/_listview.php')
                 ->dataReader($this->createOffsetPaginator($this->data, 10))
                 ->render(),
         );
     }
 
-    public function testNoItemsWrapperTag(): void
+    public function testNoItemListTag(): void
     {
         Assert::equalsWithoutLE(
             <<<HTML
@@ -389,15 +389,15 @@ final class BaseTest extends TestCase
             </div>
             HTML,
             ListView::widget()
-                ->itemsWrapperTag(null)
-                ->itemViewTag('div')
+                ->itemListTag(null)
+                ->itemTag('div')
                 ->itemView(dirname(__DIR__) . '/Support/view/_listview.php')
                 ->dataReader($this->createOffsetPaginator($this->data, 10))
                 ->render(),
         );
     }
 
-    public function testNoItemViewTag(): void
+    public function testNoItemTag(): void
     {
         Assert::equalsWithoutLE(
             <<<HTML
@@ -412,15 +412,15 @@ final class BaseTest extends TestCase
             </div>
             HTML,
             ListView::widget()
-                ->itemsWrapperTag('div')
-                ->itemViewTag(null)
+                ->itemListTag('div')
+                ->itemTag(null)
                 ->itemView(dirname(__DIR__) . '/Support/view/_listview.php')
                 ->dataReader($this->createOffsetPaginator($this->data, 10))
                 ->render(),
         );
     }
 
-    public function testNoItemViewTagNoItemsWrapperTag(): void
+    public function testNoItemTagNoItemListTag(): void
     {
         Assert::equalsWithoutLE(
             <<<HTML
@@ -433,15 +433,15 @@ final class BaseTest extends TestCase
             </div>
             HTML,
             ListView::widget()
-                ->itemsWrapperTag(null)
-                ->itemViewTag(null)
+                ->itemListTag(null)
+                ->itemTag(null)
                 ->itemView(dirname(__DIR__) . '/Support/view/_listview.php')
                 ->dataReader($this->createOffsetPaginator($this->data, 10))
                 ->render(),
         );
     }
 
-    public function testClosureForItemViewAttributes(): void
+    public function testClosureForItemAttributes(): void
     {
         Assert::equalsWithoutLE(
             <<<HTML
@@ -459,7 +459,7 @@ final class BaseTest extends TestCase
             HTML,
             ListView::widget()
                 ->itemView(dirname(__DIR__) . '/Support/view/_listview.php')
-                ->itemViewAttributes(static fn (ListItemContext $context) => [
+                ->itemAttributes(static fn (ListItemContext $context) => [
                     'data-item-id' => $context->data['id'],
                     'data-item-key' => $context->key,
                     'data-item-index' => $context->index,
@@ -470,7 +470,7 @@ final class BaseTest extends TestCase
         );
     }
 
-    public function testItemViewAttributesWithClosure(): void
+    public function testItemAttributesWithSubClosure(): void
     {
         Assert::equalsWithoutLE(
             <<<HTML
@@ -488,7 +488,7 @@ final class BaseTest extends TestCase
             HTML,
             ListView::widget()
                 ->itemView(dirname(__DIR__) . '/Support/view/_listview.php')
-                ->itemViewAttributes([
+                ->itemAttributes([
                     'class' => static fn(ListItemContext $context) => "id-{$context->data['id']}-key-{$context->key}-index-{$context->index}",
                 ])
                 ->dataReader($this->createOffsetPaginator($this->data, 10))
@@ -497,7 +497,7 @@ final class BaseTest extends TestCase
         );
     }
 
-    public function testClosureForItemViewAttributesWithClosure(): void
+    public function testSubClosureForItemAttributesWithClosure(): void
     {
         Assert::equalsWithoutLE(
             <<<HTML
@@ -515,7 +515,7 @@ final class BaseTest extends TestCase
             HTML,
             ListView::widget()
                 ->itemView(dirname(__DIR__) . '/Support/view/_listview.php')
-                ->itemViewAttributes(static fn (ListItemContext $context) => [
+                ->itemAttributes(static fn (ListItemContext $context) => [
                     'class' => static fn(ListItemContext $context) => "id-{$context->data['id']}-key-{$context->key}-index-{$context->index}",
                 ])
                 ->dataReader($this->createOffsetPaginator($this->data, 10))

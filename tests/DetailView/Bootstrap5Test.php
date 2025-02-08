@@ -50,11 +50,11 @@ final class Bootstrap5Test extends TestCase
             DetailView::widget()
                 ->attributes(['class' => 'container'])
                 ->fields(
-                    DataField::create()->attribute('id')->label('Id'),
-                    DataField::create()->attribute('login'),
-                    DataField::create()->attribute('created_at')->label('Created At'),
+                    new Datafield('id', label: 'Id'),
+                    new Datafield('login'),
+                    new Datafield('created_at', label: 'Created At'),
                 )
-                ->containerAttributes(['class' => 'row flex-column justify-content-center align-items-center'])
+                ->fieldListAttributes(['class' => 'row flex-column justify-content-center align-items-center'])
                 ->data(
                     [
                         'id' => 1,
@@ -62,7 +62,7 @@ final class Bootstrap5Test extends TestCase
                         'created_at' => '2020-01-01',
                     ],
                 )
-                ->dataAttributes(['class' => 'col-xl-5'])
+                ->fieldAttributes(['class' => 'col-xl-5'])
                 ->header(
                     H2::tag()->addClass('text-center')->content('<strong>Bootstrap 5</strong>')->encode(false)->render()
                 )
@@ -101,9 +101,9 @@ final class Bootstrap5Test extends TestCase
             DetailView::widget()
                 ->attributes(['class' => 'table table-success table-striped'])
                 ->fields(
-                    DataField::create()->attribute('id')->label('Id'),
-                    DataField::create()->attribute('login'),
-                    DataField::create()->attribute('created_at')->label('Created At'),
+                    new Datafield('id', label: 'Id'),
+                    new Datafield('login'),
+                    new Datafield('created_at', label: 'Created At'),
                 )
                 ->data(
                     [
@@ -112,15 +112,15 @@ final class Bootstrap5Test extends TestCase
                         'created_at' => '2020-01-01',
                     ],
                 )
-                ->dataAttributes(['class' => 'col-xl-5'])
+                ->fieldAttributes(['class' => 'col-xl-5'])
                 ->header(
                     H2::tag()->addClass('text-center')->content('<strong>Bootstrap 5</strong>')->encode(false)->render()
                 )
                 ->labelAttributes(['class' => 'fw-bold'])
-                ->labelTemplate('<th{labelAttributes}>{label}</th>')
-                ->itemTemplate("<tr>\n{label}\n{value}\n</tr>")
-                ->template("<table{attributes}>\n{header}\n{items}\n</table>")
-                ->valueTemplate('<td{valueAttributes}>{value}</td>')
+                ->labelTemplate('<th{attributes}>{label}</th>')
+                ->fieldTemplate("<tr>\n{label}\n{value}\n</tr>")
+                ->template("<table{attributes}>\n{header}\n{fields}\n</table>")
+                ->valueTemplate('<td{attributes}>{value}</td>')
                 ->render(),
         );
     }

@@ -7,6 +7,9 @@ namespace Yiisoft\Yii\DataView\PageSize;
 use Yiisoft\Html\Html;
 use Yiisoft\Widget\Widget;
 
+/**
+ * Widget that renders a text input for setting the page size.
+ */
 final class InputPageSize extends Widget implements PageSizeWidgetInterface
 {
     use PageSizeContextTrait;
@@ -14,10 +17,12 @@ final class InputPageSize extends Widget implements PageSizeWidgetInterface
     private array $attributes = [];
 
     /**
-     * Add a set of attributes to existing SELECT tag attributes.
+     * Add a set of attributes to existing input tag attributes.
      * Same named attributes are replaced.
      *
      * @param array $attributes Name-value set of attributes.
+     *
+     * @return self New instance with added attributes.
      */
     public function addAttributes(array $attributes): self
     {
@@ -27,9 +32,11 @@ final class InputPageSize extends Widget implements PageSizeWidgetInterface
     }
 
     /**
-     * Replace SELECT tag attributes with a new set.
+     * Replace input tag attributes with a new set.
      *
      * @param array $attributes Name-value set of attributes.
+     *
+     * @return self New instance with replaced attributes.
      */
     public function attributes(array $attributes): self
     {
@@ -38,6 +45,11 @@ final class InputPageSize extends Widget implements PageSizeWidgetInterface
         return $new;
     }
 
+    /**
+     * Renders the page size input with the current context.
+     *
+     * @return string The rendered HTML input element.
+     */
     public function render(): string
     {
         $context = $this->getContext();

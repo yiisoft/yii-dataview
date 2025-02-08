@@ -11,6 +11,9 @@ use Yiisoft\Data\Paginator\PaginatorInterface;
 use Yiisoft\Html\Html;
 use Yiisoft\Widget\Widget;
 
+/**
+ * Widget for rendering {@see KeysetPaginator}.
+ */
 final class KeysetPagination extends Widget implements PaginationWidgetInterface
 {
     use PaginationContextTrait;
@@ -42,6 +45,16 @@ final class KeysetPagination extends Widget implements PaginationWidgetInterface
     private string|Stringable $labelPrevious = '⟨';
     private string|Stringable $labelNext = '⟩';
 
+    /**
+     * Sets the paginator instance.
+     *
+     * @param PaginatorInterface $paginator The paginator to use.
+     * Must be an instance of {@see KeysetPaginator}.
+     *
+     * @throws PaginatorNotSupportedException If paginator is not a {@see KeysetPaginator}.
+     *
+     * @return static New instance with the specified paginator.
+     */
     public function withPaginator(PaginatorInterface $paginator): static
     {
         if (!$paginator instanceof KeysetPaginator) {
@@ -53,6 +66,16 @@ final class KeysetPagination extends Widget implements PaginationWidgetInterface
         return $new;
     }
 
+    /**
+     * Sets the container tag name.
+     *
+     * @param string|null $tag The tag name for the container element.
+     * Common values: 'nav', 'div'. Use `null` to omit the container.
+     *
+     * @throws InvalidArgumentException If tag name is empty.
+     *
+     * @return self New instance with the specified container tag.
+     */
     public function containerTag(?string $tag): self
     {
         if ($tag === '') {
@@ -64,6 +87,13 @@ final class KeysetPagination extends Widget implements PaginationWidgetInterface
         return $new;
     }
 
+    /**
+     * Sets the container element attributes.
+     *
+     * @param array $attributes HTML attributes for the container element.
+     *
+     * @return self New instance with the specified container attributes.
+     */
     public function containerAttributes(array $attributes): self
     {
         $new = clone $this;
@@ -71,6 +101,16 @@ final class KeysetPagination extends Widget implements PaginationWidgetInterface
         return $new;
     }
 
+    /**
+     * Sets the list tag name.
+     *
+     * @param string|null $tag The tag name for the list element.
+     * Common values: 'ul', 'div'. Use `null` to omit the list container.
+     *
+     * @throws InvalidArgumentException if tag name is empty.
+     *
+     * @return self New instance with the specified list tag.
+     */
     public function listTag(?string $tag): self
     {
         if ($tag === '') {
@@ -82,6 +122,13 @@ final class KeysetPagination extends Widget implements PaginationWidgetInterface
         return $new;
     }
 
+    /**
+     * Sets the list element attributes.
+     *
+     * @param array $attributes HTML attributes for the list element.
+     *
+     * @return self New instance with the specified list attributes.
+     */
     public function listAttributes(array $attributes): self
     {
         $new = clone $this;
@@ -89,6 +136,16 @@ final class KeysetPagination extends Widget implements PaginationWidgetInterface
         return $new;
     }
 
+    /**
+     * Sets the item tag name.
+     *
+     * @param string|null $tag The tag name for the item elements.
+     * Common values: 'li', 'div'. Use `null` to omit item containers.
+     *
+     * @throws InvalidArgumentException if tag name is empty.
+     *
+     * @return self New instance with the specified item tag.
+     */
     public function itemTag(?string $tag): self
     {
         if ($tag === '') {
@@ -100,6 +157,13 @@ final class KeysetPagination extends Widget implements PaginationWidgetInterface
         return $new;
     }
 
+    /**
+     * Sets the item element attributes.
+     *
+     * @param array $attributes HTML attributes for the item elements.
+     *
+     * @return self New instance with the specified item attributes.
+     */
     public function itemAttributes(array $attributes): self
     {
         $new = clone $this;
@@ -107,6 +171,13 @@ final class KeysetPagination extends Widget implements PaginationWidgetInterface
         return $new;
     }
 
+    /**
+     * Sets the CSS class for disabled item elements.
+     *
+     * @param string|null $class The CSS class for disabled items.
+     *
+     * @return self New instance with the specified disabled item class.
+     */
     public function disabledItemClass(?string $class): self
     {
         $new = clone $this;
@@ -114,6 +185,13 @@ final class KeysetPagination extends Widget implements PaginationWidgetInterface
         return $new;
     }
 
+    /**
+     * Sets the link attributes.
+     *
+     * @param array $attributes HTML attributes for the link elements.
+     *
+     * @return self New instance with the specified link attributes.
+     */
     public function linkAttributes(array $attributes): self
     {
         $new = clone $this;
@@ -121,6 +199,13 @@ final class KeysetPagination extends Widget implements PaginationWidgetInterface
         return $new;
     }
 
+    /**
+     * Sets the CSS class for disabled link elements.
+     *
+     * @param string|null $class The CSS class for disabled links.
+     *
+     * @return self New instance with the specified disabled link class.
+     */
     public function disabledLinkClass(?string $class): self
     {
         $new = clone $this;
@@ -128,6 +213,12 @@ final class KeysetPagination extends Widget implements PaginationWidgetInterface
         return $new;
     }
 
+    /**
+     * Renders the pagination controls.
+     *
+     * @throws PaginatorNotSetException If paginator is not set.
+     * @return string The rendered HTML pagination controls.
+     */
     public function render(): string
     {
         $result = '';
@@ -165,6 +256,15 @@ final class KeysetPagination extends Widget implements PaginationWidgetInterface
         return $result;
     }
 
+    /**
+     * Renders a single pagination item (previous or next).
+     *
+     * @param string|Stringable $label The item label.
+     * @param string|null $url The item URL, or null if disabled.
+     * @param bool $isDisabled Whether the item should be rendered as disabled.
+     *
+     * @return Stringable The rendered HTML for the pagination item.
+     */
     private function renderItem(string|Stringable $label, ?string $url, bool $isDisabled): Stringable
     {
         $linkAttributes = $this->linkAttributes;
@@ -184,6 +284,13 @@ final class KeysetPagination extends Widget implements PaginationWidgetInterface
         return Html::tag($this->itemTag, $link, $attributes);
     }
 
+    /**
+     * Gets the keyset paginator instance.
+     *
+     * @throws PaginatorNotSetException If paginator is not set.
+     *
+     * @return KeysetPaginator The keyset paginator instance.
+     */
     private function getPaginator(): KeysetPaginator
     {
         return $this->paginator ?? throw new PaginatorNotSetException();

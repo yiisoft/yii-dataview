@@ -11,6 +11,8 @@ use Yiisoft\Yii\DataView\Column\Base\GlobalContext;
 use Yiisoft\Yii\DataView\Column\Base\HeaderContext;
 
 /**
+ * `SerialColumnRenderer` handles the rendering of sequential row number columns in a grid.
+ *
  * @implements ColumnRendererInterface<SerialColumn>
  */
 final class SerialColumnRenderer implements ColumnRendererInterface

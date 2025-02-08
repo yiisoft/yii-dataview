@@ -543,7 +543,7 @@ final class DataColumnTest extends TestCase
                         bodyClass: 'bodyClass'
                     ),
                 )
-                ->columnGroupEnabled()
+                ->enableColumnGrouping()
                 ->dataReader(new IterableDataReader($this->data))
                 ->render()
         );

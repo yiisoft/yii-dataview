@@ -12,68 +12,63 @@ use Yiisoft\Widget\Widget;
 use Yiisoft\Yii\DataView\Field\DataField;
 
 /**
- * DetailView displays the detail of single data.
- *
- * DetailView is displaying data in a regular format (each field is displayed using flexbox).
- *
+ * `DetailView` displays details about a single data item.
  * The data can be either an object or an associative array.
+ * Which fields should be displayed and how exactly is determined
+ * by "fields":
  *
- * DetailView uses the {@see data} property to determine which model should be displayed how they should be formatted.
- *
- * A typical usage of DetailView is as follows:
- *
- * ```php
+ * ```
  * <?= DetailView::widget()
  *     ->data(['id' => 1, 'username' => 'tests 1', 'status' => true])
  *     ->fields(
- *         DataField::create()->attribute('id'),
- *         DataField::create()->attribute('username'),
- *         DataField::create()->attribute('status'),
+ *         new DataField('id'),
+ *         new DataField('username'),
+ *         new DataField('status'),
  *     )
- *     ->render()
+ * ?>
  * ```
  */
 final class DetailView extends Widget
 {
     private array $attributes = [];
-    private array $containerAttributes = [];
+    private array $fieldListAttributes = [];
     private array|object $data = [];
-    private array $dataAttributes = [];
+    private array $fieldAttributes = [];
     private array $fields = [];
     private string $header = '';
-    private string $itemTemplate = "<div{dataAttributes}>\n{label}\n{value}\n</div>";
+    private string $fieldTemplate = "<div{attributes}>\n{label}\n{value}\n</div>";
     private array|Closure $labelAttributes = [];
     private string $labelTag = 'dt';
-    private string $labelTemplate = '<{labelTag}{labelAttributes}>{label}</{labelTag}>';
-    private string $template = "<div{attributes}>\n{header}\n<dl{containerAttributes}>\n{items}\n</dl>\n</div>";
+    private string $labelTemplate = '<{tag}{attributes}>{label}</{tag}>';
+    private string $template = "<div{attributes}>\n{header}\n<dl{fieldListAttributes}>\n{fields}\n</dl>\n</div>";
     private array|Closure $valueAttributes = [];
     private string $valueFalse = 'false';
     private string $valueTag = 'dd';
-    private string $valueTemplate = '<{valueTag}{valueAttributes}>{value}</{valueTag}>';
+    private string $valueTemplate = '<{tag}{attributes}>{value}</{tag}>';
     private string $valueTrue = 'true';
 
     /**
-     * Returns a new instance with the HTML attributes.
+     * Returns a new instance with the main widget tag HTML attributes set.
      *
-     * @param array $values Attribute values indexed by attribute names.
+     * @param array $attributes Attribute values indexed by attribute names.
      */
-    public function attributes(array $values): self
+    public function attributes(array $attributes): self
     {
         $new = clone $this;
-        $new->attributes = $values;
+        $new->attributes = $attributes;
 
         return $new;
     }
 
     /**
-     * Returns a new instance with the HTML attributes for the container items.
+     * Returns a new instance with the HTML attributes for the field list set.
      *
-     * @param array $values Attribute values indexed by attribute names.
+     * @param array $attributes Attribute values indexed by attribute names.
      */
-    public function containerAttributes(array $values): self
+    public function fieldListAttributes(array $attributes): self
     {
         $new = clone $this;
-        $new->containerAttributes = $values;
+        $new->fieldListAttributes = $attributes;
 
         return $new;
     }
@@ -81,8 +76,8 @@ final class DetailView extends Widget
     /**
      * Return new instance with the data.
      *
-     * @param array|object $data the data model whose details are to be displayed.
-     * This can be an instance, an associative array, an object.
+     * @param array|object $data The data model whose details are to be displayed.
+     * This can be an object or an associative array.
      */
     public function data(array|object $data): self
     {
@@ -93,23 +88,23 @@ final class DetailView extends Widget
     }
 
     /**
-     * Returns a new instance with the HTML attributes for the container item.
+     * Returns a new instance with the HTML attributes for the field container tag set.
      *
-     * @param array $values Attribute values indexed by attribute names.
+     * @param array $attributes Attribute values indexed by attribute names.
      */
-    public function dataAttributes(array $values): self
+    public function fieldAttributes(array $attributes): self
     {
         $new = clone $this;
-        $new->dataAttributes = $values;
+        $new->fieldAttributes = $attributes;
 
         return $new;
     }
 
     /**
-     * Return a new instance the specified fields.
+     * Return a new instance with the specified fields configuration.
      *
-     * @param DataField ...$value The `DetailView` column configuration. Each object represents the configuration for
-     * one particular DetailView column. For example,
+     * @param DataField ...$fields The field configurations. Each object represents the configuration for
+     * one particular field. For example,
      *
      * ```php
      * [
@@ -117,62 +112,65 @@ final class DetailView extends Widget
      * ]
      * ```
      */
-    public function fields(DataField ...$value): self
+    public function fields(DataField ...$fields): self
     {
         $new = clone $this;
-        $new->fields = $value;
+        $new->fields = $fields;
 
         return $new;
     }
 
     /**
-     * Return new instance with the header.
+     * Return new instance with the header content set.
+     * Note that header content is not HTML-encoded.
      *
-     * @param string $value The header.
+     * @param string $content The header content.
      */
-    public function header(string $value): self
+    public function header(string $content): self
     {
         $new = clone $this;
-        $new->header = $value;
+        $new->header = $content;
 
         return $new;
     }
 
     /**
-     * Return new instance with the item template.
+     * Return new instance with the field template set.
      *
-     * @param string $value The item template.
+     * Available placeholders are `{attributes}`, `{label}`, and `{value}`.
+     *
+     * @param string $template The field template.
      */
-    public function itemTemplate(string $value): self
+    public function fieldTemplate(string $template): self
     {
         $new = clone $this;
-        $new->itemTemplate = $value;
+        $new->fieldTemplate = $template;
 
         return $new;
     }
 
     /**
-     * Returns a new instance with the HTML attributes for the label.
+     * Returns a new instance with the HTML attributes for the field label.
      *
-     * @param array $values Attribute values indexed by attribute names.
+     * @param array $attributes Attribute values indexed by attribute names.
      */
-    public function labelAttributes(array $values): self
+    public function labelAttributes(array $attributes): self
     {
         $new = clone $this;
-        $new->labelAttributes = $values;
+        $new->labelAttributes = $attributes;
 
         return $new;
     }
 
     /**
-     * Return new instance with the label tag.
+     * Return new instance with the HTML tag to use for the label.
      *
-     * @param string $value The tag to use for the label.
+     * @param string $tag The HTML tag name.
      */
-    public function labelTag(string $value): self
+    public function labelTag(string $tag): self
     {
         $new = clone $this;
-        $new->labelTag = $value;
+        $new->labelTag = $tag;
 
         return $new;
     }
@@ -180,25 +178,29 @@ final class DetailView extends Widget
     /**
      * Return new instance with the label template.
      *
-     * @param string $value The label template.
+     * Available placeholders are `{attributes}`, `{label}`, and `{tag}`.
+     *
+     * @param string $template The label template.
      */
-    public function labelTemplate(string $value): self
+    public function labelTemplate(string $template): self
     {
         $new = clone $this;
-        $new->labelTemplate = $value;
+        $new->labelTemplate = $template;
 
         return $new;
     }
 
     /**
-     * Return new instance with the template.
+     * Return new instance with the overall widget template set.
      *
-     * @param string $value The template.
+     * Available placeholders are `{attributes}`, `{header}`, `{fieldListAttributes}`, and `{fields}`.
+     *
+     * @param string $template The template.
      */
-    public function template(string $value): self
+    public function template(string $template): self
     {
         $new = clone $this;
-        $new->template = $value;
+        $new->template = $template;
 
         return $new;
     }
@@ -206,25 +208,25 @@ final class DetailView extends Widget
     /**
      * Returns a new instance with the HTML attributes for the value.
      *
-     * @param array $values Attribute values indexed by attribute names.
+     * @param array $attributes Attribute values indexed by attribute names.
      */
-    public function valueAttributes(array $values): self
+    public function valueAttributes(array $attributes): self
     {
         $new = clone $this;
-        $new->valueAttributes = $values;
+        $new->valueAttributes = $attributes;
 
         return $new;
     }
 
     /**
-     * Return new instance when the value is false.
+     * Return new instance with the content displayed when the value is `false`.
      *
-     * @param string $value The value when is false.
+     * @param string $content The content.
      */
-    public function valueFalse(string $value): self
+    public function valueFalse(string $content): self
     {
         $new = clone $this;
-        $new->valueFalse = $value;
+        $new->valueFalse = $content;
 
         return $new;
     }
@@ -232,12 +234,12 @@ final class DetailView extends Widget
     /**
      * Return new instance with the value tag.
      *
-     * @param string $value The tag to use for the value.
+     * @param string $tag HTML tag.
      */
-    public function valueTag(string $value): self
+    public function valueTag(string $tag): self
     {
         $new = clone $this;
-        $new->valueTag = $value;
+        $new->valueTag = $tag;
 
         return $new;
     }
@@ -245,25 +247,27 @@ final class DetailView extends Widget
     /**
      * Return new instance with the value template.
      *
-     * @param string $value The value template.
+     * Available placeholders are `{attributes}`, `{value}`, and `{tag}`.
+     *
+     * @param string $template The value template.
      */
-    public function valueTemplate(string $value): self
+    public function valueTemplate(string $template): self
     {
         $new = clone $this;
-        $new->valueTemplate = $value;
+        $new->valueTemplate = $template;
 
         return $new;
     }
 
     /**
-     * Return new instance when the value is true.
+     * Return new instance with the content displayed when the value is `true`.
      *
-     * @param string $value The value when is true.
+     * @param string $content The content.
      */
-    public function valueTrue(string $value): self
+    public function valueTrue(string $content): self
     {
         $new = clone $this;
-        $new->valueTrue = $value;
+        $new->valueTrue = $content;
 
         return $new;
     }
@@ -273,19 +277,18 @@ final class DetailView extends Widget
      */
     public function render(): string
     {
-        if ($this->renderItems() === '') {
+        if ($this->renderFields() === '') {
             return '';
         }
 
-        return $this->removeDoubleLinesBreaks(
+        return $this->removeDoubleLineBreaks(
             strtr(
                 $this->template,
                 [
                     '{attributes}' => Html::renderTagAttributes($this->attributes),
-                    '{containerAttributes}' => Html::renderTagAttributes($this->containerAttributes),
-                    '{dataAttributes}' => Html::renderTagAttributes($this->dataAttributes),
                     '{header}' => $this->header,
-                    '{items}' => $this->renderItems(),
+                    '{fieldListAttributes}' => Html::renderTagAttributes($this->fieldListAttributes),
+                    '{fields}' => $this->renderFields(),
                 ]
             )
         );
@@ -314,24 +317,24 @@ final class DetailView extends Widget
 
         /** @psalm-var DataField[] $fields */
         foreach ($fields as $field) {
-            if ($field->getLabel() === '') {
-                throw new InvalidArgumentException('The "attribute" or "label" must be set.');
+            if ($field->label === '' && $field->name === '') {
+                throw new InvalidArgumentException('Either DataField "name" or "label" must be set.');
             }
 
-            $labelAttributes = $field->getLabelAttributes() === []
-                ? $this->labelAttributes : $field->getLabelAttributes();
-            $labelTag = $field->getLabelTag() === '' ? $this->labelTag : $field->getLabelTag();
-            $valueTag = $field->getValueTag() === '' ? $this->valueTag : $field->getValueTag();
-            $valueAttributes = $field->getValueAttributes() === []
-                ? $this->valueAttributes : $field->getValueAttributes();
+            $labelAttributes = $field->labelAttributes === []
+                ? $this->labelAttributes : $field->labelAttributes;
+            $labelTag = $field->labelTag === '' ? $this->labelTag : $field->labelTag;
+            $valueTag = $field->valueTag === '' ? $this->valueTag : $field->valueTag;
+            $valueAttributes = $field->valueAttributes === []
+                ? $this->valueAttributes : $field->valueAttributes;
 
             $normalized[] = [
-                'label' => Html::encode($field->getLabel()),
+                'label' => Html::encode($field->label === '' ? $field->name : $field->label),
                 'labelAttributes' => $this->renderAttributes($labelAttributes),
-                'labelTag' => Html::encode($labelTag),
-                'value' => Html::encodeAttribute($this->renderValue($field->getAttribute(), $field->getValue())),
+                'labelTag' => $labelTag,
+                'value' => Html::encodeAttribute($this->renderValue($field->name, $field->value)),
                 'valueAttributes' => $this->renderAttributes($valueAttributes),
-                'valueTag' => Html::encode($valueTag),
+                'valueTag' => $valueTag,
             ];
         }
 
@@ -354,7 +357,7 @@ final class DetailView extends Widget
     /**
      * @throws JsonException
      */
-    private function renderItems(): string
+    private function renderFields(): string
     {
         $fields = $this->normalizeColumns($this->fields);
 
@@ -367,18 +370,18 @@ final class DetailView extends Widget
         foreach ($fields as $field) {
             $label = strtr($this->labelTemplate, [
                 '{label}' => $field['label'],
-                '{labelTag}' => $field['labelTag'],
-                '{labelAttributes}' => Html::renderTagAttributes($field['labelAttributes']),
+                '{tag}' => $field['labelTag'],
+                '{attributes}' => Html::renderTagAttributes($field['labelAttributes']),
             ]);
 
             $value = strtr($this->valueTemplate, [
                 '{value}' => $field['value'],
-                '{valueTag}' => $field['valueTag'],
-                '{valueAttributes}' => Html::renderTagAttributes($field['valueAttributes']),
+                '{tag}' => $field['valueTag'],
+                '{attributes}' => Html::renderTagAttributes($field['valueAttributes']),
             ]);
 
-            $rows[] = strtr($this->itemTemplate, [
-                '{dataAttributes}' => Html::renderTagAttributes($this->dataAttributes),
+            $rows[] = strtr($this->fieldTemplate, [
+                '{attributes}' => Html::renderTagAttributes($this->fieldAttributes),
                 '{label}' => $label,
                 '{value}' => $value,
             ]);
@@ -415,12 +418,12 @@ final class DetailView extends Widget
     }
 
     /**
-     * Remove double spaces from string.
+     * Remove double line breaks from a string.
      *
-     * @param string $string String to remove double spaces from.
+     * @param string $string String to remove double line breaks from.
      */
-    private function removeDoubleLinesBreaks(string $string): string
+    private function removeDoubleLineBreaks(string $string): string
     {
-        return preg_replace("/([\r\n]{4,}|[\n]{2,}|[\r]{2,})/", "\n", $string);
+        return preg_replace('/(\R{2,})/', "\n", $string);
     }
 }

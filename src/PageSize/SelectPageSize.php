@@ -10,6 +10,9 @@ use Yiisoft\Widget\Widget;
 use function count;
 use function is_array;
 
+/**
+ * Widget that renders a dropdown (select) input for choosing the page size.
+ */
 final class SelectPageSize extends Widget implements PageSizeWidgetInterface
 {
     use PageSizeContextTrait;
@@ -17,10 +20,12 @@ final class SelectPageSize extends Widget implements PageSizeWidgetInterface
     private array $attributes = [];
 
     /**
-     * Add a set of attributes to existing SELECT tag attributes.
+     * Add a set of attributes to existing select tag attributes.
      * Same named attributes are replaced.
      *
      * @param array $attributes Name-value set of attributes.
+     *
+     * @return self New instance with added attributes.
      */
     public function addAttributes(array $attributes): self
     {
@@ -30,9 +35,11 @@ final class SelectPageSize extends Widget implements PageSizeWidgetInterface
     }
 
     /**
-     * Replace SELECT tag attributes with a new set.
+     * Replace select tag attributes with a new set.
      *
      * @param array $attributes Name-value set of attributes.
+     *
+     * @return self New instance with replaced attributes.
      */
     public function attributes(array $attributes): self
     {
@@ -41,6 +48,12 @@ final class SelectPageSize extends Widget implements PageSizeWidgetInterface
         return $new;
     }
 
+    /**
+     * Renders the page size select with the current context.
+     *
+     * @return string The rendered HTML select element, or empty string if
+     * there are insufficient options.
+     */
     public function render(): string
     {
         $context = $this->getContext();

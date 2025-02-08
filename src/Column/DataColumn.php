@@ -10,16 +10,9 @@ use Yiisoft\Yii\DataView\Filter\Factory\FilterFactoryInterface;
 use Yiisoft\Yii\DataView\Filter\Widget\FilterWidget;
 
 /**
- * DetailColumn is the default column type for the {@see GridView} widget.
+ * `DataColumn` is the default column type for the {@see GridView} widget.
  *
- * A simple data column definition refers to an attribute in the data of the GridView's data provider.
- *
- * By setting {@see value} and {@see label}, the label and cell content can be customized.
- *
- * A data column differentiates between the {@see getDataCellValue|data cell value} and the
- * {@see renderDataCellContent|data cell content}. The cell value is an unformatted value that may be used for
- * calculation, while the actual cell content is a {@see format|formatted} version of that value which may contain HTML
- * markup.
+ * A simple data column definition refers to an attribute in the GridView's data provider.
  *
  * @psalm-type FilterEmptyCallable = callable(mixed $value): bool
  * @psalm-type BodyAttributesCallable = callable(array|object,DataContext): array
@@ -27,13 +20,90 @@ use Yiisoft\Yii\DataView\Filter\Widget\FilterWidget;
 final class DataColumn implements ColumnInterface
 {
     /**
+     * Function to determine if a filter value should be considered empty.
+     *
+     * This property can be:
+     * - `null`: Uses default empty value checking (`empty()` function)
+     * - `true`: Always considers the value empty (disables filtering)
+     * - `false`: Always considers the value non-empty (enables filtering)
+     * - `callable`: Custom function to determine emptiness with signature:
+     *   ```php
+     *   function (mixed $value): bool {
+     *       // Return true if value should be considered empty
+     *       return $value === '' || $value === null;
+     *   }
+     *   ```
+     *
      * @var bool|callable|null
      * @psalm-var bool|FilterEmptyCallable|null
      */
     public readonly mixed $filterEmpty;
 
     /**
-     * @param array|callable $bodyAttributes
+     * Creates a new `DataColumn` instance.
+     *
+     * ```php
+     * // Basic usage
+     * $column = new DataColumn(
+     *     property: 'username',
+     *     header: 'User',
+     *     withSorting: true
+     * );
+     *
+     * // With filter and validation
+     * $column = new DataColumn(
+     *     property: 'email',
+     *     filter: new TextFilterWidget(),
+     *     filterValidation: [new EmailValidator()]
+     * );
+     *
+     * // With custom content
+     * $column = new DataColumn(
+     *     content: fn($model) => Html::encode($model->fullName)
+     * );
+     *
+     * // With custom empty value checking
+     * $column = new DataColumn(
+     *     property: 'status',
+     *     filterEmpty: fn($value) => $value === 0 || $value === null,
+     * );
+     * ```
+     *
+     * @param string|null $property The property name of the data model to be displayed in this column.
+     * @param string|null $field The field name to be used in sorting and filtering.
+     * @param string|null $header The header cell content.
+     * @param bool $encodeHeader Whether to HTML-encode the header cell content.
+     * @param string|null $footer The footer cell content.
+     * @param array $columnAttributes HTML attributes for all column cells.
+     * @param array $headerAttributes HTML attributes for the header cell.
+     * @param array|callable $bodyAttributes HTML attributes for the body cells. Can be a callable that returns attributes.
+     * The callable signature is: `function(array|object $data, DataContext $context): array`.
+     * @param bool $withSorting Whether this column is sortable.
+     * @param mixed $content Custom content for data cells. Can be a callable with signature:
+     * `function(array|object $data, DataContext $context): string|Stringable`.
+     * @param string|null $dateTimeFormat Format string for datetime values (e.g., 'Y-m-d H:i:s').
+     * @param array|bool|FilterWidget $filter Filter configuration. Can be:
+     * - `false` (disabled)
+     * - `array` (filter options)
+     * - `FilterWidget` instance (custom filter widget)
+     * @param FilterFactoryInterface|string|null $filterFactory Factory for creating filter widgets.
+     * @param array|RuleInterface|null $filterValidation Validation rules for filter values.
+     * Can be a single rule or array of rules.
+     * @param bool|callable|null $filterEmpty Function to determine if a filter value is empty. Can be:
+     * - `null`: Uses default empty value checking (`empty()` function)
+     * - `true`: Always considers the value empty (disables filtering)
+     * - `false`: Always considers the value non-empty (enables filtering)
+     * - `callable`: Custom function to determine emptiness with signature:
+     *   ```php
+     *   function (mixed $value): bool {
+     *       // Return true if value should be considered empty
+     *       return $value === '' || $value === null;
+     *   }
+     *   ```
+     * @param bool $visible Whether the column is visible.
+     * @param string|null $columnClass Additional CSS class for all column cells.
+     * @param string|null $headerClass Additional CSS class for the header cell.
+     * @param string|null $bodyClass Additional CSS class for the body cells.
      *
      * @psalm-param array|BodyAttributesCallable $bodyAttributes
      * @psalm-param bool|array<array-key,string|array<array-key,string>>|FilterWidget $filter

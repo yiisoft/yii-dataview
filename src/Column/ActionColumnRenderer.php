@@ -15,24 +15,36 @@ use function is_bool;
 use function is_callable;
 
 /**
- * @implements ColumnRendererInterface<ActionColumn>
+ * `ActionColumnRenderer` renders action buttons in a grid column.
  *
  * @psalm-import-type UrlCreator from ActionColumn
  * @psalm-import-type ButtonRenderer from ActionColumn
+ *
+ * @implements ColumnRendererInterface<ActionColumn>
  */
 final class ActionColumnRenderer implements ColumnRendererInterface
 {
     /**
+     * @var callable URL creator callback.
      * @psalm-var UrlCreator
      */
     private $urlCreator;
 
     /**
+     * @var array Default action buttons configuration.
      * @psalm-var array<array-key, ButtonRenderer>
      */
     private readonly array $buttons;
 
     /**
+     * @param callable|null $urlCreator Callback for generating button URLs.
+     * @param array|null $buttons Action buttons configuration.
+     * @param array|string|null $buttonClass CSS class(es) for buttons.
+     * @param array $buttonAttributes Default HTML attributes for buttons.
+     * @param string|null $template Template for rendering buttons.
+     * @param string|null $before Content to prepend to buttons.
+     * @param string|null $after Content to append to buttons.
+     *
      * @psalm-param UrlCreator|null $urlCreator
      * @psalm-param array<array-key, ButtonRenderer>|null $buttons
      * @psalm-param array<string, string>|string|null $buttonClass
@@ -122,6 +134,14 @@ final class ActionColumnRenderer implements ColumnRendererInterface
     }
 
     /**
+     * Render a single action button.
+     *
+     * @param ActionButton|callable $button Button configuration or rendering callback.
+     * @param string $name Button identifier.
+     * @param DataContext $context Data rendering context.
+     *
+     * @return string The rendered button HTML.
+     *
      * @psalm-param ButtonRenderer $button
      */
     private function renderButton(ActionButton|callable $button, string $name, DataContext $context): string
@@ -184,6 +204,14 @@ final class ActionColumnRenderer implements ColumnRendererInterface
         return (string) Html::a($content, $url, $attributes);
     }
 
+    /**
+     * Create a URL for an action button.
+     *
+     * @param string $action The action identifier.
+     * @param DataContext $context Data rendering context.
+     *
+     * @return string The generated URL.
+     */
     private function createUrl(string $action, DataContext $context): string
     {
         /** @var ActionColumn $column */
@@ -194,6 +222,17 @@ final class ActionColumnRenderer implements ColumnRendererInterface
         return $urlCreator($action, $context);
     }
 
+    /**
+     * Check if a button should be visible.
+     *
+     * @param ActionColumn $column The action column.
+     * @param string $name Button identifier.
+     * @param array|object $data Current data item.
+     * @param mixed $key Current data key.
+     * @param int $index Current row index.
+     *
+     * @return bool Whether the button should be visible.
+     */
     private function isVisibleButton(
         ActionColumn $column,
         string $name,
@@ -217,6 +256,13 @@ final class ActionColumnRenderer implements ColumnRendererInterface
     }
 
     /**
+     * Get the template for rendering buttons.
+     *
+     * @param ActionColumn $column The action column.
+     * @param array $buttons Button configurations.
+     *
+     * @return string The template string.
+     *
      * @psalm-param array<array-key, ButtonRenderer> $buttons
      */
     private function getTemplate(ActionColumn $column, array $buttons): string

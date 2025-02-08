@@ -119,7 +119,7 @@ final class BaseTest extends TestCase
                     new DataColumn(property: 'id', columnAttributes: ['class' => 'bg-primary']),
                     new DataColumn(property: 'name', columnAttributes: ['class' => 'bg-success']),
                 )
-                ->columnGroupEnabled(true)
+                ->enableColumnGrouping()
                 ->id('w1-grid')
                 ->dataReader($this->createOffsetPaginator($this->data, 10))
                 ->render()
@@ -171,7 +171,7 @@ final class BaseTest extends TestCase
                     new DataColumn(property: 'name'),
                     new DataColumn(property: 'age'),
                 )
-                ->columnGroupEnabled(true)
+                ->enableColumnGrouping()
                 ->id('w1-grid')
                 ->dataReader($this->createOffsetPaginator($this->data, 10))
                 ->render()
@@ -291,7 +291,7 @@ final class BaseTest extends TestCase
                     new DataColumn('id', footer: '2'),
                     new DataColumn('name', footer: '2'),
                 )
-                ->footerEnabled(true)
+                ->enableFooter(true)
                 ->footerRowAttributes(['class' => 'text-primary'])
                 ->id('w1-grid')
                 ->dataReader($this->createOffsetPaginator($this->data, 10))
@@ -484,7 +484,7 @@ final class BaseTest extends TestCase
                     new DataColumn('name'),
                     new DataColumn('age'),
                 )
-                ->headerTableEnabled(false)
+                ->enableHeader(false)
                 ->id('w1-grid')
                 ->dataReader($this->createOffsetPaginator($this->data, 10))
                 ->render()

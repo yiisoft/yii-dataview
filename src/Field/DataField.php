@@ -7,150 +7,47 @@ namespace Yiisoft\Yii\DataView\Field;
 use Closure;
 
 /**
- * DataField is the default field for the {@see DetailView} widget.
+ * `DataField` represents a field configuration for {@see DetailView} widget.
  *
- * A simple data field definition refers to an attribute in the data of the `DetailView`.
- *
- * By setting {@see value} and {@see label}, the label and column content can be customized.
+ * This class defines how a single field should be displayed in a {@see DetailView},
+ * including its label, value, and HTML attributes for both label and value elements.
  */
 final class DataField
 {
-    private string $attribute = '';
-    private string $label = '';
-    private array|Closure $labelAttributes = [];
-    private string $labelTag = '';
-    private mixed $value = null;
-    private string $valueTag = '';
-    private array|Closure $valueAttributes = [];
-
     /**
-     * Return new instance of DataField with specified attribute.
+     * Creates a new `DataField` instance.
      *
-     * @param string $attribute The attribute name.
-     */
-    public function attribute(string $attribute): self
-    {
-        $new = clone $this;
-        $new->attribute = $attribute;
-
-        return $new;
-    }
-
-    public function getAttribute(): string
-    {
-        return $this->attribute;
-    }
-
-    public function getLabel(): string
-    {
-        return $this->label === '' ? $this->attribute : $this->label;
-    }
-
-    public function getLabelAttributes(): array|Closure
-    {
-        return $this->labelAttributes;
-    }
-
-    public function getLabelTag(): string
-    {
-        return $this->labelTag;
-    }
-
-    public function getValue(): mixed
-    {
-        return $this->value;
-    }
-
-    public function getValueAttributes(): array|Closure
-    {
-        return $this->valueAttributes;
-    }
-
-    public function getValueTag(): string
-    {
-        return $this->valueTag;
-    }
-
-    /**
-     * Return new instance with the data label for the column content.
+     * @param string $name Property name in the data object or key name in the data array.
+     * Optional if `$value` is set explicitly.
      *
-     * @param string $value The data label for the column content.
-     */
-    public function label(string $value): self
-    {
-        $new = clone $this;
-        $new->label = $value;
-
-        return $new;
-    }
-
-    /**
-     * Return new instance with the HTML attributes of the label column.
+     * @param string $label Field label. If not set, `$name` is used.
      *
-     * @param array|Closure $values Attribute values indexed by attribute names.
-     */
-    public function labelAttributes(array|Closure $values): self
-    {
-        $new = clone $this;
-        $new->labelAttributes = $values;
-
-        return $new;
-    }
-
-    /**
-     * Return new instance with the HTML tag of the label column.
+     * @param array|Closure $labelAttributes An array of label's HTML attribute values indexed by attribute names or
+     * a function accepting data and returning the array.
+     * Example array: `['class' => 'label', 'style' => 'color: red']`
+     * Example closure: `fn($data) => ['class' => $data->type . '-label']`
      *
-     * @param string $value The HTML tag of the label column.
-     */
-    public function labelTag(string $value): self
-    {
-        $new = clone $this;
-        $new->labelTag = $value;
-
-        return $new;
-    }
-
-    /**
-     * Return new instance with the data value for the column content.
+     * @param string $labelTag Label HTML tag.
+     * Example: 'span', 'div', 'label'
      *
-     * @param mixed $value The data value for the column content.
-     */
-    public function value(mixed $value): self
-    {
-        $new = clone $this;
-        $new->value = $value;
-
-        return $new;
-    }
-
-    /**
-     * Return new instance with the HTML attributes of the value column.
+     * @param mixed|null $value Explicit value. If `null`, the value is obtained from the data by field `$name`.
      *
-     * @param array|Closure $values Attribute values indexed by attribute names.
-     */
-    public function valueAttributes(array|Closure $values): self
-    {
-        $new = clone $this;
-        $new->valueAttributes = $values;
-
-        return $new;
-    }
-
-    /**
-     * Return new instance with the HTML tag of the value column.
+     * @param string $valueTag Value HTML tag.
+     * Example: 'span', 'div', 'p'
      *
-     * @param string $value The HTML tag of the value column.
+     * @param array|Closure $valueAttributes An array of value's HTML attribute values indexed by attribute names or
+     * a function accepting data and returning the array.
+     * Example array: `['class' => 'value', 'data-type' => 'text']`
+     * Example closure: `fn($data) => ['class' => $data->status . '-value']`
      */
-    public function valueTag(string $value): self
-    {
-        $new = clone $this;
-        $new->valueTag = $value;
-
-        return $new;
-    }
-
-    public static function create(): self
-    {
-        return new self();
+    public function __construct(
+        public readonly string $name = '',
+        public readonly string $label = '',
+        public readonly array|Closure $labelAttributes = [],
+        public readonly string $labelTag = '',
+        public readonly mixed $value = null,
+        public readonly string $valueTag = '',
+        public readonly array|Closure $valueAttributes = []
+    ) {
     }
 }
