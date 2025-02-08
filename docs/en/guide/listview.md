@@ -1,4 +1,4 @@
-# List view
+# List View
 
 The `ListView` widget is designed to display a list of data items.
 It provides a flexible way to render data in a list format,

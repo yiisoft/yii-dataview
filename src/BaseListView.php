@@ -53,7 +53,7 @@ use function is_array;
 use function is_int;
 
 /**
- * BaseListView is an abstract base class for widgets that display data items in terms of a list or grid.
+ * `BaseListView` is an abstract base class for widgets that display data items in terms of a list or grid.
  *
  * @psalm-type UrlArguments = array<string,scalar|Stringable|null>
  * @psalm-type UrlCreator = callable(UrlArguments,array):string

@@ -15,7 +15,7 @@ use function is_bool;
 use function is_callable;
 
 /**
- * ActionColumnRenderer renders action buttons in a grid column.
+ * `ActionColumnRenderer` renders action buttons in a grid column.
  *
  * @psalm-import-type UrlCreator from ActionColumn
  * @psalm-import-type ButtonRenderer from ActionColumn

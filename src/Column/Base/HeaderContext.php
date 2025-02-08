@@ -20,7 +20,7 @@ use function call_user_func_array;
 use function count;
 
 /**
- * HeaderContext provides context for rendering and handling grid column headers.
+ * `HeaderContext` provides context for rendering and handling grid column headers.
  *
  * @psalm-import-type UrlCreator from BaseListView
  */
@@ -31,7 +31,7 @@ final class HeaderContext
      *
      * @param Sort|null $originalSort Original sort configuration before any modifications.
      * @param Sort|null $sort Current sort configuration that reflects the active sort state.
-     * @param array<string, string> $orderProperties Map of field names to their sort properties.
+     * @param array $orderProperties Map of field names to their sort properties.
      * @param string|null $sortableHeaderClass CSS class for sortable headers.
      * @param string|Stringable $sortableHeaderPrepend Content to prepend to sortable headers.
      * @param string|Stringable $sortableHeaderAppend Content to append to sortable headers.

@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Yiisoft\Yii\DataView;
 
 /**
- * BodyRowContext provides contextual information for rendering a table body row in data views.
+ * `BodyRowContext` provides contextual information for rendering a table body row in data views.
  */
 final class BodyRowContext
 {

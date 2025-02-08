@@ -17,7 +17,9 @@ use Yiisoft\Yii\DataView\Column\Base\DataContext;
 final class ActionColumn implements ColumnInterface
 {
     /**
-     * @var UrlCreator|null URL creator callback.
+     * @var callable|null URL creator callback.
+     *
+     * @psalm-var UrlCreator|null
      */
     private $urlCreator;
 
@@ -40,7 +42,7 @@ final class ActionColumn implements ColumnInterface
      * @param bool $visible Whether the column is visible.
      *
      * @psalm-param UrlCreator|null $urlCreator
-     * @psalm-param array<string, ButtonRenderer>|null $buttons
+     * @psalm-param array<array-key, ButtonRenderer>|null $buttons
      * @psalm-param array<string, bool|Closure>|null $visibleButtons
      */
     public function __construct(

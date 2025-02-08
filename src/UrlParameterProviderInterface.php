@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Yiisoft\Yii\DataView;
 
 /**
- * UrlParameterProviderInterface defines a contract for retrieving URL parameters.
+ * `UrlParameterProviderInterface` defines a contract for retrieving URL parameters.
  */
 interface UrlParameterProviderInterface
 {

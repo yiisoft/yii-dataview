@@ -33,7 +33,7 @@ interface SortableColumnInterface
      *
      * @param ColumnInterface $column The column instance being rendered
      *
-     * @return array<string, string> The properties that can be sorted by this column
+     * @return array The properties that can be sorted by this column
      *
      * @psalm-param TColumn $column
      * @psalm-return array<string, string>

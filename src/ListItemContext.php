@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Yiisoft\Yii\DataView;
 
 /**
- * ListItemContext provides contextual information about the current item being rendered in a ListView.
+ * `ListItemContext` provides contextual information about the current item being rendered in a `ListView`.
  */
 final class ListItemContext
 {
@@ -17,7 +17,7 @@ final class ListItemContext
      * @param int $index The zero-based index of the data in the array. This represents the item's position
      * in the overall dataset, starting from 0.
      * @param ListView $widget The list view object that is rendering the current item. This provides access
-     * to the ListView instance for accessing widget configuration and methods.
+     * to the `ListView` instance for accessing widget configuration and methods.
      */
     public function __construct(
         public readonly array|object $data,

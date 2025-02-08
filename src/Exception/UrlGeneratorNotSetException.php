@@ -10,14 +10,14 @@ use Yiisoft\FriendlyException\FriendlyExceptionInterface;
 /**
  * Exception thrown when attempting to create a widget that requires URL generation without a URL generator.
  *
- * This exception is thrown in scenarios where a widget (such as GridView or ListView) needs to generate
+ * This exception is thrown in scenarios where a widget (such as `GridView` or `ListView`) needs to generate
  * URLs (e.g., for sorting, pagination, or filtering), but no URL generator is configured. The URL generator
  * is essential for creating proper URLs that maintain the widget's state and functionality.
  */
 final class UrlGeneratorNotSetException extends RuntimeException implements FriendlyExceptionInterface
 {
     /**
-     * Creates a new UrlGeneratorNotSetException instance.
+     * Creates a new `UrlGeneratorNotSetException` instance.
      *
      * @param string $message Custom error message. If empty, use the default message from {@see getName()}.
      */

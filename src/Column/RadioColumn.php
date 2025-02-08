@@ -7,7 +7,7 @@ namespace Yiisoft\Yii\DataView\Column;
 use Closure;
 
 /**
- * RadioColumn displays a column of radio buttons in a grid view.
+ * `RadioColumn` displays a column of radio buttons in a grid view.
  *
  * This column type is typically used when you need to allow users to select a single row from the grid.
  * Each radio button in the column shares the same name attribute, ensuring only one can be selected at a time.
@@ -15,7 +15,7 @@ use Closure;
 final class RadioColumn implements ColumnInterface
 {
     /**
-     * Creates a new RadioColumn instance.
+     * Creates a new `RadioColumn` instance.
      *
      * @param string|null $header The header cell content. If `null`, no header will be rendered.
      * @param string|null $footer The footer cell content. If `null`, no footer will be rendered.

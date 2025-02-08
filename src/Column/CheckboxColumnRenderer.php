@@ -12,7 +12,7 @@ use Yiisoft\Yii\DataView\Column\Base\GlobalContext;
 use Yiisoft\Yii\DataView\Column\Base\HeaderContext;
 
 /**
- * CheckboxColumnRenderer renders checkbox inputs in a grid column.
+ * `CheckboxColumnRenderer` renders checkbox inputs in a grid column.
  *
  * @implements ColumnRendererInterface<CheckboxColumn>
  */

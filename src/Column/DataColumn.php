@@ -10,7 +10,7 @@ use Yiisoft\Yii\DataView\Filter\Factory\FilterFactoryInterface;
 use Yiisoft\Yii\DataView\Filter\Widget\FilterWidget;
 
 /**
- * DataColumn is the default column type for the {@see GridView} widget.
+ * `DataColumn` is the default column type for the {@see GridView} widget.
  *
  * A simple data column definition refers to an attribute in the GridView's data provider.
  *
@@ -23,7 +23,7 @@ final class DataColumn implements ColumnInterface
      * Function to determine if a filter value should be considered empty.
      *
      * This property can be:
-     * - `null`: Uses default empty value checking (empty() function)
+     * - `null`: Uses default empty value checking (`empty()` function)
      * - `true`: Always considers the value empty (disables filtering)
      * - `false`: Always considers the value non-empty (enables filtering)
      * - `callable`: Custom function to determine emptiness with signature:
@@ -40,7 +40,7 @@ final class DataColumn implements ColumnInterface
     public readonly mixed $filterEmpty;
 
     /**
-     * Creates a new DataColumn instance.
+     * Creates a new `DataColumn` instance.
      *
      * ```php
      * // Basic usage
@@ -83,14 +83,14 @@ final class DataColumn implements ColumnInterface
      * `function(array|object $data, DataContext $context): string|Stringable`.
      * @param string|null $dateTimeFormat Format string for datetime values (e.g., 'Y-m-d H:i:s').
      * @param array|bool|FilterWidget $filter Filter configuration. Can be:
-     * - false (disabled)
-     * - array (filter options)
-     * - FilterWidget instance (custom filter widget)
+     * - `false` (disabled)
+     * - `array` (filter options)
+     * - `FilterWidget` instance (custom filter widget)
      * @param FilterFactoryInterface|string|null $filterFactory Factory for creating filter widgets.
      * @param array|RuleInterface|null $filterValidation Validation rules for filter values.
      * Can be a single rule or array of rules.
      * @param bool|callable|null $filterEmpty Function to determine if a filter value is empty. Can be:
-     * - `null`: Uses default empty value checking (empty() function)
+     * - `null`: Uses default empty value checking (`empty()` function)
      * - `true`: Always considers the value empty (disables filtering)
      * - `false`: Always considers the value non-empty (enables filtering)
      * - `callable`: Custom function to determine emptiness with signature:

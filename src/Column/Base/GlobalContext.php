@@ -9,7 +9,7 @@ use Yiisoft\Data\Reader\ReadableDataInterface;
 use Yiisoft\Translator\TranslatorInterface;
 
 /**
- * GlobalContext provides shared context for all columns in a grid.
+ * `GlobalContext` provides shared context for all columns in a grid.
  */
 final class GlobalContext
 {
@@ -17,7 +17,7 @@ final class GlobalContext
      * Creates a new global context instance.
      *
      * @param ReadableDataInterface $dataReader Data reader for accessing grid data.
-     * @param array<string,scalar|Stringable|null> $pathArguments URL path arguments for link generation.
+     * @param array $pathArguments URL path arguments for link generation.
      * @psalm-param array<string,scalar|Stringable|null> $pathArguments
      * @param array $queryParameters URL query parameters for link generation.
      * @param TranslatorInterface $translator Translator service for internationalizing grid content.

@@ -8,7 +8,7 @@ use Yiisoft\Data\Reader\ReadableDataInterface;
 use Yiisoft\Yii\DataView\Column\ColumnInterface;
 
 /**
- * DataContext provides context information for rendering a data cell in a grid.
+ * `DataContext` provides context information for rendering a data cell in a grid.
  */
 final class DataContext
 {

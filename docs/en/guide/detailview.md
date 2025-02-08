@@ -38,7 +38,6 @@ the following:
 - `valueAttributes` - An array of value's HTML attribute values indexed by attribute names or a function accepting
   data and returning the array.
 
-
 ## Rendering options
 
 The widget is fully customizable in terms of how it's rendered.

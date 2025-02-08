@@ -9,7 +9,7 @@ use Yiisoft\Html\Html;
 use Yiisoft\Html\NoEncodeStringableInterface;
 
 /**
- * Cell represents a single grid cell with content and attributes.
+ * `Cell` represents a single grid cell with content and attributes.
  */
 final class Cell
 {
@@ -200,7 +200,7 @@ final class Cell
     /**
      * Get cell content parts.
      *
-     * @return array<array-key,string|Stringable> Array of content parts.
+     * @return array Array of content parts.
      *
      * @psalm-return array<array-key,string|Stringable>
      */

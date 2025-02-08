@@ -30,7 +30,7 @@ use function is_callable;
 use function is_string;
 
 /**
- * DataColumnRenderer handles rendering and filtering of data columns in a grid.
+ * `DataColumnRenderer` handles rendering and filtering of data columns in a grid.
  *
  * @template TColumn as DataColumn
  * @implements FilterableColumnRendererInterface<TColumn>
@@ -49,7 +49,7 @@ final class DataColumnRenderer implements FilterableColumnRendererInterface, Sor
     private readonly mixed $defaultFilterEmpty;
 
     /**
-     * Creates a new DataColumnRenderer instance.
+     * Creates a new `DataColumnRenderer` instance.
      *
      * @param ContainerInterface $filterFactoryContainer Container for filter factory instances.
      * @param ValidatorInterface $validator Validator for filter values.

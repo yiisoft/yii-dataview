@@ -257,7 +257,7 @@ final class KeysetPagination extends Widget implements PaginationWidgetInterface
     }
 
     /**
-     * Renders a single pagination item (Previous or Next).
+     * Renders a single pagination item (previous or next).
      *
      * @param string|Stringable $label The item label.
      * @param string|null $url The item URL, or null if disabled.
@@ -287,7 +287,7 @@ final class KeysetPagination extends Widget implements PaginationWidgetInterface
     /**
      * Gets the keyset paginator instance.
      *
-     * @throws PaginatorNotSetException if paginator is not set.
+     * @throws PaginatorNotSetException If paginator is not set.
      *
      * @return KeysetPaginator The keyset paginator instance.
      */

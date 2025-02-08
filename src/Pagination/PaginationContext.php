@@ -18,7 +18,6 @@ final class PaginationContext
 
     /**
      * @internal This constructor is not meant to be used directly.
-     * Use the appropriate factory method or dependency injection instead.
      *
      * @param string $nextUrlPattern URL pattern for next page links.
      * Must contain {@see URL_PLACEHOLDER}.

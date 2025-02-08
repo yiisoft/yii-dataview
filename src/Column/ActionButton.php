@@ -8,7 +8,7 @@ use Closure;
 use Stringable;
 
 /**
- * ActionButton represents a button in an action column of a grid.
+ * `ActionButton` represents a button in an action column of a grid.
  */
 final class ActionButton
 {
@@ -19,10 +19,12 @@ final class ActionButton
      * `function(array|object $data, DataContext $context): string`.
      * @param array|Closure|null $attributes HTML attributes. If closure is used, its signature is:
      * `function(array|object $data, DataContext $context): array`.
-     * @param array<array-key,string|null>|Closure|false|string|null $class CSS class(es). If closure is used, its signature is:
+     * @param array|Closure|false|string|null $class CSS class(es). If closure is used, its signature is:
      * `function(array|object $data, DataContext $context): string|array<array-key,string|null>|null`.
      * @param string|null $title Button title attribute.
      * @param bool $overrideAttributes Whether to override default attributes with custom ones instead of merging.
+     *
+     * @psalm-param array<array-key,string|null>|Closure|false|string|null $class
      */
     public function __construct(
         public readonly Closure|string|Stringable $content = '',

@@ -14,7 +14,7 @@ use Yiisoft\Yii\DataView\Column\Base\HeaderContext;
 use function array_key_exists;
 
 /**
- * RadioColumnRenderer handles the rendering of radio button columns in a grid.
+ * `RadioColumnRenderer` handles the rendering of radio button columns in a grid.
  *
  * @implements ColumnRendererInterface<RadioColumn>
  */

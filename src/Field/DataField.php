@@ -7,7 +7,7 @@ namespace Yiisoft\Yii\DataView\Field;
 use Closure;
 
 /**
- * DataField represents a field configuration for {@see DetailView} widget.
+ * `DataField` represents a field configuration for {@see DetailView} widget.
  *
  * This class defines how a single field should be displayed in a {@see DetailView},
  * including its label, value, and HTML attributes for both label and value elements.
@@ -15,7 +15,7 @@ use Closure;
 final class DataField
 {
     /**
-     * Creates a new DataField instance.
+     * Creates a new `DataField` instance.
      *
      * @param string $name Property name in the data object or key name in the data array.
      * Optional if `$value` is set explicitly.

@@ -32,7 +32,7 @@ trait PaginationContextTrait
     /**
      * Gets the current pagination context.
      *
-     * @throws LogicException if the context has not been set.
+     * @throws LogicException If the context has not been set.
      *
      * @return PaginationContext The current pagination context.
      */

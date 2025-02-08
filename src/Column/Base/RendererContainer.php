@@ -9,7 +9,7 @@ use Yiisoft\Injector\Injector;
 use Yiisoft\Yii\DataView\Column\ColumnRendererInterface;
 
 /**
- * RendererContainer manages the creation and configuration of column renderers.
+ * `RendererContainer` manages the creation and configuration of column renderers.
  *
  * @internal This class is not part of the public API and may change without notice.
  */

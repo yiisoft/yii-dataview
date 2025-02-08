@@ -9,7 +9,7 @@ use Yiisoft\Yii\DataView\UrlParameterProviderInterface;
 use Yiisoft\Yii\DataView\UrlParameterType;
 
 /**
- * FilterContext provides context information for rendering and handling grid column filters.
+ * `FilterContext` provides context information for rendering and handling grid column filters.
  */
 final class FilterContext
 {

@@ -14,7 +14,7 @@ use Yiisoft\Yii\DataView\UrlParameterType;
 use function is_object;
 
 /**
- * URL creator for action columns in GridView.
+ * URL creator for action columns in `GridView`.
  */
 final class ActionColumnUrlCreator
 {
@@ -43,7 +43,7 @@ final class ActionColumnUrlCreator
      * @param string $action The action name (e.g., 'view', 'edit', 'delete').
      * @param DataContext $context The data context containing the row data and column.
      *
-     * @throws LogicException if the URL config is not an instance of ActionColumnUrlConfig.
+     * @throws LogicException if the URL config is not an instance of `ActionColumnUrlConfig`.
      *
      * @return string The generated URL for the action.
      */

@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Yiisoft\Yii\DataView;
 
 /**
- * UrlConfig provides configuration for URL parameter handling in data views.
+ * `UrlConfig` provides configuration for URL parameter handling in data views.
  *
  * @psalm-import-type UrlArguments from BaseListView
  * @psalm-immutable
@@ -103,8 +103,8 @@ final class UrlConfig
      * Creates a new instance with the specified page parameter type.
      *
      * @param int $type The new page parameter type. Must be one of:
-     *                 - UrlParameterType::PATH for path parameters
-     *                 - UrlParameterType::QUERY for query parameters
+     *  - `UrlParameterType::PATH` for path parameters
+     *  - `UrlParameterType::QUERY` for query parameters
      *
      * @return self A new instance with the updated page parameter type.
      *
@@ -121,8 +121,8 @@ final class UrlConfig
      * Creates a new instance with the specified previous page parameter type.
      *
      * @param int $type The new previous page parameter type. Must be one of:
-     *                 - UrlParameterType::PATH for path parameters
-     *                 - UrlParameterType::QUERY for query parameters
+     *  - `UrlParameterType::PATH` for path parameters
+     *  - `UrlParameterType::QUERY` for query parameters
      *
      * @return self A new instance with the updated previous page parameter type.
      *
@@ -139,8 +139,8 @@ final class UrlConfig
      * Creates a new instance with the specified page size parameter type.
      *
      * @param int $type The new page size parameter type. Must be one of:
-     *                 - UrlParameterType::PATH for path parameters
-     *                 - UrlParameterType::QUERY for query parameters
+     *  - `UrlParameterType::PATH` for path parameters
+     *  - `UrlParameterType::QUERY` for query parameters
      *
      * @return self A new instance with the updated page size parameter type.
      *
@@ -157,8 +157,8 @@ final class UrlConfig
      * Creates a new instance with the specified sort parameter type.
      *
      * @param int $type The new sort parameter type. Must be one of:
-     *                 - UrlParameterType::PATH for path parameters
-     *                 - UrlParameterType::QUERY for query parameters
+     *  - `UrlParameterType::PATH` for path parameters
+     *  - `UrlParameterType::QUERY` for query parameters
      *
      * @return self A new instance with the updated sort parameter type.
      *

@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Yiisoft\Yii\DataView\Column;
 
 /**
- * SerialColumn displays a column of sequential row numbers (1-based) in a grid view.
+ * `SerialColumn` displays a column of sequential row numbers (1-based) in a grid view.
  */
 final class SerialColumn implements ColumnInterface
 {
     /**
-     * Creates a new SerialColumn instance.
+     * Creates a new `SerialColumn` instance.
      *
      * @param string|null $header The header cell content. If null, no header will be rendered.
      * @param string|null $footer The footer cell content. If null, no footer will be rendered.
