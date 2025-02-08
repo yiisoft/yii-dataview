@@ -66,12 +66,9 @@ final class RendererContainer
      *
      * @param array $configs Configuration settings for renderers.
      * Keys are renderer class names, values are arrays of constructor arguments.
+     * @psalm-param array<class-string, array> $configs
      *
      * @return self New instance with updated configurations.
-     *
-     * @psalm-param array<class-string, array> $configs An array of configurations for {@see get()}. Keys are column
-     * renderer class names. Values are arrays of constructor arguments either indexed by argument name or having integer
-     * index if applied sequentially.
      */
     public function addConfigs(array $configs): self
     {
