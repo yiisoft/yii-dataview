@@ -13,7 +13,7 @@ use Yiisoft\View\Exception\ViewNotFoundException;
 use Yiisoft\View\View;
 
 /**
- * ListView is a flexible widget for displaying a list of data items with customizable rendering and layout.
+ * `ListView` is a flexible widget for displaying a list of data items with customizable rendering and layout.
  */
 final class ListView extends BaseListView
 {

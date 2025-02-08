@@ -47,12 +47,12 @@ use function is_callable;
 final class GridView extends BaseListView
 {
     /**
-     * @var Closure|null Callback executed after rendering each data row.
+     * @var Closure|null Callback executed after rendering each data row. The Result is appended after the row.
      */
     private Closure|null $afterRowCallback = null;
 
     /**
-     * @var Closure|null Callback executed before rendering each data row.
+     * @var Closure|null Callback executed before rendering each data row. The Result is prepended before the row.
      */
     private Closure|null $beforeRowCallback = null;
 
@@ -319,7 +319,7 @@ final class GridView extends BaseListView
      *
      * The callback should return either:
      * - a {@see Tr} instance representing a table row to be rendered after the data row
-     * - or null if no additional row should be rendered
+     * - or `null` if no additional row should be rendered
      *
      * @return self New instance with the after row callback.
      */
@@ -347,7 +347,7 @@ final class GridView extends BaseListView
      *
      * The callback should return either:
      * - a {@see Tr} instance representing a table row to be rendered before the data row
-     * - or null if no additional row should be rendered
+     * - or `null` if no additional row should be rendered
      *
      * @return self New instance with the before row callback.
      */

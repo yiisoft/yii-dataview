@@ -12,7 +12,7 @@ use Yiisoft\Widget\Widget;
 use Yiisoft\Yii\DataView\Field\DataField;
 
 /**
- * DetailView displays details about a single data item.
+ * `DetailView` displays details about a single data item.
  * The data can be either an object or an associative array.
  * Which fields should be displayed and how exactly is determined
  * by "fields":
