@@ -9,22 +9,6 @@ use Yiisoft\Html\Tag\Input;
 
 /**
  * Filter widget that renders a text input for filtering data.
- *
- * This widget creates a standard HTML text input that can be used for free-form
- * text filtering in data views. It supports customization through HTML attributes
- * and follows immutable object pattern.
- *
- * Example usage:
- * ```php
- * echo TextInputFilter::widget()
- *     ->addAttributes(['class' => 'form-control'])
- *     ->withContext(new Context('username', 'john', 'filter-form'));
- * ```
- *
- * The above example will render:
- * ```html
- * <input type="text" class="form-control" name="username" value="john" form="filter-form">
- * ```
  */
 final class TextInputFilter extends FilterWidget
 {
@@ -35,7 +19,6 @@ final class TextInputFilter extends FilterWidget
      * Same named attributes are replaced.
      *
      * @param array $attributes Name-value set of attributes.
-     * Example: `['class' => 'form-control', 'placeholder' => 'Search...']`
      *
      * @return self New instance with added attributes.
      *
@@ -52,7 +35,6 @@ final class TextInputFilter extends FilterWidget
      * Replace attributes with a new set.
      *
      * @param array $attributes Name-value set of attributes.
-     * Example: `['class' => 'search-input', 'data-role' => 'filter']`
      *
      * @return self New instance with replaced attributes.
      *
@@ -67,11 +49,6 @@ final class TextInputFilter extends FilterWidget
 
     /**
      * Renders the text input filter with the given context.
-     *
-     * Uses the context to set:
-     * - name attribute from context property
-     * - value attribute from context value
-     * - form attribute from context formId
      *
      * @param Context $context The filter context.
      *

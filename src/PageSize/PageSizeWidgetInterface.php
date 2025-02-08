@@ -9,18 +9,8 @@ use Stringable;
 /**
  * Interface for widgets that allow users to control the number of items displayed per page.
  *
- * This interface defines the contract for page size widgets, which are responsible for:
- * - Rendering page size controls (inputs, dropdowns, etc.)
- * - Managing page size context
- * - Handling user interactions
- *
- * Implementations should:
- * - Use immutable state management
- * - Support context-based configuration
- * - Render valid HTML controls
- *
- * @see InputPageSize A text input implementation
- * @see SelectPageSize A dropdown implementation
+ * @see InputPageSize A text input implementation.
+ * @see SelectPageSize A dropdown implementation.
  */
 interface PageSizeWidgetInterface extends Stringable
 {

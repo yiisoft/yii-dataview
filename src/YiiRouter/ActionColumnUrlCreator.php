@@ -15,40 +15,6 @@ use function is_object;
 
 /**
  * URL creator for action columns in GridView.
- *
- * This class is responsible for generating URLs for action buttons (like view, edit,
- * delete) in GridView action columns. It supports:
- * - Automatic primary key handling
- * - Flexible URL parameter configuration
- * - Path and query parameter styles
- * - Default configuration with overrides
- *
- * Example usage:
- * ```php
- * // Create the URL creator
- * $urlCreator = new ActionColumnUrlCreator(
- *     urlGenerator: $container->get(UrlGeneratorInterface::class),
- *     currentRoute: $container->get(CurrentRoute::class),
- *     defaultPrimaryKey: 'id',
- *     defaultPrimaryKeyParameterType: UrlParameterType::QUERY
- * );
- *
- * // Use in GridView action column
- * $grid->column(
- *     ActionColumn::class,
- *     urlCreator: $urlCreator,
- *     urlConfig: new ActionColumnUrlConfig(
- *         primaryKey: 'uuid',
- *         baseRouteName: 'user',
- *         primaryKeyParameterType: UrlParameterType::PATH
- *     )
- * )
- * ```
- *
- * The above configuration will generate URLs like:
- * - View: /user/view/123
- * - Edit: /user/edit/123
- * - Delete: /user/delete/123
  */
 final class ActionColumnUrlCreator
 {
@@ -73,13 +39,6 @@ final class ActionColumnUrlCreator
 
     /**
      * Generates a URL for an action button.
-     *
-     * This method:
-     * 1. Extracts the primary key value from the data row
-     * 2. Determines the base route name (from config or current route)
-     * 3. Appends the action name to the route
-     * 4. Adds the primary key value as either a path or query parameter
-     * 5. Generates the final URL with all parameters
      *
      * @param string $action The action name (e.g., 'view', 'edit', 'delete').
      * @param DataContext $context The data context containing the row data and column.

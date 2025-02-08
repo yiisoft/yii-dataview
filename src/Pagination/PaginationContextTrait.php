@@ -9,27 +9,6 @@ use LogicException;
 /**
  * Trait providing context management functionality for pagination widgets.
  *
- * This trait implements common context handling methods required by all pagination
- * widgets. It provides:
- * - Context storage
- * - Immutable context updates
- * - Context access with validation
- *
- * Example usage:
- * ```php
- * class MyPaginationWidget implements PaginationWidgetInterface
- * {
- *     use PaginationContextTrait;
- *
- *     public function render(): string
- *     {
- *         $context = $this->getContext();
- *         // Use context to generate pagination URLs
- *         return $html;
- *     }
- * }
- * ```
- *
  * @psalm-require-implements PaginationWidgetInterface
  */
 trait PaginationContextTrait
@@ -38,9 +17,6 @@ trait PaginationContextTrait
 
     /**
      * Creates a new instance with the specified pagination context.
-     *
-     * This method follows the immutable pattern, returning a new instance
-     * with the updated context rather than modifying the existing instance.
      *
      * @param PaginationContext $context The pagination context to use.
      *

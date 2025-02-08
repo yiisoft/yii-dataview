@@ -12,47 +12,7 @@ use Yiisoft\Html\Html;
 use Yiisoft\Widget\Widget;
 
 /**
- * Widget for rendering keyset-based pagination controls.
- *
- * Keyset pagination is a technique that uses unique keys (tokens) to navigate through
- * data sets. Unlike offset pagination, it provides consistent results even when data
- * changes between page loads. This widget renders "Previous" and "Next" links using
- * these tokens.
- *
- * Features:
- * - Customizable container, list, and item HTML structure
- * - Configurable CSS classes for disabled states
- * - Customizable navigation labels
- * - Immutable state management
- *
- * Example usage:
- * ```php
- * echo KeysetPagination::widget()
- *     ->containerTag('nav')
- *     ->listTag('ul')
- *     ->itemTag('li')
- *     ->containerAttributes(['aria-label' => 'Navigation'])
- *     ->listAttributes(['class' => 'pagination'])
- *     ->itemAttributes(['class' => 'page-item'])
- *     ->linkAttributes(['class' => 'page-link'])
- *     ->disabledItemClass('disabled')
- *     ->withPaginator($keysetPaginator)
- *     ->withContext($paginationContext);
- * ```
- *
- * The above example will render:
- * ```html
- * <nav aria-label="Navigation">
- *     <ul class="pagination">
- *         <li class="page-item disabled">
- *             <a class="page-link" href="#">⟨</a>
- *         </li>
- *         <li class="page-item">
- *             <a class="page-link" href="/items?next=token123">⟩</a>
- *         </li>
- *     </ul>
- * </nav>
- * ```
+ * Widget for rendering {@see KeysetPaginator}.
  */
 final class KeysetPagination extends Widget implements PaginationWidgetInterface
 {
@@ -91,7 +51,7 @@ final class KeysetPagination extends Widget implements PaginationWidgetInterface
      * @param PaginatorInterface $paginator The paginator to use.
      * Must be an instance of {@see KeysetPaginator}.
      *
-     * @throws PaginatorNotSupportedException if paginator is not a KeysetPaginator.
+     * @throws PaginatorNotSupportedException If paginator is not a {@see KeysetPaginator}.
      *
      * @return static New instance with the specified paginator.
      */
@@ -110,9 +70,9 @@ final class KeysetPagination extends Widget implements PaginationWidgetInterface
      * Sets the container tag name.
      *
      * @param string|null $tag The tag name for the container element.
-     * Common values: 'nav', 'div'. Use null to omit the container.
+     * Common values: 'nav', 'div'. Use `null` to omit the container.
      *
-     * @throws InvalidArgumentException if tag name is empty.
+     * @throws InvalidArgumentException If tag name is empty.
      *
      * @return self New instance with the specified container tag.
      */
@@ -131,7 +91,6 @@ final class KeysetPagination extends Widget implements PaginationWidgetInterface
      * Sets the container element attributes.
      *
      * @param array $attributes HTML attributes for the container element.
-     * Example: `['aria-label' => 'Navigation', 'class' => 'pagination-nav']`
      *
      * @return self New instance with the specified container attributes.
      */
@@ -146,7 +105,7 @@ final class KeysetPagination extends Widget implements PaginationWidgetInterface
      * Sets the list tag name.
      *
      * @param string|null $tag The tag name for the list element.
-     * Common values: 'ul', 'div'. Use null to omit the list container.
+     * Common values: 'ul', 'div'. Use `null` to omit the list container.
      *
      * @throws InvalidArgumentException if tag name is empty.
      *
@@ -167,7 +126,6 @@ final class KeysetPagination extends Widget implements PaginationWidgetInterface
      * Sets the list element attributes.
      *
      * @param array $attributes HTML attributes for the list element.
-     * Example: `['class' => 'pagination', 'role' => 'list']`
      *
      * @return self New instance with the specified list attributes.
      */
@@ -182,7 +140,7 @@ final class KeysetPagination extends Widget implements PaginationWidgetInterface
      * Sets the item tag name.
      *
      * @param string|null $tag The tag name for the item elements.
-     * Common values: 'li', 'div'. Use null to omit item containers.
+     * Common values: 'li', 'div'. Use `null` to omit item containers.
      *
      * @throws InvalidArgumentException if tag name is empty.
      *
@@ -203,7 +161,6 @@ final class KeysetPagination extends Widget implements PaginationWidgetInterface
      * Sets the item element attributes.
      *
      * @param array $attributes HTML attributes for the item elements.
-     * Example: `['class' => 'page-item']`
      *
      * @return self New instance with the specified item attributes.
      */
@@ -218,7 +175,6 @@ final class KeysetPagination extends Widget implements PaginationWidgetInterface
      * Sets the CSS class for disabled item elements.
      *
      * @param string|null $class The CSS class for disabled items.
-     * Example: 'disabled', 'inactive'
      *
      * @return self New instance with the specified disabled item class.
      */
@@ -233,7 +189,6 @@ final class KeysetPagination extends Widget implements PaginationWidgetInterface
      * Sets the link attributes.
      *
      * @param array $attributes HTML attributes for the link elements.
-     * Example: `['class' => 'page-link', 'role' => 'button']`
      *
      * @return self New instance with the specified link attributes.
      */
@@ -248,7 +203,6 @@ final class KeysetPagination extends Widget implements PaginationWidgetInterface
      * Sets the CSS class for disabled link elements.
      *
      * @param string|null $class The CSS class for disabled links.
-     * Example: 'disabled', 'inactive'
      *
      * @return self New instance with the specified disabled link class.
      */
@@ -262,13 +216,7 @@ final class KeysetPagination extends Widget implements PaginationWidgetInterface
     /**
      * Renders the pagination controls.
      *
-     * The output includes:
-     * - Optional container element (nav)
-     * - Optional list element (ul)
-     * - Previous and Next links with appropriate tokens
-     * - Disabled states for unavailable navigation
-     *
-     * @throws PaginatorNotSetException if paginator is not set.
+     * @throws PaginatorNotSetException If paginator is not set.
      * @return string The rendered HTML pagination controls.
      */
     public function render(): string

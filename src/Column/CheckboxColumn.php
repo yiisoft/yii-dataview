@@ -43,22 +43,11 @@ final class CheckboxColumn implements ColumnInterface
         }
     }
 
-    /**
-     * Get the renderer class for this column.
-     *
-     * @return string The fully qualified class name of the renderer.
-     * @psalm-return class-string<ColumnRendererInterface>
-     */
     public function getRenderer(): string
     {
         return CheckboxColumnRenderer::class;
     }
 
-    /**
-     * Check if the column is visible.
-     *
-     * @return bool Whether the column should be rendered.
-     */
     public function isVisible(): bool
     {
         return $this->visible;

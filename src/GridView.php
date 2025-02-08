@@ -782,8 +782,8 @@ final class GridView extends BaseListView
             } else {
                 $tags[] = Html::td(attributes: $cell->getAttributes())
                     ->content(...$cell->getContent())
-                    ->encode($cell->isEncode())
-                    ->doubleEncode($cell->isDoubleEncode());
+                    ->encode($cell->shouldEncode())
+                    ->doubleEncode($cell->shouldDoubleEncode());
                 $hasFilters = true;
             }
         }
@@ -857,8 +857,8 @@ final class GridView extends BaseListView
                     ? Html::th('&nbsp;')->encode(false)
                     : Html::th(attributes: $cell->getAttributes())
                         ->content(...$cell->getContent())
-                        ->encode($cell->isEncode())
-                        ->doubleEncode($cell->isDoubleEncode());
+                        ->encode($cell->shouldEncode())
+                        ->doubleEncode($cell->shouldDoubleEncode());
             }
             $headerRow = Html::tr($this->headerRowAttributes)->cells(...$tags);
             $thead = Html::thead()->rows($headerRow);
@@ -878,8 +878,8 @@ final class GridView extends BaseListView
                 );
                 $tags[] = Html::td(attributes: $cell->getAttributes())
                     ->content(...$cell->getContent())
-                    ->encode($cell->isEncode())
-                    ->doubleEncode($cell->isDoubleEncode());
+                    ->encode($cell->shouldEncode())
+                    ->doubleEncode($cell->shouldDoubleEncode());
             }
             $footerRow = Html::tr($this->footerRowAttributes)->cells(...$tags);
             $blocks[] = Html::tfoot()->rows($footerRow)->render();
@@ -904,8 +904,8 @@ final class GridView extends BaseListView
                     ? Html::td($this->emptyCell, $this->emptyCellAttributes)->encode(false)
                     : Html::td(attributes: $this->prepareBodyAttributes($cell->getAttributes(), $context))
                         ->content(...$cell->getContent())
-                        ->encode($cell->isEncode())
-                        ->doubleEncode($cell->isDoubleEncode());
+                        ->encode($cell->shouldEncode())
+                        ->doubleEncode($cell->shouldDoubleEncode());
             }
             $bodyRowAttributes = $this->prepareBodyRowAttributes(
                 $this->bodyRowAttributes,

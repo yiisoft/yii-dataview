@@ -9,12 +9,6 @@ use Yiisoft\Yii\DataView\BaseListView;
 /**
  * Context class that holds the state and configuration for page size widgets.
  *
- * This class encapsulates all the necessary information for rendering and handling
- * page size controls in data views, including:
- * - Current and default page sizes
- * - Page size constraints
- * - URL patterns for navigation
- *
  * @psalm-import-type PageSizeConstraint from BaseListView
  */
 final class PageSizeContext
@@ -45,8 +39,8 @@ final class PageSizeContext
      * @param int $defaultValue The default page size value.
      * @param array|bool|int $constraint The page size constraint.
      * Can be:
-     * - FIXED_VALUE: page size is fixed to default
-     * - ANY_VALUE: any page size is allowed
+     * - {@see FIXED_VALUE}: page size is fixed to default
+     * - {@see ANY_VALUE}: any page size is allowed
      * - int: maximum allowed page size
      * - array: list of allowed page sizes
      * @param string $urlPattern The URL pattern with placeholder for page size.
@@ -57,9 +51,6 @@ final class PageSizeContext
     public function __construct(
         public readonly int $currentValue,
         public readonly int $defaultValue,
-        /**
-         * @var PageSizeConstraint
-         */
         public readonly array|int|bool $constraint,
         public readonly string $urlPattern,
         public readonly string $defaultUrl,

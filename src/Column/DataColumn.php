@@ -12,13 +12,7 @@ use Yiisoft\Yii\DataView\Filter\Widget\FilterWidget;
 /**
  * DataColumn is the default column type for the {@see GridView} widget.
  *
- * A simple data column definition refers to an attribute in the data of the GridView's data provider.
- * By setting {@see value} and {@see label}, the label and cell content can be customized.
- *
- * A data column differentiates between the {@see getDataCellValue|data cell value} and the
- * {@see renderDataCellContent|data cell content}. The cell value is an unformatted value that may be used for
- * calculation, while the actual cell content is a {@see format|formatted} version of that value which may contain HTML
- * markup.
+ * A simple data column definition refers to an attribute in the GridView's data provider.
  *
  * @psalm-type FilterEmptyCallable = callable(mixed $value): bool
  * @psalm-type BodyAttributesCallable = callable(array|object,DataContext): array
@@ -140,22 +134,11 @@ final class DataColumn implements ColumnInterface
         $this->filterEmpty = $filterEmpty;
     }
 
-    /**
-     * Check if the column is visible.
-     *
-     * @return bool Whether the column should be rendered.
-     */
     public function isVisible(): bool
     {
         return $this->visible;
     }
 
-    /**
-     * Get the renderer class for this column.
-     *
-     * @return string The fully qualified class name of the renderer.
-     * @psalm-return class-string<ColumnRendererInterface>
-     */
     public function getRenderer(): string
     {
         return DataColumnRenderer::class;

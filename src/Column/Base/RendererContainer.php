@@ -11,12 +11,6 @@ use Yiisoft\Yii\DataView\Column\ColumnRendererInterface;
 /**
  * RendererContainer manages the creation and configuration of column renderers.
  *
- * This class provides:
- *
- * - Lazy instantiation of column renderers
- * - Configuration management for renderers
- * - Caching of renderer instances
- *
  * @internal This class is not part of the public API and may change without notice.
  */
 final class RendererContainer

@@ -17,11 +17,6 @@ use function is_callable;
 /**
  * ActionColumnRenderer renders action buttons in a grid column.
  *
- * This class is responsible for:
- * - Rendering action buttons with customizable content and appearance
- * - Managing button visibility and URL generation
- * - Handling template-based button layout
- *
  * @psalm-import-type UrlCreator from ActionColumn
  * @psalm-import-type ButtonRenderer from ActionColumn
  *
@@ -72,29 +67,11 @@ final class ActionColumnRenderer implements ColumnRendererInterface
         ];
     }
 
-    /**
-     * Render the column container.
-     *
-     * @param ColumnInterface $column The column being rendered.
-     * @param Cell $cell The cell to render.
-     * @param GlobalContext $context Global rendering context.
-     *
-     * @return Cell The rendered cell.
-     */
     public function renderColumn(ColumnInterface $column, Cell $cell, GlobalContext $context): Cell
     {
         return $cell->addAttributes($column->columnAttributes);
     }
 
-    /**
-     * Render the column header.
-     *
-     * @param ColumnInterface $column The column being rendered.
-     * @param Cell $cell The cell to render.
-     * @param HeaderContext $context Header rendering context.
-     *
-     * @return Cell The rendered header cell.
-     */
     public function renderHeader(ColumnInterface $column, Cell $cell, HeaderContext $context): Cell
     {
         return $cell
@@ -102,15 +79,6 @@ final class ActionColumnRenderer implements ColumnRendererInterface
             ->addAttributes($column->headerAttributes);
     }
 
-    /**
-     * Render a data cell in the column.
-     *
-     * @param ColumnInterface $column The column being rendered.
-     * @param Cell $cell The cell to render.
-     * @param DataContext $context Data rendering context.
-     *
-     * @return Cell The rendered data cell.
-     */
     public function renderBody(ColumnInterface $column, Cell $cell, DataContext $context): Cell
     {
         $contentSource = $column->content;
@@ -156,15 +124,6 @@ final class ActionColumnRenderer implements ColumnRendererInterface
             ->encode(false);
     }
 
-    /**
-     * Render the column footer.
-     *
-     * @param ColumnInterface $column The column being rendered.
-     * @param Cell $cell The cell to render.
-     * @param GlobalContext $context Global rendering context.
-     *
-     * @return Cell The rendered footer cell.
-     */
     public function renderFooter(ColumnInterface $column, Cell $cell, GlobalContext $context): Cell
     {
         if ($column->footer !== null) {

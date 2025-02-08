@@ -31,11 +31,13 @@ use function is_callable;
 use function is_string;
 
 /**
- *  DataColumnRenderer handles rendering and filtering of data columns in a grid.
+ * DataColumnRenderer handles rendering and filtering of data columns in a grid.
  *
  * @template TColumn as DataColumn
  * @implements FilterableColumnRendererInterface<TColumn>
  * @implements SortableColumnInterface<TColumn>
+ *
+ * @psalm-import-type FilterEmptyCallable from DataColumn
  */
 final class DataColumnRenderer implements FilterableColumnRendererInterface, SortableColumnInterface
 {
@@ -70,16 +72,6 @@ final class DataColumnRenderer implements FilterableColumnRendererInterface, Sor
         $this->defaultFilterEmpty = $defaultFilterEmpty;
     }
 
-    /**
-     * Render the column container with attributes and classes.
-     *
-     * @param ColumnInterface $column The column being rendered.
-     * @param Cell $cell The cell to render.
-     * @param GlobalContext $context Global rendering context.
-     *
-     * @throws InvalidArgumentException If the column is not a DataColumn.
-     * @return Cell The rendered cell.
-     */
     public function renderColumn(ColumnInterface $column, Cell $cell, GlobalContext $context): Cell
     {
         /** @var DataColumn $column This annotation is for IDE only */
@@ -89,16 +81,6 @@ final class DataColumnRenderer implements FilterableColumnRendererInterface, Sor
             ->addClass($column->columnClass);
     }
 
-    /**
-     * Render the column header with optional sorting links.
-     *
-     * @param ColumnInterface $column The column being rendered.
-     * @param Cell $cell The cell to render.
-     * @param HeaderContext $context Header rendering context.
-     *
-     * @throws InvalidArgumentException If the column is not a DataColumn.
-     * @return Cell The rendered header cell.
-     */
     public function renderHeader(ColumnInterface $column, Cell $cell, HeaderContext $context): Cell
     {
         /** @var DataColumn $column This annotation is for IDE only */
@@ -127,16 +109,6 @@ final class DataColumnRenderer implements FilterableColumnRendererInterface, Sor
         return $cell->content($prepend . ($link ?? $label) . $append);
     }
 
-    /**
-     * Render the filter cell with validation support.
-     *
-     * @param ColumnInterface $column The column being rendered.
-     * @param Cell $cell The cell to render.
-     * @param FilterContext $context Filter rendering context.
-     *
-     * @throws InvalidArgumentException If the column is not a DataColumn.
-     * @return Cell|null The rendered filter cell or null if filtering is disabled.
-     */
     public function renderFilter(ColumnInterface $column, Cell $cell, FilterContext $context): ?Cell
     {
         /** @var DataColumn $column This annotation is for IDE only */
@@ -173,15 +145,6 @@ final class DataColumnRenderer implements FilterableColumnRendererInterface, Sor
         return $cell->content(...$content)->encode(false);
     }
 
-    /**
-     * Create a filter for the column based on query parameters.
-     *
-     * @param ColumnInterface $column The column being rendered.
-     * @param MakeFilterContext $context Filter creation context.
-     *
-     * @throws InvalidArgumentException If the column is not a DataColumn.
-     * @return FilterInterface|null The created filter or null if filtering is not applicable.
-     */
     public function makeFilter(ColumnInterface $column, MakeFilterContext $context): ?FilterInterface
     {
         /** @var DataColumn $column This annotation is for IDE only */
@@ -229,16 +192,6 @@ final class DataColumnRenderer implements FilterableColumnRendererInterface, Sor
         return $factory->create($column->field ?? $column->property, $value);
     }
 
-    /**
-     * Render a data cell with formatted content.
-     *
-     * @param ColumnInterface $column The column being rendered.
-     * @param Cell $cell The cell to render.
-     * @param DataContext $context Data rendering context.
-     *
-     * @throws InvalidArgumentException If the column is not a DataColumn.
-     * @return Cell The rendered data cell.
-     */
     public function renderBody(ColumnInterface $column, Cell $cell, DataContext $context): Cell
     {
         /** @var DataColumn $column This annotation is for IDE only */
@@ -272,16 +225,6 @@ final class DataColumnRenderer implements FilterableColumnRendererInterface, Sor
             ->encode(false);
     }
 
-    /**
-     * Render the column footer.
-     *
-     * @param ColumnInterface $column The column being rendered.
-     * @param Cell $cell The cell to render.
-     * @param GlobalContext $context Global rendering context.
-     *
-     * @throws InvalidArgumentException If the column is not a DataColumn.
-     * @return Cell The rendered footer cell.
-     */
     public function renderFooter(ColumnInterface $column, Cell $cell, GlobalContext $context): Cell
     {
         /** @var DataColumn $column This annotation is for IDE only */

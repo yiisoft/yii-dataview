@@ -75,22 +75,11 @@ final class ActionColumn implements ColumnInterface
         return $this->urlCreator;
     }
 
-    /**
-     * Check if the column is visible.
-     *
-     * @return bool Whether the column should be rendered.
-     */
     public function isVisible(): bool
     {
         return $this->visible;
     }
 
-    /**
-     * Get the renderer class for this column.
-     *
-     * @return string The fully qualified class name of the renderer.
-     * @psalm-return class-string<ColumnRendererInterface>
-     */
     public function getRenderer(): string
     {
         return ActionColumnRenderer::class;

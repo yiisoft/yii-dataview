@@ -60,10 +60,7 @@ interface ColumnRendererInterface
      * Configures the column container cell.
      *
      * This method is called once per column to set up the container that will hold
-     * all the column's cells. It's typically used to:
-     * - Add column-wide CSS classes
-     * - Set column-level HTML attributes
-     * - Configure column-specific behavior
+     * all the column's cells.
      *
      * @param ColumnInterface $column The column definition to render.
      * @psalm-param TColumn $column
@@ -77,18 +74,12 @@ interface ColumnRendererInterface
     /**
      * Configures the column header cell.
      *
-     * This method handles the column's header presentation, including:
-     * - Header text or content
-     * - Sorting indicators
-     * - Filter inputs
-     * - Header-specific styling
-     *
      * @param ColumnInterface $column The column definition to render.
      * @psalm-param TColumn $column
      * @param Cell $cell The header cell to configure.
      * @param HeaderContext $context Header-specific rendering context.
      *
-     * @return Cell|null The configured header cell, or null if no header should be shown.
+     * @return Cell|null The configured header cell, or `null` if no header should be shown.
      */
     public function renderHeader(ColumnInterface $column, Cell $cell, HeaderContext $context): ?Cell;
 
@@ -96,11 +87,6 @@ interface ColumnRendererInterface
      * Configures a data row cell.
      *
      * This method is called for each row in the grid to render the column's data cell.
-     * It handles:
-     * - Data value formatting
-     * - Cell content generation
-     * - Row-specific styling
-     * - Dynamic content based on data context
      *
      * @param ColumnInterface $column The column definition to render.
      * @psalm-param TColumn $column
@@ -113,12 +99,6 @@ interface ColumnRendererInterface
 
     /**
      * Configures the column footer cell.
-     *
-     * This method handles the column's footer presentation, which might include:
-     * - Summary calculations
-     * - Totals
-     * - Footer-specific styling
-     * - Aggregated information
      *
      * @param ColumnInterface $column The column definition to render.
      * @psalm-param TColumn $column

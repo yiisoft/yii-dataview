@@ -6,20 +6,6 @@ namespace Yiisoft\Yii\DataView\Column;
 
 /**
  * SerialColumn displays a column of sequential row numbers (1-based) in a grid view.
- *
- * This column is useful for:
- * - Displaying row numbers for reference
- * - Maintaining a consistent numbering sequence across pages
- * - Providing visual order in data presentation
- *
- * Example usage:
- * ```php
- * $column = new SerialColumn(
- *     header: '#',
- *     columnAttributes: ['class' => 'serial-column'],
- *     bodyAttributes: ['class' => 'text-center'],
- * );
- * ```
  */
 final class SerialColumn implements ColumnInterface
 {
@@ -41,22 +27,11 @@ final class SerialColumn implements ColumnInterface
     ) {
     }
 
-    /**
-     * Checks if the column should be rendered.
-     *
-     * @return bool Whether the column is visible.
-     */
     public function isVisible(): bool
     {
         return $this->visible;
     }
 
-    /**
-     * Gets the renderer class for this column.
-     *
-     * @return string The fully qualified class name of the renderer.
-     * @psalm-return class-string<ColumnRendererInterface>
-     */
     public function getRenderer(): string
     {
         return SerialColumnRenderer::class;

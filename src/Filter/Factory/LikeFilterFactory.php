@@ -20,8 +20,6 @@ use Yiisoft\Data\Reader\Filter\Like;
 final class LikeFilterFactory implements FilterFactoryInterface
 {
     /**
-     * Creates a new LikeFilterFactory instance.
-     *
      * @param bool|null $caseSensitive Whether the pattern matching should be case-sensitive.
      * - `true` for case-sensitive matching
      * - `false` for case-insensitive matching
@@ -32,16 +30,6 @@ final class LikeFilterFactory implements FilterFactoryInterface
     ) {
     }
 
-    /**
-     * Creates a LIKE filter for the specified property and pattern.
-     *
-     * @param string $property The property name to filter on.
-     * @param string $value The pattern to match against.
-     *
-     * @return Like|null The LIKE filter, or null if the pattern is empty.
-     *
-     * @see Like The filter class used for pattern matching
-     */
     public function create(string $property, string $value): ?Like
     {
         if (empty($value)) {

@@ -8,29 +8,6 @@ use Yiisoft\Data\Paginator\PageToken;
 
 /**
  * Context class for pagination widgets that provides URL generation and configuration.
- *
- * This class is responsible for:
- * - Storing URL patterns for pagination navigation
- * - Managing field ordering overrides
- * - Generating URLs for page tokens
- *
- * Example usage:
- * ```php
- * $context = new PaginationContext(
- *     overrideOrderFields: ['id' => 'DESC'],
- *     nextUrlPattern: '/items?next=' . PaginationContext::URL_PLACEHOLDER,
- *     previousUrlPattern: '/items?prev=' . PaginationContext::URL_PLACEHOLDER,
- *     defaultUrl: '/items'
- * );
- *
- * // Generate URL for a next page token
- * $nextUrl = $context->createUrl($nextPageToken);
- * // Result: /items?next=token123
- *
- * // Generate URL for a previous page token
- * $prevUrl = $context->createUrl($prevPageToken);
- * // Result: /items?prev=token456
- * ```
  */
 final class PaginationContext
 {

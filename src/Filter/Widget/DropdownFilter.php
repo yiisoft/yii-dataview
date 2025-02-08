@@ -8,33 +8,6 @@ use Yiisoft\Html\Tag\Select;
 
 /**
  * Filter widget that renders a dropdown (select) input for filtering data.
- *
- * This widget creates an HTML select element that can be used for filtering data
- * based on predefined options. It supports:
- * - Option groups
- * - HTML encoding control
- * - Custom attributes for options and groups
- * - Auto-submit on change
- *
- * Example usage:
- * ```php
- * echo DropdownFilter::widget()
- *     ->optionsData([
- *         'active' => 'Active Users',
- *         'inactive' => 'Inactive Users',
- *     ])
- *     ->addAttributes(['class' => 'form-select'])
- *     ->withContext(new Context('status', 'active', 'filter-form'));
- * ```
- *
- * The above example will render:
- * ```html
- * <select class="form-select" name="status" form="filter-form" onChange="this.form.submit()">
- *     <option value=""></option>
- *     <option value="active" selected>Active Users</option>
- *     <option value="inactive">Inactive Users</option>
- * </select>
- * ```
  */
 final class DropdownFilter extends FilterWidget
 {
@@ -57,7 +30,7 @@ final class DropdownFilter extends FilterWidget
      * ```
      *
      * @param bool $encode Whether to HTML-encode option content.
-     * Set to false if your option labels contain HTML that should be rendered.
+     * Set to `false` if your option labels contain HTML that should be rendered.
      *
      * @param array[] $optionsAttributes Array of option attribute sets indexed by option values.
      * Example: `['active' => ['class' => 'highlight']]`
@@ -119,14 +92,6 @@ final class DropdownFilter extends FilterWidget
 
     /**
      * Renders the dropdown filter with the given context.
-     *
-     * Uses the context to set:
-     * - name attribute from context property
-     * - value attribute from context value
-     * - form attribute from context formId
-     *
-     * Additionally adds an onChange event handler to auto-submit the form
-     * when a new option is selected.
      *
      * @param Context $context The filter context.
      *

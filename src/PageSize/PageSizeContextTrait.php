@@ -9,12 +9,6 @@ use LogicException;
 /**
  * Trait providing context management functionality for page size widgets.
  *
- * This trait implements common context handling methods required by all page size widgets.
- * It provides:
- * - Context storage
- * - Immutable context updates
- * - Context access with validation
- *
  * @psalm-require-implements PageSizeWidgetInterface
  */
 trait PageSizeContextTrait
@@ -23,9 +17,6 @@ trait PageSizeContextTrait
 
     /**
      * Creates a new instance with the specified page size context.
-     *
-     * This method follows the immutable pattern, returning a new instance
-     * with the updated context rather than modifying the existing instance.
      *
      * @param PageSizeContext $context The page size context to use.
      *
@@ -41,7 +32,7 @@ trait PageSizeContextTrait
     /**
      * Gets the current page size context.
      *
-     * @throws LogicException if the context has not been set.
+     * @throws LogicException If the context has not been set.
      *
      * @return PageSizeContext The current page size context.
      */

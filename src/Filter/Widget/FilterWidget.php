@@ -8,18 +8,6 @@ use Yiisoft\Widget\Widget;
 
 /**
  * Base class for filter widgets that render filter inputs in data views.
- *
- * This abstract class provides the foundation for implementing various types of
- * filter widgets (e.g., text inputs, dropdowns, date pickers). It handles the
- * common aspects of filter widgets:
- * - Context management
- * - Immutable state
- * - Rendering lifecycle
- *
- * To implement a new filter widget:
- * 1. Extend this class
- * 2. Implement the {@see renderFilter()} method
- * 3. Use the provided context to access filter data
  */
 abstract class FilterWidget extends Widget
 {
@@ -27,9 +15,6 @@ abstract class FilterWidget extends Widget
 
     /**
      * Creates a new instance with the specified filter context.
-     *
-     * This method follows the immutable pattern, returning a new instance
-     * with the updated context rather than modifying the existing instance.
      *
      * @param Context $context The filter context containing property, value, and form data.
      *

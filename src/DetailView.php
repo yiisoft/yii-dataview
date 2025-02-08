@@ -219,7 +219,6 @@ final class DetailView extends Widget
     }
 
     /**
-     * TODO: better name?
      * Return new instance with the content displayed when the value is `false`.
      *
      * @param string $content The content.
@@ -261,7 +260,6 @@ final class DetailView extends Widget
     }
 
     /**
-     * TODO: better name?
      * Return new instance with the content displayed when the value is `true`.
      *
      * @param string $content The content.

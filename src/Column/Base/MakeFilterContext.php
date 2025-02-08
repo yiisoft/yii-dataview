@@ -10,11 +10,6 @@ use Yiisoft\Yii\DataView\UrlParameterType;
 
 /**
  * MakeFilterContext provides context for creating and validating grid column filters.
- *
- * This class manages:
- *
- * - Filter validation results
- * - URL parameter handling for filter values
  */
 final class MakeFilterContext
 {

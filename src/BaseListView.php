@@ -55,68 +55,6 @@ use function is_int;
 /**
  * BaseListView is an abstract base class for widgets that display data items in terms of a list or grid.
  *
- * It provides essential features for displaying data from a data reader, including:
- *
- * - Pagination: Both offset-based and keyset-based pagination are supported
- * - Sorting: Configurable sorting of data with single or multiple column support
- * - Filtering: Ability to filter data based on various criteria
- * - Page Size Control: Customizable page size with various constraints
- * - Summary Information: Configurable summary showing pagination details
- * - Empty Data Handling: Customizable display when no data is available
- * - Internationalization: Built-in translation support
- * - URL Management: Flexible URL creation for pagination, sorting, and filtering
- *
- * Features:
- *
- * 1. Data Source:
- *    - Uses {@see ReadableDataInterface} as the data source
- *    - Supports various data reader types: Countable, Filterable, Limitable, Offsetable, Sortable
- *    - Automatically adapts to the capabilities of the provided data reader
- *
- * 2. Pagination:
- *    - Supports both offset-based ({@see OffsetPaginator}) and keyset-based ({@see KeysetPaginator}) pagination
- *    - Customizable page size with constraints (fixed, range, or unlimited)
- *    - Page size can be controlled via URL parameters
- *    - Handles missing pages gracefully with configurable behavior
- *
- * 3. Layout and Rendering:
- *    - Customizable layout template with sections for header, toolbar, items, summary, pager, and page size
- *    - Configurable HTML containers and attributes for each section
- *    - Support for custom widgets for pagination and page size controls
- *    - Flexible empty data handling with customizable messages
- *
- * 4. URL Configuration:
- *    - Customizable URL creation for pagination, sorting, and filtering
- *    - Support for both path parameters and query parameters
- *    - Configurable parameter names for page, page size, and sort
- *
- * 5. Internationalization:
- *    - Built-in translation support via {@see TranslatorInterface}
- *    - Configurable translation category
- *    - Support for both simple and Intl message formatting
- *
- * Example usage:
- * ```php
- * // Create a list view with a data reader
- * $listView = ListView::widget()
- *     ->dataReader($dataReader)
- *     ->pageSize(20)
- *     ->layout("{items}\n{pager}")
- *     ->urlCreator(fn ($args) => Url::to(['list', ...$args]))
- *     ->render();
- *
- * // Create a grid view with sorting and filtering
- * $gridView = GridView::widget()
- *     ->dataReader($dataReader)
- *     ->columns([
- *         'id',
- *         'name',
- *         'email',
- *     ])
- *     ->enableMultiSort()
- *     ->render();
- * ```
- *
  * @psalm-type UrlArguments = array<string,scalar|Stringable|null>
  * @psalm-type UrlCreator = callable(UrlArguments,array):string
  * @psalm-type PageNotFoundExceptionCallback = callable(InvalidPageException):void
