@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Yiisoft\Yii\DataView\Column;
 
-use InvalidArgumentException;
 use Stringable;
 use Yiisoft\Html\Html;
 use Yiisoft\Yii\DataView\Column\Base\Cell;
@@ -12,18 +11,20 @@ use Yiisoft\Yii\DataView\Column\Base\DataContext;
 use Yiisoft\Yii\DataView\Column\Base\GlobalContext;
 use Yiisoft\Yii\DataView\Column\Base\HeaderContext;
 
+use function array_key_exists;
+
+/**
+ * @implements ColumnRendererInterface<RadioColumn>
+ */
 final class RadioColumnRenderer implements ColumnRendererInterface
 {
     public function renderColumn(ColumnInterface $column, Cell $cell, GlobalContext $context): Cell
     {
-        $this->checkColumn($column);
         return $cell->addAttributes($column->columnAttributes);
     }
 
     public function renderHeader(ColumnInterface $column, Cell $cell, HeaderContext $context): ?Cell
     {
-        $this->checkColumn($column);
-
         $header = $column->header;
         if ($header === null) {
             return null;
@@ -36,8 +37,6 @@ final class RadioColumnRenderer implements ColumnRendererInterface
 
     public function renderBody(ColumnInterface $column, Cell $cell, DataContext $context): Cell
     {
-        $this->checkColumn($column);
-
         $inputAttributes = $column->inputAttributes;
         $name = null;
         $value = null;
@@ -64,28 +63,10 @@ final class RadioColumnRenderer implements ColumnRendererInterface
 
     public function renderFooter(ColumnInterface $column, Cell $cell, GlobalContext $context): Cell
     {
-        $this->checkColumn($column);
-
         if ($column->footer !== null) {
             $cell = $cell->content($column->footer);
         }
 
         return $cell;
-    }
-
-    /**
-     * @psalm-assert RadioColumn $column
-     */
-    private function checkColumn(ColumnInterface $column): void
-    {
-        if (!$column instanceof RadioColumn) {
-            throw new InvalidArgumentException(
-                sprintf(
-                    'Expected "%s", but "%s" given.',
-                    RadioColumn::class,
-                    $column::class
-                )
-            );
-        }
     }
 }

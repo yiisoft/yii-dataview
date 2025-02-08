@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Yiisoft\Yii\DataView\Column;
 
 use DateTimeInterface;
-use InvalidArgumentException;
 use Psr\Container\ContainerInterface;
 use Yiisoft\Arrays\ArrayHelper;
 use Yiisoft\Data\Reader\FilterInterface;
@@ -31,6 +30,10 @@ use function is_callable;
 use function is_string;
 
 /**
+ * @template TColumn as DataColumn
+ * @implements FilterableColumnRendererInterface<TColumn>
+ * @implements SortableColumnInterface<TColumn>
+ *
  * @psalm-import-type FilterEmptyCallable from DataColumn
  */
 final class DataColumnRenderer implements FilterableColumnRendererInterface, SortableColumnInterface
@@ -57,7 +60,6 @@ final class DataColumnRenderer implements FilterableColumnRendererInterface, Sor
 
     public function renderColumn(ColumnInterface $column, Cell $cell, GlobalContext $context): Cell
     {
-        $this->checkColumn($column);
         /** @var DataColumn $column This annotation is for IDE only */
 
         return $cell
@@ -67,7 +69,6 @@ final class DataColumnRenderer implements FilterableColumnRendererInterface, Sor
 
     public function renderHeader(ColumnInterface $column, Cell $cell, HeaderContext $context): Cell
     {
-        $this->checkColumn($column);
         /** @var DataColumn $column This annotation is for IDE only */
 
         $cell = $cell
@@ -96,7 +97,6 @@ final class DataColumnRenderer implements FilterableColumnRendererInterface, Sor
 
     public function renderFilter(ColumnInterface $column, Cell $cell, FilterContext $context): ?Cell
     {
-        $this->checkColumn($column);
         /** @var DataColumn $column This annotation is for IDE only */
 
         if ($column->property === null || $column->filter === false) {
@@ -133,7 +133,6 @@ final class DataColumnRenderer implements FilterableColumnRendererInterface, Sor
 
     public function makeFilter(ColumnInterface $column, MakeFilterContext $context): ?FilterInterface
     {
-        $this->checkColumn($column);
         /** @var DataColumn $column This annotation is for IDE only */
 
         if ($column->property === null) {
@@ -181,7 +180,6 @@ final class DataColumnRenderer implements FilterableColumnRendererInterface, Sor
 
     public function renderBody(ColumnInterface $column, Cell $cell, DataContext $context): Cell
     {
-        $this->checkColumn($column);
         /** @var DataColumn $column This annotation is for IDE only */
 
         $contentSource = $column->content;
@@ -215,7 +213,6 @@ final class DataColumnRenderer implements FilterableColumnRendererInterface, Sor
 
     public function renderFooter(ColumnInterface $column, Cell $cell, GlobalContext $context): Cell
     {
-        $this->checkColumn($column);
         /** @var DataColumn $column This annotation is for IDE only */
 
         if ($column->footer !== null) {
@@ -255,25 +252,8 @@ final class DataColumnRenderer implements FilterableColumnRendererInterface, Sor
         return (string) $value;
     }
 
-    /**
-     * @psalm-assert DataColumn $column
-     */
-    private function checkColumn(ColumnInterface $column): void
-    {
-        if (!$column instanceof DataColumn) {
-            throw new InvalidArgumentException(
-                sprintf(
-                    'Expected "%s", but "%s" given.',
-                    DataColumn::class,
-                    $column::class
-                )
-            );
-        }
-    }
-
     public function getOrderProperties(ColumnInterface $column): array
     {
-        $this->checkColumn($column);
         /** @var DataColumn $column This annotation is for IDE only */
 
         if ($column->property === null) {

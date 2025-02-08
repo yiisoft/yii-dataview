@@ -148,8 +148,6 @@ abstract class BaseListView extends Widget
      */
     private $pageNotFoundExceptionCallback = null;
 
-    protected ?ReadableDataInterface $preparedDataReader = null;
-
     public function __construct(
         TranslatorInterface|null $translator = null,
         protected readonly string $translationCategory = self::DEFAULT_TRANSLATION_CATEGORY,
@@ -237,7 +235,11 @@ abstract class BaseListView extends Widget
      *
      * @psalm-param array<array-key, array|object> $items
      */
-    abstract protected function renderItems(array $items, ValidationResult $filterValidationResult): string;
+    abstract protected function renderItems(
+        array $items,
+        ValidationResult $filterValidationResult,
+        ?ReadableDataInterface $preparedDataReader,
+    ): string;
 
     final public function containerTag(?string $tag): static
     {
@@ -323,9 +325,9 @@ abstract class BaseListView extends Widget
      *
      * @throws PageNotFoundException
      *
-     * @psalm-return array<array-key, array|object>
+     * @psalm-return list{ReadableDataInterface|null, array<array|object>}
      */
-    private function prepareDataReaderAndGetItems(array $filters): array
+    private function prepareDataReaderAndItems(array $filters): array
     {
         $page = $this->urlParameterProvider?->get(
             $this->urlConfig->getPageParameterName(),
@@ -345,15 +347,15 @@ abstract class BaseListView extends Widget
         );
 
         try {
-            $this->preparedDataReader = $this->prepareDataReaderByParams($page, $previousPage, $pageSize, $sort, $filters);
-            return $this->getItems($this->preparedDataReader);
+            $preparedDataReader = $this->prepareDataReaderByParams($page, $previousPage, $pageSize, $sort, $filters);
+            return [$preparedDataReader, $this->getItems($preparedDataReader)];
         } catch (InvalidPageException $exception) {
         }
 
         if ($this->ignoreMissingPage) {
-            $this->preparedDataReader = $this->prepareDataReaderByParams(null, null, $pageSize, $sort, $filters);
+            $preparedDataReader = $this->prepareDataReaderByParams(null, null, $pageSize, $sort, $filters);
             try {
-                return $this->getItems($this->preparedDataReader);
+                return [$preparedDataReader, $this->getItems($preparedDataReader)];
             } catch (InvalidPageException $exception) {
             }
         }
@@ -709,7 +711,9 @@ abstract class BaseListView extends Widget
     public function render(): string
     {
         [$filters, $filterValidationResult] = $this->makeFilters();
-        $items = $filters === null ? [] : $this->prepareDataReaderAndGetItems($filters);
+        [$preparedDataReader, $items] = $filters === null
+            ? [null, []]
+            : $this->prepareDataReaderAndItems($filters);
 
         $content = trim(
             strtr(
@@ -717,10 +721,10 @@ abstract class BaseListView extends Widget
                 [
                     '{header}' => $this->renderHeader(),
                     '{toolbar}' => $this->toolbar,
-                    '{items}' => $this->renderItems($items, $filterValidationResult),
-                    '{summary}' => $this->renderSummary(),
-                    '{pager}' => $this->renderPagination(),
-                    '{pageSize}' => $this->renderPageSize(),
+                    '{items}' => $this->renderItems($items, $filterValidationResult, $preparedDataReader),
+                    '{summary}' => $this->renderSummary($preparedDataReader),
+                    '{pager}' => $this->renderPagination($preparedDataReader),
+                    '{pageSize}' => $this->renderPageSize($preparedDataReader),
                 ],
             )
         );
@@ -787,9 +791,8 @@ abstract class BaseListView extends Widget
         return [];
     }
 
-    private function renderPagination(): string
+    private function renderPagination(?ReadableDataInterface $dataReader): string
     {
-        $dataReader = $this->preparedDataReader;
         if (!$dataReader instanceof PaginatorInterface || !$dataReader->isPaginationRequired()) {
             return '';
         }
@@ -851,14 +854,9 @@ abstract class BaseListView extends Widget
         return $widget->withContext($context)->render();
     }
 
-    private function renderPageSize(): string
+    private function renderPageSize(?ReadableDataInterface $dataReader): string
     {
-        if (empty($this->pageSizeTemplate)) {
-            return '';
-        }
-
-        $dataReader = $this->preparedDataReader;
-        if (!$dataReader instanceof PaginatorInterface) {
+        if (empty($this->pageSizeTemplate) || !$dataReader instanceof PaginatorInterface) {
             return '';
         }
 
@@ -914,14 +912,9 @@ abstract class BaseListView extends Widget
             : Html::tag($this->pageSizeTag, $content, $this->pageSizeAttributes)->encode(false)->render();
     }
 
-    private function renderSummary(): string
+    private function renderSummary(?ReadableDataInterface $dataReader): string
     {
-        if (empty($this->summaryTemplate)) {
-            return '';
-        }
-
-        $dataReader = $this->preparedDataReader;
-        if (!$dataReader instanceof OffsetPaginator) {
+        if (empty($this->summaryTemplate) || !$dataReader instanceof OffsetPaginator) {
             return '';
         }
 
