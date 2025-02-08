@@ -8,7 +8,6 @@ use Closure;
 use Psr\Container\ContainerInterface;
 use Stringable;
 use Yiisoft\Data\Paginator\PaginatorInterface;
-use Yiisoft\Data\Reader\FilterInterface;
 use Yiisoft\Data\Reader\ReadableDataInterface;
 use Yiisoft\Data\Reader\Sort;
 use Yiisoft\Data\Reader\SortableDataInterface;
