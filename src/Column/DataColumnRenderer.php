@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Yiisoft\Yii\DataView\Column;
 
 use DateTimeInterface;
-use InvalidArgumentException;
 use Psr\Container\ContainerInterface;
 use Yiisoft\Arrays\ArrayHelper;
 use Yiisoft\Data\Reader\FilterInterface;

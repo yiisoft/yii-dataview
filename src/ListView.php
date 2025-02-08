@@ -229,9 +229,9 @@ final class ListView extends BaseListView
      *
      * @param ListItemContext $context The context to take into account when rendering.
      *
-     * @return string Rendered HTML.
      * @throws ViewNotFoundException If the item view file doesn't exist.
      * @throws InvalidArgumentException If both itemView and itemCallback aren't set.
+     * @return string Rendered HTML.
      */
     protected function renderItem(ListItemContext $context): string
     {
