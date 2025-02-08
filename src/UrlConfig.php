@@ -18,15 +18,15 @@ final class UrlConfig
      * @param string $pageSizeParameterName Name of the parameter for items per page.
      * @param string $sortParameterName Name of the parameter for sorting configuration.
      * @param int $pageParameterType Type of the page parameter (query or path).
-     * @psalm-var UrlParameterType::* $pageParameterType
+     * @psalm-param UrlParameterType::* $pageParameterType
      * @param int $previousPageParameterType Type of the previous page parameter.
-     * @psalm-var UrlParameterType::* $previousPageParameterType
+     * @psalm-param UrlParameterType::* $previousPageParameterType
      * @param int $pageSizeParameterType Type of the page size parameter.
-     * @psalm-var UrlParameterType::* $pageSizeParameterType
+     * @psalm-param UrlParameterType::* $pageSizeParameterType
      * @param int $sortParameterType Type of the sort parameter.
-     * @psalm-var UrlParameterType::* $sortParameterType
+     * @psalm-param UrlParameterType::* $sortParameterType
      * @param array $arguments Additional URL arguments to be included in generated URLs.
-     * @psalm-var UrlArguments $arguments
+     * @psalm-param UrlArguments $arguments
      * @param array $queryParameters Additional query parameters to be included in generated URLs.
      */
     public function __construct(

@@ -8,6 +8,7 @@ use Closure;
 use Psr\Container\ContainerInterface;
 use Stringable;
 use Yiisoft\Data\Paginator\PaginatorInterface;
+use Yiisoft\Data\Reader\FilterInterface;
 use Yiisoft\Data\Reader\ReadableDataInterface;
 use Yiisoft\Data\Reader\Sort;
 use Yiisoft\Data\Reader\SortableDataInterface;
@@ -725,14 +726,6 @@ final class GridView extends BaseListView
         return $new;
     }
 
-    /**
-     * Renders the data items for the grid view.
-     *
-     * @param array $items The data items to be rendered.
-     * @param ValidationResult $filterValidationResult The validation result for filters.
-     *
-     * @return string The rendered HTML content.
-     */
     protected function renderItems(
         array $items,
         ValidationResult $filterValidationResult,
@@ -938,11 +931,6 @@ final class GridView extends BaseListView
             . '</table>';
     }
 
-    /**
-     * Makes filters for the grid view.
-     *
-     * @return array{0: array, 1: ValidationResult} The prepared filters and validation result.
-     */
     protected function makeFilters(): array
     {
         $columns = $this->getColumns();
@@ -969,11 +957,6 @@ final class GridView extends BaseListView
         return [$filters, $validationResult];
     }
 
-    /**
-     * Prepares the order configuration.
-     *
-     * @param array $order The order configuration to prepare.
-     */
     protected function prepareOrder(array $order): array
     {
         $columns = $this->getColumns();
