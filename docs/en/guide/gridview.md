@@ -100,26 +100,84 @@ $column = new CheckboxColumn(
 
 ## Filtering
 
-// TODO: fix it!
-
-GridView supports filtering data through several configuration options:
+GridView supports filtering. Of the built-in columns, only `DataColumn` supports it. For example:
 
 ```php
-<?php
-use Yiisoft\Yii\DataView\GridView;
-?>
-
-<?= GridView::widget()
-    // Set attributes for filter cells
-    ->filterCellAttributes(['class' => 'filter-cell'])
-    
-    // Set class for cells with invalid filter values
-    ->filterCellInvalidClass('invalid-filter')
-    
-    // Configure filter error container
-    ->filterErrorsContainerAttributes(['class' => 'filter-errors'])
-?>
+/** 
+ * @var \Yiisoft\Data\Reader\DataReaderInterface $reader 
+ */
+echo GridView::widget()
+    ->dataReader($reader)
+    ->columns(
+        new DataColumn(
+            'name',
+            filter: true, // Enable filtering (by default text input widget is used)
+            filterValidation: new Length(max: 50), // Validation rules for filter value
+        ),
+        new DataColumn(
+            'type',
+            filter: ['on' => 'Enabled', 'off' => 'Disabled'], // Filtering by predefined list of values
+            filterValidation: new In(['on', 'off']),
+        ),
+    );
 ```
+
+### `GridView` options
+
+- `filterCellAttributes()` — set HTML attributes for the filter cell (`td`) tag.
+- `filterCellInvalidClass()` — set CSS class for the filter cell when the filter is invalid. 
+- `filterErrorsContainerAttributes()` — set HTML attributes for the container of filter errors.
+
+### `DataColumn`
+
+Of the built-in columns, only `DataColumn` supports filtering.
+
+#### `$filter`
+
+Available values:
+
+- `false` — no filter;
+- `true` — text input;
+- `array` — dropdown list (select) with these options;
+- `\Yiisoft\Yii\DataView\Filter\Widget\FilterWidget` instance — custom filter widget.
+
+Filter widgets out of the box:
+
+- `\Yiisoft\Yii\DataView\Filter\Widget\TextInputFilter` — text input;
+- `\Yiisoft\Yii\DataView\Filter\Widget\DropdownFilter` — dropdown list (select).
+
+#### `$filterFactory`
+
+Available values:
+
+- `null` — if `$filter` is array, then `LikeFilterFactory` is used, otherwise `EqualsFilterFactory`;
+- class name — filter factory will be received from the container;
+- `\Yiisoft\Yii\DataView\Filter\Factory\FilterFactoryInterface` instance — custom filter factory.
+
+Filter factories out of the box:
+
+- `\Yiisoft\Yii\DataView\Filter\Factory\EqualsFilterFactory` — create `Equals` data filter;
+- `\Yiisoft\Yii\DataView\Filter\Factory\LikeFilterFactory` — create `Like` data filter.
+
+#### `$filterValidation`
+
+Set [validation rules](https://github.com/yiisoft/validator/tree/master/docs/guide/en#rules) for value of filter. 
+
+Available values:
+
+- `null` — without validation;
+- `array` — list of validation rules.
+- `\Yiisoft\Validator\RuleInterface` instance — single validation rule.
+
+#### `$filterEmpty`
+
+Set condition for empty value of filter. If value of filter is empty, then filter will be ignored.
+
+Available values:
+
+- `null` or `true` — `\Yiisoft\Validator\EmptyCondition\WhenEmpty` is used, empty values: `null`, `[]`, or `''`.
+- `false` — `\Yiisoft\Validator\EmptyCondition\NeverEmpty` is used, every value is considered non-empty.
+- `callable` — custom condition with signature `callable(mixed $value): bool`.
 
 ## Sorting
 
