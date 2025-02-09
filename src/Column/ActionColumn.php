@@ -11,8 +11,8 @@ use Yiisoft\Yii\DataView\Column\Base\DataContext;
  * `ActionColumn` is a column for the {@see GridView} widget that displays buttons for viewing and manipulating
  * the items.
  *
- * @psalm-type UrlCreator = callable(string,DataContext):string
- * @psalm-type ButtonRenderer = ActionButton|callable(string):string
+ * @psalm-type UrlCreator = callable(string, DataContext): string
+ * @psalm-type ButtonRenderer = ActionButton|callable(string): string
  */
 final class ActionColumn implements ColumnInterface
 {
