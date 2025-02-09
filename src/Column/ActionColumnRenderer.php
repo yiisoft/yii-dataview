@@ -81,12 +81,18 @@ final class ActionColumnRenderer implements ColumnRendererInterface
 
     public function renderBody(ColumnInterface $column, Cell $cell, DataContext $context): Cell
     {
+        /** @var ActionColumn $column This annotation needs for IDE only. */
+
         $contentSource = $column->content;
 
         if ($contentSource !== null) {
             $content = (string)(is_callable($contentSource) ? $contentSource($context->data, $context) : $contentSource);
         } else {
             $buttons = $column->buttons ?? $this->buttons;
+            /**
+             * @var string $content We assume that we work with valid UTF-8 strings, so `preg_replace_callback()` never
+             * returns `null`.
+             */
             $content = preg_replace_callback(
                 '/{([\w\-\/]+)}/',
                 function (array $matches) use ($column, $buttons, $context): string {
