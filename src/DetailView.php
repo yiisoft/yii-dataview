@@ -11,6 +11,10 @@ use Yiisoft\Html\Html;
 use Yiisoft\Widget\Widget;
 use Yiisoft\Yii\DataView\Field\DataField;
 
+use function is_array;
+use function is_bool;
+use function is_object;
+
 /**
  * `DetailView` displays details about a single data item.
  * The data can be either an object or an associative array.
@@ -420,10 +424,13 @@ final class DetailView extends Widget
     /**
      * Remove double line breaks from a string.
      *
-     * @param string $string String to remove double line breaks from.
+     * @param string $string The valid UTF-8 string to remove double line breaks from.
      */
     private function removeDoubleLineBreaks(string $string): string
     {
+        /**
+         * @var string We assume that `$string` is a valid UTF-8 string.
+         */
         return preg_replace('/(\R{2,})/', "\n", $string);
     }
 }

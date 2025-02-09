@@ -5,14 +5,16 @@ declare(strict_types=1);
 namespace Yiisoft\Yii\DataView\Column;
 
 use Closure;
+use Stringable;
 use Yiisoft\Yii\DataView\Column\Base\DataContext;
 
 /**
  * `ActionColumn` is a column for the {@see GridView} widget that displays buttons for viewing and manipulating
  * the items.
  *
- * @psalm-type UrlCreator = callable(string,DataContext):string
- * @psalm-type ButtonRenderer = ActionButton|callable(string):string
+ * @psalm-type UrlCreator = callable(string, DataContext): string
+ * @psalm-type ButtonRenderer = ActionButton|callable(string): string
+ * @psalm-type TContent = scalar|Stringable|null|callable(array|object, DataContext): string
  */
 final class ActionColumn implements ColumnInterface
 {
@@ -41,6 +43,7 @@ final class ActionColumn implements ColumnInterface
      * @param array $footerAttributes HTML attributes for the footer cell.
      * @param bool $visible Whether the column is visible.
      *
+     * @psalm-param TContent $content
      * @psalm-param UrlCreator|null $urlCreator
      * @psalm-param array<array-key, ButtonRenderer>|null $buttons
      * @psalm-param array<string, bool|Closure>|null $visibleButtons
