@@ -223,7 +223,7 @@ abstract class BaseListView extends Widget
         return $new;
     }
 
-    final public function enableMultiSort(bool $enable = true): self
+    final public function enableMultiSort(bool $enable = true): static
     {
         $new = clone $this;
         $new->enableMultiSort = $enable;
@@ -466,11 +466,10 @@ abstract class BaseListView extends Widget
      *
      * {@see headerAttributes}
      */
-    public function header(string $content): self
+    public function header(string $content): static
     {
         $new = clone $this;
         $new->header = $content;
-
         return $new;
     }
 
@@ -479,11 +478,10 @@ abstract class BaseListView extends Widget
      *
      * @param array $attributes Attribute values indexed by attribute names.
      */
-    public function headerAttributes(array $attributes): self
+    public function headerAttributes(array $attributes): static
     {
         $new = clone $this;
         $new->headerAttributes = $attributes;
-
         return $new;
     }
 
@@ -662,11 +660,10 @@ abstract class BaseListView extends Widget
      *
      * @psalm-param array $toolbar
      */
-    public function toolbar(string $content): self
+    public function toolbar(string $content): static
     {
         $new = clone $this;
         $new->toolbar = $content;
-
         return $new;
     }
 
