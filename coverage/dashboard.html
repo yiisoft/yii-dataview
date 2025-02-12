@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="en">
+ <head>
+  <meta charset="UTF-8">
+  <title>Dashboard for /home/samdark/src/yii/yii-dataview</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="_css/bootstrap.min.css?v=10.1.16" rel="stylesheet" type="text/css">
+  <link href="_css/nv.d3.min.css?v=10.1.16" rel="stylesheet" type="text/css">
+  <link href="_css/style.css?v=10.1.16" rel="stylesheet" type="text/css">
+  <link href="_css/custom.css" rel="stylesheet" type="text/css">
+ </head>
+ <body>
+  <header>
+   <div class="container-fluid">
+    <div class="row">
+     <div class="col-md-12">
+      <nav aria-label="breadcrumb">
+       <ol class="breadcrumb">
+         <li class="breadcrumb-item"><a href="index.html">/home/samdark/src/yii/yii-dataview</a></li>
+         <li class="breadcrumb-item active">(Dashboard)</li>
+
+       </ol>
+      </nav>
+     </div>
+    </div>
+   </div>
+  </header>
+  <div class="container-fluid">
+   <div class="row">
+    <div class="col-md-12">
+     <h2>Classes</h2>
+    </div>
+   </div>
+   <div class="row">
+    <div class="col-md-6">
+     <h3>Coverage Distribution</h3>
+     <div id="classCoverageDistribution" style="height: 300px;">
+       <svg></svg>
+     </div>
+    </div>
+    <div class="col-md-6">
+     <h3>Complexity</h3>
+     <div id="classComplexity" style="height: 300px;">
+       <svg></svg>
+     </div>
+    </div>
+   </div>
+   <div class="row">
+    <div class="col-md-6">
+     <h3>Insufficient Coverage</h3>
+     <div class="scrollbox">
+      <table class="table">
+       <thead>
+        <tr>
+         <th>Class</th>
+         <th class="text-right">Coverage</th>
+        </tr>
+       </thead>
+       <tbody>
+       <tr><td><a href="src/Exception/UrlGeneratorNotSetException.php.html#17">Yiisoft\Yii\DataView\Exception\UrlGeneratorNotSetException</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="src/Filter/Factory/EqualsFilterFactory.php.html#17">Yiisoft\Yii\DataView\Filter\Factory\EqualsFilterFactory</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="src/Filter/Widget/Context.php.html#10">Yiisoft\Yii\DataView\Filter\Widget\Context</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="src/Filter/Widget/DropdownFilter.php.html#12">Yiisoft\Yii\DataView\Filter\Widget\DropdownFilter</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="src/Filter/Widget/FilterWidget.php.html#12">Yiisoft\Yii\DataView\Filter\Widget\FilterWidget</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="src/Filter/Widget/TextInputFilter.php.html#13">Yiisoft\Yii\DataView\Filter\Widget\TextInputFilter</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="src/PageSize/InputPageSize.php.html#13">Yiisoft\Yii\DataView\PageSize\InputPageSize</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="src/PageSize/PageSizeContext.php.html#14">Yiisoft\Yii\DataView\PageSize\PageSizeContext</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="src/PageSize/SelectPageSize.php.html#16">Yiisoft\Yii\DataView\PageSize\SelectPageSize</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="src/Pagination/PaginatorNotSupportedException.php.html#15">Yiisoft\Yii\DataView\Pagination\PaginatorNotSupportedException</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="src/UrlParametersFactory.php.html#16">Yiisoft\Yii\DataView\UrlParametersFactory</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="src/YiiRouter/UrlCreator.php.html#15">Yiisoft\Yii\DataView\YiiRouter\UrlCreator</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="src/YiiRouter/UrlParameterProvider.php.html#14">Yiisoft\Yii\DataView\YiiRouter\UrlParameterProvider</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="src/PageSize/PageSizeContextTrait.php.html#14">Yiisoft\Yii\DataView\PageSize\PageSizeContextTrait</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="src/Column/Base/HeaderContext.php.html#27">Yiisoft\Yii\DataView\Column\Base\HeaderContext</a></td><td class="text-right">13%</td></tr>
+       <tr><td><a href="src/UrlConfig.php.html#13">Yiisoft\Yii\DataView\UrlConfig</a></td><td class="text-right">21%</td></tr>
+       <tr><td><a href="src/Column/DataColumnRenderer.php.html#41">Yiisoft\Yii\DataView\Column\DataColumnRenderer</a></td><td class="text-right">44%</td></tr>
+       <tr><td><a href="src/Column/Base/FilterContext.php.html#14">Yiisoft\Yii\DataView\Column\Base\FilterContext</a></td><td class="text-right">50%</td></tr>
+       <tr><td><a href="src/Column/Base/GlobalContext.php.html#14">Yiisoft\Yii\DataView\Column\Base\GlobalContext</a></td><td class="text-right">50%</td></tr>
+       <tr><td><a href="src/BaseListView.php.html#64">Yiisoft\Yii\DataView\BaseListView</a></td><td class="text-right">54%</td></tr>
+       <tr><td><a href="src/GridView.php.html#47">Yiisoft\Yii\DataView\GridView</a></td><td class="text-right">67%</td></tr>
+       <tr><td><a href="src/Column/Base/Cell.php.html#14">Yiisoft\Yii\DataView\Column\Base\Cell</a></td><td class="text-right">70%</td></tr>
+       <tr><td><a href="src/Filter/Factory/LikeFilterFactory.php.html#20">Yiisoft\Yii\DataView\Filter\Factory\LikeFilterFactory</a></td><td class="text-right">75%</td></tr>
+       <tr><td><a href="src/Pagination/OffsetPagination.php.html#18">Yiisoft\Yii\DataView\Pagination\OffsetPagination</a></td><td class="text-right">78%</td></tr>
+       <tr><td><a href="src/Pagination/KeysetPagination.php.html#17">Yiisoft\Yii\DataView\Pagination\KeysetPagination</a></td><td class="text-right">81%</td></tr>
+       <tr><td><a href="src/Column/RadioColumnRenderer.php.html#21">Yiisoft\Yii\DataView\Column\RadioColumnRenderer</a></td><td class="text-right">83%</td></tr>
+       <tr><td><a href="src/YiiRouter/ActionColumnUrlCreator.php.html#19">Yiisoft\Yii\DataView\YiiRouter\ActionColumnUrlCreator</a></td><td class="text-right">83%</td></tr>
+       <tr><td><a href="src/Pagination/PaginationContextTrait.php.html#14">Yiisoft\Yii\DataView\Pagination\PaginationContextTrait</a></td><td class="text-right">83%</td></tr>
+       <tr><td><a href="src/Column/CheckboxColumnRenderer.php.html#19">Yiisoft\Yii\DataView\Column\CheckboxColumnRenderer</a></td><td class="text-right">84%</td></tr>
+       <tr><td><a href="src/Column/SerialColumnRenderer.php.html#18">Yiisoft\Yii\DataView\Column\SerialColumnRenderer</a></td><td class="text-right">88%</td></tr>
+
+       </tbody>
+      </table>
+     </div>
+    </div>
+    <div class="col-md-6">
+     <h3>Project Risks</h3>
+     <div class="scrollbox">
+      <table class="table">
+       <thead>
+        <tr>
+         <th>Class</th>
+         <th class="text-right"><abbr title="Change Risk Anti-Patterns (CRAP) Index">CRAP</abbr></th>
+        </tr>
+       </thead>
+       <tbody>
+       <tr><td><a href="src/BaseListView.php.html#64">Yiisoft\Yii\DataView\BaseListView</a></td><td class="text-right">1476</td></tr>
+       <tr><td><a href="src/Column/Base/HeaderContext.php.html#27">Yiisoft\Yii\DataView\Column\Base\HeaderContext</a></td><td class="text-right">506</td></tr>
+       <tr><td><a href="src/GridView.php.html#47">Yiisoft\Yii\DataView\GridView</a></td><td class="text-right">382</td></tr>
+       <tr><td><a href="src/Column/DataColumnRenderer.php.html#41">Yiisoft\Yii\DataView\Column\DataColumnRenderer</a></td><td class="text-right">312</td></tr>
+       <tr><td><a href="src/UrlParametersFactory.php.html#16">Yiisoft\Yii\DataView\UrlParametersFactory</a></td><td class="text-right">182</td></tr>
+       <tr><td><a href="src/Pagination/OffsetPagination.php.html#18">Yiisoft\Yii\DataView\Pagination\OffsetPagination</a></td><td class="text-right">64</td></tr>
+       <tr><td><a href="src/Filter/Widget/DropdownFilter.php.html#12">Yiisoft\Yii\DataView\Filter\Widget\DropdownFilter</a></td><td class="text-right">42</td></tr>
+       <tr><td><a href="src/PageSize/SelectPageSize.php.html#16">Yiisoft\Yii\DataView\PageSize\SelectPageSize</a></td><td class="text-right">42</td></tr>
+       <tr><td><a href="src/YiiRouter/UrlParameterProvider.php.html#14">Yiisoft\Yii\DataView\YiiRouter\UrlParameterProvider</a></td><td class="text-right">42</td></tr>
+       <tr><td><a href="src/Pagination/KeysetPagination.php.html#17">Yiisoft\Yii\DataView\Pagination\KeysetPagination</a></td><td class="text-right">30</td></tr>
+       <tr><td><a href="src/Column/Base/Cell.php.html#14">Yiisoft\Yii\DataView\Column\Base\Cell</a></td><td class="text-right">21</td></tr>
+       <tr><td><a href="src/Exception/UrlGeneratorNotSetException.php.html#17">Yiisoft\Yii\DataView\Exception\UrlGeneratorNotSetException</a></td><td class="text-right">20</td></tr>
+       <tr><td><a href="src/PageSize/PageSizeContextTrait.php.html#14">Yiisoft\Yii\DataView\PageSize\PageSizeContextTrait</a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="src/Column/CheckboxColumnRenderer.php.html#19">Yiisoft\Yii\DataView\Column\CheckboxColumnRenderer</a></td><td class="text-right">10</td></tr>
+       <tr><td><a href="src/Column/RadioColumnRenderer.php.html#21">Yiisoft\Yii\DataView\Column\RadioColumnRenderer</a></td><td class="text-right">9</td></tr>
+       <tr><td><a href="src/YiiRouter/ActionColumnUrlCreator.php.html#19">Yiisoft\Yii\DataView\YiiRouter\ActionColumnUrlCreator</a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="src/Filter/Factory/EqualsFilterFactory.php.html#17">Yiisoft\Yii\DataView\Filter\Factory\EqualsFilterFactory</a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="src/Column/SerialColumnRenderer.php.html#18">Yiisoft\Yii\DataView\Column\SerialColumnRenderer</a></td><td class="text-right">5</td></tr>
+       <tr><td><a href="src/Filter/Factory/LikeFilterFactory.php.html#20">Yiisoft\Yii\DataView\Filter\Factory\LikeFilterFactory</a></td><td class="text-right">3</td></tr>
+       <tr><td><a href="src/Pagination/PaginationContextTrait.php.html#14">Yiisoft\Yii\DataView\Pagination\PaginationContextTrait</a></td><td class="text-right">3</td></tr>
+
+       </tbody>
+      </table>
+     </div>
+    </div>
+   </div>
+   <div class="row">
+    <div class="col-md-12">
+     <h2>Methods</h2>
+    </div>
+   </div>
+   <div class="row">
+    <div class="col-md-6">
+     <h3>Coverage Distribution</h3>
+     <div id="methodCoverageDistribution" style="height: 300px;">
+       <svg></svg>
+     </div>
+    </div>
+    <div class="col-md-6">
+     <h3>Complexity</h3>
+     <div id="methodComplexity" style="height: 300px;">
+       <svg></svg>
+     </div>
+    </div>
+   </div>
+   <div class="row">
+    <div class="col-md-6">
+     <h3>Insufficient Coverage</h3>
+     <div class="scrollbox">
+      <table class="table">
+       <thead>
+        <tr>
+         <th>Method</th>
+         <th class="text-right">Coverage</th>
+        </tr>
+       </thead>
+       <tbody>
+       <tr><td><a href="src/BaseListView.php.html#164"><abbr title="Yiisoft\Yii\DataView\BaseListView::urlCreator">urlCreator</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="src/BaseListView.php.html#181"><abbr title="Yiisoft\Yii\DataView\BaseListView::pageNotFoundExceptionCallback">pageNotFoundExceptionCallback</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="src/BaseListView.php.html#193"><abbr title="Yiisoft\Yii\DataView\BaseListView::pageParameterName">pageParameterName</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="src/BaseListView.php.html#200"><abbr title="Yiisoft\Yii\DataView\BaseListView::previousPageParameterName">previousPageParameterName</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="src/BaseListView.php.html#212"><abbr title="Yiisoft\Yii\DataView\BaseListView::pageSizeParameterName">pageSizeParameterName</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="src/BaseListView.php.html#226"><abbr title="Yiisoft\Yii\DataView\BaseListView::enableMultiSort">enableMultiSort</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="src/BaseListView.php.html#457"><abbr title="Yiisoft\Yii\DataView\BaseListView::prepareOrder">prepareOrder</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="src/BaseListView.php.html#519"><abbr title="Yiisoft\Yii\DataView\BaseListView::pageSizeTag">pageSizeTag</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="src/BaseListView.php.html#535"><abbr title="Yiisoft\Yii\DataView\BaseListView::pageSizeAttributes">pageSizeAttributes</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="src/BaseListView.php.html#552"><abbr title="Yiisoft\Yii\DataView\BaseListView::pageSizeTemplate">pageSizeTemplate</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="src/BaseListView.php.html#559"><abbr title="Yiisoft\Yii\DataView\BaseListView::pageSizeWidget">pageSizeWidget</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="src/BaseListView.php.html#611"><abbr title="Yiisoft\Yii\DataView\BaseListView::summaryTag">summaryTag</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="src/BaseListView.php.html#775"><abbr title="Yiisoft\Yii\DataView\BaseListView::pageSizeConstraint">pageSizeConstraint</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="src/BaseListView.php.html#788"><abbr title="Yiisoft\Yii\DataView\BaseListView::getOrderProperties">getOrderProperties</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="src/BaseListView.php.html#1024"><abbr title="Yiisoft\Yii\DataView\BaseListView::getPageSizeValueForUrl">getPageSizeValueForUrl</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="src/BaseListView.php.html#1032"><abbr title="Yiisoft\Yii\DataView\BaseListView::getSortValueForUrl">getSortValueForUrl</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="src/BaseListView.php.html#1056"><abbr title="Yiisoft\Yii\DataView\BaseListView::getSort">getSort</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="src/Column/ActionColumnRenderer.php.html#70"><abbr title="Yiisoft\Yii\DataView\Column\ActionColumnRenderer::renderColumn">renderColumn</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="src/Column/Base/Cell.php.html#74"><abbr title="Yiisoft\Yii\DataView\Column\Base\Cell::doubleEncode">doubleEncode</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="src/Column/Base/Cell.php.html#125"><abbr title="Yiisoft\Yii\DataView\Column\Base\Cell::attributes">attributes</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="src/Column/Base/Cell.php.html#143"><abbr title="Yiisoft\Yii\DataView\Column\Base\Cell::attribute">attribute</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="src/Column/Base/FilterContext.php.html#47"><abbr title="Yiisoft\Yii\DataView\Column\Base\FilterContext::getQueryValue">getQueryValue</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="src/Column/Base/GlobalContext.php.html#42"><abbr title="Yiisoft\Yii\DataView\Column\Base\GlobalContext::translate">translate</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="src/Column/Base/HeaderContext.php.html#170"><abbr title="Yiisoft\Yii\DataView\Column\Base\HeaderContext::getLinkSortValue">getLinkSortValue</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="src/Column/Base/HeaderContext.php.html#227"><abbr title="Yiisoft\Yii\DataView\Column\Base\HeaderContext::isEqualOrders">isEqualOrders</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="src/Column/CheckboxColumnRenderer.php.html#21"><abbr title="Yiisoft\Yii\DataView\Column\CheckboxColumnRenderer::renderColumn">renderColumn</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="src/Column/CheckboxColumnRenderer.php.html#67"><abbr title="Yiisoft\Yii\DataView\Column\CheckboxColumnRenderer::renderFooter">renderFooter</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="src/Column/DataColumnRenderer.php.html#248"><abbr title="Yiisoft\Yii\DataView\Column\DataColumnRenderer::normalizeFilterEmpty">normalizeFilterEmpty</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="src/Column/RadioColumnRenderer.php.html#23"><abbr title="Yiisoft\Yii\DataView\Column\RadioColumnRenderer::renderColumn">renderColumn</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="src/Column/RadioColumnRenderer.php.html#66"><abbr title="Yiisoft\Yii\DataView\Column\RadioColumnRenderer::renderFooter">renderFooter</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="src/Exception/UrlGeneratorNotSetException.php.html#24"><abbr title="Yiisoft\Yii\DataView\Exception\UrlGeneratorNotSetException::__construct">__construct</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="src/Exception/UrlGeneratorNotSetException.php.html#30"><abbr title="Yiisoft\Yii\DataView\Exception\UrlGeneratorNotSetException::getName">getName</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="src/Exception/UrlGeneratorNotSetException.php.html#35"><abbr title="Yiisoft\Yii\DataView\Exception\UrlGeneratorNotSetException::getSolution">getSolution</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="src/Filter/Factory/EqualsFilterFactory.php.html#19"><abbr title="Yiisoft\Yii\DataView\Filter\Factory\EqualsFilterFactory::create">create</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="src/Filter/Widget/Context.php.html#20"><abbr title="Yiisoft\Yii\DataView\Filter\Widget\Context::__construct">__construct</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="src/Filter/Widget/DropdownFilter.php.html#47"><abbr title="Yiisoft\Yii\DataView\Filter\Widget\DropdownFilter::optionsData">optionsData</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="src/Filter/Widget/DropdownFilter.php.html#69"><abbr title="Yiisoft\Yii\DataView\Filter\Widget\DropdownFilter::addAttributes">addAttributes</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="src/Filter/Widget/DropdownFilter.php.html#86"><abbr title="Yiisoft\Yii\DataView\Filter\Widget\DropdownFilter::attributes">attributes</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="src/Filter/Widget/DropdownFilter.php.html#100"><abbr title="Yiisoft\Yii\DataView\Filter\Widget\DropdownFilter::renderFilter">renderFilter</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="src/Filter/Widget/DropdownFilter.php.html#121"><abbr title="Yiisoft\Yii\DataView\Filter\Widget\DropdownFilter::getSelect">getSelect</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="src/Filter/Widget/FilterWidget.php.html#23"><abbr title="Yiisoft\Yii\DataView\Filter\Widget\FilterWidget::withContext">withContext</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="src/Filter/Widget/FilterWidget.php.html#35"><abbr title="Yiisoft\Yii\DataView\Filter\Widget\FilterWidget::render">render</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="src/Filter/Widget/FilterWidget.php.html#53"><abbr title="Yiisoft\Yii\DataView\Filter\Widget\FilterWidget::renderFilter">renderFilter</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="src/Filter/Widget/TextInputFilter.php.html#27"><abbr title="Yiisoft\Yii\DataView\Filter\Widget\TextInputFilter::addAttributes">addAttributes</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="src/Filter/Widget/TextInputFilter.php.html#43"><abbr title="Yiisoft\Yii\DataView\Filter\Widget\TextInputFilter::attributes">attributes</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="src/Filter/Widget/TextInputFilter.php.html#57"><abbr title="Yiisoft\Yii\DataView\Filter\Widget\TextInputFilter::renderFilter">renderFilter</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="src/Filter/Widget/TextInputFilter.php.html#71"><abbr title="Yiisoft\Yii\DataView\Filter\Widget\TextInputFilter::getInput">getInput</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="src/GridView.php.html#256"><abbr title="Yiisoft\Yii\DataView\GridView::filterCellAttributes">filterCellAttributes</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="src/GridView.php.html#270"><abbr title="Yiisoft\Yii\DataView\GridView::filterCellInvalidClass">filterCellInvalidClass</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="src/GridView.php.html#285"><abbr title="Yiisoft\Yii\DataView\GridView::filterErrorsContainerAttributes">filterErrorsContainerAttributes</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="src/GridView.php.html#299"><abbr title="Yiisoft\Yii\DataView\GridView::keepPageOnSort">keepPageOnSort</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="src/GridView.php.html#427"><abbr title="Yiisoft\Yii\DataView\GridView::emptyCellAttributes">emptyCellAttributes</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="src/GridView.php.html#539"><abbr title="Yiisoft\Yii\DataView\GridView::addTableClass">addTableClass</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="src/GridView.php.html#553"><abbr title="Yiisoft\Yii\DataView\GridView::tableClass">tableClass</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="src/GridView.php.html#567"><abbr title="Yiisoft\Yii\DataView\GridView::tbodyAttributes">tbodyAttributes</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="src/GridView.php.html#581"><abbr title="Yiisoft\Yii\DataView\GridView::addTbodyClass">addTbodyClass</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="src/GridView.php.html#595"><abbr title="Yiisoft\Yii\DataView\GridView::tbodyClass">tbodyClass</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="src/GridView.php.html#609"><abbr title="Yiisoft\Yii\DataView\GridView::headerCellAttributes">headerCellAttributes</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="src/GridView.php.html#623"><abbr title="Yiisoft\Yii\DataView\GridView::bodyCellAttributes">bodyCellAttributes</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="src/GridView.php.html#637"><abbr title="Yiisoft\Yii\DataView\GridView::sortableLinkAttributes">sortableLinkAttributes</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="src/GridView.php.html#651"><abbr title="Yiisoft\Yii\DataView\GridView::sortableHeaderPrepend">sortableHeaderPrepend</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="src/GridView.php.html#665"><abbr title="Yiisoft\Yii\DataView\GridView::sortableHeaderAppend">sortableHeaderAppend</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="src/GridView.php.html#679"><abbr title="Yiisoft\Yii\DataView\GridView::sortableHeaderAscPrepend">sortableHeaderAscPrepend</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="src/GridView.php.html#693"><abbr title="Yiisoft\Yii\DataView\GridView::sortableHeaderAscAppend">sortableHeaderAscAppend</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="src/GridView.php.html#707"><abbr title="Yiisoft\Yii\DataView\GridView::sortableHeaderDescPrepend">sortableHeaderDescPrepend</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="src/GridView.php.html#721"><abbr title="Yiisoft\Yii\DataView\GridView::sortableHeaderDescAppend">sortableHeaderDescAppend</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="src/GridView.php.html#959"><abbr title="Yiisoft\Yii\DataView\GridView::prepareOrder">prepareOrder</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="src/PageSize/InputPageSize.php.html#27"><abbr title="Yiisoft\Yii\DataView\PageSize\InputPageSize::addAttributes">addAttributes</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="src/PageSize/InputPageSize.php.html#41"><abbr title="Yiisoft\Yii\DataView\PageSize\InputPageSize::attributes">attributes</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="src/PageSize/InputPageSize.php.html#53"><abbr title="Yiisoft\Yii\DataView\PageSize\InputPageSize::render">render</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="src/PageSize/PageSizeContext.php.html#51"><abbr title="Yiisoft\Yii\DataView\PageSize\PageSizeContext::__construct">__construct</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="src/PageSize/SelectPageSize.php.html#30"><abbr title="Yiisoft\Yii\DataView\PageSize\SelectPageSize::addAttributes">addAttributes</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="src/PageSize/SelectPageSize.php.html#44"><abbr title="Yiisoft\Yii\DataView\PageSize\SelectPageSize::attributes">attributes</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="src/PageSize/SelectPageSize.php.html#57"><abbr title="Yiisoft\Yii\DataView\PageSize\SelectPageSize::render">render</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="src/Pagination/KeysetPagination.php.html#79"><abbr title="Yiisoft\Yii\DataView\Pagination\KeysetPagination::containerTag">containerTag</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="src/Pagination/KeysetPagination.php.html#97"><abbr title="Yiisoft\Yii\DataView\Pagination\KeysetPagination::containerAttributes">containerAttributes</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="src/Pagination/KeysetPagination.php.html#209"><abbr title="Yiisoft\Yii\DataView\Pagination\KeysetPagination::disabledLinkClass">disabledLinkClass</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="src/Pagination/OffsetPagination.php.html#66"><abbr title="Yiisoft\Yii\DataView\Pagination\OffsetPagination::containerTag">containerTag</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="src/Pagination/OffsetPagination.php.html#77"><abbr title="Yiisoft\Yii\DataView\Pagination\OffsetPagination::containerAttributes">containerAttributes</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="src/Pagination/OffsetPagination.php.html#141"><abbr title="Yiisoft\Yii\DataView\Pagination\OffsetPagination::currentLinkClass">currentLinkClass</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="src/Pagination/OffsetPagination.php.html#148"><abbr title="Yiisoft\Yii\DataView\Pagination\OffsetPagination::disabledLinkClass">disabledLinkClass</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="src/Pagination/OffsetPagination.php.html#155"><abbr title="Yiisoft\Yii\DataView\Pagination\OffsetPagination::labelPrevious">labelPrevious</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="src/Pagination/OffsetPagination.php.html#162"><abbr title="Yiisoft\Yii\DataView\Pagination\OffsetPagination::labelNext">labelNext</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="src/Pagination/OffsetPagination.php.html#169"><abbr title="Yiisoft\Yii\DataView\Pagination\OffsetPagination::labelFirst">labelFirst</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="src/Pagination/OffsetPagination.php.html#176"><abbr title="Yiisoft\Yii\DataView\Pagination\OffsetPagination::labelLast">labelLast</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="src/Pagination/PaginatorNotSupportedException.php.html#22"><abbr title="Yiisoft\Yii\DataView\Pagination\PaginatorNotSupportedException::__construct">__construct</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="src/UrlConfig.php.html#53"><abbr title="Yiisoft\Yii\DataView\UrlConfig::withPageParameterName">withPageParameterName</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="src/UrlConfig.php.html#67"><abbr title="Yiisoft\Yii\DataView\UrlConfig::withPreviousPageParameterName">withPreviousPageParameterName</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="src/UrlConfig.php.html#81"><abbr title="Yiisoft\Yii\DataView\UrlConfig::withPageSizeParameterName">withPageSizeParameterName</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="src/UrlConfig.php.html#95"><abbr title="Yiisoft\Yii\DataView\UrlConfig::withSortParameterName">withSortParameterName</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="src/UrlConfig.php.html#113"><abbr title="Yiisoft\Yii\DataView\UrlConfig::withPageParameterType">withPageParameterType</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="src/UrlConfig.php.html#131"><abbr title="Yiisoft\Yii\DataView\UrlConfig::withPreviousPageParameterType">withPreviousPageParameterType</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="src/UrlConfig.php.html#149"><abbr title="Yiisoft\Yii\DataView\UrlConfig::withPageSizeParameterType">withPageSizeParameterType</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="src/UrlConfig.php.html#167"><abbr title="Yiisoft\Yii\DataView\UrlConfig::withSortParameterType">withSortParameterType</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="src/UrlConfig.php.html#184"><abbr title="Yiisoft\Yii\DataView\UrlConfig::withArguments">withArguments</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="src/UrlConfig.php.html#199"><abbr title="Yiisoft\Yii\DataView\UrlConfig::withQueryParameters">withQueryParameters</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="src/UrlConfig.php.html#301"><abbr title="Yiisoft\Yii\DataView\UrlConfig::getArguments">getArguments</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="src/UrlConfig.php.html#311"><abbr title="Yiisoft\Yii\DataView\UrlConfig::getQueryParameters">getQueryParameters</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="src/UrlParametersFactory.php.html#35"><abbr title="Yiisoft\Yii\DataView\UrlParametersFactory::create">create</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="src/YiiRouter/UrlCreator.php.html#23"><abbr title="Yiisoft\Yii\DataView\YiiRouter\UrlCreator::__construct">__construct</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="src/YiiRouter/UrlCreator.php.html#37"><abbr title="Yiisoft\Yii\DataView\YiiRouter\UrlCreator::__invoke">__invoke</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="src/YiiRouter/UrlParameterProvider.php.html#22"><abbr title="Yiisoft\Yii\DataView\YiiRouter\UrlParameterProvider::__construct">__construct</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="src/YiiRouter/UrlParameterProvider.php.html#41"><abbr title="Yiisoft\Yii\DataView\YiiRouter\UrlParameterProvider::get">get</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="src/PageSize/PageSizeContextTrait.php.html#25"><abbr title="Yiisoft\Yii\DataView\PageSize\PageSizeContextTrait::withContext">withContext</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="src/PageSize/PageSizeContextTrait.php.html#39"><abbr title="Yiisoft\Yii\DataView\PageSize\PageSizeContextTrait::getContext">getContext</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="src/Column/DataColumnRenderer.php.html#111"><abbr title="Yiisoft\Yii\DataView\Column\DataColumnRenderer::renderFilter">renderFilter</abbr></a></td><td class="text-right">9%</td></tr>
+       <tr><td><a href="src/BaseListView.php.html#856"><abbr title="Yiisoft\Yii\DataView\BaseListView::renderPageSize">renderPageSize</abbr></a></td><td class="text-right">11%</td></tr>
+       <tr><td><a href="src/BaseListView.php.html#974"><abbr title="Yiisoft\Yii\DataView\BaseListView::preparePageSize">preparePageSize</abbr></a></td><td class="text-right">14%</td></tr>
+       <tr><td><a href="src/Column/DataColumnRenderer.php.html#147"><abbr title="Yiisoft\Yii\DataView\Column\DataColumnRenderer::makeFilter">makeFilter</abbr></a></td><td class="text-right">15%</td></tr>
+       <tr><td><a href="src/Column/Base/HeaderContext.php.html#112"><abbr title="Yiisoft\Yii\DataView\Column\Base\HeaderContext::prepareSortable">prepareSortable</abbr></a></td><td class="text-right">18%</td></tr>
+       <tr><td><a href="src/BaseListView.php.html#793"><abbr title="Yiisoft\Yii\DataView\BaseListView::renderPagination">renderPagination</abbr></a></td><td class="text-right">41%</td></tr>
+       <tr><td><a href="src/BaseListView.php.html#388"><abbr title="Yiisoft\Yii\DataView\BaseListView::prepareDataReaderByParams">prepareDataReaderByParams</abbr></a></td><td class="text-right">45%</td></tr>
+       <tr><td><a href="src/BaseListView.php.html#741"><abbr title="Yiisoft\Yii\DataView\BaseListView::getDefaultPageSize">getDefaultPageSize</abbr></a></td><td class="text-right">53%</td></tr>
+       <tr><td><a href="src/Column/DataColumnRenderer.php.html#269"><abbr title="Yiisoft\Yii\DataView\Column\DataColumnRenderer::castToString">castToString</abbr></a></td><td class="text-right">60%</td></tr>
+       <tr><td><a href="src/Column/DataColumnRenderer.php.html#282"><abbr title="Yiisoft\Yii\DataView\Column\DataColumnRenderer::getOrderProperties">getOrderProperties</abbr></a></td><td class="text-right">66%</td></tr>
+       <tr><td><a href="src/Filter/Factory/LikeFilterFactory.php.html#33"><abbr title="Yiisoft\Yii\DataView\Filter\Factory\LikeFilterFactory::create">create</abbr></a></td><td class="text-right">66%</td></tr>
+       <tr><td><a href="src/Pagination/PaginationContextTrait.php.html#39"><abbr title="Yiisoft\Yii\DataView\Pagination\PaginationContextTrait::getContext">getContext</abbr></a></td><td class="text-right">66%</td></tr>
+       <tr><td><a href="src/GridView.php.html#933"><abbr title="Yiisoft\Yii\DataView\GridView::makeFilters">makeFilters</abbr></a></td><td class="text-right">71%</td></tr>
+       <tr><td><a href="src/Column/DataColumnRenderer.php.html#194"><abbr title="Yiisoft\Yii\DataView\Column\DataColumnRenderer::renderBody">renderBody</abbr></a></td><td class="text-right">73%</td></tr>
+       <tr><td><a href="src/GridView.php.html#1003"><abbr title="Yiisoft\Yii\DataView\GridView::prepareBodyRowAttributes">prepareBodyRowAttributes</abbr></a></td><td class="text-right">75%</td></tr>
+       <tr><td><a href="src/BaseListView.php.html#246"><abbr title="Yiisoft\Yii\DataView\BaseListView::containerTag">containerTag</abbr></a></td><td class="text-right">80%</td></tr>
+       <tr><td><a href="src/GridView.php.html#410"><abbr title="Yiisoft\Yii\DataView\GridView::emptyCell">emptyCell</abbr></a></td><td class="text-right">80%</td></tr>
+       <tr><td><a href="src/Pagination/KeysetPagination.php.html#58"><abbr title="Yiisoft\Yii\DataView\Pagination\KeysetPagination::withPaginator">withPaginator</abbr></a></td><td class="text-right">80%</td></tr>
+       <tr><td><a href="src/Pagination/KeysetPagination.php.html#114"><abbr title="Yiisoft\Yii\DataView\Pagination\KeysetPagination::listTag">listTag</abbr></a></td><td class="text-right">80%</td></tr>
+       <tr><td><a href="src/Pagination/KeysetPagination.php.html#149"><abbr title="Yiisoft\Yii\DataView\Pagination\KeysetPagination::itemTag">itemTag</abbr></a></td><td class="text-right">80%</td></tr>
+       <tr><td><a href="src/Pagination/OffsetPagination.php.html#55"><abbr title="Yiisoft\Yii\DataView\Pagination\OffsetPagination::withPaginator">withPaginator</abbr></a></td><td class="text-right">80%</td></tr>
+       <tr><td><a href="src/Pagination/OffsetPagination.php.html#84"><abbr title="Yiisoft\Yii\DataView\Pagination\OffsetPagination::listTag">listTag</abbr></a></td><td class="text-right">80%</td></tr>
+       <tr><td><a href="src/Pagination/OffsetPagination.php.html#102"><abbr title="Yiisoft\Yii\DataView\Pagination\OffsetPagination::itemTag">itemTag</abbr></a></td><td class="text-right">80%</td></tr>
+       <tr><td><a href="src/GridView.php.html#728"><abbr title="Yiisoft\Yii\DataView\GridView::renderItems">renderItems</abbr></a></td><td class="text-right">81%</td></tr>
+       <tr><td><a href="src/YiiRouter/ActionColumnUrlCreator.php.html#50"><abbr title="Yiisoft\Yii\DataView\YiiRouter\ActionColumnUrlCreator::__invoke">__invoke</abbr></a></td><td class="text-right">82%</td></tr>
+       <tr><td><a href="src/Column/SerialColumnRenderer.php.html#30"><abbr title="Yiisoft\Yii\DataView\Column\SerialColumnRenderer::renderBody">renderBody</abbr></a></td><td class="text-right">83%</td></tr>
+       <tr><td><a href="src/Column/Base/RendererContainer.php.html#73"><abbr title="Yiisoft\Yii\DataView\Column\Base\RendererContainer::addConfigs">addConfigs</abbr></a></td><td class="text-right">85%</td></tr>
+
+       </tbody>
+      </table>
+     </div>
+    </div>
+    <div class="col-md-6">
+     <h3>Project Risks</h3>
+     <div class="scrollbox">
+      <table class="table">
+       <thead>
+        <tr>
+         <th>Method</th>
+         <th class="text-right"><abbr title="Change Risk Anti-Patterns (CRAP) Index">CRAP</abbr></th>
+        </tr>
+       </thead>
+       <tbody>
+       <tr><td><a href="src/Column/Base/HeaderContext.php.html#170"><abbr title="Yiisoft\Yii\DataView\Column\Base\HeaderContext::getLinkSortValue">getLinkSortValue</abbr></a></td><td class="text-right">182</td></tr>
+       <tr><td><a href="src/UrlParametersFactory.php.html#35"><abbr title="Yiisoft\Yii\DataView\UrlParametersFactory::create">create</abbr></a></td><td class="text-right">182</td></tr>
+       <tr><td><a href="src/Column/Base/HeaderContext.php.html#112"><abbr title="Yiisoft\Yii\DataView\Column\Base\HeaderContext::prepareSortable">prepareSortable</abbr></a></td><td class="text-right">75</td></tr>
+       <tr><td><a href="src/Column/DataColumnRenderer.php.html#147"><abbr title="Yiisoft\Yii\DataView\Column\DataColumnRenderer::makeFilter">makeFilter</abbr></a></td><td class="text-right">70</td></tr>
+       <tr><td><a href="src/BaseListView.php.html#388"><abbr title="Yiisoft\Yii\DataView\BaseListView::prepareDataReaderByParams">prepareDataReaderByParams</abbr></a></td><td class="text-right">69</td></tr>
+       <tr><td><a href="src/BaseListView.php.html#856"><abbr title="Yiisoft\Yii\DataView\BaseListView::renderPageSize">renderPageSize</abbr></a></td><td class="text-right">64</td></tr>
+       <tr><td><a href="src/BaseListView.php.html#974"><abbr title="Yiisoft\Yii\DataView\BaseListView::preparePageSize">preparePageSize</abbr></a></td><td class="text-right">60</td></tr>
+       <tr><td><a href="src/GridView.php.html#728"><abbr title="Yiisoft\Yii\DataView\GridView::renderItems">renderItems</abbr></a></td><td class="text-right">38</td></tr>
+       <tr><td><a href="src/Column/DataColumnRenderer.php.html#111"><abbr title="Yiisoft\Yii\DataView\Column\DataColumnRenderer::renderFilter">renderFilter</abbr></a></td><td class="text-right">33</td></tr>
+       <tr><td><a href="src/BaseListView.php.html#1032"><abbr title="Yiisoft\Yii\DataView\BaseListView::getSortValueForUrl">getSortValueForUrl</abbr></a></td><td class="text-right">30</td></tr>
+       <tr><td><a href="src/GridView.php.html#959"><abbr title="Yiisoft\Yii\DataView\GridView::prepareOrder">prepareOrder</abbr></a></td><td class="text-right">30</td></tr>
+       <tr><td><a href="src/YiiRouter/UrlParameterProvider.php.html#41"><abbr title="Yiisoft\Yii\DataView\YiiRouter\UrlParameterProvider::get">get</abbr></a></td><td class="text-right">30</td></tr>
+       <tr><td><a href="src/BaseListView.php.html#793"><abbr title="Yiisoft\Yii\DataView\BaseListView::renderPagination">renderPagination</abbr></a></td><td class="text-right">20</td></tr>
+       <tr><td><a href="src/BaseListView.php.html#1056"><abbr title="Yiisoft\Yii\DataView\BaseListView::getSort">getSort</abbr></a></td><td class="text-right">20</td></tr>
+       <tr><td><a href="src/PageSize/SelectPageSize.php.html#57"><abbr title="Yiisoft\Yii\DataView\PageSize\SelectPageSize::render">render</abbr></a></td><td class="text-right">20</td></tr>
+       <tr><td><a href="src/Column/DataColumnRenderer.php.html#248"><abbr title="Yiisoft\Yii\DataView\Column\DataColumnRenderer::normalizeFilterEmpty">normalizeFilterEmpty</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="src/BaseListView.php.html#741"><abbr title="Yiisoft\Yii\DataView\BaseListView::getDefaultPageSize">getDefaultPageSize</abbr></a></td><td class="text-right">9</td></tr>
+       <tr><td><a href="src/BaseListView.php.html#519"><abbr title="Yiisoft\Yii\DataView\BaseListView::pageSizeTag">pageSizeTag</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="src/BaseListView.php.html#611"><abbr title="Yiisoft\Yii\DataView\BaseListView::summaryTag">summaryTag</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="src/BaseListView.php.html#1024"><abbr title="Yiisoft\Yii\DataView\BaseListView::getPageSizeValueForUrl">getPageSizeValueForUrl</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="src/Column/CheckboxColumnRenderer.php.html#67"><abbr title="Yiisoft\Yii\DataView\Column\CheckboxColumnRenderer::renderFooter">renderFooter</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="src/Column/RadioColumnRenderer.php.html#66"><abbr title="Yiisoft\Yii\DataView\Column\RadioColumnRenderer::renderFooter">renderFooter</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="src/Exception/UrlGeneratorNotSetException.php.html#24"><abbr title="Yiisoft\Yii\DataView\Exception\UrlGeneratorNotSetException::__construct">__construct</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="src/Filter/Factory/EqualsFilterFactory.php.html#19"><abbr title="Yiisoft\Yii\DataView\Filter\Factory\EqualsFilterFactory::create">create</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="src/Filter/Widget/DropdownFilter.php.html#100"><abbr title="Yiisoft\Yii\DataView\Filter\Widget\DropdownFilter::renderFilter">renderFilter</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="src/Pagination/KeysetPagination.php.html#79"><abbr title="Yiisoft\Yii\DataView\Pagination\KeysetPagination::containerTag">containerTag</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="src/Pagination/OffsetPagination.php.html#66"><abbr title="Yiisoft\Yii\DataView\Pagination\OffsetPagination::containerTag">containerTag</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="src/PageSize/PageSizeContextTrait.php.html#39"><abbr title="Yiisoft\Yii\DataView\PageSize\PageSizeContextTrait::getContext">getContext</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="src/GridView.php.html#933"><abbr title="Yiisoft\Yii\DataView\GridView::makeFilters">makeFilters</abbr></a></td><td class="text-right">5</td></tr>
+       <tr><td><a href="src/Column/DataColumnRenderer.php.html#194"><abbr title="Yiisoft\Yii\DataView\Column\DataColumnRenderer::renderBody">renderBody</abbr></a></td><td class="text-right">5</td></tr>
+       <tr><td><a href="src/YiiRouter/ActionColumnUrlCreator.php.html#50"><abbr title="Yiisoft\Yii\DataView\YiiRouter\ActionColumnUrlCreator::__invoke">__invoke</abbr></a></td><td class="text-right">5</td></tr>
+       <tr><td><a href="src/Column/DataColumnRenderer.php.html#269"><abbr title="Yiisoft\Yii\DataView\Column\DataColumnRenderer::castToString">castToString</abbr></a></td><td class="text-right">3</td></tr>
+       <tr><td><a href="src/GridView.php.html#1003"><abbr title="Yiisoft\Yii\DataView\GridView::prepareBodyRowAttributes">prepareBodyRowAttributes</abbr></a></td><td class="text-right">3</td></tr>
+       <tr><td><a href="src/Column/Base/RendererContainer.php.html#73"><abbr title="Yiisoft\Yii\DataView\Column\Base\RendererContainer::addConfigs">addConfigs</abbr></a></td><td class="text-right">3</td></tr>
+       <tr><td><a href="src/Column/DataColumnRenderer.php.html#282"><abbr title="Yiisoft\Yii\DataView\Column\DataColumnRenderer::getOrderProperties">getOrderProperties</abbr></a></td><td class="text-right">2</td></tr>
+       <tr><td><a href="src/Filter/Factory/LikeFilterFactory.php.html#33"><abbr title="Yiisoft\Yii\DataView\Filter\Factory\LikeFilterFactory::create">create</abbr></a></td><td class="text-right">2</td></tr>
+       <tr><td><a href="src/Pagination/PaginationContextTrait.php.html#39"><abbr title="Yiisoft\Yii\DataView\Pagination\PaginationContextTrait::getContext">getContext</abbr></a></td><td class="text-right">2</td></tr>
+       <tr><td><a href="src/BaseListView.php.html#246"><abbr title="Yiisoft\Yii\DataView\BaseListView::containerTag">containerTag</abbr></a></td><td class="text-right">2</td></tr>
+       <tr><td><a href="src/GridView.php.html#410"><abbr title="Yiisoft\Yii\DataView\GridView::emptyCell">emptyCell</abbr></a></td><td class="text-right">2</td></tr>
+       <tr><td><a href="src/Pagination/KeysetPagination.php.html#58"><abbr title="Yiisoft\Yii\DataView\Pagination\KeysetPagination::withPaginator">withPaginator</abbr></a></td><td class="text-right">2</td></tr>
+       <tr><td><a href="src/Pagination/KeysetPagination.php.html#114"><abbr title="Yiisoft\Yii\DataView\Pagination\KeysetPagination::listTag">listTag</abbr></a></td><td class="text-right">2</td></tr>
+       <tr><td><a href="src/Pagination/KeysetPagination.php.html#149"><abbr title="Yiisoft\Yii\DataView\Pagination\KeysetPagination::itemTag">itemTag</abbr></a></td><td class="text-right">2</td></tr>
+       <tr><td><a href="src/Pagination/OffsetPagination.php.html#55"><abbr title="Yiisoft\Yii\DataView\Pagination\OffsetPagination::withPaginator">withPaginator</abbr></a></td><td class="text-right">2</td></tr>
+       <tr><td><a href="src/Pagination/OffsetPagination.php.html#84"><abbr title="Yiisoft\Yii\DataView\Pagination\OffsetPagination::listTag">listTag</abbr></a></td><td class="text-right">2</td></tr>
+       <tr><td><a href="src/Pagination/OffsetPagination.php.html#102"><abbr title="Yiisoft\Yii\DataView\Pagination\OffsetPagination::itemTag">itemTag</abbr></a></td><td class="text-right">2</td></tr>
+       <tr><td><a href="src/Column/SerialColumnRenderer.php.html#30"><abbr title="Yiisoft\Yii\DataView\Column\SerialColumnRenderer::renderBody">renderBody</abbr></a></td><td class="text-right">2</td></tr>
+
+       </tbody>
+      </table>
+     </div>
+    </div>
+   </div>
+   <footer>
+    <hr/>
+    <p>
+     <small>Generated by <a href="https://github.com/sebastianbergmann/php-code-coverage" target="_top">php-code-coverage 10.1.16</a> using <a href="https://www.php.net/" target="_top">PHP 8.3.16</a> and <a href="https://phpunit.de/">PHPUnit 10.5.45</a> at Wed Feb 12 22:08:35 UTC 2025.</small>
+    </p>
+   </footer>
+  </div>
+  <script src="_js/jquery.min.js?v=10.1.16" type="text/javascript"></script>
+  <script src="_js/d3.min.js?v=10.1.16" type="text/javascript"></script>
+  <script src="_js/nv.d3.min.js?v=10.1.16" type="text/javascript"></script>
+  <script type="text/javascript">
+$(document).ready(function() {
+  nv.addGraph(function() {
+    var chart = nv.models.multiBarChart();
+    chart.tooltips(false)
+      .showControls(false)
+      .showLegend(false)
+      .reduceXTicks(false)
+      .staggerLabels(true)
+      .yAxis.tickFormat(d3.format('d'));
+
+    d3.select('#classCoverageDistribution svg')
+      .datum(getCoverageDistributionData([14,0,1,1,0,1,3,1,3,6,2,19], "Class Coverage"))
+      .transition().duration(500).call(chart);
+
+    nv.utils.windowResize(chart.update);
+
+    return chart;
+  });
+
+  nv.addGraph(function() {
+    var chart = nv.models.multiBarChart();
+    chart.tooltips(false)
+      .showControls(false)
+      .showLegend(false)
+      .reduceXTicks(false)
+      .staggerLabels(true)
+      .yAxis.tickFormat(d3.format('d'));
+
+    d3.select('#methodCoverageDistribution svg')
+      .datum(getCoverageDistributionData([105,1,4,0,0,2,1,4,3,12,6,174], "Method Coverage"))
+      .transition().duration(500).call(chart);
+
+    nv.utils.windowResize(chart.update);
+
+    return chart;
+  });
+
+  function getCoverageDistributionData(data, label) {
+    var labels = [
+      '0%',
+      '0-10%',
+      '10-20%',
+      '20-30%',
+      '30-40%',
+      '40-50%',
+      '50-60%',
+      '60-70%',
+      '70-80%',
+      '80-90%',
+      '90-100%',
+      '100%'
+    ];
+    var values = [];
+    $.each(labels, function(key) {
+      values.push({x: labels[key], y: data[key]});
+    });
+
+    return [
+      {
+        key: label,
+        values: values,
+        color: "#4572A7"
+      }
+    ];
+  }
+  nv.addGraph(function() {
+    var chart = nv.models.scatterChart()
+      .showDistX(true)
+      .showDistY(true)
+      .showLegend(false)
+      .forceX([0, 100]);
+    chart.tooltipContent(function(graph) {
+      return '<p>' + graph.point.class + '</p>';
+    });
+
+    chart.xAxis.axisLabel('Code Coverage (in percent)');
+    chart.yAxis.axisLabel('Cyclomatic Complexity');
+
+    d3.select('#classComplexity svg')
+      .datum(getComplexityData([[54.4973544973545,120,"<a href=\"src\/BaseListView.php.html#64\">Yiisoft\\Yii\\DataView\\BaseListView<\/a>"],[100,1,"<a href=\"src\/BodyRowContext.php.html#10\">Yiisoft\\Yii\\DataView\\BodyRowContext<\/a>"],[100,1,"<a href=\"src\/Column\/ActionButton.php.html#13\">Yiisoft\\Yii\\DataView\\Column\\ActionButton<\/a>"],[100,4,"<a href=\"src\/Column\/ActionColumn.php.html#19\">Yiisoft\\Yii\\DataView\\Column\\ActionColumn<\/a>"],[97.82608695652173,30,"<a href=\"src\/Column\/ActionColumnRenderer.php.html#25\">Yiisoft\\Yii\\DataView\\Column\\ActionColumnRenderer<\/a>"],[70,15,"<a href=\"src\/Column\/Base\/Cell.php.html#14\">Yiisoft\\Yii\\DataView\\Column\\Base\\Cell<\/a>"],[100,1,"<a href=\"src\/Column\/Base\/DataContext.php.html#13\">Yiisoft\\Yii\\DataView\\Column\\Base\\DataContext<\/a>"],[50,2,"<a href=\"src\/Column\/Base\/FilterContext.php.html#14\">Yiisoft\\Yii\\DataView\\Column\\Base\\FilterContext<\/a>"],[50,2,"<a href=\"src\/Column\/Base\/GlobalContext.php.html#14\">Yiisoft\\Yii\\DataView\\Column\\Base\\GlobalContext<\/a>"],[13.043478260869565,27,"<a href=\"src\/Column\/Base\/HeaderContext.php.html#27\">Yiisoft\\Yii\\DataView\\Column\\Base\\HeaderContext<\/a>"],[100,2,"<a href=\"src\/Column\/Base\/MakeFilterContext.php.html#14\">Yiisoft\\Yii\\DataView\\Column\\Base\\MakeFilterContext<\/a>"],[90.9090909090909,6,"<a href=\"src\/Column\/Base\/RendererContainer.php.html#16\">Yiisoft\\Yii\\DataView\\Column\\Base\\RendererContainer<\/a>"],[100,4,"<a href=\"src\/Column\/CheckboxColumn.php.html#12\">Yiisoft\\Yii\\DataView\\Column\\CheckboxColumn<\/a>"],[84.61538461538461,10,"<a href=\"src\/Column\/CheckboxColumnRenderer.php.html#19\">Yiisoft\\Yii\\DataView\\Column\\CheckboxColumnRenderer<\/a>"],[100,3,"<a href=\"src\/Column\/DataColumn.php.html#20\">Yiisoft\\Yii\\DataView\\Column\\DataColumn<\/a>"],[44.554455445544555,40,"<a href=\"src\/Column\/DataColumnRenderer.php.html#41\">Yiisoft\\Yii\\DataView\\Column\\DataColumnRenderer<\/a>"],[100,4,"<a href=\"src\/Column\/RadioColumn.php.html#15\">Yiisoft\\Yii\\DataView\\Column\\RadioColumn<\/a>"],[83.33333333333334,9,"<a href=\"src\/Column\/RadioColumnRenderer.php.html#21\">Yiisoft\\Yii\\DataView\\Column\\RadioColumnRenderer<\/a>"],[100,3,"<a href=\"src\/Column\/SerialColumn.php.html#10\">Yiisoft\\Yii\\DataView\\Column\\SerialColumn<\/a>"],[88.88888888888889,5,"<a href=\"src\/Column\/SerialColumnRenderer.php.html#18\">Yiisoft\\Yii\\DataView\\Column\\SerialColumnRenderer<\/a>"],[100,47,"<a href=\"src\/DetailView.php.html#35\">Yiisoft\\Yii\\DataView\\DetailView<\/a>"],[100,1,"<a href=\"src\/Exception\/DataReaderNotSetException.php.html#16\">Yiisoft\\Yii\\DataView\\Exception\\DataReaderNotSetException<\/a>"],[0,4,"<a href=\"src\/Exception\/UrlGeneratorNotSetException.php.html#17\">Yiisoft\\Yii\\DataView\\Exception\\UrlGeneratorNotSetException<\/a>"],[100,1,"<a href=\"src\/Field\/DataField.php.html#15\">Yiisoft\\Yii\\DataView\\Field\\DataField<\/a>"],[0,2,"<a href=\"src\/Filter\/Factory\/EqualsFilterFactory.php.html#17\">Yiisoft\\Yii\\DataView\\Filter\\Factory\\EqualsFilterFactory<\/a>"],[100,0,"<a href=\"src\/Filter\/Factory\/IncorrectValueException.php.html#21\">Yiisoft\\Yii\\DataView\\Filter\\Factory\\IncorrectValueException<\/a>"],[75,3,"<a href=\"src\/Filter\/Factory\/LikeFilterFactory.php.html#20\">Yiisoft\\Yii\\DataView\\Filter\\Factory\\LikeFilterFactory<\/a>"],[0,1,"<a href=\"src\/Filter\/Widget\/Context.php.html#10\">Yiisoft\\Yii\\DataView\\Filter\\Widget\\Context<\/a>"],[0,6,"<a href=\"src\/Filter\/Widget\/DropdownFilter.php.html#12\">Yiisoft\\Yii\\DataView\\Filter\\Widget\\DropdownFilter<\/a>"],[0,2,"<a href=\"src\/Filter\/Widget\/FilterWidget.php.html#12\">Yiisoft\\Yii\\DataView\\Filter\\Widget\\FilterWidget<\/a>"],[0,4,"<a href=\"src\/Filter\/Widget\/TextInputFilter.php.html#13\">Yiisoft\\Yii\\DataView\\Filter\\Widget\\TextInputFilter<\/a>"],[67.50788643533123,92,"<a href=\"src\/GridView.php.html#47\">Yiisoft\\Yii\\DataView\\GridView<\/a>"],[100,1,"<a href=\"src\/ListItemContext.php.html#10\">Yiisoft\\Yii\\DataView\\ListItemContext<\/a>"],[100,32,"<a href=\"src\/ListView.php.html#18\">Yiisoft\\Yii\\DataView\\ListView<\/a>"],[0,3,"<a href=\"src\/PageSize\/InputPageSize.php.html#13\">Yiisoft\\Yii\\DataView\\PageSize\\InputPageSize<\/a>"],[0,1,"<a href=\"src\/PageSize\/PageSizeContext.php.html#14\">Yiisoft\\Yii\\DataView\\PageSize\\PageSizeContext<\/a>"],[0,6,"<a href=\"src\/PageSize\/SelectPageSize.php.html#16\">Yiisoft\\Yii\\DataView\\PageSize\\SelectPageSize<\/a>"],[81.08108108108108,26,"<a href=\"src\/Pagination\/KeysetPagination.php.html#17\">Yiisoft\\Yii\\DataView\\Pagination\\KeysetPagination<\/a>"],[78.72340425531915,45,"<a href=\"src\/Pagination\/OffsetPagination.php.html#18\">Yiisoft\\Yii\\DataView\\Pagination\\OffsetPagination<\/a>"],[100,3,"<a href=\"src\/Pagination\/PaginationContext.php.html#12\">Yiisoft\\Yii\\DataView\\Pagination\\PaginationContext<\/a>"],[100,4,"<a href=\"src\/Pagination\/PaginatorNotSetException.php.html#13\">Yiisoft\\Yii\\DataView\\Pagination\\PaginatorNotSetException<\/a>"],[0,1,"<a href=\"src\/Pagination\/PaginatorNotSupportedException.php.html#15\">Yiisoft\\Yii\\DataView\\Pagination\\PaginatorNotSupportedException<\/a>"],[21.951219512195124,21,"<a href=\"src\/UrlConfig.php.html#13\">Yiisoft\\Yii\\DataView\\UrlConfig<\/a>"],[100,0,"<a href=\"src\/UrlParameterType.php.html#10\">Yiisoft\\Yii\\DataView\\UrlParameterType<\/a>"],[0,13,"<a href=\"src\/UrlParametersFactory.php.html#16\">Yiisoft\\Yii\\DataView\\UrlParametersFactory<\/a>"],[100,1,"<a href=\"src\/YiiRouter\/ActionColumnUrlConfig.php.html#13\">Yiisoft\\Yii\\DataView\\YiiRouter\\ActionColumnUrlConfig<\/a>"],[83.33333333333334,6,"<a href=\"src\/YiiRouter\/ActionColumnUrlCreator.php.html#19\">Yiisoft\\Yii\\DataView\\YiiRouter\\ActionColumnUrlCreator<\/a>"],[0,2,"<a href=\"src\/YiiRouter\/UrlCreator.php.html#15\">Yiisoft\\Yii\\DataView\\YiiRouter\\UrlCreator<\/a>"],[0,6,"<a href=\"src\/YiiRouter\/UrlParameterProvider.php.html#14\">Yiisoft\\Yii\\DataView\\YiiRouter\\UrlParameterProvider<\/a>"],[0,3,"<a href=\"src\/PageSize\/PageSizeContextTrait.php.html#14\">Yiisoft\\Yii\\DataView\\PageSize\\PageSizeContextTrait<\/a>"],[83.33333333333334,3,"<a href=\"src\/Pagination\/PaginationContextTrait.php.html#14\">Yiisoft\\Yii\\DataView\\Pagination\\PaginationContextTrait<\/a>"]], 'Class Complexity'))
+      .transition()
+      .duration(500)
+      .call(chart);
+
+    nv.utils.windowResize(chart.update);
+
+    return chart;
+  });
+
+  nv.addGraph(function() {
+    var chart = nv.models.scatterChart()
+      .showDistX(true)
+      .showDistY(true)
+      .showLegend(false)
+      .forceX([0, 100]);
+    chart.tooltipContent(function(graph) {
+      return '<p>' + graph.point.class + '</p>';
+    });
+
+    chart.xAxis.axisLabel('Code Coverage (in percent)');
+    chart.yAxis.axisLabel('Method Complexity');
+
+    d3.select('#methodComplexity svg')
+      .datum(getComplexityData([[100,1,"<a href=\"src\/BaseListView.php.html#153\">Yiisoft\\Yii\\DataView\\BaseListView::__construct<\/a>"],[0,1,"<a href=\"src\/BaseListView.php.html#164\">Yiisoft\\Yii\\DataView\\BaseListView::urlCreator<\/a>"],[100,1,"<a href=\"src\/BaseListView.php.html#171\">Yiisoft\\Yii\\DataView\\BaseListView::ignoreMissingPage<\/a>"],[0,1,"<a href=\"src\/BaseListView.php.html#181\">Yiisoft\\Yii\\DataView\\BaseListView::pageNotFoundExceptionCallback<\/a>"],[0,1,"<a href=\"src\/BaseListView.php.html#193\">Yiisoft\\Yii\\DataView\\BaseListView::pageParameterName<\/a>"],[0,1,"<a href=\"src\/BaseListView.php.html#200\">Yiisoft\\Yii\\DataView\\BaseListView::previousPageParameterName<\/a>"],[0,1,"<a href=\"src\/BaseListView.php.html#212\">Yiisoft\\Yii\\DataView\\BaseListView::pageSizeParameterName<\/a>"],[100,1,"<a href=\"src\/BaseListView.php.html#219\">Yiisoft\\Yii\\DataView\\BaseListView::urlParameterProvider<\/a>"],[0,1,"<a href=\"src\/BaseListView.php.html#226\">Yiisoft\\Yii\\DataView\\BaseListView::enableMultiSort<\/a>"],[100,0,"<a href=\"src\/BaseListView.php.html#240\">Yiisoft\\Yii\\DataView\\BaseListView::renderItems<\/a>"],[80,2,"<a href=\"src\/BaseListView.php.html#246\">Yiisoft\\Yii\\DataView\\BaseListView::containerTag<\/a>"],[100,1,"<a href=\"src\/BaseListView.php.html#262\">Yiisoft\\Yii\\DataView\\BaseListView::containerAttributes<\/a>"],[100,1,"<a href=\"src\/BaseListView.php.html#279\">Yiisoft\\Yii\\DataView\\BaseListView::emptyText<\/a>"],[100,1,"<a href=\"src\/BaseListView.php.html#292\">Yiisoft\\Yii\\DataView\\BaseListView::emptyTextAttributes<\/a>"],[100,2,"<a href=\"src\/BaseListView.php.html#300\">Yiisoft\\Yii\\DataView\\BaseListView::getDataReader<\/a>"],[100,1,"<a href=\"src\/BaseListView.php.html#320\">Yiisoft\\Yii\\DataView\\BaseListView::makeFilters<\/a>"],[92.3076923076923,5,"<a href=\"src\/BaseListView.php.html#332\">Yiisoft\\Yii\\DataView\\BaseListView::prepareDataReaderAndItems<\/a>"],[100,2,"<a href=\"src\/BaseListView.php.html#377\">Yiisoft\\Yii\\DataView\\BaseListView::getItems<\/a>"],[45.714285714285715,18,"<a href=\"src\/BaseListView.php.html#388\">Yiisoft\\Yii\\DataView\\BaseListView::prepareDataReaderByParams<\/a>"],[0,1,"<a href=\"src\/BaseListView.php.html#457\">Yiisoft\\Yii\\DataView\\BaseListView::prepareOrder<\/a>"],[100,1,"<a href=\"src\/BaseListView.php.html#469\">Yiisoft\\Yii\\DataView\\BaseListView::header<\/a>"],[100,1,"<a href=\"src\/BaseListView.php.html#481\">Yiisoft\\Yii\\DataView\\BaseListView::headerAttributes<\/a>"],[100,1,"<a href=\"src\/BaseListView.php.html#493\">Yiisoft\\Yii\\DataView\\BaseListView::id<\/a>"],[100,1,"<a href=\"src\/BaseListView.php.html#511\">Yiisoft\\Yii\\DataView\\BaseListView::layout<\/a>"],[0,2,"<a href=\"src\/BaseListView.php.html#519\">Yiisoft\\Yii\\DataView\\BaseListView::pageSizeTag<\/a>"],[0,1,"<a href=\"src\/BaseListView.php.html#535\">Yiisoft\\Yii\\DataView\\BaseListView::pageSizeAttributes<\/a>"],[0,1,"<a href=\"src\/BaseListView.php.html#552\">Yiisoft\\Yii\\DataView\\BaseListView::pageSizeTemplate<\/a>"],[0,1,"<a href=\"src\/BaseListView.php.html#559\">Yiisoft\\Yii\\DataView\\BaseListView::pageSizeWidget<\/a>"],[100,1,"<a href=\"src\/BaseListView.php.html#566\">Yiisoft\\Yii\\DataView\\BaseListView::paginationWidget<\/a>"],[100,1,"<a href=\"src\/BaseListView.php.html#579\">Yiisoft\\Yii\\DataView\\BaseListView::offsetPaginationConfig<\/a>"],[100,1,"<a href=\"src\/BaseListView.php.html#592\">Yiisoft\\Yii\\DataView\\BaseListView::keysetPaginationConfig<\/a>"],[100,1,"<a href=\"src\/BaseListView.php.html#604\">Yiisoft\\Yii\\DataView\\BaseListView::dataReader<\/a>"],[0,2,"<a href=\"src\/BaseListView.php.html#611\">Yiisoft\\Yii\\DataView\\BaseListView::summaryTag<\/a>"],[100,1,"<a href=\"src\/BaseListView.php.html#637\">Yiisoft\\Yii\\DataView\\BaseListView::summaryTemplate<\/a>"],[100,1,"<a href=\"src\/BaseListView.php.html#649\">Yiisoft\\Yii\\DataView\\BaseListView::summaryAttributes<\/a>"],[100,1,"<a href=\"src\/BaseListView.php.html#663\">Yiisoft\\Yii\\DataView\\BaseListView::toolbar<\/a>"],[100,1,"<a href=\"src\/BaseListView.php.html#677\">Yiisoft\\Yii\\DataView\\BaseListView::urlArguments<\/a>"],[100,1,"<a href=\"src\/BaseListView.php.html#689\">Yiisoft\\Yii\\DataView\\BaseListView::urlQueryParameters<\/a>"],[100,1,"<a href=\"src\/BaseListView.php.html#697\">Yiisoft\\Yii\\DataView\\BaseListView::renderEmpty<\/a>"],[90.9090909090909,3,"<a href=\"src\/BaseListView.php.html#710\">Yiisoft\\Yii\\DataView\\BaseListView::render<\/a>"],[53.84615384615385,6,"<a href=\"src\/BaseListView.php.html#741\">Yiisoft\\Yii\\DataView\\BaseListView::getDefaultPageSize<\/a>"],[0,1,"<a href=\"src\/BaseListView.php.html#775\">Yiisoft\\Yii\\DataView\\BaseListView::pageSizeConstraint<\/a>"],[0,1,"<a href=\"src\/BaseListView.php.html#788\">Yiisoft\\Yii\\DataView\\BaseListView::getOrderProperties<\/a>"],[41.30434782608695,8,"<a href=\"src\/BaseListView.php.html#793\">Yiisoft\\Yii\\DataView\\BaseListView::renderPagination<\/a>"],[11.904761904761903,9,"<a href=\"src\/BaseListView.php.html#856\">Yiisoft\\Yii\\DataView\\BaseListView::renderPageSize<\/a>"],[96,5,"<a href=\"src\/BaseListView.php.html#914\">Yiisoft\\Yii\\DataView\\BaseListView::renderSummary<\/a>"],[100,1,"<a href=\"src\/BaseListView.php.html#959\">Yiisoft\\Yii\\DataView\\BaseListView::renderHeader<\/a>"],[14.285714285714285,9,"<a href=\"src\/BaseListView.php.html#974\">Yiisoft\\Yii\\DataView\\BaseListView::preparePageSize<\/a>"],[100,2,"<a href=\"src\/BaseListView.php.html#1011\">Yiisoft\\Yii\\DataView\\BaseListView::createDefaultTranslator<\/a>"],[0,2,"<a href=\"src\/BaseListView.php.html#1024\">Yiisoft\\Yii\\DataView\\BaseListView::getPageSizeValueForUrl<\/a>"],[0,5,"<a href=\"src\/BaseListView.php.html#1032\">Yiisoft\\Yii\\DataView\\BaseListView::getSortValueForUrl<\/a>"],[0,4,"<a href=\"src\/BaseListView.php.html#1056\">Yiisoft\\Yii\\DataView\\BaseListView::getSort<\/a>"],[100,1,"<a href=\"src\/BodyRowContext.php.html#22\">Yiisoft\\Yii\\DataView\\BodyRowContext::__construct<\/a>"],[100,1,"<a href=\"src\/Column\/ActionButton.php.html#29\">Yiisoft\\Yii\\DataView\\Column\\ActionButton::__construct<\/a>"],[100,1,"<a href=\"src\/Column\/ActionColumn.php.html#51\">Yiisoft\\Yii\\DataView\\Column\\ActionColumn::__construct<\/a>"],[100,1,"<a href=\"src\/Column\/ActionColumn.php.html#78\">Yiisoft\\Yii\\DataView\\Column\\ActionColumn::getUrlCreator<\/a>"],[100,1,"<a href=\"src\/Column\/ActionColumn.php.html#83\">Yiisoft\\Yii\\DataView\\Column\\ActionColumn::isVisible<\/a>"],[100,1,"<a href=\"src\/Column\/ActionColumn.php.html#88\">Yiisoft\\Yii\\DataView\\Column\\ActionColumn::getRenderer<\/a>"],[100,1,"<a href=\"src\/Column\/ActionColumnRenderer.php.html#52\">Yiisoft\\Yii\\DataView\\Column\\ActionColumnRenderer::__construct<\/a>"],[0,1,"<a href=\"src\/Column\/ActionColumnRenderer.php.html#70\">Yiisoft\\Yii\\DataView\\Column\\ActionColumnRenderer::renderColumn<\/a>"],[100,1,"<a href=\"src\/Column\/ActionColumnRenderer.php.html#75\">Yiisoft\\Yii\\DataView\\Column\\ActionColumnRenderer::renderHeader<\/a>"],[100,5,"<a href=\"src\/Column\/ActionColumnRenderer.php.html#82\">Yiisoft\\Yii\\DataView\\Column\\ActionColumnRenderer::renderBody<\/a>"],[100,2,"<a href=\"src\/Column\/ActionColumnRenderer.php.html#133\">Yiisoft\\Yii\\DataView\\Column\\ActionColumnRenderer::renderFooter<\/a>"],[96.7741935483871,12,"<a href=\"src\/Column\/ActionColumnRenderer.php.html#153\">Yiisoft\\Yii\\DataView\\Column\\ActionColumnRenderer::renderButton<\/a>"],[100,1,"<a href=\"src\/Column\/ActionColumnRenderer.php.html#221\">Yiisoft\\Yii\\DataView\\Column\\ActionColumnRenderer::createUrl<\/a>"],[100,3,"<a href=\"src\/Column\/ActionColumnRenderer.php.html#242\">Yiisoft\\Yii\\DataView\\Column\\ActionColumnRenderer::isVisibleButton<\/a>"],[100,4,"<a href=\"src\/Column\/ActionColumnRenderer.php.html#274\">Yiisoft\\Yii\\DataView\\Column\\ActionColumnRenderer::getTemplate<\/a>"],[100,1,"<a href=\"src\/Column\/Base\/Cell.php.html#34\">Yiisoft\\Yii\\DataView\\Column\\Base\\Cell::__construct<\/a>"],[100,1,"<a href=\"src\/Column\/Base\/Cell.php.html#56\">Yiisoft\\Yii\\DataView\\Column\\Base\\Cell::encode<\/a>"],[0,1,"<a href=\"src\/Column\/Base\/Cell.php.html#74\">Yiisoft\\Yii\\DataView\\Column\\Base\\Cell::doubleEncode<\/a>"],[100,1,"<a href=\"src\/Column\/Base\/Cell.php.html#91\">Yiisoft\\Yii\\DataView\\Column\\Base\\Cell::content<\/a>"],[100,1,"<a href=\"src\/Column\/Base\/Cell.php.html#108\">Yiisoft\\Yii\\DataView\\Column\\Base\\Cell::addAttributes<\/a>"],[0,1,"<a href=\"src\/Column\/Base\/Cell.php.html#125\">Yiisoft\\Yii\\DataView\\Column\\Base\\Cell::attributes<\/a>"],[0,1,"<a href=\"src\/Column\/Base\/Cell.php.html#143\">Yiisoft\\Yii\\DataView\\Column\\Base\\Cell::attribute<\/a>"],[100,1,"<a href=\"src\/Column\/Base\/Cell.php.html#160\">Yiisoft\\Yii\\DataView\\Column\\Base\\Cell::addClass<\/a>"],[100,1,"<a href=\"src\/Column\/Base\/Cell.php.html#172\">Yiisoft\\Yii\\DataView\\Column\\Base\\Cell::getAttributes<\/a>"],[100,1,"<a href=\"src\/Column\/Base\/Cell.php.html#185\">Yiisoft\\Yii\\DataView\\Column\\Base\\Cell::shouldEncode<\/a>"],[100,1,"<a href=\"src\/Column\/Base\/Cell.php.html#195\">Yiisoft\\Yii\\DataView\\Column\\Base\\Cell::shouldDoubleEncode<\/a>"],[100,1,"<a href=\"src\/Column\/Base\/Cell.php.html#207\">Yiisoft\\Yii\\DataView\\Column\\Base\\Cell::getContent<\/a>"],[100,3,"<a href=\"src\/Column\/Base\/Cell.php.html#220\">Yiisoft\\Yii\\DataView\\Column\\Base\\Cell::isEmptyContent<\/a>"],[100,1,"<a href=\"src\/Column\/Base\/DataContext.php.html#27\">Yiisoft\\Yii\\DataView\\Column\\Base\\DataContext::__construct<\/a>"],[100,1,"<a href=\"src\/Column\/Base\/FilterContext.php.html#30\">Yiisoft\\Yii\\DataView\\Column\\Base\\FilterContext::__construct<\/a>"],[0,1,"<a href=\"src\/Column\/Base\/FilterContext.php.html#47\">Yiisoft\\Yii\\DataView\\Column\\Base\\FilterContext::getQueryValue<\/a>"],[100,1,"<a href=\"src\/Column\/Base\/GlobalContext.php.html#26\">Yiisoft\\Yii\\DataView\\Column\\Base\\GlobalContext::__construct<\/a>"],[0,1,"<a href=\"src\/Column\/Base\/GlobalContext.php.html#42\">Yiisoft\\Yii\\DataView\\Column\\Base\\GlobalContext::translate<\/a>"],[100,1,"<a href=\"src\/Column\/Base\/HeaderContext.php.html#60\">Yiisoft\\Yii\\DataView\\Column\\Base\\HeaderContext::__construct<\/a>"],[100,1,"<a href=\"src\/Column\/Base\/HeaderContext.php.html#93\">Yiisoft\\Yii\\DataView\\Column\\Base\\HeaderContext::translate<\/a>"],[18.91891891891892,11,"<a href=\"src\/Column\/Base\/HeaderContext.php.html#112\">Yiisoft\\Yii\\DataView\\Column\\Base\\HeaderContext::prepareSortable<\/a>"],[0,13,"<a href=\"src\/Column\/Base\/HeaderContext.php.html#170\">Yiisoft\\Yii\\DataView\\Column\\Base\\HeaderContext::getLinkSortValue<\/a>"],[0,1,"<a href=\"src\/Column\/Base\/HeaderContext.php.html#227\">Yiisoft\\Yii\\DataView\\Column\\Base\\HeaderContext::isEqualOrders<\/a>"],[100,1,"<a href=\"src\/Column\/Base\/MakeFilterContext.php.html#20\">Yiisoft\\Yii\\DataView\\Column\\Base\\MakeFilterContext::__construct<\/a>"],[100,1,"<a href=\"src\/Column\/Base\/MakeFilterContext.php.html#33\">Yiisoft\\Yii\\DataView\\Column\\Base\\MakeFilterContext::getQueryValue<\/a>"],[100,1,"<a href=\"src\/Column\/Base\/RendererContainer.php.html#35\">Yiisoft\\Yii\\DataView\\Column\\Base\\RendererContainer::__construct<\/a>"],[100,2,"<a href=\"src\/Column\/Base\/RendererContainer.php.html#52\">Yiisoft\\Yii\\DataView\\Column\\Base\\RendererContainer::get<\/a>"],[85.71428571428571,3,"<a href=\"src\/Column\/Base\/RendererContainer.php.html#73\">Yiisoft\\Yii\\DataView\\Column\\Base\\RendererContainer::addConfigs<\/a>"],[100,2,"<a href=\"src\/Column\/CheckboxColumn.php.html#29\">Yiisoft\\Yii\\DataView\\Column\\CheckboxColumn::__construct<\/a>"],[100,1,"<a href=\"src\/Column\/CheckboxColumn.php.html#46\">Yiisoft\\Yii\\DataView\\Column\\CheckboxColumn::getRenderer<\/a>"],[100,1,"<a href=\"src\/Column\/CheckboxColumn.php.html#51\">Yiisoft\\Yii\\DataView\\Column\\CheckboxColumn::isVisible<\/a>"],[0,1,"<a href=\"src\/Column\/CheckboxColumnRenderer.php.html#21\">Yiisoft\\Yii\\DataView\\Column\\CheckboxColumnRenderer::renderColumn<\/a>"],[100,3,"<a href=\"src\/Column\/CheckboxColumnRenderer.php.html#26\">Yiisoft\\Yii\\DataView\\Column\\CheckboxColumnRenderer::renderHeader<\/a>"],[100,4,"<a href=\"src\/Column\/CheckboxColumnRenderer.php.html#41\">Yiisoft\\Yii\\DataView\\Column\\CheckboxColumnRenderer::renderBody<\/a>"],[0,2,"<a href=\"src\/Column\/CheckboxColumnRenderer.php.html#67\">Yiisoft\\Yii\\DataView\\Column\\CheckboxColumnRenderer::renderFooter<\/a>"],[100,1,"<a href=\"src\/Column\/DataColumn.php.html#113\">Yiisoft\\Yii\\DataView\\Column\\DataColumn::__construct<\/a>"],[100,1,"<a href=\"src\/Column\/DataColumn.php.html#137\">Yiisoft\\Yii\\DataView\\Column\\DataColumn::isVisible<\/a>"],[100,1,"<a href=\"src\/Column\/DataColumn.php.html#142\">Yiisoft\\Yii\\DataView\\Column\\DataColumn::getRenderer<\/a>"],[100,1,"<a href=\"src\/Column\/DataColumnRenderer.php.html#63\">Yiisoft\\Yii\\DataView\\Column\\DataColumnRenderer::__construct<\/a>"],[100,1,"<a href=\"src\/Column\/DataColumnRenderer.php.html#74\">Yiisoft\\Yii\\DataView\\Column\\DataColumnRenderer::renderColumn<\/a>"],[92.85714285714286,7,"<a href=\"src\/Column\/DataColumnRenderer.php.html#83\">Yiisoft\\Yii\\DataView\\Column\\DataColumnRenderer::renderHeader<\/a>"],[9.090909090909092,6,"<a href=\"src\/Column\/DataColumnRenderer.php.html#111\">Yiisoft\\Yii\\DataView\\Column\\DataColumnRenderer::renderFilter<\/a>"],[15.384615384615385,10,"<a href=\"src\/Column\/DataColumnRenderer.php.html#147\">Yiisoft\\Yii\\DataView\\Column\\DataColumnRenderer::makeFilter<\/a>"],[73.68421052631578,5,"<a href=\"src\/Column\/DataColumnRenderer.php.html#194\">Yiisoft\\Yii\\DataView\\Column\\DataColumnRenderer::renderBody<\/a>"],[100,2,"<a href=\"src\/Column\/DataColumnRenderer.php.html#227\">Yiisoft\\Yii\\DataView\\Column\\DataColumnRenderer::renderFooter<\/a>"],[0,3,"<a href=\"src\/Column\/DataColumnRenderer.php.html#248\">Yiisoft\\Yii\\DataView\\Column\\DataColumnRenderer::normalizeFilterEmpty<\/a>"],[60,3,"<a href=\"src\/Column\/DataColumnRenderer.php.html#269\">Yiisoft\\Yii\\DataView\\Column\\DataColumnRenderer::castToString<\/a>"],[66.66666666666666,2,"<a href=\"src\/Column\/DataColumnRenderer.php.html#282\">Yiisoft\\Yii\\DataView\\Column\\DataColumnRenderer::getOrderProperties<\/a>"],[100,2,"<a href=\"src\/Column\/RadioColumn.php.html#33\">Yiisoft\\Yii\\DataView\\Column\\RadioColumn::__construct<\/a>"],[100,1,"<a href=\"src\/Column\/RadioColumn.php.html#49\">Yiisoft\\Yii\\DataView\\Column\\RadioColumn::isVisible<\/a>"],[100,1,"<a href=\"src\/Column\/RadioColumn.php.html#54\">Yiisoft\\Yii\\DataView\\Column\\RadioColumn::getRenderer<\/a>"],[0,1,"<a href=\"src\/Column\/RadioColumnRenderer.php.html#23\">Yiisoft\\Yii\\DataView\\Column\\RadioColumnRenderer::renderColumn<\/a>"],[100,2,"<a href=\"src\/Column\/RadioColumnRenderer.php.html#28\">Yiisoft\\Yii\\DataView\\Column\\RadioColumnRenderer::renderHeader<\/a>"],[100,4,"<a href=\"src\/Column\/RadioColumnRenderer.php.html#40\">Yiisoft\\Yii\\DataView\\Column\\RadioColumnRenderer::renderBody<\/a>"],[0,2,"<a href=\"src\/Column\/RadioColumnRenderer.php.html#66\">Yiisoft\\Yii\\DataView\\Column\\RadioColumnRenderer::renderFooter<\/a>"],[100,1,"<a href=\"src\/Column\/SerialColumn.php.html#21\">Yiisoft\\Yii\\DataView\\Column\\SerialColumn::__construct<\/a>"],[100,1,"<a href=\"src\/Column\/SerialColumn.php.html#30\">Yiisoft\\Yii\\DataView\\Column\\SerialColumn::isVisible<\/a>"],[100,1,"<a href=\"src\/Column\/SerialColumn.php.html#35\">Yiisoft\\Yii\\DataView\\Column\\SerialColumn::getRenderer<\/a>"],[100,1,"<a href=\"src\/Column\/SerialColumnRenderer.php.html#20\">Yiisoft\\Yii\\DataView\\Column\\SerialColumnRenderer::renderColumn<\/a>"],[100,1,"<a href=\"src\/Column\/SerialColumnRenderer.php.html#25\">Yiisoft\\Yii\\DataView\\Column\\SerialColumnRenderer::renderHeader<\/a>"],[83.33333333333334,2,"<a href=\"src\/Column\/SerialColumnRenderer.php.html#30\">Yiisoft\\Yii\\DataView\\Column\\SerialColumnRenderer::renderBody<\/a>"],[100,1,"<a href=\"src\/Column\/SerialColumnRenderer.php.html#41\">Yiisoft\\Yii\\DataView\\Column\\SerialColumnRenderer::renderFooter<\/a>"],[100,1,"<a href=\"src\/DetailView.php.html#59\">Yiisoft\\Yii\\DataView\\DetailView::attributes<\/a>"],[100,1,"<a href=\"src\/DetailView.php.html#72\">Yiisoft\\Yii\\DataView\\DetailView::fieldListAttributes<\/a>"],[100,1,"<a href=\"src\/DetailView.php.html#86\">Yiisoft\\Yii\\DataView\\DetailView::data<\/a>"],[100,1,"<a href=\"src\/DetailView.php.html#99\">Yiisoft\\Yii\\DataView\\DetailView::fieldAttributes<\/a>"],[100,1,"<a href=\"src\/DetailView.php.html#119\">Yiisoft\\Yii\\DataView\\DetailView::fields<\/a>"],[100,1,"<a href=\"src\/DetailView.php.html#133\">Yiisoft\\Yii\\DataView\\DetailView::header<\/a>"],[100,1,"<a href=\"src\/DetailView.php.html#148\">Yiisoft\\Yii\\DataView\\DetailView::fieldTemplate<\/a>"],[100,1,"<a href=\"src\/DetailView.php.html#161\">Yiisoft\\Yii\\DataView\\DetailView::labelAttributes<\/a>"],[100,1,"<a href=\"src\/DetailView.php.html#174\">Yiisoft\\Yii\\DataView\\DetailView::labelTag<\/a>"],[100,1,"<a href=\"src\/DetailView.php.html#189\">Yiisoft\\Yii\\DataView\\DetailView::labelTemplate<\/a>"],[100,1,"<a href=\"src\/DetailView.php.html#204\">Yiisoft\\Yii\\DataView\\DetailView::template<\/a>"],[100,1,"<a href=\"src\/DetailView.php.html#217\">Yiisoft\\Yii\\DataView\\DetailView::valueAttributes<\/a>"],[100,1,"<a href=\"src\/DetailView.php.html#230\">Yiisoft\\Yii\\DataView\\DetailView::valueFalse<\/a>"],[100,1,"<a href=\"src\/DetailView.php.html#243\">Yiisoft\\Yii\\DataView\\DetailView::valueTag<\/a>"],[100,1,"<a href=\"src\/DetailView.php.html#258\">Yiisoft\\Yii\\DataView\\DetailView::valueTemplate<\/a>"],[100,1,"<a href=\"src\/DetailView.php.html#271\">Yiisoft\\Yii\\DataView\\DetailView::valueTrue<\/a>"],[100,2,"<a href=\"src\/DetailView.php.html#282\">Yiisoft\\Yii\\DataView\\DetailView::render<\/a>"],[100,2,"<a href=\"src\/DetailView.php.html#301\">Yiisoft\\Yii\\DataView\\DetailView::has<\/a>"],[100,9,"<a href=\"src\/DetailView.php.html#318\">Yiisoft\\Yii\\DataView\\DetailView::normalizeColumns<\/a>"],[100,3,"<a href=\"src\/DetailView.php.html#348\">Yiisoft\\Yii\\DataView\\DetailView::renderAttributes<\/a>"],[100,3,"<a href=\"src\/DetailView.php.html#364\">Yiisoft\\Yii\\DataView\\DetailView::renderFields<\/a>"],[100,11,"<a href=\"src\/DetailView.php.html#397\">Yiisoft\\Yii\\DataView\\DetailView::renderValue<\/a>"],[100,1,"<a href=\"src\/DetailView.php.html#429\">Yiisoft\\Yii\\DataView\\DetailView::removeDoubleLineBreaks<\/a>"],[100,1,"<a href=\"src\/Exception\/DataReaderNotSetException.php.html#24\">Yiisoft\\Yii\\DataView\\Exception\\DataReaderNotSetException::__construct<\/a>"],[0,2,"<a href=\"src\/Exception\/UrlGeneratorNotSetException.php.html#24\">Yiisoft\\Yii\\DataView\\Exception\\UrlGeneratorNotSetException::__construct<\/a>"],[0,1,"<a href=\"src\/Exception\/UrlGeneratorNotSetException.php.html#30\">Yiisoft\\Yii\\DataView\\Exception\\UrlGeneratorNotSetException::getName<\/a>"],[0,1,"<a href=\"src\/Exception\/UrlGeneratorNotSetException.php.html#35\">Yiisoft\\Yii\\DataView\\Exception\\UrlGeneratorNotSetException::getSolution<\/a>"],[100,1,"<a href=\"src\/Field\/DataField.php.html#43\">Yiisoft\\Yii\\DataView\\Field\\DataField::__construct<\/a>"],[0,2,"<a href=\"src\/Filter\/Factory\/EqualsFilterFactory.php.html#19\">Yiisoft\\Yii\\DataView\\Filter\\Factory\\EqualsFilterFactory::create<\/a>"],[100,1,"<a href=\"src\/Filter\/Factory\/LikeFilterFactory.php.html#28\">Yiisoft\\Yii\\DataView\\Filter\\Factory\\LikeFilterFactory::__construct<\/a>"],[66.66666666666666,2,"<a href=\"src\/Filter\/Factory\/LikeFilterFactory.php.html#33\">Yiisoft\\Yii\\DataView\\Filter\\Factory\\LikeFilterFactory::create<\/a>"],[0,1,"<a href=\"src\/Filter\/Widget\/Context.php.html#20\">Yiisoft\\Yii\\DataView\\Filter\\Widget\\Context::__construct<\/a>"],[0,1,"<a href=\"src\/Filter\/Widget\/DropdownFilter.php.html#47\">Yiisoft\\Yii\\DataView\\Filter\\Widget\\DropdownFilter::optionsData<\/a>"],[0,1,"<a href=\"src\/Filter\/Widget\/DropdownFilter.php.html#69\">Yiisoft\\Yii\\DataView\\Filter\\Widget\\DropdownFilter::addAttributes<\/a>"],[0,1,"<a href=\"src\/Filter\/Widget\/DropdownFilter.php.html#86\">Yiisoft\\Yii\\DataView\\Filter\\Widget\\DropdownFilter::attributes<\/a>"],[0,2,"<a href=\"src\/Filter\/Widget\/DropdownFilter.php.html#100\">Yiisoft\\Yii\\DataView\\Filter\\Widget\\DropdownFilter::renderFilter<\/a>"],[0,1,"<a href=\"src\/Filter\/Widget\/DropdownFilter.php.html#121\">Yiisoft\\Yii\\DataView\\Filter\\Widget\\DropdownFilter::getSelect<\/a>"],[0,1,"<a href=\"src\/Filter\/Widget\/FilterWidget.php.html#23\">Yiisoft\\Yii\\DataView\\Filter\\Widget\\FilterWidget::withContext<\/a>"],[0,1,"<a href=\"src\/Filter\/Widget\/FilterWidget.php.html#35\">Yiisoft\\Yii\\DataView\\Filter\\Widget\\FilterWidget::render<\/a>"],[0,0,"<a href=\"src\/Filter\/Widget\/FilterWidget.php.html#53\">Yiisoft\\Yii\\DataView\\Filter\\Widget\\FilterWidget::renderFilter<\/a>"],[0,1,"<a href=\"src\/Filter\/Widget\/TextInputFilter.php.html#27\">Yiisoft\\Yii\\DataView\\Filter\\Widget\\TextInputFilter::addAttributes<\/a>"],[0,1,"<a href=\"src\/Filter\/Widget\/TextInputFilter.php.html#43\">Yiisoft\\Yii\\DataView\\Filter\\Widget\\TextInputFilter::attributes<\/a>"],[0,1,"<a href=\"src\/Filter\/Widget\/TextInputFilter.php.html#57\">Yiisoft\\Yii\\DataView\\Filter\\Widget\\TextInputFilter::renderFilter<\/a>"],[0,1,"<a href=\"src\/Filter\/Widget\/TextInputFilter.php.html#71\">Yiisoft\\Yii\\DataView\\Filter\\Widget\\TextInputFilter::getInput<\/a>"],[100,1,"<a href=\"src\/GridView.php.html#225\">Yiisoft\\Yii\\DataView\\GridView::__construct<\/a>"],[100,1,"<a href=\"src\/GridView.php.html#242\">Yiisoft\\Yii\\DataView\\GridView::addColumnRendererConfigs<\/a>"],[0,1,"<a href=\"src\/GridView.php.html#256\">Yiisoft\\Yii\\DataView\\GridView::filterCellAttributes<\/a>"],[0,1,"<a href=\"src\/GridView.php.html#270\">Yiisoft\\Yii\\DataView\\GridView::filterCellInvalidClass<\/a>"],[0,1,"<a href=\"src\/GridView.php.html#285\">Yiisoft\\Yii\\DataView\\GridView::filterErrorsContainerAttributes<\/a>"],[0,1,"<a href=\"src\/GridView.php.html#299\">Yiisoft\\Yii\\DataView\\GridView::keepPageOnSort<\/a>"],[100,1,"<a href=\"src\/GridView.php.html#326\">Yiisoft\\Yii\\DataView\\GridView::afterRow<\/a>"],[100,1,"<a href=\"src\/GridView.php.html#354\">Yiisoft\\Yii\\DataView\\GridView::beforeRow<\/a>"],[100,1,"<a href=\"src\/GridView.php.html#378\">Yiisoft\\Yii\\DataView\\GridView::columns<\/a>"],[100,1,"<a href=\"src\/GridView.php.html#395\">Yiisoft\\Yii\\DataView\\GridView::enableColumnGrouping<\/a>"],[80,2,"<a href=\"src\/GridView.php.html#410\">Yiisoft\\Yii\\DataView\\GridView::emptyCell<\/a>"],[0,1,"<a href=\"src\/GridView.php.html#427\">Yiisoft\\Yii\\DataView\\GridView::emptyCellAttributes<\/a>"],[100,1,"<a href=\"src\/GridView.php.html#441\">Yiisoft\\Yii\\DataView\\GridView::enableFooter<\/a>"],[100,1,"<a href=\"src\/GridView.php.html#455\">Yiisoft\\Yii\\DataView\\GridView::footerRowAttributes<\/a>"],[100,1,"<a href=\"src\/GridView.php.html#469\">Yiisoft\\Yii\\DataView\\GridView::enableHeader<\/a>"],[100,1,"<a href=\"src\/GridView.php.html#483\">Yiisoft\\Yii\\DataView\\GridView::headerRowAttributes<\/a>"],[100,1,"<a href=\"src\/GridView.php.html#511\">Yiisoft\\Yii\\DataView\\GridView::bodyRowAttributes<\/a>"],[100,1,"<a href=\"src\/GridView.php.html#525\">Yiisoft\\Yii\\DataView\\GridView::tableAttributes<\/a>"],[0,1,"<a href=\"src\/GridView.php.html#539\">Yiisoft\\Yii\\DataView\\GridView::addTableClass<\/a>"],[0,1,"<a href=\"src\/GridView.php.html#553\">Yiisoft\\Yii\\DataView\\GridView::tableClass<\/a>"],[0,1,"<a href=\"src\/GridView.php.html#567\">Yiisoft\\Yii\\DataView\\GridView::tbodyAttributes<\/a>"],[0,1,"<a href=\"src\/GridView.php.html#581\">Yiisoft\\Yii\\DataView\\GridView::addTbodyClass<\/a>"],[0,1,"<a href=\"src\/GridView.php.html#595\">Yiisoft\\Yii\\DataView\\GridView::tbodyClass<\/a>"],[0,1,"<a href=\"src\/GridView.php.html#609\">Yiisoft\\Yii\\DataView\\GridView::headerCellAttributes<\/a>"],[0,1,"<a href=\"src\/GridView.php.html#623\">Yiisoft\\Yii\\DataView\\GridView::bodyCellAttributes<\/a>"],[0,1,"<a href=\"src\/GridView.php.html#637\">Yiisoft\\Yii\\DataView\\GridView::sortableLinkAttributes<\/a>"],[0,1,"<a href=\"src\/GridView.php.html#651\">Yiisoft\\Yii\\DataView\\GridView::sortableHeaderPrepend<\/a>"],[0,1,"<a href=\"src\/GridView.php.html#665\">Yiisoft\\Yii\\DataView\\GridView::sortableHeaderAppend<\/a>"],[0,1,"<a href=\"src\/GridView.php.html#679\">Yiisoft\\Yii\\DataView\\GridView::sortableHeaderAscPrepend<\/a>"],[0,1,"<a href=\"src\/GridView.php.html#693\">Yiisoft\\Yii\\DataView\\GridView::sortableHeaderAscAppend<\/a>"],[0,1,"<a href=\"src\/GridView.php.html#707\">Yiisoft\\Yii\\DataView\\GridView::sortableHeaderDescPrepend<\/a>"],[0,1,"<a href=\"src\/GridView.php.html#721\">Yiisoft\\Yii\\DataView\\GridView::sortableHeaderDescAppend<\/a>"],[81.36645962732919,32,"<a href=\"src\/GridView.php.html#728\">Yiisoft\\Yii\\DataView\\GridView::renderItems<\/a>"],[71.42857142857143,5,"<a href=\"src\/GridView.php.html#933\">Yiisoft\\Yii\\DataView\\GridView::makeFilters<\/a>"],[0,5,"<a href=\"src\/GridView.php.html#959\">Yiisoft\\Yii\\DataView\\GridView::prepareOrder<\/a>"],[100,3,"<a href=\"src\/GridView.php.html#978\">Yiisoft\\Yii\\DataView\\GridView::getOrderProperties<\/a>"],[75,3,"<a href=\"src\/GridView.php.html#1003\">Yiisoft\\Yii\\DataView\\GridView::prepareBodyRowAttributes<\/a>"],[100,3,"<a href=\"src\/GridView.php.html#1025\">Yiisoft\\Yii\\DataView\\GridView::prepareBodyAttributes<\/a>"],[100,4,"<a href=\"src\/GridView.php.html#1043\">Yiisoft\\Yii\\DataView\\GridView::getSort<\/a>"],[100,2,"<a href=\"src\/GridView.php.html#1061\">Yiisoft\\Yii\\DataView\\GridView::getColumns<\/a>"],[100,2,"<a href=\"src\/GridView.php.html#1078\">Yiisoft\\Yii\\DataView\\GridView::getColumnRenderers<\/a>"],[100,1,"<a href=\"src\/ListItemContext.php.html#22\">Yiisoft\\Yii\\DataView\\ListItemContext::__construct<\/a>"],[100,1,"<a href=\"src\/ListView.php.html#54\">Yiisoft\\Yii\\DataView\\ListView::afterItem<\/a>"],[100,1,"<a href=\"src\/ListView.php.html#76\">Yiisoft\\Yii\\DataView\\ListView::beforeItem<\/a>"],[100,2,"<a href=\"src\/ListView.php.html#90\">Yiisoft\\Yii\\DataView\\ListView::itemListTag<\/a>"],[100,1,"<a href=\"src\/ListView.php.html#107\">Yiisoft\\Yii\\DataView\\ListView::itemListAttributes<\/a>"],[100,1,"<a href=\"src\/ListView.php.html#128\">Yiisoft\\Yii\\DataView\\ListView::itemView<\/a>"],[100,1,"<a href=\"src\/ListView.php.html#148\">Yiisoft\\Yii\\DataView\\ListView::itemCallback<\/a>"],[100,2,"<a href=\"src\/ListView.php.html#161\">Yiisoft\\Yii\\DataView\\ListView::itemTag<\/a>"],[100,1,"<a href=\"src\/ListView.php.html#192\">Yiisoft\\Yii\\DataView\\ListView::itemAttributes<\/a>"],[100,1,"<a href=\"src\/ListView.php.html#205\">Yiisoft\\Yii\\DataView\\ListView::separator<\/a>"],[100,1,"<a href=\"src\/ListView.php.html#219\">Yiisoft\\Yii\\DataView\\ListView::itemViewParameters<\/a>"],[100,9,"<a href=\"src\/ListView.php.html#236\">Yiisoft\\Yii\\DataView\\ListView::renderItem<\/a>"],[100,5,"<a href=\"src\/ListView.php.html#287\">Yiisoft\\Yii\\DataView\\ListView::renderItems<\/a>"],[100,2,"<a href=\"src\/ListView.php.html#329\">Yiisoft\\Yii\\DataView\\ListView::renderAfterItem<\/a>"],[100,2,"<a href=\"src\/ListView.php.html#348\">Yiisoft\\Yii\\DataView\\ListView::renderBeforeItem<\/a>"],[100,2,"<a href=\"src\/ListView.php.html#359\">Yiisoft\\Yii\\DataView\\ListView::getView<\/a>"],[0,1,"<a href=\"src\/PageSize\/InputPageSize.php.html#27\">Yiisoft\\Yii\\DataView\\PageSize\\InputPageSize::addAttributes<\/a>"],[0,1,"<a href=\"src\/PageSize\/InputPageSize.php.html#41\">Yiisoft\\Yii\\DataView\\PageSize\\InputPageSize::attributes<\/a>"],[0,1,"<a href=\"src\/PageSize\/InputPageSize.php.html#53\">Yiisoft\\Yii\\DataView\\PageSize\\InputPageSize::render<\/a>"],[0,1,"<a href=\"src\/PageSize\/PageSizeContext.php.html#51\">Yiisoft\\Yii\\DataView\\PageSize\\PageSizeContext::__construct<\/a>"],[0,1,"<a href=\"src\/PageSize\/SelectPageSize.php.html#30\">Yiisoft\\Yii\\DataView\\PageSize\\SelectPageSize::addAttributes<\/a>"],[0,1,"<a href=\"src\/PageSize\/SelectPageSize.php.html#44\">Yiisoft\\Yii\\DataView\\PageSize\\SelectPageSize::attributes<\/a>"],[0,4,"<a href=\"src\/PageSize\/SelectPageSize.php.html#57\">Yiisoft\\Yii\\DataView\\PageSize\\SelectPageSize::render<\/a>"],[80,2,"<a href=\"src\/Pagination\/KeysetPagination.php.html#58\">Yiisoft\\Yii\\DataView\\Pagination\\KeysetPagination::withPaginator<\/a>"],[0,2,"<a href=\"src\/Pagination\/KeysetPagination.php.html#79\">Yiisoft\\Yii\\DataView\\Pagination\\KeysetPagination::containerTag<\/a>"],[0,1,"<a href=\"src\/Pagination\/KeysetPagination.php.html#97\">Yiisoft\\Yii\\DataView\\Pagination\\KeysetPagination::containerAttributes<\/a>"],[80,2,"<a href=\"src\/Pagination\/KeysetPagination.php.html#114\">Yiisoft\\Yii\\DataView\\Pagination\\KeysetPagination::listTag<\/a>"],[100,1,"<a href=\"src\/Pagination\/KeysetPagination.php.html#132\">Yiisoft\\Yii\\DataView\\Pagination\\KeysetPagination::listAttributes<\/a>"],[80,2,"<a href=\"src\/Pagination\/KeysetPagination.php.html#149\">Yiisoft\\Yii\\DataView\\Pagination\\KeysetPagination::itemTag<\/a>"],[100,1,"<a href=\"src\/Pagination\/KeysetPagination.php.html#167\">Yiisoft\\Yii\\DataView\\Pagination\\KeysetPagination::itemAttributes<\/a>"],[100,1,"<a href=\"src\/Pagination\/KeysetPagination.php.html#181\">Yiisoft\\Yii\\DataView\\Pagination\\KeysetPagination::disabledItemClass<\/a>"],[100,1,"<a href=\"src\/Pagination\/KeysetPagination.php.html#195\">Yiisoft\\Yii\\DataView\\Pagination\\KeysetPagination::linkAttributes<\/a>"],[0,1,"<a href=\"src\/Pagination\/KeysetPagination.php.html#209\">Yiisoft\\Yii\\DataView\\Pagination\\KeysetPagination::disabledLinkClass<\/a>"],[100,7,"<a href=\"src\/Pagination\/KeysetPagination.php.html#222\">Yiisoft\\Yii\\DataView\\Pagination\\KeysetPagination::render<\/a>"],[100,4,"<a href=\"src\/Pagination\/KeysetPagination.php.html#268\">Yiisoft\\Yii\\DataView\\Pagination\\KeysetPagination::renderItem<\/a>"],[100,1,"<a href=\"src\/Pagination\/KeysetPagination.php.html#294\">Yiisoft\\Yii\\DataView\\Pagination\\KeysetPagination::getPaginator<\/a>"],[80,2,"<a href=\"src\/Pagination\/OffsetPagination.php.html#55\">Yiisoft\\Yii\\DataView\\Pagination\\OffsetPagination::withPaginator<\/a>"],[0,2,"<a href=\"src\/Pagination\/OffsetPagination.php.html#66\">Yiisoft\\Yii\\DataView\\Pagination\\OffsetPagination::containerTag<\/a>"],[0,1,"<a href=\"src\/Pagination\/OffsetPagination.php.html#77\">Yiisoft\\Yii\\DataView\\Pagination\\OffsetPagination::containerAttributes<\/a>"],[80,2,"<a href=\"src\/Pagination\/OffsetPagination.php.html#84\">Yiisoft\\Yii\\DataView\\Pagination\\OffsetPagination::listTag<\/a>"],[100,1,"<a href=\"src\/Pagination\/OffsetPagination.php.html#95\">Yiisoft\\Yii\\DataView\\Pagination\\OffsetPagination::listAttributes<\/a>"],[80,2,"<a href=\"src\/Pagination\/OffsetPagination.php.html#102\">Yiisoft\\Yii\\DataView\\Pagination\\OffsetPagination::itemTag<\/a>"],[100,1,"<a href=\"src\/Pagination\/OffsetPagination.php.html#113\">Yiisoft\\Yii\\DataView\\Pagination\\OffsetPagination::itemAttributes<\/a>"],[100,1,"<a href=\"src\/Pagination\/OffsetPagination.php.html#120\">Yiisoft\\Yii\\DataView\\Pagination\\OffsetPagination::currentItemClass<\/a>"],[100,1,"<a href=\"src\/Pagination\/OffsetPagination.php.html#127\">Yiisoft\\Yii\\DataView\\Pagination\\OffsetPagination::disabledItemClass<\/a>"],[100,1,"<a href=\"src\/Pagination\/OffsetPagination.php.html#134\">Yiisoft\\Yii\\DataView\\Pagination\\OffsetPagination::linkAttributes<\/a>"],[0,1,"<a href=\"src\/Pagination\/OffsetPagination.php.html#141\">Yiisoft\\Yii\\DataView\\Pagination\\OffsetPagination::currentLinkClass<\/a>"],[0,1,"<a href=\"src\/Pagination\/OffsetPagination.php.html#148\">Yiisoft\\Yii\\DataView\\Pagination\\OffsetPagination::disabledLinkClass<\/a>"],[0,1,"<a href=\"src\/Pagination\/OffsetPagination.php.html#155\">Yiisoft\\Yii\\DataView\\Pagination\\OffsetPagination::labelPrevious<\/a>"],[0,1,"<a href=\"src\/Pagination\/OffsetPagination.php.html#162\">Yiisoft\\Yii\\DataView\\Pagination\\OffsetPagination::labelNext<\/a>"],[0,1,"<a href=\"src\/Pagination\/OffsetPagination.php.html#169\">Yiisoft\\Yii\\DataView\\Pagination\\OffsetPagination::labelFirst<\/a>"],[0,1,"<a href=\"src\/Pagination\/OffsetPagination.php.html#176\">Yiisoft\\Yii\\DataView\\Pagination\\OffsetPagination::labelLast<\/a>"],[100,1,"<a href=\"src\/Pagination\/OffsetPagination.php.html#188\">Yiisoft\\Yii\\DataView\\Pagination\\OffsetPagination::maxNavLinkCount<\/a>"],[92.85714285714286,6,"<a href=\"src\/Pagination\/OffsetPagination.php.html#195\">Yiisoft\\Yii\\DataView\\Pagination\\OffsetPagination::render<\/a>"],[100,5,"<a href=\"src\/Pagination\/OffsetPagination.php.html#226\">Yiisoft\\Yii\\DataView\\Pagination\\OffsetPagination::renderItems<\/a>"],[100,6,"<a href=\"src\/Pagination\/OffsetPagination.php.html#284\">Yiisoft\\Yii\\DataView\\Pagination\\OffsetPagination::renderItem<\/a>"],[100,4,"<a href=\"src\/Pagination\/OffsetPagination.php.html#312\">Yiisoft\\Yii\\DataView\\Pagination\\OffsetPagination::getPageRange<\/a>"],[100,2,"<a href=\"src\/Pagination\/OffsetPagination.php.html#332\">Yiisoft\\Yii\\DataView\\Pagination\\OffsetPagination::createUrl<\/a>"],[100,1,"<a href=\"src\/Pagination\/OffsetPagination.php.html#340\">Yiisoft\\Yii\\DataView\\Pagination\\OffsetPagination::getPaginator<\/a>"],[100,1,"<a href=\"src\/Pagination\/PaginationContext.php.html#28\">Yiisoft\\Yii\\DataView\\Pagination\\PaginationContext::__construct<\/a>"],[100,2,"<a href=\"src\/Pagination\/PaginationContext.php.html#45\">Yiisoft\\Yii\\DataView\\Pagination\\PaginationContext::createUrl<\/a>"],[100,2,"<a href=\"src\/Pagination\/PaginatorNotSetException.php.html#20\">Yiisoft\\Yii\\DataView\\Pagination\\PaginatorNotSetException::__construct<\/a>"],[100,1,"<a href=\"src\/Pagination\/PaginatorNotSetException.php.html#26\">Yiisoft\\Yii\\DataView\\Pagination\\PaginatorNotSetException::getName<\/a>"],[100,1,"<a href=\"src\/Pagination\/PaginatorNotSetException.php.html#31\">Yiisoft\\Yii\\DataView\\Pagination\\PaginatorNotSetException::getSolution<\/a>"],[0,1,"<a href=\"src\/Pagination\/PaginatorNotSupportedException.php.html#22\">Yiisoft\\Yii\\DataView\\Pagination\\PaginatorNotSupportedException::__construct<\/a>"],[100,1,"<a href=\"src\/UrlConfig.php.html#32\">Yiisoft\\Yii\\DataView\\UrlConfig::__construct<\/a>"],[0,1,"<a href=\"src\/UrlConfig.php.html#53\">Yiisoft\\Yii\\DataView\\UrlConfig::withPageParameterName<\/a>"],[0,1,"<a href=\"src\/UrlConfig.php.html#67\">Yiisoft\\Yii\\DataView\\UrlConfig::withPreviousPageParameterName<\/a>"],[0,1,"<a href=\"src\/UrlConfig.php.html#81\">Yiisoft\\Yii\\DataView\\UrlConfig::withPageSizeParameterName<\/a>"],[0,1,"<a href=\"src\/UrlConfig.php.html#95\">Yiisoft\\Yii\\DataView\\UrlConfig::withSortParameterName<\/a>"],[0,1,"<a href=\"src\/UrlConfig.php.html#113\">Yiisoft\\Yii\\DataView\\UrlConfig::withPageParameterType<\/a>"],[0,1,"<a href=\"src\/UrlConfig.php.html#131\">Yiisoft\\Yii\\DataView\\UrlConfig::withPreviousPageParameterType<\/a>"],[0,1,"<a href=\"src\/UrlConfig.php.html#149\">Yiisoft\\Yii\\DataView\\UrlConfig::withPageSizeParameterType<\/a>"],[0,1,"<a href=\"src\/UrlConfig.php.html#167\">Yiisoft\\Yii\\DataView\\UrlConfig::withSortParameterType<\/a>"],[0,1,"<a href=\"src\/UrlConfig.php.html#184\">Yiisoft\\Yii\\DataView\\UrlConfig::withArguments<\/a>"],[0,1,"<a href=\"src\/UrlConfig.php.html#199\">Yiisoft\\Yii\\DataView\\UrlConfig::withQueryParameters<\/a>"],[100,1,"<a href=\"src\/UrlConfig.php.html#211\">Yiisoft\\Yii\\DataView\\UrlConfig::getPageParameterName<\/a>"],[100,1,"<a href=\"src\/UrlConfig.php.html#221\">Yiisoft\\Yii\\DataView\\UrlConfig::getPreviousPageParameterName<\/a>"],[100,1,"<a href=\"src\/UrlConfig.php.html#231\">Yiisoft\\Yii\\DataView\\UrlConfig::getPageSizeParameterName<\/a>"],[100,1,"<a href=\"src\/UrlConfig.php.html#241\">Yiisoft\\Yii\\DataView\\UrlConfig::getSortParameterName<\/a>"],[100,1,"<a href=\"src\/UrlConfig.php.html#253\">Yiisoft\\Yii\\DataView\\UrlConfig::getPageParameterType<\/a>"],[100,1,"<a href=\"src\/UrlConfig.php.html#265\">Yiisoft\\Yii\\DataView\\UrlConfig::getPreviousPageParameterType<\/a>"],[100,1,"<a href=\"src\/UrlConfig.php.html#277\">Yiisoft\\Yii\\DataView\\UrlConfig::getPageSizeParameterType<\/a>"],[100,1,"<a href=\"src\/UrlConfig.php.html#289\">Yiisoft\\Yii\\DataView\\UrlConfig::getSortParameterType<\/a>"],[0,1,"<a href=\"src\/UrlConfig.php.html#301\">Yiisoft\\Yii\\DataView\\UrlConfig::getArguments<\/a>"],[0,1,"<a href=\"src\/UrlConfig.php.html#311\">Yiisoft\\Yii\\DataView\\UrlConfig::getQueryParameters<\/a>"],[0,13,"<a href=\"src\/UrlParametersFactory.php.html#35\">Yiisoft\\Yii\\DataView\\UrlParametersFactory::create<\/a>"],[100,1,"<a href=\"src\/YiiRouter\/ActionColumnUrlConfig.php.html#29\">Yiisoft\\Yii\\DataView\\YiiRouter\\ActionColumnUrlConfig::__construct<\/a>"],[100,1,"<a href=\"src\/YiiRouter\/ActionColumnUrlCreator.php.html#32\">Yiisoft\\Yii\\DataView\\YiiRouter\\ActionColumnUrlCreator::__construct<\/a>"],[82.35294117647058,5,"<a href=\"src\/YiiRouter\/ActionColumnUrlCreator.php.html#50\">Yiisoft\\Yii\\DataView\\YiiRouter\\ActionColumnUrlCreator::__invoke<\/a>"],[0,1,"<a href=\"src\/YiiRouter\/UrlCreator.php.html#23\">Yiisoft\\Yii\\DataView\\YiiRouter\\UrlCreator::__construct<\/a>"],[0,1,"<a href=\"src\/YiiRouter\/UrlCreator.php.html#37\">Yiisoft\\Yii\\DataView\\YiiRouter\\UrlCreator::__invoke<\/a>"],[0,1,"<a href=\"src\/YiiRouter\/UrlParameterProvider.php.html#22\">Yiisoft\\Yii\\DataView\\YiiRouter\\UrlParameterProvider::__construct<\/a>"],[0,5,"<a href=\"src\/YiiRouter\/UrlParameterProvider.php.html#41\">Yiisoft\\Yii\\DataView\\YiiRouter\\UrlParameterProvider::get<\/a>"],[0,1,"<a href=\"src\/PageSize\/PageSizeContextTrait.php.html#25\">Yiisoft\\Yii\\DataView\\PageSize\\PageSizeContextTrait::withContext<\/a>"],[0,2,"<a href=\"src\/PageSize\/PageSizeContextTrait.php.html#39\">Yiisoft\\Yii\\DataView\\PageSize\\PageSizeContextTrait::getContext<\/a>"],[100,1,"<a href=\"src\/Pagination\/PaginationContextTrait.php.html#25\">Yiisoft\\Yii\\DataView\\Pagination\\PaginationContextTrait::withContext<\/a>"],[66.66666666666666,2,"<a href=\"src\/Pagination\/PaginationContextTrait.php.html#39\">Yiisoft\\Yii\\DataView\\Pagination\\PaginationContextTrait::getContext<\/a>"]], 'Method Complexity'))
+      .transition()
+      .duration(500)
+      .call(chart);
+
+    nv.utils.windowResize(chart.update);
+
+    return chart;
+  });
+
+  function getComplexityData(data, label) {
+    var values = [];
+    $.each(data, function(key) {
+      var value = Math.round(data[key][0]*100) / 100;
+      values.push({
+        x: value,
+        y: data[key][1],
+        class: data[key][2],
+        size: 0.05,
+        shape: 'diamond'
+      });
+    });
+
+    return [
+      {
+        key: label,
+        values: values,
+        color: "#4572A7"
+      }
+    ];
+  }
+});
+  </script>
+ </body>
+</html>
