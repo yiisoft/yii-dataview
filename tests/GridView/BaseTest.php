@@ -703,4 +703,54 @@ final class BaseTest extends TestCase
 
         $this->assertStringNotContainsString('sort=', $output);
     }
+
+    public function testEmptyCellAttributes(): void
+    {
+        $attributes = ['class' => 'empty-cell', 'data-test' => 'test-value'];
+
+        $html = GridView::widget()
+            ->id('w1-grid')
+            ->emptyCellAttributes($attributes)
+            ->columns(
+                new SerialColumn(),
+                new DataColumn('id'),
+                new DataColumn('name'),
+                new DataColumn('age'),
+            )
+            ->dataReader($this->createOffsetPaginator([
+                [
+                    'id' => 1,
+                    'name' => '',
+                    'age' => 42,
+                ],
+            ], 10))
+            ->render();
+
+        Assert::equalsWithoutLE(
+            <<<HTML
+            <div id="w1-grid">
+            <table>
+            <thead>
+            <tr>
+            <th>#</th>
+            <th>Id</th>
+            <th>Name</th>
+            <th>Age</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+            <td>1</td>
+            <td>1</td>
+            <td class="empty-cell" data-test="test-value">&nbsp;</td>
+            <td>42</td>
+            </tr>
+            </tbody>
+            </table>
+            <div>Page <b>1</b> of <b>1</b></div>
+            </div>
+            HTML,
+            $html
+        );
+    }
 }
