@@ -180,6 +180,8 @@ final class BaseTest extends TestCase
 
     public function testEmptyCell(): void
     {
+        $attributes = ['class' => 'empty-cell'];
+
         Assert::equalsWithoutLE(
             <<<HTML
             <div id="w1-grid">
@@ -191,7 +193,7 @@ final class BaseTest extends TestCase
             </thead>
             <tbody>
             <tr>
-            <td>Empty cell</td>
+            <td class="empty-cell">Empty cell</td>
             </tr>
             </tbody>
             </table>
@@ -200,7 +202,7 @@ final class BaseTest extends TestCase
             HTML,
             GridView::widget()
                 ->columns(new DataColumn('id'))
-                ->emptyCell('Empty cell')
+                ->emptyCell('Empty cell', $attributes)
                 ->id('w1-grid')
                 ->dataReader($this->createOffsetPaginator([['id' => '']], 10))
                 ->render()
