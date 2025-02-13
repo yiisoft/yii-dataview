@@ -29,7 +29,6 @@ use Yiisoft\Yii\DataView\Column\SortableColumnInterface;
 use Yiisoft\Yii\DataView\Filter\Factory\IncorrectValueException;
 
 use function array_key_exists;
-use function call_user_func;
 use function call_user_func_array;
 use function is_callable;
 
@@ -42,17 +41,20 @@ use function is_callable;
  * The look and feel of a grid view can be customized using many properties.
  *
  * @psalm-import-type UrlCreator from BaseListView
- * @psalm-type BodyRowAttributes = array|(Closure(array|object, BodyRowContext): array)|(array<array-key, Closure(array|object, BodyRowContext): mixed>)
+ * @psalm-type TBodyRowAttributes = array|(Closure(array|object, BodyRowContext): array)|(array<array-key, Closure(array|object, BodyRowContext): mixed>)
+ * @psalm-type TBeforeAfterRowClosure = Closure(array|object, array-key, int, GridView): (Tr|null)
  */
 final class GridView extends BaseListView
 {
     /**
      * @var Closure|null Callback executed after rendering each data row. The Result is appended after the row.
+     * @psalm-var TBeforeAfterRowClosure|null
      */
     private Closure|null $afterRowCallback = null;
 
     /**
      * @var Closure|null Callback executed before rendering each data row. The Result is prepended before the row.
+     * @psalm-var TBeforeAfterRowClosure|null
      */
     private Closure|null $beforeRowCallback = null;
 
@@ -103,7 +105,7 @@ final class GridView extends BaseListView
 
     /**
      * @var array|Closure HTML attributes for body rows.
-     * @psalm-var BodyRowAttributes
+     * @psalm-var TBodyRowAttributes
      */
     private Closure|array $bodyRowAttributes = [];
 
@@ -322,6 +324,8 @@ final class GridView extends BaseListView
      * - or `null` if no additional row should be rendered
      *
      * @return self New instance with the after row callback.
+     *
+     * @psalm-param TBeforeAfterRowClosure|null $callback
      */
     public function afterRow(Closure|null $callback): self
     {
@@ -350,6 +354,8 @@ final class GridView extends BaseListView
      * - or `null` if no additional row should be rendered
      *
      * @return self New instance with the before row callback.
+     *
+     * @psalm-param TBeforeAfterRowClosure|null $callback
      */
     public function beforeRow(Closure|null $callback): self
     {
@@ -504,7 +510,7 @@ final class GridView extends BaseListView
      * function (array|object $data, BodyRowContext $context): mixed
      * ```
      *
-     * @psalm-param BodyRowAttributes $attributes
+     * @psalm-param TBodyRowAttributes $attributes
      *
      * @return self New instance with the body row attributes.
      */
@@ -881,8 +887,7 @@ final class GridView extends BaseListView
         $index = 0;
         foreach ($items as $key => $value) {
             if ($this->beforeRowCallback !== null) {
-                /** @var Tr|null $row */
-                $row = call_user_func($this->beforeRowCallback, $value, $key, $index, $this);
+                $row = ($this->beforeRowCallback)($value, $key, $index, $this);
                 if (!empty($row)) {
                     $rows[] = $row;
                 }
@@ -906,8 +911,7 @@ final class GridView extends BaseListView
             $rows[] = Html::tr($bodyRowAttributes)->cells(...$tags);
 
             if ($this->afterRowCallback !== null) {
-                /** @var Tr|null $row */
-                $row = call_user_func($this->afterRowCallback, $value, $key, $index, $this);
+                $row = ($this->afterRowCallback)($value, $key, $index, $this);
                 if (!empty($row)) {
                     $rows[] = $row;
                 }
@@ -998,7 +1002,7 @@ final class GridView extends BaseListView
      *
      * @return array The prepared attributes.
      *
-     * @psalm-param BodyRowAttributes $attributes
+     * @psalm-param TBodyRowAttributes $attributes
      */
     private function prepareBodyRowAttributes(array|Closure $attributes, BodyRowContext $context): array
     {
