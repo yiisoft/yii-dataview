@@ -4,12 +4,13 @@ declare(strict_types=1);
 
 namespace Yiisoft\Yii\DataView\Column;
 
-use Stringable;
 use Yiisoft\Html\Html;
 use Yiisoft\Yii\DataView\Column\Base\Cell;
 use Yiisoft\Yii\DataView\Column\Base\DataContext;
 use Yiisoft\Yii\DataView\Column\Base\GlobalContext;
 use Yiisoft\Yii\DataView\Column\Base\HeaderContext;
+
+use function array_key_exists;
 
 /**
  * `CheckboxColumnRenderer` renders checkbox inputs in a grid column.
@@ -54,9 +55,9 @@ final class CheckboxColumnRenderer implements ColumnRendererInterface
 
         $input = Html::checkbox($name, $value, $inputAttributes);
 
-        $contentClosure = $column->content;
-        /** @var string|Stringable $content */
-        $content = $contentClosure === null ? $input : $contentClosure($input, $context);
+        $content = $column->content === null
+            ? $input
+            : ($column->content)($input, $context);
 
         return $cell
             ->addAttributes($column->bodyAttributes)

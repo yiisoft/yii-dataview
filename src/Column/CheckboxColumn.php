@@ -5,9 +5,14 @@ declare(strict_types=1);
 namespace Yiisoft\Yii\DataView\Column;
 
 use Closure;
+use Stringable;
+use Yiisoft\Html\Tag\Input\Checkbox;
+use Yiisoft\Yii\DataView\Column\Base\DataContext;
 
 /**
  * `CheckboxColumn` displays a column of checkboxes in a grid view.
+ *
+ * @psalm-type TContentClosure = Closure(Checkbox, DataContext): (string|Stringable)
  */
 final class CheckboxColumn implements ColumnInterface
 {
@@ -23,8 +28,10 @@ final class CheckboxColumn implements ColumnInterface
      * @param bool $multiple Whether to allow multiple selection. If true, checkbox names will be
      * an array like `name[]`; if false, checkbox names will be single strings.
      * @param Closure|null $content Closure for generating custom checkbox content. If set, it should have
-     * the signature: `function(array|object $data, DataContext $context): string`.
+     * the signature: `function(Checkbox $input, DataContext $context): string|Stringable`.
      * @param bool $visible Whether the column is visible.
+     *
+     * @psalm-param TContentClosure|null $content
      */
     public function __construct(
         public readonly ?string $header = null,

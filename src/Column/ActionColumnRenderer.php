@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Yiisoft\Yii\DataView\Column;
 
 use Closure;
+use Stringable;
 use Yiisoft\Html\Html;
 use Yiisoft\Yii\DataView\Column\Base\Cell;
 use Yiisoft\Yii\DataView\Column\Base\GlobalContext;
@@ -157,42 +158,25 @@ final class ActionColumnRenderer implements ColumnRendererInterface
             return $button($url);
         }
 
-        if ($button->content instanceof Closure) {
-            $closure = $button->content;
-            /** @var string $content */
-            $content = $closure($context->data, $context);
-        } else {
-            $content = $button->content;
-        }
+        /** @var string|Stringable $content */
+        $content = $button->content instanceof Closure
+            ? ($button->content)($context->data, $context)
+            : $button->content;
 
-        if ($button->url === null) {
-            $url = $this->createUrl($name, $context);
-        } elseif ($button->url instanceof Closure) {
-            $closure = $button->url;
-            /** @var string $url */
-            $url = $closure($context->data, $context);
-        } else {
-            $url = $button->url;
-        }
+        $url = $button->url instanceof Closure
+            ? ($button->url)($context->data, $context)
+            : ($button->url ?? $this->createUrl($name, $context));
 
-        if ($button->attributes instanceof Closure) {
-            $closure = $button->attributes;
-            /** @var array $attributes */
-            $attributes = $closure($context->data, $context);
-        } else {
-            $attributes = $button->attributes ?? [];
-        }
+        $attributes = $button->attributes instanceof Closure
+            ? ($button->attributes)($context->data, $context)
+            : ($button->attributes ?? []);
         if (!$button->overrideAttributes && !empty($this->buttonAttributes)) {
             $attributes = array_merge($this->buttonAttributes, $attributes);
         }
 
-        if ($button->class instanceof Closure) {
-            $closure = $button->class;
-            /** @var array<array-key,string|null>|string|null $class */
-            $class = $closure($context->data, $context);
-        } else {
-            $class = $button->class;
-        }
+        $class = $button->class instanceof Closure
+            ? ($button->class)($context->data, $context)
+            : $button->class;
 
         if ($class === false) {
             Html::addCssClass($attributes, $this->buttonClass);
@@ -207,7 +191,7 @@ final class ActionColumnRenderer implements ColumnRendererInterface
             $attributes['title'] = $button->title;
         }
 
-        return (string) Html::a($content, $url, $attributes);
+        return Html::a($content, $url, $attributes)->render();
     }
 
     /**
