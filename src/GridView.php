@@ -444,7 +444,7 @@ final class GridView extends BaseListView
      *
      * @return self New instance with the footer section visibility setting.
      */
-    public function enableFooter(bool $enabled): self
+    public function enableFooter(bool $enabled = true): self
     {
         $new = clone $this;
         $new->isFooterEnabled = $enabled;
