@@ -71,7 +71,7 @@ final class GridView extends BaseListView
     /**
      * @var bool Whether column grouping is enabled.
      */
-    private bool $isColumnGroupingEnabled = false;
+    private bool $columnGrouping = false;
 
     /**
      * @var string HTML content for empty cells.
@@ -398,10 +398,10 @@ final class GridView extends BaseListView
      *
      * @return self New instance with the column grouping enabled.
      */
-    public function enableColumnGrouping(bool $enabled = true): self
+    public function columnGrouping(bool $enabled = true): self
     {
         $new = clone $this;
-        $new->isColumnGroupingEnabled = $enabled;
+        $new->columnGrouping = $enabled;
         return $new;
     }
 
@@ -444,7 +444,7 @@ final class GridView extends BaseListView
      *
      * @return self New instance with the footer section visibility setting.
      */
-    public function enableFooter(bool $enabled): self
+    public function enableFooter(bool $enabled = true): self
     {
         $new = clone $this;
         $new->isFooterEnabled = $enabled;
@@ -814,7 +814,7 @@ final class GridView extends BaseListView
             $filterRow = null;
         }
 
-        if ($this->isColumnGroupingEnabled) {
+        if ($this->columnGrouping) {
             $tags = [];
             foreach ($columns as $i => $column) {
                 $cell = $renderers[$i]->renderColumn($column, new Cell(), $globalContext);
@@ -842,7 +842,7 @@ final class GridView extends BaseListView
                 $this->sortableLinkDescClass,
                 $this->keepPageOnSort ? $pageToken : null,
                 $pageSize,
-                $this->enableMultiSort,
+                $this->multiSort,
                 $this->urlConfig,
                 $this->urlCreator,
                 $this->translator,

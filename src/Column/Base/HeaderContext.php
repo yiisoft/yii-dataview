@@ -46,7 +46,7 @@ final class HeaderContext
      * @param string|null $sortableLinkDescClass CSS class for descending sort links.
      * @param PageToken|null $pageToken Current page token for pagination.
      * @param int|null $pageSize Number of items per page.
-     * @param bool $enableMultiSort Whether multiple column sorting is enabled.
+     * @param bool $multiSort Whether multiple column sorting is enabled.
      * @param UrlConfig $urlConfig URL configuration settings.
      * @param UrlCreator|null $urlCreator Callback for creating sort URLs.
      * @param TranslatorInterface $translator Translator service for header content.
@@ -75,7 +75,7 @@ final class HeaderContext
         public readonly ?string $sortableLinkDescClass,
         private readonly ?PageToken $pageToken,
         private readonly int|null $pageSize,
-        private readonly bool $enableMultiSort,
+        private readonly bool $multiSort,
         private readonly UrlConfig $urlConfig,
         private $urlCreator,
         private readonly TranslatorInterface $translator,
@@ -177,7 +177,7 @@ final class HeaderContext
         $order = $sort->getOrder();
 
         if (isset($order[$property])) {
-            if ($this->enableMultiSort) {
+            if ($this->multiSort) {
                 if ($order[$property] === 'asc') {
                     $order[$property] = 'desc';
                 } elseif (!empty($originalOrder) && count($order) === 1) {
@@ -196,7 +196,7 @@ final class HeaderContext
             } else {
                 unset($order[$property]);
             }
-        } elseif ($this->enableMultiSort) {
+        } elseif ($this->multiSort) {
             $order[$property] = 'asc';
         } else {
             $order = [$property => 'asc'];
