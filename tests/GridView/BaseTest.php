@@ -180,6 +180,8 @@ final class BaseTest extends TestCase
 
     public function testEmptyCell(): void
     {
+        $attributes = ['class' => 'empty-cell'];
+
         Assert::equalsWithoutLE(
             <<<HTML
             <div id="w1-grid">
@@ -191,7 +193,7 @@ final class BaseTest extends TestCase
             </thead>
             <tbody>
             <tr>
-            <td>Empty cell</td>
+            <td class="empty-cell">Empty cell</td>
             </tr>
             </tbody>
             </table>
@@ -200,7 +202,7 @@ final class BaseTest extends TestCase
             HTML,
             GridView::widget()
                 ->columns(new DataColumn('id'))
-                ->emptyCell('Empty cell')
+                ->emptyCell('Empty cell', $attributes)
                 ->id('w1-grid')
                 ->dataReader($this->createOffsetPaginator([['id' => '']], 10))
                 ->render()
@@ -702,5 +704,266 @@ final class BaseTest extends TestCase
             ->render();
 
         $this->assertStringNotContainsString('sort=', $output);
+    }
+
+    public function testEmptyCellAttributes(): void
+    {
+        $attributes = ['class' => 'empty-cell', 'data-test' => 'test-value'];
+
+        $html = GridView::widget()
+            ->id('w1-grid')
+            ->emptyCellAttributes($attributes)
+            ->columns(
+                new SerialColumn(),
+                new DataColumn('id'),
+                new DataColumn('name'),
+                new DataColumn('age'),
+            )
+            ->dataReader($this->createOffsetPaginator([
+                [
+                    'id' => 1,
+                    'name' => '',
+                    'age' => 42,
+                ],
+            ], 10))
+            ->render();
+
+        Assert::equalsWithoutLE(
+            <<<HTML
+            <div id="w1-grid">
+            <table>
+            <thead>
+            <tr>
+            <th>#</th>
+            <th>Id</th>
+            <th>Name</th>
+            <th>Age</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+            <td>1</td>
+            <td>1</td>
+            <td class="empty-cell" data-test="test-value">&nbsp;</td>
+            <td>42</td>
+            </tr>
+            </tbody>
+            </table>
+            <div>Page <b>1</b> of <b>1</b></div>
+            </div>
+            HTML,
+            $html
+        );
+    }
+
+    public function testAddTableClass(): void
+    {
+        $reader = new IterableDataReader($this->data);
+        $paginator = $this->createOffsetPaginator($this->data, 10);
+
+        $gridView = GridView::widget()
+            ->dataReader($paginator)
+            ->columns(
+                new DataColumn(property: 'id'),
+                new DataColumn(property: 'name')
+            );
+
+        $newGridView = $gridView->addTableClass('test-class', 'another-class');
+
+        // Assert original instance not modified
+        $this->assertStringNotContainsString('test-class', $gridView->render());
+
+        // Assert new instance has classes
+        $html = $newGridView->render();
+        $this->assertStringContainsString('test-class', $html);
+        $this->assertStringContainsString('another-class', $html);
+    }
+
+    public function testTableClass(): void
+    {
+        $paginator = $this->createOffsetPaginator($this->data, 10);
+
+        $gridView = GridView::widget()
+            ->dataReader($paginator)
+            ->columns(
+                new DataColumn(property: 'id'),
+                new DataColumn(property: 'name')
+            )
+            ->addTableClass('initial-class');
+
+        $newGridView = $gridView->tableClass('test-class', 'another-class', null);
+
+        // Assert immutability
+        $this->assertNotSame($gridView, $newGridView);
+
+        // Assert original instance still has initial class
+        $html = $gridView->render();
+        $this->assertStringContainsString('initial-class', $html);
+        $this->assertStringNotContainsString('test-class', $html);
+
+        // Assert new instance has new classes and old class is removed
+        $html = $newGridView->render();
+        $this->assertStringContainsString('test-class', $html);
+        $this->assertStringContainsString('another-class', $html);
+        $this->assertStringNotContainsString('initial-class', $html);
+    }
+
+    public function testTbodyAttributes(): void
+    {
+        $paginator = $this->createOffsetPaginator($this->data, 10);
+
+        $gridView = GridView::widget()
+            ->dataReader($paginator)
+            ->columns(
+                new DataColumn(property: 'id'),
+                new DataColumn(property: 'name')
+            );
+
+        $newGridView = $gridView->tbodyAttributes([
+            'class' => 'tbody-class',
+            'data-test' => 'test-value',
+            'id' => 'test-tbody',
+        ]);
+
+        // Assert immutability
+        $this->assertNotSame($gridView, $newGridView);
+
+        // Assert original instance doesn't have attributes
+        $html = $gridView->render();
+        $this->assertStringNotContainsString('tbody-class', $html);
+        $this->assertStringNotContainsString('data-test', $html);
+        $this->assertStringNotContainsString('test-tbody', $html);
+
+        // Assert new instance has all attributes
+        $html = $newGridView->render();
+        $this->assertStringContainsString('tbody-class', $html);
+        $this->assertStringContainsString('data-test="test-value"', $html);
+        $this->assertStringContainsString('id="test-tbody"', $html);
+    }
+
+    public function testAddTbodyClass(): void
+    {
+        $paginator = $this->createOffsetPaginator($this->data, 10);
+
+        $gridView = GridView::widget()
+            ->dataReader($paginator)
+            ->columns(
+                new DataColumn(property: 'id'),
+                new DataColumn(property: 'name')
+            )
+            ->tbodyAttributes(['class' => 'initial-class']);
+
+        $newGridView = $gridView->addTbodyClass('test-class', 'another-class', null);
+
+        // Assert immutability
+        $this->assertNotSame($gridView, $newGridView);
+
+        // Assert original instance still has only initial class
+        $html = $gridView->render();
+        $this->assertStringContainsString('initial-class', $html);
+        $this->assertStringNotContainsString('test-class', $html);
+        $this->assertStringNotContainsString('another-class', $html);
+
+        // Assert new instance has all classes including the initial one
+        $html = $newGridView->render();
+        $this->assertStringContainsString('initial-class', $html);
+        $this->assertStringContainsString('test-class', $html);
+        $this->assertStringContainsString('another-class', $html);
+    }
+
+    public function testTbodyClass(): void
+    {
+        $paginator = $this->createOffsetPaginator($this->data, 10);
+
+        $gridView = GridView::widget()
+            ->dataReader($paginator)
+            ->columns(
+                new DataColumn(property: 'id'),
+                new DataColumn(property: 'name')
+            )
+            ->tbodyAttributes(['class' => 'initial-class']);
+
+        $newGridView = $gridView->tbodyClass('test-class', 'another-class', null);
+
+        // Assert immutability
+        $this->assertNotSame($gridView, $newGridView);
+
+        // Assert original instance still has initial class
+        $html = $gridView->render();
+        $this->assertStringContainsString('initial-class', $html);
+        $this->assertStringNotContainsString('test-class', $html);
+        $this->assertStringNotContainsString('another-class', $html);
+
+        // Assert new instance has new classes and old class is removed
+        $html = $newGridView->render();
+        $this->assertStringContainsString('test-class', $html);
+        $this->assertStringContainsString('another-class', $html);
+        $this->assertStringNotContainsString('initial-class', $html);
+    }
+
+    public function testHeaderCellAttributes(): void
+    {
+        $paginator = $this->createOffsetPaginator($this->data, 10);
+
+        $gridView = GridView::widget()
+            ->dataReader($paginator)
+            ->columns(
+                new DataColumn(property: 'id'),
+                new DataColumn(property: 'name')
+            );
+
+        $newGridView = $gridView->headerCellAttributes([
+            'class' => 'header-class',
+            'data-test' => 'test-value',
+            'scope' => 'col',
+        ]);
+
+        // Assert immutability
+        $this->assertNotSame($gridView, $newGridView);
+
+        // Assert original instance doesn't have attributes
+        $html = $gridView->render();
+        $this->assertStringNotContainsString('header-class', $html);
+        $this->assertStringNotContainsString('data-test="test-value"', $html);
+        $this->assertStringNotContainsString('scope="col"', $html);
+
+        // Assert new instance has all attributes
+        $html = $newGridView->render();
+        $this->assertStringContainsString('header-class', $html);
+        $this->assertStringContainsString('data-test="test-value"', $html);
+        $this->assertStringContainsString('scope="col"', $html);
+    }
+
+    public function testBodyCellAttributes(): void
+    {
+        $paginator = $this->createOffsetPaginator($this->data, 10);
+
+        $gridView = GridView::widget()
+            ->dataReader($paginator)
+            ->columns(
+                new DataColumn(property: 'id'),
+                new DataColumn(property: 'name')
+            );
+
+        $newGridView = $gridView->bodyCellAttributes([
+            'class' => 'cell-class',
+            'data-test' => 'test-value',
+            'title' => 'Cell title',
+        ]);
+
+        // Assert immutability
+        $this->assertNotSame($gridView, $newGridView);
+
+        // Assert original instance doesn't have attributes
+        $html = $gridView->render();
+        $this->assertStringNotContainsString('cell-class', $html);
+        $this->assertStringNotContainsString('data-test="test-value"', $html);
+        $this->assertStringNotContainsString('title="Cell title"', $html);
+
+        // Assert new instance has all attributes
+        $html = $newGridView->render();
+        $this->assertStringContainsString('cell-class', $html);
+        $this->assertStringContainsString('data-test="test-value"', $html);
+        $this->assertStringContainsString('title="Cell title"', $html);
     }
 }
