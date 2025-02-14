@@ -64,6 +64,26 @@ final class ImmutableTest extends TestCase
         $this->assertNotSame($gridView, $gridView->enableHeader(false));
         $this->assertNotSame($gridView, $gridView->bodyRowAttributes([]));
         $this->assertNotSame($gridView, $gridView->tableAttributes([]));
+        $this->assertNotSame($gridView, $gridView->addColumnRendererConfigs([]));
+        $this->assertNotSame($gridView, $gridView->filterCellAttributes([]));
+        $this->assertNotSame($gridView, $gridView->filterCellInvalidClass(null));
+        $this->assertNotSame($gridView, $gridView->filterErrorsContainerAttributes([]));
+        $this->assertNotSame($gridView, $gridView->keepPageOnSort(true));
+        $this->assertNotSame($gridView, $gridView->emptyCellAttributes([]));
+        $this->assertNotSame($gridView, $gridView->addTableClass(null));
+        $this->assertNotSame($gridView, $gridView->tableClass(null));
+        $this->assertNotSame($gridView, $gridView->tbodyAttributes([]));
+        $this->assertNotSame($gridView, $gridView->addTbodyClass(null));
+        $this->assertNotSame($gridView, $gridView->tbodyClass(null));
+        $this->assertNotSame($gridView, $gridView->headerCellAttributes([]));
+        $this->assertNotSame($gridView, $gridView->bodyCellAttributes([]));
+        $this->assertNotSame($gridView, $gridView->sortableLinkAttributes([]));
+        $this->assertNotSame($gridView, $gridView->sortableHeaderPrepend(''));
+        $this->assertNotSame($gridView, $gridView->sortableHeaderAppend(''));
+        $this->assertNotSame($gridView, $gridView->sortableHeaderAscPrepend(''));
+        $this->assertNotSame($gridView, $gridView->sortableHeaderAscAppend(''));
+        $this->assertNotSame($gridView, $gridView->sortableHeaderDescPrepend(''));
+        $this->assertNotSame($gridView, $gridView->sortableHeaderDescAppend(''));
     }
 
     private function createBaseListView(): DataView\BaseListView
