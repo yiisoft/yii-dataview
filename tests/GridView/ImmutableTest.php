@@ -42,6 +42,21 @@ final class ImmutableTest extends TestCase
         $this->assertNotSame($baseListView, $baseListView->toolbar(''));
         $this->assertNotSame($baseListView, $baseListView->urlArguments([]));
         $this->assertNotSame($baseListView, $baseListView->urlQueryParameters([]));
+        $this->assertNotSame($baseListView, $baseListView->pageSizeTag(null));
+        $this->assertNotSame($baseListView, $baseListView->pageSizeAttributes([]));
+        $this->assertNotSame($baseListView, $baseListView->pageSizeTemplate(null));
+        $this->assertNotSame($baseListView, $baseListView->pageSizeWidget(null));
+        $this->assertNotSame($baseListView, $baseListView->pageSizeParameterName(''));
+        $this->assertNotSame($baseListView, $baseListView->pageParameterName(''));
+        $this->assertNotSame($baseListView, $baseListView->previousPageParameterName(''));
+        $this->assertNotSame($baseListView, $baseListView->urlParameterProvider(null));
+        $this->assertNotSame($baseListView, $baseListView->enableMultiSort());
+        $this->assertNotSame($baseListView, $baseListView->ignoreMissingPage(true));
+        $this->assertNotSame($baseListView, $baseListView->pageNotFoundExceptionCallback(null));
+        $this->assertNotSame($baseListView, $baseListView->urlCreator(null));
+        $this->assertNotSame($baseListView, $baseListView->offsetPaginationConfig([]));
+        $this->assertNotSame($baseListView, $baseListView->keysetPaginationConfig([]));
+        $this->assertNotSame($baseListView, $baseListView->pageSizeConstraint(true));
     }
 
     /**
