@@ -842,7 +842,7 @@ final class GridView extends BaseListView
                 $this->sortableLinkDescClass,
                 $this->keepPageOnSort ? $pageToken : null,
                 $pageSize,
-                $this->enableMultiSort,
+                $this->multiSort,
                 $this->urlConfig,
                 $this->urlCreator,
                 $this->translator,
