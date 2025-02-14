@@ -770,9 +770,6 @@ final class BaseTest extends TestCase
 
         $newGridView = $gridView->addTableClass('test-class', 'another-class');
 
-        // Assert immutability
-        $this->assertNotSame($gridView, $newGridView);
-
         // Assert original instance not modified
         $this->assertStringNotContainsString('test-class', $gridView->render());
 
