@@ -793,9 +793,6 @@ final class BaseTest extends TestCase
 
         $newGridView = $gridView->tableClass('test-class', 'another-class', null);
 
-        // Assert immutability
-        $this->assertNotSame($gridView, $newGridView);
-
         // Assert original instance still has initial class
         $html = $gridView->render();
         $this->assertStringContainsString('initial-class', $html);
@@ -825,9 +822,6 @@ final class BaseTest extends TestCase
             'id' => 'test-tbody',
         ]);
 
-        // Assert immutability
-        $this->assertNotSame($gridView, $newGridView);
-
         // Assert original instance doesn't have attributes
         $html = $gridView->render();
         $this->assertStringNotContainsString('tbody-class', $html);
@@ -855,9 +849,6 @@ final class BaseTest extends TestCase
 
         $newGridView = $gridView->addTbodyClass('test-class', 'another-class', null);
 
-        // Assert immutability
-        $this->assertNotSame($gridView, $newGridView);
-
         // Assert original instance still has only initial class
         $html = $gridView->render();
         $this->assertStringContainsString('initial-class', $html);
@@ -884,9 +875,6 @@ final class BaseTest extends TestCase
             ->tbodyAttributes(['class' => 'initial-class']);
 
         $newGridView = $gridView->tbodyClass('test-class', 'another-class', null);
-
-        // Assert immutability
-        $this->assertNotSame($gridView, $newGridView);
 
         // Assert original instance still has initial class
         $html = $gridView->render();
@@ -918,9 +906,6 @@ final class BaseTest extends TestCase
             'scope' => 'col',
         ]);
 
-        // Assert immutability
-        $this->assertNotSame($gridView, $newGridView);
-
         // Assert original instance doesn't have attributes
         $html = $gridView->render();
         $this->assertStringNotContainsString('header-class', $html);
@@ -950,9 +935,6 @@ final class BaseTest extends TestCase
             'data-test' => 'test-value',
             'title' => 'Cell title',
         ]);
-
-        // Assert immutability
-        $this->assertNotSame($gridView, $newGridView);
 
         // Assert original instance doesn't have attributes
         $html = $gridView->render();

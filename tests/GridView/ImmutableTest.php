@@ -50,7 +50,7 @@ final class ImmutableTest extends TestCase
         $this->assertNotSame($baseListView, $baseListView->pageParameterName(''));
         $this->assertNotSame($baseListView, $baseListView->previousPageParameterName(''));
         $this->assertNotSame($baseListView, $baseListView->urlParameterProvider(null));
-        $this->assertNotSame($baseListView, $baseListView->enableMultiSort());
+        $this->assertNotSame($baseListView, $baseListView->multiSort());
         $this->assertNotSame($baseListView, $baseListView->ignoreMissingPage(true));
         $this->assertNotSame($baseListView, $baseListView->pageNotFoundExceptionCallback(null));
         $this->assertNotSame($baseListView, $baseListView->urlCreator(null));
