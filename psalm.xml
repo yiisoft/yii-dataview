@@ -4,6 +4,7 @@
     findUnusedBaselineEntry="true"
     findUnusedCode="false"
     resolveFromConfigFile="true"
+    strictBinaryOperands="false"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns="https://getpsalm.org/schema/config"
     xsi:schemaLocation="https://getpsalm.org/schema/config vendor/vimeo/psalm/config.xsd"
@@ -16,10 +17,10 @@
     </projectFiles>
 
     <issueHandlers>
-        <!-- Do not initialize properties to null.  -->
         <MixedAssignment errorLevel="suppress" />
         <PropertyNotSetInConstructor errorLevel="suppress" />
         <RedundantPropertyInitializationCheck errorLevel="suppress" />
         <RiskyTruthyFalsyComparison errorLevel="suppress" />
+        <MissingOverrideAttribute errorLevel="suppress" />
     </issueHandlers>
 </psalm>
