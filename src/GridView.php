@@ -324,14 +324,15 @@ final class GridView extends BaseListView
      * - or `null` if no additional row should be rendered
      *
      * @return self New instance with the after row callback.
-     *
-     * @psalm-param TBeforeAfterRowClosure|null $callback
      */
     public function afterRow(Closure|null $callback): self
     {
+        /**
+         * @psalm-var TBeforeAfterRowClosure|null $callback We intentionally don't use stricter types for `$callback`
+         * parameter in method to make it easier to use in userland.
+         */
         $new = clone $this;
         $new->afterRowCallback = $callback;
-
         return $new;
     }
 
@@ -354,14 +355,15 @@ final class GridView extends BaseListView
      * - or `null` if no additional row should be rendered
      *
      * @return self New instance with the before row callback.
-     *
-     * @psalm-param TBeforeAfterRowClosure|null $callback
      */
     public function beforeRow(Closure|null $callback): self
     {
+        /**
+         * @psalm-var TBeforeAfterRowClosure|null $callback We intentionally don't use stricter types for `$callback`
+         * parameter in method to make it easier to use in userland.
+         */
         $new = clone $this;
         $new->beforeRowCallback = $callback;
-
         return $new;
     }
 
@@ -510,12 +512,14 @@ final class GridView extends BaseListView
      * function (array|object $data, BodyRowContext $context): mixed
      * ```
      *
-     * @psalm-param TBodyRowAttributes $attributes
-     *
      * @return self New instance with the body row attributes.
      */
     public function bodyRowAttributes(Closure|array $attributes): self
     {
+        /**
+         * @psalm-var TBodyRowAttributes $attributes We intentionally don't use stricter types for `$attributes`
+         * parameter in method to make it easier to use in userland.
+         */
         $new = clone $this;
         $new->bodyRowAttributes = $attributes;
         return $new;
