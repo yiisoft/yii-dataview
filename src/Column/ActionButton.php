@@ -26,10 +26,10 @@ final class ActionButton
      * @param bool $overrideAttributes Whether to override default attributes with custom ones instead of merging.
      *
      * @template TData as array|object
-     * @psalm-param (Closure(TData=, DataContext=): string)|string|null $url
-     * @psalm-param (Closure(TData=, DataContext=): array)|array|null $attributes
-     * @psalm-param (Closure(TData=, DataContext=): (array<array-key, string|null>|string|null))|array<array-key,string|null>|false|string|null $class
-     * @psalm-param (Closure(TData=, DataContext=): (string|Stringable))|string|Stringable $content
+     * @psalm-param (Closure(TData, DataContext): string)|string|null $url
+     * @psalm-param (Closure(TData, DataContext): array)|array|null $attributes
+     * @psalm-param (Closure(TData, DataContext): (array<array-key, string|null>|string|null))|array<array-key,string|null>|false|string|null $class
+     * @psalm-param (Closure(TData, DataContext): (string|Stringable))|string|Stringable $content
      */
     public function __construct(
         public readonly Closure|string|Stringable $content = '',
