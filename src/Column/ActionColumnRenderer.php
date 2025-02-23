@@ -160,8 +160,8 @@ final class ActionColumnRenderer implements ColumnRendererInterface
 
         if ($button->content instanceof Closure) {
             /**
-             * @var string|Stringable $content We intentionally don't use stricter types for closure in `ActionButton` constructor to
-             * make it easier to use in userland.
+             * @psalm-suppress InvalidArgument
+             * @var string|Stringable $content
              */
             $content = ($button->content)($context->data, $context);
         } else {
@@ -170,8 +170,7 @@ final class ActionColumnRenderer implements ColumnRendererInterface
 
         if ($button->url instanceof Closure) {
             /**
-             * @var string $url We intentionally don't use stricter types for closure in `ActionButton` constructor to
-             * make it easier to use in userland.
+             * @psalm-suppress InvalidArgument
              */
             $url = ($button->url)($context->data, $context);
         } else {
@@ -180,8 +179,7 @@ final class ActionColumnRenderer implements ColumnRendererInterface
 
         if ($button->attributes instanceof Closure) {
             /**
-             * @var array $attributes We intentionally don't use stricter types for closure in `ActionButton` constructor to
-             * make it easier to use in userland.
+             * @psalm-suppress InvalidArgument
              */
             $attributes = ($button->attributes)($context->data, $context);
         } else {
@@ -193,8 +191,7 @@ final class ActionColumnRenderer implements ColumnRendererInterface
 
         if ($button->class instanceof Closure) {
             /**
-             * @var array<array-key, string|null>|string|null $class We intentionally don't use stricter types for closure
-             * in `ActionButton` constructor to make it easier to use in userland.
+             * @psalm-suppress InvalidArgument
              */
             $class = ($button->class)($context->data, $context);
         } else {

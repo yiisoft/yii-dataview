@@ -40,21 +40,21 @@ use function is_callable;
  *
  * The look and feel of a grid view can be customized using many properties.
  *
+ *
+ * @template TData as array|object
  * @psalm-import-type UrlCreator from BaseListView
- * @psalm-type TBodyRowAttributes = array|(Closure(array|object, BodyRowContext): array)|(array<array-key, Closure(array|object, BodyRowContext): mixed>)
- * @psalm-type TBeforeAfterRowClosure = Closure(array|object, array-key, int, GridView): (Tr|null)
  */
 final class GridView extends BaseListView
 {
     /**
      * @var Closure|null Callback executed after rendering each data row. The Result is appended after the row.
-     * @psalm-var TBeforeAfterRowClosure|null
+     * @psalm-var (Closure(TData, array-key, int, GridView): (Tr|null))|null
      */
     private Closure|null $afterRowCallback = null;
 
     /**
      * @var Closure|null Callback executed before rendering each data row. The Result is prepended before the row.
-     * @psalm-var TBeforeAfterRowClosure|null
+     * @psalm-var (Closure(TData, array-key, int, GridView): (Tr|null))|null
      */
     private Closure|null $beforeRowCallback = null;
 
@@ -105,7 +105,7 @@ final class GridView extends BaseListView
 
     /**
      * @var array|Closure HTML attributes for body rows.
-     * @psalm-var TBodyRowAttributes
+     * @psalm-var array|(Closure(TData, BodyRowContext): array)|(array<array-key, Closure(TData, BodyRowContext): mixed>)
      */
     private Closure|array $bodyRowAttributes = [];
 
@@ -324,13 +324,11 @@ final class GridView extends BaseListView
      * - or `null` if no additional row should be rendered
      *
      * @return self New instance with the after row callback.
+     *
+     * @psalm-param (Closure(TData, array-key, int, GridView): (Tr|null))|null $callback
      */
     public function afterRow(Closure|null $callback): self
     {
-        /**
-         * @psalm-var TBeforeAfterRowClosure|null $callback We intentionally don't use stricter types for `$callback`
-         * parameter in method to make it easier to use in userland.
-         */
         $new = clone $this;
         $new->afterRowCallback = $callback;
         return $new;
@@ -355,13 +353,11 @@ final class GridView extends BaseListView
      * - or `null` if no additional row should be rendered
      *
      * @return self New instance with the before row callback.
+     *
+     * @psalm-param (Closure(TData, array-key, int, GridView): (Tr|null))|null $callback
      */
     public function beforeRow(Closure|null $callback): self
     {
-        /**
-         * @psalm-var TBeforeAfterRowClosure|null $callback We intentionally don't use stricter types for `$callback`
-         * parameter in method to make it easier to use in userland.
-         */
         $new = clone $this;
         $new->beforeRowCallback = $callback;
         return $new;
@@ -512,14 +508,12 @@ final class GridView extends BaseListView
      * function (array|object $data, BodyRowContext $context): mixed
      * ```
      *
+     * @psalm-param array|(Closure(TData, BodyRowContext): array)|(array<array-key, Closure(TData, BodyRowContext): mixed>) $attributes
+     *
      * @return self New instance with the body row attributes.
      */
     public function bodyRowAttributes(Closure|array $attributes): self
     {
-        /**
-         * @psalm-var TBodyRowAttributes $attributes We intentionally don't use stricter types for `$attributes`
-         * parameter in method to make it easier to use in userland.
-         */
         $new = clone $this;
         $new->bodyRowAttributes = $attributes;
         return $new;
@@ -891,6 +885,9 @@ final class GridView extends BaseListView
         $index = 0;
         foreach ($items as $key => $value) {
             if ($this->beforeRowCallback !== null) {
+                /**
+                 * @psalm-suppress InvalidArgument
+                 */
                 $row = ($this->beforeRowCallback)($value, $key, $index, $this);
                 if (!empty($row)) {
                     $rows[] = $row;
@@ -915,6 +912,9 @@ final class GridView extends BaseListView
             $rows[] = Html::tr($bodyRowAttributes)->cells(...$tags);
 
             if ($this->afterRowCallback !== null) {
+                /**
+                 * @psalm-suppress InvalidArgument
+                 */
                 $row = ($this->afterRowCallback)($value, $key, $index, $this);
                 if (!empty($row)) {
                     $rows[] = $row;
@@ -1006,11 +1006,14 @@ final class GridView extends BaseListView
      *
      * @return array The prepared attributes.
      *
-     * @psalm-param TBodyRowAttributes $attributes
+     * @psalm-param array|(Closure(TData, BodyRowContext): array)|(array<array-key, Closure(TData, BodyRowContext): mixed>) $attributes
      */
     private function prepareBodyRowAttributes(array|Closure $attributes, BodyRowContext $context): array
     {
         if (is_callable($attributes)) {
+            /**
+             * @psalm-suppress InvalidArgument
+             */
             return $attributes($context->data, $context);
         }
 
