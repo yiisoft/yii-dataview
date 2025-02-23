@@ -40,7 +40,6 @@ use function is_callable;
  *
  * The look and feel of a grid view can be customized using many properties.
  *
- *
  * @template TData as array|object
  * @psalm-import-type UrlCreator from BaseListView
  */
