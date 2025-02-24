@@ -158,25 +158,45 @@ final class ActionColumnRenderer implements ColumnRendererInterface
             return $button($url);
         }
 
-        /** @var string|Stringable $content */
-        $content = $button->content instanceof Closure
-            ? ($button->content)($context->data, $context)
-            : $button->content;
+        if ($button->content instanceof Closure) {
+            /**
+             * @psalm-suppress InvalidArgument
+             * @var string|Stringable $content
+             */
+            $content = ($button->content)($context->data, $context);
+        } else {
+            $content = $button->content;
+        }
 
-        $url = $button->url instanceof Closure
-            ? ($button->url)($context->data, $context)
-            : ($button->url ?? $this->createUrl($name, $context));
+        if ($button->url instanceof Closure) {
+            /**
+             * @psalm-suppress InvalidArgument
+             */
+            $url = ($button->url)($context->data, $context);
+        } else {
+            $url = $button->url ?? $this->createUrl($name, $context);
+        }
 
-        $attributes = $button->attributes instanceof Closure
-            ? ($button->attributes)($context->data, $context)
-            : ($button->attributes ?? []);
+        if ($button->attributes instanceof Closure) {
+            /**
+             * @psalm-suppress InvalidArgument
+             */
+            $attributes = ($button->attributes)($context->data, $context);
+        } else {
+            $attributes = $button->attributes ?? [];
+        }
         if (!$button->overrideAttributes && !empty($this->buttonAttributes)) {
             $attributes = array_merge($this->buttonAttributes, $attributes);
         }
 
-        $class = $button->class instanceof Closure
-            ? ($button->class)($context->data, $context)
-            : $button->class;
+        if ($button->class instanceof Closure) {
+            /**
+             * @psalm-suppress InvalidArgument
+             */
+            $class = ($button->class)($context->data, $context);
+        } else {
+            $class = $button->class;
+        }
 
         if ($class === false) {
             Html::addCssClass($attributes, $this->buttonClass);

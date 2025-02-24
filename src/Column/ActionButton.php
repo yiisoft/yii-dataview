@@ -10,11 +10,6 @@ use Yiisoft\Yii\DataView\Column\Base\DataContext;
 
 /**
  * `ActionButton` represents a button in an action column of a grid.
- *
- * @psalm-type TContentClosure = Closure(array|object $data, DataContext $context): (string|Stringable)
- * @psalm-type TUrlClosure = Closure(array|object $data, DataContext $context): string
- * @psalm-type TAttributesClosure = Closure(array|object $data, DataContext $context): array
- * @psalm-type TClassClosure = Closure(array|object $data, DataContext $context): (array<array-key, string|null>|string|null)
  */
 final class ActionButton
 {
@@ -30,10 +25,11 @@ final class ActionButton
      * @param string|null $title Button title attribute.
      * @param bool $overrideAttributes Whether to override default attributes with custom ones instead of merging.
      *
-     * @psalm-param TContentClosure|string|Stringable $content
-     * @psalm-param TUrlClosure|string|null $url
-     * @psalm-param TAttributesClosure|array|null $attributes
-     * @psalm-param TClassClosure|array<array-key,string|null>|false|string|null $class
+     * @template TData as array|object
+     * @psalm-param (Closure(TData, DataContext): string)|string|null $url
+     * @psalm-param (Closure(TData, DataContext): array)|array|null $attributes
+     * @psalm-param (Closure(TData, DataContext): (array<array-key, string|null>|string|null))|array<array-key,string|null>|false|string|null $class
+     * @psalm-param (Closure(TData, DataContext): (string|Stringable))|string|Stringable $content
      */
     public function __construct(
         public readonly Closure|string|Stringable $content = '',
