@@ -76,13 +76,13 @@ final class UrlConfigTest extends TestCase
     public function testChaining(): void
     {
         $urlConfig = new UrlConfig();
-        
+
         $newConfig = $urlConfig
             ->withPageParameterName('p')
             ->withPageParameterType(UrlParameterType::PATH)
             ->withArguments(['controller' => 'site'])
             ->withQueryParameters(['q' => 'search']);
-        
+
         $this->assertSame('p', $newConfig->getPageParameterName());
         $this->assertSame(UrlParameterType::PATH, $newConfig->getPageParameterType());
         $this->assertSame(['controller' => 'site'], $newConfig->getArguments());

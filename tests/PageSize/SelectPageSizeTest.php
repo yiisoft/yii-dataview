@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Yiisoft\Yii\DataView\Tests\PageSize;
 
-use LogicException;
 use PHPUnit\Framework\TestCase;
 use Yiisoft\Yii\DataView\PageSize\PageSizeContext;
 use Yiisoft\Yii\DataView\PageSize\SelectPageSize;
