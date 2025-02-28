@@ -53,12 +53,12 @@ final class DropdownFilterTest extends TestCase
             'active' => 'Active',
             'inactive' => 'Inactive',
         ];
-        
+
         $filter = $filter->optionsData($options);
         $context = new Context('status', null, 'filter-form');
-        
+
         $html = $filter->renderFilter($context);
-        
+
         $this->assertStringContainsString('>Active<', $html);
         $this->assertStringContainsString('>Inactive<', $html);
         $this->assertStringContainsString('value="active"', $html);
@@ -69,10 +69,10 @@ final class DropdownFilterTest extends TestCase
     {
         $filter = new DropdownFilter();
         $filter = $filter->addAttributes(['class' => 'custom-select', 'data-test' => 'value']);
-        
+
         $context = new Context('status', null, 'filter-form');
         $html = $filter->renderFilter($context);
-        
+
         $this->assertStringContainsString('class="custom-select"', $html);
         $this->assertStringContainsString('data-test="value"', $html);
     }
@@ -81,10 +81,10 @@ final class DropdownFilterTest extends TestCase
     {
         $filter = new DropdownFilter();
         $filter = $filter->attributes(['class' => 'new-select', 'required' => true]);
-        
+
         $context = new Context('status', null, 'filter-form');
         $html = $filter->renderFilter($context);
-        
+
         $this->assertStringContainsString('class="new-select"', $html);
         $this->assertStringContainsString('required', $html);
     }

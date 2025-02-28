@@ -292,24 +292,24 @@ final class UrlParametersFactoryTest extends TestCase
             'sort' => null,
         ], $queryParameters);
     }
-    
+
     public function testCreateWithInstanceMethod(): void
     {
         // Create an instance of UrlParametersFactory
         $factory = new UrlParametersFactory();
-        
+
         $config = new UrlConfig(
             pageParameterType: UrlParameterType::QUERY,
             previousPageParameterType: UrlParameterType::QUERY,
             pageSizeParameterType: UrlParameterType::QUERY,
             sortParameterType: UrlParameterType::QUERY
         );
-        
+
         // Call the non-static method
         $result = $factory->createParameters(null, null, null, $config);
-        
+
         [$arguments, $queryParameters] = $result;
-        
+
         $this->assertSame([], $arguments);
         $this->assertSame([
             'page' => null,
