@@ -308,6 +308,10 @@ final class UrlParametersFactoryTest extends TestCase
         // Call the non-static method
         $result = $factory->createParameters(null, null, null, $config);
 
+
+        // Call the static method
+        $result = UrlParametersFactory::create(null, null, null, $config);
+
         [$arguments, $queryParameters] = $result;
 
         $this->assertSame([], $arguments);
