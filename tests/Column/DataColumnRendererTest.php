@@ -8,7 +8,6 @@ use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerInterface;
 use Yiisoft\Data\Reader\Iterable\IterableDataReader;
 use Yiisoft\Data\Reader\Sort;
-use Yiisoft\Html\Html;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\Validator\Validator;
 use Yiisoft\Yii\DataView\Column\Base\Cell;
@@ -35,7 +34,7 @@ final class DataColumnRendererTest extends TestCase
         $this->filterFactoryContainer = $this->createMock(ContainerInterface::class);
         $this->translator = $this->createMock(TranslatorInterface::class);
         $this->translator->method('translate')->willReturnArgument(0);
-        
+
         $this->dataReader = new IterableDataReader([
             ['id' => 1, 'name' => 'John', 'age' => 20],
             ['id' => 2, 'name' => 'Mary', 'age' => 21],
@@ -60,7 +59,7 @@ final class DataColumnRendererTest extends TestCase
         );
 
         $result = $renderer->renderColumn($column, $cell, $context);
-        
+
         $this->assertNotNull($result);
     }
 
@@ -68,9 +67,9 @@ final class DataColumnRendererTest extends TestCase
     {
         $column = new DataColumn('test', 'Test Header');
         $cell = new Cell();
-        
+
         $sort = Sort::any();
-        
+
         $context = new HeaderContext(
             $sort,
             $sort,
@@ -102,7 +101,7 @@ final class DataColumnRendererTest extends TestCase
         );
 
         $result = $renderer->renderHeader($column, $cell, $context);
-        
+
         $this->assertNotNull($result);
     }
 
@@ -111,7 +110,7 @@ final class DataColumnRendererTest extends TestCase
         $column = new DataColumn('name');
         $cell = new Cell();
         $data = ['id' => 1, 'name' => 'John Doe', 'age' => 20];
-        
+
         $context = new DataContext(
             $this->dataReader,
             $column,
@@ -126,7 +125,7 @@ final class DataColumnRendererTest extends TestCase
         );
 
         $result = $renderer->renderBody($column, $cell, $context);
-        
+
         $this->assertNotNull($result);
         $content = $result->getContent();
         $this->assertNotEmpty($content);
@@ -140,7 +139,7 @@ final class DataColumnRendererTest extends TestCase
             $this->filterFactoryContainer,
             new Validator()
         );
-        
+
         $result = $renderer->getOrderProperties($column);
         $this->assertEquals(['test' => 'test'], $result);
     }
