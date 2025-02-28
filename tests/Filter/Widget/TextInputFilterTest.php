@@ -10,6 +10,8 @@ use Yiisoft\Yii\DataView\Filter\Widget\TextInputFilter;
 
 /**
  * @covers \Yiisoft\Yii\DataView\Filter\Widget\TextInputFilter
+ * @covers \Yiisoft\Yii\DataView\Filter\Widget\Context
+ * @covers \Yiisoft\Yii\DataView\Filter\Widget\FilterWidget
  */
 final class TextInputFilterTest extends TestCase
 {

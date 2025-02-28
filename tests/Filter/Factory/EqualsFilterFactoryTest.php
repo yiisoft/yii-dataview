@@ -45,10 +45,12 @@ final class EqualsFilterFactoryTest extends TestCase
     public function testCreateWithNonEmptyNumericValue(): void
     {
         $factory = new EqualsFilterFactory();
-        $filter = $factory->create('age', '25');
+        $filter = $factory->create('quantity', '42');
 
         $this->assertInstanceOf(Equals::class, $filter);
-        $this->assertSame('age', $filter->getField());
-        $this->assertSame('25', $filter->getValue());
+
+        // Test the filter works as expected
+        $this->assertSame('quantity', $filter->getField());
+        $this->assertSame('42', $filter->getValue());
     }
 }
