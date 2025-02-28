@@ -23,14 +23,14 @@ final class ActionColumnUrlCreatorTest extends TestCase
 {
     private UrlGeneratorInterface $urlGenerator;
     private CurrentRoute $currentRoute;
-    
+
     protected function setUp(): void
     {
         $this->urlGenerator = $this->createMock(UrlGeneratorInterface::class);
         $this->currentRoute = new CurrentRoute();
         $this->currentRoute->setRouteWithArguments(Route::get('/test')->name('test'), []);
     }
-    
+
     public function testInvokeWithDefaultConfig(): void
     {
         $this->urlGenerator
@@ -101,7 +101,7 @@ final class ActionColumnUrlCreatorTest extends TestCase
         $creator = new ActionColumnUrlCreator($this->urlGenerator, $this->currentRoute);
 
         $column = new ActionColumn();
-        $data = new class {
+        $data = new class () {
             public int $id = 789;
         };
         $dataReader = $this->createStub(ReadableDataInterface::class);
