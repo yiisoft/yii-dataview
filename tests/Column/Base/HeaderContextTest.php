@@ -11,6 +11,7 @@ use Yiisoft\Html\Tag\A;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\Yii\DataView\Column\Base\Cell;
 use Yiisoft\Yii\DataView\Column\Base\HeaderContext;
+use Yiisoft\Yii\DataView\Tests\Support\Mock;
 use Yiisoft\Yii\DataView\UrlConfig;
 
 /**
@@ -23,43 +24,31 @@ final class HeaderContextTest extends TestCase
 {
     public function testTranslate(): void
     {
-        $translator = $this->createMock(TranslatorInterface::class);
-        $translator
-            ->expects($this->once())
-            ->method('translate')
-            ->with('test.message', [], 'grid')
-            ->willReturn('Translated Message');
+        $translator = Mock::translator('en');
 
         $headerContext = $this->createHeaderContext(translator: $translator);
 
         $result = $headerContext->translate('test.message');
 
-        $this->assertSame('Translated Message', $result);
+        $this->assertSame('test.message', $result);
     }
 
     public function testTranslateWithStringable(): void
     {
-        $translator = $this->createMock(TranslatorInterface::class);
-        $translator
-            ->expects($this->once())
-            ->method('translate')
-            ->with($this->callback(function ($message) {
-                return (string)$message === 'stringable.message';
-            }), [], 'grid')
-            ->willReturn('Translated Stringable');
+        $translator = Mock::translator('en');
 
         $headerContext = $this->createHeaderContext(translator: $translator);
 
-        $stringable = new class () implements \Stringable {
+        $stringable = new class () {
             public function __toString(): string
             {
-                return 'stringable.message';
+                return 'Stringable Message';
             }
         };
 
         $result = $headerContext->translate($stringable);
 
-        $this->assertSame('Translated Stringable', $result);
+        $this->assertSame('Stringable Message', $result);
     }
 
     public function testPrepareSortableWithEmptyProperty(): void
@@ -101,7 +90,7 @@ final class HeaderContextTest extends TestCase
             orderProperties: ['name' => 'name']
         );
 
-        $result = $headerContext->prepareSortable($cell, 'name');
+        $result = $headerContext->prepareSortable($cell, 'age');
 
         $this->assertSame($cell, $result[0]);
         $this->assertNull($result[1]);
@@ -180,16 +169,16 @@ final class HeaderContextTest extends TestCase
     private function createHeaderContext(
         ?Sort $sort = null,
         ?Sort $originalSort = null,
-        array $orderProperties = [],
+        array $orderProperties = ['name' => 'name'],
         ?string $sortableHeaderClass = null,
-        string|\Stringable $sortableHeaderPrepend = '',
-        string|\Stringable $sortableHeaderAppend = '',
+        string|Stringable $sortableHeaderPrepend = '',
+        string|Stringable $sortableHeaderAppend = '',
         ?string $sortableHeaderAscClass = null,
-        string|\Stringable $sortableHeaderAscPrepend = '',
-        string|\Stringable $sortableHeaderAscAppend = '',
+        string|Stringable $sortableHeaderAscPrepend = '',
+        string|Stringable $sortableHeaderAscAppend = '',
         ?string $sortableHeaderDescClass = null,
-        string|\Stringable $sortableHeaderDescPrepend = '',
-        string|\Stringable $sortableHeaderDescAppend = '',
+        string|Stringable $sortableHeaderDescPrepend = '',
+        string|Stringable $sortableHeaderDescAppend = '',
         array $sortableLinkAttributes = [],
         ?string $sortableLinkAscClass = null,
         ?string $sortableLinkDescClass = null,
@@ -207,7 +196,7 @@ final class HeaderContextTest extends TestCase
         }
 
         if ($translator === null) {
-            $translator = $this->createMock(TranslatorInterface::class);
+            $translator = Mock::translator('en');
         }
 
         $urlConfig = new UrlConfig(
