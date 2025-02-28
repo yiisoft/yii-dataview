@@ -19,9 +19,6 @@ use Yiisoft\Yii\DataView\Column\DataColumnRenderer;
 use Yiisoft\Yii\DataView\Tests\Support\TestTrait;
 use Yiisoft\Yii\DataView\UrlConfig;
 
-/**
- * @covers \Yiisoft\Yii\DataView\Column\DataColumnRenderer
- */
 final class DataColumnRendererTest extends TestCase
 {
     use TestTrait;
