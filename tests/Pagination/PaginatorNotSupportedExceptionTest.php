@@ -21,7 +21,7 @@ final class PaginatorNotSupportedExceptionTest extends TestCase
 
         $expectedMessage = sprintf(
             'Paginator "%s" is not supported.',
-            get_class($paginator)
+            $paginator::class
         );
 
         $this->assertSame($expectedMessage, $exception->getMessage());
