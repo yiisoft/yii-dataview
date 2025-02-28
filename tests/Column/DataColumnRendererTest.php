@@ -8,7 +8,8 @@ use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerInterface;
 use Yiisoft\Data\Reader\Iterable\IterableDataReader;
 use Yiisoft\Data\Reader\Sort;
-use Yiisoft\Translator\TranslatorInterface;
+use Yiisoft\Di\Container;
+use Yiisoft\Di\ContainerConfig;
 use Yiisoft\Validator\Validator;
 use Yiisoft\Yii\DataView\Column\Base\Cell;
 use Yiisoft\Yii\DataView\Column\Base\DataContext;
@@ -16,6 +17,7 @@ use Yiisoft\Yii\DataView\Column\Base\GlobalContext;
 use Yiisoft\Yii\DataView\Column\Base\HeaderContext;
 use Yiisoft\Yii\DataView\Column\DataColumn;
 use Yiisoft\Yii\DataView\Column\DataColumnRenderer;
+use Yiisoft\Yii\DataView\Tests\Support\Mock;
 use Yiisoft\Yii\DataView\Tests\Support\TestTrait;
 use Yiisoft\Yii\DataView\UrlConfig;
 
@@ -24,16 +26,13 @@ final class DataColumnRendererTest extends TestCase
     use TestTrait;
 
     private ContainerInterface $filterFactoryContainer;
-    private TranslatorInterface $translator;
     private IterableDataReader $dataReader;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->filterFactoryContainer = $this->createMock(ContainerInterface::class);
-        $this->translator = $this->createMock(TranslatorInterface::class);
-        $this->translator->method('translate')->willReturnArgument(0);
+        $this->filterFactoryContainer = new Container(ContainerConfig::create());
 
         $this->dataReader = new IterableDataReader([
             ['id' => 1, 'name' => 'John', 'age' => 20],
@@ -45,11 +44,13 @@ final class DataColumnRendererTest extends TestCase
     {
         $column = new DataColumn('test');
         $cell = new Cell();
+        $translator = Mock::translator('en');
+
         $context = new GlobalContext(
             $this->dataReader,
             [],
             [],
-            $this->translator,
+            $translator,
             'test'
         );
 
@@ -68,6 +69,7 @@ final class DataColumnRendererTest extends TestCase
     {
         $column = new DataColumn('test', 'Test Header');
         $cell = new Cell();
+        $translator = Mock::translator('en');
 
         $sort = Sort::any();
 
@@ -92,7 +94,7 @@ final class DataColumnRendererTest extends TestCase
             false,
             new UrlConfig(),
             null,
-            $this->translator,
+            $translator,
             'test'
         );
 
