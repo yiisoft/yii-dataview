@@ -19,6 +19,9 @@ use Yiisoft\Yii\DataView\Column\DataColumnRenderer;
 use Yiisoft\Yii\DataView\Tests\Support\TestTrait;
 use Yiisoft\Yii\DataView\UrlConfig;
 
+/**
+ * @covers \Yiisoft\Yii\DataView\Column\DataColumnRenderer
+ */
 final class DataColumnRendererTest extends TestCase
 {
     use TestTrait;
@@ -61,6 +64,7 @@ final class DataColumnRendererTest extends TestCase
         $result = $renderer->renderColumn($column, $cell, $context);
 
         $this->assertNotNull($result);
+        $this->assertInstanceOf(Cell::class, $result);
     }
 
     public function testRenderHeader(): void
@@ -103,6 +107,8 @@ final class DataColumnRendererTest extends TestCase
         $result = $renderer->renderHeader($column, $cell, $context);
 
         $this->assertNotNull($result);
+        $this->assertInstanceOf(Cell::class, $result);
+        $this->assertNotEmpty($result->getContent());
     }
 
     public function testRenderBody(): void

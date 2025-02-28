@@ -18,6 +18,9 @@ use Yiisoft\Yii\DataView\YiiRouter\ActionColumnUrlCreator;
 
 /**
  * @covers \Yiisoft\Yii\DataView\YiiRouter\ActionColumnUrlCreator
+ * @uses \Yiisoft\Yii\DataView\Column\ActionColumn
+ * @uses \Yiisoft\Yii\DataView\Column\Base\DataContext
+ * @uses \Yiisoft\Yii\DataView\YiiRouter\ActionColumnUrlConfig
  */
 final class ActionColumnUrlCreatorTest extends TestCase
 {
