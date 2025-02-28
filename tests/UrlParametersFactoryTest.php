@@ -305,11 +305,7 @@ final class UrlParametersFactoryTest extends TestCase
             sortParameterType: UrlParameterType::QUERY
         );
 
-        // Call the non-static method
-        $result = $factory->createParameters(null, null, null, $config);
-
-
-        // Call the static method
+        // Call the static method instead of a non-existent instance method
         $result = UrlParametersFactory::create(null, null, null, $config);
 
         [$arguments, $queryParameters] = $result;
