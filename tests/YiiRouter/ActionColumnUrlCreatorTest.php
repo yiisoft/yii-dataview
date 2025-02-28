@@ -131,15 +131,15 @@ final class ActionColumnUrlCreatorTest extends TestCase
     {
         $urlGenerator = $this->createMock(UrlGeneratorInterface::class);
         $currentRoute = new CurrentRoute();
-        
+
         // Test with default values
         $creator = new ActionColumnUrlCreator($urlGenerator, $currentRoute);
         $this->assertInstanceOf(ActionColumnUrlCreator::class, $creator);
-        
+
         // Test with custom values
         $creator = new ActionColumnUrlCreator(
-            $urlGenerator, 
-            $currentRoute, 
+            $urlGenerator,
+            $currentRoute,
             'custom_id',
             UrlParameterType::PATH
         );
