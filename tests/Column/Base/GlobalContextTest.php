@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Yiisoft\Yii\DataView\Tests\Column\Base;
 
 use PHPUnit\Framework\TestCase;
-use Yiisoft\Data\Reader\ReadableDataInterface;
+use Yiisoft\Data\Reader\Iterable\IterableDataReader;
 use Yiisoft\Yii\DataView\Column\Base\GlobalContext;
 use Yiisoft\Yii\DataView\Tests\Support\Mock;
 
@@ -16,7 +16,11 @@ final class GlobalContextTest extends TestCase
 {
     public function testConstructor(): void
     {
-        $dataReader = $this->createMock(ReadableDataInterface::class);
+        $data = [
+            ['id' => 1, 'name' => 'John', 'age' => 20],
+            ['id' => 2, 'name' => 'Mary', 'age' => 21],
+        ];
+        $dataReader = new IterableDataReader($data);
         $translator = Mock::translator('en');
 
         $pathArguments = ['id' => '42'];
@@ -38,7 +42,11 @@ final class GlobalContextTest extends TestCase
 
     public function testTranslate(): void
     {
-        $dataReader = $this->createMock(ReadableDataInterface::class);
+        $data = [
+            ['id' => 1, 'name' => 'John', 'age' => 20],
+            ['id' => 2, 'name' => 'Mary', 'age' => 21],
+        ];
+        $dataReader = new IterableDataReader($data);
         $translator = Mock::translator('en');
 
         $context = new GlobalContext(
@@ -56,7 +64,11 @@ final class GlobalContextTest extends TestCase
 
     public function testTranslateWithStringable(): void
     {
-        $dataReader = $this->createMock(ReadableDataInterface::class);
+        $data = [
+            ['id' => 1, 'name' => 'John', 'age' => 20],
+            ['id' => 2, 'name' => 'Mary', 'age' => 21],
+        ];
+        $dataReader = new IterableDataReader($data);
         $translator = Mock::translator('en');
 
         $context = new GlobalContext(
