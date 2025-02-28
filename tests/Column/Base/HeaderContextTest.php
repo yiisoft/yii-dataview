@@ -29,14 +29,14 @@ final class HeaderContextTest extends TestCase
             ->method('translate')
             ->with('test.message', [], 'grid')
             ->willReturn('Translated Message');
-        
+
         $headerContext = $this->createHeaderContext(translator: $translator);
-        
+
         $result = $headerContext->translate('test.message');
-        
+
         $this->assertSame('Translated Message', $result);
     }
-    
+
     public function testTranslateWithStringable(): void
     {
         $translator = $this->createMock(TranslatorInterface::class);
@@ -47,34 +47,34 @@ final class HeaderContextTest extends TestCase
                 return (string)$message === 'stringable.message';
             }), [], 'grid')
             ->willReturn('Translated Stringable');
-        
+
         $headerContext = $this->createHeaderContext(translator: $translator);
-        
-        $stringable = new class implements \Stringable {
+
+        $stringable = new class () implements \Stringable {
             public function __toString(): string
             {
                 return 'stringable.message';
             }
         };
-        
+
         $result = $headerContext->translate($stringable);
-        
+
         $this->assertSame('Translated Stringable', $result);
     }
-    
+
     public function testPrepareSortableWithEmptyProperty(): void
     {
         $cell = new Cell();
         $headerContext = $this->createHeaderContext();
-        
+
         $result = $headerContext->prepareSortable($cell, 'nonexistent');
-        
+
         $this->assertSame($cell, $result[0]);
         $this->assertNull($result[1]);
         $this->assertSame('', $result[2]);
         $this->assertSame('', $result[3]);
     }
-    
+
     public function testPrepareSortableWithNullSort(): void
     {
         $cell = new Cell();
@@ -82,15 +82,15 @@ final class HeaderContextTest extends TestCase
             sort: null,
             originalSort: null
         );
-        
+
         $result = $headerContext->prepareSortable($cell, 'name');
-        
+
         $this->assertSame($cell, $result[0]);
         $this->assertNull($result[1]);
         $this->assertSame('', $result[2]);
         $this->assertSame('', $result[3]);
     }
-    
+
     public function testPrepareSortableWithPropertyNotInConfig(): void
     {
         $sort = Sort::any();
@@ -100,15 +100,15 @@ final class HeaderContextTest extends TestCase
             originalSort: $sort,
             orderProperties: ['name' => 'name']
         );
-        
+
         $result = $headerContext->prepareSortable($cell, 'name');
-        
+
         $this->assertSame($cell, $result[0]);
         $this->assertNull($result[1]);
         $this->assertSame('', $result[2]);
         $this->assertSame('', $result[3]);
     }
-    
+
     public function testPrepareSortableWithNoOrder(): void
     {
         $sort = Sort::any(['name' => []]);
@@ -121,16 +121,16 @@ final class HeaderContextTest extends TestCase
             sortableHeaderPrepend: '↕',
             sortableHeaderAppend: '!'
         );
-        
+
         $result = $headerContext->prepareSortable($cell, 'name');
-        
+
         $this->assertInstanceOf(Cell::class, $result[0]);
         $this->assertStringContainsString('sortable', $result[0]->getAttributes()['class']);
         $this->assertInstanceOf(A::class, $result[1]);
         $this->assertSame('↕', $result[2]);
         $this->assertSame('!', $result[3]);
     }
-    
+
     public function testPrepareSortableWithAscOrder(): void
     {
         $sort = Sort::any(['name' => []])->withOrder(['name' => 'asc']);
@@ -144,16 +144,16 @@ final class HeaderContextTest extends TestCase
             sortableHeaderAscAppend: '!',
             sortableLinkAscClass: 'link-asc'
         );
-        
+
         $result = $headerContext->prepareSortable($cell, 'name');
-        
+
         $this->assertInstanceOf(Cell::class, $result[0]);
         $this->assertStringContainsString('asc', $result[0]->getAttributes()['class']);
         $this->assertInstanceOf(A::class, $result[1]);
         $this->assertSame('↑', $result[2]);
         $this->assertSame('!', $result[3]);
     }
-    
+
     public function testPrepareSortableWithDescOrder(): void
     {
         $sort = Sort::any(['name' => []])->withOrder(['name' => 'desc']);
@@ -167,16 +167,16 @@ final class HeaderContextTest extends TestCase
             sortableHeaderDescAppend: '!',
             sortableLinkDescClass: 'link-desc'
         );
-        
+
         $result = $headerContext->prepareSortable($cell, 'name');
-        
+
         $this->assertInstanceOf(Cell::class, $result[0]);
         $this->assertStringContainsString('desc', $result[0]->getAttributes()['class']);
         $this->assertInstanceOf(A::class, $result[1]);
         $this->assertSame('↓', $result[2]);
         $this->assertSame('!', $result[3]);
     }
-    
+
     private function createHeaderContext(
         ?Sort $sort = null,
         ?Sort $originalSort = null,
@@ -201,26 +201,26 @@ final class HeaderContextTest extends TestCase
         if ($sort === null) {
             $sort = Sort::any();
         }
-        
+
         if ($originalSort === null) {
             $originalSort = Sort::any();
         }
-        
+
         if ($translator === null) {
             $translator = $this->createMock(TranslatorInterface::class);
         }
-        
+
         $urlConfig = new UrlConfig(
             pageParameterName: 'page',
             previousPageParameterName: 'prev',
             pageSizeParameterName: 'per-page',
             sortParameterName: 'sort'
         );
-        
+
         $urlCreator = function () {
             return '#';
         };
-        
+
         return new HeaderContext(
             originalSort: $originalSort,
             sort: $sort,

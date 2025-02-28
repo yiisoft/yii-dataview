@@ -26,7 +26,7 @@ final class MockUrlParametersFactory
     ): array {
         $arguments = [];
         $queryParameters = [];
-        
+
         // Handle page token for next page
         if ($pageToken !== null && !$pageToken->isPrevious) {
             if ($context->getPageParameterType() === UrlParameterType::PATH) {
@@ -35,7 +35,7 @@ final class MockUrlParametersFactory
                 $queryParameters[$context->getPageParameterName()] = $pageToken->value;
             }
         }
-        
+
         // Handle page token for previous page
         if ($pageToken !== null && $pageToken->isPrevious) {
             if ($context->getPreviousPageParameterType() === UrlParameterType::PATH) {
@@ -44,7 +44,7 @@ final class MockUrlParametersFactory
                 $queryParameters[$context->getPreviousPageParameterName()] = $pageToken->value;
             }
         }
-        
+
         // Handle page size
         if ($pageSize !== null) {
             if ($context->getPageSizeParameterType() === UrlParameterType::PATH) {
@@ -53,7 +53,7 @@ final class MockUrlParametersFactory
                 $queryParameters[$context->getPageSizeParameterName()] = $pageSize;
             }
         }
-        
+
         // Handle sort
         if ($sort !== null) {
             if ($context->getSortParameterType() === UrlParameterType::PATH) {
@@ -62,11 +62,11 @@ final class MockUrlParametersFactory
                 $queryParameters[$context->getSortParameterName()] = $sort;
             }
         }
-        
+
         // Add custom arguments and query parameters
         $arguments = array_merge($arguments, $context->getArguments());
         $queryParameters = array_merge($queryParameters, $context->getQueryParameters());
-        
+
         return [$arguments, $queryParameters];
     }
 }
