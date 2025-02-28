@@ -16,6 +16,8 @@ final class EqualsFilterFactoryTest extends TestCase
     public function testCreateWithValidValue(): void
     {
         $factory = new EqualsFilterFactory();
+
+        /**@var Equals $filter */
         $filter = $factory->create('name', 'John');
 
         $this->assertInstanceOf(Equals::class, $filter);
@@ -45,6 +47,8 @@ final class EqualsFilterFactoryTest extends TestCase
     public function testCreateWithNonEmptyNumericValue(): void
     {
         $factory = new EqualsFilterFactory();
+
+        /** @var Equals $filter */
         $filter = $factory->create('quantity', '42');
 
         $this->assertInstanceOf(Equals::class, $filter);
