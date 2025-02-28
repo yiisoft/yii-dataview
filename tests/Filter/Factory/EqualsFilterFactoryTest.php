@@ -19,7 +19,7 @@ final class EqualsFilterFactoryTest extends TestCase
         $filter = $factory->create('name', 'John');
 
         $this->assertInstanceOf(Equals::class, $filter);
-        
+
         // Test the filter works as expected
         $this->assertSame('name', $filter->getField());
         $this->assertSame('John', $filter->getValue());
@@ -32,7 +32,7 @@ final class EqualsFilterFactoryTest extends TestCase
 
         $this->assertNull($filter);
     }
-    
+
     public function testCreateWithZeroValue(): void
     {
         $factory = new EqualsFilterFactory();
@@ -41,7 +41,7 @@ final class EqualsFilterFactoryTest extends TestCase
         // PHP's empty() function returns true for '0', so this should return null
         $this->assertNull($filter);
     }
-    
+
     public function testCreateWithNonEmptyNumericValue(): void
     {
         $factory = new EqualsFilterFactory();
