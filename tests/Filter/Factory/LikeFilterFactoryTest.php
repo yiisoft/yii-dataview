@@ -37,7 +37,6 @@ final class LikeFilterFactoryTest extends TestCase
         $factory = new LikeFilterFactory();
         $filter = $factory->create('name', '0');
 
-        // PHP's empty() function returns true for '0', so this should return null
         $this->assertNull($filter);
     }
 

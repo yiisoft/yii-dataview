@@ -22,7 +22,6 @@ final class EqualsFilterFactoryTest extends TestCase
 
         $this->assertInstanceOf(Equals::class, $filter);
 
-        // Test the filter works as expected
         $this->assertSame('name', $filter->getField());
         $this->assertSame('John', $filter->getValue());
     }

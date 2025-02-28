@@ -73,14 +73,10 @@ final class TextInputFilterTest extends TestCase
 
     public function testRender(): void
     {
-        $filter = new TextInputFilter();
         $context = new Context('username', 'john', 'filter-form');
-
-        // Set context using withContext
-        $filter = $filter->withContext($context);
-
-        // Test render method
-        $result = $filter->render();
+        $result = (new TextInputFilter())
+            ->withContext($context)
+            ->render();
 
         $this->assertStringContainsString('name="username"', $result);
         $this->assertStringContainsString('value="john"', $result);
