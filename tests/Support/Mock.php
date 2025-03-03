@@ -35,8 +35,8 @@ final class Mock extends TestCase
 
     public static function translator(
         string $locale,
-        string $fallbackLocale = null,
-        EventDispatcherInterface $eventDispatcher = null
+        ?string $fallbackLocale = null,
+        ?EventDispatcherInterface $eventDispatcher = null
     ): TranslatorInterface {
         return new Translator($locale, $fallbackLocale, 'app', $eventDispatcher);
     }
@@ -46,8 +46,8 @@ final class Mock extends TestCase
      */
     public static function urlGenerator(
         array $routes = [],
-        CurrentRoute $currentRoute = null,
-        RouteParser $parser = null
+        ?CurrentRoute $currentRoute = null,
+        ?RouteParser $parser = null
     ): UrlGeneratorInterface {
         if ($routes === []) {
             $routes = [
@@ -69,9 +69,8 @@ final class Mock extends TestCase
      */
     private static function routeCollection(array $routes): RouteCollectionInterface
     {
-        $rootGroup = Group::create()->routes(...$routes);
         $collector = new RouteCollector();
-        $collector->addGroup($rootGroup);
+        $collector->addRoute(...$routes);
 
         return new RouteCollection($collector);
     }
