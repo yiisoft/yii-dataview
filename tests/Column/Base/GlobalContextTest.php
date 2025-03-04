@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Yiisoft\Yii\DataView\Tests\Column\Base;
 
 use PHPUnit\Framework\TestCase;
+use Stringable;
 use Yiisoft\Data\Reader\Iterable\IterableDataReader;
 use Yiisoft\Yii\DataView\Column\Base\GlobalContext;
 use Yiisoft\Yii\DataView\Tests\Support\Mock;
@@ -79,7 +80,7 @@ final class GlobalContextTest extends TestCase
             'grid'
         );
 
-        $stringable = new class () implements \Stringable {
+        $stringable = new class () implements Stringable {
             public function __toString(): string
             {
                 return 'stringable.message';

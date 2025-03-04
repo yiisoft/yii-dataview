@@ -295,9 +295,6 @@ final class UrlParametersFactoryTest extends TestCase
 
     public function testCreateWithInstanceMethod(): void
     {
-        // Create an instance of UrlParametersFactory
-        $factory = new UrlParametersFactory();
-
         $config = new UrlConfig(
             pageParameterType: UrlParameterType::QUERY,
             previousPageParameterType: UrlParameterType::QUERY,

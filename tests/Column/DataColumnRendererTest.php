@@ -42,6 +42,8 @@ final class DataColumnRendererTest extends TestCase
 
     public function testRenderColumn(): void
     {
+        $this->expectNotToPerformAssertions();
+
         $column = new DataColumn('test');
         $cell = new Cell();
         $translator = Mock::translator('en');
@@ -59,10 +61,7 @@ final class DataColumnRendererTest extends TestCase
             new Validator()
         );
 
-        $result = $renderer->renderColumn($column, $cell, $context);
-
-        $this->assertNotNull($result);
-        $this->assertInstanceOf(Cell::class, $result);
+        $renderer->renderColumn($column, $cell, $context);
     }
 
     public function testRenderHeader(): void
@@ -105,8 +104,6 @@ final class DataColumnRendererTest extends TestCase
 
         $result = $renderer->renderHeader($column, $cell, $context);
 
-        $this->assertNotNull($result);
-        $this->assertInstanceOf(Cell::class, $result);
         $this->assertNotEmpty($result->getContent());
     }
 
@@ -131,7 +128,6 @@ final class DataColumnRendererTest extends TestCase
 
         $result = $renderer->renderBody($column, $cell, $context);
 
-        $this->assertNotNull($result);
         $content = $result->getContent();
         $this->assertNotEmpty($content);
         $this->assertStringContainsString('John Doe', (string)$content[0]);

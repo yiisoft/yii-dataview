@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Yiisoft\Yii\DataView\Tests\Column\Base;
 
 use PHPUnit\Framework\TestCase;
+use Stringable;
 use Yiisoft\Data\Paginator\PageToken;
 use Yiisoft\Data\Reader\Sort;
 use Yiisoft\Html\Tag\A;
@@ -206,9 +207,7 @@ final class HeaderContextTest extends TestCase
             sortParameterName: 'sort'
         );
 
-        $urlCreator = function () {
-            return '#';
-        };
+        $urlCreator = fn(): string => '#';
 
         return new HeaderContext(
             originalSort: $originalSort,
