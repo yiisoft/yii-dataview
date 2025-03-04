@@ -8,6 +8,9 @@ use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Yiisoft\Yii\DataView\Filter\Factory\LikeFilterFactory;
 
+/**
+ * @covers \Yiisoft\Yii\DataView\Filter\Factory\LikeFilterFactory
+ */
 final class LikeFilterFactoryTest extends TestCase
 {
     public function testBase(): void
@@ -19,6 +22,22 @@ final class LikeFilterFactoryTest extends TestCase
         $this->assertSame('name', $filter->getField());
         $this->assertSame('John', $filter->getValue());
         $this->assertNull($filter->isCaseSensitive());
+    }
+
+    public function testCreateWithEmptyValue(): void
+    {
+        $factory = new LikeFilterFactory();
+        $filter = $factory->create('name', '');
+
+        $this->assertNull($filter);
+    }
+
+    public function testCreateWithZeroValue(): void
+    {
+        $factory = new LikeFilterFactory();
+        $filter = $factory->create('name', '0');
+
+        $this->assertNull($filter);
     }
 
     public static function dataCaseSensitive(): iterable
