@@ -16,31 +16,6 @@ use Yiisoft\Yii\DataView\UrlParametersFactory;
  */
 final class UrlParametersFactoryTest extends TestCase
 {
-    public function testCreateWithNullValues(): void
-    {
-        $config = new UrlConfig(
-            pageParameterType: UrlParameterType::QUERY,
-            previousPageParameterType: UrlParameterType::QUERY,
-            pageSizeParameterType: UrlParameterType::QUERY,
-            sortParameterType: UrlParameterType::QUERY
-        );
-
-        [$arguments, $queryParameters] = UrlParametersFactory::create(
-            null,
-            null,
-            null,
-            $config
-        );
-
-        $this->assertSame([], $arguments);
-        $this->assertSame([
-            'page' => null,
-            'prev-page' => null,
-            'pagesize' => null,
-            'sort' => null,
-        ], $queryParameters);
-    }
-
     public function testCreateWithNextPageTokenInQueryParameter(): void
     {
         $config = new UrlConfig(
@@ -293,25 +268,60 @@ final class UrlParametersFactoryTest extends TestCase
         ], $queryParameters);
     }
 
-    public function testCreateWithInstanceMethod(): void
+    public function testCreateWithMixedParameterTypesAndValues(): void
     {
         $config = new UrlConfig(
-            pageParameterType: UrlParameterType::QUERY,
+            pageParameterType: UrlParameterType::PATH,
             previousPageParameterType: UrlParameterType::QUERY,
+            pageSizeParameterType: UrlParameterType::PATH,
+            sortParameterType: UrlParameterType::QUERY,
+            arguments: ['id' => 123],
+            queryParameters: ['filter' => 'active']
+        );
+
+        [$arguments, $queryParameters] = UrlParametersFactory::create(
+            PageToken::next('token123'),
+            20,
+            'name,-date',
+            $config
+        );
+
+        $this->assertSame([
+            'id' => 123,
+            'page' => 'token123',
+            'pagesize' => 20,
+        ], $arguments);
+        $this->assertSame([
+            'filter' => 'active',
+            'prev-page' => null,
+            'sort' => 'name,-date',
+        ], $queryParameters);
+    }
+
+    public function testCreateWithNullPageToken(): void
+    {
+        $config = new UrlConfig(
+            pageParameterType: UrlParameterType::PATH,
+            previousPageParameterType: UrlParameterType::PATH,
             pageSizeParameterType: UrlParameterType::QUERY,
             sortParameterType: UrlParameterType::QUERY
         );
 
-        $result = UrlParametersFactory::create(null, null, null, $config);
+        [$arguments, $queryParameters] = UrlParametersFactory::create(
+            null,
+            20,
+            'name,-date',
+            $config
+        );
 
-        [$arguments, $queryParameters] = $result;
-
-        $this->assertSame([], $arguments);
         $this->assertSame([
             'page' => null,
             'prev-page' => null,
-            'pagesize' => null,
-            'sort' => null,
+        ], $arguments);
+        $this->assertSame([
+            'pagesize' => 20,
+            'sort' => 'name,-date',
         ], $queryParameters);
     }
 }
+
