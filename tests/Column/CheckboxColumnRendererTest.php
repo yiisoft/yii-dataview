@@ -33,11 +33,11 @@ final class CheckboxColumnRendererTest extends TestCase
             ['id' => 2, 'name' => 'Mary'],
         ]);
         $this->globalContext = new GlobalContext(
-            $this->dataReader,
-            [],
-            [],
-            Mock::translator('en'),
-            'test'
+            dataReader: $this->dataReader,
+            pathArguments: [],
+            queryParameters: [],
+            translator: Mock::translator('en'),
+            translationCategory: 'test'
         );
     }
 
@@ -53,28 +53,28 @@ final class CheckboxColumnRendererTest extends TestCase
         $column = new CheckboxColumn(multiple: false);
         $sort = Sort::any();
         $context = new HeaderContext(
-            $sort,
-            $sort,
-            ['test' => 'test'],
-            'sortable',
-            '',
-            '',
-            'asc',
-            '',
-            '',
-            'desc',
-            '',
-            '',
-            [],
-            'asc-link',
-            'desc-link',
-            null,
-            10,
-            false,
-            new UrlConfig(),
-            null,
-            Mock::translator('en'),
-            'test'
+            originalSort: $sort,
+            sort: $sort,
+            orderProperties: ['test' => 'test'],
+            sortableHeaderClass: 'sortable',
+            sortableHeaderPrepend: '',
+            sortableHeaderAppend: '',
+            sortableHeaderAscClass: 'asc',
+            sortableHeaderAscPrepend: '',
+            sortableHeaderAscAppend: '',
+            sortableHeaderDescClass: 'desc',
+            sortableHeaderDescPrepend: '',
+            sortableHeaderDescAppend: '',
+            sortableLinkAttributes: [],
+            sortableLinkAscClass: 'asc-link',
+            sortableLinkDescClass: 'desc-link',
+            pageToken: null,
+            pageSize: 10,
+            multiSort: false,
+            urlConfig: new UrlConfig(),
+            urlCreator: null,
+            translator: Mock::translator('en'),
+            translationCategory: 'test'
         );
         $result = $this->renderer->renderHeader($column, $this->cell, $context);
         $this->assertNull($result);
@@ -85,28 +85,28 @@ final class CheckboxColumnRendererTest extends TestCase
         $column = new CheckboxColumn(multiple: true);
         $sort = Sort::any();
         $context = new HeaderContext(
-            $sort,
-            $sort,
-            ['test' => 'test'],
-            'sortable',
-            '',
-            '',
-            'asc',
-            '',
-            '',
-            'desc',
-            '',
-            '',
-            [],
-            'asc-link',
-            'desc-link',
-            null,
-            10,
-            false,
-            new UrlConfig(),
-            null,
-            Mock::translator('en'),
-            'test'
+            originalSort: $sort,
+            sort: $sort,
+            orderProperties: ['test' => 'test'],
+            sortableHeaderClass: 'sortable',
+            sortableHeaderPrepend: '',
+            sortableHeaderAppend: '',
+            sortableHeaderAscClass: 'asc',
+            sortableHeaderAscPrepend: '',
+            sortableHeaderAscAppend: '',
+            sortableHeaderDescClass: 'desc',
+            sortableHeaderDescPrepend: '',
+            sortableHeaderDescAppend: '',
+            sortableLinkAttributes: [],
+            sortableLinkAscClass: 'asc-link',
+            sortableLinkDescClass: 'desc-link',
+            pageToken: null,
+            pageSize: 10,
+            multiSort: false,
+            urlConfig: new UrlConfig(),
+            urlCreator: null,
+            translator: Mock::translator('en'),
+            translationCategory: 'test'
         );
         $result = $this->renderer->renderHeader($column, $this->cell, $context);
         $this->assertNotNull($result);
@@ -121,28 +121,28 @@ final class CheckboxColumnRendererTest extends TestCase
         );
         $sort = Sort::any();
         $context = new HeaderContext(
-            $sort,
-            $sort,
-            ['test' => 'test'],
-            'sortable',
-            '',
-            '',
-            'asc',
-            '',
-            '',
-            'desc',
-            '',
-            '',
-            [],
-            'asc-link',
-            'desc-link',
-            null,
-            10,
-            false,
-            new UrlConfig(),
-            null,
-            Mock::translator('en'),
-            'test'
+            originalSort: $sort,
+            sort: $sort,
+            orderProperties: ['test' => 'test'],
+            sortableHeaderClass: 'sortable',
+            sortableHeaderPrepend: '',
+            sortableHeaderAppend: '',
+            sortableHeaderAscClass: 'asc',
+            sortableHeaderAscPrepend: '',
+            sortableHeaderAscAppend: '',
+            sortableHeaderDescClass: 'desc',
+            sortableHeaderDescPrepend: '',
+            sortableHeaderDescAppend: '',
+            sortableLinkAttributes: [],
+            sortableLinkAscClass: 'asc-link',
+            sortableLinkDescClass: 'desc-link',
+            pageToken: null,
+            pageSize: 10,
+            multiSort: false,
+            urlConfig: new UrlConfig(),
+            urlCreator: null,
+            translator: Mock::translator('en'),
+            translationCategory: 'test'
         );
         $result = $this->renderer->renderHeader($column, $this->cell, $context);
         $this->assertNotNull($result);
@@ -154,11 +154,11 @@ final class CheckboxColumnRendererTest extends TestCase
     {
         $column = new CheckboxColumn();
         $context = new DataContext(
-            $this->dataReader,
-            $column,
-            ['id' => 1, 'name' => 'John'],
-            1,
-            0
+            preparedDataReader: $this->dataReader,
+            column: $column,
+            data: ['id' => 1, 'name' => 'John'],
+            key: 1,
+            index: 0
         );
         $result = $this->renderer->renderBody($column, $this->cell, $context);
         $content = (string) $result->getContent()[0];
@@ -177,11 +177,11 @@ final class CheckboxColumnRendererTest extends TestCase
             ]
         );
         $context = new DataContext(
-            $this->dataReader,
-            $column,
-            ['id' => 1, 'name' => 'John'],
-            1,
-            0
+            preparedDataReader: $this->dataReader,
+            column: $column,
+            data: ['id' => 1, 'name' => 'John'],
+            key: 1,
+            index: 0
         );
         $result = $this->renderer->renderBody($column, $this->cell, $context);
         $content = (string) $result->getContent()[0];
@@ -196,11 +196,11 @@ final class CheckboxColumnRendererTest extends TestCase
             content: static fn(Checkbox $input, DataContext $context): string => "<div>{$input->render()}</div>"
         );
         $context = new DataContext(
-            $this->dataReader,
-            $column,
-            ['id' => 1, 'name' => 'John'],
-            1,
-            0
+            preparedDataReader: $this->dataReader,
+            column: $column,
+            data: ['id' => 1, 'name' => 'John'],
+            key: 1,
+            index: 0
         );
         $result = $this->renderer->renderBody($column, $this->cell, $context);
         $content = (string) $result->getContent()[0];

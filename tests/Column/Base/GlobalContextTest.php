@@ -6,19 +6,27 @@ namespace Yiisoft\Yii\DataView\Tests\Column\Base;
 
 use PHPUnit\Framework\TestCase;
 use Stringable;
-use Yiisoft\Data\Reader\ReadableDataInterface;
+use Yiisoft\Data\Reader\Iterable\IterableDataReader;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\Yii\DataView\Column\Base\GlobalContext;
+use Yiisoft\Yii\DataView\Tests\Support\Mock;
+use Yiisoft\Yii\DataView\Tests\Support\TestTrait;
 
 /**
  * @covers \Yiisoft\Yii\DataView\Column\Base\GlobalContext
  */
 final class GlobalContextTest extends TestCase
 {
+    use TestTrait;
+
+    private array $data = [
+        ['id' => 1, 'name' => 'John'],
+        ['id' => 2, 'name' => 'Mary'],
+    ];
     public function testConstructor(): void
     {
-        $dataReader = $this->createMock(ReadableDataInterface::class);
-        $translator = $this->createMock(TranslatorInterface::class);
+        $dataReader = new IterableDataReader($this->data);
+        $translator = Mock::translator('en');
         $pathArguments = ['id' => 123];
         $queryParameters = ['sort' => 'name'];
         $translationCategory = 'app';
@@ -38,22 +46,17 @@ final class GlobalContextTest extends TestCase
 
     public function testTranslateWithString(): void
     {
-        $translator = $this->createMock(TranslatorInterface::class);
-        $translator
-            ->expects($this->once())
-            ->method('translate')
-            ->with('test.message', [], 'app')
-            ->willReturn('Test Message');
+        $translator = Mock::translator('en');
 
         $context = new GlobalContext(
-            $this->createMock(ReadableDataInterface::class),
+            new IterableDataReader($this->data),
             [],
             [],
             $translator,
             'app'
         );
 
-        $this->assertSame('Test Message', $context->translate('test.message'));
+        $this->assertSame('test.message', $context->translate('test.message'));
     }
 
     public function testTranslateWithStringable(): void
@@ -65,21 +68,16 @@ final class GlobalContextTest extends TestCase
             }
         };
 
-        $translator = $this->createMock(TranslatorInterface::class);
-        $translator
-            ->expects($this->once())
-            ->method('translate')
-            ->with('test.stringable', [], 'app')
-            ->willReturn('Test Stringable');
+        $translator = Mock::translator('en');
 
         $context = new GlobalContext(
-            $this->createMock(ReadableDataInterface::class),
+            new IterableDataReader($this->data),
             [],
             [],
             $translator,
             'app'
         );
 
-        $this->assertSame('Test Stringable', $context->translate($stringable));
+        $this->assertSame('test.stringable', $context->translate($stringable));
     }
 }
