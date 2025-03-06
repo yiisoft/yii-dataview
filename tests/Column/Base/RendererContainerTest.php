@@ -77,8 +77,8 @@ final class RendererContainerTest extends TestCase
 final class TestRenderer implements ColumnRendererInterface
 {
     public function __construct(
-        private string $value = 'default',
-        private string $option = 'default',
+        private readonly string $value = 'default',
+        private readonly string $option = 'default',
     ) {
     }
 
