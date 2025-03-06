@@ -52,11 +52,11 @@ final class DataColumnRendererTest extends TestCase
         $translator = Mock::translator('en');
 
         $context = new GlobalContext(
-            $this->dataReader,
-            [],
-            [],
-            $translator,
-            'test'
+            dataReader: $this->dataReader,
+            pathArguments: [],
+            queryParameters: [],
+            translator: $translator,
+            translationCategory: 'test'
         );
 
         $renderer = new DataColumnRenderer(
@@ -76,28 +76,28 @@ final class DataColumnRendererTest extends TestCase
         $sort = Sort::any();
 
         $context = new HeaderContext(
-            $sort,
-            $sort,
-            ['test' => 'test'],
-            'sortable',
-            '',
-            '',
-            'asc',
-            '',
-            '',
-            'desc',
-            '',
-            '',
-            [],
-            'asc-link',
-            'desc-link',
-            null,
-            10,
-            false,
-            new UrlConfig(),
-            null,
-            $translator,
-            'test'
+            originalSort: $sort,
+            sort: $sort,
+            orderProperties: ['test' => 'test'],
+            sortableHeaderClass: 'sortable',
+            sortableHeaderPrepend: '',
+            sortableHeaderAppend: '',
+            sortableHeaderAscClass: 'asc',
+            sortableHeaderAscPrepend: '',
+            sortableHeaderAscAppend: '',
+            sortableHeaderDescClass: 'desc',
+            sortableHeaderDescPrepend: '',
+            sortableHeaderDescAppend: '',
+            sortableLinkAttributes: [],
+            sortableLinkAscClass: 'asc-link',
+            sortableLinkDescClass: 'desc-link',
+            pageToken: null,
+            pageSize: 10,
+            multiSort: false,
+            urlConfig: new UrlConfig(),
+            urlCreator: null,
+            translator: $translator,
+            translationCategory: 'test'
         );
 
         $renderer = new DataColumnRenderer(
@@ -117,11 +117,11 @@ final class DataColumnRendererTest extends TestCase
         $data = ['id' => 1, 'name' => 'John Doe', 'age' => 20];
 
         $context = new DataContext(
-            $this->dataReader,
-            $column,
-            $data,
-            1,
-            0
+            preparedDataReader: $this->dataReader,
+            column: $column,
+            data: $data,
+            key: 1,
+            index: 0
         );
 
         $renderer = new DataColumnRenderer(
@@ -158,11 +158,11 @@ final class DataColumnRendererTest extends TestCase
         $data = ['id' => 1, 'name' => 'John Doe', 'age' => 20];
 
         $context = new DataContext(
-            $this->dataReader,
-            $column,
-            $data,
-            1,
-            0
+            preparedDataReader: $this->dataReader,
+            column: $column,
+            data: $data,
+            key: 1,
+            index: 0
         );
 
         $renderer = new DataColumnRenderer(
@@ -184,11 +184,11 @@ final class DataColumnRendererTest extends TestCase
         $data = ['id' => 1, 'created_at' => $date];
 
         $context = new DataContext(
-            $this->dataReader,
-            $column,
-            $data,
-            1,
-            0
+            preparedDataReader: $this->dataReader,
+            column: $column,
+            data: $data,
+            key: 1,
+            index: 0
         );
 
         $renderer = new DataColumnRenderer(
@@ -212,11 +212,11 @@ final class DataColumnRendererTest extends TestCase
         $data = ['id' => 2, 'name' => 'Mary', 'age' => 21];
 
         $context = new DataContext(
-            $this->dataReader,
-            $column,
-            $data,
-            1,
-            0
+            preparedDataReader: $this->dataReader,
+            column: $column,
+            data: $data,
+            key: 1,
+            index: 0
         );
 
         $renderer = new DataColumnRenderer(
