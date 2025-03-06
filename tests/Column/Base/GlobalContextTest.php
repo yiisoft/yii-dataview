@@ -7,7 +7,6 @@ namespace Yiisoft\Yii\DataView\Tests\Column\Base;
 use PHPUnit\Framework\TestCase;
 use Stringable;
 use Yiisoft\Data\Reader\Iterable\IterableDataReader;
-use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\Yii\DataView\Column\Base\GlobalContext;
 use Yiisoft\Yii\DataView\Tests\Support\Mock;
 use Yiisoft\Yii\DataView\Tests\Support\TestTrait;
@@ -23,6 +22,7 @@ final class GlobalContextTest extends TestCase
         ['id' => 1, 'name' => 'John'],
         ['id' => 2, 'name' => 'Mary'],
     ];
+
     public function testConstructor(): void
     {
         $dataReader = new IterableDataReader($this->data);
