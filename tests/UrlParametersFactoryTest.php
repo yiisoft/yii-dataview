@@ -324,4 +324,3 @@ final class UrlParametersFactoryTest extends TestCase
         ], $queryParameters);
     }
 }
-

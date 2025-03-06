@@ -58,7 +58,7 @@ final class GlobalContextTest extends TestCase
 
     public function testTranslateWithStringable(): void
     {
-        $stringable = new class implements Stringable {
+        $stringable = new class () implements Stringable {
             public function __toString(): string
             {
                 return 'test.stringable';

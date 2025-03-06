@@ -236,7 +236,7 @@ final class DataColumnRendererTest extends TestCase
         );
         $cell = new Cell();
 
-        $urlParameterProvider = new class implements \Yiisoft\Yii\DataView\UrlParameterProviderInterface {
+        $urlParameterProvider = new class () implements \Yiisoft\Yii\DataView\UrlParameterProviderInterface {
             public function get(string $name, int $type): ?string
             {
                 return 'active';
@@ -271,7 +271,7 @@ final class DataColumnRendererTest extends TestCase
             filterFactory: \Yiisoft\Yii\DataView\Filter\Factory\LikeFilterFactory::class
         );
 
-        $urlParameterProvider = new class implements \Yiisoft\Yii\DataView\UrlParameterProviderInterface {
+        $urlParameterProvider = new class () implements \Yiisoft\Yii\DataView\UrlParameterProviderInterface {
             public function get(string $name, int $type): ?string
             {
                 return match ($name) {
@@ -304,7 +304,7 @@ final class DataColumnRendererTest extends TestCase
             filterValidation: [new Number()]
         );
 
-        $urlParameterProvider = new class implements \Yiisoft\Yii\DataView\UrlParameterProviderInterface {
+        $urlParameterProvider = new class () implements \Yiisoft\Yii\DataView\UrlParameterProviderInterface {
             public function get(string $name, int $type): ?string
             {
                 return match ($name) {
@@ -338,7 +338,7 @@ final class DataColumnRendererTest extends TestCase
             filterEmpty: true
         );
 
-        $urlParameterProvider = new class implements \Yiisoft\Yii\DataView\UrlParameterProviderInterface {
+        $urlParameterProvider = new class () implements \Yiisoft\Yii\DataView\UrlParameterProviderInterface {
             public function get(string $name, int $type): ?string
             {
                 return match ($name) {

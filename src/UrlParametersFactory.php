@@ -33,7 +33,7 @@ final class UrlParametersFactory
      * - Query parameters as key-value pairs
      */
     /**
-     * @return array{0: array<string, string|int|null>, 1: array<string, string|int|null>}
+     * @return array{0: array<string, int|string|null>, 1: array<string, int|string|null>}
      */
     public static function create(
         ?PageToken $pageToken,
