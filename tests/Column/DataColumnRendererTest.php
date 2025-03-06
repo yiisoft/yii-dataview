@@ -4,12 +4,14 @@ declare(strict_types=1);
 
 namespace Yiisoft\Yii\DataView\Tests\Column;
 
+use DateTime;
 use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerInterface;
 use Yiisoft\Data\Reader\Iterable\IterableDataReader;
 use Yiisoft\Data\Reader\Sort;
 use Yiisoft\Di\Container;
 use Yiisoft\Di\ContainerConfig;
+use Yiisoft\Validator\Result;
 use Yiisoft\Validator\Validator;
 use Yiisoft\Yii\DataView\Column\Base\Cell;
 use Yiisoft\Yii\DataView\Column\Base\DataContext;
@@ -19,10 +21,12 @@ use Yiisoft\Yii\DataView\Column\Base\FilterContext;
 use Yiisoft\Yii\DataView\Column\Base\MakeFilterContext;
 use Yiisoft\Yii\DataView\Column\DataColumn;
 use Yiisoft\Yii\DataView\Column\DataColumnRenderer;
+use Yiisoft\Yii\DataView\Filter\Factory\LikeFilterFactory;
 use Yiisoft\Yii\DataView\Tests\Support\Mock;
 use Yiisoft\Yii\DataView\Tests\Support\TestTrait;
 use Yiisoft\Yii\DataView\UrlConfig;
 use Yiisoft\Validator\Rule\Number;
+use Yiisoft\Yii\DataView\UrlParameterProviderInterface;
 
 final class DataColumnRendererTest extends TestCase
 {
@@ -178,7 +182,7 @@ final class DataColumnRendererTest extends TestCase
 
     public function testRenderBodyWithDateTime(): void
     {
-        $date = new \DateTime('2025-03-06 02:00:22');
+        $date = new DateTime('2025-03-06 02:00:22');
         $column = new DataColumn('created_at', dateTimeFormat: 'Y-m-d');
         $cell = new Cell();
         $data = ['id' => 1, 'created_at' => $date];
@@ -236,7 +240,7 @@ final class DataColumnRendererTest extends TestCase
         );
         $cell = new Cell();
 
-        $urlParameterProvider = new class () implements \Yiisoft\Yii\DataView\UrlParameterProviderInterface {
+        $urlParameterProvider = new class () implements UrlParameterProviderInterface {
             public function get(string $name, int $type): ?string
             {
                 return 'active';
@@ -245,7 +249,7 @@ final class DataColumnRendererTest extends TestCase
 
         $context = new FilterContext(
             'filter-form',
-            new \Yiisoft\Validator\Result(),
+            new Result(),
             'invalid',
             ['class' => 'error-container'],
             $urlParameterProvider
@@ -268,10 +272,10 @@ final class DataColumnRendererTest extends TestCase
     {
         $column = new DataColumn(
             'name',
-            filterFactory: \Yiisoft\Yii\DataView\Filter\Factory\LikeFilterFactory::class
+            filterFactory: LikeFilterFactory::class
         );
 
-        $urlParameterProvider = new class () implements \Yiisoft\Yii\DataView\UrlParameterProviderInterface {
+        $urlParameterProvider = new class () implements UrlParameterProviderInterface {
             public function get(string $name, int $type): ?string
             {
                 return match ($name) {
@@ -284,7 +288,7 @@ final class DataColumnRendererTest extends TestCase
         };
 
         $context = new MakeFilterContext(
-            new \Yiisoft\Validator\Result(),
+            new Result(),
             $urlParameterProvider
         );
 
@@ -304,7 +308,7 @@ final class DataColumnRendererTest extends TestCase
             filterValidation: [new Number()]
         );
 
-        $urlParameterProvider = new class () implements \Yiisoft\Yii\DataView\UrlParameterProviderInterface {
+        $urlParameterProvider = new class () implements UrlParameterProviderInterface {
             public function get(string $name, int $type): ?string
             {
                 return match ($name) {
@@ -317,7 +321,7 @@ final class DataColumnRendererTest extends TestCase
         };
 
         $context = new MakeFilterContext(
-            new \Yiisoft\Validator\Result(),
+            new Result(),
             $urlParameterProvider
         );
 
@@ -338,7 +342,7 @@ final class DataColumnRendererTest extends TestCase
             filterEmpty: true
         );
 
-        $urlParameterProvider = new class () implements \Yiisoft\Yii\DataView\UrlParameterProviderInterface {
+        $urlParameterProvider = new class () implements UrlParameterProviderInterface {
             public function get(string $name, int $type): ?string
             {
                 return match ($name) {
@@ -351,7 +355,7 @@ final class DataColumnRendererTest extends TestCase
         };
 
         $context = new MakeFilterContext(
-            new \Yiisoft\Validator\Result(),
+            new Result(),
             $urlParameterProvider
         );
 
