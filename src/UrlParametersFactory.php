@@ -32,9 +32,6 @@ final class UrlParametersFactory
      * - Path arguments as key-value pairs
      * - Query parameters as key-value pairs
      */
-    /**
-     * @return array{0: array<string, int|string|null>, 1: array<string, int|string|null>}
-     */
     public static function create(
         ?PageToken $pageToken,
         int|string|null $pageSize,
