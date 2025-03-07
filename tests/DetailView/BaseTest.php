@@ -25,6 +25,47 @@ final class BaseTest extends TestCase
      * @throws NotInstantiableException
      * @throws CircularReferenceException
      */
+    public function testNonEncodedValue(): void
+    {
+        Assert::equalsWithoutLE(
+            <<<HTML
+            <div>
+            <dl>
+            <div>
+            <dt>id</dt>
+            <dd>1</dd>
+            </div>
+            <div>
+            <dt>value</dt>
+            <dd><pre>tests 1</pre></dd>
+            </div>
+            <div>
+            <dt>total</dt>
+            <dd>10</dd>
+            </div>
+            </dl>
+            </div>
+            HTML,
+            DetailView::widget()
+                ->fields(
+                    new DataField('id'),
+                    new DataField(
+                        name: 'value',
+                        encodeValue: false
+                    ),
+                    new DataField('total'),
+                )
+                ->data(['id' => 1, 'value' => '<pre>tests 1</pre>', 'total' => '10'])
+                ->render(),
+        );
+    }
+
+    /**
+     * @throws InvalidConfigException
+     * @throws NotFoundException
+     * @throws NotInstantiableException
+     * @throws CircularReferenceException
+     */
     public function testAttributes(): void
     {
         Assert::equalsWithoutLE(
