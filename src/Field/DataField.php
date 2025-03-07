@@ -39,6 +39,8 @@ final class DataField
      * a function accepting data and returning the array.
      * Example array: `['class' => 'value', 'data-type' => 'text']`
      * Example closure: `fn($data) => ['class' => $data->status . '-value']`
+     *
+     * @param bool $encodeValue Whether the value is HTML encoded
      */
     public function __construct(
         public readonly string $name = '',
@@ -47,7 +49,8 @@ final class DataField
         public readonly string $labelTag = '',
         public readonly mixed $value = null,
         public readonly string $valueTag = '',
-        public readonly array|Closure $valueAttributes = []
+        public readonly array|Closure $valueAttributes = [],
+        public readonly bool $encodeValue = true,
     ) {
     }
 }
