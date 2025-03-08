@@ -338,7 +338,7 @@ final class DetailView extends Widget
                 'labelTag' => $labelTag,
                 'value' => $field->encodeValue
                     ? Html::encodeAttribute($this->renderValue($field->name, $field->value))
-                    : $this->renderValue($field->name, $field->value)
+                    : (string) $this->renderValue($field->name, $field->value)
                 ,
                 'valueAttributes' => $this->renderAttributes($valueAttributes),
                 'valueTag' => $valueTag,
