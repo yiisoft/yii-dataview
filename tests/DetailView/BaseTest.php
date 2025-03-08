@@ -19,12 +19,6 @@ final class BaseTest extends TestCase
 {
     use TestTrait;
 
-    /**
-     * @throws InvalidConfigException
-     * @throws NotFoundException
-     * @throws NotInstantiableException
-     * @throws CircularReferenceException
-     */
     public function testNonEncodedValue(): void
     {
         Assert::equalsWithoutLE(
