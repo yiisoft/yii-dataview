@@ -356,4 +356,325 @@ final class RadioColumnRendererTest extends TestCase
 
         $this->assertSame(['class' => 'test-column'], $result->getAttributes());
     }
+
+    public function testRenderBodyWithDefaultNameAndValue(): void
+    {
+        $column = new RadioColumn();
+        $cell = new Cell();
+        $data = ['id' => 1];
+
+        $context = new DataContext(
+            preparedDataReader: $this->dataReader,
+            column: $column,
+            data: $data,
+            key: 'test-key',
+            index: 0
+        );
+
+        $renderer = new RadioColumnRenderer();
+        $result = $renderer->renderBody($column, $cell, $context);
+
+        $content = $result->getContent();
+        $this->assertNotEmpty($content);
+        $this->assertStringContainsString('name="radio-selection"', (string)$content[0]);
+        $this->assertStringContainsString('value="test-key"', (string)$content[0]);
+    }
+
+    public function testRenderBodyWithCustomValue(): void
+    {
+        $column = new RadioColumn(
+            inputAttributes: ['value' => 'custom-value']
+        );
+        $cell = new Cell();
+        $data = ['id' => 1];
+
+        $context = new DataContext(
+            preparedDataReader: $this->dataReader,
+            column: $column,
+            data: $data,
+            key: 'test-key',
+            index: 0
+        );
+
+        $renderer = new RadioColumnRenderer();
+        $result = $renderer->renderBody($column, $cell, $context);
+
+        $content = $result->getContent();
+        $this->assertNotEmpty($content);
+        $this->assertStringContainsString('value="custom-value"', (string)$content[0]);
+    }
+
+    public function testRenderHeaderWithEmptyAttributes(): void
+    {
+        $column = new RadioColumn(
+            header: 'Test Header',
+            headerAttributes: []
+        );
+        $cell = new Cell();
+        $translator = Mock::translator('en');
+
+        $context = new HeaderContext(
+            originalSort: null,
+            sort: null,
+            orderProperties: [],
+            sortableHeaderClass: '',
+            sortableHeaderPrepend: '',
+            sortableHeaderAppend: '',
+            sortableHeaderAscClass: '',
+            sortableHeaderAscPrepend: '',
+            sortableHeaderAscAppend: '',
+            sortableHeaderDescClass: '',
+            sortableHeaderDescPrepend: '',
+            sortableHeaderDescAppend: '',
+            sortableLinkAttributes: [],
+            sortableLinkAscClass: '',
+            sortableLinkDescClass: '',
+            pageToken: null,
+            pageSize: 10,
+            multiSort: false,
+            urlConfig: new UrlConfig(),
+            urlCreator: null,
+            translator: $translator,
+            translationCategory: 'test'
+        );
+
+        $renderer = new RadioColumnRenderer();
+        $result = $renderer->renderHeader($column, $cell, $context);
+
+        $this->assertNotNull($result);
+        $this->assertSame('Test Header', $result->getContent()[0]);
+        $this->assertEmpty($result->getAttributes());
+    }
+
+    public function testRenderColumnWithMultipleAttributes(): void
+    {
+        $column = new RadioColumn(
+            columnAttributes: [
+                'class' => 'test-column',
+                'data-role' => 'radio-column',
+                'data-index' => '1',
+            ]
+        );
+        $cell = new Cell();
+        $translator = Mock::translator('en');
+
+        $context = new GlobalContext(
+            dataReader: $this->dataReader,
+            pathArguments: [],
+            queryParameters: [],
+            translator: $translator,
+            translationCategory: 'test'
+        );
+
+        $renderer = new RadioColumnRenderer();
+        $result = $renderer->renderColumn($column, $cell, $context);
+
+        $this->assertSame(
+            [
+                'class' => 'test-column',
+                'data-role' => 'radio-column',
+                'data-index' => '1',
+            ],
+            $result->getAttributes()
+        );
+    }
+
+    public function testRenderHeaderWithHtmlSpecialChars(): void
+    {
+        $column = new RadioColumn(
+            header: '<script>alert("xss")</script>',
+            headerAttributes: ['class' => 'header-class']
+        );
+        $cell = new Cell();
+        $translator = Mock::translator('en');
+
+        $context = new HeaderContext(
+            originalSort: null,
+            sort: null,
+            orderProperties: [],
+            sortableHeaderClass: '',
+            sortableHeaderPrepend: '',
+            sortableHeaderAppend: '',
+            sortableHeaderAscClass: '',
+            sortableHeaderAscPrepend: '',
+            sortableHeaderAscAppend: '',
+            sortableHeaderDescClass: '',
+            sortableHeaderDescPrepend: '',
+            sortableHeaderDescAppend: '',
+            sortableLinkAttributes: [],
+            sortableLinkAscClass: '',
+            sortableLinkDescClass: '',
+            pageToken: null,
+            pageSize: 10,
+            multiSort: false,
+            urlConfig: new UrlConfig(),
+            urlCreator: null,
+            translator: $translator,
+            translationCategory: 'test'
+        );
+
+        $renderer = new RadioColumnRenderer();
+        $result = $renderer->renderHeader($column, $cell, $context);
+
+        $this->assertNotNull($result);
+        $this->assertSame('<script>alert("xss")</script>', $result->getContent()[0]);
+        $this->assertSame(['class' => 'header-class'], $result->getAttributes());
+    }
+
+    public function testRenderFooterWithColumnAttributes(): void
+    {
+        $column = new RadioColumn(
+            footer: 'Total',
+            columnAttributes: ['class' => 'column-class']
+        );
+        $cell = new Cell();
+        $translator = Mock::translator('en');
+
+        $context = new GlobalContext(
+            dataReader: $this->dataReader,
+            pathArguments: [],
+            queryParameters: [],
+            translator: $translator,
+            translationCategory: 'test'
+        );
+
+        $renderer = new RadioColumnRenderer();
+        $result = $renderer->renderFooter($column, $cell, $context);
+
+        $this->assertSame('Total', $result->getContent()[0]);
+    }
+
+    public function testRenderBodyWithRealWorldData(): void
+    {
+        $column = new RadioColumn(
+            bodyAttributes: ['class' => 'selection-column'],
+            inputAttributes: [
+                'name' => 'user-selection',
+                'class' => 'user-radio',
+                'form' => 'user-form',
+            ]
+        );
+        $cell = new Cell();
+        $data = [
+            'id' => 42,
+            'username' => 'john.doe',
+            'email' => 'john@example.com',
+        ];
+
+        $context = new DataContext(
+            preparedDataReader: $this->dataReader,
+            column: $column,
+            data: $data,
+            key: 42,
+            index: 0
+        );
+
+        $renderer = new RadioColumnRenderer();
+        $result = $renderer->renderBody($column, $cell, $context);
+
+        $content = $result->getContent();
+        $this->assertNotEmpty($content);
+        $this->assertStringContainsString('name="user-selection"', (string)$content[0]);
+        $this->assertStringContainsString('class="user-radio"', (string)$content[0]);
+        $this->assertStringContainsString('form="user-form"', (string)$content[0]);
+        $this->assertStringContainsString('value="42"', (string)$content[0]);
+        $this->assertSame(['class' => 'selection-column'], $result->getAttributes());
+    }
+
+    public function testRenderFooterWithHtmlContent(): void
+    {
+        $column = new RadioColumn(
+            footer: '<strong>Total:</strong> 42'
+        );
+        $cell = new Cell();
+        $translator = Mock::translator('en');
+
+        $context = new GlobalContext(
+            dataReader: $this->dataReader,
+            pathArguments: [],
+            queryParameters: [],
+            translator: $translator,
+            translationCategory: 'test'
+        );
+
+        $renderer = new RadioColumnRenderer();
+        $result = $renderer->renderFooter($column, $cell, $context);
+
+        $this->assertSame('<strong>Total:</strong> 42', $result->getContent()[0]);
+    }
+
+    public function testRenderHeaderWithAttributesButNoContent(): void
+    {
+        $column = new RadioColumn(
+            headerAttributes: ['class' => 'header-class']
+        );
+        $cell = new Cell();
+        $translator = Mock::translator('en');
+
+        $context = new HeaderContext(
+            originalSort: null,
+            sort: null,
+            orderProperties: [],
+            sortableHeaderClass: '',
+            sortableHeaderPrepend: '',
+            sortableHeaderAppend: '',
+            sortableHeaderAscClass: '',
+            sortableHeaderAscPrepend: '',
+            sortableHeaderAscAppend: '',
+            sortableHeaderDescClass: '',
+            sortableHeaderDescPrepend: '',
+            sortableHeaderDescAppend: '',
+            sortableLinkAttributes: [],
+            sortableLinkAscClass: '',
+            sortableLinkDescClass: '',
+            pageToken: null,
+            pageSize: 10,
+            multiSort: false,
+            urlConfig: new UrlConfig(),
+            urlCreator: null,
+            translator: $translator,
+            translationCategory: 'test'
+        );
+
+        $renderer = new RadioColumnRenderer();
+        $result = $renderer->renderHeader($column, $cell, $context);
+
+        $this->assertNull($result);
+    }
+
+    public function testRenderBodyWithCustomHtmlContent(): void
+    {
+        $column = new RadioColumn(
+            content: static fn($input) => Html::div()
+                ->class('input-group')
+                ->content(
+                    Html::label()
+                        ->content(
+                            $input,
+                            Html::span('*')->class('required'),
+                            'Select user'
+                        )
+                )
+        );
+        $cell = new Cell();
+        $data = ['id' => 1];
+
+        $context = new DataContext(
+            preparedDataReader: $this->dataReader,
+            column: $column,
+            data: $data,
+            key: 1,
+            index: 0
+        );
+
+        $renderer = new RadioColumnRenderer();
+        $result = $renderer->renderBody($column, $cell, $context);
+
+        $content = $result->getContent();
+        $this->assertNotEmpty($content);
+        $this->assertStringContainsString('<div class="input-group">', (string)$content[0]);
+        $this->assertStringContainsString('Select user', (string)$content[0]);
+        $this->assertStringContainsString('<span class="required">*</span>', (string)$content[0]);
+        $this->assertFalse($result->shouldEncode());
+    }
 }
