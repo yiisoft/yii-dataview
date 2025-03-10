@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Yiisoft\Yii\DataView\Field;
 
 use Closure;
+use Stringable;
 
 /**
  * `DataField` represents a field configuration for {@see DetailView} widget.
@@ -30,7 +31,10 @@ final class DataField
      * @param string $labelTag Label HTML tag.
      * Example: 'span', 'div', 'label'
      *
-     * @param mixed|null $value Explicit value. If `null`, the value is obtained from the data by field `$name`.
+     * @param Closure|float|int|string|Stringable|null $value The field value. It can be:
+     *  - `null` if the value should be retrieved from the data object using the property name;
+     *  - a closure that will be called to get the value, format: `function (array|object $data): string`;
+     *  - string, `Stringable`, integer or float which will be used as is.
      *
      * @param string $valueTag Value HTML tag.
      * Example: 'span', 'div', 'p'
@@ -41,13 +45,16 @@ final class DataField
      * Example closure: `fn($data) => ['class' => $data->status . '-value']`
      *
      * @param bool $encodeValue Whether the value is HTML encoded
+     *
+     * @template TData as array|object
+     * @psalm-param string|Stringable|int|float|(Closure(TData): string)|null $value
      */
     public function __construct(
         public readonly string $name = '',
         public readonly string $label = '',
         public readonly array|Closure $labelAttributes = [],
         public readonly string $labelTag = '',
-        public readonly mixed $value = null,
+        public readonly string|Stringable|int|float|Closure|null $value = null,
         public readonly string $valueTag = '',
         public readonly array|Closure $valueAttributes = [],
         public readonly bool $encodeValue = true,
