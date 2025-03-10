@@ -89,11 +89,11 @@ final class RadioColumnRendererTest extends TestCase
         $this->assertNull($result);
     }
 
-    public function testRenderHeaderWithCustomHeader(): void
+    public function testRenderHeaderWithCustomAttributes(): void
     {
         $column = new RadioColumn(
             header: 'Select',
-            headerAttributes: ['class' => 'header-class']
+            headerAttributes: ['class' => 'header-class', 'data-test' => 'value']
         );
         $cell = new Cell();
         $translator = Mock::translator('en');
@@ -130,6 +130,8 @@ final class RadioColumnRendererTest extends TestCase
         $this->assertSame('Select', $result->getContent()[0]);
         $this->assertArrayHasKey('class', $result->getAttributes());
         $this->assertSame('header-class', $result->getAttributes()['class']);
+        $this->assertArrayHasKey('data-test', $result->getAttributes());
+        $this->assertSame('value', $result->getAttributes()['data-test']);
     }
 
     public function testRenderBodyWithDefaultSettings(): void
@@ -185,10 +187,12 @@ final class RadioColumnRendererTest extends TestCase
         $this->assertStringContainsString('class="radio-class"', (string)$content[0]);
     }
 
-    public function testRenderBodyWithCustomContent(): void
+    public function testRenderBodyWithCustomContentAndAttributes(): void
     {
         $column = new RadioColumn(
-            content: static fn($input, $context) => Html::div($input)->class('custom-wrapper')
+            content: static fn($input) => Html::div($input)->class('custom-wrapper'),
+            bodyAttributes: ['class' => 'body-class', 'data-index' => '1'],
+            inputAttributes: ['class' => 'input-class', 'data-test' => 'value']
         );
         $cell = new Cell();
         $data = ['id' => 1, 'name' => 'John', 'age' => 20];
@@ -207,7 +211,12 @@ final class RadioColumnRendererTest extends TestCase
         $content = $result->getContent();
         $this->assertNotEmpty($content);
         $this->assertStringContainsString('<div class="custom-wrapper">', (string)$content[0]);
-        $this->assertStringContainsString('radio-selection', (string)$content[0]);
+        $this->assertStringContainsString('class="input-class"', (string)$content[0]);
+        $this->assertStringContainsString('data-test="value"', (string)$content[0]);
+        $this->assertArrayHasKey('class', $result->getAttributes());
+        $this->assertSame('body-class', $result->getAttributes()['class']);
+        $this->assertArrayHasKey('data-index', $result->getAttributes());
+        $this->assertSame('1', $result->getAttributes()['data-index']);
     }
 
     public function testRenderFooterWithContent(): void
@@ -250,5 +259,101 @@ final class RadioColumnRendererTest extends TestCase
         $result = $renderer->renderFooter($column, $cell, $context);
 
         $this->assertEmpty($result->getContent());
+    }
+
+    public function testRenderBodyWithCustomContentAndEmptyAttributes(): void
+    {
+        $column = new RadioColumn(
+            content: static fn($input) => Html::div($input)->class('custom-wrapper'),
+            bodyAttributes: [],
+            inputAttributes: []
+        );
+        $cell = new Cell();
+        $data = ['id' => 1];
+
+        $context = new DataContext(
+            preparedDataReader: $this->dataReader,
+            column: $column,
+            data: $data,
+            key: 1,
+            index: 0
+        );
+
+        $renderer = new RadioColumnRenderer();
+        $result = $renderer->renderBody($column, $cell, $context);
+
+        $content = $result->getContent();
+        $this->assertNotEmpty($content);
+        $this->assertStringContainsString('<div class="custom-wrapper">', (string)$content[0]);
+        $this->assertEmpty($result->getAttributes());
+    }
+
+    public function testRenderBodyWithCustomName(): void
+    {
+        $column = new RadioColumn(
+            inputAttributes: ['name' => 'custom-selection']
+        );
+        $cell = new Cell();
+        $data = ['id' => 1];
+
+        $context = new DataContext(
+            preparedDataReader: $this->dataReader,
+            column: $column,
+            data: $data,
+            key: 1,
+            index: 0
+        );
+
+        $renderer = new RadioColumnRenderer();
+        $result = $renderer->renderBody($column, $cell, $context);
+
+        $content = $result->getContent();
+        $this->assertNotEmpty($content);
+        $this->assertStringContainsString('name="custom-selection"', (string)$content[0]);
+    }
+
+    public function testRenderBodyWithInvisibleColumn(): void
+    {
+        $column = new RadioColumn(visible: false);
+        $cell = new Cell();
+        $data = ['id' => 1];
+
+        $context = new DataContext(
+            preparedDataReader: $this->dataReader,
+            column: $column,
+            data: $data,
+            key: 1,
+            index: 0
+        );
+
+        $renderer = new RadioColumnRenderer();
+        $result = $renderer->renderBody($column, $cell, $context);
+
+        $content = $result->getContent();
+        $this->assertNotEmpty($content);
+        $this->assertStringContainsString('type="radio"', (string)$content[0]);
+    }
+
+    public function testRenderColumnWithInvisibleColumn(): void
+    {
+        $column = new RadioColumn(
+            columnAttributes: ['class' => 'test-column'],
+            visible: false
+        );
+        $cell = new Cell();
+        $translator = Mock::translator('en');
+
+        $context = new GlobalContext(
+            dataReader: $this->dataReader,
+            pathArguments: [],
+            queryParameters: [],
+            translator: $translator,
+            translationCategory: 'test'
+        );
+
+        $renderer = new RadioColumnRenderer();
+        $result = $renderer->renderColumn($column, $cell, $context);
+
+        $this->assertSame(['class' => 'test-column'], $result->getAttributes());
     }
 }
