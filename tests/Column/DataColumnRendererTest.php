@@ -367,4 +367,447 @@ final class DataColumnRendererTest extends TestCase
         $result = $renderer->makeFilter($column, $context);
         $this->assertNull($result);
     }
+
+    public function testRenderHeaderWithoutProperty(): void
+    {
+        $column = new DataColumn(header: 'Custom Header');
+        $cell = new Cell();
+        $translator = Mock::translator('en');
+        $sort = Sort::any();
+
+        $context = new HeaderContext(
+            originalSort: $sort,
+            sort: $sort,
+            orderProperties: [],
+            sortableHeaderClass: 'sortable',
+            sortableHeaderPrepend: '',
+            sortableHeaderAppend: '',
+            sortableHeaderAscClass: 'asc',
+            sortableHeaderAscPrepend: '',
+            sortableHeaderAscAppend: '',
+            sortableHeaderDescClass: 'desc',
+            sortableHeaderDescPrepend: '',
+            sortableHeaderDescAppend: '',
+            sortableLinkAttributes: [],
+            sortableLinkAscClass: 'asc-link',
+            sortableLinkDescClass: 'desc-link',
+            pageToken: null,
+            pageSize: 10,
+            multiSort: false,
+            urlConfig: new UrlConfig(),
+            urlCreator: null,
+            translator: $translator,
+            translationCategory: 'test'
+        );
+
+        $renderer = new DataColumnRenderer(
+            $this->filterFactoryContainer,
+            new Validator()
+        );
+
+        $result = $renderer->renderHeader($column, $cell, $context);
+        $this->assertEquals('Custom Header', $result->getContent()[0]);
+    }
+
+    public function testRenderHeaderWithoutHeaderAndProperty(): void
+    {
+        $column = new DataColumn();
+        $cell = new Cell();
+        $translator = Mock::translator('en');
+        $sort = Sort::any();
+
+        $context = new HeaderContext(
+            originalSort: $sort,
+            sort: $sort,
+            orderProperties: [],
+            sortableHeaderClass: 'sortable',
+            sortableHeaderPrepend: '',
+            sortableHeaderAppend: '',
+            sortableHeaderAscClass: 'asc',
+            sortableHeaderAscPrepend: '',
+            sortableHeaderAscAppend: '',
+            sortableHeaderDescClass: 'desc',
+            sortableHeaderDescPrepend: '',
+            sortableHeaderDescAppend: '',
+            sortableLinkAttributes: [],
+            sortableLinkAscClass: 'asc-link',
+            sortableLinkDescClass: 'desc-link',
+            pageToken: null,
+            pageSize: 10,
+            multiSort: false,
+            urlConfig: new UrlConfig(),
+            urlCreator: null,
+            translator: $translator,
+            translationCategory: 'test'
+        );
+
+        $renderer = new DataColumnRenderer(
+            $this->filterFactoryContainer,
+            new Validator()
+        );
+
+        $result = $renderer->renderHeader($column, $cell, $context);
+        $this->assertEquals('', $result->getContent()[0]);
+    }
+
+    public function testRenderBodyWithNullContent(): void
+    {
+        $column = new DataColumn();
+        $cell = new Cell();
+        $data = ['id' => 1, 'name' => null];
+
+        $context = new DataContext(
+            preparedDataReader: $this->dataReader,
+            column: $column,
+            data: $data,
+            key: 1,
+            index: 0
+        );
+
+        $renderer = new DataColumnRenderer(
+            $this->filterFactoryContainer,
+            new Validator()
+        );
+
+        $result = $renderer->renderBody($column, $cell, $context);
+        $this->assertEquals('', $result->getContent()[0]);
+    }
+
+    public function testRenderFooterWithContent(): void
+    {
+        $column = new DataColumn(footer: 'Total: 100');
+        $cell = new Cell();
+        $translator = Mock::translator('en');
+
+        $context = new GlobalContext(
+            dataReader: $this->dataReader,
+            pathArguments: [],
+            queryParameters: [],
+            translator: $translator,
+            translationCategory: 'test'
+        );
+
+        $renderer = new DataColumnRenderer(
+            $this->filterFactoryContainer,
+            new Validator()
+        );
+
+        $result = $renderer->renderFooter($column, $cell, $context);
+        $this->assertEquals('Total: 100', $result->getContent()[0]);
+    }
+
+    public function testRenderFooterWithoutContent(): void
+    {
+        $column = new DataColumn();
+        $cell = new Cell();
+        $translator = Mock::translator('en');
+
+        $context = new GlobalContext(
+            dataReader: $this->dataReader,
+            pathArguments: [],
+            queryParameters: [],
+            translator: $translator,
+            translationCategory: 'test'
+        );
+
+        $renderer = new DataColumnRenderer(
+            $this->filterFactoryContainer,
+            new Validator()
+        );
+
+        $result = $renderer->renderFooter($column, $cell, $context);
+        $this->assertEmpty($result->getContent());
+    }
+
+    public function testRenderFilterWithoutProperty(): void
+    {
+        $column = new DataColumn();
+        $cell = new Cell();
+
+        $urlParameterProvider = new class () implements UrlParameterProviderInterface {
+            public function get(string $name, int $type): ?string
+            {
+                return null;
+            }
+        };
+
+        $context = new FilterContext(
+            'filter-form',
+            new Result(),
+            'invalid',
+            ['class' => 'error-container'],
+            $urlParameterProvider
+        );
+
+        $renderer = new DataColumnRenderer(
+            $this->filterFactoryContainer,
+            new Validator()
+        );
+
+        $result = $renderer->renderFilter($column, $cell, $context);
+        $this->assertNull($result);
+    }
+
+    public function testRenderFilterWithFilterDisabled(): void
+    {
+        $column = new DataColumn('name', filter: false);
+        $cell = new Cell();
+
+        $urlParameterProvider = new class () implements UrlParameterProviderInterface {
+            public function get(string $name, int $type): ?string
+            {
+                return null;
+            }
+        };
+
+        $context = new FilterContext(
+            'filter-form',
+            new Result(),
+            'invalid',
+            ['class' => 'error-container'],
+            $urlParameterProvider
+        );
+
+        $renderer = new DataColumnRenderer(
+            $this->filterFactoryContainer,
+            new Validator()
+        );
+
+        $result = $renderer->renderFilter($column, $cell, $context);
+        $this->assertNull($result);
+    }
+
+    public function testMakeFilterWithNeverEmptyCallback(): void
+    {
+        $column = new DataColumn(
+            'status',
+            filterEmpty: false
+        );
+
+        $urlParameterProvider = new class () implements UrlParameterProviderInterface {
+            public function get(string $name, int $type): ?string
+            {
+                return 'test';
+            }
+        };
+
+        $context = new MakeFilterContext(
+            new Result(),
+            $urlParameterProvider
+        );
+
+        $renderer = new DataColumnRenderer(
+            $this->filterFactoryContainer,
+            new Validator()
+        );
+
+        $result = $renderer->makeFilter($column, $context);
+        $this->assertNotNull($result);
+    }
+
+    public function testMakeFilterWithCustomEmptyCallback(): void
+    {
+        $column = new DataColumn(
+            'status',
+            filterEmpty: static fn (mixed $value): bool => $value === 'empty'
+        );
+
+        $urlParameterProvider = new class () implements UrlParameterProviderInterface {
+            public function get(string $name, int $type): ?string
+            {
+                return 'empty';
+            }
+        };
+
+        $context = new MakeFilterContext(
+            new Result(),
+            $urlParameterProvider
+        );
+
+        $renderer = new DataColumnRenderer(
+            $this->filterFactoryContainer,
+            new Validator()
+        );
+
+        $result = $renderer->makeFilter($column, $context);
+        $this->assertNull($result);
+    }
+
+    public function testRenderHeaderWithSortingDisabled(): void
+    {
+        $column = new DataColumn('test', withSorting: false);
+        $cell = new Cell();
+        $translator = Mock::translator('en');
+        $sort = Sort::any();
+
+        $context = new HeaderContext(
+            originalSort: $sort,
+            sort: $sort,
+            orderProperties: ['test' => 'test'],
+            sortableHeaderClass: 'sortable',
+            sortableHeaderPrepend: '↑',
+            sortableHeaderAppend: '↓',
+            sortableHeaderAscClass: 'asc',
+            sortableHeaderAscPrepend: '',
+            sortableHeaderAscAppend: '',
+            sortableHeaderDescClass: 'desc',
+            sortableHeaderDescPrepend: '',
+            sortableHeaderDescAppend: '',
+            sortableLinkAttributes: [],
+            sortableLinkAscClass: 'asc-link',
+            sortableLinkDescClass: 'desc-link',
+            pageToken: null,
+            pageSize: 10,
+            multiSort: false,
+            urlConfig: new UrlConfig(),
+            urlCreator: null,
+            translator: $translator,
+            translationCategory: 'test'
+        );
+
+        $renderer = new DataColumnRenderer(
+            $this->filterFactoryContainer,
+            new Validator()
+        );
+
+        $result = $renderer->renderHeader($column, $cell, $context);
+        $content = $result->getContent()[0];
+        $this->assertEquals('Test', $content);
+        $this->assertArrayNotHasKey('class', $result->getAttributes());
+    }
+
+    public function testRenderHeaderWithSorting(): void
+    {
+        $column = new DataColumn('test', withSorting: true);
+        $cell = new Cell();
+        $translator = Mock::translator('en');
+        $sort = Sort::only(['test']);
+
+        $context = new HeaderContext(
+            originalSort: $sort,
+            sort: $sort,
+            orderProperties: ['test' => 'test'],
+            sortableHeaderClass: 'sortable',
+            sortableHeaderPrepend: '↑',
+            sortableHeaderAppend: '↓',
+            sortableHeaderAscClass: 'asc',
+            sortableHeaderAscPrepend: '',
+            sortableHeaderAscAppend: '',
+            sortableHeaderDescClass: 'desc',
+            sortableHeaderDescPrepend: '',
+            sortableHeaderDescAppend: '',
+            sortableLinkAttributes: [],
+            sortableLinkAscClass: 'asc-link',
+            sortableLinkDescClass: 'desc-link',
+            pageToken: null,
+            pageSize: 10,
+            multiSort: false,
+            urlConfig: new UrlConfig(),
+            urlCreator: null,
+            translator: $translator,
+            translationCategory: 'test'
+        );
+
+        $renderer = new DataColumnRenderer(
+            $this->filterFactoryContainer,
+            new Validator()
+        );
+
+        $result = $renderer->renderHeader($column, $cell, $context);
+        $content = $result->getContent()[0];
+        $this->assertStringContainsString('Test', $content);
+        $this->assertStringContainsString('↑', $content);
+        $this->assertStringContainsString('↓', $content);
+        $this->assertStringContainsString('sortable', $result->getAttributes()['class']);
+    }
+
+    public function testRenderHeaderWithAscendingSort(): void
+    {
+        $column = new DataColumn('test', withSorting: true);
+        $cell = new Cell();
+        $translator = Mock::translator('en');
+        $sort = Sort::only(['test'])->withOrder(['test' => 'asc']);
+
+        $context = new HeaderContext(
+            originalSort: $sort,
+            sort: $sort,
+            orderProperties: ['test' => 'test'],
+            sortableHeaderClass: 'sortable',
+            sortableHeaderPrepend: '↑',
+            sortableHeaderAppend: '↓',
+            sortableHeaderAscClass: 'asc',
+            sortableHeaderAscPrepend: '↑',
+            sortableHeaderAscAppend: '',
+            sortableHeaderDescClass: 'desc',
+            sortableHeaderDescPrepend: '',
+            sortableHeaderDescAppend: '',
+            sortableLinkAttributes: [],
+            sortableLinkAscClass: 'asc-link',
+            sortableLinkDescClass: 'desc-link',
+            pageToken: null,
+            pageSize: 10,
+            multiSort: false,
+            urlConfig: new UrlConfig(),
+            urlCreator: null,
+            translator: $translator,
+            translationCategory: 'test'
+        );
+
+        $renderer = new DataColumnRenderer(
+            $this->filterFactoryContainer,
+            new Validator()
+        );
+
+        $result = $renderer->renderHeader($column, $cell, $context);
+        $content = $result->getContent()[0];
+        $this->assertStringContainsString('Test', $content);
+        $this->assertStringContainsString('↑', $content);
+        $this->assertStringNotContainsString('↓', $content);
+        $this->assertStringContainsString('asc', $result->getAttributes()['class']);
+    }
+
+    public function testRenderHeaderWithDescendingSort(): void
+    {
+        $column = new DataColumn('test', withSorting: true);
+        $cell = new Cell();
+        $translator = Mock::translator('en');
+        $sort = Sort::only(['test'])->withOrder(['test' => 'desc']);
+
+        $context = new HeaderContext(
+            originalSort: $sort,
+            sort: $sort,
+            orderProperties: ['test' => 'test'],
+            sortableHeaderClass: 'sortable',
+            sortableHeaderPrepend: '↑',
+            sortableHeaderAppend: '↓',
+            sortableHeaderAscClass: 'asc',
+            sortableHeaderAscPrepend: '',
+            sortableHeaderAscAppend: '',
+            sortableHeaderDescClass: 'desc',
+            sortableHeaderDescPrepend: '',
+            sortableHeaderDescAppend: '↓',
+            sortableLinkAttributes: [],
+            sortableLinkAscClass: 'asc-link',
+            sortableLinkDescClass: 'desc-link',
+            pageToken: null,
+            pageSize: 10,
+            multiSort: false,
+            urlConfig: new UrlConfig(),
+            urlCreator: null,
+            translator: $translator,
+            translationCategory: 'test'
+        );
+
+        $renderer = new DataColumnRenderer(
+            $this->filterFactoryContainer,
+            new Validator()
+        );
+
+        $result = $renderer->renderHeader($column, $cell, $context);
+        $content = $result->getContent()[0];
+        $this->assertStringContainsString('Test', $content);
+        $this->assertStringNotContainsString('↑', $content);
+        $this->assertStringContainsString('↓', $content);
+        $this->assertStringContainsString('desc', $result->getAttributes()['class']);
+    }
 }
