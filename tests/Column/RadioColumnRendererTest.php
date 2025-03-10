@@ -841,7 +841,7 @@ final class RadioColumnRendererTest extends TestCase
             inputAttributes: [
                 'class' => 'form-check-input',
                 'data-testid' => 'radio-input',
-                'required' => true
+                'required' => true,
             ],
             bodyAttributes: ['class' => 'form-check']
         );
