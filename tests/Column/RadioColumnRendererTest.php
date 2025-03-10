@@ -1055,7 +1055,7 @@ final class RadioColumnRendererTest extends TestCase
             inputAttributes: [
                 'class' => 'form-check-input',
                 'data-bs-target' => '#target',
-                'data-bs-action' => 'select'
+                'data-bs-action' => 'select',
             ]
         );
         $cell = new Cell();
@@ -1188,7 +1188,7 @@ final class RadioColumnRendererTest extends TestCase
             inputAttributes: [
                 'class' => 'form-check-input',
                 'value' => 'active',
-                'checked' => true
+                'checked' => true,
             ]
         );
 
@@ -1228,7 +1228,7 @@ final class RadioColumnRendererTest extends TestCase
                 ),
             inputAttributes: [
                 'class' => 'form-check-input',
-                'value' => 'inactive'
+                'value' => 'inactive',
             ]
         );
 
