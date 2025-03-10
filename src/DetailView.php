@@ -7,13 +7,14 @@ namespace Yiisoft\Yii\DataView;
 use Closure;
 use InvalidArgumentException;
 use JsonException;
+use Stringable;
 use Yiisoft\Html\Html;
 use Yiisoft\Widget\Widget;
 use Yiisoft\Yii\DataView\Field\DataField;
 
+use function array_key_exists;
 use function is_array;
 use function is_bool;
-use function is_object;
 
 /**
  * `DetailView` displays details about a single data item.
@@ -298,11 +299,6 @@ final class DetailView extends Widget
         );
     }
 
-    private function has(string $attribute): bool
-    {
-        return is_array($this->data) ? array_key_exists($attribute, $this->data) : isset($this->data->$attribute);
-    }
-
     /**
      * @psalm-return list<
      *     array{
@@ -338,7 +334,7 @@ final class DetailView extends Widget
                 'labelTag' => $labelTag,
                 'value' => $field->encodeValue
                     ? Html::encodeAttribute($this->renderValue($field->name, $field->value))
-                    : (string) $this->renderValue($field->name, $field->value)
+                    : $this->renderValue($field->name, $field->value)
                 ,
                 'valueAttributes' => $this->renderAttributes($valueAttributes),
                 'valueTag' => $valueTag,
@@ -397,31 +393,50 @@ final class DetailView extends Widget
         return implode("\n", $rows);
     }
 
-    private function renderValue(string $attribute, mixed $value): mixed
+    /**
+     * @psalm-param string|Stringable|int|float|(Closure(array|object): string)|null $value
+     */
+    private function renderValue(string $property, string|Stringable|int|float|Closure|null $value): string
     {
         if ($this->data === []) {
             throw new InvalidArgumentException('The "data" must be set.');
         }
 
-        if ($value === null && is_array($this->data) && $this->has($attribute)) {
-            return match (is_bool($this->data[$attribute])) {
-                true => $this->data[$attribute] ? $this->valueTrue : $this->valueFalse,
-                default => $this->data[$attribute],
-            };
-        }
-
-        if ($value === null && is_object($this->data) && $this->has($attribute)) {
-            return match (is_bool($this->data->{$attribute})) {
-                true => $this->data->{$attribute} ? $this->valueTrue : $this->valueFalse,
-                default => $this->data->{$attribute},
-            };
+        if ($value === null) {
+            return $this->extractValueFromData($property);
         }
 
         if ($value instanceof Closure) {
+            /**
+             * @var string
+             * @see https://github.com/vimeo/psalm/issues/11062
+             */
             return $value($this->data);
         }
 
-        return $value;
+        return (string) $value;
+    }
+
+    private function extractValueFromData(string $property): string
+    {
+        if (is_array($this->data)) {
+            if (array_key_exists($property, $this->data)) {
+                return (string) match (is_bool($this->data[$property])) {
+                    true => $this->data[$property] ? $this->valueTrue : $this->valueFalse,
+                    default => $this->data[$property],
+                };
+            }
+            return '';
+        }
+
+        if (isset($this->data->$property)) {
+            return (string) match (is_bool($this->data->{$property})) {
+                true => $this->data->{$property} ? $this->valueTrue : $this->valueFalse,
+                default => $this->data->{$property},
+            };
+        }
+
+        return '';
     }
 
     /**
