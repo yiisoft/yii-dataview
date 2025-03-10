@@ -31,7 +31,7 @@ final class DataField
      * @param string $labelTag Label HTML tag.
      * Example: 'span', 'div', 'label'
      *
-     * @param string|Stringable|int|float|Closure|null $value The field value. It can be:
+     * @param Closure|float|int|string|Stringable|null $value The field value. It can be:
      *  - `null` if the value should be retrieved from the data object using the property name;
      *  - a closure that will be called to get the value, format: `function (array|object $data): string`;
      *  - string, `Stringable`, integer or float which will be used as is.
