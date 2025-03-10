@@ -67,4 +67,3 @@ final class RendererContainerTest extends TestCase
         $this->assertSame('second', $instance->getOption());
     }
 }
-

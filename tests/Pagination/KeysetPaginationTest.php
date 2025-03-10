@@ -6,7 +6,6 @@ namespace Yiisoft\Yii\DataView\Tests\Pagination;
 
 use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
-use Yiisoft\Data\Paginator\KeysetPaginator;
 use Yiisoft\Data\Paginator\PageToken;
 use Yiisoft\Data\Paginator\PaginatorInterface;
 use Yiisoft\Definitions\Exception\CircularReferenceException;
@@ -376,7 +375,7 @@ final class KeysetPaginationTest extends TestCase
         $this->expectException(PaginatorNotSupportedException::class);
         // Use a partial message match since the actual class name of the mock will vary
         $this->expectExceptionMessageMatches('/Paginator ".*" is not supported\./');
-        
+
         /** @var PaginatorInterface $nonKeysetPaginator */
         $nonKeysetPaginator = $this->createMock(PaginatorInterface::class);
         KeysetPagination::widget()->withPaginator($nonKeysetPaginator);
@@ -386,7 +385,7 @@ final class KeysetPaginationTest extends TestCase
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('Tag name cannot be empty.');
-        
+
         KeysetPagination::widget()->containerTag('');
     }
 
@@ -394,7 +393,7 @@ final class KeysetPaginationTest extends TestCase
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('Tag name cannot be empty.');
-        
+
         KeysetPagination::widget()->listTag('');
     }
 
@@ -402,7 +401,7 @@ final class KeysetPaginationTest extends TestCase
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('Tag name cannot be empty.');
-        
+
         KeysetPagination::widget()->itemTag('');
     }
 
