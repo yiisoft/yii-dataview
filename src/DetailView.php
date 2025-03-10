@@ -393,9 +393,6 @@ final class DetailView extends Widget
         return implode("\n", $rows);
     }
 
-    /**
-     * @psalm-param string|Stringable|int|float|(Closure(array|object): string)|null $value
-     */
     private function renderValue(string $property, string|Stringable|int|float|Closure|null $value): string
     {
         if ($this->data === []) {
@@ -408,8 +405,7 @@ final class DetailView extends Widget
 
         if ($value instanceof Closure) {
             /**
-             * @var string
-             * @see https://github.com/vimeo/psalm/issues/11062
+             * @psalm-var Closure(array|object): string $value
              */
             return $value($this->data);
         }
