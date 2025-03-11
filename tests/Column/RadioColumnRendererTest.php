@@ -190,9 +190,9 @@ final class RadioColumnRendererTest extends TestCase
     public function testRenderBodyWithCustomContentAndAttributes(): void
     {
         $column = new RadioColumn(
-            content: static fn($input) => Html::div($input)->class('custom-wrapper'),
             bodyAttributes: ['class' => 'body-class', 'data-index' => '1'],
-            inputAttributes: ['class' => 'input-class', 'data-test' => 'value']
+            inputAttributes: ['class' => 'input-class', 'data-test' => 'value'],
+            content: static fn($input) => Html::div($input)->class('custom-wrapper')
         );
         $cell = new Cell();
         $data = ['id' => 1, 'name' => 'John', 'age' => 20];
@@ -264,9 +264,9 @@ final class RadioColumnRendererTest extends TestCase
     public function testRenderBodyWithCustomContentAndEmptyAttributes(): void
     {
         $column = new RadioColumn(
-            content: static fn($input) => Html::div($input)->class('custom-wrapper'),
             bodyAttributes: [],
-            inputAttributes: []
+            inputAttributes: [],
+            content: static fn($input) => Html::div($input)->class('custom-wrapper')
         );
         $cell = new Cell();
         $data = ['id' => 1];
@@ -681,14 +681,14 @@ final class RadioColumnRendererTest extends TestCase
     public function testRenderBodyWithCustomLabelAndAttributes(): void
     {
         $column = new RadioColumn(
-            content: static fn($input) => Html::label($input, 'Select item')
-                ->class('form-label')
-                ->attribute('data-testid', 'radio-label'),
             bodyAttributes: ['class' => 'radio-cell'],
             inputAttributes: [
                 'class' => 'form-radio',
                 'data-testid' => 'radio-input',
-            ]
+            ],
+            content: static fn($input) => Html::label($input, 'Select item')
+                ->class('form-label')
+                ->attribute('data-testid', 'radio-label')
         );
         $cell = new Cell();
         $data = ['id' => 1];
@@ -835,13 +835,13 @@ final class RadioColumnRendererTest extends TestCase
     public function testRenderBodyWithMultipleAttributes(): void
     {
         $column = new RadioColumn(
-            name: 'selection',
+            bodyAttributes: ['class' => 'form-check'],
             inputAttributes: [
                 'class' => 'form-check-input',
                 'data-testid' => 'radio-input',
                 'required' => true,
             ],
-            bodyAttributes: ['class' => 'form-check']
+            name: 'selection'
         );
         $cell = new Cell();
         $data = ['id' => 42];
@@ -916,8 +916,8 @@ final class RadioColumnRendererTest extends TestCase
     public function testRenderBodyWithAriaLabelAttribute(): void
     {
         $column = new RadioColumn(
-            content: static fn($input) => (string)$input,
-            inputAttributes: ['aria-label' => 'Select item']
+            inputAttributes: ['aria-label' => 'Select item'],
+            content: static fn($input) => (string)$input
         );
         $cell = new Cell();
         $data = ['id' => 42];
@@ -975,6 +975,7 @@ final class RadioColumnRendererTest extends TestCase
     public function testRenderBodyWithBootstrapFormCheck(): void
     {
         $column = new RadioColumn(
+            inputAttributes: ['class' => 'form-check-input'],
             content: static fn($input) => Html::div()
                 ->class('form-check')
                 ->content(
@@ -982,8 +983,7 @@ final class RadioColumnRendererTest extends TestCase
                     Html::label()
                         ->class('form-check-label')
                         ->content('Option 1')
-                ),
-            inputAttributes: ['class' => 'form-check-input']
+                )
         );
         $cell = new Cell();
         $data = ['id' => 42];
@@ -1011,6 +1011,7 @@ final class RadioColumnRendererTest extends TestCase
     public function testRenderBodyWithInlineFormCheck(): void
     {
         $column = new RadioColumn(
+            inputAttributes: ['class' => 'form-check-input'],
             content: static fn($input) => Html::div()
                 ->class('form-check form-check-inline')
                 ->content(
@@ -1018,8 +1019,7 @@ final class RadioColumnRendererTest extends TestCase
                     Html::label()
                         ->class('form-check-label')
                         ->content('Option 1')
-                ),
-            inputAttributes: ['class' => 'form-check-input']
+                )
         );
         $cell = new Cell();
         $data = ['id' => 42];
@@ -1047,16 +1047,16 @@ final class RadioColumnRendererTest extends TestCase
     public function testRenderBodyWithDataAttributes(): void
     {
         $column = new RadioColumn(
-            content: static fn($input) => Html::div()
-                ->class('form-check')
-                ->attribute('data-bs-toggle', 'tooltip')
-                ->attribute('title', 'Select this option')
-                ->content($input),
             inputAttributes: [
                 'class' => 'form-check-input',
                 'data-bs-target' => '#target',
                 'data-bs-action' => 'select',
-            ]
+            ],
+            content: static fn($input) => Html::div()
+                ->class('form-check')
+                ->attribute('data-bs-toggle', 'tooltip')
+                ->attribute('title', 'Select this option')
+                ->content($input)
         );
         $cell = new Cell();
         $data = ['id' => 42];
@@ -1084,13 +1084,13 @@ final class RadioColumnRendererTest extends TestCase
     public function testRenderBodyWithCustomValueAndChecked(): void
     {
         $column = new RadioColumn(
-            content: static fn($input) => Html::div()
-                ->class('form-check')
-                ->content($input),
             inputAttributes: [
                 'value' => '42_custom',
                 'checked' => true,
-            ]
+            ],
+            content: static fn($input) => Html::div()
+                ->class('form-check')
+                ->content($input)
         );
         $cell = new Cell();
         $data = ['id' => 42];
@@ -1117,12 +1117,12 @@ final class RadioColumnRendererTest extends TestCase
     {
         // Arrange
         $column = new RadioColumn(
-            content: static fn($input) => Html::div()
-                ->class('form-check')
-                ->content($input),
             inputAttributes: [
                 'name' => '',
-            ]
+            ],
+            content: static fn($input) => Html::div()
+                ->class('form-check')
+                ->content($input)
         );
         $cell = new Cell();
         $data = ['id' => 42];
@@ -1147,12 +1147,12 @@ final class RadioColumnRendererTest extends TestCase
     {
         // Arrange
         $column = new RadioColumn(
-            content: static fn($input) => Html::div()
-                ->class('form-check')
-                ->content($input),
             inputAttributes: [
                 'value' => '',
-            ]
+            ],
+            content: static fn($input) => Html::div()
+                ->class('form-check')
+                ->content($input)
         );
         $cell = new Cell();
         $data = ['id' => 42];
@@ -1176,6 +1176,11 @@ final class RadioColumnRendererTest extends TestCase
     public function testRenderBodyWithActiveStatus(): void
     {
         $column = new RadioColumn(
+            inputAttributes: [
+                'class' => 'form-check-input',
+                'value' => 'active',
+                'checked' => true,
+            ],
             name: 'status',
             content: static fn($input, $context) => Html::div()
                 ->class('form-check')
@@ -1184,12 +1189,7 @@ final class RadioColumnRendererTest extends TestCase
                     Html::label()
                         ->class('form-check-label')
                         ->content($context->data['status'])
-                ),
-            inputAttributes: [
-                'class' => 'form-check-input',
-                'value' => 'active',
-                'checked' => true,
-            ]
+                )
         );
 
         $cell = new Cell();
@@ -1217,6 +1217,10 @@ final class RadioColumnRendererTest extends TestCase
     public function testRenderBodyWithInactiveStatus(): void
     {
         $column = new RadioColumn(
+            inputAttributes: [
+                'class' => 'form-check-input',
+                'value' => 'inactive',
+            ],
             name: 'status',
             content: static fn($input, $context) => Html::div()
                 ->class('form-check')
@@ -1225,11 +1229,7 @@ final class RadioColumnRendererTest extends TestCase
                     Html::label()
                         ->class('form-check-label')
                         ->content($context->data['status'])
-                ),
-            inputAttributes: [
-                'class' => 'form-check-input',
-                'value' => 'inactive',
-            ]
+                )
         );
 
         $cell = new Cell();
