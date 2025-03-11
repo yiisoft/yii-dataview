@@ -4,14 +4,17 @@ declare(strict_types=1);
 
 namespace Yiisoft\Yii\DataView\Tests\Pagination;
 
+use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 use Yiisoft\Data\Paginator\PageToken;
+use Yiisoft\Data\Paginator\PaginatorInterface;
 use Yiisoft\Definitions\Exception\CircularReferenceException;
 use Yiisoft\Definitions\Exception\InvalidConfigException;
 use Yiisoft\Definitions\Exception\NotInstantiableException;
 use Yiisoft\Factory\NotFoundException;
 use Yiisoft\Yii\DataView\Column\DataColumn;
 use Yiisoft\Yii\DataView\Pagination\PaginatorNotSetException;
+use Yiisoft\Yii\DataView\Pagination\PaginatorNotSupportedException;
 use Yiisoft\Yii\DataView\GridView;
 use Yiisoft\Yii\DataView\Pagination\KeysetPagination;
 use Yiisoft\Yii\DataView\Tests\Support\Assert;
@@ -364,5 +367,514 @@ final class KeysetPaginationTest extends TestCase
         $this->expectException(PaginatorNotSetException::class);
         $this->expectExceptionMessage('Failed to create widget because "paginator" is not set.');
         Assert::invokeMethod($pagination, 'getPaginator');
+    }
+
+    public function testPaginatorNotSupportedException(): void
+    {
+        $this->expectException(PaginatorNotSupportedException::class);
+        // Use a partial message match since the actual class name of the mock will vary
+        $this->expectExceptionMessageMatches('/Paginator ".*" is not supported\./');
+
+        /** @var PaginatorInterface $nonKeysetPaginator */
+        $nonKeysetPaginator = $this->createMock(PaginatorInterface::class);
+        KeysetPagination::widget()->withPaginator($nonKeysetPaginator);
+    }
+
+    public function testContainerTagWithEmptyString(): void
+    {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Tag name cannot be empty.');
+
+        KeysetPagination::widget()->containerTag('');
+    }
+
+    public function testListTagWithEmptyString(): void
+    {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Tag name cannot be empty.');
+
+        KeysetPagination::widget()->listTag('');
+    }
+
+    public function testItemTagWithEmptyString(): void
+    {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Tag name cannot be empty.');
+
+        KeysetPagination::widget()->itemTag('');
+    }
+
+    public function testCustomContainerAttributes(): void
+    {
+        $keysetPaginator = $this->createKeysetPaginator($this->data, 5);
+
+        Assert::equalsWithoutLE(
+            <<<HTML
+            <div id="w1-grid">
+            <table>
+            <thead>
+            <tr>
+            <th>Id</th>
+            <th>Name</th>
+            <th>Description</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+            <td>1</td>
+            <td>name1</td>
+            <td>description1</td>
+            </tr>
+            <tr>
+            <td>2</td>
+            <td>name2</td>
+            <td>description2</td>
+            </tr>
+            <tr>
+            <td>3</td>
+            <td>name3</td>
+            <td>description3</td>
+            </tr>
+            <tr>
+            <td>4</td>
+            <td>name4</td>
+            <td>description4</td>
+            </tr>
+            <tr>
+            <td>5</td>
+            <td>name5</td>
+            <td>description5</td>
+            </tr>
+            </tbody>
+            </table>
+            <nav id="pagination-nav" class="custom-nav">
+            <a>⟨</a>
+            <a href="#page=5">⟩</a>
+            </nav>
+            </div>
+            HTML,
+            GridView::widget()
+                ->columns(
+                    new DataColumn('id'),
+                    new DataColumn('name'),
+                    new DataColumn('description'),
+                )
+                ->id('w1-grid')
+                ->dataReader($keysetPaginator)
+                ->paginationWidget(
+                    KeysetPagination::widget()
+                        ->withPaginator($keysetPaginator)
+                        ->containerAttributes(['class' => 'custom-nav', 'id' => 'pagination-nav'])
+                )
+                ->layout('{items}' . PHP_EOL . '{pager}')
+                ->render(),
+        );
+    }
+
+    public function testCustomListTagAndAttributes(): void
+    {
+        $keysetPaginator = $this->createKeysetPaginator($this->data, 5);
+
+        Assert::equalsWithoutLE(
+            <<<HTML
+            <div id="w1-grid">
+            <table>
+            <thead>
+            <tr>
+            <th>Id</th>
+            <th>Name</th>
+            <th>Description</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+            <td>1</td>
+            <td>name1</td>
+            <td>description1</td>
+            </tr>
+            <tr>
+            <td>2</td>
+            <td>name2</td>
+            <td>description2</td>
+            </tr>
+            <tr>
+            <td>3</td>
+            <td>name3</td>
+            <td>description3</td>
+            </tr>
+            <tr>
+            <td>4</td>
+            <td>name4</td>
+            <td>description4</td>
+            </tr>
+            <tr>
+            <td>5</td>
+            <td>name5</td>
+            <td>description5</td>
+            </tr>
+            </tbody>
+            </table>
+            <nav>
+            <ul class="pagination">
+            <a>⟨</a>
+            <a href="#page=5">⟩</a>
+            </ul>
+            </nav>
+            </div>
+            HTML,
+            GridView::widget()
+                ->columns(
+                    new DataColumn('id'),
+                    new DataColumn('name'),
+                    new DataColumn('description'),
+                )
+                ->id('w1-grid')
+                ->dataReader($keysetPaginator)
+                ->paginationWidget(
+                    KeysetPagination::widget()
+                        ->withPaginator($keysetPaginator)
+                        ->listTag('ul')
+                        ->listAttributes(['class' => 'pagination'])
+                )
+                ->layout('{items}' . PHP_EOL . '{pager}')
+                ->render(),
+        );
+    }
+
+    public function testCustomItemTagAndAttributes(): void
+    {
+        $keysetPaginator = $this->createKeysetPaginator($this->data, 5);
+
+        Assert::equalsWithoutLE(
+            <<<HTML
+            <div id="w1-grid">
+            <table>
+            <thead>
+            <tr>
+            <th>Id</th>
+            <th>Name</th>
+            <th>Description</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+            <td>1</td>
+            <td>name1</td>
+            <td>description1</td>
+            </tr>
+            <tr>
+            <td>2</td>
+            <td>name2</td>
+            <td>description2</td>
+            </tr>
+            <tr>
+            <td>3</td>
+            <td>name3</td>
+            <td>description3</td>
+            </tr>
+            <tr>
+            <td>4</td>
+            <td>name4</td>
+            <td>description4</td>
+            </tr>
+            <tr>
+            <td>5</td>
+            <td>name5</td>
+            <td>description5</td>
+            </tr>
+            </tbody>
+            </table>
+            <nav>
+            <li class="page-item"><a>⟨</a></li>
+            <li class="page-item"><a href="#page=5">⟩</a></li>
+            </nav>
+            </div>
+            HTML,
+            GridView::widget()
+                ->columns(
+                    new DataColumn('id'),
+                    new DataColumn('name'),
+                    new DataColumn('description'),
+                )
+                ->id('w1-grid')
+                ->dataReader($keysetPaginator)
+                ->paginationWidget(
+                    KeysetPagination::widget()
+                        ->withPaginator($keysetPaginator)
+                        ->itemTag('li')
+                        ->itemAttributes(['class' => 'page-item'])
+                )
+                ->layout('{items}' . PHP_EOL . '{pager}')
+                ->render(),
+        );
+    }
+
+    public function testDisabledItemAndLinkClasses(): void
+    {
+        $keysetPaginator = $this->createKeysetPaginator($this->data, 5);
+
+        Assert::equalsWithoutLE(
+            <<<HTML
+            <div id="w1-grid">
+            <table>
+            <thead>
+            <tr>
+            <th>Id</th>
+            <th>Name</th>
+            <th>Description</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+            <td>1</td>
+            <td>name1</td>
+            <td>description1</td>
+            </tr>
+            <tr>
+            <td>2</td>
+            <td>name2</td>
+            <td>description2</td>
+            </tr>
+            <tr>
+            <td>3</td>
+            <td>name3</td>
+            <td>description3</td>
+            </tr>
+            <tr>
+            <td>4</td>
+            <td>name4</td>
+            <td>description4</td>
+            </tr>
+            <tr>
+            <td>5</td>
+            <td>name5</td>
+            <td>description5</td>
+            </tr>
+            </tbody>
+            </table>
+            <nav>
+            <li class="page-item disabled"><a class="disabled">⟨</a></li>
+            <li class="page-item"><a href="#page=5">⟩</a></li>
+            </nav>
+            </div>
+            HTML,
+            GridView::widget()
+                ->columns(
+                    new DataColumn('id'),
+                    new DataColumn('name'),
+                    new DataColumn('description'),
+                )
+                ->id('w1-grid')
+                ->dataReader($keysetPaginator)
+                ->paginationWidget(
+                    KeysetPagination::widget()
+                        ->withPaginator($keysetPaginator)
+                        ->itemTag('li')
+                        ->itemAttributes(['class' => 'page-item'])
+                        ->disabledItemClass('disabled')
+                        ->disabledLinkClass('disabled')
+                )
+                ->layout('{items}' . PHP_EOL . '{pager}')
+                ->render(),
+        );
+    }
+
+    public function testCustomLinkAttributes(): void
+    {
+        $keysetPaginator = $this->createKeysetPaginator($this->data, 5);
+
+        Assert::equalsWithoutLE(
+            <<<HTML
+            <div id="w1-grid">
+            <table>
+            <thead>
+            <tr>
+            <th>Id</th>
+            <th>Name</th>
+            <th>Description</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+            <td>1</td>
+            <td>name1</td>
+            <td>description1</td>
+            </tr>
+            <tr>
+            <td>2</td>
+            <td>name2</td>
+            <td>description2</td>
+            </tr>
+            <tr>
+            <td>3</td>
+            <td>name3</td>
+            <td>description3</td>
+            </tr>
+            <tr>
+            <td>4</td>
+            <td>name4</td>
+            <td>description4</td>
+            </tr>
+            <tr>
+            <td>5</td>
+            <td>name5</td>
+            <td>description5</td>
+            </tr>
+            </tbody>
+            </table>
+            <nav>
+            <a class="page-link">⟨</a>
+            <a class="page-link" href="#page=5">⟩</a>
+            </nav>
+            </div>
+            HTML,
+            GridView::widget()
+                ->columns(
+                    new DataColumn('id'),
+                    new DataColumn('name'),
+                    new DataColumn('description'),
+                )
+                ->id('w1-grid')
+                ->dataReader($keysetPaginator)
+                ->paginationWidget(
+                    KeysetPagination::widget()
+                        ->withPaginator($keysetPaginator)
+                        ->linkAttributes(['class' => 'page-link'])
+                )
+                ->layout('{items}' . PHP_EOL . '{pager}')
+                ->render(),
+        );
+    }
+
+    public function testCustomContainerTag(): void
+    {
+        $keysetPaginator = $this->createKeysetPaginator($this->data, 5);
+
+        Assert::equalsWithoutLE(
+            <<<HTML
+            <div id="w1-grid">
+            <table>
+            <thead>
+            <tr>
+            <th>Id</th>
+            <th>Name</th>
+            <th>Description</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+            <td>1</td>
+            <td>name1</td>
+            <td>description1</td>
+            </tr>
+            <tr>
+            <td>2</td>
+            <td>name2</td>
+            <td>description2</td>
+            </tr>
+            <tr>
+            <td>3</td>
+            <td>name3</td>
+            <td>description3</td>
+            </tr>
+            <tr>
+            <td>4</td>
+            <td>name4</td>
+            <td>description4</td>
+            </tr>
+            <tr>
+            <td>5</td>
+            <td>name5</td>
+            <td>description5</td>
+            </tr>
+            </tbody>
+            </table>
+            <div>
+            <a>⟨</a>
+            <a href="#page=5">⟩</a>
+            </div>
+            </div>
+            HTML,
+            GridView::widget()
+                ->columns(
+                    new DataColumn('id'),
+                    new DataColumn('name'),
+                    new DataColumn('description'),
+                )
+                ->id('w1-grid')
+                ->dataReader($keysetPaginator)
+                ->paginationWidget(
+                    KeysetPagination::widget()
+                        ->withPaginator($keysetPaginator)
+                        ->containerTag('div')
+                )
+                ->layout('{items}' . PHP_EOL . '{pager}')
+                ->render(),
+        );
+    }
+
+    public function testNoContainerTag(): void
+    {
+        $keysetPaginator = $this->createKeysetPaginator($this->data, 5);
+
+        Assert::equalsWithoutLE(
+            <<<HTML
+            <div id="w1-grid">
+            <table>
+            <thead>
+            <tr>
+            <th>Id</th>
+            <th>Name</th>
+            <th>Description</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+            <td>1</td>
+            <td>name1</td>
+            <td>description1</td>
+            </tr>
+            <tr>
+            <td>2</td>
+            <td>name2</td>
+            <td>description2</td>
+            </tr>
+            <tr>
+            <td>3</td>
+            <td>name3</td>
+            <td>description3</td>
+            </tr>
+            <tr>
+            <td>4</td>
+            <td>name4</td>
+            <td>description4</td>
+            </tr>
+            <tr>
+            <td>5</td>
+            <td>name5</td>
+            <td>description5</td>
+            </tr>
+            </tbody>
+            </table>
+            <a>⟨</a>
+            <a href="#page=5">⟩</a>
+            </div>
+            HTML,
+            GridView::widget()
+                ->columns(
+                    new DataColumn('id'),
+                    new DataColumn('name'),
+                    new DataColumn('description'),
+                )
+                ->id('w1-grid')
+                ->dataReader($keysetPaginator)
+                ->paginationWidget(
+                    KeysetPagination::widget()
+                        ->withPaginator($keysetPaginator)
+                        ->containerTag(null)
+                )
+                ->layout('{items}' . PHP_EOL . '{pager}')
+                ->render(),
+        );
     }
 }
