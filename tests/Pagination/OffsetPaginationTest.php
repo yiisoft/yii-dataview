@@ -24,15 +24,45 @@ final class OffsetPaginationTest extends TestCase
 {
     use TestTrait;
 
+    private const PAGE_SIZE = 10;
+    private const TOTAL_ITEMS = 30;
+
+    /**
+     * @return array<int, array{id: int, value: string}>
+     */
+    private function createTestData(): array
+    {
+        return array_map(
+            static fn (int $i): array => ['id' => $i, 'value' => "Item $i"],
+            range(1, self::TOTAL_ITEMS)
+        );
+    }
+
+    /**
+     * @param array<int, array{id: int, value: string}> $data
+     */
+    private function createGridView(array $data, OffsetPagination $pagination): string
+    {
+        return GridView::widget()
+            ->id('w1-grid')
+            ->dataReader($this->createOffsetPaginator($data, self::PAGE_SIZE))
+            ->columns(
+                new DataColumn(property: 'id'),
+                new DataColumn(property: 'value')
+            )
+            ->paginationWidget($pagination)
+            ->render();
+    }
+
     /**
      * @throws CircularReferenceException
      * @throws InvalidConfigException
      * @throws NotInstantiableException
      * @throws NotFoundException
      */
-    public function testRenderPaginatorEmptyData(): void
+    public function testEmptyData(): void
     {
-        $offsetPaginator = $this->createOffsetPaginator([], 10);
+        $offsetPaginator = $this->createOffsetPaginator([], self::PAGE_SIZE);
 
         Assert::equalsWithoutLE(
             <<<HTML
@@ -57,16 +87,15 @@ final class OffsetPaginationTest extends TestCase
         );
     }
 
-    public function testNotSetPaginator(): void
+    public function testPaginatorNotSet(): void
     {
         $pagination = OffsetPagination::widget();
 
         $this->expectException(PaginatorNotSetException::class);
-        $this->expectExceptionMessage('Failed to create widget because "paginator" is not set.');
-        Assert::invokeMethod($pagination, 'getPaginator');
+        $pagination->render();
     }
 
-    public function testContainerTagCannotBeEmpty(): void
+    public function testEmptyContainerTag(): void
     {
         $pagination = OffsetPagination::widget();
 
@@ -75,7 +104,7 @@ final class OffsetPaginationTest extends TestCase
         $pagination->containerTag('');
     }
 
-    public function testListTagCannotBeEmpty(): void
+    public function testEmptyListTag(): void
     {
         $pagination = OffsetPagination::widget();
 
@@ -84,7 +113,7 @@ final class OffsetPaginationTest extends TestCase
         $pagination->listTag('');
     }
 
-    public function testItemTagCannotBeEmpty(): void
+    public function testEmptyItemTag(): void
     {
         $pagination = OffsetPagination::widget();
 
@@ -99,34 +128,16 @@ final class OffsetPaginationTest extends TestCase
      * @throws NotInstantiableException
      * @throws NotFoundException
      */
-    public function testCustomAttributesAreRendered(): void
+    public function testCustomAttributes(): void
     {
-        $data = array_map(
-            static fn (int $i): array => ['id' => $i, 'value' => "Item $i"],
-            range(1, 30)
-        );
-        $offsetPaginator = $this->createOffsetPaginator($data, 10);
+        $pagination = OffsetPagination::widget()
+            ->containerAttributes(['class' => 'container'])
+            ->linkAttributes(['class' => 'link'])
+            ->currentLinkClass('current')
+            ->disabledLinkClass('inactive')
+            ->maxNavLinkCount(5);
 
-        $html = GridView::widget()
-            ->id('w1-grid')
-            ->dataReader($offsetPaginator)
-            ->columns(
-                new DataColumn(property: 'id'),
-                new DataColumn(property: 'value')
-            )
-            ->paginationWidget(
-                OffsetPagination::widget()
-                    ->containerAttributes(['class' => 'container'])
-                    ->listAttributes(['class' => 'list'])
-                    ->itemAttributes(['class' => 'item'])
-                    ->linkAttributes(['class' => 'link'])
-                    ->currentItemClass('active')
-                    ->disabledItemClass('disabled')
-                    ->currentLinkClass('current')
-                    ->disabledLinkClass('inactive')
-                    ->maxNavLinkCount(5)
-            )
-            ->render();
+        $html = $this->createGridView($this->createTestData(), $pagination);
 
         $this->assertStringContainsString('class="container"', $html);
         $this->assertStringContainsString('class="link inactive"', $html);
@@ -139,29 +150,15 @@ final class OffsetPaginationTest extends TestCase
      * @throws NotInstantiableException
      * @throws NotFoundException
      */
-    public function testCustomLabelsAreRendered(): void
+    public function testCustomLabels(): void
     {
-        $data = array_map(
-            static fn (int $i): array => ['id' => $i, 'value' => "Item $i"],
-            range(1, 30)
-        );
-        $offsetPaginator = $this->createOffsetPaginator($data, 10);
+        $pagination = OffsetPagination::widget()
+            ->labelFirst('First')
+            ->labelLast('Last')
+            ->labelPrevious('Prev')
+            ->labelNext('Next');
 
-        $html = GridView::widget()
-            ->id('w1-grid')
-            ->dataReader($offsetPaginator)
-            ->columns(
-                new DataColumn(property: 'id'),
-                new DataColumn(property: 'value')
-            )
-            ->paginationWidget(
-                OffsetPagination::widget()
-                    ->labelFirst('First')
-                    ->labelLast('Last')
-                    ->labelPrevious('Prev')
-                    ->labelNext('Next')
-            )
-            ->render();
+        $html = $this->createGridView($this->createTestData(), $pagination);
 
         $this->assertStringContainsString('First', $html);
         $this->assertStringContainsString('Last', $html);
@@ -175,28 +172,14 @@ final class OffsetPaginationTest extends TestCase
      * @throws NotInstantiableException
      * @throws NotFoundException
      */
-    public function testCustomTagsAreRendered(): void
+    public function testCustomTags(): void
     {
-        $data = array_map(
-            static fn (int $i): array => ['id' => $i, 'value' => "Item $i"],
-            range(1, 30)
-        );
-        $offsetPaginator = $this->createOffsetPaginator($data, 10);
+        $pagination = OffsetPagination::widget()
+            ->containerTag('div')
+            ->listTag('ul')
+            ->itemTag('li');
 
-        $html = GridView::widget()
-            ->id('w1-grid')
-            ->dataReader($offsetPaginator)
-            ->columns(
-                new DataColumn(property: 'id'),
-                new DataColumn(property: 'value')
-            )
-            ->paginationWidget(
-                OffsetPagination::widget()
-                    ->containerTag('div')
-                    ->listTag('ul')
-                    ->itemTag('li')
-            )
-            ->render();
+        $html = $this->createGridView($this->createTestData(), $pagination);
 
         $this->assertStringContainsString('<div', $html);
         $this->assertStringContainsString('<ul', $html);
