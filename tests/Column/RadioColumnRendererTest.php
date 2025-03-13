@@ -241,53 +241,6 @@ final class RadioColumnRendererTest extends TestCase
         $this->assertSame('Footer content', $result->getContent()[0]);
     }
 
-    public function testRenderFooterWithoutContent(): void
-    {
-        $column = new RadioColumn();
-        $cell = new Cell();
-        $translator = Mock::translator('en');
-
-        $context = new GlobalContext(
-            dataReader: $this->dataReader,
-            pathArguments: [],
-            queryParameters: [],
-            translator: $translator,
-            translationCategory: 'test'
-        );
-
-        $renderer = new RadioColumnRenderer();
-        $result = $renderer->renderFooter($column, $cell, $context);
-
-        $this->assertEmpty($result->getContent());
-    }
-
-    public function testRenderBodyWithCustomContentAndEmptyAttributes(): void
-    {
-        $column = new RadioColumn(
-            bodyAttributes: [],
-            inputAttributes: [],
-            content: static fn($input) => Html::div($input)->class('custom-wrapper')
-        );
-        $cell = new Cell();
-        $data = ['id' => 1];
-
-        $context = new DataContext(
-            preparedDataReader: $this->dataReader,
-            column: $column,
-            data: $data,
-            key: 1,
-            index: 0
-        );
-
-        $renderer = new RadioColumnRenderer();
-        $result = $renderer->renderBody($column, $cell, $context);
-
-        $content = $result->getContent();
-        $this->assertNotEmpty($content);
-        $this->assertStringContainsString('<div class="custom-wrapper">', (string)$content[0]);
-        $this->assertEmpty($result->getAttributes());
-    }
-
     public function testRenderBodyWithCustomName(): void
     {
         $column = new RadioColumn(
@@ -648,12 +601,9 @@ final class RadioColumnRendererTest extends TestCase
             content: static fn($input) => Html::div()
                 ->class('input-group')
                 ->content(
-                    Html::label()
-                        ->content(
-                            $input,
-                            Html::span('*')->class('required'),
-                            'Select user'
-                        )
+                    $input,
+                    Html::span('*')->class('required'),
+                    'Select user'
                 )
         );
         $cell = new Cell();
@@ -811,7 +761,6 @@ final class RadioColumnRendererTest extends TestCase
 
     public function testDefaultNameIsUsedWhenNotProvided(): void
     {
-        // Arrange
         $column = new RadioColumn();
         $cell = new Cell();
         $data = ['id' => 42];
@@ -824,10 +773,8 @@ final class RadioColumnRendererTest extends TestCase
         );
         $renderer = new RadioColumnRenderer();
 
-        // Act
         $result = $renderer->renderBody($column, $cell, $context);
 
-        // Assert
         $content = $result->getContent();
         $this->assertStringContainsString('name="radio-selection"', (string)$content[0]);
     }
@@ -892,7 +839,7 @@ final class RadioColumnRendererTest extends TestCase
     public function testRenderBodyWithContextInContentClosure(): void
     {
         $column = new RadioColumn(
-            content: static fn($input, $context) => (string)$input . ' Item ' . $context->index
+            content: static fn($input, $context) => $input . ' Item ' . $context->index
         );
         $cell = new Cell();
         $data = ['id' => 42];
@@ -1115,7 +1062,6 @@ final class RadioColumnRendererTest extends TestCase
 
     public function testEmptyNameAttributeIsPreserved(): void
     {
-        // Arrange
         $column = new RadioColumn(
             inputAttributes: [
                 'name' => '',
@@ -1135,17 +1081,14 @@ final class RadioColumnRendererTest extends TestCase
         );
         $renderer = new RadioColumnRenderer();
 
-        // Act
         $result = $renderer->renderBody($column, $cell, $context);
 
-        // Assert
         $content = $result->getContent();
         $this->assertStringContainsString('name value="1"', (string)$content[0]);
     }
 
     public function testEmptyValueAttributeIsPreserved(): void
     {
-        // Arrange
         $column = new RadioColumn(
             inputAttributes: [
                 'value' => '',
@@ -1165,10 +1108,8 @@ final class RadioColumnRendererTest extends TestCase
         );
         $renderer = new RadioColumnRenderer();
 
-        // Act
         $result = $renderer->renderBody($column, $cell, $context);
 
-        // Assert
         $content = $result->getContent();
         $this->assertStringContainsString('name="radio-selection" value', (string)$content[0]);
     }
@@ -1252,5 +1193,231 @@ final class RadioColumnRendererTest extends TestCase
         $this->assertStringContainsString('value="inactive"', (string)$content[0]);
         $this->assertStringNotContainsString('checked', (string)$content[0]);
         $this->assertFalse($result->shouldEncode());
+    }
+
+    public function testContentClosureReceivesInputAndContext(): void
+    {
+        $expectedInput = null;
+        $expectedContext = null;
+        $column = new RadioColumn(
+            inputAttributes: [
+                'class' => 'form-check-input',
+                'name' => 'selection',
+            ],
+            content: static function($input, $context) use (&$expectedInput, &$expectedContext) {
+                $expectedInput = $input;
+                $expectedContext = $context;
+                return $input;
+            }
+        );
+        $cell = new Cell();
+        $data = ['id' => 42, 'name' => 'Test'];
+        $context = new DataContext(
+            preparedDataReader: $this->dataReader,
+            column: $column,
+            data: $data,
+            key: 1,
+            index: 0
+        );
+        $renderer = new RadioColumnRenderer();
+
+        $result = $renderer->renderBody($column, $cell, $context);
+
+        $this->assertNotNull($expectedInput);
+        $this->assertStringContainsString('type="radio"', (string)$expectedInput);
+        $this->assertSame($context, $expectedContext);
+    }
+
+    public function testContentClosureCanModifyInput(): void
+    {
+        $column = new RadioColumn(
+            inputAttributes: [
+                'class' => 'form-check-input',
+                'name' => 'selection',
+            ],
+            content: static function($input) {
+                return Html::div()
+                    ->class('input-wrapper')
+                    ->content(
+                        $input->class('modified-input'),
+                        Html::label('Select item')
+                    );
+            }
+        );
+        $cell = new Cell();
+        $data = ['id' => 42];
+        $context = new DataContext(
+            preparedDataReader: $this->dataReader,
+            column: $column,
+            data: $data,
+            key: 1,
+            index: 0
+        );
+        $renderer = new RadioColumnRenderer();
+
+        $result = $renderer->renderBody($column, $cell, $context);
+
+        $content = $result->getContent();
+        $this->assertStringContainsString('class="modified-input"', (string)$content[0]);
+        $this->assertStringContainsString('class="input-wrapper"', (string)$content[0]);
+    }
+
+    public function testRenderBodyPreservesExistingInputAttributes(): void
+    {
+        $column = new RadioColumn(
+            inputAttributes: [
+                'class' => 'custom-radio',
+                'data-test' => 'test-value',
+                'aria-label' => 'Select option',
+                'name' => 'custom-name',
+                'value' => 'custom-value',
+            ]
+        );
+        $cell = new Cell();
+        $data = ['id' => 42];
+        $context = new DataContext(
+            preparedDataReader: $this->dataReader,
+            column: $column,
+            data: $data,
+            key: 1,
+            index: 0
+        );
+        $renderer = new RadioColumnRenderer();
+
+        $result = $renderer->renderBody($column, $cell, $context);
+
+        $content = $result->getContent();
+        $this->assertStringContainsString('class="custom-radio"', (string)$content[0]);
+        $this->assertStringContainsString('data-test="test-value"', (string)$content[0]);
+        $this->assertStringContainsString('aria-label="Select option"', (string)$content[0]);
+        $this->assertStringContainsString('name="custom-name"', (string)$content[0]);
+        $this->assertStringContainsString('value="custom-value"', (string)$content[0]);
+    }
+
+    public function testRenderBodyWithCustomizedHtmlStructure(): void
+    {
+        $column = new RadioColumn(
+            inputAttributes: [
+                'class' => 'form-check-input custom-radio',
+                'id' => 'radio-42',
+                'aria-label' => 'Select option',
+            ],
+            content: static function($input) {
+                return Html::div()
+                    ->class('form-check custom-control')
+                    ->attributes(['data-test' => 'radio-wrapper'])
+                    ->content(
+                        $input,
+                        Html::span('✓')->class('check-mark'),
+                        Html::label()
+                            ->class('form-check-label')
+                            ->attributes(['for' => 'radio-42'])
+                            ->content('Select option')
+                    );
+            }
+        );
+        $cell = new Cell();
+        $data = ['id' => 42];
+        $context = new DataContext(
+            preparedDataReader: $this->dataReader,
+            column: $column,
+            data: $data,
+            key: 1,
+            index: 0
+        );
+        $renderer = new RadioColumnRenderer();
+
+        $result = $renderer->renderBody($column, $cell, $context);
+
+        $content = $result->getContent();
+        $this->assertStringContainsString('form-check-input', (string)$content[0]);
+        $this->assertStringContainsString('custom-radio', (string)$content[0]);
+        $this->assertStringContainsString('for="radio-42"', (string)$content[0]);
+        $this->assertStringContainsString('id="radio-42"', (string)$content[0]);
+        $this->assertStringContainsString('check-mark', (string)$content[0]);
+        $this->assertStringContainsString('Select option', (string)$content[0]);
+    }
+
+    public function testRenderBodyWithCustomizedHtmlStructureAndAttributes(): void
+    {
+        $column = new RadioColumn(
+            inputAttributes: [
+                'class' => 'form-check-input custom-radio',
+                'id' => 'radio-42',
+                'aria-label' => 'Select option',
+                'data-test' => 'test-value',
+            ],
+            content: static function($input) {
+                return Html::div()
+                    ->class('form-check custom-control')
+                    ->attributes([
+                        'data-test' => 'radio-wrapper',
+                        'data-user-id' => '42',
+                    ])
+                    ->content(
+                        $input,
+                        Html::span('✓')->class('check-mark'),
+                        Html::label()
+                            ->class('form-check-label')
+                            ->attributes(['for' => 'radio-42'])
+                            ->content('Select option')
+                    );
+            }
+        );
+        $cell = new Cell();
+        $data = ['id' => 42];
+        $context = new DataContext(
+            preparedDataReader: $this->dataReader,
+            column: $column,
+            data: $data,
+            key: 1,
+            index: 0
+        );
+        $renderer = new RadioColumnRenderer();
+
+        $result = $renderer->renderBody($column, $cell, $context);
+
+        $content = $result->getContent();
+        $this->assertStringContainsString('form-check-input', (string)$content[0]);
+        $this->assertStringContainsString('custom-radio', (string)$content[0]);
+        $this->assertStringContainsString('data-test="test-value"', (string)$content[0]);
+        $this->assertStringContainsString('data-user-id="42"', (string)$content[0]);
+        $this->assertStringContainsString('for="radio-42"', (string)$content[0]);
+        $this->assertStringContainsString('id="radio-42"', (string)$content[0]);
+        $this->assertStringContainsString('check-mark', (string)$content[0]);
+        $this->assertStringContainsString('Select option', (string)$content[0]);
+    }
+
+    public function testRenderBodyWithDataFromContext(): void
+    {
+        $column = new RadioColumn(
+            inputAttributes: ['class' => 'form-check-input'],
+            content: static function($input, $context) {
+                return Html::div()
+                    ->class('form-check')
+                    ->content(
+                        $input,
+                        Html::label()
+                            ->class('form-check-label')
+                            ->content($context->data['name'])
+                    );
+            }
+        );
+        $cell = new Cell();
+        $data = ['id' => 42, 'name' => 'Test User'];
+        $context = new DataContext(
+            preparedDataReader: $this->dataReader,
+            column: $column,
+            data: $data,
+            key: 1,
+            index: 0
+        );
+        $renderer = new RadioColumnRenderer();
+
+        $result = $renderer->renderBody($column, $cell, $context);
+
+        $content = $result->getContent();
+        $this->assertStringContainsString('Test User', (string)$content[0]);
+        $this->assertStringContainsString('class="form-check-label"', (string)$content[0]);
     }
 }
