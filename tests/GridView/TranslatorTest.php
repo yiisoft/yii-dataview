@@ -11,7 +11,6 @@ use Yiisoft\Definitions\Exception\NotInstantiableException;
 use Yiisoft\Definitions\Reference;
 use Yiisoft\Di\Container;
 use Yiisoft\Di\ContainerConfig;
-use Yiisoft\Factory\NotFoundException;
 use Yiisoft\Translator\Translator;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\Validator\Validator;
@@ -154,7 +153,7 @@ final class TranslatorTest extends TestCase
 
     /**
      * @throws InvalidConfigException
-     * @throws NotFoundException
+     * @throws \Yiisoft\Factory\NotFoundException
      * @throws NotInstantiableException
      * @throws CircularReferenceException
      */
@@ -205,7 +204,7 @@ final class TranslatorTest extends TestCase
 
     /**
      * @throws InvalidConfigException
-     * @throws NotFoundException
+     * @throws \Yiisoft\Factory\NotFoundException
      * @throws NotInstantiableException
      * @throws CircularReferenceException
      */
@@ -258,7 +257,7 @@ final class TranslatorTest extends TestCase
 
     /**
      * @throws InvalidConfigException
-     * @throws NotFoundException
+     * @throws \Yiisoft\Factory\NotFoundException
      * @throws NotInstantiableException
      * @throws CircularReferenceException
      */
