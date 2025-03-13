@@ -10,6 +10,7 @@ use Yiisoft\Definitions\Exception\CircularReferenceException;
 use Yiisoft\Definitions\Exception\InvalidConfigException;
 use Yiisoft\Definitions\Exception\NotInstantiableException;
 use Yiisoft\Factory\NotFoundException;
+use Yiisoft\Validator\Result;
 use Yiisoft\Yii\DataView;
 use Yiisoft\Yii\DataView\Column\DataColumn;
 use Yiisoft\Yii\DataView\Pagination\OffsetPagination;
@@ -106,7 +107,7 @@ final class ImmutableTest extends TestCase
         return new class () extends DataView\BaseListView {
             public function renderItems(
                 array $items,
-                \Yiisoft\Validator\Result $filterValidationResult,
+                Result $filterValidationResult,
                 ?ReadableDataInterface $preparedDataReader,
             ): string {
                 return '';
