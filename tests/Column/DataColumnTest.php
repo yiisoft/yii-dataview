@@ -10,9 +10,7 @@ use Yiisoft\Definitions\Exception\CircularReferenceException;
 use Yiisoft\Definitions\Exception\InvalidConfigException;
 use Yiisoft\Definitions\Exception\NotInstantiableException;
 use Yiisoft\Factory\NotFoundException;
-use Yiisoft\Validator\Rule\Email;
 use Yiisoft\Yii\DataView\Column\DataColumn;
-use Yiisoft\Yii\DataView\Filter\Factory\EqualsFilterFactory;
 use Yiisoft\Yii\DataView\GridView;
 use Yiisoft\Yii\DataView\Tests\Support\Assert;
 use Yiisoft\Yii\DataView\Tests\Support\TestTrait;
@@ -700,7 +698,7 @@ final class DataColumnTest extends TestCase
                 new DataColumn(
                     'email',
                     filter: true,
-                    filterValidation: new Email()
+                    filterValidation: new \Yiisoft\Validator\Rule\Email()
                 ),
             )
             ->id('w1-grid')
@@ -747,7 +745,7 @@ final class DataColumnTest extends TestCase
                 new DataColumn(
                     'status',
                     filter: true,
-                    filterFactory: new EqualsFilterFactory()
+                    filterFactory: new \Yiisoft\Yii\DataView\Filter\Factory\EqualsFilterFactory()
                 ),
             )
             ->id('w1-grid')
