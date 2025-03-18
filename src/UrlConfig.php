@@ -74,28 +74,28 @@ final class UrlConfig
     /**
      * Creates a new instance with the specified page size parameter name.
      *
-     * @param string $pageSizeParameterName The new page size parameter name.
+     * @param string $name The new page size parameter name.
      *
      * @return self A new instance with the updated page size parameter name.
      */
-    public function withPageSizeParameterName(string $pageSizeParameterName): self
+    public function withPageSizeParameterName(string $name): self
     {
         $new = clone $this;
-        $new->pageSizeParameterName = $pageSizeParameterName;
+        $new->pageSizeParameterName = $name;
         return $new;
     }
 
     /**
      * Creates a new instance with the specified sort parameter name.
      *
-     * @param string $sortParameterName The new sort parameter name.
+     * @param string $name The new sort parameter name.
      *
      * @return self A new instance with the updated sort parameter name.
      */
-    public function withSortParameterName(string $sortParameterName): self
+    public function withSortParameterName(string $name): self
     {
         $new = clone $this;
-        $new->sortParameterName = $sortParameterName;
+        $new->sortParameterName = $name;
         return $new;
     }
 
@@ -191,15 +191,15 @@ final class UrlConfig
     /**
      * Creates a new instance with the specified additional query parameters.
      *
-     * @param array $queryParameters The new additional query parameters. These will
+     * @param array $parameters The new additional query parameters. These will
      * completely replace any existing query parameters.
      *
      * @return self A new instance with the updated additional query parameters.
      */
-    public function withQueryParameters(array $queryParameters): self
+    public function withQueryParameters(array $parameters): self
     {
         $new = clone $this;
-        $new->queryParameters = $queryParameters;
+        $new->queryParameters = $parameters;
         return $new;
     }
 
