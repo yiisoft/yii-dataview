@@ -2,19 +2,6 @@
 
 You can adjust URLs used in grids and lists for pagination, sorting, and filtering.
 
-  
-urlArguments
-urlQueryParameters
-
-* @param array $arguments Additional URL arguments to be included in generated URLs.
-     * @psalm-param UrlArguments $arguments
-* @param array $queryParameters Additional query parameters to be included in generated URLs.
-
-
-
-final public function urlCreator(?callable $urlCreator): static
-final public function urlParameterProvider(?UrlParameterProviderInterface $provider): static
-
 ## Parameter names and types
 
 You can customize parameter names and types:
