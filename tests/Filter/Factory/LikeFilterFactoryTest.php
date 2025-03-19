@@ -21,7 +21,7 @@ final class LikeFilterFactoryTest extends TestCase
 
         $this->assertSame('name', $filter->getField());
         $this->assertSame('John', $filter->getValue());
-        $this->assertNull($filter->isCaseSensitive());
+        $this->assertNull($filter->getCaseSensitive());
     }
 
     public function testCreateWithEmptyValue(): void
@@ -54,6 +54,6 @@ final class LikeFilterFactoryTest extends TestCase
 
         $filter = $factory->create('name', 'John');
 
-        $this->assertSame($value, $filter->isCaseSensitive());
+        $this->assertSame($value, $filter->getCaseSensitive());
     }
 }
