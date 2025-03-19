@@ -134,12 +134,6 @@ abstract class BaseListView extends Widget
     protected ?ReadableDataInterface $dataReader = null;
     private string $toolbar = '';
 
-    /**
-     * @psalm-var array<string,scalar|Stringable|null>
-     */
-    protected array $urlArguments = [];
-    protected array $urlQueryParameters = [];
-
     protected UrlParameterProviderInterface|null $urlParameterProvider = null;
 
     private bool $ignoreMissingPage = true;
@@ -511,7 +505,7 @@ abstract class BaseListView extends Widget
     final public function urlArguments(array $arguments): static
     {
         $new = clone $this;
-        $new->urlArguments = $arguments;
+        $new->urlConfig = $this->urlConfig->withArguments($arguments);
         return $new;
     }
 
@@ -523,8 +517,7 @@ abstract class BaseListView extends Widget
     final public function urlQueryParameters(array $parameters): static
     {
         $new = clone $this;
-        $new->urlQueryParameters = $parameters;
-
+        $new->urlConfig = $this->urlConfig->withQueryParameters($parameters);
         return $new;
     }
 
