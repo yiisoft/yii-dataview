@@ -1,73 +1,54 @@
 # URLs
 
-The Yii DataView component provides a flexible and customizable URL management system through the `UrlConfig` class.
-This system handles URL generation for pagination, sorting, and filtering in a consistent and configurable way.
-
-The most basic URL configuration can be created with default settings:
-
-```php
-use Yiisoft\Yii\DataView\UrlConfig;
-use Yiisoft\Yii\DataView\GridView;
-
-$config = new UrlConfig();
-
-echo GridView::widget()
-    ->urlConfig($config)
-    ->dataReader($dataReader);
-```
+You can adjust URLs used in grids and lists for pagination, sorting, and filtering.
 
 ## Parameter names and types
 
 You can customize parameter names and types:
 
 ```php
-use Yiisoft\Yii\DataView\UrlConfig;
+<?php
+use Yiisoft\Yii\DataView\GridView;
 use Yiisoft\Yii\DataView\UrlParameterType;
+?>
 
-$config = (new UrlConfig())
+<?= GridView::widget()
     // Page parameters
-    ->withPageParameterName('p')
-    ->withPageParameterType(UrlParameterType::PATH)
-    ->withPreviousPageParameterName('prev')
-    ->withPreviousPageParameterType(UrlParameterType::QUERY)
+    ->pageParameterName('p') // Name of the parameter for the current page number. Default is `page`.
+    ->pageParameterType(UrlParameterType::PATH) // Type of the page parameter. Default is `UrlParameterType::QUERY`.
+    ->previousPageParameterName('prev') // Name of the parameter for the previous page. Default is `prev-page`.
+    ->previousPageParameterType(UrlParameterType::PATH) // Type of the previous page parameter. Default is `UrlParameterType::QUERY`.
     
-    // Sorting parameters
-    ->withSortParameterName('orderBy')
-    ->withSortParameterType(UrlParameterType::QUERY)
+    // Sorting parameter
+    ->sortParameterName('orderBy') // Name of the parameter for sorting configuration. Default is `sort`.
+    ->sortParameterType(UrlParameterType::QUERY) // Type of the sort parameter. Default is `UrlParameterType::QUERY`.
     
     // Page size parameters
-    ->withPageSizeParameterName('limit')
-    ->withPageSizeParameterType(UrlParameterType::QUERY);
+    ->pageSizeParameterName('limit') // Name of the parameter for items per page. Default is `pagesize`.
+    ->pageSizeParameterType(UrlParameterType::QUERY); // Type of the page size parameter. Default is `UrlParameterType::QUERY`.
+?>
 ```
 
 If needed, you can add fixed arguments and query parameters to the URL generated:
 
 ```php
-use Yiisoft\Yii\DataView\UrlConfig;
+<?php
+use Yiisoft\Yii\DataView\GridView;
+use Yiisoft\Yii\DataView\UrlParameterType;
+?>
 
-$config = (new UrlConfig())
+<?= GridView::widget()
     // /books/page/2/active
-    ->withArguments([
+    ->urlArguments([
         'category' => 'books',
         'status' => 'active',
     ])
     // /books/page/2?language=en&format=html
-    ->withQueryParameters([
+    ->urlQueryParameters([
         'language' => 'en',
         'format' => 'html',
-    ]);
-```
-
-Page and sorting parameters could be included either in the path or in the query:
-
-```php
-use Yiisoft\Yii\DataView\UrlConfig;
-
-$config = (new UrlConfig())
-    // Use path parameter for page
-    ->withPageParameterType(UrlParameterType::PATH)
-    // Use query parameter for sorting
-    ->withSortParameterType(UrlParameterType::QUERY);
+    ])
+?>
 ```
 
 A custom callback could be used instead of configuration:

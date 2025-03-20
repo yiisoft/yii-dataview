@@ -134,12 +134,6 @@ abstract class BaseListView extends Widget
     protected ?ReadableDataInterface $dataReader = null;
     private string $toolbar = '';
 
-    /**
-     * @psalm-var array<string,scalar|Stringable|null>
-     */
-    protected array $urlArguments = [];
-    protected array $urlQueryParameters = [];
-
     protected UrlParameterProviderInterface|null $urlParameterProvider = null;
 
     private bool $ignoreMissingPage = true;
@@ -511,7 +505,7 @@ abstract class BaseListView extends Widget
     final public function urlArguments(array $arguments): static
     {
         $new = clone $this;
-        $new->urlArguments = $arguments;
+        $new->urlConfig = $this->urlConfig->withArguments($arguments);
         return $new;
     }
 
@@ -523,8 +517,7 @@ abstract class BaseListView extends Widget
     final public function urlQueryParameters(array $parameters): static
     {
         $new = clone $this;
-        $new->urlQueryParameters = $parameters;
-
+        $new->urlConfig = $this->urlConfig->withQueryParameters($parameters);
         return $new;
     }
 
@@ -1064,5 +1057,91 @@ abstract class BaseListView extends Widget
         }
 
         return null;
+    }
+
+    /**
+     * Creates a new instance with the specified sort parameter name.
+     *
+     * @param string $name The new sort parameter name.
+     *
+     * @return self A new instance with the updated sort parameter name.
+     */
+    public function sortParameterName(string $name): self
+    {
+        $new = clone $this;
+        $new->urlConfig = $this->urlConfig->withSortParameterName($name);
+        return $new;
+    }
+
+    /**
+     * Creates a new instance with the specified page parameter type.
+     *
+     * @param int $type The new page parameter type. Must be one of:
+     *  - `UrlParameterType::PATH` for path parameters
+     *  - `UrlParameterType::QUERY` for query parameters
+     *
+     * @return self A new instance with the updated page parameter type.
+     *
+     * @psalm-param UrlParameterType::* $type
+     */
+    public function pageParameterType(int $type): self
+    {
+        $new = clone $this;
+        $new->urlConfig = $this->urlConfig->withPageParameterType($type);
+        return $new;
+    }
+
+    /**
+     * Creates a new instance with the specified previous page parameter type.
+     *
+     * @param int $type The new previous page parameter type. Must be one of:
+     *  - `UrlParameterType::PATH` for path parameters
+     *  - `UrlParameterType::QUERY` for query parameters
+     *
+     * @return self A new instance with the updated previous page parameter type.
+     *
+     * @psalm-param UrlParameterType::* $type
+     */
+    public function previousPageParameterType(int $type): self
+    {
+        $new = clone $this;
+        $new->urlConfig = $this->urlConfig->withPreviousPageParameterType($type);
+        return $new;
+    }
+
+    /**
+     * Creates a new instance with the specified page size parameter type.
+     *
+     * @param int $type The new page size parameter type. Must be one of:
+     *  - `UrlParameterType::PATH` for path parameters
+     *  - `UrlParameterType::QUERY` for query parameters
+     *
+     * @return self A new instance with the updated page size parameter type.
+     *
+     * @psalm-param UrlParameterType::* $type
+     */
+    public function pageSizeParameterType(int $type): self
+    {
+        $new = clone $this;
+        $new->urlConfig = $this->urlConfig->withPageSizeParameterType($type);
+        return $new;
+    }
+
+    /**
+     * Creates a new instance with the specified sort parameter type.
+     *
+     * @param int $type The new sort parameter type. Must be one of:
+     *  - `UrlParameterType::PATH` for path parameters
+     *  - `UrlParameterType::QUERY` for query parameters
+     *
+     * @return self A new instance with the updated sort parameter type.
+     *
+     * @psalm-param UrlParameterType::* $type
+     */
+    public function sortParameterType(int $type): self
+    {
+        $new = clone $this;
+        $new->urlConfig = $this->urlConfig->withSortParameterType($type);
+        return $new;
     }
 }

@@ -742,8 +742,8 @@ final class GridView extends BaseListView
         $dataReader = $this->getDataReader();
         $globalContext = new GlobalContext(
             $dataReader,
-            $this->urlArguments,
-            $this->urlQueryParameters,
+            $this->urlConfig->getArguments(),
+            $this->urlConfig->getQueryParameters(),
             $this->translator,
             $this->translationCategory,
         );
