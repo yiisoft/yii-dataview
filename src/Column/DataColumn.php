@@ -22,7 +22,7 @@ use Yiisoft\Yii\DataView\Filter\Widget\FilterWidget;
 final class DataColumn implements ColumnInterface
 {
     /**
-     * @var string|Stringable|int|float|callable|null
+     * @var callable|float|int|string|Stringable|null
      * @psalm-var string|Stringable|int|float|ContentCallable|null
      */
     public readonly mixed $content;
@@ -87,7 +87,7 @@ final class DataColumn implements ColumnInterface
      * @param array|callable $bodyAttributes HTML attributes for the body cells. Can be a callable that returns attributes.
      * The callable signature is: `function(array|object $data, DataContext $context): array`.
      * @param bool $withSorting Whether this column is sortable.
-     * @param string|Stringable|int|float|callable|null $content Custom content for data cells. Can be a callable with signature:
+     * @param callable|float|int|string|Stringable|null $content Custom content for data cells. Can be a callable with signature:
      * `function(array|object $data, DataContext $context): string|Stringable|int|float`.
      * @param bool $encodeContent Whether to HTML-encode the cell content.
      * @param string|null $dateTimeFormat Format string for datetime values (e.g., 'Y-m-d H:i:s').

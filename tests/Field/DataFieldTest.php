@@ -53,9 +53,9 @@ final class DataFieldTest extends TestCase
             HTML,
             DetailView::widget()
                 ->fields(
-                    new Datafield('id'),
-                    new Datafield('username'),
-                    new Datafield('isAdmin', labelAttributes: ['class' => 'test-class']),
+                    new DataField('id'),
+                    new DataField('username'),
+                    new DataField('isAdmin', labelAttributes: ['class' => 'test-class']),
                 )
                 ->data(['id' => 1, 'username' => 'admin', 'isAdmin' => true])
                 ->render(),
@@ -91,9 +91,9 @@ final class DataFieldTest extends TestCase
             HTML,
             DetailView::widget()
                 ->fields(
-                    new Datafield('id'),
-                    new Datafield('username'),
-                    new Datafield('isAdmin', labelTag: 'p'),
+                    new DataField('id'),
+                    new DataField('username'),
+                    new DataField('isAdmin', labelTag: 'p'),
                 )
                 ->data(['id' => 1, 'username' => 'admin', 'isAdmin' => true])
                 ->render(),
@@ -129,8 +129,8 @@ final class DataFieldTest extends TestCase
             HTML,
             DetailView::widget()
                 ->fields(
-                    new Datafield('id'),
-                    new Datafield('username'),
+                    new DataField('id'),
+                    new DataField('username'),
                     new DataField(
                         'total',
                         valueAttributes: static fn (array $data) => $data['total'] > 10
@@ -171,8 +171,8 @@ final class DataFieldTest extends TestCase
             HTML,
             DetailView::widget()
                 ->fields(
-                    new Datafield('id'),
-                    new Datafield('username'),
+                    new DataField('id'),
+                    new DataField('username'),
                     new DataField('status', value: static fn (array $data): string => $data['status'] ? 'yes' : 'no')
                 )
                 ->data(['id' => 1, 'username' => 'tests 1', 'status' => true])
@@ -215,8 +215,8 @@ final class DataFieldTest extends TestCase
             HTML,
             DetailView::widget()
                 ->fields(
-                    new Datafield('id'),
-                    new Datafield('username'),
+                    new DataField('id'),
+                    new DataField('username'),
                     new DataField('status', value: static fn (object $data): string => $data->status ? 'yes' : 'no')
                 )
                 ->data($dataObject)
@@ -253,9 +253,9 @@ final class DataFieldTest extends TestCase
             HTML,
             DetailView::widget()
                 ->fields(
-                    new Datafield('id'),
-                    new Datafield('username'),
-                    new Datafield('isAdmin', value: 1),
+                    new DataField('id'),
+                    new DataField('username'),
+                    new DataField('isAdmin', value: 1),
                 )
                 ->data(['id' => 1, 'username' => 'guess', 'isAdmin' => false])
                 ->valueFalse('no')
@@ -292,9 +292,9 @@ final class DataFieldTest extends TestCase
             HTML,
             DetailView::widget()
                 ->fields(
-                    new Datafield('id'),
-                    new Datafield('username'),
-                    new Datafield('isAdmin', valueTag: 'p'),
+                    new DataField('id'),
+                    new DataField('username'),
+                    new DataField('isAdmin', valueTag: 'p'),
                 )
                 ->data(['id' => 1, 'username' => 'admin', 'isAdmin' => true])
                 ->render(),

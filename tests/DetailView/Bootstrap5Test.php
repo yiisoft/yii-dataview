@@ -50,9 +50,9 @@ final class Bootstrap5Test extends TestCase
             DetailView::widget()
                 ->attributes(['class' => 'container'])
                 ->fields(
-                    new Datafield('id', label: 'Id'),
-                    new Datafield('login'),
-                    new Datafield('created_at', label: 'Created At'),
+                    new DataField('id', label: 'Id'),
+                    new DataField('login'),
+                    new DataField('created_at', label: 'Created At'),
                 )
                 ->fieldListAttributes(['class' => 'row flex-column justify-content-center align-items-center'])
                 ->data(
@@ -101,9 +101,9 @@ final class Bootstrap5Test extends TestCase
             DetailView::widget()
                 ->attributes(['class' => 'table table-success table-striped'])
                 ->fields(
-                    new Datafield('id', label: 'Id'),
-                    new Datafield('login'),
-                    new Datafield('created_at', label: 'Created At'),
+                    new DataField('id', label: 'Id'),
+                    new DataField('login'),
+                    new DataField('created_at', label: 'Created At'),
                 )
                 ->data(
                     [
