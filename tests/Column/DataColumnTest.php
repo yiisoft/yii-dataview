@@ -831,7 +831,7 @@ final class DataColumnTest extends TestCase
         $this->assertStringContainsString($expected, $output);
     }
 
-    #[TestWith(['1 &gt; 2', null])]
+    #[TestWith(['1 > 2', null])]
     #[TestWith(['1 &gt; 2', true])]
     #[TestWith(['1 > 2', false])]
     public function testEncodeContentWithNoEncodeInData(string $expected, ?bool $encodeContent): void

@@ -268,7 +268,7 @@ final class DataColumnRenderer implements FilterableColumnRendererInterface, Sor
         return [$column->property => $column->field ?? $column->property];
     }
 
-    private function extractValueFromData(DataColumn $column, DataContext $context): string
+    private function extractValueFromData(DataColumn $column, DataContext $context): string|Stringable
     {
         if ($column->property === null) {
             return '';
@@ -284,7 +284,7 @@ final class DataColumnRenderer implements FilterableColumnRendererInterface, Sor
             return $value->format($column->dateTimeFormat ?? $this->dateTimeFormat);
         }
 
-        return (string) $value;
+        return $value instanceof Stringable ? $value : (string) $value;
     }
 
     private function encodeContent(string|Stringable|int|float $content, ?bool $encode): string
