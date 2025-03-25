@@ -6,9 +6,11 @@ namespace Yiisoft\Yii\DataView\Column;
 
 use DateTimeInterface;
 use Psr\Container\ContainerInterface;
+use Stringable;
 use Yiisoft\Arrays\ArrayHelper;
 use Yiisoft\Data\Reader\FilterInterface;
 use Yiisoft\Html\Html;
+use Yiisoft\Html\NoEncodeStringableInterface;
 use Yiisoft\Validator\EmptyCondition\NeverEmpty;
 use Yiisoft\Validator\EmptyCondition\WhenEmpty;
 use Yiisoft\Validator\ValidatorInterface;
@@ -195,17 +197,14 @@ final class DataColumnRenderer implements FilterableColumnRendererInterface, Sor
     {
         /** @var DataColumn $column This annotation is for IDE only */
 
-        $contentSource = $column->content;
-
-        if ($contentSource !== null) {
-            $content = (string)(is_callable($contentSource) ? $contentSource($context->data, $context) : $contentSource);
-        } elseif ($column->property !== null) {
-            $value = ArrayHelper::getValue($context->data, $column->property);
-            $value = $this->castToString($value, $column);
-            $content = Html::encode($value);
+        if ($column->content === null) {
+            $content = $this->extractValueFromData($column, $context);
+        } elseif (is_callable($column->content)) {
+            $content = ($column->content)($context->data, $context);
         } else {
-            $content = '';
+            $content = $column->content;
         }
+        $content = $this->encodeContent($content, $column->encodeContent);
 
         if (is_callable($column->bodyAttributes)) {
             /** @var array $attributes Remove annotation after fix https://github.com/vimeo/psalm/issues/11062 */
@@ -258,16 +257,25 @@ final class DataColumnRenderer implements FilterableColumnRendererInterface, Sor
         return $value;
     }
 
-    /**
-     * Cast a value to string with type-specific handling.
-     *
-     * @param mixed $value The value to cast.
-     * @param DataColumn $column The column containing format settings.
-     *
-     * @return string The string representation of the value.
-     */
-    private function castToString(mixed $value, DataColumn $column): string
+    public function getOrderProperties(ColumnInterface $column): array
     {
+        /** @var DataColumn $column This annotation is for IDE only */
+
+        if ($column->property === null) {
+            return [];
+        }
+
+        return [$column->property => $column->field ?? $column->property];
+    }
+
+    private function extractValueFromData(DataColumn $column, DataContext $context): string
+    {
+        if ($column->property === null) {
+            return '';
+        }
+
+        $value = ArrayHelper::getValue($context->data, $column->property);
+
         if ($value === null) {
             return '';
         }
@@ -279,14 +287,14 @@ final class DataColumnRenderer implements FilterableColumnRendererInterface, Sor
         return (string) $value;
     }
 
-    public function getOrderProperties(ColumnInterface $column): array
+    private function encodeContent(string|Stringable|int|float $content, ?bool $encode): string
     {
-        /** @var DataColumn $column This annotation is for IDE only */
-
-        if ($column->property === null) {
-            return [];
+        if ($encode === null) {
+            $encode = !$content instanceof NoEncodeStringableInterface;
         }
 
-        return [$column->property => $column->field ?? $column->property];
+        $contentAsString = (string) $content;
+
+        return $encode ? Html::encode($contentAsString) : $contentAsString;
     }
 }

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Yiisoft\Yii\DataView\Column;
 
+use Stringable;
 use Yiisoft\Validator\RuleInterface;
 use Yiisoft\Yii\DataView\Column\Base\DataContext;
 use Yiisoft\Yii\DataView\Filter\Factory\FilterFactoryInterface;
@@ -14,11 +15,18 @@ use Yiisoft\Yii\DataView\Filter\Widget\FilterWidget;
  *
  * A simple data column definition refers to an attribute in the GridView's data provider.
  *
+ * @psalm-type ContentCallable = callable(array|object, DataContext): string|Stringable|int|float
  * @psalm-type FilterEmptyCallable = callable(mixed $value): bool
- * @psalm-type BodyAttributesCallable = callable(array|object,DataContext): array
+ * @psalm-type BodyAttributesCallable = callable(array|object, DataContext): array
  */
 final class DataColumn implements ColumnInterface
 {
+    /**
+     * @var string|Stringable|int|float|callable|null
+     * @psalm-var string|Stringable|int|float|ContentCallable|null
+     */
+    public readonly mixed $content;
+
     /**
      * Function to determine if a filter value should be considered empty.
      *
@@ -79,8 +87,9 @@ final class DataColumn implements ColumnInterface
      * @param array|callable $bodyAttributes HTML attributes for the body cells. Can be a callable that returns attributes.
      * The callable signature is: `function(array|object $data, DataContext $context): array`.
      * @param bool $withSorting Whether this column is sortable.
-     * @param mixed $content Custom content for data cells. Can be a callable with signature:
-     * `function(array|object $data, DataContext $context): string|Stringable`.
+     * @param string|Stringable|int|float|callable|null $content Custom content for data cells. Can be a callable with signature:
+     * `function(array|object $data, DataContext $context): string|Stringable|int|float`.
+     * @param bool $encodeContent Whether to HTML-encode the cell content.
      * @param string|null $dateTimeFormat Format string for datetime values (e.g., 'Y-m-d H:i:s').
      * @param array|bool|FilterWidget $filter Filter configuration. Can be:
      * - `false` (disabled)
@@ -106,6 +115,7 @@ final class DataColumn implements ColumnInterface
      * @param string|null $bodyClass Additional CSS class for the body cells.
      *
      * @psalm-param array|BodyAttributesCallable $bodyAttributes
+     * @psalm-param string|Stringable|int|float|ContentCallable|null $content
      * @psalm-param bool|array<array-key,string|array<array-key,string>>|FilterWidget $filter
      * @psalm-param RuleInterface[]|RuleInterface|null $filterValidation
      * @psalm-param bool|FilterEmptyCallable|null $filterEmpty
@@ -120,7 +130,8 @@ final class DataColumn implements ColumnInterface
         public readonly array $headerAttributes = [],
         public readonly mixed $bodyAttributes = [],
         public readonly bool $withSorting = true,
-        public readonly mixed $content = null,
+        string|Stringable|int|float|callable|null $content = null,
+        public bool|null $encodeContent = null,
         public readonly ?string $dateTimeFormat = null,
         public readonly bool|array|FilterWidget $filter = false,
         public readonly string|FilterFactoryInterface|null $filterFactory = null,
@@ -131,6 +142,7 @@ final class DataColumn implements ColumnInterface
         public readonly ?string $headerClass = null,
         public readonly ?string $bodyClass = null,
     ) {
+        $this->content = $content;
         $this->filterEmpty = $filterEmpty;
     }
 
