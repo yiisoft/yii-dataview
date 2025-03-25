@@ -289,9 +289,7 @@ final class DataColumnRenderer implements FilterableColumnRendererInterface, Sor
 
     private function encodeContent(string|Stringable|int|float $content, ?bool $encode): string
     {
-        if ($encode === null) {
-            $encode = !$content instanceof NoEncodeStringableInterface;
-        }
+        $encode ??= !$content instanceof NoEncodeStringableInterface;
 
         $contentAsString = (string) $content;
 
