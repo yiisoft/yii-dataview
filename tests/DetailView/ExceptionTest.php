@@ -44,6 +44,6 @@ final class ExceptionTest extends TestCase
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('The "data" must be set.');
-        DetailView::widget()->fields(new Datafield('id'))->data([])->render();
+        DetailView::widget()->fields(new DataField('id'))->data([])->render();
     }
 }

@@ -49,7 +49,7 @@ trait TestTrait
         int $pageSize,
         int $currentPage = 1,
         bool $sort = false
-    ): OffSetPaginator {
+    ): OffsetPaginator {
         $data = new IterableDataReader($data);
 
         if ($sort) {
@@ -59,7 +59,7 @@ trait TestTrait
         return (new OffsetPaginator($data))->withToken(PageToken::next((string) $currentPage))->withPageSize($pageSize);
     }
 
-    private function createKeysetPaginator(array $data, int $pageSize): KeySetPaginator
+    private function createKeysetPaginator(array $data, int $pageSize): KeysetPaginator
     {
         $data = (new IterableDataReader($data))
             ->withSort(Sort::any()->withOrder(['id' => 'asc', 'name' => 'asc']));
