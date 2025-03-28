@@ -15,15 +15,14 @@ use Yiisoft\Yii\DataView\Filter\Widget\FilterWidget;
  *
  * A simple data column definition refers to an attribute in the GridView's data provider.
  *
- * @psalm-type ContentCallable = callable(array|object, DataContext): string|Stringable|int|float
+ * @template TData as array|object
  * @psalm-type FilterEmptyCallable = callable(mixed $value): bool
- * @psalm-type BodyAttributesCallable = callable(array|object, DataContext): array
  */
 final class DataColumn implements ColumnInterface
 {
     /**
      * @var callable|float|int|string|Stringable|null
-     * @psalm-var string|Stringable|int|float|ContentCallable|null
+     * @psalm-var string|Stringable|int|float|(callable(TData, DataContext): (string|Stringable|int|float))|null
      */
     public readonly mixed $content;
 
@@ -118,8 +117,8 @@ final class DataColumn implements ColumnInterface
      * @param string|null $headerClass Additional CSS class for the header cell.
      * @param string|null $bodyClass Additional CSS class for the body cells.
      *
-     * @psalm-param array|BodyAttributesCallable $bodyAttributes
-     * @psalm-param string|Stringable|int|float|ContentCallable|null $content
+     * @psalm-param array|(callable(TData, DataContext): array) $bodyAttributes
+     * @psalm-param string|Stringable|int|float|(callable(TData, DataContext): (string|Stringable|int|float))|null $content
      * @psalm-param bool|array<array-key,string|array<array-key,string>>|FilterWidget $filter
      * @psalm-param RuleInterface[]|RuleInterface|null $filterValidation
      * @psalm-param bool|FilterEmptyCallable|null $filterEmpty
