@@ -7,7 +7,6 @@ namespace Yiisoft\Yii\DataView\Tests\Support;
 use Yiisoft\Yii\DataView\Column\Base\Cell;
 use Yiisoft\Yii\DataView\Column\Base\DataContext;
 use Yiisoft\Yii\DataView\Column\Base\GlobalContext;
-use Yiisoft\Yii\DataView\Column\Base\HeaderContext;
 use Yiisoft\Yii\DataView\Column\ColumnInterface;
 use Yiisoft\Yii\DataView\Column\ColumnRendererInterface;
 
@@ -37,7 +36,7 @@ final class TestRenderer implements ColumnRendererInterface
         return $cell;
     }
 
-    public function renderHeader(ColumnInterface $column, Cell $cell, HeaderContext $context): ?Cell
+    public function renderHeader(ColumnInterface $column, Cell $cell, GlobalContext $context): ?Cell
     {
         return $cell;
     }

@@ -10,10 +10,10 @@ use Yiisoft\Html\Html;
 use Yiisoft\Yii\DataView\Column\Base\Cell;
 use Yiisoft\Yii\DataView\Column\Base\DataContext;
 use Yiisoft\Yii\DataView\Column\Base\GlobalContext;
-use Yiisoft\Yii\DataView\Column\Base\HeaderContext;
 use Yiisoft\Yii\DataView\Column\RadioColumn;
 use Yiisoft\Yii\DataView\Column\RadioColumnRenderer;
 use Yiisoft\Yii\DataView\Tests\Support\Mock;
+use Yiisoft\Yii\DataView\Tests\Support\TestHelper;
 use Yiisoft\Yii\DataView\UrlConfig;
 
 final class RadioColumnRendererTest extends TestCase
@@ -36,15 +36,8 @@ final class RadioColumnRendererTest extends TestCase
             columnAttributes: ['class' => 'test-column']
         );
         $cell = new Cell();
-        $translator = Mock::translator('en');
 
-        $context = new GlobalContext(
-            dataReader: $this->dataReader,
-            pathArguments: [],
-            queryParameters: [],
-            translator: $translator,
-            translationCategory: 'test'
-        );
+        $context = TestHelper::createGlobalContext();
 
         $renderer = new RadioColumnRenderer();
         $result = $renderer->renderColumn($column, $cell, $context);
@@ -58,7 +51,7 @@ final class RadioColumnRendererTest extends TestCase
         $cell = new Cell();
         $translator = Mock::translator('en');
 
-        $context = new HeaderContext(
+        $context = new GlobalContext(
             originalSort: null,
             sort: null,
             orderProperties: [],
@@ -98,7 +91,7 @@ final class RadioColumnRendererTest extends TestCase
         $cell = new Cell();
         $translator = Mock::translator('en');
 
-        $context = new HeaderContext(
+        $context = new GlobalContext(
             originalSort: null,
             sort: null,
             orderProperties: [],
@@ -225,15 +218,8 @@ final class RadioColumnRendererTest extends TestCase
             footer: 'Footer content'
         );
         $cell = new Cell();
-        $translator = Mock::translator('en');
 
-        $context = new GlobalContext(
-            dataReader: $this->dataReader,
-            pathArguments: [],
-            queryParameters: [],
-            translator: $translator,
-            translationCategory: 'test'
-        );
+        $context = TestHelper::createGlobalContext();
 
         $renderer = new RadioColumnRenderer();
         $result = $renderer->renderFooter($column, $cell, $context);
@@ -245,15 +231,8 @@ final class RadioColumnRendererTest extends TestCase
     {
         $column = new RadioColumn();
         $cell = new Cell();
-        $translator = Mock::translator('en');
 
-        $context = new GlobalContext(
-            dataReader: $this->dataReader,
-            pathArguments: [],
-            queryParameters: [],
-            translator: $translator,
-            translationCategory: 'test'
-        );
+        $context = TestHelper::createGlobalContext();
 
         $renderer = new RadioColumnRenderer();
         $result = $renderer->renderFooter($column, $cell, $context);
@@ -341,15 +320,8 @@ final class RadioColumnRendererTest extends TestCase
             visible: false
         );
         $cell = new Cell();
-        $translator = Mock::translator('en');
 
-        $context = new GlobalContext(
-            dataReader: $this->dataReader,
-            pathArguments: [],
-            queryParameters: [],
-            translator: $translator,
-            translationCategory: 'test'
-        );
+        $context = TestHelper::createGlobalContext();
 
         $renderer = new RadioColumnRenderer();
         $result = $renderer->renderColumn($column, $cell, $context);
@@ -413,7 +385,7 @@ final class RadioColumnRendererTest extends TestCase
         $cell = new Cell();
         $translator = Mock::translator('en');
 
-        $context = new HeaderContext(
+        $context = new GlobalContext(
             originalSort: null,
             sort: null,
             orderProperties: [],
@@ -456,15 +428,8 @@ final class RadioColumnRendererTest extends TestCase
             ]
         );
         $cell = new Cell();
-        $translator = Mock::translator('en');
 
-        $context = new GlobalContext(
-            dataReader: $this->dataReader,
-            pathArguments: [],
-            queryParameters: [],
-            translator: $translator,
-            translationCategory: 'test'
-        );
+        $context = TestHelper::createGlobalContext();
 
         $renderer = new RadioColumnRenderer();
         $result = $renderer->renderColumn($column, $cell, $context);
@@ -488,7 +453,7 @@ final class RadioColumnRendererTest extends TestCase
         $cell = new Cell();
         $translator = Mock::translator('en');
 
-        $context = new HeaderContext(
+        $context = new GlobalContext(
             originalSort: null,
             sort: null,
             orderProperties: [],
@@ -528,15 +493,8 @@ final class RadioColumnRendererTest extends TestCase
             columnAttributes: ['class' => 'column-class']
         );
         $cell = new Cell();
-        $translator = Mock::translator('en');
 
-        $context = new GlobalContext(
-            dataReader: $this->dataReader,
-            pathArguments: [],
-            queryParameters: [],
-            translator: $translator,
-            translationCategory: 'test'
-        );
+        $context = TestHelper::createGlobalContext();
 
         $renderer = new RadioColumnRenderer();
         $result = $renderer->renderFooter($column, $cell, $context);
@@ -587,15 +545,8 @@ final class RadioColumnRendererTest extends TestCase
             footer: '<strong>Total:</strong> 42'
         );
         $cell = new Cell();
-        $translator = Mock::translator('en');
 
-        $context = new GlobalContext(
-            dataReader: $this->dataReader,
-            pathArguments: [],
-            queryParameters: [],
-            translator: $translator,
-            translationCategory: 'test'
-        );
+        $context = TestHelper::createGlobalContext();
 
         $renderer = new RadioColumnRenderer();
         $result = $renderer->renderFooter($column, $cell, $context);
@@ -611,7 +562,7 @@ final class RadioColumnRendererTest extends TestCase
         $cell = new Cell();
         $translator = Mock::translator('en');
 
-        $context = new HeaderContext(
+        $context = new GlobalContext(
             originalSort: null,
             sort: null,
             orderProperties: [],

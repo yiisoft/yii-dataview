@@ -16,13 +16,13 @@ use Yiisoft\Validator\Validator;
 use Yiisoft\Yii\DataView\Column\Base\Cell;
 use Yiisoft\Yii\DataView\Column\Base\DataContext;
 use Yiisoft\Yii\DataView\Column\Base\GlobalContext;
-use Yiisoft\Yii\DataView\Column\Base\HeaderContext;
 use Yiisoft\Yii\DataView\Column\Base\FilterContext;
 use Yiisoft\Yii\DataView\Column\Base\MakeFilterContext;
 use Yiisoft\Yii\DataView\Column\DataColumn;
 use Yiisoft\Yii\DataView\Column\DataColumnRenderer;
 use Yiisoft\Yii\DataView\Filter\Factory\LikeFilterFactory;
 use Yiisoft\Yii\DataView\Tests\Support\Mock;
+use Yiisoft\Yii\DataView\Tests\Support\TestHelper;
 use Yiisoft\Yii\DataView\Tests\Support\TestTrait;
 use Yiisoft\Yii\DataView\UrlConfig;
 use Yiisoft\Validator\Rule\Number;
@@ -53,15 +53,8 @@ final class DataColumnRendererTest extends TestCase
 
         $column = new DataColumn('test');
         $cell = new Cell();
-        $translator = Mock::translator('en');
 
-        $context = new GlobalContext(
-            dataReader: $this->dataReader,
-            pathArguments: [],
-            queryParameters: [],
-            translator: $translator,
-            translationCategory: 'test'
-        );
+        $context = TestHelper::createGlobalContext();
 
         $renderer = new DataColumnRenderer(
             $this->filterFactoryContainer,
@@ -79,7 +72,7 @@ final class DataColumnRendererTest extends TestCase
 
         $sort = Sort::any();
 
-        $context = new HeaderContext(
+        $context = new GlobalContext(
             originalSort: $sort,
             sort: $sort,
             orderProperties: ['test' => 'test'],
@@ -375,7 +368,7 @@ final class DataColumnRendererTest extends TestCase
         $translator = Mock::translator('en');
         $sort = Sort::any();
 
-        $context = new HeaderContext(
+        $context = new GlobalContext(
             originalSort: $sort,
             sort: $sort,
             orderProperties: [],
@@ -416,7 +409,7 @@ final class DataColumnRendererTest extends TestCase
         $translator = Mock::translator('en');
         $sort = Sort::any();
 
-        $context = new HeaderContext(
+        $context = new GlobalContext(
             originalSort: $sort,
             sort: $sort,
             orderProperties: [],
@@ -477,15 +470,8 @@ final class DataColumnRendererTest extends TestCase
     {
         $column = new DataColumn(footer: 'Total: 100');
         $cell = new Cell();
-        $translator = Mock::translator('en');
 
-        $context = new GlobalContext(
-            dataReader: $this->dataReader,
-            pathArguments: [],
-            queryParameters: [],
-            translator: $translator,
-            translationCategory: 'test'
-        );
+        $context = TestHelper::createGlobalContext();
 
         $renderer = new DataColumnRenderer(
             $this->filterFactoryContainer,
@@ -500,15 +486,8 @@ final class DataColumnRendererTest extends TestCase
     {
         $column = new DataColumn();
         $cell = new Cell();
-        $translator = Mock::translator('en');
 
-        $context = new GlobalContext(
-            dataReader: $this->dataReader,
-            pathArguments: [],
-            queryParameters: [],
-            translator: $translator,
-            translationCategory: 'test'
-        );
+        $context = TestHelper::createGlobalContext();
 
         $renderer = new DataColumnRenderer(
             $this->filterFactoryContainer,
@@ -640,7 +619,7 @@ final class DataColumnRendererTest extends TestCase
         $translator = Mock::translator('en');
         $sort = Sort::any();
 
-        $context = new HeaderContext(
+        $context = new GlobalContext(
             originalSort: $sort,
             sort: $sort,
             orderProperties: ['test' => 'test'],
@@ -683,7 +662,7 @@ final class DataColumnRendererTest extends TestCase
         $translator = Mock::translator('en');
         $sort = Sort::only(['test']);
 
-        $context = new HeaderContext(
+        $context = new GlobalContext(
             originalSort: $sort,
             sort: $sort,
             orderProperties: ['test' => 'test'],
@@ -728,7 +707,7 @@ final class DataColumnRendererTest extends TestCase
         $translator = Mock::translator('en');
         $sort = Sort::only(['test'])->withOrder(['test' => 'asc']);
 
-        $context = new HeaderContext(
+        $context = new GlobalContext(
             originalSort: $sort,
             sort: $sort,
             orderProperties: ['test' => 'test'],
@@ -773,7 +752,7 @@ final class DataColumnRendererTest extends TestCase
         $translator = Mock::translator('en');
         $sort = Sort::only(['test'])->withOrder(['test' => 'desc']);
 
-        $context = new HeaderContext(
+        $context = new GlobalContext(
             originalSort: $sort,
             sort: $sort,
             orderProperties: ['test' => 'test'],

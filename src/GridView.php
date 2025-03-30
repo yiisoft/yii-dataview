@@ -19,7 +19,6 @@ use Yiisoft\Yii\DataView\Column\Base\Cell;
 use Yiisoft\Yii\DataView\Column\Base\FilterContext;
 use Yiisoft\Yii\DataView\Column\Base\GlobalContext;
 use Yiisoft\Yii\DataView\Column\Base\DataContext;
-use Yiisoft\Yii\DataView\Column\Base\HeaderContext;
 use Yiisoft\Yii\DataView\Column\Base\MakeFilterContext;
 use Yiisoft\Yii\DataView\Column\Base\RendererContainer;
 use Yiisoft\Yii\DataView\Column\ColumnInterface;
@@ -740,13 +739,6 @@ final class GridView extends BaseListView
         $filtersForm = '';
 
         $dataReader = $this->getDataReader();
-        $globalContext = new GlobalContext(
-            $dataReader,
-            $this->urlConfig->getArguments(),
-            $this->urlConfig->getQueryParameters(),
-            $this->translator,
-            $this->translationCategory,
-        );
 
         if ($preparedDataReader instanceof PaginatorInterface) {
             $pageToken = $preparedDataReader->isOnFirstPage() ? null : $preparedDataReader->getToken();
@@ -758,6 +750,31 @@ final class GridView extends BaseListView
             $pageToken = null;
             $pageSize = null;
         }
+
+        $globalContext = new GlobalContext(
+            $this->getSort($dataReader),
+            $this->getSort($preparedDataReader),
+            $this->getOrderProperties(),
+            $this->sortableHeaderClass,
+            $this->sortableHeaderPrepend,
+            $this->sortableHeaderAppend,
+            $this->sortableHeaderAscClass,
+            $this->sortableHeaderAscPrepend,
+            $this->sortableHeaderAscAppend,
+            $this->sortableHeaderDescClass,
+            $this->sortableHeaderDescPrepend,
+            $this->sortableHeaderDescAppend,
+            $this->sortableLinkAttributes,
+            $this->sortableLinkAscClass,
+            $this->sortableLinkDescClass,
+            $this->keepPageOnSort ? $pageToken : null,
+            $pageSize,
+            $this->multiSort,
+            $this->urlConfig,
+            $this->urlCreator,
+            $this->translator,
+            $this->translationCategory,
+        );
 
         $tags = [];
         $hasFilters = false;
@@ -821,33 +838,9 @@ final class GridView extends BaseListView
         }
 
         if ($this->isHeaderEnabled) {
-            $headerContext = new HeaderContext(
-                $this->getSort($dataReader),
-                $this->getSort($preparedDataReader),
-                $this->getOrderProperties(),
-                $this->sortableHeaderClass,
-                $this->sortableHeaderPrepend,
-                $this->sortableHeaderAppend,
-                $this->sortableHeaderAscClass,
-                $this->sortableHeaderAscPrepend,
-                $this->sortableHeaderAscAppend,
-                $this->sortableHeaderDescClass,
-                $this->sortableHeaderDescPrepend,
-                $this->sortableHeaderDescAppend,
-                $this->sortableLinkAttributes,
-                $this->sortableLinkAscClass,
-                $this->sortableLinkDescClass,
-                $this->keepPageOnSort ? $pageToken : null,
-                $pageSize,
-                $this->multiSort,
-                $this->urlConfig,
-                $this->urlCreator,
-                $this->translator,
-                $this->translationCategory,
-            );
             $tags = [];
             foreach ($columns as $i => $column) {
-                $cell = $renderers[$i]->renderHeader($column, new Cell($this->headerCellAttributes), $headerContext);
+                $cell = $renderers[$i]->renderHeader($column, new Cell($this->headerCellAttributes), $globalContext);
                 $tags[] = $cell === null
                     ? Html::th('&nbsp;')->encode(false)
                     : Html::th(attributes: $cell->getAttributes())

@@ -8,7 +8,6 @@ use Yiisoft\Data\Paginator\OffsetPaginator;
 use Yiisoft\Yii\DataView\Column\Base\Cell;
 use Yiisoft\Yii\DataView\Column\Base\DataContext;
 use Yiisoft\Yii\DataView\Column\Base\GlobalContext;
-use Yiisoft\Yii\DataView\Column\Base\HeaderContext;
 
 /**
  * `SerialColumnRenderer` handles the rendering of sequential row number columns in a grid.
@@ -22,7 +21,7 @@ final class SerialColumnRenderer implements ColumnRendererInterface
         return $cell->addAttributes($column->columnAttributes);
     }
 
-    public function renderHeader(ColumnInterface $column, Cell $cell, HeaderContext $context): Cell
+    public function renderHeader(ColumnInterface $column, Cell $cell, GlobalContext $context): Cell
     {
         return $cell->content($column->header ?? '#');
     }

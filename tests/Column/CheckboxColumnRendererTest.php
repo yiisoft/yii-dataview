@@ -11,10 +11,10 @@ use Yiisoft\Html\Tag\Input\Checkbox;
 use Yiisoft\Yii\DataView\Column\Base\Cell;
 use Yiisoft\Yii\DataView\Column\Base\DataContext;
 use Yiisoft\Yii\DataView\Column\Base\GlobalContext;
-use Yiisoft\Yii\DataView\Column\Base\HeaderContext;
 use Yiisoft\Yii\DataView\Column\CheckboxColumn;
 use Yiisoft\Yii\DataView\Column\CheckboxColumnRenderer;
 use Yiisoft\Yii\DataView\Tests\Support\Mock;
+use Yiisoft\Yii\DataView\Tests\Support\TestHelper;
 use Yiisoft\Yii\DataView\UrlConfig;
 
 final class CheckboxColumnRendererTest extends TestCase
@@ -32,13 +32,7 @@ final class CheckboxColumnRendererTest extends TestCase
             ['id' => 1, 'name' => 'John'],
             ['id' => 2, 'name' => 'Mary'],
         ]);
-        $this->globalContext = new GlobalContext(
-            dataReader: $this->dataReader,
-            pathArguments: [],
-            queryParameters: [],
-            translator: Mock::translator('en'),
-            translationCategory: 'test'
-        );
+        $this->globalContext = TestHelper::createGlobalContext();
     }
 
     public function testRenderColumn(): void
@@ -52,7 +46,7 @@ final class CheckboxColumnRendererTest extends TestCase
     {
         $column = new CheckboxColumn(multiple: false);
         $sort = Sort::any();
-        $context = new HeaderContext(
+        $context = new GlobalContext(
             originalSort: $sort,
             sort: $sort,
             orderProperties: ['test' => 'test'],
@@ -84,7 +78,7 @@ final class CheckboxColumnRendererTest extends TestCase
     {
         $column = new CheckboxColumn(multiple: true);
         $sort = Sort::any();
-        $context = new HeaderContext(
+        $context = new GlobalContext(
             originalSort: $sort,
             sort: $sort,
             orderProperties: ['test' => 'test'],
@@ -120,7 +114,7 @@ final class CheckboxColumnRendererTest extends TestCase
             headerAttributes: ['class' => 'header-class']
         );
         $sort = Sort::any();
-        $context = new HeaderContext(
+        $context = new GlobalContext(
             originalSort: $sort,
             sort: $sort,
             orderProperties: ['test' => 'test'],
