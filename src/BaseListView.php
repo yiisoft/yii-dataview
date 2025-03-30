@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Yiisoft\Yii\DataView;
 
+use BackedEnum;
 use InvalidArgumentException;
 use Stringable;
 use Yiisoft\Data\Paginator\InvalidPageException;
@@ -1142,6 +1143,40 @@ abstract class BaseListView extends Widget
     {
         $new = clone $this;
         $new->urlConfig = $this->urlConfig->withSortParameterType($type);
+        return $new;
+    }
+
+    /**
+     * Set new container classes.
+     *
+     * Multiple classes can be set by passing them as separate arguments. `null` values are filtered out
+     * automatically.
+     *
+     * @param BackedEnum|string|null ...$class One or more CSS class names to use. Pass `null` to skip a class.
+     * @return self
+     */
+    public function containerClass(BackedEnum|string|null ...$class): self
+    {
+        $new = clone $this;
+        $new->containerAttributes['class'] = [];
+        Html::addCssClass($new->containerAttributes, $class);
+        return $new;
+    }
+
+    /**
+     * Adds one or more CSS classes to the existing container classes.
+     *
+     * Multiple classes can be added by passing them as separate arguments. `null` values are filtered out
+     * automatically.
+     *
+     * @param BackedEnum|string|null ...$class One or more CSS class names to add. Pass `null` to skip adding a class.
+     * @return self A new instance with the specified CSS classes added to existing ones.
+     */
+
+    public function addContainerClass(BackedEnum|string|null ...$class): self
+    {
+        $new = clone $this;
+        Html::addCssClass($new->containerAttributes, $class);
         return $new;
     }
 }
