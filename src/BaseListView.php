@@ -1172,7 +1172,6 @@ abstract class BaseListView extends Widget
      * @param BackedEnum|string|null ...$class One or more CSS class names to add. Pass `null` to skip adding a class.
      * @return self A new instance with the specified CSS classes added to existing ones.
      */
-
     public function addContainerClass(BackedEnum|string|null ...$class): self
     {
         $new = clone $this;
