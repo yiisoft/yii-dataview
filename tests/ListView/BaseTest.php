@@ -557,4 +557,56 @@ final class BaseTest extends TestCase
 
         $listView->render();
     }
+
+    public function testContainerClass(): void
+    {
+        Assert::equalsWithoutLE(
+            <<<HTML
+            <div class="my container">
+            <ul>
+            <li>
+            <div>Id: 1</div><div>Name: John</div><div>Age: 20</div>
+            </li>
+            <li>
+            <div>Id: 2</div><div>Name: Mary</div><div>Age: 21</div>
+            </li>
+            </ul>
+            <div>Page <b>1</b> of <b>1</b></div>
+            </div>
+            HTML,
+            ListView::widget()
+                ->itemView(dirname(__DIR__) . '/Support/view/_listview.php')
+                ->containerAttributes(['class' => 'existing'])
+                ->containerClass('my', 'container')
+                ->dataReader($this->createOffsetPaginator($this->data, 10))
+                ->separator(PHP_EOL)
+                ->render(),
+        );
+    }
+
+    public function testAddContainerClass(): void
+    {
+        Assert::equalsWithoutLE(
+            <<<HTML
+            <div class="existing my container">
+            <ul>
+            <li>
+            <div>Id: 1</div><div>Name: John</div><div>Age: 20</div>
+            </li>
+            <li>
+            <div>Id: 2</div><div>Name: Mary</div><div>Age: 21</div>
+            </li>
+            </ul>
+            <div>Page <b>1</b> of <b>1</b></div>
+            </div>
+            HTML,
+            ListView::widget()
+                ->itemView(dirname(__DIR__) . '/Support/view/_listview.php')
+                ->containerAttributes(['class' => 'existing'])
+                ->addContainerClass('my', 'container')
+                ->dataReader($this->createOffsetPaginator($this->data, 10))
+                ->separator(PHP_EOL)
+                ->render(),
+        );
+    }
 }
