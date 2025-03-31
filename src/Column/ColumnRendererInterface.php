@@ -7,7 +7,6 @@ namespace Yiisoft\Yii\DataView\Column;
 use Yiisoft\Yii\DataView\Column\Base\Cell;
 use Yiisoft\Yii\DataView\Column\Base\GlobalContext;
 use Yiisoft\Yii\DataView\Column\Base\DataContext;
-use Yiisoft\Yii\DataView\Column\Base\HeaderContext;
 
 /**
  * Interface for column renderers that handle the visual presentation of grid columns.
@@ -77,11 +76,11 @@ interface ColumnRendererInterface
      * @param ColumnInterface $column The column definition to render.
      * @psalm-param TColumn $column
      * @param Cell $cell The header cell to configure.
-     * @param HeaderContext $context Header-specific rendering context.
+     * @param GlobalContext $context Global grid rendering context.
      *
      * @return Cell|null The configured header cell, or `null` if no header should be shown.
      */
-    public function renderHeader(ColumnInterface $column, Cell $cell, HeaderContext $context): ?Cell;
+    public function renderHeader(ColumnInterface $column, Cell $cell, GlobalContext $context): ?Cell;
 
     /**
      * Configures a data row cell.

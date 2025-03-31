@@ -18,7 +18,6 @@ use Yiisoft\Yii\DataView\Column\Base\Cell;
 use Yiisoft\Yii\DataView\Column\Base\DataContext;
 use Yiisoft\Yii\DataView\Column\Base\FilterContext;
 use Yiisoft\Yii\DataView\Column\Base\GlobalContext;
-use Yiisoft\Yii\DataView\Column\Base\HeaderContext;
 use Yiisoft\Yii\DataView\Column\Base\MakeFilterContext;
 use Yiisoft\Yii\DataView\Filter\Factory\EqualsFilterFactory;
 use Yiisoft\Yii\DataView\Filter\Factory\FilterFactoryInterface;
@@ -82,7 +81,7 @@ final class DataColumnRenderer implements FilterableColumnRendererInterface, Sor
             ->addClass($column->columnClass);
     }
 
-    public function renderHeader(ColumnInterface $column, Cell $cell, HeaderContext $context): Cell
+    public function renderHeader(ColumnInterface $column, Cell $cell, GlobalContext $context): Cell
     {
         /** @var DataColumn $column This annotation is for IDE only */
 

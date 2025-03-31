@@ -9,7 +9,6 @@ use Yiisoft\Html\Html;
 use Yiisoft\Yii\DataView\Column\Base\Cell;
 use Yiisoft\Yii\DataView\Column\Base\DataContext;
 use Yiisoft\Yii\DataView\Column\Base\GlobalContext;
-use Yiisoft\Yii\DataView\Column\Base\HeaderContext;
 
 use function array_key_exists;
 
@@ -25,7 +24,7 @@ final class RadioColumnRenderer implements ColumnRendererInterface
         return $cell->addAttributes($column->columnAttributes);
     }
 
-    public function renderHeader(ColumnInterface $column, Cell $cell, HeaderContext $context): ?Cell
+    public function renderHeader(ColumnInterface $column, Cell $cell, GlobalContext $context): ?Cell
     {
         $header = $column->header;
         if ($header === null) {

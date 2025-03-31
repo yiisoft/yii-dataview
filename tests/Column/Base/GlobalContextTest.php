@@ -5,79 +5,162 @@ declare(strict_types=1);
 namespace Yiisoft\Yii\DataView\Tests\Column\Base;
 
 use PHPUnit\Framework\TestCase;
-use Stringable;
-use Yiisoft\Data\Reader\Iterable\IterableDataReader;
-use Yiisoft\Yii\DataView\Column\Base\GlobalContext;
+use Yiisoft\Data\Reader\Sort;
+use Yiisoft\Html\Tag\A;
+use Yiisoft\Yii\DataView\Column\Base\Cell;
 use Yiisoft\Yii\DataView\Tests\Support\Mock;
-use Yiisoft\Yii\DataView\Tests\Support\TestTrait;
+use Yiisoft\Yii\DataView\Tests\Support\TestHelper;
 
 /**
  * @covers \Yiisoft\Yii\DataView\Column\Base\GlobalContext
+ * @covers \Yiisoft\Yii\DataView\Column\Base\Cell
+ * @covers \Yiisoft\Yii\DataView\UrlConfig
+ * @covers \Yiisoft\Yii\DataView\UrlParametersFactory
  */
 final class GlobalContextTest extends TestCase
 {
-    use TestTrait;
-
-    private array $data = [
-        ['id' => 1, 'name' => 'John'],
-        ['id' => 2, 'name' => 'Mary'],
-    ];
-
-    public function testConstructor(): void
-    {
-        $dataReader = new IterableDataReader($this->data);
-        $translator = Mock::translator('en');
-        $pathArguments = ['id' => 123];
-        $queryParameters = ['sort' => 'name'];
-        $translationCategory = 'app';
-
-        $context = new GlobalContext(
-            $dataReader,
-            $pathArguments,
-            $queryParameters,
-            $translator,
-            $translationCategory
-        );
-
-        $this->assertSame($dataReader, $context->dataReader);
-        $this->assertSame($pathArguments, $context->pathArguments);
-        $this->assertSame($queryParameters, $context->queryParameters);
-    }
-
-    public function testTranslateWithString(): void
+    public function testTranslate(): void
     {
         $translator = Mock::translator('en');
 
-        $context = new GlobalContext(
-            new IterableDataReader($this->data),
-            [],
-            [],
-            $translator,
-            'app'
-        );
+        $headerContext = TestHelper::createGlobalContext(translator: $translator);
 
-        $this->assertSame('test.message', $context->translate('test.message'));
+        $result = $headerContext->translate('test.message');
+
+        $this->assertSame('test.message', $result);
     }
 
     public function testTranslateWithStringable(): void
     {
-        $stringable = new class () implements Stringable {
+        $translator = Mock::translator('en');
+
+        $headerContext = TestHelper::createGlobalContext(translator: $translator);
+
+        $stringable = new class () {
             public function __toString(): string
             {
-                return 'test.stringable';
+                return 'Stringable Message';
             }
         };
 
-        $translator = Mock::translator('en');
+        $result = $headerContext->translate($stringable);
 
-        $context = new GlobalContext(
-            new IterableDataReader($this->data),
-            [],
-            [],
-            $translator,
-            'app'
+        $this->assertSame('Stringable Message', $result);
+    }
+
+    public function testPrepareSortableWithEmptyProperty(): void
+    {
+        $cell = new Cell();
+        $headerContext = TestHelper::createGlobalContext();
+
+        $result = $headerContext->prepareSortable($cell, 'nonexistent');
+
+        $this->assertSame($cell, $result[0]);
+        $this->assertNull($result[1]);
+        $this->assertSame('', $result[2]);
+        $this->assertSame('', $result[3]);
+    }
+
+    public function testPrepareSortableWithNullSort(): void
+    {
+        $cell = new Cell();
+        $headerContext = TestHelper::createGlobalContext(
+            sort: null,
+            originalSort: null
         );
 
-        $this->assertSame('test.stringable', $context->translate($stringable));
+        $result = $headerContext->prepareSortable($cell, 'name');
+
+        $this->assertSame($cell, $result[0]);
+        $this->assertNull($result[1]);
+        $this->assertSame('', $result[2]);
+        $this->assertSame('', $result[3]);
+    }
+
+    public function testPrepareSortableWithPropertyNotInConfig(): void
+    {
+        $sort = Sort::any();
+        $cell = new Cell();
+        $headerContext = TestHelper::createGlobalContext(
+            sort: $sort,
+            originalSort: $sort,
+            orderProperties: ['name' => 'name']
+        );
+
+        $result = $headerContext->prepareSortable($cell, 'age');
+
+        $this->assertSame($cell, $result[0]);
+        $this->assertNull($result[1]);
+        $this->assertSame('', $result[2]);
+        $this->assertSame('', $result[3]);
+    }
+
+    public function testPrepareSortableWithNoOrder(): void
+    {
+        $sort = Sort::any(['name' => []]);
+        $cell = new Cell();
+        $headerContext = TestHelper::createGlobalContext(
+            sort: $sort,
+            originalSort: $sort,
+            orderProperties: ['name' => 'name'],
+            sortableHeaderClass: 'sortable',
+            sortableHeaderPrepend: '↕',
+            sortableHeaderAppend: '!'
+        );
+
+        $result = $headerContext->prepareSortable($cell, 'name');
+
+        $this->assertInstanceOf(Cell::class, $result[0]);
+        $this->assertStringContainsString('sortable', $result[0]->getAttributes()['class']);
+        $this->assertInstanceOf(A::class, $result[1]);
+        $this->assertSame('↕', $result[2]);
+        $this->assertSame('!', $result[3]);
+    }
+
+    public function testPrepareSortableWithAscOrder(): void
+    {
+        $sort = Sort::any(['name' => []])->withOrder(['name' => 'asc']);
+        $cell = new Cell();
+        $headerContext = TestHelper::createGlobalContext(
+            sort: $sort,
+            originalSort: $sort,
+            orderProperties: ['name' => 'name'],
+            sortableHeaderAscClass: 'asc',
+            sortableHeaderAscPrepend: '↑',
+            sortableHeaderAscAppend: '!',
+            sortableLinkAscClass: 'link-asc'
+        );
+
+        $result = $headerContext->prepareSortable($cell, 'name');
+
+        $this->assertInstanceOf(Cell::class, $result[0]);
+        $this->assertStringContainsString('asc', $result[0]->getAttributes()['class']);
+        $this->assertInstanceOf(A::class, $result[1]);
+        $this->assertSame('↑', $result[2]);
+        $this->assertSame('!', $result[3]);
+    }
+
+    public function testPrepareSortableWithDescOrder(): void
+    {
+        $sort = Sort::any(['name' => []])->withOrder(['name' => 'desc']);
+        $cell = new Cell();
+
+        $headerContext = TestHelper::createGlobalContext(
+            sort: $sort,
+            originalSort: $sort,
+            orderProperties: ['name' => 'name'],
+            sortableHeaderDescClass: 'desc',
+            sortableHeaderDescPrepend: '↓',
+            sortableHeaderDescAppend: '!',
+            sortableLinkDescClass: 'link-desc'
+        );
+
+        $result = $headerContext->prepareSortable($cell, 'name');
+
+        $this->assertInstanceOf(Cell::class, $result[0]);
+        $this->assertStringContainsString('desc', $result[0]->getAttributes()['class']);
+        $this->assertInstanceOf(A::class, $result[1]);
+        $this->assertSame('↓', $result[2]);
+        $this->assertSame('!', $result[3]);
     }
 }
