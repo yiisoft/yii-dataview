@@ -84,7 +84,7 @@ final class GlobalContext
     }
 
     /**
-     * Translate a message using the header's translation category.
+     * Translate a message using the grid's translation category.
      *
      * @param string|Stringable $id Message ID to translate.
      *
