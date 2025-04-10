@@ -27,9 +27,14 @@ final class ImmutableTest extends TestCase
         $listView = ListView::widget();
         $this->assertNotSame($listView, $listView->afterItem(fn () => ''));
         $this->assertNotSame($listView, $listView->beforeItem(fn () => ''));
-        $this->assertNotSame($listView, $listView->itemView(''));
         $this->assertNotSame($listView, $listView->itemAttributes([]));
-        $this->assertNotSame($listView, $listView->separator(''));
+        $this->assertNotSame($listView, $listView->itemView(''));
         $this->assertNotSame($listView, $listView->itemViewParameters([]));
+        $this->assertNotSame($listView, $listView->pageParameterType(1));
+        $this->assertNotSame($listView, $listView->pageSizeParameterType(1));
+        $this->assertNotSame($listView, $listView->previousPageParameterType(1));
+        $this->assertNotSame($listView, $listView->separator(''));
+        $this->assertNotSame($listView, $listView->sortParameterName(''));
+        $this->assertNotSame($listView, $listView->sortParameterType(1));
     }
 }
