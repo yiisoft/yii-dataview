@@ -253,24 +253,24 @@ abstract class BaseListView extends Widget
     /**
      * Returns a new instance with HTML content to be added after the open container tag.
      *
-     * @param string $prepend The HTML content to be prepended.
+     * @param string|Stringable $prepend The HTML content to be prepended.
      */
-    final public function prepend(string $prepend): static
+    final public function prepend(string|Stringable $prepend): static
     {
         $new = clone $this;
-        $new->prepend = $prepend;
+        $new->prepend = (string) $prepend;
         return $new;
     }
 
     /**
      * Returns a new instance with HTML content to be added before the close container tag.
      *
-     * @param string $append The HTML content to be appended.
+     * @param string|Stringable $append The HTML content to be appended.
      */
-    final public function append(string $append): static
+    final public function append(string|Stringable $append): static
     {
         $new = clone $this;
-        $new->append = $append;
+        $new->append = (string) $append;
         return $new;
     }
 
