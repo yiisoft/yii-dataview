@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Yiisoft\Yii\DataView\Pagination;
 
+use BackedEnum;
 use InvalidArgumentException;
 use Stringable;
 use Yiisoft\Data\Paginator\KeysetPaginator;
@@ -196,6 +197,39 @@ final class KeysetPagination extends Widget implements PaginationWidgetInterface
     {
         $new = clone $this;
         $new->linkAttributes = $attributes;
+        return $new;
+    }
+
+    /**
+     * Set new link classes.
+     *
+     * Multiple classes can be set by passing them as separate arguments. `null` values are filtered out
+     * automatically.
+     *
+     * @param BackedEnum|string|null ...$class One or more CSS class names to use. Pass `null` to skip a class.
+     * @return self
+     */
+    public function linkClass(BackedEnum|string|null ...$class): self
+    {
+        $new = clone $this;
+        $new->linkAttributes['class'] = [];
+        Html::addCssClass($new->linkAttributes, $class);
+        return $new;
+    }
+
+    /**
+     * Adds one or more CSS classes to the existing link classes.
+     *
+     * Multiple classes can be added by passing them as separate arguments. `null` values are filtered out
+     * automatically.
+     *
+     * @param BackedEnum|string|null ...$class One or more CSS class names to add. Pass `null` to skip adding a class.
+     * @return self A new instance with the specified CSS classes added to existing ones.
+     */
+    public function addLinkClass(BackedEnum|string|null ...$class): self
+    {
+        $new = clone $this;
+        Html::addCssClass($new->linkAttributes, $class);
         return $new;
     }
 

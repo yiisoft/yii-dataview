@@ -63,7 +63,7 @@ return [
             'listAttributes()' => [['class' => 'pagination']],
             'itemTag()' => ['li'],
             'itemAttributes()' => [['class' => 'page-item']],
-            'linkAttributes()' => [['class' => 'page-link']],
+            'linkClass()' => ['page-link'],
             'currentItemClass()' => ['active'],
             'disabledItemClass()' => ['disabled'],
         ],
@@ -72,7 +72,7 @@ return [
             'listAttributes()' => [['class' => 'pagination']],
             'itemTag()' => ['li'],
             'itemAttributes()' => [['class' => 'page-item']],
-            'linkAttributes()' => [['class' => 'page-link']],
+            'linkClass()' => ['page-link'],
             'disabledItemClass()' => ['disabled'],
         ],
         InputPageSize::class => [
