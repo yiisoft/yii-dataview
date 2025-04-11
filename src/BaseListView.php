@@ -115,6 +115,8 @@ abstract class BaseListView extends Widget
      */
     private ?string $containerTag = 'div';
     private array $containerAttributes = [];
+    private string $prepend = '';
+    private string $append = '';
 
     /**
      * @psalm-var non-empty-string|null
@@ -245,6 +247,30 @@ abstract class BaseListView extends Widget
     {
         $new = clone $this;
         $new->containerAttributes = $attributes;
+        return $new;
+    }
+
+    /**
+     * Returns a new instance with HTML content to be added after the open container tag.
+     *
+     * @param string $prepend The HTML content to be prepended.
+     */
+    final public function prepend(string $prepend): static
+    {
+        $new = clone $this;
+        $new->prepend = $prepend;
+        return $new;
+    }
+
+    /**
+     * Returns a new instance with HTML content to be added before the close container tag.
+     *
+     * @param string $append The HTML content to be appended.
+     */
+    final public function append(string $append): static
+    {
+        $new = clone $this;
+        $new->append = $append;
         return $new;
     }
 
@@ -542,6 +568,13 @@ abstract class BaseListView extends Widget
                 ],
             )
         );
+
+        if ($this->prepend !== '') {
+            $content = $this->prepend . "\n" . $content;
+        }
+        if ($this->append !== '') {
+            $content .= "\n" . $this->append;
+        }
 
         return $this->containerTag === null
             ? $content
