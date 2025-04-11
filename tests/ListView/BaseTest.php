@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Yiisoft\Yii\DataView\Tests\ListView;
 
+use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 use Yiisoft\Data\Paginator\InvalidPageException;
 use Yiisoft\Definitions\Exception\CircularReferenceException;
@@ -608,5 +609,29 @@ final class BaseTest extends TestCase
                 ->separator(PHP_EOL)
                 ->render(),
         );
+    }
+
+    public function testThrowExceptionForContainterTagEmptyValue(): void
+    {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Tag name cannot be empty.');
+
+        ListView::widget()->containerTag('');
+    }
+
+    public function testThrowExceptionForPageSizeTagEmptyValue(): void
+    {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Tag name cannot be empty.');
+
+        ListView::widget()->pageSizeTag('');
+    }
+
+    public function testThrowExceptionFotSummaryTagEmptyValue(): void
+    {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Tag name cannot be empty.');
+
+        ListView::widget()->summaryTag('');
     }
 }
