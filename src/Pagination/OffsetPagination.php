@@ -238,9 +238,6 @@ final class OffsetPagination extends Widget implements PaginationWidgetInterface
         }
 
         $items = $this->renderItems();
-        if ($items === []) {
-            return '';
-        }
 
         $result .= implode("\n", $items);
 
