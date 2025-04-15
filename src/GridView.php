@@ -16,9 +16,9 @@ use Yiisoft\Html\Tag\Tr;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\Validator\Result as ValidationResult;
 use Yiisoft\Yii\DataView\Column\Base\Cell;
+use Yiisoft\Yii\DataView\Column\Base\DataContext;
 use Yiisoft\Yii\DataView\Column\Base\FilterContext;
 use Yiisoft\Yii\DataView\Column\Base\GlobalContext;
-use Yiisoft\Yii\DataView\Column\Base\DataContext;
 use Yiisoft\Yii\DataView\Column\Base\MakeFilterContext;
 use Yiisoft\Yii\DataView\Column\Base\RendererContainer;
 use Yiisoft\Yii\DataView\Column\ColumnInterface;
@@ -207,6 +207,8 @@ final class GridView extends BaseListView
      */
     private array $filterErrorsContainerAttributes = [];
 
+    private array $filterFormAttributes = [];
+
     /**
      * @var RendererContainer Container for column renderers.
      */
@@ -286,6 +288,13 @@ final class GridView extends BaseListView
     {
         $new = clone $this;
         $new->filterErrorsContainerAttributes = $attributes;
+        return $new;
+    }
+
+    public function filterFormAttributes(array $attributes): self
+    {
+        $new = clone $this;
+        $new->filterFormAttributes = $attributes;
         return $new;
     }
 
@@ -820,7 +829,10 @@ final class GridView extends BaseListView
             if (!empty($sort) && $this->urlConfig->getSortParameterType() === UrlParameterType::QUERY) {
                 $content[] = Html::hiddenInput($this->urlConfig->getSortParameterName(), $sort);
             }
-            $filtersForm = Html::form($url, 'GET', ['id' => $filterContext->formId, 'style' => 'display:none'])
+            $formAttributes = $this->filterFormAttributes;
+            $formAttributes['id'] = $filterContext->formId;
+            Html::addCssStyle($formAttributes, 'display:none');
+            $filtersForm = Html::form($url, 'GET', $formAttributes)
                 ->content(...$content)
                 ->render();
             $filterRow = Html::tr()->cells(...$tags);

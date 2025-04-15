@@ -101,7 +101,7 @@ final class GlobalContext
      * @param Cell $cell The header cell to prepare.
      * @param string $property The property name for sorting.
      *
-     * @psalm-return list{Cell,?A,string,string}
+     * @psalm-return list{Cell, ?A, string, string}
      *
      *  @return array Array containing:
      *   - Modified cell
@@ -122,7 +122,7 @@ final class GlobalContext
             return [$cell, null, '', ''];
         }
 
-        $linkAttributes = [];
+        $linkAttributes = $this->sortableLinkAttributes;
         $propertyOrder = $this->sort->getOrder()[$property] ?? null;
         if ($propertyOrder === null) {
             $cell = $cell->addClass($this->sortableHeaderClass);
