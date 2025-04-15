@@ -251,7 +251,7 @@ abstract class BaseListView extends Widget
     }
 
     /**
-     * Returns a new instance with HTML content to be added after the open container tag.
+     * Returns a new instance with HTML content to be added after the opening container tag.
      *
      * @param string|Stringable $prepend The HTML content to be prepended.
      */
