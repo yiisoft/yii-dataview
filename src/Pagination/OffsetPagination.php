@@ -139,6 +139,13 @@ final class OffsetPagination extends Widget implements PaginationWidgetInterface
         return $new;
     }
 
+    public function addLinkAttributes(array $attributes): self
+    {
+        $new = clone $this;
+        $new->linkAttributes = array_merge($new->linkAttributes, $attributes);
+        return $new;
+    }
+
     /**
      * Set new link classes.
      *
