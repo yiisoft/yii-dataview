@@ -54,8 +54,8 @@ final class DataColumnRenderer implements FilterableColumnRendererInterface, Sor
      * @param ContainerInterface $filterFactoryContainer Container for filter factory instances.
      * @param ValidatorInterface $validator Validator for filter values.
      * @param string $dateTimeFormat Default format for datetime values (e.g., 'Y-m-d H:i:s').
-     * @param string|FilterFactoryInterface $defaultFilterFactory Default filter factory for non-array filters.
-     * @param string|FilterFactoryInterface $defaultArrayFilterFactory Default filter factory for array filters.
+     * @param FilterFactoryInterface|string $defaultFilterFactory Default filter factory for non-array filters.
+     * @param FilterFactoryInterface|string $defaultArrayFilterFactory Default filter factory for array filters.
      * @param bool|callable $defaultFilterEmpty Default function to determine if a filter value is empty.
      *
      * @psalm-param bool|FilterEmptyCallable $defaultFilterEmpty
