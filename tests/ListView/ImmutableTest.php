@@ -36,5 +36,7 @@ final class ImmutableTest extends TestCase
         $this->assertNotSame($listView, $listView->separator(''));
         $this->assertNotSame($listView, $listView->sortParameterName(''));
         $this->assertNotSame($listView, $listView->sortParameterType(1));
+        $this->assertNotSame($listView, $listView->append(''));
+        $this->assertNotSame($listView, $listView->prepend(''));
     }
 }
