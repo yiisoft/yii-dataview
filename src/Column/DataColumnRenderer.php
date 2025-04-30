@@ -28,7 +28,6 @@ use Yiisoft\Yii\DataView\Filter\Widget\TextInputFilter;
 
 use function is_array;
 use function is_callable;
-use function is_string;
 
 /**
  * `DataColumnRenderer` handles rendering and filtering of data columns in a grid.
@@ -55,8 +54,8 @@ final class DataColumnRenderer implements FilterableColumnRendererInterface, Sor
      * @param ContainerInterface $filterFactoryContainer Container for filter factory instances.
      * @param ValidatorInterface $validator Validator for filter values.
      * @param string $dateTimeFormat Default format for datetime values (e.g., 'Y-m-d H:i:s').
-     * @param string $defaultFilterFactory Default filter factory class for non-array filters.
-     * @param string $defaultArrayFilterFactory Default filter factory class for array filters.
+     * @param FilterFactoryInterface|string $defaultFilterFactory Default filter factory for non-array filters.
+     * @param FilterFactoryInterface|string $defaultArrayFilterFactory Default filter factory for array filters.
      * @param bool|callable $defaultFilterEmpty Default function to determine if a filter value is empty.
      *
      * @psalm-param bool|FilterEmptyCallable $defaultFilterEmpty
@@ -65,8 +64,8 @@ final class DataColumnRenderer implements FilterableColumnRendererInterface, Sor
         private readonly ContainerInterface $filterFactoryContainer,
         private readonly ValidatorInterface $validator,
         private readonly string $dateTimeFormat = 'Y-m-d H:i:s',
-        private readonly string $defaultFilterFactory = LikeFilterFactory::class,
-        private readonly string $defaultArrayFilterFactory = EqualsFilterFactory::class,
+        private readonly string|FilterFactoryInterface $defaultFilterFactory = LikeFilterFactory::class,
+        private readonly string|FilterFactoryInterface $defaultArrayFilterFactory = EqualsFilterFactory::class,
         bool|callable $defaultFilterEmpty = true,
     ) {
         $this->defaultFilterEmpty = $defaultFilterEmpty;
@@ -177,19 +176,9 @@ final class DataColumnRenderer implements FilterableColumnRendererInterface, Sor
             }
         }
 
-        if ($column->filterFactory === null) {
-            /** @var FilterFactoryInterface $factory */
-            $factory = $this->filterFactoryContainer->get(
-                is_array($column->filter) ? $this->defaultArrayFilterFactory : $this->defaultFilterFactory
-            );
-        } elseif (is_string($column->filterFactory)) {
-            /** @var FilterFactoryInterface $factory */
-            $factory = $this->filterFactoryContainer->get($column->filterFactory);
-        } else {
-            $factory = $column->filterFactory;
-        }
-
-        return $factory->create($column->field ?? $column->property, $value);
+        return $this
+            ->getFilterFactory($column)
+            ->create($column->field ?? $column->property, $value);
     }
 
     public function renderBody(ColumnInterface $column, Cell $cell, DataContext $context): Cell
@@ -265,6 +254,24 @@ final class DataColumnRenderer implements FilterableColumnRendererInterface, Sor
         }
 
         return [$column->property => $column->field ?? $column->property];
+    }
+
+    private function getFilterFactory(DataColumn $column): FilterFactoryInterface
+    {
+        if ($column->filterFactory === null) {
+            $factory = is_array($column->filter)
+                ? $this->defaultArrayFilterFactory
+                : $this->defaultFilterFactory;
+        } else {
+            $factory = $column->filterFactory;
+        }
+
+        if ($factory instanceof FilterFactoryInterface) {
+            return $factory;
+        }
+
+        /** @var FilterFactoryInterface */
+        return $this->filterFactoryContainer->get($factory);
     }
 
     private function extractValueFromData(DataColumn $column, DataContext $context): string|Stringable
