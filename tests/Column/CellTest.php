@@ -9,41 +9,74 @@ use Yiisoft\Yii\DataView\Column\Base\Cell;
 
 final class CellTest extends TestCase
 {
-    public function testDoubleEncodeReturnsNewInstanceWithModifiedValue(): void
+    public function testDoubleEncodeReturnsModifiedInstance(): void
     {
         $cell = new Cell();
-        $newCell = $cell->doubleEncode(false);
+        $new = $cell->doubleEncode(false);
 
-        $this->assertNotSame($cell, $newCell);
-        $this->assertFalse($this->getProperty($newCell, 'doubleEncode'));
-        $this->assertTrue($this->getProperty($cell, 'doubleEncode'));
+        $this->assertNotSame($cell, $new);
+        $this->assertSame(
+            $this->renderContent($cell),
+            $this->renderContent($new)
+        );
     }
 
-    public function testAttributesReturnsNewInstanceWithAttributes(): void
+    public function testEncodeReturnsModifiedInstance(): void
     {
         $cell = new Cell();
-        $newCell = $cell->attributes(['class' => 'test', 'data-id' => '123']);
+        $new = $cell->encode(false);
 
-        $this->assertNotSame($cell, $newCell);
-        $this->assertSame(['class' => 'test', 'data-id' => '123'], $this->getProperty($newCell, 'attributes'));
-        $this->assertSame([], $this->getProperty($cell, 'attributes'));
+        $this->assertNotSame($cell, $new);
+        $this->assertSame(
+            $this->renderContent($cell),
+            $this->renderContent($new)
+        );
     }
 
-    public function testAttributeReturnsNewInstanceWithSingleAttribute(): void
+    public function testAttributesReturnsModifiedInstance(): void
     {
         $cell = new Cell();
-        $newCell = $cell->attribute('class', 'highlight');
+        $new = $cell->attributes(['class' => 'red']);
 
-        $this->assertNotSame($cell, $newCell);
-        $this->assertSame(['class' => 'highlight'], $this->getProperty($newCell, 'attributes'));
-        $this->assertSame([], $this->getProperty($cell, 'attributes'));
+        $this->assertNotSame($cell, $new);
+        $this->assertSame(
+            $this->renderContent($cell),
+            $this->renderContent($new)
+        );
     }
 
-    private function getProperty(object $object, string $property): mixed
+    public function testAttributeReturnsModifiedInstance(): void
     {
-        $reflection = new \ReflectionClass($object);
-        $prop = $reflection->getProperty($property);
-        $prop->setAccessible(true);
-        return $prop->getValue($object);
+        $cell = new Cell();
+        $new = $cell->attribute('data-id', '123');
+
+        $this->assertNotSame($cell, $new);
+        $this->assertSame(
+            $this->renderContent($cell),
+            $this->renderContent($new)
+        );
+    }
+
+    public function testContentReturnsModifiedInstanceWithNewContent(): void
+    {
+        $cell = new Cell();
+        $new = $cell->content('Hello', 'World');
+
+        $this->assertNotSame($cell, $new);
+        $this->assertSame(['Hello', 'World'], $new->getContent());
+    }
+
+    public function testIsEmptyContentReturnsTrueOnlyIfNoContent(): void
+    {
+        $cell = new Cell();
+        $this->assertTrue($cell->isEmptyContent());
+
+        $cellWithContent = $cell->content('Hello');
+        $this->assertFalse($cellWithContent->isEmptyContent());
+    }
+
+    private function renderContent(Cell $cell): string
+    {
+        return implode('', $cell->getContent());
     }
 }
