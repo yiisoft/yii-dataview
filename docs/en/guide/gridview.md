@@ -122,7 +122,7 @@ echo GridView::widget()
     );
 ```
 
-> If a property name conflicts in the URL with pagination or sort parameters, you should use different names for those
+> If a property name in the URL has the same name as pagination or sort parameters, you should choose different names for those
 > parameters (see [URLs](./urls.md)).  
 
 ### `GridView` options
