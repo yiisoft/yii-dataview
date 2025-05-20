@@ -148,7 +148,7 @@ final class DataColumnRenderer implements FilterableColumnRendererInterface, Sor
     {
         /** @var DataColumn $column This annotation is for IDE only */
 
-        if ($column->property === null) {
+        if ($column->filter === false || $column->property === null) {
             return null;
         }
 
