@@ -44,7 +44,7 @@ GridView supports several types of columns out of the box.
 
 ### Data Column
 
-DataColumn is the most commonly used column type. It displays model attribute values:
+`DataColumn` is the most commonly used column type. It displays model attribute values:
 
 ```php
 use Yiisoft\Yii\DataView\Column\DataColumn;
@@ -121,6 +121,9 @@ echo GridView::widget()
         ),
     );
 ```
+
+> If a property name conflicts in the URL with pagination or sort parameters, you should use different names for those
+> parameters (see [URLs](./urls.md)).  
 
 ### `GridView` options
 
