@@ -18,6 +18,10 @@ use Yiisoft\Yii\DataView\Tests\Support\TestTrait;
 use Yiisoft\Data\Paginator\OffsetPaginator;
 use Yiisoft\Data\Reader\Iterable\IterableDataReader;
 use Yiisoft\Data\Reader\Sort;
+use Yiisoft\Data\Paginator\KeysetPaginator;
+use Yiisoft\Data\Paginator\PageToken;
+use Yiisoft\Yii\DataView\Column\ActionColumn;
+use Yiisoft\Yii\DataView\Column\ActionButton;
 
 final class BaseTest extends TestCase
 {
@@ -947,5 +951,174 @@ final class BaseTest extends TestCase
         $this->assertStringContainsString('cell-class', $html);
         $this->assertStringContainsString('data-test="test-value"', $html);
         $this->assertStringContainsString('title="Cell title"', $html);
+    }
+
+    public function testFilterFormRendersCustomAttributesAndAssignsFormAttributeToInput(): void
+    {
+        $html = GridView::widget()
+            ->columns(
+                new DataColumn('id', filter: true),
+            )
+            ->filterFormAttributes(['data-testid' => 'filter-form', 'style' => 'opacity:1'])
+            ->id('w1-grid')
+            ->dataReader($this->createOffsetPaginator([
+                ['id' => 1],
+                ['id' => 2],
+            ], 10))
+            ->render();
+
+        $this->assertStringContainsString('data-testid="filter-form"', $html);
+        $this->assertStringContainsString('style="opacity: 1; display: none;"', $html);
+        $this->assertMatchesRegularExpression('/<input[^>]+name="id"[^>]+form="/', $html);
+    }
+
+    public function testBodyRowAttributesCallbackAddsCustomAttributesToRow(): void
+    {
+        $html = GridView::widget()
+            ->columns(new DataColumn('id'))
+            ->bodyRowAttributes(fn($data, $context) => ['data-id' => $data['id']])
+            ->id('w1-grid')
+            ->dataReader($this->createOffsetPaginator([['id' => 123]], 10))
+            ->render();
+
+        $this->assertStringContainsString('data-id="123"', $html);
+    }
+
+    public function testCallableAndStaticRowAttributesAppliedFromArray(): void
+    {
+        $html = GridView::widget()
+            ->columns(new DataColumn('id'))
+            ->bodyRowAttributes([
+                'data-id' => fn($data, $context) => $data['id'],
+                'class' => 'row-class',
+            ])
+            ->id('w1-grid')
+            ->dataReader($this->createOffsetPaginator([['id' => 456]], 10))
+            ->render();
+
+        $this->assertStringContainsString('data-id="456"', $html);
+        $this->assertStringContainsString('class="row-class"', $html);
+    }
+
+    public function testKeysetPaginationLinkClassRenderedInGridView(): void
+    {
+        $data = [
+            ['id' => 1],
+            ['id' => 2],
+        ];
+
+        $sort = Sort::only(['id'])->withOrder(['id' => 'asc']);
+
+        $reader = (new IterableDataReader($data))
+            ->withSort($sort);
+
+        $paginator = (new KeysetPaginator($reader))
+            ->withToken(PageToken::next('2'));
+
+        $html = GridView::widget()
+            ->columns(new DataColumn('id'))
+            ->dataReader($paginator)
+            ->keysetPaginationConfig([
+                'linkClass()' => ['test-link'],
+            ])
+            ->id('w1-grid')
+            ->render();
+
+        $this->assertStringContainsString('class="test-link"', $html);
+    }
+
+    public function testKeysetPaginationRendersCombinedLinkClassesInGridView(): void
+    {
+        $data = [
+            ['id' => 1],
+            ['id' => 2],
+        ];
+
+        $sort = Sort::only(['id'])->withOrder(['id' => 'asc']);
+
+        $reader = (new IterableDataReader($data))
+            ->withSort($sort);
+
+        $paginator = (new KeysetPaginator($reader))
+            ->withToken(PageToken::next('2'));
+
+        $html = GridView::widget()
+            ->columns(new DataColumn('id'))
+            ->dataReader($paginator)
+            ->keysetPaginationConfig([
+                'linkClass()' => ['base'],
+                'addLinkClass()' => ['extra', 'highlight'],
+            ])
+            ->id('w1-grid')
+            ->render();
+
+        $this->assertStringContainsString('class="base extra highlight"', $html);
+    }
+
+    public function testOffsetPaginationRendersCombinedLinkAttributesInGridView(): void
+    {
+        $data = [
+            ['id' => 1],
+            ['id' => 2],
+        ];
+
+        $reader = new IterableDataReader($data);
+
+        $paginator = (new OffsetPaginator($reader))
+            ->withPageSize(1)
+            ->withCurrentPage(1);
+
+        $html = GridView::widget()
+            ->columns(new DataColumn('id'))
+            ->dataReader($paginator)
+            ->offsetPaginationConfig([
+                'linkAttributes()' => [['data-base' => 'base']],
+                'addLinkAttributes()' => [['data-added' => 'yes', 'class' => 'custom-class']],
+            ])
+            ->id('w1-grid')
+            ->render();
+
+        $this->assertStringContainsString('data-base="base"', $html);
+        $this->assertStringContainsString('data-added="yes"', $html);
+        $this->assertStringContainsString('class="custom-class"', $html);
+    }
+
+    public function testActionColumnAndCustomButtonAttributesRenderedInGridView(): void
+    {
+        $data = [
+            ['id' => 1],
+            ['id' => 2],
+        ];
+
+        $paginator = $this->createOffsetPaginator($data, 10);
+
+        $html = GridView::widget()
+            ->columns(
+                new ActionColumn(
+                    columnAttributes: ['class' => 'action-col'],
+                    buttons: [
+                        'custom' => new ActionButton(
+                            content: '🧪',
+                            url: static fn(array $data) => '/test?id=' . $data['id'],
+                            attributes: ['data-testid' => 'custom-button'],
+                            class: 'custom-class',
+                            title: 'Custom action'
+                        ),
+                    ],
+                    template: '{custom}',
+                    visibleButtons: ['custom' => true],
+                )
+            )
+            ->dataReader($paginator)
+            ->id('w1-grid')
+            ->columnGrouping(true)
+            ->render();
+
+        $this->assertStringContainsString('<col class="action-col">', $html);
+        $this->assertStringContainsString('title="Custom action"', $html);
+        $this->assertStringContainsString('/test?id=1', $html);
+        $this->assertStringContainsString('🧪', $html);
+        $this->assertStringContainsString('class="custom-class"', $html);
+        $this->assertStringContainsString('data-testid="custom-button"', $html);
     }
 }
