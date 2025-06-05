@@ -783,11 +783,11 @@ abstract class BaseListView extends Widget
             }
         }
 
-        if ($dataReader->isPaginationRequired()) {
-            $dataReader = $dataReader->withPageSize(
-                $this->preparePageSize($pageSize) ?? $this->getDefaultPageSize()
-            );
+        $dataReader = $dataReader->withPageSize(
+            $this->preparePageSize($pageSize) ?? $this->getDefaultPageSize(),
+        );
 
+        if ($dataReader->isPaginationRequired()) {
             if ($page !== null) {
                 $dataReader = $dataReader->withToken(PageToken::next($page));
             } elseif ($previousPage !== null) {
