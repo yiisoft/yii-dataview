@@ -9,6 +9,8 @@ use Yiisoft\Html\Tag\Select;
 
 /**
  * Filter widget that renders a dropdown (select) input for filtering data.
+ *
+ * @psalm-import-type OptionsData from Select
  */
 final class DropdownFilter extends FilterWidget
 {
@@ -43,7 +45,7 @@ final class DropdownFilter extends FilterWidget
      *
      * @see Select::optionsData()
      *
-     * @psalm-param array<array-key, string|array<array-key,string>> $data
+     * @psalm-param OptionsData $data
      */
     public function optionsData(
         array $data,
