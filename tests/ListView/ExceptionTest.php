@@ -68,4 +68,16 @@ final class ExceptionTest extends TestCase
             ->dataReader($this->createOffsetPaginator($this->data, 10))
             ->render();
     }
+
+    public function testEmptySummaryTagThrowsInvalidArgumentException(): void
+    {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Tag name cannot be empty.');
+
+        ListView::widget()
+            ->itemView(dirname(__DIR__) . '/Support/view/_listview.php')
+            ->dataReader($this->createOffsetPaginator($this->data, 10))
+            ->summaryTag('')
+            ->render();
+    }
 }
