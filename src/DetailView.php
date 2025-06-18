@@ -338,6 +338,7 @@ final class DetailView extends Widget
                 ,
                 'valueAttributes' => $this->renderAttributes($valueAttributes),
                 'valueTag' => $valueTag,
+                'isVisible' => $field->isVisible,
             ];
         }
 
@@ -371,23 +372,25 @@ final class DetailView extends Widget
         $rows = [];
 
         foreach ($fields as $field) {
-            $label = strtr($this->labelTemplate, [
-                '{label}' => $field['label'],
-                '{tag}' => $field['labelTag'],
-                '{attributes}' => Html::renderTagAttributes($field['labelAttributes']),
-            ]);
-
-            $value = strtr($this->valueTemplate, [
-                '{value}' => $field['value'],
-                '{tag}' => $field['valueTag'],
-                '{attributes}' => Html::renderTagAttributes($field['valueAttributes']),
-            ]);
-
-            $rows[] = strtr($this->fieldTemplate, [
-                '{attributes}' => Html::renderTagAttributes($this->fieldAttributes),
-                '{label}' => $label,
-                '{value}' => $value,
-            ]);
+            if ($field['isVisible']) {
+                $label = strtr($this->labelTemplate, [
+                    '{label}' => $field['label'],
+                    '{tag}' => $field['labelTag'],
+                    '{attributes}' => Html::renderTagAttributes($field['labelAttributes']),
+                ]);
+    
+                $value = strtr($this->valueTemplate, [
+                    '{value}' => $field['value'],
+                    '{tag}' => $field['valueTag'],
+                    '{attributes}' => Html::renderTagAttributes($field['valueAttributes']),
+                ]);
+    
+                $rows[] = strtr($this->fieldTemplate, [
+                    '{attributes}' => Html::renderTagAttributes($this->fieldAttributes),
+                    '{label}' => $label,
+                    '{value}' => $value,
+                ]);
+            }
         }
 
         return implode("\n", $rows);
