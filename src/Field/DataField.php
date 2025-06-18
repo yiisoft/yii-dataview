@@ -46,6 +46,8 @@ final class DataField
      *
      * @param bool $encodeValue Whether the value is HTML encoded
      *
+     * @param bool $isVisible Whether the field is visible
+     *
      * @template TData as array|object
      * @psalm-param string|Stringable|int|float|(Closure(TData): string)|null $value
      */
@@ -58,6 +60,7 @@ final class DataField
         public readonly string $valueTag = '',
         public readonly array|Closure $valueAttributes = [],
         public readonly bool $encodeValue = true,
+        public readonly bool $isVisible = true,
     ) {
     }
 }
