@@ -300,4 +300,36 @@ final class DataFieldTest extends TestCase
                 ->render(),
         );
     }
+
+    /**
+     * @throws InvalidConfigException
+     * @throws NotFoundException
+     * @throws NotInstantiableException
+     * @throws CircularReferenceException
+     */
+    public function testNotVisibleField(): void
+    {
+        Assert::equalsWithoutLE(
+            <<<HTML
+            <div>
+            <dl>
+            <div>
+            <dt>id</dt>
+            <dd>1</dd>
+            </div>
+            <div>
+            <dt>username</dt>
+            <dd>admin</dd>
+            </div>
+            HTML,
+            DetailView::widget()
+                ->fields(
+                    new DataField('id'),
+                    new DataField('username'),
+                    new DataField('isAdmin', isVisible: false),
+                )
+                ->data(['id' => 1, 'username' => 'admin', 'isAdmin' => true])
+                ->render(),
+        );
+    }
 }
