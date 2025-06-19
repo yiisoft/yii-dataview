@@ -28,6 +28,8 @@ use Yiisoft\Yii\DataView\UrlConfig;
 use Yiisoft\Validator\Rule\Number;
 use Yiisoft\Yii\DataView\UrlParameterProviderInterface;
 
+use function PHPUnit\Framework\assertNull;
+
 final class DataColumnRendererTest extends TestCase
 {
     use TestTrait;
@@ -265,7 +267,8 @@ final class DataColumnRendererTest extends TestCase
     {
         $column = new DataColumn(
             'name',
-            filterFactory: LikeFilterFactory::class
+            filter: true,
+            filterFactory: LikeFilterFactory::class,
         );
 
         $urlParameterProvider = new class () implements UrlParameterProviderInterface {
@@ -298,7 +301,8 @@ final class DataColumnRendererTest extends TestCase
     {
         $column = new DataColumn(
             'age',
-            filterValidation: [new Number()]
+            filter: true,
+            filterValidation: [new Number()],
         );
 
         $urlParameterProvider = new class () implements UrlParameterProviderInterface {
@@ -332,7 +336,8 @@ final class DataColumnRendererTest extends TestCase
     {
         $column = new DataColumn(
             'status',
-            filterEmpty: true
+            filter: true,
+            filterEmpty: true,
         );
 
         $urlParameterProvider = new class () implements UrlParameterProviderInterface {
@@ -359,6 +364,28 @@ final class DataColumnRendererTest extends TestCase
 
         $result = $renderer->makeFilter($column, $context);
         $this->assertNull($result);
+    }
+
+    public function testMakeFilterWithDisabledFilter()
+    {
+        $column = new DataColumn('status');
+        $context = new MakeFilterContext(
+            new Result(),
+            new class () implements UrlParameterProviderInterface {
+                public function get(string $name, int $type): ?string
+                {
+                    return 'text';
+                }
+            },
+        );
+        $renderer = new DataColumnRenderer(
+            $this->filterFactoryContainer,
+            new Validator(),
+        );
+
+        $result = $renderer->makeFilter($column, $context);
+
+        assertNull($result);
     }
 
     public function testRenderHeaderWithoutProperty(): void
@@ -560,6 +587,7 @@ final class DataColumnRendererTest extends TestCase
     {
         $column = new DataColumn(
             'status',
+            filter: true,
             filterEmpty: false
         );
 

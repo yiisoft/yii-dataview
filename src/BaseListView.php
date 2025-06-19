@@ -253,24 +253,24 @@ abstract class BaseListView extends Widget
     /**
      * Returns a new instance with HTML content to be added after the opening container tag.
      *
-     * @param string|Stringable $prepend The HTML content to be prepended.
+     * @param string|Stringable ...$prepend The HTML content to be prepended.
      */
-    final public function prepend(string|Stringable $prepend): static
+    final public function prepend(string|Stringable ...$prepend): static
     {
         $new = clone $this;
-        $new->prepend = (string) $prepend;
+        $new->prepend = implode('', $prepend);
         return $new;
     }
 
     /**
      * Returns a new instance with HTML content to be added before the closing container tag.
      *
-     * @param string|Stringable $append The HTML content to be appended.
+     * @param string|Stringable ...$append The HTML content to be appended.
      */
-    final public function append(string|Stringable $append): static
+    final public function append(string|Stringable ...$append): static
     {
         $new = clone $this;
-        $new->append = (string) $append;
+        $new->append = implode('', $append);
         return $new;
     }
 
@@ -783,11 +783,11 @@ abstract class BaseListView extends Widget
             }
         }
 
-        if ($dataReader->isPaginationRequired()) {
-            $dataReader = $dataReader->withPageSize(
-                $this->preparePageSize($pageSize) ?? $this->getDefaultPageSize()
-            );
+        $dataReader = $dataReader->withPageSize(
+            $this->preparePageSize($pageSize) ?? $this->getDefaultPageSize(),
+        );
 
+        if ($dataReader->isPaginationRequired()) {
             if ($page !== null) {
                 $dataReader = $dataReader->withToken(PageToken::next($page));
             } elseif ($previousPage !== null) {

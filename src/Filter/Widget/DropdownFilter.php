@@ -4,10 +4,13 @@ declare(strict_types=1);
 
 namespace Yiisoft\Yii\DataView\Filter\Widget;
 
+use BackedEnum;
 use Yiisoft\Html\Tag\Select;
 
 /**
  * Filter widget that renders a dropdown (select) input for filtering data.
+ *
+ * @psalm-import-type OptionsData from Select
  */
 final class DropdownFilter extends FilterWidget
 {
@@ -42,7 +45,7 @@ final class DropdownFilter extends FilterWidget
      *
      * @see Select::optionsData()
      *
-     * @psalm-param array<array-key, string|array<array-key,string>> $data
+     * @psalm-param OptionsData $data
      */
     public function optionsData(
         array $data,
@@ -87,6 +90,30 @@ final class DropdownFilter extends FilterWidget
     {
         $new = clone $this;
         $new->select = $this->getSelect()->attributes($attributes);
+        return $new;
+    }
+
+    /**
+     * Add one or more CSS classes to the `Select` tag.
+     *
+     * @param BackedEnum|string|null ...$class One or many CSS classes.
+     */
+    public function addClass(BackedEnum|string|null ...$class): self
+    {
+        $new = clone $this;
+        $new->select = $this->getSelect()->addClass(...$class);
+        return $new;
+    }
+
+    /**
+     * Replace current `Select` tag CSS classes with a new set of classes.
+     *
+     * @param BackedEnum|string|null ...$class One or many CSS classes.
+     */
+    public function class(BackedEnum|string|null ...$class): self
+    {
+        $new = clone $this;
+        $new->select = $this->getSelect()->class(...$class);
         return $new;
     }
 
