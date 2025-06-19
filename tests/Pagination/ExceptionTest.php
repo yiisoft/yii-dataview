@@ -52,4 +52,21 @@ final class ExceptionTest extends TestCase
         $this->expectExceptionMessage('Current page must be less than or equal to total pages.');
         $widget->render();
     }
+
+    public function testGetContextThrowsLogicExceptionWhenContextIsNotSet(): void
+    {
+        $pagination = new class () {
+            use \Yiisoft\Yii\DataView\Pagination\PaginationContextTrait;
+
+            public function getExposedContext()
+            {
+                return $this->getContext();
+            }
+        };
+
+        $this->expectException(\LogicException::class);
+        $this->expectExceptionMessage('Context is not set.');
+
+        $pagination->getExposedContext();
+    }
 }

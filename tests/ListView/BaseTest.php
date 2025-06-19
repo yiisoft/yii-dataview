@@ -634,4 +634,79 @@ final class BaseTest extends TestCase
 
         ListView::widget()->summaryTag('');
     }
+
+    public function testPrependAndAppendContentAreRenderedAroundListView(): void
+    {
+        Assert::equalsWithoutLE(
+            <<<HTML
+            <div>
+            <div>PRE</div>
+            <ul>
+            <li>
+            <div>Id: 1</div><div>Name: John</div><div>Age: 20</div>
+            </li>
+            <li>
+            <div>Id: 2</div><div>Name: Mary</div><div>Age: 21</div>
+            </li>
+            </ul>
+            <div>Page <b>1</b> of <b>1</b></div>
+            <div>POST</div>
+            </div>
+            HTML,
+            ListView::widget()
+                ->itemView(dirname(__DIR__) . '/Support/view/_listview.php')
+                ->dataReader($this->createOffsetPaginator($this->data, 10))
+                ->prepend('<div>PRE</div>')
+                ->append('<div>POST</div>')
+                ->render(),
+        );
+    }
+
+    public function testCustomSummaryTagIsRenderedInListView(): void
+    {
+        Assert::equalsWithoutLE(
+            <<<HTML
+            <div>
+            <ul>
+            <li>
+            <div>Id: 1</div><div>Name: John</div><div>Age: 20</div>
+            </li>
+            <li>
+            <div>Id: 2</div><div>Name: Mary</div><div>Age: 21</div>
+            </li>
+            </ul>
+            <strong>Page <b>1</b> of <b>1</b></strong>
+            </div>
+            HTML,
+            ListView::widget()
+                ->itemView(dirname(__DIR__) . '/Support/view/_listview.php')
+                ->dataReader($this->createOffsetPaginator($this->data, 10))
+                ->summaryTag('strong')
+                ->render(),
+        );
+    }
+
+    public function testSummaryIsRenderedWithoutTagWhenCustomSummaryTagIsNull(): void
+    {
+        Assert::equalsWithoutLE(
+            <<<HTML
+            <div>
+            <ul>
+            <li>
+            <div>Id: 1</div><div>Name: John</div><div>Age: 20</div>
+            </li>
+            <li>
+            <div>Id: 2</div><div>Name: Mary</div><div>Age: 21</div>
+            </li>
+            </ul>
+            Page <b>1</b> of <b>1</b>
+            </div>
+            HTML,
+            ListView::widget()
+                ->itemView(dirname(__DIR__) . '/Support/view/_listview.php')
+                ->dataReader($this->createOffsetPaginator($this->data, 10))
+                ->summaryTag(null)
+                ->render(),
+        );
+    }
 }
