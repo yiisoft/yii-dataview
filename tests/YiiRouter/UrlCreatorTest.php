@@ -4,12 +4,16 @@ declare(strict_types=1);
 
 namespace Yiisoft\Yii\DataView\Tests\YiiRouter;
 
+use PHPUnit\Framework\MockObject\Exception;
 use PHPUnit\Framework\TestCase;
 use Yiisoft\Router\UrlGeneratorInterface;
 use Yiisoft\Yii\DataView\YiiRouter\UrlCreator;
 
 final class UrlCreatorTest extends TestCase
 {
+    /**
+     * @throws Exception
+     */
     public function testInvoke(): void
     {
         $arguments = ['page' => 2];
@@ -30,6 +34,9 @@ final class UrlCreatorTest extends TestCase
         $this->assertSame($expectedUrl, $urlCreator($arguments, $queryParameters));
     }
 
+    /**
+     * @throws Exception
+     */
     public function testInvokeWithEmptyParameters(): void
     {
         $expectedUrl = '/users';
@@ -44,6 +51,9 @@ final class UrlCreatorTest extends TestCase
         $this->assertSame($expectedUrl, $urlCreator([], []));
     }
 
+    /**
+     * @throws Exception
+     */
     public function testInvokeWithOnlyArguments(): void
     {
         $arguments = ['id' => 123];
@@ -63,6 +73,9 @@ final class UrlCreatorTest extends TestCase
         $this->assertSame($expectedUrl, $urlCreator($arguments, []));
     }
 
+    /**
+     * @throws Exception
+     */
     public function testInvokeWithOnlyQueryParameters(): void
     {
         $queryParameters = ['filter' => 'active'];
