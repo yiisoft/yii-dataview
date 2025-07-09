@@ -47,7 +47,7 @@ final class DataColumn implements ColumnInterface
     public readonly mixed $filterEmpty;
 
     /**
-     * @var string|string[]|callable|null Additional CSS class for the body cells.
+     * @var callable|string|string[]|null Additional CSS class for the body cells.
      * @psalm-var string|array<string>|(callable(TData, DataContext): (string|array<string>|null))|null
      */
     public readonly mixed $bodyClass;
@@ -121,7 +121,7 @@ final class DataColumn implements ColumnInterface
      * @param bool $visible Whether the column is visible.
      * @param string|null $columnClass Additional CSS class for all column cells.
      * @param string|null $headerClass Additional CSS class for the header cell.
-     * @param string|string[]|callable|null $bodyClass Additional CSS class for the body cells.
+     * @param callable|string|string[]|null $bodyClass Additional CSS class for the body cells.
      *
      * @psalm-param array|(callable(TData, DataContext): array) $bodyAttributes
      * @psalm-param string|Stringable|int|float|(callable(TData, DataContext): (string|Stringable|int|float))|null $content
