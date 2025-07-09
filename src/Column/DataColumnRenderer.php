@@ -204,9 +204,13 @@ final class DataColumnRenderer implements FilterableColumnRendererInterface, Sor
             $attributes = $column->bodyAttributes;
         }
 
+        $bodyClass = is_callable($column->bodyClass)
+            ? ($column->bodyClass)($context->data, $context)
+            : $column->bodyClass;
+
         return $cell
             ->addAttributes($attributes)
-            ->addClass($column->bodyClass)
+            ->addClass($bodyClass)
             ->content($content)
             ->encode(false);
     }
