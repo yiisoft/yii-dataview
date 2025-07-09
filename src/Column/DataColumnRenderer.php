@@ -292,7 +292,7 @@ final class DataColumnRenderer implements FilterableColumnRendererInterface, Sor
         }
 
         if ($value instanceof BackedEnum) {
-            return (string) $value->value;
+            return $value->name;
         }
 
         if ($value instanceof Stringable) {
