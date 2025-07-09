@@ -153,11 +153,11 @@ final class Cell
      * This method safely adds a CSS class to the cell's class attribute,
      * maintaining any existing classes.
      *
-     * @param string|null $class CSS class name to add.
+     * @param string|string[]|null $class The CSS class(es) to be added. Null values will be ignored.
      *
      * @return self New instance with added CSS class.
      */
-    public function addClass(?string $class): self
+    public function addClass(string|array|null $class): self
     {
         $new = clone $this;
         Html::addCssClass($new->attributes, $class);
