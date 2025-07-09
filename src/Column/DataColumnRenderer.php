@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Yiisoft\Yii\DataView\Column;
 
+use BackedEnum;
 use DateTimeInterface;
 use Psr\Container\ContainerInterface;
 use Stringable;
@@ -290,7 +291,15 @@ final class DataColumnRenderer implements FilterableColumnRendererInterface, Sor
             return $value->format($column->dateTimeFormat ?? $this->dateTimeFormat);
         }
 
-        return $value instanceof Stringable ? $value : (string) $value;
+        if ($value instanceof BackedEnum) {
+            return (string) $value->value;
+        }
+
+        if ($value instanceof Stringable) {
+            return $value;
+        }
+
+        return (string) $value;
     }
 
     private function encodeContent(string|Stringable|int|float $content, ?bool $encode): string
