@@ -14,7 +14,7 @@ use Yiisoft\Data\Paginator\PageNotFoundException;
 use Yiisoft\Data\Paginator\PageToken;
 use Yiisoft\Data\Paginator\PaginatorInterface;
 use Yiisoft\Data\Reader\CountableDataInterface;
-use Yiisoft\Data\Reader\Filter\All;
+use Yiisoft\Data\Reader\Filter\AndX;
 use Yiisoft\Data\Reader\FilterableDataInterface;
 use Yiisoft\Data\Reader\FilterInterface;
 use Yiisoft\Data\Reader\LimitableDataInterface;
@@ -811,7 +811,7 @@ abstract class BaseListView extends Widget
         }
 
         if (!empty($filters) && $dataReader->isFilterable()) {
-            $dataReader = $dataReader->withFilter(new All(...$filters));
+            $dataReader = $dataReader->withFilter(new AndX(...$filters));
         }
 
         return $dataReader;
