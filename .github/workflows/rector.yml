@@ -22,3 +22,5 @@ jobs:
         ['ubuntu-latest']
       php: >-
         ['8.4']
+      required-packages: >-
+        ['data']
