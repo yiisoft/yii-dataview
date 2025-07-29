@@ -22,8 +22,8 @@ final class EqualsFilterFactoryTest extends TestCase
 
         $this->assertInstanceOf(Equals::class, $filter);
 
-        $this->assertSame('name', $filter->getField());
-        $this->assertSame('John', $filter->getValue());
+        $this->assertSame('name', $filter->field);
+        $this->assertSame('John', $filter->value);
     }
 
     public function testCreateWithEmptyValue(): void
@@ -51,7 +51,7 @@ final class EqualsFilterFactoryTest extends TestCase
 
         $this->assertInstanceOf(Equals::class, $filter);
 
-        $this->assertSame('quantity', $filter->getField());
-        $this->assertSame('42', $filter->getValue());
+        $this->assertSame('quantity', $filter->field);
+        $this->assertSame('42', $filter->value);
     }
 }
