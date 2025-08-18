@@ -44,7 +44,6 @@ final class Assert extends TestCase
         $class = new ReflectionClass($object);
 
         $property = $class->getProperty($propertyName);
-        $property->setAccessible(true);
         /** @var mixed $result */
         return $property->getValue($object);
     }
@@ -62,7 +61,6 @@ final class Assert extends TestCase
     {
         $reflection = new ReflectionObject($object);
         $method = $reflection->getMethod($method);
-        $method->setAccessible(true);
 
         return $method->invokeArgs($object, $args);
     }
