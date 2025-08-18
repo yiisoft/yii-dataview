@@ -207,6 +207,7 @@ final class GridView extends BaseListView
      */
     private array $filterErrorsContainerAttributes = [];
 
+    private string $filterFormId;
     private array $filterFormAttributes = [];
 
     /**
@@ -228,6 +229,7 @@ final class GridView extends BaseListView
         ContainerInterface $columnRenderersDependencyContainer,
         TranslatorInterface|null $translator = null,
     ) {
+        $this->filterFormId = Html::generateId();
         $this->columnRendererContainer = new RendererContainer($columnRenderersDependencyContainer);
         parent::__construct($translator);
     }
@@ -288,6 +290,13 @@ final class GridView extends BaseListView
     {
         $new = clone $this;
         $new->filterErrorsContainerAttributes = $attributes;
+        return $new;
+    }
+
+    public function filterFormId(string $id): self
+    {
+        $new = clone $this;
+        $new->filterFormId = $id;
         return $new;
     }
 
@@ -788,7 +797,7 @@ final class GridView extends BaseListView
         $tags = [];
         $hasFilters = false;
         $filterContext = new FilterContext(
-            formId: Html::generateId(),
+            formId: $this->filterFormId,
             validationResult: $filterValidationResult,
             cellInvalidClass: $this->filterCellInvalidClass,
             errorsContainerAttributes: $this->filterErrorsContainerAttributes,
