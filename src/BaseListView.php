@@ -811,7 +811,12 @@ abstract class BaseListView extends Widget
         }
 
         if (!empty($filters) && $dataReader->isFilterable()) {
-            $dataReader = $dataReader->withFilter(new AndX(...$filters));
+            $dataReader = $dataReader->withFilter(
+                new AndX(
+                    $dataReader->getFilter(),
+                    ...$filters,
+                ),
+            );
         }
 
         return $dataReader;
