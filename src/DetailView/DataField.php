@@ -54,7 +54,7 @@ final class DataField
         public readonly string $property = '',
         public readonly string $label = '',
         public readonly array|Closure $labelAttributes = [],
-        public readonly string $labelTag = '',
+        public readonly string|null $labelTag = null,
         public readonly string|Stringable|int|float|Closure|null $value = null,
         public readonly string $valueTag = '',
         public readonly array|Closure $valueAttributes = [],

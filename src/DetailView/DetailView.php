@@ -6,7 +6,6 @@ namespace Yiisoft\Yii\DataView\DetailView;
 
 use Closure;
 use InvalidArgumentException;
-use JsonException;
 use Stringable;
 use Yiisoft\Html\Html;
 use Yiisoft\Widget\Widget;
@@ -31,52 +30,208 @@ use function is_bool;
  *     )
  * ?>
  * ```
+ *
+ * @psalm-type FieldAttributesClosure = Closure(FieldContext): array
+ * @psalm-type LabelAttributesClosure = Closure(LabelContext): array
+ * @psalm-type ValueAttributesClosure = Closure(ValueContext): array
  */
 final class DetailView extends Widget
 {
-    private array $attributes = [];
-    private array $fieldListAttributes = [];
     private array|object $data = [];
-    private array $fieldAttributes = [];
-    /**
-     * @psalm-var list<DataField>
-     */
+
+    /** @psalm-var list<DataField> */
     private array $fields = [];
-    private string $header = '';
-    private string $fieldTemplate = "<div{attributes}>\n{label}\n{value}\n</div>";
+
+    /** @psalm-var non-empty-string|null */
+    private ?string $containerTag = null;
+    private array $containerAttributes = [];
+    private string $prepend = '';
+    private string $append = '';
+
+    /** @psalm-var non-empty-string|null */
+    private ?string $listTag = 'dl';
+    private array $listAttributes = [];
+
+    /** @psalm-var non-empty-string|null */
+    private ?string $fieldTag = null;
+    /** @psalm-var array|FieldAttributesClosure */
+    private array|Closure $fieldAttributes = [];
+    private string $fieldPrepend = '';
+    private string $fieldAppend = '';
+    private string $fieldTemplate = "{label}\n{value}";
+
+    /** @psalm-var non-empty-string|null */
+    private ?string $labelTag = 'dt';
+    /** @psalm-var array|LabelAttributesClosure */
     private array|Closure $labelAttributes = [];
-    private string $labelTag = 'dt';
-    private string $labelTemplate = '<{tag}{attributes}>{label}</{tag}>';
-    private string $template = "<div{attributes}>\n{header}\n<dl{fieldListAttributes}>\n{fields}\n</dl>\n</div>";
+    private string $labelPrepend = '';
+    private string $labelAppend = '';
+
     private array|Closure $valueAttributes = [];
     private string $valueFalse = 'false';
     private string $valueTag = 'dd';
     private string $valueTemplate = '<{tag}{attributes}>{value}</{tag}>';
     private string $valueTrue = 'true';
 
-    /**
-     * Returns a new instance with the main widget tag HTML attributes set.
-     *
-     * @param array $attributes Attribute values indexed by attribute names.
-     */
-    public function attributes(array $attributes): self
+    public function containerTag(?string $tag): self
     {
-        $new = clone $this;
-        $new->attributes = $attributes;
+        if ($tag === '') {
+            throw new InvalidArgumentException('Tag name cannot be empty.');
+        }
 
+        $new = clone $this;
+        $new->containerTag = $tag;
         return $new;
     }
 
     /**
-     * Returns a new instance with the HTML attributes for the field list set.
+     * Returns a new instance with the HTML attributes for container.
      *
      * @param array $attributes Attribute values indexed by attribute names.
      */
-    public function fieldListAttributes(array $attributes): self
+    public function containerAttributes(array $attributes): self
     {
         $new = clone $this;
-        $new->fieldListAttributes = $attributes;
+        $new->containerAttributes = $attributes;
+        return $new;
+    }
 
+    /**
+     * Returns a new instance with HTML content to be added after the opening container tag.
+     *
+     * @param string|Stringable ...$prepend The HTML content to be prepended.
+     */
+    public function prepend(string|Stringable ...$prepend): self
+    {
+        $new = clone $this;
+        $new->prepend = implode('', $prepend);
+        return $new;
+    }
+
+    /**
+     * Returns a new instance with HTML content to be added before the closing container tag.
+     *
+     * @param string|Stringable ...$append The HTML content to be appended.
+     */
+    public function append(string|Stringable ...$append): self
+    {
+        $new = clone $this;
+        $new->append = implode('', $append);
+        return $new;
+    }
+
+    public function listTag(?string $tag): self
+    {
+        if ($tag === '') {
+            throw new InvalidArgumentException('Tag name cannot be empty.');
+        }
+
+        $new = clone $this;
+        $new->listTag = $tag;
+        return $new;
+    }
+
+    /**
+     * Returns a new instance with the HTML attributes for the list set.
+     *
+     * @param array $attributes Attribute values indexed by attribute names.
+     */
+    public function listAttributes(array $attributes): self
+    {
+        $new = clone $this;
+        $new->listAttributes = $attributes;
+        return $new;
+    }
+
+    public function fieldTag(?string $tag): self
+    {
+        if ($tag === '') {
+            throw new InvalidArgumentException('Tag name cannot be empty.');
+        }
+
+        $new = clone $this;
+        $new->fieldTag = $tag;
+        return $new;
+    }
+
+    /**
+     * Returns a new instance with the HTML attributes for the field container tag set.
+     *
+     * @param array|Closure $attributes Attribute values indexed by attribute names.
+     *
+     * @psalm-param array|FieldAttributesClosure $attributes
+     */
+    public function fieldAttributes(array|Closure $attributes): self
+    {
+        $new = clone $this;
+        $new->fieldAttributes = $attributes;
+        return $new;
+    }
+
+    public function fieldPrepend(string|Stringable ...$prepend): self
+    {
+        $new = clone $this;
+        $new->fieldPrepend = implode('', $prepend);
+        return $new;
+    }
+
+    public function fieldAppend(string|Stringable ...$append): self
+    {
+        $new = clone $this;
+        $new->fieldAppend = implode('', $append);
+        return $new;
+    }
+
+    /**
+     * Return new instance with the field template set.
+     *
+     * Available placeholders are `{label}` and `{value}`.
+     *
+     * @param string $template The field template.
+     */
+    public function fieldTemplate(string $template): self
+    {
+        $new = clone $this;
+        $new->fieldTemplate = $template;
+        return $new;
+    }
+
+    public function labelTag(?string $tag): self
+    {
+        if ($tag === '') {
+            throw new InvalidArgumentException('Tag name cannot be empty.');
+        }
+
+        $new = clone $this;
+        $new->labelTag = $tag;
+        return $new;
+    }
+
+    /**
+     * Returns a new instance with the HTML attributes for the field label.
+     *
+     * @param array|Closure $attributes Attribute values indexed by attribute names.
+     *
+     * @psalm-param array|FieldAttributesClosure $attributes
+     */
+    public function labelAttributes(array|Closure $attributes): self
+    {
+        $new = clone $this;
+        $new->labelAttributes = $attributes;
+        return $new;
+    }
+
+    public function labelPrepend(string|Stringable ...$prepend): self
+    {
+        $new = clone $this;
+        $new->labelPrepend = implode('', $prepend);
+        return $new;
+    }
+
+    public function labelAppend(string|Stringable ...$append): self
+    {
+        $new = clone $this;
+        $new->labelAppend = implode('', $append);
         return $new;
     }
 
@@ -90,19 +245,6 @@ final class DetailView extends Widget
     {
         $new = clone $this;
         $new->data = $data;
-
-        return $new;
-    }
-
-    /**
-     * Returns a new instance with the HTML attributes for the field container tag set.
-     *
-     * @param array $attributes Attribute values indexed by attribute names.
-     */
-    public function fieldAttributes(array $attributes): self
-    {
-        $new = clone $this;
-        $new->fieldAttributes = $attributes;
 
         return $new;
     }
@@ -125,91 +267,6 @@ final class DetailView extends Widget
     {
         $new = clone $this;
         $new->fields = $fields;
-
-        return $new;
-    }
-
-    /**
-     * Return new instance with the header content set.
-     * Note that header content is not HTML-encoded.
-     *
-     * @param string $content The header content.
-     */
-    public function header(string $content): self
-    {
-        $new = clone $this;
-        $new->header = $content;
-
-        return $new;
-    }
-
-    /**
-     * Return new instance with the field template set.
-     *
-     * Available placeholders are `{attributes}`, `{label}`, and `{value}`.
-     *
-     * @param string $template The field template.
-     */
-    public function fieldTemplate(string $template): self
-    {
-        $new = clone $this;
-        $new->fieldTemplate = $template;
-
-        return $new;
-    }
-
-    /**
-     * Returns a new instance with the HTML attributes for the field label.
-     *
-     * @param array $attributes Attribute values indexed by attribute names.
-     */
-    public function labelAttributes(array $attributes): self
-    {
-        $new = clone $this;
-        $new->labelAttributes = $attributes;
-
-        return $new;
-    }
-
-    /**
-     * Return new instance with the HTML tag to use for the label.
-     *
-     * @param string $tag The HTML tag name.
-     */
-    public function labelTag(string $tag): self
-    {
-        $new = clone $this;
-        $new->labelTag = $tag;
-
-        return $new;
-    }
-
-    /**
-     * Return new instance with the label template.
-     *
-     * Available placeholders are `{attributes}`, `{label}`, and `{tag}`.
-     *
-     * @param string $template The label template.
-     */
-    public function labelTemplate(string $template): self
-    {
-        $new = clone $this;
-        $new->labelTemplate = $template;
-
-        return $new;
-    }
-
-    /**
-     * Return new instance with the overall widget template set.
-     *
-     * Available placeholders are `{attributes}`, `{header}`, `{fieldListAttributes}`, and `{fields}`.
-     *
-     * @param string $template The template.
-     */
-    public function template(string $template): self
-    {
-        $new = clone $this;
-        $new->template = $template;
 
         return $new;
     }
@@ -281,86 +338,151 @@ final class DetailView extends Widget
         return $new;
     }
 
-    /**
-     * @throws JsonException
-     */
     public function render(): string
     {
-        if ($this->renderFields() === '') {
+        $content = $this->renderList();
+        if ($content === '') {
             return '';
         }
 
-        return $this->removeDoubleLineBreaks(
-            strtr(
-                $this->template,
-                [
-                    '{attributes}' => Html::renderTagAttributes($this->attributes),
-                    '{header}' => $this->header,
-                    '{fieldListAttributes}' => Html::renderTagAttributes($this->fieldListAttributes),
-                    '{fields}' => $this->renderFields(),
-                ]
-            )
+        if ($this->prepend !== '') {
+            $content = $this->prepend . "\n" . $content;
+        }
+        if ($this->append !== '') {
+            $content .= "\n" . $this->append;
+        }
+
+        return $this->containerTag === null
+            ? $content
+            : Html::tag($this->containerTag, "\n" . $content . "\n", $this->containerAttributes)
+                ->encode(false)
+                ->render();
+    }
+
+    private function renderList(): string
+    {
+        $content = $this->renderFields();
+        if ($content === '') {
+            return '';
+        }
+
+        return $this->listTag === null
+            ? $content
+            : Html::tag($this->listTag, "\n" . $content . "\n", $this->listAttributes)
+                ->encode(false)
+                ->render();
+    }
+
+    private function renderFields(): string
+    {
+        return implode(
+            "\n",
+            array_map(
+                $this->renderField(...),
+                $this->fields,
+            ),
         );
     }
 
-    private function renderAttributes(array|Closure $attributes): array
+    private function renderField(DataField $field): string
     {
-        if ($attributes === []) {
-            return [];
+        $context = new FieldContext(
+            $field,
+            $this->data,
+            $this->renderValue($field),
+            $this->renderLabel($field),
+        );
+
+        $content = strtr(
+            $this->fieldTemplate,
+            [
+                '{label}' => $context->label,
+                '{value}' => $context->value,
+            ],
+        );
+
+        if ($this->fieldPrepend !== '') {
+            $content = $this->fieldPrepend . "\n" . $content;
+        }
+        if ($this->fieldAppend !== '') {
+            $content .= "\n" . $this->fieldAppend;
         }
 
-        if ($attributes instanceof Closure) {
-            return (array) $attributes($this->data);
+        if ($this->fieldTag === null) {
+            return $content;
         }
 
-        return $attributes;
+        $attributes = $this->fieldAttributes instanceof Closure
+            ? ($this->fieldAttributes)($context)
+            : $this->fieldAttributes;
+
+        return Html::tag($this->fieldTag, "\n" . $content . "\n", $attributes)
+            ->encode(false)
+            ->render();
     }
 
-    /**
-     * @throws JsonException
-     */
-    private function renderFields(): string
+    private function renderLabel(DataField $field): string
     {
-        if ($this->fields === []) {
+        $label = $field->label === '' ? $field->property : $field->label;
+        if ($label === '') {
             return '';
         }
 
-        $rows = [];
+        $content = Html::encode($label);
 
-        foreach ($this->fields as $field) {
-            $label = strtr($this->labelTemplate, [
+        if ($this->labelPrepend !== '') {
+            $content = $this->labelPrepend . "\n" . $content;
+        }
+        if ($this->labelAppend !== '') {
+            $content .= "\n" . $this->labelAppend;
+        }
+
+        if ($this->labelTag === null) {
+            return $content;
+        }
+
+        $context = new LabelContext($field, $this->data);
+        $attributes = $this->labelAttributes instanceof Closure
+            ? ($this->labelAttributes)($context)
+            : $this->labelAttributes;
+
+        return Html::tag($this->labelTag, $content, $attributes)
+            ->encode(false)
+            ->render();
+
+        return strtr(
+            $this->labelTemplate,
+            [
                 '{label}' => Html::encode($field->label === '' ? $field->property : $field->label),
                 '{tag}' => $field->labelTag === '' ? $this->labelTag : $field->labelTag,
                 '{attributes}' => Html::renderTagAttributes(
-                    $this->renderAttributes(
+                    $this->prepareFieldAttributes(
                         $field->labelAttributes === [] ? $this->labelAttributes : $field->labelAttributes,
                     )
                 ),
-            ]);
+            ]
+        );
+    }
 
-            $value = strtr($this->valueTemplate, [
+    private function renderValue(DataField $field): string
+    {
+        return strtr(
+            $this->valueTemplate,
+            [
                 '{value}' => $field->encodeValue
-                    ? Html::encodeAttribute($this->renderValue($field->property, $field->value))
-                    : $this->renderValue($field->property, $field->value),
+                    ? Html::encodeAttribute($this->renderValueInternal($field->property, $field->value))
+                    : $this->renderValueInternal($field->property, $field->value),
                 '{tag}' => $field->valueTag === '' ? $this->valueTag : $field->valueTag,
                 '{attributes}' => Html::renderTagAttributes(
-                    $this->renderAttributes(
+                    $this->prepareFieldAttributes(
                         $field->valueAttributes === [] ? $this->valueAttributes : $field->valueAttributes,
                     )
                 ),
-            ]);
-
-            $rows[] = strtr($this->fieldTemplate, [
-                '{attributes}' => Html::renderTagAttributes($this->fieldAttributes),
-                '{label}' => $label,
-                '{value}' => $value,
-            ]);
-        }
-
-        return implode("\n", $rows);
+            ],
+        );
     }
 
-    private function renderValue(string $property, string|Stringable|int|float|Closure|null $value): string
+    private function renderValueInternal(string $property, string|Stringable|int|float|Closure|null $value): string
     {
         if ($this->data === []) {
             throw new InvalidArgumentException('The "data" must be set.');
@@ -400,18 +522,5 @@ final class DetailView extends Widget
         }
 
         return '';
-    }
-
-    /**
-     * Remove double line breaks from a string.
-     *
-     * @param string $string The valid UTF-8 string to remove double line breaks from.
-     */
-    private function removeDoubleLineBreaks(string $string): string
-    {
-        /**
-         * @var string We assume that `$string` is a valid UTF-8 string.
-         */
-        return preg_replace('/(\R{2,})/', "\n", $string);
     }
 }
