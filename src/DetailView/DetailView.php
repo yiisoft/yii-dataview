@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Yiisoft\Yii\DataView;
+namespace Yiisoft\Yii\DataView\DetailView;
 
 use Closure;
 use InvalidArgumentException;
@@ -10,7 +10,6 @@ use JsonException;
 use Stringable;
 use Yiisoft\Html\Html;
 use Yiisoft\Widget\Widget;
-use Yiisoft\Yii\DataView\Field\DataField;
 
 use function array_key_exists;
 use function is_array;
@@ -39,6 +38,9 @@ final class DetailView extends Widget
     private array $fieldListAttributes = [];
     private array|object $data = [];
     private array $fieldAttributes = [];
+    /**
+     * @psalm-var list<DataField>
+     */
     private array $fields = [];
     private string $header = '';
     private string $fieldTemplate = "<div{attributes}>\n{label}\n{value}\n</div>";
@@ -116,6 +118,8 @@ final class DetailView extends Widget
      *    DataField::create()->label('Name')->value($data->name),
      * ]
      * ```
+     *
+     * @no-named-arguments
      */
     public function fields(DataField ...$fields): self
     {
@@ -299,51 +303,6 @@ final class DetailView extends Widget
         );
     }
 
-    /**
-     * @psalm-return list<
-     *     array{
-     *         label: string,
-     *         labelAttributes: array<array-key, mixed>,
-     *         labelTag: string,
-     *         value: string,
-     *         valueAttributes: array<array-key, mixed>,
-     *         valueTag: string,
-     *     }
-     * >
-     */
-    private function normalizeColumns(array $fields): array
-    {
-        $normalized = [];
-
-        /** @psalm-var DataField[] $fields */
-        foreach ($fields as $field) {
-            if ($field->label === '' && $field->name === '') {
-                throw new InvalidArgumentException('Either DataField "name" or "label" must be set.');
-            }
-
-            $labelAttributes = $field->labelAttributes === []
-                ? $this->labelAttributes : $field->labelAttributes;
-            $labelTag = $field->labelTag === '' ? $this->labelTag : $field->labelTag;
-            $valueTag = $field->valueTag === '' ? $this->valueTag : $field->valueTag;
-            $valueAttributes = $field->valueAttributes === []
-                ? $this->valueAttributes : $field->valueAttributes;
-
-            $normalized[] = [
-                'label' => Html::encode($field->label === '' ? $field->name : $field->label),
-                'labelAttributes' => $this->renderAttributes($labelAttributes),
-                'labelTag' => $labelTag,
-                'value' => $field->encodeValue
-                    ? Html::encodeAttribute($this->renderValue($field->name, $field->value))
-                    : $this->renderValue($field->name, $field->value)
-                ,
-                'valueAttributes' => $this->renderAttributes($valueAttributes),
-                'valueTag' => $valueTag,
-            ];
-        }
-
-        return $normalized;
-    }
-
     private function renderAttributes(array|Closure $attributes): array
     {
         if ($attributes === []) {
@@ -362,25 +321,33 @@ final class DetailView extends Widget
      */
     private function renderFields(): string
     {
-        $fields = $this->normalizeColumns($this->fields);
-
-        if ($fields === []) {
+        if ($this->fields === []) {
             return '';
         }
 
         $rows = [];
 
-        foreach ($fields as $field) {
+        foreach ($this->fields as $field) {
             $label = strtr($this->labelTemplate, [
-                '{label}' => $field['label'],
-                '{tag}' => $field['labelTag'],
-                '{attributes}' => Html::renderTagAttributes($field['labelAttributes']),
+                '{label}' => Html::encode($field->label === '' ? $field->property : $field->label),
+                '{tag}' => $field->labelTag === '' ? $this->labelTag : $field->labelTag,
+                '{attributes}' => Html::renderTagAttributes(
+                    $this->renderAttributes(
+                        $field->labelAttributes === [] ? $this->labelAttributes : $field->labelAttributes,
+                    )
+                ),
             ]);
 
             $value = strtr($this->valueTemplate, [
-                '{value}' => $field['value'],
-                '{tag}' => $field['valueTag'],
-                '{attributes}' => Html::renderTagAttributes($field['valueAttributes']),
+                '{value}' => $field->encodeValue
+                    ? Html::encodeAttribute($this->renderValue($field->property, $field->value))
+                    : $this->renderValue($field->property, $field->value),
+                '{tag}' => $field->valueTag === '' ? $this->valueTag : $field->valueTag,
+                '{attributes}' => Html::renderTagAttributes(
+                    $this->renderAttributes(
+                        $field->valueAttributes === [] ? $this->valueAttributes : $field->valueAttributes,
+                    )
+                ),
             ]);
 
             $rows[] = strtr($this->fieldTemplate, [

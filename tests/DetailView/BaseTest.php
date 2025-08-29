@@ -10,8 +10,8 @@ use Yiisoft\Definitions\Exception\CircularReferenceException;
 use Yiisoft\Definitions\Exception\InvalidConfigException;
 use Yiisoft\Definitions\Exception\NotInstantiableException;
 use Yiisoft\Factory\NotFoundException;
-use Yiisoft\Yii\DataView\DetailView;
-use Yiisoft\Yii\DataView\Field\DataField;
+use Yiisoft\Yii\DataView\DetailView\DetailView;
+use Yiisoft\Yii\DataView\DetailView\DataField;
 use Yiisoft\Yii\DataView\Tests\Support\Assert;
 use Yiisoft\Yii\DataView\Tests\Support\TestTrait;
 
@@ -44,7 +44,7 @@ final class BaseTest extends TestCase
                 ->fields(
                     new DataField('id'),
                     new DataField(
-                        name: 'value',
+                        property: 'value',
                         encodeValue: false
                     ),
                     new DataField('total'),

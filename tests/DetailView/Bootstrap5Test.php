@@ -10,8 +10,8 @@ use Yiisoft\Definitions\Exception\InvalidConfigException;
 use Yiisoft\Definitions\Exception\NotInstantiableException;
 use Yiisoft\Factory\NotFoundException;
 use Yiisoft\Html\Tag\H2;
-use Yiisoft\Yii\DataView\DetailView;
-use Yiisoft\Yii\DataView\Field\DataField;
+use Yiisoft\Yii\DataView\DetailView\DetailView;
+use Yiisoft\Yii\DataView\DetailView\DataField;
 use Yiisoft\Yii\DataView\Tests\Support\Assert;
 use Yiisoft\Yii\DataView\Tests\Support\TestTrait;
 

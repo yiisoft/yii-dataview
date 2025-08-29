@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 use Yiisoft\Yii\DataView\Column\ActionColumnRenderer;
-use Yiisoft\Yii\DataView\DetailView;
+use Yiisoft\Yii\DataView\DetailView\DetailView;
 use Yiisoft\Yii\DataView\Filter\Widget\DropdownFilter;
 use Yiisoft\Yii\DataView\Filter\Widget\TextInputFilter;
 use Yiisoft\Yii\DataView\GridView;

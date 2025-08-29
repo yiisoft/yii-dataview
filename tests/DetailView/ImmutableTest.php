@@ -9,8 +9,8 @@ use Yiisoft\Definitions\Exception\CircularReferenceException;
 use Yiisoft\Definitions\Exception\InvalidConfigException;
 use Yiisoft\Definitions\Exception\NotInstantiableException;
 use Yiisoft\Factory\NotFoundException;
-use Yiisoft\Yii\DataView\DetailView;
-use Yiisoft\Yii\DataView\Field\DataField;
+use Yiisoft\Yii\DataView\DetailView\DetailView;
+use Yiisoft\Yii\DataView\DetailView\DataField;
 use Yiisoft\Yii\DataView\Tests\Support\TestTrait;
 
 final class ImmutableTest extends TestCase
@@ -27,7 +27,7 @@ final class ImmutableTest extends TestCase
     {
         $detailView = DetailView::widget();
         $this->assertNotSame($detailView, $detailView->attributes([]));
-        $this->assertNotSame($detailView, $detailView->fields(new DataField()));
+        $this->assertNotSame($detailView, $detailView->fields(new DataField('test')));
         $this->assertNotSame($detailView, $detailView->fieldListAttributes([]));
         $this->assertNotSame($detailView, $detailView->data([]));
         $this->assertNotSame($detailView, $detailView->fieldAttributes([]));

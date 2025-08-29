@@ -2,9 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Yiisoft\Yii\DataView\Field;
+namespace Yiisoft\Yii\DataView\DetailView;
 
 use Closure;
+use InvalidArgumentException;
 use Stringable;
 
 /**
@@ -18,7 +19,7 @@ final class DataField
     /**
      * Creates a new `DataField` instance.
      *
-     * @param string $name Property name in the data object or key name in the data array.
+     * @param string $property Property name in the data object or key name in the data array.
      * Optional if `$value` is set explicitly.
      *
      * @param string $label Field label. If not set, `$name` is used.
@@ -50,7 +51,7 @@ final class DataField
      * @psalm-param string|Stringable|int|float|(Closure(TData): string)|null $value
      */
     public function __construct(
-        public readonly string $name = '',
+        public readonly string $property = '',
         public readonly string $label = '',
         public readonly array|Closure $labelAttributes = [],
         public readonly string $labelTag = '',
@@ -59,5 +60,8 @@ final class DataField
         public readonly array|Closure $valueAttributes = [],
         public readonly bool $encodeValue = true,
     ) {
+        if ($label === '' && $property === '') {
+            throw new InvalidArgumentException('Either DataField "property" or "label" must be set.');
+        }
     }
 }

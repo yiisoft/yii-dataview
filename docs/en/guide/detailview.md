@@ -9,8 +9,8 @@ The basic usage is the following:
 
 ```php
 <?php
-use Yiisoft\Yii\DataView\DetailView;
-use Yiisoft\Yii\DataView\Field\DataField; 
+use Yiisoft\Yii\DataView\DetailView\DetailView;
+use Yiisoft\Yii\DataView\DetailView\DataField; 
 ?>
 
 <?= DetailView::widget()
