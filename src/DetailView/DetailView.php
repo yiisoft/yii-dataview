@@ -13,7 +13,6 @@ use Yiisoft\Widget\Widget;
 use Yiisoft\Yii\DataView\ValuePresenter\SimpleValuePresenter;
 use Yiisoft\Yii\DataView\ValuePresenter\ValuePresenterInterface;
 
-
 /**
  * `DetailView` displays details about a single data item. The data can be either an object or an associative array.
  * Which fields should be displayed and how exactly is determined by "fields":
