@@ -6,62 +6,53 @@ namespace Yiisoft\Yii\DataView\DetailView;
 
 use Closure;
 use InvalidArgumentException;
-use Stringable;
 
 /**
  * `DataField` represents a field configuration for {@see DetailView} widget.
  *
- * This class defines how a single field should be displayed in a {@see DetailView},
- * including its label, value, and HTML attributes for both label and value elements.
+ * This class defines how a single field should be displayed in a {@see DetailView}
+ *
+ * @psalm-import-type FieldAttributesClosure from DetailView
+ * @psalm-import-type LabelAttributesClosure from DetailView
+ * @psalm-import-type ValueAttributesClosure from DetailView
+ * @psalm-import-type GetValueClosure from DetailView
  */
 final class DataField
 {
     /**
-     * Creates a new `DataField` instance.
-     *
-     * @param string $property Property name in the data object or key name in the data array.
-     * Optional if `$value` is set explicitly.
-     *
-     * @param string $label Field label. If not set, `$name` is used.
-     *
+     * @param string|null $property Property name in the data object or key name in the data array. Optional if `$value`
+     * is set explicitly.
+     * @param string|null $label Field label. If not set, `$property` or empty string is used.
+     * @param bool $labelEncode Whether the label is HTML encoded
      * @param array|Closure $labelAttributes An array of label's HTML attribute values indexed by attribute names or
-     * a function accepting data and returning the array.
-     * Example array: `['class' => 'label', 'style' => 'color: red']`
-     * Example closure: `fn($data) => ['class' => $data->type . '-label']`
-     *
-     * @param string $labelTag Label HTML tag.
-     * Example: 'span', 'div', 'label'
-     *
-     * @param Closure|float|int|string|Stringable|null $value The field value. It can be:
+     * a function accepting data and returning the array.     *
+     * @param mixed $value The field value. It can be:
      *  - `null` if the value should be retrieved from the data object using the property name;
-     *  - a closure that will be called to get the value, format: `function (array|object $data): string`;
-     *  - string, `Stringable`, integer or float which will be used as is.
-     *
-     * @param string $valueTag Value HTML tag.
-     * Example: 'span', 'div', 'p'
-     *
+     *  - a closure that will be called to get the value, format: `function (GetValueContext $context): mixed`;
+     *  - other value that will be used as is.
      * @param array|Closure $valueAttributes An array of value's HTML attribute values indexed by attribute names or
      * a function accepting data and returning the array.
-     * Example array: `['class' => 'value', 'data-type' => 'text']`
-     * Example closure: `fn($data) => ['class' => $data->status . '-value']`
+     * @param bool $valueEncode Whether the value is HTML encoded.
+     * @param array|Closure $fieldAttributes An array of label's HTML attribute values indexed by attribute names or
+     *  a function accepting data and returning the array.
      *
-     * @param bool $encodeValue Whether the value is HTML encoded
-     *
-     * @template TData as array|object
-     * @psalm-param string|Stringable|int|float|(Closure(TData): string)|null $value
+     * @psalm-param array|LabelAttributesClosure $labelAttributes
+     * @psalm-param GetValueClosure|mixed $value
+     * @psalm-param array|ValueAttributesClosure $valueAttributes
+     * @psalm-param array|FieldAttributesClosure $fieldAttributes
      */
     public function __construct(
-        public readonly string $property = '',
-        public readonly string $label = '',
+        public readonly string|null $property = null,
+        public readonly string|null $label = null,
+        public readonly bool $labelEncode = true,
         public readonly array|Closure $labelAttributes = [],
-        public readonly string $labelTag = '',
-        public readonly string|Stringable|int|float|Closure|null $value = null,
-        public readonly string $valueTag = '',
+        public readonly mixed $value = null,
+        public readonly bool $valueEncode = true,
         public readonly array|Closure $valueAttributes = [],
-        public readonly bool $encodeValue = true,
+        public readonly array|Closure $fieldAttributes = [],
     ) {
-        if ($label === '' && $property === '') {
-            throw new InvalidArgumentException('Either DataField "property" or "label" must be set.');
+        if ($property === null && $value === null) {
+            throw new InvalidArgumentException('Either "property" or "value" must be set.');
         }
     }
 }

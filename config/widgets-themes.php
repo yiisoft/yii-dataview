@@ -47,8 +47,7 @@ return [
             ],
         ],
         DetailView::class => [
-            'fieldListAttributes()' => [['class' => 'row mx-2']],
-            'fieldTemplate()' => ["{label}\n{value}"],
+            'listAttributes()' => [['class' => 'row mx-2']],
             'labelAttributes()' => [['class' => 'col-sm-3 bg-light h-100 py-2']],
             'valueAttributes()' => [['class' => 'col-sm-9 bg-light h-100 py-2']],
         ],
