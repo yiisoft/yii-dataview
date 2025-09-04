@@ -9,8 +9,16 @@ use Stringable;
 
 use function gettype;
 
+/**
+ * Presents scalars and Stringable objects as strings.
+ */
 final class SimpleValuePresenter implements ValuePresenterInterface
 {
+    /**
+     * @param string $null Label to use for `null`.
+     * @param string $true Label to use for `true`.
+     * @param string $false Label to use for `false`.
+     */
     public function __construct(
         private readonly string $null = '',
         private readonly string $true = 'True',

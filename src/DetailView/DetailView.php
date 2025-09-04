@@ -80,7 +80,7 @@ final class DetailView extends Widget
     }
 
     /**
-     * Return new instance with the data.
+     * Return a new instance with the data.
      *
      * @param array|object $data The data model whose details are to be displayed. This can be an object or
      * an associative array.
@@ -113,6 +113,11 @@ final class DetailView extends Widget
         return $new;
     }
 
+    /**
+     * Returns a new instance with the HTML tag name for the container.
+     *
+     * @param string|null $tag HTML tag name.
+     */
     public function containerTag(?string $tag): self
     {
         if ($tag === '') {
@@ -160,6 +165,11 @@ final class DetailView extends Widget
         return $new;
     }
 
+    /**
+     * Returns a new instance with the HTML tag name for the list.
+     *
+     * @param string|null $tag The HTML tag name.
+     */
     public function listTag(?string $tag): self
     {
         if ($tag === '') {
@@ -183,6 +193,11 @@ final class DetailView extends Widget
         return $new;
     }
 
+    /**
+     * Returns a new instance with the HTML tag name for the field container.
+     *
+     * @param string|null $tag The HTML tag name.
+     */
     public function fieldTag(?string $tag): self
     {
         if ($tag === '') {
@@ -215,6 +230,12 @@ final class DetailView extends Widget
         return $new;
     }
 
+    /**
+     * Add HTML content after the field container tag.
+     *
+     * @param string|Stringable ...$append The HTML content to be appended.
+     * @return $this
+     */
     public function fieldAppend(string|Stringable ...$append): self
     {
         $new = clone $this;
@@ -223,7 +244,7 @@ final class DetailView extends Widget
     }
 
     /**
-     * Return new instance with the field template set.
+     * Return a new instance with the field template set.
      *
      * Available placeholders are `{label}` and `{value}`.
      *
@@ -236,6 +257,10 @@ final class DetailView extends Widget
         return $new;
     }
 
+    /**
+     * Returns a new instance with the HTML tag name for the field label wrapper.
+     * @param string|null $tag The HTML tag name or `null` to disable the wrapper.
+     */
     public function labelTag(?string $tag): self
     {
         if ($tag === '') {
@@ -261,6 +286,11 @@ final class DetailView extends Widget
         return $new;
     }
 
+    /**
+     * Returns a new instance with the HTML content to be prepended to the label.
+     *
+     * @param string|Stringable ...$prepend The HTML content to be prepended.
+     */
     public function labelPrepend(string|Stringable ...$prepend): self
     {
         $new = clone $this;
@@ -268,6 +298,10 @@ final class DetailView extends Widget
         return $new;
     }
 
+    /**
+     * Returns a new instance with the HTML content to be appended to the label.
+     * @param string|Stringable ...$append The HTML content to be appended.
+     */
     public function labelAppend(string|Stringable ...$append): self
     {
         $new = clone $this;
@@ -276,7 +310,7 @@ final class DetailView extends Widget
     }
 
     /**
-     * Return new instance with the value tag.
+     * Return a new instance with the value tag.
      *
      * @param string|null $tag HTML tag.
      */
@@ -305,6 +339,10 @@ final class DetailView extends Widget
         return $new;
     }
 
+    /**
+     * Returns a new instance with the HTML content to be prepended to the value.
+     * @param string|Stringable ...$prepend The HTML content to be prepended.
+     */
     public function valuePrepend(string|Stringable ...$prepend): self
     {
         $new = clone $this;
@@ -312,6 +350,10 @@ final class DetailView extends Widget
         return $new;
     }
 
+    /**
+     * Returns a new instance with the HTML content to be appended to the value.
+     * @param string|Stringable ...$append The HTML content to be appended.
+     */
     public function valueAppend(string|Stringable ...$append): self
     {
         $new = clone $this;
@@ -319,6 +361,10 @@ final class DetailView extends Widget
         return $new;
     }
 
+    /**
+     * Returns a new instance with the value presenter set.
+     * @param ValuePresenterInterface $presenter The value presenter.
+     */
     public function valuePresenter(ValuePresenterInterface $presenter): self
     {
         $new = clone $this;
