@@ -9,8 +9,8 @@ The basic usage is the following:
 
 ```php
 <?php
-use Yiisoft\Yii\DataView\DetailView;
-use Yiisoft\Yii\DataView\Field\DataField; 
+use Yiisoft\Yii\DataView\DetailView\DetailView;
+use Yiisoft\Yii\DataView\DetailView\DataField;
 ?>
 
 <?= DetailView::widget()
@@ -25,79 +25,120 @@ use Yiisoft\Yii\DataView\Field\DataField;
 
 In the above the data set via `data()` can be either an object with public fields or an associative array.
 What's displayed is defined via fields configurations where each is an instance of `DataField` that may contain
-the following:
+the following constructor parameters:
 
-- `name` - Property name in the data object or key name in the data array. Optional if `value` is set explicitly.
-- `label` - Field label. If not set, `name` is used.
-- `labelAttributes` - An array of label's HTML attribute values indexed by attribute names or a function accepting
-  data and returning the array.
-- `labelTag` - Label HTML tag.
-- `value` Explicit value. If `null`, the value is obtained from the data by its name. Could be a
-  function accepting data as an argument and returning the value.
-- `valueTag` Value HTML tag.
-- `valueAttributes` - An array of value's HTML attribute values indexed by attribute names or a function accepting
-  data and returning the array.
+- `property` - Property name in the data object or key name in the data array. Optional if `value` is set explicitly.
+- `label` - Field label. If not set, `property` is used.
+- `labelEncode` - Whether the label should be HTML encoded (default: `true`).
+- `labelAttributes` - An array of label's HTML attributes or a function accepting a `LabelContext` and returning
+  the array.
+- `value` - Explicit value. If `null`, the value is obtained from the data by its property name. Could be a
+  function accepting a `GetValueContext` and returning the value.
+- `valueEncode` - Whether the value should be HTML encoded (default: `true`).
+- `valueAttributes` - An array of value's HTML attributes or a function accepting a `ValueContext` and returning
+  the array.
+- `fieldAttributes` - An array of field container's HTML attributes or a function accepting a `FieldContext` and
+  returning the array.
 
 ## Rendering options
 
 The widget is fully customizable in terms of how it's rendered.
 
-### Main widget
+### Common Structure
 
-By default, the widget is rendered as
+By default, the widget is rendered with this structure:
 
-```html
-<div{attributes}>
-    {header}
-    <dl{fieldListAttributes}>
-        {fields}
-    </dl>
-</div>
+```
+{start container tag}
+    {prepend}
+    {start list tag}
+        {start field tag}
+            {field prepend}
+            {field content}
+            {field append}
+        {end field tag}
+        …
+    {end list tag}
+    {append}
+{end container tag}
 ```
 
-The template above could be changed with `template()`.
-Attributes for the main widget tag could be set using `attributes()` and attributes for the field list container
-could be set with `fieldListAttributes()`. 
-Header is an extra content displayed and could be set with `header()`.
+The container can be customized with:
 
-`{fields}` placeholder is replaced with the rendered fields. Each field is using a template that defaults to the following:
+- `containerTag()` - set the container HTML tag (default: `null` - no container tag);
+- `containerAttributes()` - set attributes for the container tag;
+- `prepend()` - add content after the opening container tag;
+- `append()` - add content before the closing container tag.
 
-```html
-<div{attributes}>
+The field list can be customized with:
+
+- `listTag()` - set the list HTML tag (default: `dl`, set to `null` to disable list wrapper);
+- `listAttributes()` - set attributes for the list tag.
+
+### Field Structure
+
+Each field uses this template by default:
+
+```
+{label} {value}
+```
+
+Field rendering can be customized with:
+
+- `fieldTemplate()` - set the field template (available placeholders: `{label}`, `{value}`);
+- `fieldTag()` - set the field container HTML tag (default: `null` - no wrapper);
+- `fieldAttributes()` - set attributes for the field container (array or closure accepting `FieldContext`);
+- `fieldPrepend()` - add content after the opening field tag;
+- `fieldAppend()` - add content before the closing field tag.
+
+### Label Rendering
+
+Labels are rendered as:
+
+```
+{start label tag}
+    {label prepend}
     {label}
+    {label append}
+{end label tag}
+```
+
+Label rendering can be customized with:
+
+- `labelTag()` - set the label HTML tag (default: `dt`, set to `null` to disable wrapper);
+- `labelAttributes()` - set attributes for the label tag (array or closure accepting `LabelContext`);
+- `labelPrepend()` - add content before the label;
+- `labelAppend()` - add content after the label.
+
+If `DataField`'s `label` is set, it is used as is, otherwise it falls back to `property`.
+
+### Value Rendering
+
+Values are rendered as:
+
+```html
+{start value tag}
+    {value prepend}
     {value}
-</div>
+    {value append}
+{end value tag}
 ```
 
-The template could be customized with `fieldTemplate()` and attributes could be set with `fieldAttributes()`.
+Value rendering can be customized with:
 
+- `valueTag()` - set the value HTML tag (default: `dd`, set to `null` to disable wrapper);
+- `valueAttributes()` - set attributes for the value tag (array or closure accepting `ValueContext`);
+- `valuePrepend()` - add content before the value;
+- `valueAppend()` - add content after the value.
 
-Label is rendered as:
+If `DataField`'s `value` is set, it is used as is, otherwise the value is retrieved from the data using `property` 
+as either object property name or array key.
 
-```html
-<{tag}{attributes}>{label}</{tag}>
-```
+### Value Presentation
 
-The template above could be customized with `labelTemplate()`.
+Values are processed through a value presenter before rendering. By default, `SimpleValuePresenter` is used, which 
+handles basic type conversion (e.g., boolean values to "True" / "False" strings).
 
-Tag and its attributes could be set with `labelTag()` or `labelAttributes()` but if `DataField` has corresponding
-properties set, they have higher priority.
+You can customize value presentation with:
 
-If `DataField`'s `label` is set, it is used as is else it falls back to `name`.
-
-The value is similar. It is rendered as:
-
-```html
-<{tag}{attributes}>{value}</{tag}>
-```
-
-The template above could be customized with `valueTemplate()`.
-
-Tag and its attributes could be set with `valueTag()` or `valueAttributes()` but if `DataField` has corresponding
-properties set, they have higher priority. 
-
-If `DataField`'s `value` is set, it is used as is else it is getting the value from the data using `name` as either
-object property name or array key.
-
-There are two extra methods, `valueTrue()` and `valueFalse()`. You can use these to define how to display a boolean
-value.
+- `valuePresenter()` - set a custom value presenter implementing `ValuePresenterInterface`.

@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 use Yiisoft\Yii\DataView\Column\ActionColumnRenderer;
-use Yiisoft\Yii\DataView\DetailView;
+use Yiisoft\Yii\DataView\DetailView\DetailView;
 use Yiisoft\Yii\DataView\Filter\Widget\DropdownFilter;
 use Yiisoft\Yii\DataView\Filter\Widget\TextInputFilter;
 use Yiisoft\Yii\DataView\GridView;
@@ -47,8 +47,7 @@ return [
             ],
         ],
         DetailView::class => [
-            'fieldListAttributes()' => [['class' => 'row mx-2']],
-            'fieldTemplate()' => ["{label}\n{value}"],
+            'listAttributes()' => [['class' => 'row mx-2']],
             'labelAttributes()' => [['class' => 'col-sm-3 bg-light h-100 py-2']],
             'valueAttributes()' => [['class' => 'col-sm-9 bg-light h-100 py-2']],
         ],
