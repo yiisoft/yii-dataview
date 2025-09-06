@@ -35,6 +35,7 @@ final class DataField
      * @param bool $valueEncode Whether the value is HTML encoded.
      * @param array|Closure $fieldAttributes An array of label's HTML attribute values indexed by attribute names or
      *  a function accepting data and returning the array.
+     * @param bool $visible Whether the field is visible.
      *
      * @psalm-param array|LabelAttributesClosure $labelAttributes
      * @psalm-param GetValueClosure|mixed $value
@@ -50,9 +51,18 @@ final class DataField
         public readonly bool $valueEncode = true,
         public readonly array|Closure $valueAttributes = [],
         public readonly array|Closure $fieldAttributes = [],
+        private readonly bool $visible = true,
     ) {
         if ($property === null && $value === null) {
             throw new InvalidArgumentException('Either "property" or "value" must be set.');
         }
+    }
+
+    /**
+     * Returns whether the field is visible.
+     */
+    public function isVisible(): bool
+    {
+        return $this->visible;
     }
 }

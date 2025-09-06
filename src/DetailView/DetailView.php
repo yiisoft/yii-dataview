@@ -413,7 +413,7 @@ final class DetailView extends Widget
             "\n",
             array_map(
                 $this->renderField(...),
-                $this->fields,
+                array_filter($this->fields, static fn(DataField $field): bool => $field->isVisible()),
             ),
         );
     }
