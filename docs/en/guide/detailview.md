@@ -23,7 +23,27 @@ use Yiisoft\Yii\DataView\DetailView\DataField;
 ?>
 ```
 
-In the above the data set via `data()` can be either an object with public fields or an associative array.
+## Field Visibility
+
+You can control whether a field is visible using the `visible` parameter. This is useful for conditional display of fields based on user permissions or other logic:
+
+```php
+<?= DetailView::widget()
+    ->data(['id' => 1, 'username' => 'john_doe', 'email' => 'john@example.com', 'admin_notes' => 'VIP user'])
+    ->fields(
+        new DataField('id'),
+        new DataField('username', label: 'Username'),
+        new DataField('email', label: 'Email'),
+        new DataField('admin_notes', label: 'Admin Notes', visible: $user->isAdmin()),
+    )
+?>
+```
+
+In this example, the admin notes field will only be displayed if the current user is an admin. The `visible` parameter defaults to `true`, so all fields are visible by default for backward compatibility.
+
+## Field Configuration Parameters
+
+The data set via `data()` can be either an object with public fields or an associative array.
 What's displayed is defined via fields configurations where each is an instance of `DataField` that may contain
 the following constructor parameters:
 
@@ -39,6 +59,7 @@ the following constructor parameters:
   the array.
 - `fieldAttributes` - An array of field container's HTML attributes or a function accepting a `FieldContext` and
   returning the array.
+- `visible` - Whether the field is visible (default: `true`). Hidden fields are not rendered in the output.
 
 ## Rendering options
 
