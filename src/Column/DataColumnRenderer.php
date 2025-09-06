@@ -179,7 +179,7 @@ final class DataColumnRenderer implements FilterableColumnRendererInterface, Sor
 
         return $this
             ->getFilterFactory($column)
-            ->create($column->field ?? $column->property, $value);
+            ->create($column->property, $value);
     }
 
     public function renderBody(ColumnInterface $column, Cell $cell, DataContext $context): Cell
@@ -258,7 +258,7 @@ final class DataColumnRenderer implements FilterableColumnRendererInterface, Sor
             return [];
         }
 
-        return [$column->property => $column->field ?? $column->property];
+        return [$column->property => $column->property];
     }
 
     private function getFilterFactory(DataColumn $column): FilterFactoryInterface
