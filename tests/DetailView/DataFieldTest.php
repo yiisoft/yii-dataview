@@ -7,7 +7,6 @@ namespace Yiisoft\Yii\DataView\Tests\DetailView;
 use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 use Yiisoft\Yii\DataView\DetailView\DataField;
-use Yiisoft\Yii\DataView\DetailView\DetailView;
 
 final class DataFieldTest extends TestCase
 {
