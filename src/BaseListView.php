@@ -45,7 +45,6 @@ use Yiisoft\Yii\DataView\Pagination\PaginationContext;
 use Yiisoft\Yii\DataView\Pagination\PaginationWidgetInterface;
 use Yiisoft\Yii\DataView\Pagination\PaginatorNotSupportedException;
 
-use function array_key_exists;
 use function array_slice;
 use function call_user_func_array;
 use function extension_loaded;

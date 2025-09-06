@@ -27,7 +27,6 @@ use Yiisoft\Yii\DataView\Column\FilterableColumnRendererInterface;
 use Yiisoft\Yii\DataView\Column\SortableColumnRendererInterface;
 use Yiisoft\Yii\DataView\Filter\Factory\IncorrectValueException;
 
-use function array_key_exists;
 use function call_user_func_array;
 use function in_array;
 use function is_callable;
