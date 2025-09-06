@@ -35,11 +35,11 @@ use function is_callable;
  *
  * @template TColumn as DataColumn
  * @implements FilterableColumnRendererInterface<TColumn>
- * @implements SortableColumnInterface<TColumn>
+ * @implements SortableColumnRendererInterface<TColumn>
  *
  * @psalm-import-type FilterEmptyCallable from DataColumn
  */
-final class DataColumnRenderer implements FilterableColumnRendererInterface, SortableColumnInterface
+final class DataColumnRenderer implements FilterableColumnRendererInterface, SortableColumnRendererInterface
 {
     /**
      * Default function to determine if a filter value is empty.
@@ -254,11 +254,11 @@ final class DataColumnRenderer implements FilterableColumnRendererInterface, Sor
     {
         /** @var DataColumn $column This annotation is for IDE only */
 
-        if ($column->property === null) {
+        if (!$column->withSorting || $column->property === null) {
             return [];
         }
 
-        return [$column->property => $column->property];
+        return [$column->property];
     }
 
     private function getFilterFactory(DataColumn $column): FilterFactoryInterface

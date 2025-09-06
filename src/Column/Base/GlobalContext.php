@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Yiisoft\Yii\DataView\Column\Base;
 
 use Stringable;
-use Yiisoft\Arrays\ArrayHelper;
 use Yiisoft\Data\Paginator\PageToken;
 use Yiisoft\Data\Reader\Sort;
 use Yiisoft\Html\Html;
@@ -18,6 +17,7 @@ use Yiisoft\Yii\DataView\UrlParametersFactory;
 
 use function call_user_func_array;
 use function count;
+use function in_array;
 
 /**
  * `GlobalContext` provides context for rendering and handling grid column headers, footers and container cells.
@@ -31,7 +31,7 @@ final class GlobalContext
      *
      * @param Sort|null $originalSort Original sort configuration before any modifications.
      * @param Sort|null $sort Current sort configuration that reflects the active sort state.
-     * @param array $orderProperties Map of field names to their sort properties.
+     * @param string[] $allowedProperties List of properties that are allowed to be sorted.
      * @param string|null $sortableHeaderClass CSS class for sortable headers.
      * @param string|Stringable $sortableHeaderPrepend Content to prepend to sortable headers.
      * @param string|Stringable $sortableHeaderAppend Content to append to sortable headers.
@@ -54,13 +54,13 @@ final class GlobalContext
      *
      * @internal
      *
-     * @psalm-param array<string, string> $orderProperties
+     * @psalm-param list<string> $allowedProperties
      * @psalm-param UrlCreator|null $urlCreator
      */
     public function __construct(
         private readonly ?Sort $originalSort,
         private readonly ?Sort $sort,
-        private readonly array $orderProperties,
+        private readonly array $allowedProperties,
         private readonly ?string $sortableHeaderClass,
         private readonly string|Stringable $sortableHeaderPrepend,
         private readonly string|Stringable $sortableHeaderAppend,
@@ -111,10 +111,8 @@ final class GlobalContext
      */
     public function prepareSortable(Cell $cell, string $property): array
     {
-        $originalProperty = $property;
-        $property = $this->orderProperties[$property] ?? '';
         if (
-            $property === ''
+            !in_array($property, $this->allowedProperties, true)
             || $this->sort === null
             || $this->originalSort === null
             || !$this->sort->hasFieldInConfig($property)
@@ -144,7 +142,7 @@ final class GlobalContext
             UrlParametersFactory::create(
                 $this->pageToken,
                 $this->pageSize,
-                $this->getLinkSortValue($this->originalSort, $this->sort, $property, $originalProperty),
+                $this->getLinkSortValue($this->originalSort, $this->sort, $property),
                 $this->urlConfig,
             )
         );
@@ -163,7 +161,6 @@ final class GlobalContext
      * @param Sort $originalSort Original sort configuration.
      * @param Sort $sort Current sort configuration.
      * @param string $property Property name for sorting.
-     * @param string $originalProperty Original property name before an override.
      *
      * @return string|null Sort value for the link or `null` if unchanged.
      */
@@ -171,7 +168,6 @@ final class GlobalContext
         Sort $originalSort,
         Sort $sort,
         string $property,
-        string $originalProperty
     ): ?string {
         $originalOrder = $originalSort->getOrder();
         $order = $sort->getOrder();
@@ -211,9 +207,7 @@ final class GlobalContext
             return null;
         }
 
-        return OrderHelper::arrayToString(
-            ArrayHelper::renameKey($resultOrder, $property, $originalProperty)
-        );
+        return OrderHelper::arrayToString($resultOrder);
     }
 
     /**
