@@ -47,19 +47,19 @@ final class DataFieldTest extends TestCase
     public function testIsVisibleDefault(): void
     {
         $field = new DataField(value: 'test');
-        $this->assertTrue($field->isVisible());
+        $this->assertTrue($field->visible);
     }
 
     public function testIsVisibleTrue(): void
     {
         $field = new DataField(value: 'test', visible: true);
-        $this->assertTrue($field->isVisible());
+        $this->assertTrue($field->visible);
     }
 
     public function testIsVisibleFalse(): void
     {
         $field = new DataField(value: 'test', visible: false);
-        $this->assertFalse($field->isVisible());
+        $this->assertFalse($field->visible);
     }
 
     public function testVisibilityInDetailView(): void

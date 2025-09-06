@@ -51,18 +51,10 @@ final class DataField
         public readonly bool $valueEncode = true,
         public readonly array|Closure $valueAttributes = [],
         public readonly array|Closure $fieldAttributes = [],
-        private readonly bool $visible = true,
+        public readonly bool $visible = true,
     ) {
         if ($property === null && $value === null) {
             throw new InvalidArgumentException('Either "property" or "value" must be set.');
         }
-    }
-
-    /**
-     * Returns whether the field is visible.
-     */
-    public function isVisible(): bool
-    {
-        return $this->visible;
     }
 }
