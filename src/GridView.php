@@ -24,11 +24,11 @@ use Yiisoft\Yii\DataView\Column\Base\RendererContainer;
 use Yiisoft\Yii\DataView\Column\ColumnInterface;
 use Yiisoft\Yii\DataView\Column\ColumnRendererInterface;
 use Yiisoft\Yii\DataView\Column\FilterableColumnRendererInterface;
-use Yiisoft\Yii\DataView\Column\SortableColumnInterface;
+use Yiisoft\Yii\DataView\Column\SortableColumnRendererInterface;
 use Yiisoft\Yii\DataView\Filter\Factory\IncorrectValueException;
 
-use function array_key_exists;
 use function call_user_func_array;
+use function in_array;
 use function is_callable;
 
 /**
@@ -772,7 +772,7 @@ final class GridView extends BaseListView
         $globalContext = new GlobalContext(
             $this->getSort($dataReader),
             $this->getSort($preparedDataReader),
-            $this->getOrderProperties(),
+            $this->getAllowedPropertiesForSort(),
             $this->sortableHeaderClass,
             $this->sortableHeaderPrepend,
             $this->sortableHeaderAppend,
@@ -982,33 +982,37 @@ final class GridView extends BaseListView
         $columns = $this->getColumns();
         $renderers = $this->getColumnRenderers();
 
-        $result = [];
+        $allowedProperties = [];
         foreach ($columns as $i => $column) {
-            if ($renderers[$i] instanceof SortableColumnInterface) {
-                foreach ($renderers[$i]->getOrderProperties($column) as $from => $to) {
-                    if (array_key_exists($from, $order)) {
-                        $result[$to] = $order[$from];
-                    }
-                }
+            if ($renderers[$i] instanceof SortableColumnRendererInterface) {
+                $allowedProperties[] = $renderers[$i]->getOrderProperties($column);
             }
         }
+        $allowedProperties = array_merge(...$allowedProperties);
 
-        return $result;
+        return array_filter(
+            $order,
+            static fn (string $property): bool => in_array($property, $allowedProperties, true),
+            ARRAY_FILTER_USE_KEY,
+        );
     }
 
-    protected function getOrderProperties(): array
+    /**
+     * @psalm-return list<string>
+     */
+    private function getAllowedPropertiesForSort(): array
     {
         $columns = $this->getColumns();
         $renderers = $this->getColumnRenderers();
 
-        $orderProperties = [];
+        $properties = [];
         foreach ($columns as $i => $column) {
-            if ($renderers[$i] instanceof SortableColumnInterface) {
-                $orderProperties[] = $renderers[$i]->getOrderProperties($column);
+            if ($renderers[$i] instanceof SortableColumnRendererInterface) {
+                $properties[] = $renderers[$i]->getOrderProperties($column);
             }
         }
 
-        return array_merge(...$orderProperties);
+        return array_merge(...$properties);
     }
 
     /**

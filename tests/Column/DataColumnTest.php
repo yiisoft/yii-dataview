@@ -715,25 +715,6 @@ final class DataColumnTest extends TestCase
         unset($_GET['email']);
     }
 
-    public function testSortingWithField(): void
-    {
-        $output = GridView::widget()
-            ->columns(
-                new DataColumn(
-                    'name',
-                    field: 'user.name',
-                    withSorting: true
-                ),
-            )
-            ->id('w1-grid')
-            ->dataReader($this->createOffsetPaginator($this->data, 10))
-            ->render();
-
-        $this->assertStringContainsString('<th>Name</th>', $output);
-        $this->assertStringContainsString('John', $output);
-        $this->assertStringContainsString('Mary', $output);
-    }
-
     public function testCustomFilterFactory(): void
     {
         $data = [
