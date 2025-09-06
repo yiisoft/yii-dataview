@@ -409,12 +409,13 @@ final class DetailView extends Widget
 
     private function renderFields(): string
     {
+        $fields = array_filter(
+            $this->fields,
+            static fn(DataField $field): bool => $field->visible,
+        );
         return implode(
             "\n",
-            array_map(
-                $this->renderField(...),
-                $this->fields,
-            ),
+            array_map($this->renderField(...), $fields),
         );
     }
 

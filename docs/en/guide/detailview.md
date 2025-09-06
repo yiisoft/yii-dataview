@@ -39,6 +39,7 @@ the following constructor parameters:
   the array.
 - `fieldAttributes` - An array of field container's HTML attributes or a function accepting a `FieldContext` and
   returning the array.
+- `visible` - Whether the field is visible (default: `true`). Hidden fields are not rendered in the output.
 
 ## Rendering options
 
