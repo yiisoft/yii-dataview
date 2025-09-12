@@ -54,7 +54,7 @@ final class RadioColumnRendererTest extends TestCase
         $context = new GlobalContext(
             originalSort: null,
             sort: null,
-            orderProperties: [],
+            allowedProperties: [],
             sortableHeaderClass: '',
             sortableHeaderPrepend: '',
             sortableHeaderAppend: '',
@@ -94,7 +94,7 @@ final class RadioColumnRendererTest extends TestCase
         $context = new GlobalContext(
             originalSort: null,
             sort: null,
-            orderProperties: [],
+            allowedProperties: [],
             sortableHeaderClass: '',
             sortableHeaderPrepend: '',
             sortableHeaderAppend: '',
@@ -388,7 +388,7 @@ final class RadioColumnRendererTest extends TestCase
         $context = new GlobalContext(
             originalSort: null,
             sort: null,
-            orderProperties: [],
+            allowedProperties: [],
             sortableHeaderClass: '',
             sortableHeaderPrepend: '',
             sortableHeaderAppend: '',
@@ -456,7 +456,7 @@ final class RadioColumnRendererTest extends TestCase
         $context = new GlobalContext(
             originalSort: null,
             sort: null,
-            orderProperties: [],
+            allowedProperties: [],
             sortableHeaderClass: '',
             sortableHeaderPrepend: '',
             sortableHeaderAppend: '',
@@ -565,7 +565,7 @@ final class RadioColumnRendererTest extends TestCase
         $context = new GlobalContext(
             originalSort: null,
             sort: null,
-            orderProperties: [],
+            allowedProperties: [],
             sortableHeaderClass: '',
             sortableHeaderPrepend: '',
             sortableHeaderAppend: '',

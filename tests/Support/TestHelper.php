@@ -16,7 +16,7 @@ final class TestHelper
     public static function createGlobalContext(
         ?Sort $sort = null,
         ?Sort $originalSort = null,
-        array $orderProperties = ['name' => 'name'],
+        array $allowedProperties = ['name'],
         ?string $sortableHeaderClass = null,
         string|Stringable $sortableHeaderPrepend = '',
         string|Stringable $sortableHeaderAppend = '',
@@ -58,7 +58,7 @@ final class TestHelper
         return new GlobalContext(
             originalSort: $originalSort,
             sort: $sort,
-            orderProperties: $orderProperties,
+            allowedProperties: $allowedProperties,
             sortableHeaderClass: $sortableHeaderClass,
             sortableHeaderPrepend: $sortableHeaderPrepend,
             sortableHeaderAppend: $sortableHeaderAppend,

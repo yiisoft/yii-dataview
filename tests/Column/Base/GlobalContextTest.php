@@ -84,7 +84,7 @@ final class GlobalContextTest extends TestCase
         $headerContext = TestHelper::createGlobalContext(
             sort: $sort,
             originalSort: $sort,
-            orderProperties: ['name' => 'name']
+            allowedProperties: ['name']
         );
 
         $result = $headerContext->prepareSortable($cell, 'age');
@@ -102,7 +102,7 @@ final class GlobalContextTest extends TestCase
         $headerContext = TestHelper::createGlobalContext(
             sort: $sort,
             originalSort: $sort,
-            orderProperties: ['name' => 'name'],
+            allowedProperties: ['name'],
             sortableHeaderClass: 'sortable',
             sortableHeaderPrepend: '↕',
             sortableHeaderAppend: '!'
@@ -124,7 +124,7 @@ final class GlobalContextTest extends TestCase
         $headerContext = TestHelper::createGlobalContext(
             sort: $sort,
             originalSort: $sort,
-            orderProperties: ['name' => 'name'],
+            allowedProperties: ['name'],
             sortableHeaderAscClass: 'asc',
             sortableHeaderAscPrepend: '↑',
             sortableHeaderAscAppend: '!',
@@ -148,7 +148,7 @@ final class GlobalContextTest extends TestCase
         $headerContext = TestHelper::createGlobalContext(
             sort: $sort,
             originalSort: $sort,
-            orderProperties: ['name' => 'name'],
+            allowedProperties: ['name'],
             sortableHeaderDescClass: 'desc',
             sortableHeaderDescPrepend: '↓',
             sortableHeaderDescAppend: '!',
