@@ -83,7 +83,6 @@ final class DataColumn implements ColumnInterface
      * ```
      *
      * @param string|null $property The property name of the data model to be displayed in this column.
-     * @param string|null $field The field name to be used in sorting and filtering.
      * @param string|null $header The header cell content.
      * @param bool $encodeHeader Whether to HTML-encode the header cell content.
      * @param string|null $footer The footer cell content.
@@ -132,7 +131,6 @@ final class DataColumn implements ColumnInterface
      */
     public function __construct(
         public readonly ?string $property = null,
-        public readonly ?string $field = null,
         public readonly ?string $header = null,
         public readonly bool $encodeHeader = true,
         public readonly ?string $footer = null,

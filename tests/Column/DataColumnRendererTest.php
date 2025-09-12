@@ -77,7 +77,7 @@ final class DataColumnRendererTest extends TestCase
         $context = new GlobalContext(
             originalSort: $sort,
             sort: $sort,
-            orderProperties: ['test' => 'test'],
+            allowedProperties: ['test'],
             sortableHeaderClass: 'sortable',
             sortableHeaderPrepend: '',
             sortableHeaderAppend: '',
@@ -144,7 +144,7 @@ final class DataColumnRendererTest extends TestCase
         );
 
         $result = $renderer->getOrderProperties($column);
-        $this->assertEquals(['test' => 'test'], $result);
+        $this->assertEquals(['test'], $result);
     }
 
     public function testRenderBodyWithCustomContentCallback(): void
@@ -398,7 +398,7 @@ final class DataColumnRendererTest extends TestCase
         $context = new GlobalContext(
             originalSort: $sort,
             sort: $sort,
-            orderProperties: [],
+            allowedProperties: [],
             sortableHeaderClass: 'sortable',
             sortableHeaderPrepend: '',
             sortableHeaderAppend: '',
@@ -439,7 +439,7 @@ final class DataColumnRendererTest extends TestCase
         $context = new GlobalContext(
             originalSort: $sort,
             sort: $sort,
-            orderProperties: [],
+            allowedProperties: [],
             sortableHeaderClass: 'sortable',
             sortableHeaderPrepend: '',
             sortableHeaderAppend: '',
@@ -650,7 +650,7 @@ final class DataColumnRendererTest extends TestCase
         $context = new GlobalContext(
             originalSort: $sort,
             sort: $sort,
-            orderProperties: ['test' => 'test'],
+            allowedProperties: ['test'],
             sortableHeaderClass: 'sortable',
             sortableHeaderPrepend: '↑',
             sortableHeaderAppend: '↓',
@@ -693,7 +693,7 @@ final class DataColumnRendererTest extends TestCase
         $context = new GlobalContext(
             originalSort: $sort,
             sort: $sort,
-            orderProperties: ['test' => 'test'],
+            allowedProperties: ['test'],
             sortableHeaderClass: 'sortable',
             sortableHeaderPrepend: '↑',
             sortableHeaderAppend: '↓',
@@ -738,7 +738,7 @@ final class DataColumnRendererTest extends TestCase
         $context = new GlobalContext(
             originalSort: $sort,
             sort: $sort,
-            orderProperties: ['test' => 'test'],
+            allowedProperties: ['test'],
             sortableHeaderClass: 'sortable',
             sortableHeaderPrepend: '↑',
             sortableHeaderAppend: '↓',
@@ -783,7 +783,7 @@ final class DataColumnRendererTest extends TestCase
         $context = new GlobalContext(
             originalSort: $sort,
             sort: $sort,
-            orderProperties: ['test' => 'test'],
+            allowedProperties: ['test'],
             sortableHeaderClass: 'sortable',
             sortableHeaderPrepend: '↑',
             sortableHeaderAppend: '↓',

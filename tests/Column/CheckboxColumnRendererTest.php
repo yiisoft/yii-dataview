@@ -49,7 +49,7 @@ final class CheckboxColumnRendererTest extends TestCase
         $context = new GlobalContext(
             originalSort: $sort,
             sort: $sort,
-            orderProperties: ['test' => 'test'],
+            allowedProperties: ['test'],
             sortableHeaderClass: 'sortable',
             sortableHeaderPrepend: '',
             sortableHeaderAppend: '',
@@ -81,7 +81,7 @@ final class CheckboxColumnRendererTest extends TestCase
         $context = new GlobalContext(
             originalSort: $sort,
             sort: $sort,
-            orderProperties: ['test' => 'test'],
+            allowedProperties: ['test'],
             sortableHeaderClass: 'sortable',
             sortableHeaderPrepend: '',
             sortableHeaderAppend: '',
@@ -117,7 +117,7 @@ final class CheckboxColumnRendererTest extends TestCase
         $context = new GlobalContext(
             originalSort: $sort,
             sort: $sort,
-            orderProperties: ['test' => 'test'],
+            allowedProperties: ['test'],
             sortableHeaderClass: 'sortable',
             sortableHeaderPrepend: '',
             sortableHeaderAppend: '',

@@ -45,7 +45,6 @@ use Yiisoft\Yii\DataView\Pagination\PaginationContext;
 use Yiisoft\Yii\DataView\Pagination\PaginationWidgetInterface;
 use Yiisoft\Yii\DataView\Pagination\PaginatorNotSupportedException;
 
-use function array_key_exists;
 use function array_slice;
 use function call_user_func_array;
 use function extension_loaded;
@@ -656,17 +655,6 @@ abstract class BaseListView extends Widget
         return $pageSize;
     }
 
-    /**
-     * Returns order field names that should be replaced in URL sort argument.
-     * Format: `['field_name_in_url' => 'real_field_name']`.
-     *
-     * @psalm-return array<string, string>
-     */
-    protected function getOrderProperties(): array
-    {
-        return [];
-    }
-
     protected function renderEmpty(int $colspan): Td
     {
         $emptyTextAttributes = $this->emptyTextAttributes;
@@ -1073,16 +1061,7 @@ abstract class BaseListView extends Widget
             return null;
         }
 
-        $order = [];
-        $overrideOrderFields = array_flip($this->getOrderProperties());
-        foreach ($sort->getOrder() as $name => $value) {
-            $key = array_key_exists($name, $overrideOrderFields)
-                ? $overrideOrderFields[$name]
-                : $name;
-            $order[$key] = $value;
-        }
-
-        return OrderHelper::arrayToString($order);
+        return OrderHelper::arrayToString($sort->getOrder());
     }
 
     private function getSort(?ReadableDataInterface $dataReader): ?Sort
