@@ -32,10 +32,6 @@ final class LikeFilterFactory implements FilterFactoryInterface
 
     public function create(string $property, string $value): ?Like
     {
-        if (empty($value)) {
-            return null;
-        }
-
         return new Like($property, $value, $this->caseSensitive);
     }
 }

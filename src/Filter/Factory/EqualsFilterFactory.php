@@ -18,10 +18,6 @@ final class EqualsFilterFactory implements FilterFactoryInterface
 {
     public function create(string $property, string $value): ?FilterInterface
     {
-        if (empty($value)) {
-            return null;
-        }
-
         return new Equals($property, $value);
     }
 }
