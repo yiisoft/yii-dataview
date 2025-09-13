@@ -16,7 +16,7 @@ use Yiisoft\Data\Reader\FilterInterface;
  */
 final class EqualsFilterFactory implements FilterFactoryInterface
 {
-    public function create(string $property, string $value): ?FilterInterface
+    public function create(string $property, string $value): FilterInterface
     {
         return new Equals($property, $value);
     }
