@@ -186,6 +186,11 @@ abstract class BaseListView extends Widget
                 ->render();
     }
 
+    /**
+     * @template TKey as array-key
+     * @template TValue as array|object
+     * @psalm-param ReadableDataInterface<TKey,TValue> $dataReader
+     */
     final public function dataReader(ReadableDataInterface $dataReader): static
     {
         $new = clone $this;
