@@ -454,6 +454,10 @@ abstract class BaseListView extends Widget
      * Returns a new instance with the paginator interface of the grid view, detail view, or list view.
      *
      * @param ReadableDataInterface $dataReader The paginator interface of the grid view, detail view, or list view.
+     *
+     * @template TKey as array-key
+     * @template TValue as array|object
+     * @psalm-param ReadableDataInterface<TKey,TValue> $dataReader
      */
     final public function dataReader(ReadableDataInterface $dataReader): static
     {
