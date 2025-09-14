@@ -572,7 +572,7 @@ final class DataColumnTest extends TestCase
             ->render();
 
         $this->assertStringContainsString('<input type="text" name="status"', $output);
-        $this->assertStringContainsString('<td>&nbsp;</td>', $output);
+        $this->assertStringContainsString('<td>0</td>', $output);
         $this->assertStringContainsString('<td>1</td>', $output);
     }
 
@@ -596,7 +596,7 @@ final class DataColumnTest extends TestCase
             ->render();
 
         $this->assertStringContainsString('<input type="text" name="status"', $output);
-        $this->assertStringContainsString('<td>&nbsp;</td>', $output);
+        $this->assertStringContainsString('<td>0</td>', $output);
         $this->assertStringContainsString('<td>1</td>', $output);
     }
 
