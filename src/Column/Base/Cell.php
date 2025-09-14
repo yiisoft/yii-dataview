@@ -220,7 +220,7 @@ final class Cell
     public function isEmptyContent(): bool
     {
         foreach ($this->content as $part) {
-            if (!empty((string) $part)) {
+            if ((string) $part !== '') {
                 return false;
             }
         }
