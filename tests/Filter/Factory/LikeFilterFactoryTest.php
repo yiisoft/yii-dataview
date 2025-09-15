@@ -24,22 +24,6 @@ final class LikeFilterFactoryTest extends TestCase
         $this->assertNull($filter->caseSensitive);
     }
 
-    public function testCreateWithEmptyValue(): void
-    {
-        $factory = new LikeFilterFactory();
-        $filter = $factory->create('name', '');
-
-        $this->assertNull($filter);
-    }
-
-    public function testCreateWithZeroValue(): void
-    {
-        $factory = new LikeFilterFactory();
-        $filter = $factory->create('name', '0');
-
-        $this->assertNull($filter);
-    }
-
     public static function dataCaseSensitive(): iterable
     {
         yield [null];

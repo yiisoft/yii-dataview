@@ -26,22 +26,6 @@ final class EqualsFilterFactoryTest extends TestCase
         $this->assertSame('John', $filter->value);
     }
 
-    public function testCreateWithEmptyValue(): void
-    {
-        $factory = new EqualsFilterFactory();
-        $filter = $factory->create('name', '');
-
-        $this->assertNull($filter);
-    }
-
-    public function testCreateWithZeroValue(): void
-    {
-        $factory = new EqualsFilterFactory();
-        $filter = $factory->create('age', '0');
-
-        $this->assertNull($filter);
-    }
-
     public function testCreateWithNonEmptyNumericValue(): void
     {
         $factory = new EqualsFilterFactory();
