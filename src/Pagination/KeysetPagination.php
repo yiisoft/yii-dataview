@@ -14,6 +14,8 @@ use Yiisoft\Widget\Widget;
 
 /**
  * Widget for rendering {@see KeysetPaginator}.
+ *
+ * @implements PaginationWidgetInterface<KeysetPaginator>
  */
 final class KeysetPagination extends Widget implements PaginationWidgetInterface
 {
@@ -47,17 +49,31 @@ final class KeysetPagination extends Widget implements PaginationWidgetInterface
     private string|Stringable $labelNext = '⟩';
 
     /**
-     * Sets the paginator instance.
+     * Creates a new instance with the specified paginator and context.
      *
-     * @param PaginatorInterface $paginator The paginator to use.
-     * Must be an instance of {@see KeysetPaginator}.
+     * @param KeysetPaginator $paginator The paginator to use.
+     * @param string $nextUrlPattern URL pattern for next page links. Must contain {@see PaginationContext::URL_PLACEHOLDER}.
+     * @param string $previousUrlPattern URL pattern for previous page links. Must contain {@see PaginationContext::URL_PLACEHOLDER}.
+     *
+     * @return self New instance with the specified paginator and context.
+     */
+    public static function create(KeysetPaginator $paginator, string $nextUrlPattern, string $previousUrlPattern): self
+    {
+        return self::widget()
+            ->withPaginator($paginator)
+            ->withContext(
+                new PaginationContext($nextUrlPattern, $previousUrlPattern, ''),
+            );
+    }
+
+    /**
+     * @inheritDoc
      *
      * @throws PaginatorNotSupportedException If paginator is not a {@see KeysetPaginator}.
-     *
-     * @return static New instance with the specified paginator.
      */
     public function withPaginator(PaginatorInterface $paginator): static
     {
+        /** @psalm-suppress DocblockTypeContradiction, NoValue */
         if (!$paginator instanceof KeysetPaginator) {
             throw new PaginatorNotSupportedException($paginator);
         }

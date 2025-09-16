@@ -16,6 +16,11 @@ use Yiisoft\Widget\Widget;
 use function max;
 use function min;
 
+/**
+ * Widget for rendering {@see OffsetPaginator}.
+ *
+ * @implements PaginationWidgetInterface<OffsetPaginator>
+ */
 final class OffsetPagination extends Widget implements PaginationWidgetInterface
 {
     use PaginationContextTrait;
@@ -53,8 +58,32 @@ final class OffsetPagination extends Widget implements PaginationWidgetInterface
 
     private int $maxNavLinkCount = 10;
 
+    /**
+     * Creates a new instance with the specified paginator and context.
+     *
+     * @param OffsetPaginator $paginator The paginator to use.
+     * @param string $urlPattern URL pattern for page links. Must contain {@see PaginationContext::URL_PLACEHOLDER}.
+     * @param string $firstPageUrl URL used on the first page.
+     *
+     * @return self New instance with the specified paginator and context.
+     */
+    public static function create(OffsetPaginator $paginator, string $urlPattern, string $firstPageUrl): self
+    {
+        return self::widget()
+            ->withPaginator($paginator)
+            ->withContext(
+                new PaginationContext($urlPattern, $urlPattern, $firstPageUrl),
+            );
+    }
+
+    /**
+     * @inheritDoc
+     *
+     * @throws PaginatorNotSupportedException If paginator is not a {@see OffsetPaginator}.
+     */
     public function withPaginator(PaginatorInterface $paginator): static
     {
+        /** @psalm-suppress DocblockTypeContradiction, NoValue */
         if (!$paginator instanceof OffsetPaginator) {
             throw new PaginatorNotSupportedException($paginator);
         }
@@ -371,7 +400,7 @@ final class OffsetPagination extends Widget implements PaginationWidgetInterface
     {
         $context = $this->getContext();
         return $pageToken->value === '1'
-            ? $context->defaultUrl
+            ? $context->firstPageUrl
             : $context->createUrl($pageToken);
     }
 
