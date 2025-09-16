@@ -24,7 +24,7 @@ final class FilterContext
      * Set to null to disable invalid state styling.
      * @param array $errorsContainerAttributes HTML attributes for the container that displays validation
      * errors. Use these to style and position error messages.
-     * @param UrlParameterProviderInterface|null $urlParameterProvider Provider for accessing URL parameters.
+     * @param UrlParameterProviderInterface $urlParameterProvider Provider for accessing URL parameters.
      * Used to retrieve filter values from the current request.
      */
     public function __construct(
@@ -32,7 +32,7 @@ final class FilterContext
         public readonly Result $validationResult,
         public readonly ?string $cellInvalidClass,
         public readonly array $errorsContainerAttributes,
-        private readonly ?UrlParameterProviderInterface $urlParameterProvider,
+        private readonly UrlParameterProviderInterface $urlParameterProvider,
     ) {
     }
 
@@ -46,6 +46,6 @@ final class FilterContext
      */
     public function getQueryValue(string $name): ?string
     {
-        return $this->urlParameterProvider?->get($name, UrlParameterType::QUERY);
+        return $this->urlParameterProvider->get($name, UrlParameterType::QUERY);
     }
 }

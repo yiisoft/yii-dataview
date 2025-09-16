@@ -74,7 +74,7 @@ abstract class BaseListView extends Widget
      */
     protected $urlCreator = null;
     protected UrlConfig $urlConfig;
-    protected UrlParameterProviderInterface|null $urlParameterProvider = null;
+    protected UrlParameterProviderInterface $urlParameterProvider;
 
     /**
      * @var array|bool|int Page size constraint.
@@ -149,6 +149,7 @@ abstract class BaseListView extends Widget
     ) {
         $this->translator = $translator ?? $this->createDefaultTranslator();
         $this->urlConfig = new UrlConfig();
+        $this->urlParameterProvider = new NullUrlParameterProvider();
     }
 
     final public function render(): string
@@ -351,7 +352,7 @@ abstract class BaseListView extends Widget
         return $new;
     }
 
-    final public function urlParameterProvider(UrlParameterProviderInterface|null $provider): static
+    final public function urlParameterProvider(UrlParameterProviderInterface $provider): static
     {
         $new = clone $this;
         $new->urlParameterProvider = $provider;
@@ -790,19 +791,19 @@ abstract class BaseListView extends Widget
      */
     private function prepareDataReaderAndItems(array $filters): array
     {
-        $page = $this->urlParameterProvider?->get(
+        $page = $this->urlParameterProvider->get(
             $this->urlConfig->getPageParameterName(),
             $this->urlConfig->getPageParameterType()
         );
-        $previousPage = $this->urlParameterProvider?->get(
+        $previousPage = $this->urlParameterProvider->get(
             $this->urlConfig->getPreviousPageParameterName(),
             $this->urlConfig->getPreviousPageParameterType(),
         );
-        $pageSize = $this->urlParameterProvider?->get(
+        $pageSize = $this->urlParameterProvider->get(
             $this->urlConfig->getPageSizeParameterName(),
             $this->urlConfig->getPageSizeParameterType(),
         );
-        $sort = $this->urlParameterProvider?->get(
+        $sort = $this->urlParameterProvider->get(
             $this->urlConfig->getSortParameterName(),
             $this->urlConfig->getSortParameterType(),
         );

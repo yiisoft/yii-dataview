@@ -19,5 +19,5 @@ interface UrlParameterProviderInterface
      *
      * @psalm-param UrlParameterType::* $type
      */
-    public function get(string $name, int $type): ?string;
+    public function get(string $name, int $type): string|null;
 }

@@ -819,7 +819,7 @@ final class GridView extends BaseListView
             }
         }
         if ($hasFilters) {
-            $sort = $this->urlParameterProvider?->get(
+            $sort = $this->urlParameterProvider->get(
                 $this->urlConfig->getSortParameterName(),
                 $this->urlConfig->getSortParameterType()
             );

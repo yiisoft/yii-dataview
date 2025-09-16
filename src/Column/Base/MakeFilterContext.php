@@ -15,11 +15,11 @@ final class MakeFilterContext
 {
     /**
      * @param Result $validationResult The validation result containing any validation errors.
-     * @param UrlParameterProviderInterface|null $urlParameterProvider Provider for accessing URL parameters.
+     * @param UrlParameterProviderInterface $urlParameterProvider Provider for accessing URL parameters.
      */
     public function __construct(
         public readonly Result $validationResult,
-        private readonly ?UrlParameterProviderInterface $urlParameterProvider,
+        private readonly UrlParameterProviderInterface $urlParameterProvider,
     ) {
     }
 
@@ -32,6 +32,6 @@ final class MakeFilterContext
      */
     public function getQueryValue(string $name): ?string
     {
-        return $this->urlParameterProvider?->get($name, UrlParameterType::QUERY);
+        return $this->urlParameterProvider->get($name, UrlParameterType::QUERY);
     }
 }
