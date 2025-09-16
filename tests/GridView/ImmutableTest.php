@@ -7,12 +7,11 @@ namespace Yiisoft\Yii\DataView\Tests\GridView;
 use Exception;
 use PHPUnit\Framework\TestCase;
 use Yiisoft\Data\Reader\ReadableDataInterface;
-use Yiisoft\Definitions\Exception\CircularReferenceException;
-use Yiisoft\Definitions\Exception\InvalidConfigException;
-use Yiisoft\Definitions\Exception\NotInstantiableException;
-use Yiisoft\Factory\NotFoundException;
-use Yiisoft\Yii\DataView;
+use Yiisoft\Validator\Result;
+use Yiisoft\Yii\DataView\BaseListView;
 use Yiisoft\Yii\DataView\Column\DataColumn;
+use Yiisoft\Yii\DataView\GridView;
+use Yiisoft\Yii\DataView\NullUrlParameterProvider;
 use Yiisoft\Yii\DataView\Pagination\OffsetPagination;
 use Yiisoft\Yii\DataView\Tests\Support\TestTrait;
 
@@ -50,7 +49,7 @@ final class ImmutableTest extends TestCase
         $this->assertNotSame($baseListView, $baseListView->pageSizeParameterName(''));
         $this->assertNotSame($baseListView, $baseListView->pageParameterName(''));
         $this->assertNotSame($baseListView, $baseListView->previousPageParameterName(''));
-        $this->assertNotSame($baseListView, $baseListView->urlParameterProvider(null));
+        $this->assertNotSame($baseListView, $baseListView->urlParameterProvider(new NullUrlParameterProvider()));
         $this->assertNotSame($baseListView, $baseListView->multiSort());
         $this->assertNotSame($baseListView, $baseListView->ignoreMissingPage(true));
         $this->assertNotSame($baseListView, $baseListView->pageNotFoundExceptionCallback(null));
@@ -60,15 +59,9 @@ final class ImmutableTest extends TestCase
         $this->assertNotSame($baseListView, $baseListView->pageSizeConstraint(true));
     }
 
-    /**
-     * @throws InvalidConfigException
-     * @throws NotFoundException
-     * @throws NotInstantiableException
-     * @throws CircularReferenceException
-     */
     public function testGridView(): void
     {
-        $gridView = DataView\GridView::widget();
+        $gridView = GridView::widget();
         $this->assertNotSame($gridView, $gridView->afterRow(null));
         $this->assertNotSame($gridView, $gridView->beforeRow(null));
         $this->assertNotSame($gridView, $gridView->columns(new DataColumn()));
@@ -102,12 +95,12 @@ final class ImmutableTest extends TestCase
         $this->assertNotSame($gridView, $gridView->sortableHeaderDescAppend(''));
     }
 
-    private function createBaseListView(): DataView\BaseListView
+    private function createBaseListView(): BaseListView
     {
-        return new class () extends DataView\BaseListView {
+        return new class () extends BaseListView {
             public function renderItems(
                 array $items,
-                \Yiisoft\Validator\Result $filterValidationResult,
+                Result $filterValidationResult,
                 ?ReadableDataInterface $preparedDataReader,
             ): string {
                 throw new Exception('Not implemented');
