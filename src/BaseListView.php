@@ -41,7 +41,6 @@ use Yiisoft\Yii\DataView\Pagination\KeysetPagination;
 use Yiisoft\Yii\DataView\Pagination\OffsetPagination;
 use Yiisoft\Yii\DataView\Pagination\PaginationContext;
 use Yiisoft\Yii\DataView\Pagination\PaginationWidgetInterface;
-use Yiisoft\Yii\DataView\Pagination\PaginatorNotSupportedException;
 
 use function array_slice;
 use function call_user_func_array;
