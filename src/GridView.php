@@ -12,6 +12,7 @@ use Yiisoft\Data\Reader\ReadableDataInterface;
 use Yiisoft\Data\Reader\Sort;
 use Yiisoft\Data\Reader\SortableDataInterface;
 use Yiisoft\Html\Html;
+use Yiisoft\Html\Tag\Td;
 use Yiisoft\Html\Tag\Tr;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\Validator\Result as ValidationResult;
@@ -995,6 +996,19 @@ final class GridView extends BaseListView
             static fn (string $property): bool => in_array($property, $allowedProperties, true),
             ARRAY_FILTER_USE_KEY,
         );
+    }
+
+    private function renderEmpty(int $colspan): Td
+    {
+        $emptyTextAttributes = $this->emptyTextAttributes;
+        $emptyTextAttributes['colspan'] = $colspan;
+
+        $emptyText = $this->translator->translate(
+            $this->emptyText ?? 'No results found.',
+            category: $this->translationCategory
+        );
+
+        return Td::tag()->attributes($emptyTextAttributes)->content($emptyText);
     }
 
     /**

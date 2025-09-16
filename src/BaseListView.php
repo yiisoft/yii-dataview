@@ -19,12 +19,11 @@ use Yiisoft\Data\Reader\FilterableDataInterface;
 use Yiisoft\Data\Reader\FilterInterface;
 use Yiisoft\Data\Reader\LimitableDataInterface;
 use Yiisoft\Data\Reader\OffsetableDataInterface;
+use Yiisoft\Data\Reader\OrderHelper;
 use Yiisoft\Data\Reader\ReadableDataInterface;
 use Yiisoft\Data\Reader\Sort;
 use Yiisoft\Data\Reader\SortableDataInterface;
 use Yiisoft\Html\Html;
-use Yiisoft\Html\Tag\Div;
-use Yiisoft\Html\Tag\Td;
 use Yiisoft\Translator\CategorySource;
 use Yiisoft\Translator\IdMessageReader;
 use Yiisoft\Translator\IntlMessageFormatter;
@@ -33,7 +32,6 @@ use Yiisoft\Translator\Translator;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\Validator\Result as ValidationResult;
 use Yiisoft\Widget\Widget;
-use Yiisoft\Data\Reader\OrderHelper;
 use Yiisoft\Yii\DataView\Exception\DataReaderNotSetException;
 use Yiisoft\Yii\DataView\PageSize\InputPageSize;
 use Yiisoft\Yii\DataView\PageSize\PageSizeContext;
@@ -53,61 +51,53 @@ use function is_array;
 use function is_int;
 
 /**
- * `BaseListView` is an abstract base class for widgets that display data items in terms of a list or grid.
+ * `BaseListView` is an abstract base class for {@see GridView} and {@see ListView} only.
  *
  * @psalm-type UrlArguments = array<string,scalar|Stringable|null>
  * @psalm-type UrlCreator = callable(UrlArguments,array):string
- * @psalm-type PageNotFoundExceptionCallback = callable(InvalidPageException):void
  * @psalm-type PageSizeConstraint = list<positive-int>|positive-int|bool
+ * @psalm-type PageNotFoundExceptionCallback = callable(InvalidPageException):void
  * @psalm-import-type TOrder from Sort
  */
 abstract class BaseListView extends Widget
 {
-    /**
-     * @psalm-var UrlCreator|null
-     */
-    protected $urlCreator = null;
-    protected UrlConfig $urlConfig;
-
-    /**
-     * @var int Page size that is used in case it is not set explicitly.
-     * @psalm-var positive-int
-     */
-    protected int $defaultPageSize = PaginatorInterface::DEFAULT_PAGE_SIZE;
-
-    /**
-     * @var array|bool|int Page size constraint.
-     *  - `true` - default only.
-     *  - `false` - no constraint.
-     *  - int - maximum page size.
-     *  -  [int, int, ...] - a list of page sizes to choose from.
-     *
-     * @see PageSizeContext::FIXED_VALUE
-     * @see PageSizeContext::ANY_VALUE
-     *
-     * @psalm-var PageSizeConstraint
-     */
-    protected bool|int|array $pageSizeConstraint = true;
-
-    /**
-     * @psalm-var non-empty-string|null
-     */
-    private ?string $pageSizeTag = 'div';
-    private array $pageSizeAttributes = [];
-    private ?string $pageSizeTemplate = 'Results per page {widget}';
-    private PageSizeWidgetInterface|null $pageSizeWidget = null;
-
     /**
      * A name for {@see CategorySource} used with translator ({@see TranslatorInterface}) by default.
      * @psalm-suppress MissingClassConstType
      */
     final public const DEFAULT_TRANSLATION_CATEGORY = 'yii-dataview';
 
+    private ReadableDataInterface|null $dataReader = null;
+
     /**
-     * @var TranslatorInterface A translator instance used for translations of messages. If it wasn't set
-     * explicitly in the constructor, a default one created automatically in {@see createDefaultTranslator()}.
+     * @psalm-var UrlCreator|null
      */
-    protected readonly TranslatorInterface $translator;
+    protected $urlCreator = null;
+    protected UrlConfig $urlConfig;
+    protected UrlParameterProviderInterface|null $urlParameterProvider = null;
+
+    /**
+     * @var array|bool|int Page size constraint.
+     *  - `true` - default only.
+     *  - `false` - no constraint.
+     *  - int - maximum page size.
+     *  - [int, int, ...] - a list of page sizes to choose from.
+     *
+     * @see PageSizeContext::FIXED_VALUE
+     * @see PageSizeContext::ANY_VALUE
+     *
+     * @psalm-var PageSizeConstraint
+     */
+    private bool|int|array $pageSizeConstraint = true;
+
+    protected bool $multiSort = false;
+
+    private bool $ignoreMissingPage = true;
+
+    /**
+     * @psalm-var PageNotFoundExceptionCallback|null
+     */
+    private $pageNotFoundExceptionCallback = null;
 
     /**
      * @psalm-var non-empty-string|null
@@ -117,34 +107,41 @@ abstract class BaseListView extends Widget
     private string $prepend = '';
     private string $append = '';
 
+    private string $layout = "{header}\n{toolbar}\n{items}\n{summary}\n{pager}\n{pageSize}";
+
+    private string $header = '';
+    private array $headerAttributes = [];
+    private bool $encodeHeader = true;
+
+    private string $toolbar = '';
+
     /**
      * @psalm-var non-empty-string|null
      */
-    private ?string $summaryTag = 'div';
+    private string|null $summaryTag = 'div';
     private array $summaryAttributes = [];
-    private ?string $summaryTemplate = 'Page <b>{currentPage}</b> of <b>{totalPages}</b>';
+    private string|null $summaryTemplate = 'Page <b>{currentPage}</b> of <b>{totalPages}</b>';
 
-    protected ?string $emptyText = null;
-    private array $emptyTextAttributes = [];
-    private string $header = '';
-    private array $headerAttributes = [];
-    private string $layout = "{header}\n{toolbar}\n{items}\n{summary}\n{pager}\n{pageSize}";
-
+    private PaginationWidgetInterface|null $paginationWidget = null;
     private array $offsetPaginationConfig = [];
     private array $keysetPaginationConfig = [];
-    private PaginationWidgetInterface|null $paginationWidget = null;
-    protected ?ReadableDataInterface $dataReader = null;
-    private string $toolbar = '';
 
-    protected UrlParameterProviderInterface|null $urlParameterProvider = null;
+    private PageSizeWidgetInterface|null $pageSizeWidget = null;
+    /**
+     * @psalm-var non-empty-string|null
+     */
+    private string|null $pageSizeTag = 'div';
+    private array $pageSizeAttributes = [];
+    private string|null $pageSizeTemplate = 'Results per page {widget}';
 
-    private bool $ignoreMissingPage = true;
-    protected bool $multiSort = false;
+    protected string|null $emptyText = null;
+    protected array $emptyTextAttributes = [];
 
     /**
-     * @psalm-var PageNotFoundExceptionCallback|null
+     * @var TranslatorInterface A translator instance used for translations of messages. If it wasn't set
+     * explicitly in the constructor, a default one created automatically in {@see createDefaultTranslator()}.
      */
-    private $pageNotFoundExceptionCallback = null;
+    protected readonly TranslatorInterface $translator;
 
     public function __construct(
         TranslatorInterface|null $translator = null,
@@ -152,403 +149,6 @@ abstract class BaseListView extends Widget
     ) {
         $this->translator = $translator ?? $this->createDefaultTranslator();
         $this->urlConfig = new UrlConfig();
-    }
-
-    /**
-     * @psalm-param UrlCreator|null $urlCreator
-     */
-    final public function urlCreator(?callable $urlCreator): static
-    {
-        $new = clone $this;
-        $new->urlCreator = $urlCreator;
-        return $new;
-    }
-
-    final public function ignoreMissingPage(bool $enabled): static
-    {
-        $new = clone $this;
-        $new->ignoreMissingPage = $enabled;
-        return $new;
-    }
-
-    /**
-     * @psalm-param PageNotFoundExceptionCallback|null $callback
-     */
-    final public function pageNotFoundExceptionCallback(?callable $callback): static
-    {
-        $new = clone $this;
-        $new->pageNotFoundExceptionCallback = $callback;
-        return $new;
-    }
-
-    /**
-     * Return a new instance with the name of argument or query parameter for page.
-     *
-     * @param string $name The name of argument or query parameter for page.
-     */
-    final public function pageParameterName(string $name): static
-    {
-        $new = clone $this;
-        $new->urlConfig = $this->urlConfig->withPageParameterName($name);
-        return $new;
-    }
-
-    final public function previousPageParameterName(string $name): static
-    {
-        $new = clone $this;
-        $new->urlConfig = $this->urlConfig->withPreviousPageParameterName($name);
-        return $new;
-    }
-
-    /**
-     * Return a new instance with the name of argument or query parameter for page size.
-     *
-     * @param string $name The name of argument or query parameter for page size.
-     */
-    final public function pageSizeParameterName(string $name): static
-    {
-        $new = clone $this;
-        $new->urlConfig = $this->urlConfig->withPageSizeParameterName($name);
-        return $new;
-    }
-
-    final public function urlParameterProvider(?UrlParameterProviderInterface $provider): static
-    {
-        $new = clone $this;
-        $new->urlParameterProvider = $provider;
-        return $new;
-    }
-
-    final public function multiSort(bool $enable = true): static
-    {
-        $new = clone $this;
-        $new->multiSort = $enable;
-        return $new;
-    }
-
-    final public function containerTag(?string $tag): static
-    {
-        if ($tag === '') {
-            throw new InvalidArgumentException('Tag name cannot be empty.');
-        }
-
-        $new = clone $this;
-        $new->containerTag = $tag;
-        return $new;
-    }
-
-    /**
-     * Returns a new instance with the HTML attributes for container.
-     *
-     * @param array $attributes Attribute values indexed by attribute names.
-     */
-    final public function containerAttributes(array $attributes): static
-    {
-        $new = clone $this;
-        $new->containerAttributes = $attributes;
-        return $new;
-    }
-
-    /**
-     * Returns a new instance with HTML content to be added after the opening container tag.
-     *
-     * @param string|Stringable ...$prepend The HTML content to be prepended.
-     */
-    final public function prepend(string|Stringable ...$prepend): static
-    {
-        $new = clone $this;
-        $new->prepend = implode('', $prepend);
-        return $new;
-    }
-
-    /**
-     * Returns a new instance with HTML content to be added before the closing container tag.
-     *
-     * @param string|Stringable ...$append The HTML content to be appended.
-     */
-    final public function append(string|Stringable ...$append): static
-    {
-        $new = clone $this;
-        $new->append = implode('', $append);
-        return $new;
-    }
-
-    /**
-     * Return a new instance with the empty text.
-     *
-     * @param ?string $emptyText The HTML content to be displayed when {@see dataProvider} doesn't have any data.
-     *
-     * The default value is the text "No results found." which will be translated to the current application language.
-     *
-     * {@see notShowOnEmpty()}
-     * {@see emptyTextAttributes()}
-     */
-    final public function emptyText(?string $emptyText): static
-    {
-        $new = clone $this;
-        $new->emptyText = $emptyText;
-
-        return $new;
-    }
-
-    /**
-     * Returns a new instance with the HTML attributes for the empty text.
-     *
-     * @param array $attributes Attribute values indexed by attribute names.
-     */
-    final public function emptyTextAttributes(array $attributes): static
-    {
-        $new = clone $this;
-        $new->emptyTextAttributes = $attributes;
-
-        return $new;
-    }
-
-    final public function getDataReader(): ReadableDataInterface
-    {
-        if ($this->dataReader === null) {
-            throw new DataReaderNotSetException();
-        }
-
-        return $this->dataReader;
-    }
-
-    /**
-     * Return new instance with the header for the grid.
-     *
-     * @param string $content The header of the grid.
-     *
-     * {@see headerAttributes}
-     */
-    final public function header(string $content): static
-    {
-        $new = clone $this;
-        $new->header = $content;
-        return $new;
-    }
-
-    /**
-     * Return new instance with the HTML attributes for the header.
-     *
-     * @param array $attributes Attribute values indexed by attribute names.
-     */
-    final public function headerAttributes(array $attributes): static
-    {
-        $new = clone $this;
-        $new->headerAttributes = $attributes;
-        return $new;
-    }
-
-    /**
-     * Returns a new instance with the id of the grid view, detail view, or list view.
-     *
-     * @param string $id The ID of the grid view, detail view, or list view.
-     */
-    final public function id(string $id): static
-    {
-        $new = clone $this;
-        $new->containerAttributes['id'] = $id;
-        return $new;
-    }
-
-    /**
-     * Returns a new instance with the layout of the grid view, and list view.
-     *
-     * @param string $view The template that determines how different sections of the grid view, list view. Should be
-     * organized.
-     *
-     * The following tokens will be replaced with the corresponding section contents:
-     *
-     * - `{header}`: The header section.
-     * - `{toolbar}`: The toolbar section.
-     */
-    final public function layout(string $view): static
-    {
-        $new = clone $this;
-        $new->layout = $view;
-
-        return $new;
-    }
-
-    final public function pageSizeTag(?string $tag): static
-    {
-        if ($tag === '') {
-            throw new InvalidArgumentException('Tag name cannot be empty.');
-        }
-
-        $new = clone $this;
-        $new->pageSizeTag = $tag;
-        return $new;
-    }
-
-    /**
-     * Returns a new instance with the HTML attributes for page size wrapper tag.
-     *
-     * @param array $attributes Attribute values indexed by attribute names.
-     */
-    final public function pageSizeAttributes(array $attributes): static
-    {
-        $new = clone $this;
-        $new->pageSizeAttributes = $attributes;
-        return $new;
-    }
-
-    /**
-     * Returns a new instance with the page size template.
-     *
-     * @param string|null $template The HTML content to be displayed as the page size control. If you don't want to show
-     * control, you may set it with an empty string or null.
-     *
-     * The following tokens will be replaced with the corresponding values:
-     *
-     * - `{widget}` — page size widget.
-     */
-    final public function pageSizeTemplate(?string $template): static
-    {
-        $new = clone $this;
-        $new->pageSizeTemplate = $template;
-        return $new;
-    }
-
-    final public function pageSizeWidget(?PageSizeWidgetInterface $widget): static
-    {
-        $new = clone $this;
-        $new->pageSizeWidget = $widget;
-        return $new;
-    }
-
-    final public function paginationWidget(PaginationWidgetInterface|null $widget): static
-    {
-        $new = clone $this;
-        $new->paginationWidget = $widget;
-        return $new;
-    }
-
-    /**
-     * Set configuration for offset pagination widget.
-     *
-     * @param array $config Widget config.
-     * @return $this
-     */
-    final public function offsetPaginationConfig(array $config): static
-    {
-        $new = clone $this;
-        $new->offsetPaginationConfig = $config;
-        return $new;
-    }
-
-    /**
-     * Set configuration for keyset pagination widget.
-     *
-     * @param array $config Widget config.
-     * @return $this
-     */
-    final public function keysetPaginationConfig(array $config): static
-    {
-        $new = clone $this;
-        $new->keysetPaginationConfig = $config;
-        return $new;
-    }
-
-    /**
-     * Returns a new instance with the paginator interface of the grid view, detail view, or list view.
-     *
-     * @param ReadableDataInterface $dataReader The paginator interface of the grid view, detail view, or list view.
-     *
-     * @template TKey as array-key
-     * @template TValue as array|object
-     * @psalm-param ReadableDataInterface<TKey,TValue> $dataReader
-     */
-    final public function dataReader(ReadableDataInterface $dataReader): static
-    {
-        $new = clone $this;
-        $new->dataReader = $dataReader;
-        return $new;
-    }
-
-    final public function summaryTag(?string $tag): static
-    {
-        if ($tag === '') {
-            throw new InvalidArgumentException('Tag name cannot be empty.');
-        }
-
-        $new = clone $this;
-        $new->summaryTag = $tag;
-        return $new;
-    }
-
-    /**
-     * Returns a new instance with the summary template.
-     *
-     * @param string|null $template The HTML content to be displayed as the summary. If you don't want to show
-     * the summary, you may set it with an empty string or null.
-     *
-     * The following tokens will be replaced with the corresponding values:
-     *
-     * - `{begin}` — the starting row number (1-based) currently being displayed.
-     * - `{end}` — the ending row number (1-based) currently being displayed.
-     * - `{count}` — the number of rows currently being displayed.
-     * - `{totalCount}` — the total number of rows available.
-     * - `{currentPage}` — the page number (1-based) current being displayed.
-     * - `{totalPages}` — the number of pages available.
-     */
-    final public function summaryTemplate(?string $template): static
-    {
-        $new = clone $this;
-        $new->summaryTemplate = $template;
-        return $new;
-    }
-
-    /**
-     * Returns a new instance with the HTML attributes for summary wrapper tag.
-     *
-     * @param array $attributes Attribute values indexed by attribute names.
-     */
-    final public function summaryAttributes(array $attributes): static
-    {
-        $new = clone $this;
-        $new->summaryAttributes = $attributes;
-        return $new;
-    }
-
-    /**
-     * Return new instance with toolbar content.
-     *
-     * @param string $content The toolbar content.
-     *
-     * @psalm-param array $toolbar
-     */
-    final public function toolbar(string $content): static
-    {
-        $new = clone $this;
-        $new->toolbar = $content;
-        return $new;
-    }
-
-    /**
-     * Return a new instance with arguments of the route.
-     *
-     * @param array $arguments Arguments of the route.
-     *
-     * @psalm-param array<string,scalar|Stringable|null> $arguments
-     */
-    final public function urlArguments(array $arguments): static
-    {
-        $new = clone $this;
-        $new->urlConfig = $this->urlConfig->withArguments($arguments);
-        return $new;
-    }
-
-    /**
-     * Return a new instance with query parameters of the route.
-     *
-     * @param array $parameters The query parameters of the route.
-     */
-    final public function urlQueryParameters(array $parameters): static
-    {
-        $new = clone $this;
-        $new->urlConfig = $this->urlConfig->withQueryParameters($parameters);
-        return $new;
     }
 
     final public function render(): string
@@ -587,13 +187,185 @@ abstract class BaseListView extends Widget
     }
 
     /**
+     * @template TKey as array-key
+     * @template TValue as array|object
+     * @psalm-param ReadableDataInterface<TKey,TValue> $dataReader
+     */
+    final public function dataReader(ReadableDataInterface $dataReader): static
+    {
+        $new = clone $this;
+        $new->dataReader = $dataReader;
+        return $new;
+    }
+
+    /**
+     * @psalm-param UrlCreator|null $urlCreator
+     */
+    final public function urlCreator(callable|null $urlCreator): static
+    {
+        $new = clone $this;
+        $new->urlCreator = $urlCreator;
+        return $new;
+    }
+
+    /**
+     * Return a new instance with the name of argument or query parameter for page.
+     *
+     * @param string $name The name of argument or query parameter for page.
+     */
+    final public function pageParameterName(string $name): static
+    {
+        $new = clone $this;
+        $new->urlConfig = $this->urlConfig->withPageParameterName($name);
+        return $new;
+    }
+
+    final public function previousPageParameterName(string $name): static
+    {
+        $new = clone $this;
+        $new->urlConfig = $this->urlConfig->withPreviousPageParameterName($name);
+        return $new;
+    }
+
+    /**
+     * Return a new instance with the name of argument or query parameter for page size.
+     *
+     * @param string $name The name of argument or query parameter for page size.
+     */
+    final public function pageSizeParameterName(string $name): static
+    {
+        $new = clone $this;
+        $new->urlConfig = $this->urlConfig->withPageSizeParameterName($name);
+        return $new;
+    }
+
+    /**
+     * Creates a new instance with the specified sort parameter name.
+     *
+     * @param string $name The new sort parameter name.
+     *
+     * @return static A new instance with the updated sort parameter name.
+     */
+    final public function sortParameterName(string $name): static
+    {
+        $new = clone $this;
+        $new->urlConfig = $this->urlConfig->withSortParameterName($name);
+        return $new;
+    }
+
+    /**
+     * Creates a new instance with the specified page parameter type.
+     *
+     * @param int $type The new page parameter type. Must be one of:
+     *  - `UrlParameterType::PATH` for path parameters
+     *  - `UrlParameterType::QUERY` for query parameters
+     *
+     * @return static A new instance with the updated page parameter type.
+     *
+     * @psalm-param UrlParameterType::* $type
+     */
+    final public function pageParameterType(int $type): static
+    {
+        $new = clone $this;
+        $new->urlConfig = $this->urlConfig->withPageParameterType($type);
+        return $new;
+    }
+
+    /**
+     * Creates a new instance with the specified previous page parameter type.
+     *
+     * @param int $type The new previous page parameter type. Must be one of:
+     *  - `UrlParameterType::PATH` for path parameters
+     *  - `UrlParameterType::QUERY` for query parameters
+     *
+     * @return static A new instance with the updated previous page parameter type.
+     *
+     * @psalm-param UrlParameterType::* $type
+     */
+    final public function previousPageParameterType(int $type): static
+    {
+        $new = clone $this;
+        $new->urlConfig = $this->urlConfig->withPreviousPageParameterType($type);
+        return $new;
+    }
+
+    /**
+     * Creates a new instance with the specified page size parameter type.
+     *
+     * @param int $type The new page size parameter type. Must be one of:
+     *  - `UrlParameterType::PATH` for path parameters
+     *  - `UrlParameterType::QUERY` for query parameters
+     *
+     * @return static A new instance with the updated page size parameter type.
+     *
+     * @psalm-param UrlParameterType::* $type
+     */
+    final public function pageSizeParameterType(int $type): static
+    {
+        $new = clone $this;
+        $new->urlConfig = $this->urlConfig->withPageSizeParameterType($type);
+        return $new;
+    }
+
+    /**
+     * Creates a new instance with the specified sort parameter type.
+     *
+     * @param int $type The new sort parameter type. Must be one of:
+     *  - `UrlParameterType::PATH` for path parameters
+     *  - `UrlParameterType::QUERY` for query parameters
+     *
+     * @return static A new instance with the updated sort parameter type.
+     *
+     * @psalm-param UrlParameterType::* $type
+     */
+    final public function sortParameterType(int $type): static
+    {
+        $new = clone $this;
+        $new->urlConfig = $this->urlConfig->withSortParameterType($type);
+        return $new;
+    }
+
+    /**
+     * Return a new instance with arguments of the route.
+     *
+     * @param array $arguments Arguments of the route.
+     *
+     * @psalm-param array<string,scalar|Stringable|null> $arguments
+     */
+    final public function urlArguments(array $arguments): static
+    {
+        $new = clone $this;
+        $new->urlConfig = $this->urlConfig->withArguments($arguments);
+        return $new;
+    }
+
+    /**
+     * Return a new instance with query parameters of the route.
+     *
+     * @param array $parameters The query parameters of the route.
+     */
+    final public function urlQueryParameters(array $parameters): static
+    {
+        $new = clone $this;
+        $new->urlConfig = $this->urlConfig->withQueryParameters($parameters);
+        return $new;
+    }
+
+    final public function urlParameterProvider(UrlParameterProviderInterface|null $provider): static
+    {
+        $new = clone $this;
+        $new->urlParameterProvider = $provider;
+        return $new;
+    }
+
+    /**
      * Get a new instance with a page size constraint set.
      *
      * @param array|bool|int $pageSizeConstraint Page size constraint.
      * `true` - default only.
      * `false` - no constraint.
-     * int - maximum page size.
-     * [int, int, ...] - a list of page sizes to choose from.
+     * `int` - maximum page size.
+     * `[int, int, ...]` - a list of page sizes to choose from.
      * @return static New instance.
      *
      * @psalm-param PageSizeConstraint $pageSizeConstraint
@@ -605,18 +377,338 @@ abstract class BaseListView extends Widget
         return $new;
     }
 
+    final public function multiSort(bool $enable = true): static
+    {
+        $new = clone $this;
+        $new->multiSort = $enable;
+        return $new;
+    }
+
+    final public function ignoreMissingPage(bool $enabled): static
+    {
+        $new = clone $this;
+        $new->ignoreMissingPage = $enabled;
+        return $new;
+    }
+
     /**
-     * Renders the data models.
-     *
-     * @return string The rendering result.
-     *
-     * @psalm-param array<array-key, array|object> $items
+     * @psalm-param PageNotFoundExceptionCallback|null $callback
      */
-    abstract protected function renderItems(
-        array $items,
-        ValidationResult $filterValidationResult,
-        ?ReadableDataInterface $preparedDataReader,
-    ): string;
+    final public function pageNotFoundExceptionCallback(?callable $callback): static
+    {
+        $new = clone $this;
+        $new->pageNotFoundExceptionCallback = $callback;
+        return $new;
+    }
+
+    final public function containerTag(string|null $tag): static
+    {
+        if ($tag === '') {
+            throw new InvalidArgumentException('Tag name cannot be empty.');
+        }
+
+        $new = clone $this;
+        $new->containerTag = $tag;
+        return $new;
+    }
+
+    /**
+     * Returns a new instance with the HTML attributes for container.
+     *
+     * @param array $attributes Attribute values indexed by attribute names.
+     */
+    final public function containerAttributes(array $attributes): static
+    {
+        $new = clone $this;
+        $new->containerAttributes = $attributes;
+        return $new;
+    }
+
+    /**
+     * Returns a new instance with the id of the grid view, detail view, or list view.
+     *
+     * @param string $id The ID of the grid view, detail view, or list view.
+     */
+    final public function id(string $id): static
+    {
+        $new = clone $this;
+        $new->containerAttributes['id'] = $id;
+        return $new;
+    }
+
+    /**
+     * Set new container classes.
+     *
+     * Multiple classes can be set by passing them as separate arguments. `null` values are filtered out
+     * automatically.
+     *
+     * @param BackedEnum|string|null ...$class One or more CSS class names to use. Pass `null` to skip a class.
+     * @return self
+     */
+    public function containerClass(BackedEnum|string|null ...$class): self
+    {
+        $new = clone $this;
+        $new->containerAttributes['class'] = [];
+        Html::addCssClass($new->containerAttributes, $class);
+        return $new;
+    }
+
+    /**
+     * Adds one or more CSS classes to the existing container classes.
+     *
+     * Multiple classes can be added by passing them as separate arguments. `null` values are filtered out
+     * automatically.
+     *
+     * @param BackedEnum|string|null ...$class One or more CSS class names to add. Pass `null` to skip adding a class.
+     * @return self A new instance with the specified CSS classes added to existing ones.
+     */
+    public function addContainerClass(BackedEnum|string|null ...$class): self
+    {
+        $new = clone $this;
+        Html::addCssClass($new->containerAttributes, $class);
+        return $new;
+    }
+
+    /**
+     * Returns a new instance with HTML content to be added after the opening container tag.
+     *
+     * @param string|Stringable ...$prepend The HTML content to be prepended.
+     */
+    final public function prepend(string|Stringable ...$prepend): static
+    {
+        $new = clone $this;
+        $new->prepend = implode('', $prepend);
+        return $new;
+    }
+
+    /**
+     * Returns a new instance with HTML content to be added before the closing container tag.
+     *
+     * @param string|Stringable ...$append The HTML content to be appended.
+     */
+    final public function append(string|Stringable ...$append): static
+    {
+        $new = clone $this;
+        $new->append = implode('', $append);
+        return $new;
+    }
+
+    /**
+     * Returns a new instance with the layout of the grid view, and list view.
+     *
+     * @param string $view The template that determines how different sections of the grid view, list view. Should be
+     * organized.
+     *
+     * The following tokens will be replaced with the corresponding section contents:
+     *
+     * - `{header}`: The header section.
+     * - `{toolbar}`: The toolbar section.
+     */
+    final public function layout(string $view): static
+    {
+        $new = clone $this;
+        $new->layout = $view;
+        return $new;
+    }
+
+    /**
+     * Return new instance with the header for the grid.
+     *
+     * @param string $content The header of the grid.
+     *
+     * {@see headerAttributes}
+     */
+    final public function header(string $content): static
+    {
+        $new = clone $this;
+        $new->header = $content;
+        return $new;
+    }
+
+    /**
+     * Return new instance with the HTML attributes for the header.
+     *
+     * @param array $attributes Attribute values indexed by attribute names.
+     */
+    final public function headerAttributes(array $attributes): static
+    {
+        $new = clone $this;
+        $new->headerAttributes = $attributes;
+        return $new;
+    }
+
+    final public function encodeHeader(bool $encode): static
+    {
+        $new = clone $this;
+        $new->encodeHeader = $encode;
+        return $new;
+    }
+
+    /**
+     * Return new instance with toolbar content.
+     *
+     * @param string $content The toolbar content.
+     *
+     * @psalm-param array $toolbar
+     */
+    final public function toolbar(string $content): static
+    {
+        $new = clone $this;
+        $new->toolbar = $content;
+        return $new;
+    }
+
+    final public function summaryTag(string|null $tag): static
+    {
+        if ($tag === '') {
+            throw new InvalidArgumentException('Tag name cannot be empty.');
+        }
+
+        $new = clone $this;
+        $new->summaryTag = $tag;
+        return $new;
+    }
+
+    /**
+     * Returns a new instance with the HTML attributes for summary wrapper tag.
+     *
+     * @param array $attributes Attribute values indexed by attribute names.
+     */
+    final public function summaryAttributes(array $attributes): static
+    {
+        $new = clone $this;
+        $new->summaryAttributes = $attributes;
+        return $new;
+    }
+
+    /**
+     * Returns a new instance with the summary template.
+     *
+     * @param string|null $template The HTML content to be displayed as the summary. If you don't want to show
+     * the summary, you may set it with an empty string or null.
+     *
+     * The following tokens will be replaced with the corresponding values:
+     *
+     * - `{begin}` — the starting row number (1-based) currently being displayed.
+     * - `{end}` — the ending row number (1-based) currently being displayed.
+     * - `{count}` — the number of rows currently being displayed.
+     * - `{totalCount}` — the total number of rows available.
+     * - `{currentPage}` — the page number (1-based) current being displayed.
+     * - `{totalPages}` — the number of pages available.
+     */
+    final public function summaryTemplate(?string $template): static
+    {
+        $new = clone $this;
+        $new->summaryTemplate = $template;
+        return $new;
+    }
+
+    final public function paginationWidget(PaginationWidgetInterface|null $widget): static
+    {
+        $new = clone $this;
+        $new->paginationWidget = $widget;
+        return $new;
+    }
+
+    /**
+     * Set configuration for offset pagination widget.
+     *
+     * @param array $config Widget config.
+     */
+    final public function offsetPaginationConfig(array $config): static
+    {
+        $new = clone $this;
+        $new->offsetPaginationConfig = $config;
+        return $new;
+    }
+
+    /**
+     * Set configuration for keyset pagination widget.
+     *
+     * @param array $config Widget config.
+     */
+    final public function keysetPaginationConfig(array $config): static
+    {
+        $new = clone $this;
+        $new->keysetPaginationConfig = $config;
+        return $new;
+    }
+
+    final public function pageSizeWidget(PageSizeWidgetInterface|null $widget): static
+    {
+        $new = clone $this;
+        $new->pageSizeWidget = $widget;
+        return $new;
+    }
+
+    final public function pageSizeTag(string|null $tag): static
+    {
+        if ($tag === '') {
+            throw new InvalidArgumentException('Tag name cannot be empty.');
+        }
+
+        $new = clone $this;
+        $new->pageSizeTag = $tag;
+        return $new;
+    }
+
+    /**
+     * Returns a new instance with the HTML attributes for page size wrapper tag.
+     *
+     * @param array $attributes Attribute values indexed by attribute names.
+     */
+    final public function pageSizeAttributes(array $attributes): static
+    {
+        $new = clone $this;
+        $new->pageSizeAttributes = $attributes;
+        return $new;
+    }
+
+    /**
+     * Returns a new instance with the page size template.
+     *
+     * @param string|null $template The HTML content to be displayed as the page size control. If you don't want to show
+     * control, you may set it with an empty string or `null`.
+     *
+     * The following tokens will be replaced with the corresponding values:
+     *
+     * - `{widget}` — page size widget.
+     */
+    final public function pageSizeTemplate(string|null $template): static
+    {
+        $new = clone $this;
+        $new->pageSizeTemplate = $template;
+        return $new;
+    }
+
+    /**
+     * Return a new instance with the empty text.
+     *
+     * @param ?string $emptyText The HTML content to be displayed when {@see dataProvider} doesn't have any data.
+     *
+     * The default value is the text "No results found." which will be translated to the current application language.
+     *
+     * {@see notShowOnEmpty()}
+     * {@see emptyTextAttributes()}
+     */
+    final public function emptyText(?string $emptyText): static
+    {
+        $new = clone $this;
+        $new->emptyText = $emptyText;
+        return $new;
+    }
+
+    /**
+     * Returns a new instance with the HTML attributes for the empty text.
+     *
+     * @param array $attributes Attribute values indexed by attribute names.
+     */
+    final public function emptyTextAttributes(array $attributes): static
+    {
+        $new = clone $this;
+        $new->emptyTextAttributes = $attributes;
+        return $new;
+    }
 
     /**
      * @return array The array with format:
@@ -627,22 +719,52 @@ abstract class BaseListView extends Widget
      * ]
      * ```
      *
-     * @psalm-return list{FilterInterface[]|null,ValidationResult}
+     * @psalm-return list{array<FilterInterface>|null, ValidationResult}
      */
-    protected function makeFilters(): array
+    abstract protected function makeFilters(): array;
+
+    /**
+     * @psalm-param TOrder $order
+     * @psalm-return TOrder
+     */
+    abstract protected function prepareOrder(array $order): array;
+
+    /**
+     * Renders the data models.
+     *
+     * @param array<array|object> $items The data models to be rendered.
+     * @param ValidationResult $filterValidationResult The validation result of the filter.
+     * @param ReadableDataInterface|null $preparedDataReader The prepared data reader, `null` means that there is no
+     * data.
+     *
+     * @return string The rendering result.
+     *
+     * @psalm-param array<array|object> $items
+     */
+    abstract protected function renderItems(
+        array $items,
+        ValidationResult $filterValidationResult,
+        ReadableDataInterface|null $preparedDataReader,
+    ): string;
+
+    final protected function getDataReader(): ReadableDataInterface
     {
-        return [[], new ValidationResult()];
+        if ($this->dataReader === null) {
+            throw new DataReaderNotSetException();
+        }
+
+        return $this->dataReader;
     }
 
     /**
      * @psalm-return positive-int
      */
-    protected function getDefaultPageSize(): int
+    final protected function getDefaultPageSize(): int
     {
         $dataReader = $this->getDataReader();
         $pageSize = $dataReader instanceof PaginatorInterface
             ? $dataReader->getPageSize()
-            : $this->defaultPageSize;
+            : PaginatorInterface::DEFAULT_PAGE_SIZE;
 
         if (is_int($this->pageSizeConstraint)) {
             return $pageSize <= $this->pageSizeConstraint
@@ -657,28 +779,6 @@ abstract class BaseListView extends Widget
         }
 
         return $pageSize;
-    }
-
-    protected function renderEmpty(int $colspan): Td
-    {
-        $emptyTextAttributes = $this->emptyTextAttributes;
-        $emptyTextAttributes['colspan'] = $colspan;
-
-        $emptyText = $this->translator->translate(
-            $this->emptyText ?? 'No results found.',
-            category: $this->translationCategory
-        );
-
-        return Td::tag()->attributes($emptyTextAttributes)->content($emptyText);
-    }
-
-    /**
-     * @psalm-param TOrder $order
-     * @psalm-return TOrder
-     */
-    protected function prepareOrder(array $order): array
-    {
-        return [];
     }
 
     /**
@@ -726,17 +826,6 @@ abstract class BaseListView extends Widget
         }
 
         throw $exception;
-    }
-
-    /**
-     * @throws PageNotFoundException
-     *
-     * @psalm-return array<array-key, array|object>
-     */
-    private function getItems(ReadableDataInterface $dataReader): array
-    {
-        $items = $dataReader->read();
-        return is_array($items) ? $items : iterator_to_array($items);
     }
 
     /**
@@ -804,17 +893,110 @@ abstract class BaseListView extends Widget
 
         if (!empty($filters) && $dataReader->isFilterable()) {
             $dataReader = $dataReader->withFilter(
-                new AndX(
-                    $dataReader->getFilter(),
-                    ...$filters,
-                ),
+                new AndX($dataReader->getFilter(), ...$filters),
             );
         }
 
         return $dataReader;
     }
 
-    private function renderPagination(?ReadableDataInterface $dataReader): string
+    /**
+     * @psalm-return positive-int|null
+     */
+    private function preparePageSize(?string $rawPageSize): ?int
+    {
+        if ($this->pageSizeConstraint === true) {
+            return null;
+        }
+
+        if ($rawPageSize === null) {
+            return null;
+        }
+
+        $pageSize = (int) $rawPageSize;
+        if ($pageSize < 1) {
+            return null;
+        }
+
+        if ($this->pageSizeConstraint === false) {
+            return $pageSize;
+        }
+
+        if (is_int($this->pageSizeConstraint) && $pageSize <= $this->pageSizeConstraint) {
+            return $pageSize;
+        }
+
+        if (is_array($this->pageSizeConstraint) && in_array($pageSize, $this->pageSizeConstraint, true)) {
+            return $pageSize;
+        }
+
+        return null;
+    }
+
+    /**
+     * @throws PageNotFoundException
+     *
+     * @psalm-return array<array-key, array|object>
+     */
+    private function getItems(ReadableDataInterface $dataReader): array
+    {
+        $items = $dataReader->read();
+        return is_array($items) ? $items : iterator_to_array($items);
+    }
+
+    private function renderHeader(): string|Stringable
+    {
+        return match ($this->header) {
+            '' => '',
+            default => Html::div($this->header, $this->headerAttributes)->encode($this->encodeHeader),
+        };
+    }
+
+    private function renderSummary(ReadableDataInterface|null $dataReader): string|Stringable
+    {
+        if (empty($this->summaryTemplate) || !$dataReader instanceof OffsetPaginator) {
+            return '';
+        }
+
+        $totalCount = $dataReader->getTotalItems();
+        if ($totalCount === 0) {
+            return '';
+        }
+
+        // The page number (1-based) current being displayed
+        $currentPage = $dataReader->getCurrentPage();
+
+        // The starting row number (1-based) currently being displayed
+        $begin = ($currentPage - 1) * $dataReader->getPageSize() + 1;
+
+        // The number of rows currently being displayed
+        $count = $dataReader->getCurrentPageSize();
+
+        // The ending row number (1-based) currently being displayed
+        $end = $begin + $count - 1;
+
+        // The number of pages available
+        $totalPages = $dataReader->getTotalPages();
+
+        $content = $this->translator->translate(
+            $this->summaryTemplate,
+            [
+                'begin' => $begin,
+                'end' => $end,
+                'count' => $count,
+                'totalCount' => $totalCount,
+                'currentPage' => $currentPage,
+                'totalPages' => $totalPages,
+            ],
+            $this->translationCategory,
+        );
+
+        return $this->summaryTag === null
+            ? $content
+            : Html::tag($this->summaryTag, $content, $this->summaryAttributes)->encode(false);
+    }
+
+    private function renderPagination(ReadableDataInterface|null $dataReader): string|Stringable
     {
         if (!$dataReader instanceof PaginatorInterface || !$dataReader->isPaginationRequired()) {
             return '';
@@ -877,7 +1059,7 @@ abstract class BaseListView extends Widget
         return $widget->withContext($context)->render();
     }
 
-    private function renderPageSize(?ReadableDataInterface $dataReader): string
+    private function renderPageSize(ReadableDataInterface|null $dataReader): string
     {
         if (empty($this->pageSizeTemplate) || !$dataReader instanceof PaginatorInterface) {
             return '';
@@ -935,116 +1117,6 @@ abstract class BaseListView extends Widget
             : Html::tag($this->pageSizeTag, $content, $this->pageSizeAttributes)->encode(false)->render();
     }
 
-    private function renderSummary(?ReadableDataInterface $dataReader): string
-    {
-        if (empty($this->summaryTemplate) || !$dataReader instanceof OffsetPaginator) {
-            return '';
-        }
-
-        // The total number of rows available
-        $totalCount = $dataReader->getTotalItems();
-        if ($totalCount === 0) {
-            return '';
-        }
-
-        // The page number (1-based) current being displayed
-        $currentPage = $dataReader->getCurrentPage();
-
-        // The starting row number (1-based) currently being displayed
-        $begin = ($currentPage - 1) * $dataReader->getPageSize() + 1;
-
-        // The number of rows currently being displayed
-        $count = $dataReader->getCurrentPageSize();
-
-        // The ending row number (1-based) currently being displayed
-        $end = $begin + $count - 1;
-
-        // The number of pages available
-        $totalPages = $dataReader->getTotalPages();
-
-        $content = $this->translator->translate(
-            $this->summaryTemplate,
-            [
-                'begin' => $begin,
-                'end' => $end,
-                'count' => $count,
-                'totalCount' => $totalCount,
-                'currentPage' => $currentPage,
-                'totalPages' => $totalPages,
-            ],
-            $this->translationCategory,
-        );
-
-        return $this->summaryTag === null
-            ? $content
-            : Html::tag($this->summaryTag, $content, $this->summaryAttributes)->encode(false)->render();
-    }
-
-    private function renderHeader(): string
-    {
-        return match ($this->header) {
-            '' => '',
-            default => Div::tag()
-                ->attributes($this->headerAttributes)
-                ->content($this->header)
-                ->encode(false)
-                ->render(),
-        };
-    }
-
-    /**
-     * @psalm-return positive-int|null
-     */
-    private function preparePageSize(?string $rawPageSize): ?int
-    {
-        if ($this->pageSizeConstraint === true) {
-            return null;
-        }
-
-        if ($rawPageSize === null) {
-            return null;
-        }
-
-        $pageSize = (int) $rawPageSize;
-        if ($pageSize < 1) {
-            return null;
-        }
-
-        if ($this->pageSizeConstraint === false) {
-            return $pageSize;
-        }
-
-        if (is_int($this->pageSizeConstraint) && $pageSize <= $this->pageSizeConstraint) {
-            return $pageSize;
-        }
-
-        if (is_array($this->pageSizeConstraint) && in_array($pageSize, $this->pageSizeConstraint, true)) {
-            return $pageSize;
-        }
-
-        return null;
-    }
-
-    /**
-     * Creates default translator to use if {@see $translator} wasn't set explicitly in the constructor. Depending on
-     * "intl" extension availability, either {@see IntlMessageFormatter} or {@see SimpleMessageFormatter} is used as
-     * formatter.
-     *
-     * @return Translator Translator instance used for translations of messages.
-     */
-    private function createDefaultTranslator(): Translator
-    {
-        $categorySource = new CategorySource(
-            $this->translationCategory,
-            new IdMessageReader(),
-            extension_loaded('intl') ? new IntlMessageFormatter() : new SimpleMessageFormatter(),
-        );
-        $translator = new Translator();
-        $translator->addCategorySources($categorySource);
-
-        return $translator;
-    }
-
     private function getPageSizeValueForUrl(PaginatorInterface $paginator): ?string
     {
         $pageSize = $paginator->getPageSize();
@@ -1068,7 +1140,7 @@ abstract class BaseListView extends Widget
         return OrderHelper::arrayToString($sort->getOrder());
     }
 
-    private function getSort(?ReadableDataInterface $dataReader): ?Sort
+    private function getSort(ReadableDataInterface|null $dataReader): ?Sort
     {
         if ($dataReader instanceof PaginatorInterface && $dataReader->isSortable()) {
             return $dataReader->getSort();
@@ -1082,121 +1154,21 @@ abstract class BaseListView extends Widget
     }
 
     /**
-     * Creates a new instance with the specified sort parameter name.
+     * Creates default translator to use if {@see $translator} wasn't set explicitly in the constructor. Depending on
+     * "intl" extension availability, either {@see IntlMessageFormatter} or {@see SimpleMessageFormatter} is used as
+     * formatter.
      *
-     * @param string $name The new sort parameter name.
-     *
-     * @return self A new instance with the updated sort parameter name.
+     * @return Translator Translator instance used for translations of messages.
      */
-    public function sortParameterName(string $name): self
+    private function createDefaultTranslator(): Translator
     {
-        $new = clone $this;
-        $new->urlConfig = $this->urlConfig->withSortParameterName($name);
-        return $new;
-    }
-
-    /**
-     * Creates a new instance with the specified page parameter type.
-     *
-     * @param int $type The new page parameter type. Must be one of:
-     *  - `UrlParameterType::PATH` for path parameters
-     *  - `UrlParameterType::QUERY` for query parameters
-     *
-     * @return self A new instance with the updated page parameter type.
-     *
-     * @psalm-param UrlParameterType::* $type
-     */
-    public function pageParameterType(int $type): self
-    {
-        $new = clone $this;
-        $new->urlConfig = $this->urlConfig->withPageParameterType($type);
-        return $new;
-    }
-
-    /**
-     * Creates a new instance with the specified previous page parameter type.
-     *
-     * @param int $type The new previous page parameter type. Must be one of:
-     *  - `UrlParameterType::PATH` for path parameters
-     *  - `UrlParameterType::QUERY` for query parameters
-     *
-     * @return self A new instance with the updated previous page parameter type.
-     *
-     * @psalm-param UrlParameterType::* $type
-     */
-    public function previousPageParameterType(int $type): self
-    {
-        $new = clone $this;
-        $new->urlConfig = $this->urlConfig->withPreviousPageParameterType($type);
-        return $new;
-    }
-
-    /**
-     * Creates a new instance with the specified page size parameter type.
-     *
-     * @param int $type The new page size parameter type. Must be one of:
-     *  - `UrlParameterType::PATH` for path parameters
-     *  - `UrlParameterType::QUERY` for query parameters
-     *
-     * @return self A new instance with the updated page size parameter type.
-     *
-     * @psalm-param UrlParameterType::* $type
-     */
-    public function pageSizeParameterType(int $type): self
-    {
-        $new = clone $this;
-        $new->urlConfig = $this->urlConfig->withPageSizeParameterType($type);
-        return $new;
-    }
-
-    /**
-     * Creates a new instance with the specified sort parameter type.
-     *
-     * @param int $type The new sort parameter type. Must be one of:
-     *  - `UrlParameterType::PATH` for path parameters
-     *  - `UrlParameterType::QUERY` for query parameters
-     *
-     * @return self A new instance with the updated sort parameter type.
-     *
-     * @psalm-param UrlParameterType::* $type
-     */
-    public function sortParameterType(int $type): self
-    {
-        $new = clone $this;
-        $new->urlConfig = $this->urlConfig->withSortParameterType($type);
-        return $new;
-    }
-
-    /**
-     * Set new container classes.
-     *
-     * Multiple classes can be set by passing them as separate arguments. `null` values are filtered out
-     * automatically.
-     *
-     * @param BackedEnum|string|null ...$class One or more CSS class names to use. Pass `null` to skip a class.
-     * @return self
-     */
-    public function containerClass(BackedEnum|string|null ...$class): self
-    {
-        $new = clone $this;
-        $new->containerAttributes['class'] = [];
-        Html::addCssClass($new->containerAttributes, $class);
-        return $new;
-    }
-
-    /**
-     * Adds one or more CSS classes to the existing container classes.
-     *
-     * Multiple classes can be added by passing them as separate arguments. `null` values are filtered out
-     * automatically.
-     *
-     * @param BackedEnum|string|null ...$class One or more CSS class names to add. Pass `null` to skip adding a class.
-     * @return self A new instance with the specified CSS classes added to existing ones.
-     */
-    public function addContainerClass(BackedEnum|string|null ...$class): self
-    {
-        $new = clone $this;
-        Html::addCssClass($new->containerAttributes, $class);
-        return $new;
+        $categorySource = new CategorySource(
+            $this->translationCategory,
+            new IdMessageReader(),
+            extension_loaded('intl') ? new IntlMessageFormatter() : new SimpleMessageFormatter(),
+        );
+        $translator = new Translator();
+        $translator->addCategorySources($categorySource);
+        return $translator;
     }
 }

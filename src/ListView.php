@@ -224,6 +224,16 @@ final class ListView extends BaseListView
         return $new;
     }
 
+    protected function makeFilters(): array
+    {
+        return [[], new ValidationResult()];
+    }
+
+    protected function prepareOrder(array $order): array
+    {
+        return [];
+    }
+
     /**
      * Renders a single list item.
      *

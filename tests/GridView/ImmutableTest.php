@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Yiisoft\Yii\DataView\Tests\GridView;
 
+use Exception;
 use PHPUnit\Framework\TestCase;
 use Yiisoft\Data\Reader\ReadableDataInterface;
 use Yiisoft\Definitions\Exception\CircularReferenceException;
@@ -109,7 +110,17 @@ final class ImmutableTest extends TestCase
                 \Yiisoft\Validator\Result $filterValidationResult,
                 ?ReadableDataInterface $preparedDataReader,
             ): string {
-                return '';
+                throw new Exception('Not implemented');
+            }
+
+            protected function makeFilters(): array
+            {
+                throw new Exception('Not implemented');
+            }
+
+            protected function prepareOrder(array $order): array
+            {
+                throw new Exception('Not implemented');
             }
         };
     }
