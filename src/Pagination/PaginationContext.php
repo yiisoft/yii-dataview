@@ -17,18 +17,14 @@ final class PaginationContext
     public const URL_PLACEHOLDER = 'YII-DATAVIEW-PAGE-PLACEHOLDER';
 
     /**
-     * @internal This constructor is not meant to be used directly.
-     *
-     * @param string $nextUrlPattern URL pattern for next page links.
-     * Must contain {@see URL_PLACEHOLDER}.
-     * @param string $previousUrlPattern URL pattern for previous page links.
-     * Must contain {@see URL_PLACEHOLDER}.
-     * @param string $defaultUrl Default URL used when no pagination is needed.
+     * @param string $nextUrlPattern URL pattern for next page links. Must contain {@see URL_PLACEHOLDER}.
+     * @param string $previousUrlPattern URL pattern for previous page links. Must contain {@see URL_PLACEHOLDER}.
+     * @param string $firstPageUrl URL used on the first page.
      */
     public function __construct(
         public readonly string $nextUrlPattern,
         public readonly string $previousUrlPattern,
-        public readonly string $defaultUrl,
+        public readonly string $firstPageUrl,
     ) {
     }
 

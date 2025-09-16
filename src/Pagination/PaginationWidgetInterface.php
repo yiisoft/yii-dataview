@@ -12,6 +12,8 @@ use Yiisoft\Data\Paginator\PaginatorInterface;
  *
  * @see KeysetPagination A keyset-based pagination implementation
  * @see OffsetPagination An offset-based pagination implementation
+ *
+ * @psalm-template T as PaginatorInterface
  */
 interface PaginationWidgetInterface extends Stringable
 {
@@ -20,10 +22,12 @@ interface PaginationWidgetInterface extends Stringable
      *
      * @param PaginatorInterface $paginator The paginator to use.
      *
-     * @throws PaginatorNotSupportedException If the paginator type is not supported
-     * by the implementation.
+     * @throws PaginatorNotSupportedException If the paginator type is not supported by the implementation.
      *
      * @return static New instance with the specified paginator.
+     *
+     * @psalm-param T $paginator
+     * @psalm-return static<T>
      */
     public function withPaginator(PaginatorInterface $paginator): static;
 

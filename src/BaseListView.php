@@ -1004,15 +1004,10 @@ abstract class BaseListView extends Widget
 
         if ($this->paginationWidget === null) {
             if ($dataReader instanceof OffsetPaginator) {
-                $widget = OffsetPagination::widget(config: $this->offsetPaginationConfig);
+                $widget = OffsetPagination::widget(config: $this->offsetPaginationConfig)->withPaginator($dataReader);
             } elseif ($dataReader instanceof KeysetPaginator) {
-                $widget = KeysetPagination::widget(config: $this->keysetPaginationConfig);
+                $widget = KeysetPagination::widget(config: $this->keysetPaginationConfig)->withPaginator($dataReader);
             } else {
-                return '';
-            }
-            try {
-                $widget = $widget->withPaginator($dataReader);
-            } catch (PaginatorNotSupportedException) {
                 return '';
             }
         } else {
