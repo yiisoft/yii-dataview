@@ -98,6 +98,7 @@ final class OffsetPagination extends Widget implements PaginationWidgetInterface
     public function showOnSinglePage(bool $show = true): self
     {
         $this->showOnSinglePage = $show;
+        return $this;
     }
 
     public function containerTag(?string $tag): self

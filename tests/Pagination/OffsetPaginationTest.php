@@ -107,41 +107,25 @@ final class OffsetPaginationTest extends TestCase
 
     public function testRenderWithEmptyItems(): void
     {
-        Assert::equalsWithoutLE(
-            <<<HTML
-            <nav>
-            <a href="http://example.com/">⟪</a>
-            <a href="http://example.com/">⟨</a>
-            <a href="http://example.com/">1</a>
-            <a href="http://example.com/?page=0">⟩</a>
-            <a href="http://example.com/?page=0">⟫</a>
-            </nav>
-            HTML,
-            OffsetPagination::widget()
-                ->withContext(
-                    new PaginationContext(
-                        'http://example.com/?page=' . PaginationContext::URL_PLACEHOLDER,
-                        'http://example.com/?page=' . PaginationContext::URL_PLACEHOLDER,
-                        'http://example.com/',
-                    ),
-                )
-                ->withPaginator($this->createOffsetPaginator([], 10))
-                ->render(),
-        );
+        $result = OffsetPagination::create(
+            $this->createOffsetPaginator([], 10),
+            'http://example.com/?page=' . PaginationContext::URL_PLACEHOLDER,
+            'http://example.com/',
+        )
+            ->render();
+
+        $this->assertSame('', $result);
     }
 
     public function testAddLinkClass(): void
     {
-        $offsetPagination = OffsetPagination::widget()
-            ->addLinkClass('test-class')
-            ->withContext(
-                new PaginationContext(
-                    'http://example.com/?page=' . PaginationContext::URL_PLACEHOLDER,
-                    'http://example.com/?page=' . PaginationContext::URL_PLACEHOLDER,
-                    'http://example.com/',
-                ),
-            )
-            ->withPaginator($this->createOffsetPaginator([], 10));
+        $offsetPagination = OffsetPagination::create(
+            $this->createOffsetPaginator([], 10),
+            'http://example.com/?page=' . PaginationContext::URL_PLACEHOLDER,
+            'http://example.com/',
+        )
+            ->showOnSinglePage()
+            ->addLinkClass('test-class');
 
         Assert::equalsWithoutLE(
             <<<HTML
@@ -182,33 +166,27 @@ final class OffsetPaginationTest extends TestCase
             <a href="http://example.com/?page=0">⟫</a>
             </div>
             HTML,
-            OffsetPagination::widget()
+            OffsetPagination::create(
+                $this->createOffsetPaginator([], 10),
+                'http://example.com/?page=' . PaginationContext::URL_PLACEHOLDER,
+                'http://example.com/',
+            )
+                ->showOnSinglePage()
                 ->containerTag('div')
                 ->containerAttributes(['class' => 'test-class'])
-                ->withContext(
-                    new PaginationContext(
-                        'http://example.com/?page=' . PaginationContext::URL_PLACEHOLDER,
-                        'http://example.com/?page=' . PaginationContext::URL_PLACEHOLDER,
-                        'http://example.com/',
-                    ),
-                )
-                ->withPaginator($this->createOffsetPaginator([], 10))
                 ->render(),
         );
     }
 
     public function testCurrentLinkClass(): void
     {
-        $offsetPagination = OffsetPagination::widget()
-            ->currentLinkClass('test-class')
-            ->withContext(
-                new PaginationContext(
-                    'http://example.com/?page=' . PaginationContext::URL_PLACEHOLDER,
-                    'http://example.com/?page=' . PaginationContext::URL_PLACEHOLDER,
-                    'http://example.com/',
-                ),
-            )
-            ->withPaginator($this->createOffsetPaginator([], 10));
+        $offsetPagination = OffsetPagination::create(
+            $this->createOffsetPaginator([], 10),
+            'http://example.com/?page=' . PaginationContext::URL_PLACEHOLDER,
+            'http://example.com/',
+        )
+            ->showOnSinglePage()
+            ->currentLinkClass('test-class');
 
         Assert::equalsWithoutLE(
             <<<HTML
@@ -239,16 +217,13 @@ final class OffsetPaginationTest extends TestCase
 
     public function testDisabledLinkClass(): void
     {
-        $offsetPagination = OffsetPagination::widget()
-            ->disabledLinkClass('test-class')
-            ->withContext(
-                new PaginationContext(
-                    'http://example.com/?page=' . PaginationContext::URL_PLACEHOLDER,
-                    'http://example.com/?page=' . PaginationContext::URL_PLACEHOLDER,
-                    'http://example.com/',
-                ),
-            )
-            ->withPaginator($this->createOffsetPaginator([], 10));
+        $offsetPagination = OffsetPagination::create(
+            $this->createOffsetPaginator([], 10),
+            'http://example.com/?page=' . PaginationContext::URL_PLACEHOLDER,
+            'http://example.com/',
+        )
+            ->showOnSinglePage()
+            ->disabledLinkClass('test-class');
 
         Assert::equalsWithoutLE(
             <<<HTML
@@ -289,16 +264,13 @@ final class OffsetPaginationTest extends TestCase
             <a href="http://example.com/?page=0">⟫</a>
             </nav>
             HTML,
-            OffsetPagination::widget()
+            OffsetPagination::create(
+                $this->createOffsetPaginator([], 10),
+                'http://example.com/?page=' . PaginationContext::URL_PLACEHOLDER,
+                'http://example.com/',
+            )
+                ->showOnSinglePage()
                 ->labelFirst('First')
-                ->withContext(
-                    new PaginationContext(
-                        'http://example.com/?page=' . PaginationContext::URL_PLACEHOLDER,
-                        'http://example.com/?page=' . PaginationContext::URL_PLACEHOLDER,
-                        'http://example.com/',
-                    ),
-                )
-                ->withPaginator($this->createOffsetPaginator([], 10))
                 ->render(),
         );
     }
@@ -315,16 +287,13 @@ final class OffsetPaginationTest extends TestCase
             <a href="http://example.com/?page=0">Last</a>
             </nav>
             HTML,
-            OffsetPagination::widget()
+            OffsetPagination::create(
+                $this->createOffsetPaginator([], 10),
+                'http://example.com/?page=' . PaginationContext::URL_PLACEHOLDER,
+                'http://example.com/',
+            )
+                ->showOnSinglePage()
                 ->labelLast('Last')
-                ->withContext(
-                    new PaginationContext(
-                        'http://example.com/?page=' . PaginationContext::URL_PLACEHOLDER,
-                        'http://example.com/?page=' . PaginationContext::URL_PLACEHOLDER,
-                        'http://example.com/',
-                    ),
-                )
-                ->withPaginator($this->createOffsetPaginator([], 10))
                 ->render(),
         );
     }
@@ -341,16 +310,13 @@ final class OffsetPaginationTest extends TestCase
             <a href="http://example.com/?page=0">⟫</a>
             </nav>
             HTML,
-            OffsetPagination::widget()
+            OffsetPagination::create(
+                $this->createOffsetPaginator([], 10),
+                'http://example.com/?page=' . PaginationContext::URL_PLACEHOLDER,
+                'http://example.com/',
+            )
+                ->showOnSinglePage()
                 ->labelNext('Next')
-                ->withContext(
-                    new PaginationContext(
-                        'http://example.com/?page=' . PaginationContext::URL_PLACEHOLDER,
-                        'http://example.com/?page=' . PaginationContext::URL_PLACEHOLDER,
-                        'http://example.com/',
-                    ),
-                )
-                ->withPaginator($this->createOffsetPaginator([], 10))
                 ->render(),
         );
     }
@@ -367,32 +333,26 @@ final class OffsetPaginationTest extends TestCase
             <a href="http://example.com/?page=0">⟫</a>
             </nav>
             HTML,
-            OffsetPagination::widget()
+            OffsetPagination::create(
+                $this->createOffsetPaginator([], 10),
+                'http://example.com/?page=' . PaginationContext::URL_PLACEHOLDER,
+                'http://example.com/',
+            )
+                ->showOnSinglePage()
                 ->labelPrevious('Previous')
-                ->withContext(
-                    new PaginationContext(
-                        'http://example.com/?page=' . PaginationContext::URL_PLACEHOLDER,
-                        'http://example.com/?page=' . PaginationContext::URL_PLACEHOLDER,
-                        'http://example.com/',
-                    ),
-                )
-                ->withPaginator($this->createOffsetPaginator([], 10))
                 ->render(),
         );
     }
 
     public function testLinkClass(): void
     {
-        $offsetPagination = OffsetPagination::widget()
-            ->LinkClass('test-class')
-            ->withContext(
-                new PaginationContext(
-                    'http://example.com/?page=' . PaginationContext::URL_PLACEHOLDER,
-                    'http://example.com/?page=' . PaginationContext::URL_PLACEHOLDER,
-                    'http://example.com/',
-                ),
-            )
-            ->withPaginator($this->createOffsetPaginator([], 10));
+        $offsetPagination = OffsetPagination::create(
+            $this->createOffsetPaginator([], 10),
+            'http://example.com/?page=' . PaginationContext::URL_PLACEHOLDER,
+            'http://example.com/',
+        )
+            ->showOnSinglePage()
+            ->LinkClass('test-class');
 
         Assert::equalsWithoutLE(
             <<<HTML

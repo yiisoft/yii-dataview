@@ -88,6 +88,7 @@ final class KeysetPagination extends Widget implements PaginationWidgetInterface
     public function showOnSinglePage(bool $show = true): self
     {
         $this->showOnSinglePage = $show;
+        return $this;
     }
 
     /**
