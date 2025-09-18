@@ -23,6 +23,8 @@ final class KeysetPagination extends Widget implements PaginationWidgetInterface
 
     private KeysetPaginator|null $paginator = null;
 
+    private bool $showOnSinglePage = false;
+
     /**
      * @psalm-var non-empty-string|null
      */
@@ -81,6 +83,11 @@ final class KeysetPagination extends Widget implements PaginationWidgetInterface
         $new = clone $this;
         $new->paginator = $paginator;
         return $new;
+    }
+
+    public function showOnSinglePage(bool $show = true): self
+    {
+        $this->showOnSinglePage = $show;
     }
 
     /**
@@ -271,6 +278,10 @@ final class KeysetPagination extends Widget implements PaginationWidgetInterface
      */
     public function render(): string
     {
+        if (!$this->showOnSinglePage && !$this->getPaginator()->isPaginationRequired()) {
+            return '';
+        }
+
         $result = '';
 
         if ($this->containerTag !== null) {
