@@ -443,9 +443,9 @@ abstract class BaseListView extends Widget
      * automatically.
      *
      * @param BackedEnum|string|null ...$class One or more CSS class names to use. Pass `null` to skip a class.
-     * @return self
+     * @return static A new instance with the specified CSS classes set.
      */
-    public function containerClass(BackedEnum|string|null ...$class): self
+    public function containerClass(BackedEnum|string|null ...$class): static
     {
         $new = clone $this;
         $new->containerAttributes['class'] = [];
@@ -460,9 +460,9 @@ abstract class BaseListView extends Widget
      * automatically.
      *
      * @param BackedEnum|string|null ...$class One or more CSS class names to add. Pass `null` to skip adding a class.
-     * @return self A new instance with the specified CSS classes added to existing ones.
+     * @return static A new instance with the specified CSS classes added to existing ones.
      */
-    public function addContainerClass(BackedEnum|string|null ...$class): self
+    public function addContainerClass(BackedEnum|string|null ...$class): static
     {
         $new = clone $this;
         Html::addCssClass($new->containerAttributes, $class);
