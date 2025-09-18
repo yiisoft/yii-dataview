@@ -998,7 +998,7 @@ abstract class BaseListView extends Widget
 
     private function renderPagination(ReadableDataInterface|null $dataReader): string|Stringable
     {
-        if (!$dataReader instanceof PaginatorInterface || !$dataReader->isPaginationRequired()) {
+        if (!$dataReader instanceof PaginatorInterface) {
             return '';
         }
 

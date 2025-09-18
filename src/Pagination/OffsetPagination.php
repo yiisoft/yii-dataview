@@ -27,6 +27,8 @@ final class OffsetPagination extends Widget implements PaginationWidgetInterface
 
     private OffsetPaginator|null $paginator = null;
 
+    private bool $showOnSinglePage = false;
+
     /**
      * @psalm-var non-empty-string|null
      */
@@ -91,6 +93,12 @@ final class OffsetPagination extends Widget implements PaginationWidgetInterface
         $new = clone $this;
         $new->paginator = $paginator;
         return $new;
+    }
+
+    public function showOnSinglePage(bool $show = true): self
+    {
+        $this->showOnSinglePage = $show;
+        return $this;
     }
 
     public function containerTag(?string $tag): self
@@ -264,6 +272,10 @@ final class OffsetPagination extends Widget implements PaginationWidgetInterface
 
     public function render(): string
     {
+        if (!$this->showOnSinglePage && !$this->getPaginator()->isPaginationRequired()) {
+            return '';
+        }
+
         $result = '';
 
         if ($this->containerTag !== null) {
