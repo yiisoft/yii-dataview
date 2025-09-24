@@ -23,6 +23,18 @@ use function is_string;
 /**
  * `ListView` is a flexible widget for displaying a list of data items with customizable rendering and layout.
  *
+ * Example usage:
+ * ```php
+ * $listView = (new ListView())
+ *     ->listTag('ul')
+ *     ->listAttributes(['class' => 'my-list'])
+ *     ->itemTag('li')
+ *     ->itemContent(fn($data, $context) => Html::encode($data['name']))
+ *     ->dataReader($dataReader);
+ *
+ * echo $listView->render();
+ * ```
+ *
  * @psalm-type ItemAffixClosure = Closure(ListItemContext): (string|Stringable)
  * @psalm-type ItemContentClosure = Closure(array|object, ListItemContext): (string|Stringable)
  * @psalm-type ItemAttributesClosure = Closure(ListItemContext): array
@@ -62,6 +74,8 @@ final class ListView extends BaseListView
      * Set the HTML tag for the list.
      *
      * @param string|null $tag The tag name. If `null`, no tag will be rendered.
+     *
+     * @return self New instance with the specified list tag.
      */
     public function listTag(string|null $tag): self
     {
@@ -78,6 +92,8 @@ final class ListView extends BaseListView
      * Set the HTML attributes for the list.
      *
      * @param array $attributes Attribute values indexed by attribute names.
+     *
+     * @return self New instance with the specified list attributes.
      */
     public function listAttributes(array $attributes): self
     {
@@ -90,6 +106,8 @@ final class ListView extends BaseListView
      * Set the HTML tag for the list item.
      *
      * @param string|null $tag The tag name. If `null`, no tag will be rendered.
+     *
+     * @return self New instance with the specified item tag.
      */
     public function itemTag(?string $tag): self
     {
@@ -180,6 +198,22 @@ final class ListView extends BaseListView
     }
 
     /**
+     * Return new instance with the content rendering configuration for each list item.
+     *
+     * @param string|Closure $value Either a view file path (string) or a closure for rendering item content.
+     *
+     * If a string is provided, it should be a path to a view file. The view will receive:
+     * - `$data` - the current item data;
+     * - `$context` - the {@see ListItemContext} instance;
+     * - any additional parameters set via {@see itemViewParameters()}.
+     *
+     * If a closure is provided, it should have the following signature:
+     * ```php
+     * function (array|object $data, ListItemContext $context): string|Stringable
+     * ```
+     *
+     * @return self New instance.
+     *
      * @psalm-param string|ItemContentClosure $value
      */
     public function itemContent(string|Closure $value): self
@@ -194,6 +228,8 @@ final class ListView extends BaseListView
      *
      * @param array $parameters Additional parameters to be passed to the view set in {@see itemContent()} when it is
      * being rendered.
+     *
+     * @return self New instance with the specified view parameters.
      */
     public function itemViewParameters(array $parameters): self
     {
@@ -206,6 +242,8 @@ final class ListView extends BaseListView
      * Return new instance with the separator between the items.
      *
      * @param string $separator The HTML code to be displayed between any two consecutive items.
+     *
+     * @return self New instance with the specified separator.
      */
     public function separator(string $separator): self
     {
@@ -225,9 +263,15 @@ final class ListView extends BaseListView
     }
 
     /**
-     * Renders all data models.
+     * Renders all data items as a complete list.
+     *
+     * @param array $items The array of data items to render.
+     * @param ValidationResult $filterValidationResult The validation result from filters (unused in ListView).
+     * @param ReadableDataInterface|null $preparedDataReader The prepared data reader (unused in ListView).
      *
      * @throws ViewNotFoundException If the item view file doesn't exist.
+     *
+     * @return string The complete rendered HTML for all items.
      */
     protected function renderItems(
         array $items,
@@ -254,12 +298,12 @@ final class ListView extends BaseListView
     /**
      * Renders a single list item.
      *
-     * @param ListItemContext $context The context to take into account when rendering.
+     * @param ListItemContext $context The context.
      *
      * @throws ViewNotFoundException If the item view file doesn't exist.
      * @throws LogicException If {@see itemContent} isn't set.
      *
-     * @return string Rendered HTML.
+     * @return string The rendered HTML for the list item.
      */
     private function renderItem(ListItemContext $context): string
     {
@@ -290,7 +334,12 @@ final class ListView extends BaseListView
     }
 
     /**
+     * @param ListItemContext $context The context containing item data and rendering information.
+     *
      * @throws ViewNotFoundException If the item view file doesn't exist.
+     * @throws LogicException If {@see $itemContent} is not configured.
+     *
+     * @return string The rendered item content HTML.
      */
     private function renderItemContent(ListItemContext $context): string
     {
@@ -315,7 +364,11 @@ final class ListView extends BaseListView
     }
 
     /**
+     * Renders content that appears before each list item.
+     *
      * @param ListItemContext $context Context of the item to be rendered.
+     *
+     * @return string The rendered before-item content.
      */
     private function renderBeforeItem(ListItemContext $context): string
     {
@@ -325,7 +378,11 @@ final class ListView extends BaseListView
     }
 
     /**
+     * Renders content that appears after each list item.
+     *
      * @param ListItemContext $context Context of the item to be rendered.
+     *
+     * @return string The rendered after-item content.
      */
     private function renderAfterItem(ListItemContext $context): string
     {

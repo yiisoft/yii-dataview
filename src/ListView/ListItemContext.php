@@ -6,6 +6,11 @@ namespace Yiisoft\Yii\DataView\ListView;
 
 /**
  * `ListItemContext` provides contextual information about the current item being rendered in a {@see ListView}.
+ *
+ * This immutable data class encapsulates all the contextual information needed when rendering individual
+ * list items, making it available to closures and view templates.
+ *
+ * @see ListView The widget that creates and uses this context
  */
 final class ListItemContext
 {
