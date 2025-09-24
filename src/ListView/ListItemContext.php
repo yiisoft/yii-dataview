@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Yiisoft\Yii\DataView;
+namespace Yiisoft\Yii\DataView\ListView;
 
 /**
- * `ListItemContext` provides contextual information about the current item being rendered in a `ListView`.
+ * `ListItemContext` provides contextual information about the current item being rendered in a {@see ListView}.
  */
 final class ListItemContext
 {
