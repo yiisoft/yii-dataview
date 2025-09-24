@@ -262,17 +262,6 @@ final class ListView extends BaseListView
         return [];
     }
 
-    /**
-     * Renders all data items as a complete list.
-     *
-     * @param array $items The array of data items to render.
-     * @param ValidationResult $filterValidationResult The validation result from filters (unused in ListView).
-     * @param ReadableDataInterface|null $preparedDataReader The prepared data reader (unused in ListView).
-     *
-     * @throws ViewNotFoundException If the item view file doesn't exist.
-     *
-     * @return string The complete rendered HTML for all items.
-     */
     protected function renderItems(
         array $items,
         ValidationResult $filterValidationResult,
