@@ -22,12 +22,6 @@ final class OffsetPaginationTest extends TestCase
 {
     use TestTrait;
 
-    /**
-     * @throws InvalidConfigException
-     * @throws NotFoundException
-     * @throws NotInstantiableException
-     * @throws CircularReferenceException
-     */
     public function testRenderPaginatorEmptyData(): void
     {
         $offsetPaginator = $this->createOffsetPaginator([], 10);
@@ -72,7 +66,7 @@ final class OffsetPaginationTest extends TestCase
         $this->expectException(PaginatorNotSupportedException::class);
         $this->expectExceptionMessage(sprintf('Paginator "%s" is not supported.', $keysetPaginator::class));
 
-        $pagination->withPaginator($keysetPaginator);
+        $pagination->paginator($keysetPaginator);
     }
 
     public function testThrowExceptionForContainerTagEmptyValue(): void
@@ -379,5 +373,32 @@ final class OffsetPaginationTest extends TestCase
             HTML,
             $offsetPagination->linkClass('test-class-1')->render(),
         );
+    }
+
+    public function testImmutability(): void
+    {
+        $widget = OffsetPagination::widget();
+        $this->assertNotSame($widget, $widget->paginator($this->createOffsetPaginator([], 5)));
+        $this->assertNotSame($widget, $widget->showOnSinglePage());
+        $this->assertNotSame($widget, $widget->containerTag('div'));
+        $this->assertNotSame($widget, $widget->containerAttributes([]));
+        $this->assertNotSame($widget, $widget->listTag('ul'));
+        $this->assertNotSame($widget, $widget->listAttributes([]));
+        $this->assertNotSame($widget, $widget->itemTag('li'));
+        $this->assertNotSame($widget, $widget->itemAttributes([]));
+        $this->assertNotSame($widget, $widget->currentItemClass('current'));
+        $this->assertNotSame($widget, $widget->disabledItemClass('disabled'));
+        $this->assertNotSame($widget, $widget->linkAttributes([]));
+        $this->assertNotSame($widget, $widget->addLinkAttributes([]));
+        $this->assertNotSame($widget, $widget->linkClass('link'));
+        $this->assertNotSame($widget, $widget->addLinkClass('extra'));
+        $this->assertNotSame($widget, $widget->currentLinkClass('current'));
+        $this->assertNotSame($widget, $widget->disabledLinkClass('disabled'));
+        $this->assertNotSame($widget, $widget->labelPrevious('Prev'));
+        $this->assertNotSame($widget, $widget->labelNext('Next'));
+        $this->assertNotSame($widget, $widget->labelFirst('First'));
+        $this->assertNotSame($widget, $widget->labelLast('Last'));
+        $this->assertNotSame($widget, $widget->maxNavLinkCount(5));
+        $this->assertNotSame($widget, $widget->context(new PaginationContext('', '', '')));
     }
 }

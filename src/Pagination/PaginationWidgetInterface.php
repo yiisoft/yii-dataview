@@ -29,7 +29,7 @@ interface PaginationWidgetInterface extends Stringable
      * @psalm-param T $paginator
      * @psalm-return static<T>
      */
-    public function withPaginator(PaginatorInterface $paginator): static;
+    public function paginator(PaginatorInterface $paginator): static;
 
     /**
      * Creates a new instance with the specified pagination context.
@@ -38,7 +38,7 @@ interface PaginationWidgetInterface extends Stringable
      *
      * @return static New instance with the specified context.
      */
-    public function withContext(PaginationContext $context): static;
+    public function context(PaginationContext $context): static;
 
     /**
      * Renders the pagination controls.
