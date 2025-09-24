@@ -200,7 +200,7 @@ final class ListView extends BaseListView
     /**
      * Return new instance with the content rendering configuration for each list item.
      *
-     * @param string|Closure $value Either a view file path (string) or a closure for rendering item content.
+     * @param Closure|string $value Either a view file path (string) or a closure for rendering item content.
      *
      * If a string is provided, it should be a path to a view file. The view will receive:
      * - `$data` - the current item data;
