@@ -72,8 +72,8 @@ final class OffsetPagination extends Widget implements PaginationWidgetInterface
     public static function create(OffsetPaginator $paginator, string $urlPattern, string $firstPageUrl): self
     {
         return self::widget()
-            ->withPaginator($paginator)
-            ->withContext(
+            ->paginator($paginator)
+            ->context(
                 new PaginationContext($urlPattern, $urlPattern, $firstPageUrl),
             );
     }
@@ -83,7 +83,7 @@ final class OffsetPagination extends Widget implements PaginationWidgetInterface
      *
      * @throws PaginatorNotSupportedException If paginator is not a {@see OffsetPaginator}.
      */
-    public function withPaginator(PaginatorInterface $paginator): static
+    public function paginator(PaginatorInterface $paginator): static
     {
         /** @psalm-suppress DocblockTypeContradiction, NoValue */
         if (!$paginator instanceof OffsetPaginator) {
@@ -97,8 +97,9 @@ final class OffsetPagination extends Widget implements PaginationWidgetInterface
 
     public function showOnSinglePage(bool $show = true): self
     {
-        $this->showOnSinglePage = $show;
-        return $this;
+        $new = clone $this;
+        $new->showOnSinglePage = $show;
+        return $new;
     }
 
     public function containerTag(?string $tag): self

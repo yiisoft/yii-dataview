@@ -13,6 +13,7 @@ use Yiisoft\Definitions\Exception\InvalidConfigException;
 use Yiisoft\Definitions\Exception\NotInstantiableException;
 use Yiisoft\Factory\NotFoundException;
 use Yiisoft\Yii\DataView\Column\DataColumn;
+use Yiisoft\Yii\DataView\Pagination\PaginationContext;
 use Yiisoft\Yii\DataView\Pagination\PaginatorNotSetException;
 use Yiisoft\Yii\DataView\Pagination\PaginatorNotSupportedException;
 use Yiisoft\Yii\DataView\GridView;
@@ -129,7 +130,7 @@ final class KeysetPaginationTest extends TestCase
                 )
                 ->id('w1-grid')
                 ->dataReader($keysetPaginator)
-                ->paginationWidget(KeysetPagination::widget()->withPaginator($keysetPaginator))
+                ->paginationWidget(KeysetPagination::widget()->paginator($keysetPaginator))
                 ->layout('{items}' . PHP_EOL . '{pager}')
                 ->render(),
         );
@@ -377,7 +378,7 @@ final class KeysetPaginationTest extends TestCase
 
         /** @var PaginatorInterface $nonKeysetPaginator */
         $nonKeysetPaginator = $this->createMock(PaginatorInterface::class);
-        KeysetPagination::widget()->withPaginator($nonKeysetPaginator);
+        KeysetPagination::widget()->paginator($nonKeysetPaginator);
     }
 
     public function testContainerTagWithEmptyString(): void
@@ -463,7 +464,7 @@ final class KeysetPaginationTest extends TestCase
                 ->dataReader($keysetPaginator)
                 ->paginationWidget(
                     KeysetPagination::widget()
-                        ->withPaginator($keysetPaginator)
+                        ->paginator($keysetPaginator)
                         ->containerAttributes(['class' => 'custom-nav', 'id' => 'pagination-nav'])
                 )
                 ->layout('{items}' . PHP_EOL . '{pager}')
@@ -532,7 +533,7 @@ final class KeysetPaginationTest extends TestCase
                 ->dataReader($keysetPaginator)
                 ->paginationWidget(
                     KeysetPagination::widget()
-                        ->withPaginator($keysetPaginator)
+                        ->paginator($keysetPaginator)
                         ->listTag('ul')
                         ->listAttributes(['class' => 'pagination'])
                 )
@@ -600,7 +601,7 @@ final class KeysetPaginationTest extends TestCase
                 ->dataReader($keysetPaginator)
                 ->paginationWidget(
                     KeysetPagination::widget()
-                        ->withPaginator($keysetPaginator)
+                        ->paginator($keysetPaginator)
                         ->itemTag('li')
                         ->itemAttributes(['class' => 'page-item'])
                 )
@@ -668,7 +669,7 @@ final class KeysetPaginationTest extends TestCase
                 ->dataReader($keysetPaginator)
                 ->paginationWidget(
                     KeysetPagination::widget()
-                        ->withPaginator($keysetPaginator)
+                        ->paginator($keysetPaginator)
                         ->itemTag('li')
                         ->itemAttributes(['class' => 'page-item'])
                         ->disabledItemClass('disabled')
@@ -738,7 +739,7 @@ final class KeysetPaginationTest extends TestCase
                 ->dataReader($keysetPaginator)
                 ->paginationWidget(
                     KeysetPagination::widget()
-                        ->withPaginator($keysetPaginator)
+                        ->paginator($keysetPaginator)
                         ->linkAttributes(['class' => 'page-link'])
                 )
                 ->layout('{items}' . PHP_EOL . '{pager}')
@@ -805,7 +806,7 @@ final class KeysetPaginationTest extends TestCase
                 ->dataReader($keysetPaginator)
                 ->paginationWidget(
                     KeysetPagination::widget()
-                        ->withPaginator($keysetPaginator)
+                        ->paginator($keysetPaginator)
                         ->containerTag('div')
                 )
                 ->layout('{items}' . PHP_EOL . '{pager}')
@@ -870,11 +871,30 @@ final class KeysetPaginationTest extends TestCase
                 ->dataReader($keysetPaginator)
                 ->paginationWidget(
                     KeysetPagination::widget()
-                        ->withPaginator($keysetPaginator)
+                        ->paginator($keysetPaginator)
                         ->containerTag(null)
                 )
                 ->layout('{items}' . PHP_EOL . '{pager}')
                 ->render(),
         );
+    }
+
+    public function testImmutability(): void
+    {
+        $widget = KeysetPagination::widget();
+        $this->assertNotSame($widget, $widget->paginator($this->createKeysetPaginator([], 5)));
+        $this->assertNotSame($widget, $widget->showOnSinglePage());
+        $this->assertNotSame($widget, $widget->containerTag('div'));
+        $this->assertNotSame($widget, $widget->containerAttributes([]));
+        $this->assertNotSame($widget, $widget->listTag('ul'));
+        $this->assertNotSame($widget, $widget->listAttributes([]));
+        $this->assertNotSame($widget, $widget->itemTag('li'));
+        $this->assertNotSame($widget, $widget->itemAttributes([]));
+        $this->assertNotSame($widget, $widget->disabledItemClass('disabled'));
+        $this->assertNotSame($widget, $widget->linkAttributes([]));
+        $this->assertNotSame($widget, $widget->linkClass('link'));
+        $this->assertNotSame($widget, $widget->addLinkClass('extra'));
+        $this->assertNotSame($widget, $widget->disabledLinkClass('disabled'));
+        $this->assertNotSame($widget, $widget->context(new PaginationContext('', '', '')));
     }
 }

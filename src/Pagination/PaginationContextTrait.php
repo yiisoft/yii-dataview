@@ -22,7 +22,7 @@ trait PaginationContextTrait
      *
      * @return static New instance with the specified context.
      */
-    final public function withContext(PaginationContext $context): static
+    final public function context(PaginationContext $context): static
     {
         $new = clone $this;
         $new->context = $context;

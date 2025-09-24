@@ -62,8 +62,8 @@ final class KeysetPagination extends Widget implements PaginationWidgetInterface
     public static function create(KeysetPaginator $paginator, string $nextUrlPattern, string $previousUrlPattern): self
     {
         return self::widget()
-            ->withPaginator($paginator)
-            ->withContext(
+            ->paginator($paginator)
+            ->context(
                 new PaginationContext($nextUrlPattern, $previousUrlPattern, ''),
             );
     }
@@ -73,7 +73,7 @@ final class KeysetPagination extends Widget implements PaginationWidgetInterface
      *
      * @throws PaginatorNotSupportedException If paginator is not a {@see KeysetPaginator}.
      */
-    public function withPaginator(PaginatorInterface $paginator): static
+    public function paginator(PaginatorInterface $paginator): static
     {
         /** @psalm-suppress DocblockTypeContradiction, NoValue */
         if (!$paginator instanceof KeysetPaginator) {
@@ -87,8 +87,9 @@ final class KeysetPagination extends Widget implements PaginationWidgetInterface
 
     public function showOnSinglePage(bool $show = true): self
     {
-        $this->showOnSinglePage = $show;
-        return $this;
+        $new = clone $this;
+        $new->showOnSinglePage = $show;
+        return $new;
     }
 
     /**

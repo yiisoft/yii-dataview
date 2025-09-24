@@ -49,14 +49,14 @@
     "require-dev": {
         "maglnet/composer-require-checker": "^4.7.1",
         "phpunit/phpunit": "^10.5.53",
-        "rector/rector": "^2.1.6",
+        "rector/rector": "^2.1.7",
         "roave/infection-static-analysis-plugin": "^1.35",
         "spatie/phpunit-watcher": "^1.24",
         "vimeo/psalm": "^5.26.1 || ^6.12",
         "yiisoft/di": "^1.4",
         "yiisoft/event-dispatcher": "^1.1",
         "yiisoft/log": "^2.1.1",
-        "yiisoft/router-fastroute": "^4.0.1",
+        "yiisoft/router-fastroute": "^4.0.2",
         "yiisoft/test-support": "^3.0.2",
         "yiisoft/translator-message-php": "^1.1.1"
     },

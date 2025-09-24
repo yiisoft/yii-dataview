@@ -1004,14 +1004,14 @@ abstract class BaseListView extends Widget
 
         if ($this->paginationWidget === null) {
             if ($dataReader instanceof OffsetPaginator) {
-                $widget = OffsetPagination::widget(config: $this->offsetPaginationConfig)->withPaginator($dataReader);
+                $widget = OffsetPagination::widget(config: $this->offsetPaginationConfig)->paginator($dataReader);
             } elseif ($dataReader instanceof KeysetPaginator) {
-                $widget = KeysetPagination::widget(config: $this->keysetPaginationConfig)->withPaginator($dataReader);
+                $widget = KeysetPagination::widget(config: $this->keysetPaginationConfig)->paginator($dataReader);
             } else {
                 return '';
             }
         } else {
-            $widget = $this->paginationWidget->withPaginator($dataReader);
+            $widget = $this->paginationWidget->paginator($dataReader);
         }
 
         if ($this->urlCreator === null) {
@@ -1051,7 +1051,7 @@ abstract class BaseListView extends Widget
             $defaultUrl,
         );
 
-        return $widget->withContext($context)->render();
+        return $widget->context($context)->render();
     }
 
     private function renderPageSize(ReadableDataInterface|null $dataReader): string

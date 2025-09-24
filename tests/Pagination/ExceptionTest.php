@@ -46,7 +46,7 @@ final class ExceptionTest extends TestCase
     public function testCurrentPageOutOfRange(): void
     {
         $paginator = $this->createOffsetPaginator($this->data, 2, 4);
-        $widget = OffsetPagination::widget()->withPaginator($paginator);
+        $widget = OffsetPagination::widget()->paginator($paginator);
 
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('Current page must be less than or equal to total pages.');
