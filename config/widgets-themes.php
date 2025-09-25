@@ -7,6 +7,7 @@ use Yiisoft\Yii\DataView\DetailView\DetailView;
 use Yiisoft\Yii\DataView\Filter\Widget\DropdownFilter;
 use Yiisoft\Yii\DataView\Filter\Widget\TextInputFilter;
 use Yiisoft\Yii\DataView\GridView;
+use Yiisoft\Yii\DataView\ListView\ListView;
 use Yiisoft\Yii\DataView\Pagination\KeysetPagination;
 use Yiisoft\Yii\DataView\Pagination\OffsetPagination;
 use Yiisoft\Yii\DataView\PageSize\InputPageSize;
@@ -28,6 +29,7 @@ return [
                 HTML
             ],
             'pageSizeTag()' => [null],
+            'headerClass()' => ['fs-4 mb-3'],
             'summaryTag()' => ['p'],
             'summaryAttributes()' => [['class' => 'text-secondary']],
             'tableClass()' => ['table table-bordered'],
@@ -50,6 +52,24 @@ return [
             'listAttributes()' => [['class' => 'row mx-2']],
             'labelAttributes()' => [['class' => 'col-sm-3 bg-light h-100 py-2']],
             'valueAttributes()' => [['class' => 'col-sm-9 bg-light h-100 py-2']],
+        ],
+        ListView::class => [
+            'layout()' => [
+                <<<HTML
+                {header}
+                {toolbar}
+                {items}
+                {summary}
+                <div class="row">
+                    <div class="col-md-8">{pager}</div>
+                    <div class="col-md-4 text-end">{pageSize}</div>
+                </div>
+                HTML
+            ],
+            'pageSizeTag()' => [null],
+            'headerClass()' => ['fs-4 mb-3'],
+            'summaryTag()' => ['p'],
+            'summaryAttributes()' => [['class' => 'text-secondary']],
         ],
         DropdownFilter::class => [
             'attributes()' => [['class' => 'form-select']],
