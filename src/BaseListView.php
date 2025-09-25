@@ -99,9 +99,7 @@ abstract class BaseListView extends Widget
      */
     private $pageNotFoundExceptionCallback = null;
 
-    /**
-     * @psalm-var non-empty-string|null
-     */
+    /** @psalm-var non-empty-string|null */
     private ?string $containerTag = 'div';
     private array $containerAttributes = [];
     private string $prepend = '';
@@ -109,6 +107,8 @@ abstract class BaseListView extends Widget
 
     private string $layout = "{header}\n{toolbar}\n{items}\n{summary}\n{pager}\n{pageSize}";
 
+    /** @psalm-var non-empty-string|null */
+    private ?string $headerTag = 'div';
     private string $header = '';
     private array $headerAttributes = [];
     private bool $encodeHeader = true;
@@ -526,6 +526,17 @@ abstract class BaseListView extends Widget
         return $new;
     }
 
+    final public function headerTag(string|null $tag): static
+    {
+        if ($tag === '') {
+            throw new InvalidArgumentException('Tag name cannot be empty.');
+        }
+
+        $new = clone $this;
+        $new->headerTag = $tag;
+        return $new;
+    }
+
     /**
      * Return new instance with the HTML attributes for the header.
      *
@@ -535,6 +546,21 @@ abstract class BaseListView extends Widget
     {
         $new = clone $this;
         $new->headerAttributes = $attributes;
+        return $new;
+    }
+
+    public function headerClass(BackedEnum|string|null ...$class): static
+    {
+        $new = clone $this;
+        $new->headerAttributes['class'] = [];
+        Html::addCssClass($new->headerAttributes, $class);
+        return $new;
+    }
+
+    public function addHeaderClass(BackedEnum|string|null ...$class): static
+    {
+        $new = clone $this;
+        Html::addCssClass($new->headerAttributes, $class);
         return $new;
     }
 
@@ -945,12 +971,17 @@ abstract class BaseListView extends Widget
         return is_array($items) ? $items : iterator_to_array($items);
     }
 
-    private function renderHeader(): string|Stringable
+    private function renderHeader(): string
     {
-        return match ($this->header) {
-            '' => '',
-            default => Html::div($this->header, $this->headerAttributes)->encode($this->encodeHeader),
-        };
+        if ($this->header === '') {
+            return '';
+        }
+
+        return $this->headerTag === null
+            ? $this->header
+            : Html::tag($this->headerTag, $this->header, $this->headerAttributes)
+                ->encode($this->encodeHeader)
+                ->render();
     }
 
     private function renderSummary(ReadableDataInterface|null $dataReader): string|Stringable
