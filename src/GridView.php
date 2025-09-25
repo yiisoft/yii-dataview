@@ -29,6 +29,7 @@ use Yiisoft\Yii\DataView\Column\SortableColumnRendererInterface;
 use Yiisoft\Yii\DataView\Filter\Factory\IncorrectValueException;
 
 use function call_user_func_array;
+use function count;
 use function in_array;
 use function is_callable;
 
@@ -220,6 +221,8 @@ final class GridView extends BaseListView
      * @var ColumnRendererInterface[]|null Cache of column renderers.
      */
     private ?array $columnRenderersCache = null;
+
+    private array $noResultsCellAttributes = [];
 
     /**
      * @param ContainerInterface $columnRenderersDependencyContainer Container used to resolve
@@ -746,6 +749,13 @@ final class GridView extends BaseListView
         return $new;
     }
 
+    public function noResultsCellAttributes(array $attributes): self
+    {
+        $new = clone $this;
+        $new->noResultsCellAttributes = $attributes;
+        return $new;
+    }
+
     protected function renderItems(
         array $items,
         ValidationResult $filterValidationResult,
@@ -939,7 +949,7 @@ final class GridView extends BaseListView
         }
         $blocks[] = empty($rows)
             ? Html::tbody($this->tbodyAttributes)
-                ->rows(Html::tr()->cells($this->renderEmpty(count($columns))))
+                ->rows(Html::tr()->cells($this->renderEmptyCell(count($columns))))
                 ->render()
             : Html::tbody($this->tbodyAttributes)->rows(...$rows)->render();
 
@@ -998,17 +1008,12 @@ final class GridView extends BaseListView
         );
     }
 
-    private function renderEmpty(int $colspan): Td
+    private function renderEmptyCell(int $colspan): Td
     {
-        $emptyTextAttributes = $this->emptyTextAttributes;
-        $emptyTextAttributes['colspan'] = $colspan;
-
-        $emptyText = $this->translator->translate(
-            $this->emptyText ?? 'No results found.',
-            category: $this->translationCategory
-        );
-
-        return Td::tag()->attributes($emptyTextAttributes)->content($emptyText);
+        return Td::tag()
+            ->attributes(['colspan' => $colspan] + $this->noResultsCellAttributes)
+            ->content($this->getNoResultsContent())
+            ->encode(false);
     }
 
     /**
