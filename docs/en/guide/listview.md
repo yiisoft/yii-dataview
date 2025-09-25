@@ -10,7 +10,7 @@ The basic usage is the following:
 
 ```php
 <?php
-use Yiisoft\Yii\DataView\ListView;
+use Yiisoft\Yii\DataView\ListView\ListView;
 ?>
 
 <?= ListView::widget()
@@ -60,7 +60,7 @@ Alternatively, a callback could be used:
 ```php
 <?php
 use Yiisoft\Html\Html;
-use Yiisoft\Yii\DataView\ListView;
+use Yiisoft\Yii\DataView\ListView\ListView;
 ?>
 
 <?= ListView::widget()
@@ -82,14 +82,14 @@ It can be changed:
 
 ```php
 <?php
-use Yiisoft\Yii\DataView\ListView;
+use Yiisoft\Yii\DataView\ListView\ListView;
 ?>
 
 <?= ListView::widget()
     ->itemView('myitem.php')
     ->dataReader($dataReader)
-    ->itemListTag('ol')
-    ->itemListAttributes(['class' => 'my-list'])
+    ->listTag('ol')
+    ->listAttributes(['class' => 'my-list'])
     ->separator(' ')
 ?>
 ```
@@ -116,16 +116,16 @@ Besides using a template or a callback, you can customize item rendering:
 
 ```php
 <?php
-use Yiisoft\Yii\DataView\ListView;
-use Yiisoft\Yii\DataView\ListItemContext $context;
+use Yiisoft\Yii\DataView\ListView\ListView;
+use Yiisoft\Yii\DataView\ListView\ListItemContext $context;
 ?>
 
 <?= ListView::widget()
     ->itemView('myitem.php')
     ->dataReader($dataReader)
-    ->itemListTag('section')
+    ->listTag('section')
     ->itemTag('div')
-    ->itemListAttributes(['class' => 'item'])
+    ->listAttributes(['class' => 'item'])
     ->itemViewParameters(['time' => time()])
     ->beforeItem(function (ListItemContext $context): ?string {
         return $context->data['important'] ? '! ' : '';

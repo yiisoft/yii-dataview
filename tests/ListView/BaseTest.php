@@ -11,8 +11,8 @@ use Yiisoft\Definitions\Exception\CircularReferenceException;
 use Yiisoft\Definitions\Exception\InvalidConfigException;
 use Yiisoft\Definitions\Exception\NotInstantiableException;
 use Yiisoft\Factory\NotFoundException;
-use Yiisoft\Yii\DataView\ListItemContext;
-use Yiisoft\Yii\DataView\ListView;
+use Yiisoft\Yii\DataView\ListView\ListItemContext;
+use Yiisoft\Yii\DataView\ListView\ListView;
 use Yiisoft\Yii\DataView\Tests\Support\Assert;
 use Yiisoft\Yii\DataView\Tests\Support\SimpleUrlParameterProvider;
 use Yiisoft\Yii\DataView\Tests\Support\TestTrait;
@@ -34,16 +34,12 @@ final class BaseTest extends TestCase
             <<<HTML
             <div>
             <ul>
-            <span class="testMe">
-            <li>
+            <span class="testMe"><li>
             <div>Id: 1</div><div>Name: John</div><div>Age: 20</div>
-            </li>
-            </span>
-            <span class="testMe">
-            <li>
+            </li></span>
+            <span class="testMe"><li>
             <div>Id: 2</div><div>Name: Mary</div><div>Age: 21</div>
-            </li>
-            </span>
+            </li></span>
             </ul>
             <div>Page <b>1</b> of <b>1</b></div>
             </div>
@@ -51,7 +47,7 @@ final class BaseTest extends TestCase
             ListView::widget()
                 ->afterItem(static fn () => '</span>')
                 ->beforeItem(static fn () => '<span class="testMe">')
-                ->itemView(dirname(__DIR__) . '/Support/view/_listview.php')
+                ->itemContent(dirname(__DIR__) . '/Support/view/_listview.php')
                 ->dataReader($this->createOffsetPaginator($this->data, 10))
                 ->render(),
         );
@@ -63,16 +59,12 @@ final class BaseTest extends TestCase
             <<<HTML
             <div>
             <ul>
-            <span class="testMe" data-item-id="1">
-            <li>
+            <span class="testMe" data-item-id="1"><li>
             <div>Id: 1</div><div>Name: John</div><div>Age: 20</div>
-            </li>
-            <span data-item-id="1">just for test</span></span>
-            <span class="testMe" data-item-id="2">
-            <li>
+            </li><span data-item-id="1">just for test</span></span>
+            <span class="testMe" data-item-id="2"><li>
             <div>Id: 2</div><div>Name: Mary</div><div>Age: 21</div>
-            </li>
-            <span data-item-id="2">just for test</span></span>
+            </li><span data-item-id="2">just for test</span></span>
             </ul>
             <div>Page <b>1</b> of <b>1</b></div>
             </div>
@@ -80,7 +72,7 @@ final class BaseTest extends TestCase
             ListView::widget()
                 ->afterItem(static fn (ListItemContext $context) => '<span data-item-id="' . $context->data['id'] . '">just for test</span></span>')
                 ->beforeItem(static fn (ListItemContext $context) => '<span class="testMe" data-item-id="' . $context->data['id'] . '">')
-                ->itemView(dirname(__DIR__) . '/Support/view/_listview.php')
+                ->itemContent(dirname(__DIR__) . '/Support/view/_listview.php')
                 ->dataReader($this->createOffsetPaginator($this->data, 10))
                 ->render(),
         );
@@ -103,7 +95,7 @@ final class BaseTest extends TestCase
             </div>
             HTML,
             ListView::widget()
-                ->itemView(dirname(__DIR__) . '/Support/view/_listview.php')
+                ->itemContent(dirname(__DIR__) . '/Support/view/_listview.php')
                 ->itemAttributes(['class' => 'testMe'])
                 ->dataReader($this->createOffsetPaginator($this->data, 10))
                 ->render(),
@@ -127,7 +119,7 @@ final class BaseTest extends TestCase
             </div>
             HTML,
             ListView::widget()
-                ->itemView(dirname(__DIR__) . '/Support/view/_listview.php')
+                ->itemContent(dirname(__DIR__) . '/Support/view/_listview.php')
                 ->dataReader($this->createOffsetPaginator($this->data, 10))
                 ->render(),
         );
@@ -145,31 +137,21 @@ final class BaseTest extends TestCase
             <<<HTML
             <div>
             <ul>
-            <li>
-            <div>1</div><div>John</div>
-            </li>
-            <li>
-            <div>2</div><div>Mary</div>
-            </li>
+            <li><div>1</div><div>John</div></li>
+            <li><div>2</div><div>Mary</div></li>
             </ul>
             <div>Page <b>1</b> of <b>1</b></div>
             </div>
             HTML,
             ListView::widget()
-                ->itemCallback(
-                    fn (ListItemContext $context) => '<div>' . $context->data['id'] . '</div><div>' . $context->data['name'] . '</div>' . PHP_EOL
+                ->itemContent(
+                    fn (array $data, ListItemContext $context) => '<div>' . $data['id'] . '</div><div>' . $data['name'] . '</div>'
                 )
                 ->dataReader($this->createOffsetPaginator($this->data, 10))
                 ->render(),
         );
     }
 
-    /**
-     * @throws InvalidConfigException
-     * @throws NotFoundException
-     * @throws NotInstantiableException
-     * @throws CircularReferenceException
-     */
     public function testSeparator(): void
     {
         Assert::equalsWithoutLE(
@@ -187,19 +169,13 @@ final class BaseTest extends TestCase
             </div>
             HTML,
             ListView::widget()
-                ->itemView(dirname(__DIR__) . '/Support/view/_listview.php')
+                ->itemContent(dirname(__DIR__) . '/Support/view/_listview.php')
                 ->dataReader($this->createOffsetPaginator($this->data, 10))
                 ->separator(PHP_EOL)
                 ->render(),
         );
     }
 
-    /**
-     * @throws InvalidConfigException
-     * @throws NotFoundException
-     * @throws NotInstantiableException
-     * @throws CircularReferenceException
-     */
     public function testViewParameters(): void
     {
         Assert::equalsWithoutLE(
@@ -217,7 +193,7 @@ final class BaseTest extends TestCase
             </div>
             HTML,
             ListView::widget()
-                ->itemView(dirname(__DIR__) . '/Support/view/_listviewparams.php')
+                ->itemContent(dirname(__DIR__) . '/Support/view/_listviewparams.php')
                 ->dataReader($this->createOffsetPaginator($this->data, 10))
                 ->separator(PHP_EOL)
                 ->itemViewParameters(['itemClass' => 'text-success'])
@@ -249,7 +225,7 @@ final class BaseTest extends TestCase
             </div>
             HTML,
             ListView::widget()
-                ->itemView(dirname(__DIR__) . '/Support/view/_listviewparams.php')
+                ->itemContent(dirname(__DIR__) . '/Support/view/_listviewparams.php')
                 ->dataReader($this->createOffsetPaginator($this->data, 1))
                 ->separator(PHP_EOL)
                 ->itemViewParameters(['itemClass' => 'text-success'])
@@ -286,7 +262,7 @@ final class BaseTest extends TestCase
             </div>
             HTML,
             ListView::widget()
-                ->itemView(dirname(__DIR__) . '/Support/view/_listviewparams.php')
+                ->itemContent(dirname(__DIR__) . '/Support/view/_listviewparams.php')
                 ->dataReader($this->createKeysetPaginator($this->data, 1))
                 ->separator(PHP_EOL)
                 ->itemViewParameters(['itemClass' => 'text-success'])
@@ -319,8 +295,8 @@ final class BaseTest extends TestCase
             </div>
             HTML,
             ListView::widget()
-                ->itemListTag('ol')
-                ->itemView(dirname(__DIR__) . '/Support/view/_listview.php')
+                ->listTag('ol')
+                ->itemContent(dirname(__DIR__) . '/Support/view/_listview.php')
                 ->dataReader($this->createOffsetPaginator($this->data, 10))
                 ->render(),
         );
@@ -343,9 +319,9 @@ final class BaseTest extends TestCase
             </div>
             HTML,
             ListView::widget()
-                ->itemListTag('div')
+                ->listTag('div')
                 ->itemTag('div')
-                ->itemView(dirname(__DIR__) . '/Support/view/_listview.php')
+                ->itemContent(dirname(__DIR__) . '/Support/view/_listview.php')
                 ->dataReader($this->createOffsetPaginator($this->data, 10))
                 ->render(),
         );
@@ -368,8 +344,8 @@ final class BaseTest extends TestCase
             </div>
             HTML,
             ListView::widget()
-                ->itemListAttributes(['class' => 'the-item-wrapper-class'])
-                ->itemView(dirname(__DIR__) . '/Support/view/_listview.php')
+                ->listAttributes(['class' => 'the-item-wrapper-class'])
+                ->itemContent(dirname(__DIR__) . '/Support/view/_listview.php')
                 ->dataReader($this->createOffsetPaginator($this->data, 10))
                 ->render(),
         );
@@ -390,9 +366,9 @@ final class BaseTest extends TestCase
             </div>
             HTML,
             ListView::widget()
-                ->itemListTag(null)
+                ->listTag(null)
                 ->itemTag('div')
-                ->itemView(dirname(__DIR__) . '/Support/view/_listview.php')
+                ->itemContent(dirname(__DIR__) . '/Support/view/_listview.php')
                 ->dataReader($this->createOffsetPaginator($this->data, 10))
                 ->render(),
         );
@@ -404,18 +380,16 @@ final class BaseTest extends TestCase
             <<<HTML
             <div>
             <div>
-            <div>Id: 1</div><div>Name: John</div><div>Age: 20</div>
-
-            <div>Id: 2</div><div>Name: Mary</div><div>Age: 21</div>
-
+            item
+            item
             </div>
             <div>Page <b>1</b> of <b>1</b></div>
             </div>
             HTML,
             ListView::widget()
-                ->itemListTag('div')
+                ->listTag('div')
                 ->itemTag(null)
-                ->itemView(dirname(__DIR__) . '/Support/view/_listview.php')
+                ->itemContent(static fn() => 'item')
                 ->dataReader($this->createOffsetPaginator($this->data, 10))
                 ->render(),
         );
@@ -426,17 +400,15 @@ final class BaseTest extends TestCase
         Assert::equalsWithoutLE(
             <<<HTML
             <div>
-            <div>Id: 1</div><div>Name: John</div><div>Age: 20</div>
-
-            <div>Id: 2</div><div>Name: Mary</div><div>Age: 21</div>
-
+            item
+            item
             <div>Page <b>1</b> of <b>1</b></div>
             </div>
             HTML,
             ListView::widget()
-                ->itemListTag(null)
+                ->listTag(null)
                 ->itemTag(null)
-                ->itemView(dirname(__DIR__) . '/Support/view/_listview.php')
+                ->itemContent(static fn() => 'item')
                 ->dataReader($this->createOffsetPaginator($this->data, 10))
                 ->render(),
         );
@@ -459,7 +431,7 @@ final class BaseTest extends TestCase
             </div>
             HTML,
             ListView::widget()
-                ->itemView(dirname(__DIR__) . '/Support/view/_listview.php')
+                ->itemContent(dirname(__DIR__) . '/Support/view/_listview.php')
                 ->itemAttributes(static fn (ListItemContext $context) => [
                     'data-item-id' => $context->data['id'],
                     'data-item-key' => $context->key,
@@ -488,7 +460,7 @@ final class BaseTest extends TestCase
             </div>
             HTML,
             ListView::widget()
-                ->itemView(dirname(__DIR__) . '/Support/view/_listview.php')
+                ->itemContent(dirname(__DIR__) . '/Support/view/_listview.php')
                 ->itemAttributes([
                     'class' => static fn(ListItemContext $context) => "id-{$context->data['id']}-key-{$context->key}-index-{$context->index}",
                 ])
@@ -515,7 +487,7 @@ final class BaseTest extends TestCase
             </div>
             HTML,
             ListView::widget()
-                ->itemView(dirname(__DIR__) . '/Support/view/_listview.php')
+                ->itemContent(dirname(__DIR__) . '/Support/view/_listview.php')
                 ->itemAttributes(static fn (ListItemContext $context) => [
                     'class' => static fn(ListItemContext $context) => "id-{$context->data['id']}-key-{$context->key}-index-{$context->index}",
                 ])
@@ -532,7 +504,7 @@ final class BaseTest extends TestCase
         ]);
 
         $result = ListView::widget()
-            ->itemView(dirname(__DIR__) . '/Support/view/_listview.php')
+            ->itemContent(dirname(__DIR__) . '/Support/view/_listview.php')
             ->dataReader($this->createOffsetPaginator($this->data, 1))
             ->ignoreMissingPage(true)
             ->urlParameterProvider($params)
@@ -548,7 +520,7 @@ final class BaseTest extends TestCase
         ]);
 
         $listView = ListView::widget()
-            ->itemView(dirname(__DIR__) . '/Support/view/_listview.php')
+            ->itemContent(dirname(__DIR__) . '/Support/view/_listview.php')
             ->dataReader($this->createOffsetPaginator($this->data, 1))
             ->ignoreMissingPage(false)
             ->urlParameterProvider($params);
@@ -576,7 +548,7 @@ final class BaseTest extends TestCase
             </div>
             HTML,
             ListView::widget()
-                ->itemView(dirname(__DIR__) . '/Support/view/_listview.php')
+                ->itemContent(dirname(__DIR__) . '/Support/view/_listview.php')
                 ->containerAttributes(['class' => 'existing'])
                 ->containerClass('my', 'container')
                 ->dataReader($this->createOffsetPaginator($this->data, 10))
@@ -602,7 +574,7 @@ final class BaseTest extends TestCase
             </div>
             HTML,
             ListView::widget()
-                ->itemView(dirname(__DIR__) . '/Support/view/_listview.php')
+                ->itemContent(dirname(__DIR__) . '/Support/view/_listview.php')
                 ->containerAttributes(['class' => 'existing'])
                 ->addContainerClass('my', 'container')
                 ->dataReader($this->createOffsetPaginator($this->data, 10))
@@ -654,7 +626,7 @@ final class BaseTest extends TestCase
             </div>
             HTML,
             ListView::widget()
-                ->itemView(dirname(__DIR__) . '/Support/view/_listview.php')
+                ->itemContent(dirname(__DIR__) . '/Support/view/_listview.php')
                 ->dataReader($this->createOffsetPaginator($this->data, 10))
                 ->prepend('<div>PRE</div>')
                 ->append('<div>POST</div>')
@@ -679,7 +651,7 @@ final class BaseTest extends TestCase
             </div>
             HTML,
             ListView::widget()
-                ->itemView(dirname(__DIR__) . '/Support/view/_listview.php')
+                ->itemContent(dirname(__DIR__) . '/Support/view/_listview.php')
                 ->dataReader($this->createOffsetPaginator($this->data, 10))
                 ->summaryTag('strong')
                 ->render(),
@@ -703,7 +675,7 @@ final class BaseTest extends TestCase
             </div>
             HTML,
             ListView::widget()
-                ->itemView(dirname(__DIR__) . '/Support/view/_listview.php')
+                ->itemContent(dirname(__DIR__) . '/Support/view/_listview.php')
                 ->dataReader($this->createOffsetPaginator($this->data, 10))
                 ->summaryTag(null)
                 ->render(),
