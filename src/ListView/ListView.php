@@ -58,6 +58,10 @@ final class ListView extends BaseListView
     private string|Closure|null $itemContent = null;
     private array $itemViewParameters = [];
 
+    /** @psalm-var non-empty-string|null */
+    private string|null $noResultsTag = 'p';
+    private array $noResultsAttributes = [];
+
     private string $separator = "\n";
 
     private readonly View $view;
@@ -238,6 +242,24 @@ final class ListView extends BaseListView
         return $new;
     }
 
+    public function noResultsTag(?string $tag): self
+    {
+        if ($tag === '') {
+            throw new InvalidArgumentException('Tag name cannot be empty.');
+        }
+
+        $new = clone $this;
+        $new->noResultsTag = $tag;
+        return $new;
+    }
+
+    public function noResultsAttributes(array $attributes): self
+    {
+        $new = clone $this;
+        $new->noResultsAttributes = $attributes;
+        return $new;
+    }
+
     /**
      * Return new instance with the separator between the items.
      *
@@ -267,6 +289,10 @@ final class ListView extends BaseListView
         ValidationResult $filterValidationResult,
         ReadableDataInterface|null $preparedDataReader,
     ): string {
+        if (empty($items)) {
+            return $this->renderNoResults();
+        }
+
         $rows = [];
         foreach ($items as $key => $value) {
             $context = new ListItemContext($value, $key, count($rows), $this);
@@ -378,5 +404,19 @@ final class ListView extends BaseListView
         return is_string($this->afterItem)
             ? $this->afterItem
             : (string) ($this->afterItem)($context);
+    }
+
+    private function renderNoResults(): string
+    {
+        $text = $this->getNoResultsContent();
+        if ($text === '') {
+            return '';
+        }
+
+        return $this->noResultsTag === null
+            ? $text
+            : Html::tag($this->noResultsTag, $text, $this->noResultsAttributes)
+                ->encode(false)
+                ->render();
     }
 }

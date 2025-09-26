@@ -134,8 +134,8 @@ abstract class BaseListView extends Widget
     private array $pageSizeAttributes = [];
     private string|null $pageSizeTemplate = 'Results per page {widget}';
 
-    protected string|null $emptyText = null;
-    protected array $emptyTextAttributes = [];
+    private string $noResultsText = 'No results found.';
+    private string $noResultsTemplate = '{text}';
 
     /**
      * @var TranslatorInterface A translator instance used for translations of messages. If it wasn't set
@@ -708,32 +708,17 @@ abstract class BaseListView extends Widget
         return $new;
     }
 
-    /**
-     * Return a new instance with the empty text.
-     *
-     * @param ?string $emptyText The HTML content to be displayed when {@see dataProvider} doesn't have any data.
-     *
-     * The default value is the text "No results found." which will be translated to the current application language.
-     *
-     * {@see notShowOnEmpty()}
-     * {@see emptyTextAttributes()}
-     */
-    final public function emptyText(?string $emptyText): static
+    final public function noResultsText(string $text): static
     {
         $new = clone $this;
-        $new->emptyText = $emptyText;
+        $new->noResultsText = $text;
         return $new;
     }
 
-    /**
-     * Returns a new instance with the HTML attributes for the empty text.
-     *
-     * @param array $attributes Attribute values indexed by attribute names.
-     */
-    final public function emptyTextAttributes(array $attributes): static
+    final public function noResultsTemplate(string $template): static
     {
         $new = clone $this;
-        $new->emptyTextAttributes = $attributes;
+        $new->noResultsTemplate = $template;
         return $new;
     }
 
@@ -806,6 +791,16 @@ abstract class BaseListView extends Widget
         }
 
         return $pageSize;
+    }
+
+    final protected function getNoResultsContent(): string
+    {
+        $text = $this->translator->translate(
+            $this->noResultsText,
+            category: $this->translationCategory,
+        );
+
+        return str_replace('{text}', $text, $this->noResultsTemplate);
     }
 
     /**

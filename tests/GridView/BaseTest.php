@@ -213,7 +213,7 @@ final class BaseTest extends TestCase
         );
     }
 
-    public function testEmptyText(): void
+    public function testNoResultsText(): void
     {
         Assert::equalsWithoutLE(
             <<<HTML
@@ -242,7 +242,7 @@ final class BaseTest extends TestCase
                     new DataColumn('name'),
                     new DataColumn('age'),
                 )
-                ->emptyText('Not found.')
+                ->noResultsText('Not found.')
                 ->id('w1-grid')
                 ->dataReader($this->createOffsetPaginator([], 10))
                 ->render()

@@ -26,37 +26,38 @@ final class ImmutableTest extends TestCase
 
     public function testBaseListView(): void
     {
-        $baseListView = $this->createBaseListView();
-        $this->assertNotSame($baseListView, $baseListView->containerTag(null));
-        $this->assertNotSame($baseListView, $baseListView->containerAttributes([]));
-        $this->assertNotSame($baseListView, $baseListView->emptyText(''));
-        $this->assertNotSame($baseListView, $baseListView->emptyTextAttributes([]));
-        $this->assertNotSame($baseListView, $baseListView->header(''));
-        $this->assertNotSame($baseListView, $baseListView->headerAttributes([]));
-        $this->assertNotSame($baseListView, $baseListView->id(''));
-        $this->assertNotSame($baseListView, $baseListView->layout(''));
-        $this->assertNotSame($baseListView, $baseListView->paginationWidget(OffsetPagination::widget()));
-        $this->assertNotSame($baseListView, $baseListView->dataReader($this->createOffsetPaginator($this->data, 10)));
-        $this->assertNotSame($baseListView, $baseListView->summaryTemplate(''));
-        $this->assertNotSame($baseListView, $baseListView->summaryAttributes([]));
-        $this->assertNotSame($baseListView, $baseListView->toolbar(''));
-        $this->assertNotSame($baseListView, $baseListView->urlArguments([]));
-        $this->assertNotSame($baseListView, $baseListView->urlQueryParameters([]));
-        $this->assertNotSame($baseListView, $baseListView->pageSizeTag(null));
-        $this->assertNotSame($baseListView, $baseListView->pageSizeAttributes([]));
-        $this->assertNotSame($baseListView, $baseListView->pageSizeTemplate(null));
-        $this->assertNotSame($baseListView, $baseListView->pageSizeWidget(null));
-        $this->assertNotSame($baseListView, $baseListView->pageSizeParameterName(''));
-        $this->assertNotSame($baseListView, $baseListView->pageParameterName(''));
-        $this->assertNotSame($baseListView, $baseListView->previousPageParameterName(''));
-        $this->assertNotSame($baseListView, $baseListView->urlParameterProvider(new NullUrlParameterProvider()));
-        $this->assertNotSame($baseListView, $baseListView->multiSort());
-        $this->assertNotSame($baseListView, $baseListView->ignoreMissingPage(true));
-        $this->assertNotSame($baseListView, $baseListView->pageNotFoundExceptionCallback(null));
-        $this->assertNotSame($baseListView, $baseListView->urlCreator(null));
-        $this->assertNotSame($baseListView, $baseListView->offsetPaginationConfig([]));
-        $this->assertNotSame($baseListView, $baseListView->keysetPaginationConfig([]));
-        $this->assertNotSame($baseListView, $baseListView->pageSizeConstraint(true));
+        $widget = GridView::widget();
+        $this->assertNotSame($widget, $widget->containerTag(null));
+        $this->assertNotSame($widget, $widget->containerAttributes([]));
+        $this->assertNotSame($widget, $widget->noResultsText(''));
+        $this->assertNotSame($widget, $widget->noResultsTemplate(''));
+        $this->assertNotSame($widget, $widget->noResultsCellAttributes([]));
+        $this->assertNotSame($widget, $widget->header(''));
+        $this->assertNotSame($widget, $widget->headerAttributes([]));
+        $this->assertNotSame($widget, $widget->id(''));
+        $this->assertNotSame($widget, $widget->layout(''));
+        $this->assertNotSame($widget, $widget->paginationWidget(OffsetPagination::widget()));
+        $this->assertNotSame($widget, $widget->dataReader($this->createOffsetPaginator($this->data, 10)));
+        $this->assertNotSame($widget, $widget->summaryTemplate(''));
+        $this->assertNotSame($widget, $widget->summaryAttributes([]));
+        $this->assertNotSame($widget, $widget->toolbar(''));
+        $this->assertNotSame($widget, $widget->urlArguments([]));
+        $this->assertNotSame($widget, $widget->urlQueryParameters([]));
+        $this->assertNotSame($widget, $widget->pageSizeTag(null));
+        $this->assertNotSame($widget, $widget->pageSizeAttributes([]));
+        $this->assertNotSame($widget, $widget->pageSizeTemplate(null));
+        $this->assertNotSame($widget, $widget->pageSizeWidget(null));
+        $this->assertNotSame($widget, $widget->pageSizeParameterName(''));
+        $this->assertNotSame($widget, $widget->pageParameterName(''));
+        $this->assertNotSame($widget, $widget->previousPageParameterName(''));
+        $this->assertNotSame($widget, $widget->urlParameterProvider(new NullUrlParameterProvider()));
+        $this->assertNotSame($widget, $widget->multiSort());
+        $this->assertNotSame($widget, $widget->ignoreMissingPage(true));
+        $this->assertNotSame($widget, $widget->pageNotFoundExceptionCallback(null));
+        $this->assertNotSame($widget, $widget->urlCreator(null));
+        $this->assertNotSame($widget, $widget->offsetPaginationConfig([]));
+        $this->assertNotSame($widget, $widget->keysetPaginationConfig([]));
+        $this->assertNotSame($widget, $widget->pageSizeConstraint(true));
     }
 
     public function testGridView(): void
