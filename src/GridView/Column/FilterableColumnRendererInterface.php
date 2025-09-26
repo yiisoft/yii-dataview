@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Yiisoft\Yii\DataView\Column;
+namespace Yiisoft\Yii\DataView\GridView\Column;
 
 use Yiisoft\Data\Reader\FilterInterface;
-use Yiisoft\Yii\DataView\Column\Base\Cell;
-use Yiisoft\Yii\DataView\Column\Base\FilterContext;
-use Yiisoft\Yii\DataView\Column\Base\MakeFilterContext;
 use Yiisoft\Yii\DataView\Filter\Factory\IncorrectValueException;
+use Yiisoft\Yii\DataView\GridView\Column\Base\Cell;
+use Yiisoft\Yii\DataView\GridView\Column\Base\FilterContext;
+use Yiisoft\Yii\DataView\GridView\Column\Base\MakeFilterContext;
 
 /**
  * Interface for column renderers that support filtering functionality.

@@ -7,11 +7,11 @@ namespace Yiisoft\Yii\DataView\Tests\Column\Base;
 use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerInterface;
 use RuntimeException;
-use Yiisoft\Yii\DataView\Column\Base\RendererContainer;
+use Yiisoft\Yii\DataView\GridView\Column\Base\RendererContainer;
 use Yiisoft\Yii\DataView\Tests\Support\TestRenderer;
 
 /**
- * @covers \Yiisoft\Yii\DataView\Column\Base\RendererContainer
+ * @covers \Yiisoft\Yii\DataView\GridView\Column\Base\RendererContainer
  */
 final class RendererContainerTest extends TestCase
 {

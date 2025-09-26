@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Yiisoft\Yii\DataView\Column\Base;
+namespace Yiisoft\Yii\DataView\GridView\Column\Base;
 
 use Stringable;
 use Yiisoft\Html\Html;

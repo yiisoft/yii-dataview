@@ -7,11 +7,11 @@ offset-based and keyset-based. There are two corresponding widgets for rendering
 ## Offset Pagination
 
 [Offset pagination](https://github.com/yiisoft/data#offset-pagination) is the traditional pagination method that
-uses page numbers and is the best suitable for not that many pages and not that many data changes. 
+uses page numbers and is the best suitable for not that many pages and not that many data changes.
 
 ```php
 <?php
-use Yiisoft\Yii\DataView\GridView;
+use Yiisoft\Yii\DataView\GridView\GridView;
 ?>
 
 <?= GridView::widget()
@@ -38,7 +38,7 @@ even when data changes between page loads.
 
 ```php
 <?php
-use Yiisoft\Yii\DataView\GridView;
+use Yiisoft\Yii\DataView\GridView\GridView;
 ?>
 
 <?= GridView::widget()
@@ -62,8 +62,7 @@ By default, page size is fixed, but you can configure it to be dynamic:
 
 ```php
 <?php
-use Yiisoft\Yii\DataView\GridView;
-use Yiisoft\Yii\DataView\PageSize\SelectPageSize;
+use Yiisoft\Yii\DataView\GridView\GridView;use Yiisoft\Yii\DataView\PageSize\SelectPageSize;
 ?>
 
 <?= GridView::widget()

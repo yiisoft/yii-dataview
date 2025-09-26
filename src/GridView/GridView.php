@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Yiisoft\Yii\DataView;
+namespace Yiisoft\Yii\DataView\GridView;
 
 use Closure;
 use Psr\Container\ContainerInterface;
@@ -16,17 +16,20 @@ use Yiisoft\Html\Tag\Td;
 use Yiisoft\Html\Tag\Tr;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\Validator\Result as ValidationResult;
-use Yiisoft\Yii\DataView\Column\Base\Cell;
-use Yiisoft\Yii\DataView\Column\Base\DataContext;
-use Yiisoft\Yii\DataView\Column\Base\FilterContext;
-use Yiisoft\Yii\DataView\Column\Base\GlobalContext;
-use Yiisoft\Yii\DataView\Column\Base\MakeFilterContext;
-use Yiisoft\Yii\DataView\Column\Base\RendererContainer;
-use Yiisoft\Yii\DataView\Column\ColumnInterface;
-use Yiisoft\Yii\DataView\Column\ColumnRendererInterface;
-use Yiisoft\Yii\DataView\Column\FilterableColumnRendererInterface;
-use Yiisoft\Yii\DataView\Column\SortableColumnRendererInterface;
+use Yiisoft\Yii\DataView\BaseListView;
 use Yiisoft\Yii\DataView\Filter\Factory\IncorrectValueException;
+use Yiisoft\Yii\DataView\GridView\Column\Base\Cell;
+use Yiisoft\Yii\DataView\GridView\Column\Base\DataContext;
+use Yiisoft\Yii\DataView\GridView\Column\Base\FilterContext;
+use Yiisoft\Yii\DataView\GridView\Column\Base\GlobalContext;
+use Yiisoft\Yii\DataView\GridView\Column\Base\MakeFilterContext;
+use Yiisoft\Yii\DataView\GridView\Column\Base\RendererContainer;
+use Yiisoft\Yii\DataView\GridView\Column\ColumnInterface;
+use Yiisoft\Yii\DataView\GridView\Column\ColumnRendererInterface;
+use Yiisoft\Yii\DataView\GridView\Column\FilterableColumnRendererInterface;
+use Yiisoft\Yii\DataView\GridView\Column\SortableColumnRendererInterface;
+use Yiisoft\Yii\DataView\Url\UrlParametersFactory;
+use Yiisoft\Yii\DataView\Url\UrlParameterType;
 
 use function call_user_func_array;
 use function count;

@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Yiisoft\Yii\DataView\YiiRouter;
 
 use Yiisoft\Router\CurrentRoute;
-use Yiisoft\Yii\DataView\UrlParameterType;
-use Yiisoft\Yii\DataView\UrlParameterProviderInterface;
+use Yiisoft\Yii\DataView\Url\UrlParameterProviderInterface;
+use Yiisoft\Yii\DataView\Url\UrlParameterType;
 
 /**
  * Provider for accessing URL parameters from both path and query string.

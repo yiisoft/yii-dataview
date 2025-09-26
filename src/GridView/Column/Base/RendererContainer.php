@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Yiisoft\Yii\DataView\Column\Base;
+namespace Yiisoft\Yii\DataView\GridView\Column\Base;
 
 use Psr\Container\ContainerInterface;
 use Yiisoft\Injector\Injector;
-use Yiisoft\Yii\DataView\Column\ColumnRendererInterface;
+use Yiisoft\Yii\DataView\GridView\Column\ColumnRendererInterface;
 
 /**
  * `RendererContainer` manages the creation and configuration of column renderers.

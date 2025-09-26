@@ -8,8 +8,7 @@ You can customize parameter names and types:
 
 ```php
 <?php
-use Yiisoft\Yii\DataView\GridView;
-use Yiisoft\Yii\DataView\UrlParameterType;
+use Yiisoft\Yii\DataView\GridView\GridView;use Yiisoft\Yii\DataView\Url\UrlParameterType;
 ?>
 
 <?= GridView::widget()
@@ -33,8 +32,7 @@ If needed, you can add fixed arguments and query parameters to the URL generated
 
 ```php
 <?php
-use Yiisoft\Yii\DataView\GridView;
-use Yiisoft\Yii\DataView\UrlParameterType;
+use Yiisoft\Yii\DataView\GridView\GridView;
 ?>
 
 <?= GridView::widget()
@@ -55,8 +53,7 @@ A custom callback could be used instead of configuration:
 
 ```php
 <?php
-use Yiisoft\Yii\DataView\UrlConfig;
-use Yiisoft\Yii\DataView\GridView;
+use Yiisoft\Yii\DataView\GridView\GridView;
 ?>
 
 <?= GridView::widget()
@@ -88,9 +85,7 @@ use Yiisoft\Yii\DataView\GridView;
 For Yii applications, you can use the built-in router integration:
 
 ```php
-use Yiisoft\Yii\DataView\GridView;
-use Yiisoft\Yii\DataView\YiiRouter\UrlCreator;
-use Yiisoft\Yii\DataView\YiiRouter\UrlParameterProvider;
+use Yiisoft\Yii\DataView\GridView\GridView;use Yiisoft\Yii\DataView\YiiRouter\UrlCreator;use Yiisoft\Yii\DataView\YiiRouter\UrlParameterProvider;
 
 echo GridView::widget()
     ->urlParameterProvider(new UrlParameterProvider($currentRoute))

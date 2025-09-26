@@ -6,13 +6,13 @@ namespace Yiisoft\Yii\DataView\Tests;
 
 use PHPUnit\Framework\TestCase;
 use Yiisoft\Data\Paginator\PageToken;
-use Yiisoft\Yii\DataView\UrlConfig;
-use Yiisoft\Yii\DataView\UrlParameterType;
-use Yiisoft\Yii\DataView\UrlParametersFactory;
+use Yiisoft\Yii\DataView\Url\UrlConfig;
+use Yiisoft\Yii\DataView\Url\UrlParametersFactory;
+use Yiisoft\Yii\DataView\Url\UrlParameterType;
 
 /**
- * @covers \Yiisoft\Yii\DataView\UrlParametersFactory
- * @covers \Yiisoft\Yii\DataView\UrlConfig
+ * @covers \Yiisoft\Yii\DataView\Url\UrlParametersFactory
+ * @covers \Yiisoft\Yii\DataView\Url\UrlConfig
  */
 final class UrlParametersFactoryTest extends TestCase
 {

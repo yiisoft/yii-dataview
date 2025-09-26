@@ -10,7 +10,7 @@ By default, DataView uses the `yii-dataview` translation category.
 You can change this using the `translationCategory()` method:
 
 ```php
-use Yiisoft\Yii\DataView\GridView;
+use Yiisoft\Yii\DataView\GridView\GridView;
 
 echo GridView::widget(['translationCategory' => 'my-category'])
     ->dataReader($dataReader)

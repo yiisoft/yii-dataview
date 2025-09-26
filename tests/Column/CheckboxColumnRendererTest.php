@@ -8,14 +8,14 @@ use PHPUnit\Framework\TestCase;
 use Yiisoft\Data\Reader\Iterable\IterableDataReader;
 use Yiisoft\Data\Reader\Sort;
 use Yiisoft\Html\Tag\Input\Checkbox;
-use Yiisoft\Yii\DataView\Column\Base\Cell;
-use Yiisoft\Yii\DataView\Column\Base\DataContext;
-use Yiisoft\Yii\DataView\Column\Base\GlobalContext;
-use Yiisoft\Yii\DataView\Column\CheckboxColumn;
-use Yiisoft\Yii\DataView\Column\CheckboxColumnRenderer;
+use Yiisoft\Yii\DataView\GridView\Column\Base\Cell;
+use Yiisoft\Yii\DataView\GridView\Column\Base\DataContext;
+use Yiisoft\Yii\DataView\GridView\Column\Base\GlobalContext;
+use Yiisoft\Yii\DataView\GridView\Column\CheckboxColumn;
+use Yiisoft\Yii\DataView\GridView\Column\CheckboxColumnRenderer;
 use Yiisoft\Yii\DataView\Tests\Support\Mock;
 use Yiisoft\Yii\DataView\Tests\Support\TestHelper;
-use Yiisoft\Yii\DataView\UrlConfig;
+use Yiisoft\Yii\DataView\Url\UrlConfig;
 
 final class CheckboxColumnRendererTest extends TestCase
 {

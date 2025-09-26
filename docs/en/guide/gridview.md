@@ -17,10 +17,7 @@ Here's a basic example of using GridView:
 
 ```php
 <?php
-use Yiisoft\Yii\DataView\GridView;
-use Yiisoft\Yii\DataView\Column\DataColumn;
-use Yiisoft\Yii\DataView\Column\ActionColumn;
-use Yiisoft\Yii\DataView\DataReader\DataReaderInterface;
+use Yiisoft\Yii\DataView\DataReader\DataReaderInterface;use Yiisoft\Yii\DataView\GridView\Column\DataColumn;use Yiisoft\Yii\DataView\GridView\GridView;
 
 $dataReader = new DataReader($query);
 ?>
@@ -47,7 +44,7 @@ GridView supports several types of columns out of the box.
 `DataColumn` is the most commonly used column type. It displays model attribute values:
 
 ```php
-use Yiisoft\Yii\DataView\Column\DataColumn;
+use Yiisoft\Yii\DataView\GridView\Column\DataColumn;
 
 $column = new DataColumn(
     property: 'title',
@@ -61,12 +58,11 @@ $column = new DataColumn(
 ActionColumn displays action buttons (e.g., view, edit, delete):
 
 ```php
-use Yiisoft\Yii\DataView\Column\ActionColumn;
-use Yiisoft\Html\Html;
+use Yiisoft\Html\Html;use Yiisoft\Yii\DataView\GridView\Column\ActionColumn;
 
 $column = new ActionColumn(
     buttons: [
-        'view' => new \Yiisoft\Yii\DataView\Column\ActionButton(
+        'view' => new \Yiisoft\Yii\DataView\GridView\Column\ActionButton(
             'View',
             static function (array|object $data, DataContext $context) { 
                 return '/posts/view' . $data->id; 
@@ -90,7 +86,7 @@ $column = new ActionColumn(
 CheckboxColumn adds checkboxes for row selection:
 
 ```php
-use Yiisoft\Yii\DataView\Column\CheckboxColumn;
+use Yiisoft\Yii\DataView\GridView\Column\CheckboxColumn;
 
 $column = new CheckboxColumn(
     name: 'selection',
@@ -188,7 +184,7 @@ You can customize sorting behavior and rendering:
 
 ```php
 <?php
-use Yiisoft\Yii\DataView\GridView;
+use Yiisoft\Yii\DataView\GridView\GridView;
 ?>
 
 <?= GridView::widget()
@@ -209,7 +205,7 @@ GridView offers extensive layout customization.
 
 ```php
 <?php
-use Yiisoft\Yii\DataView\GridView;
+use Yiisoft\Yii\DataView\GridView\GridView;
 ?>
 
 <?= GridView::widget()
@@ -227,7 +223,7 @@ use Yiisoft\Yii\DataView\GridView;
 
 ```php
 <?php
-use Yiisoft\Yii\DataView\GridView;
+use Yiisoft\Yii\DataView\GridView\GridView;
 ?>
 
 <?= GridView::widget()
@@ -247,8 +243,7 @@ use Yiisoft\Yii\DataView\GridView;
 
 ```php
 <?php
-use Yiisoft\Yii\DataView\GridView;
-use Yiisoft\Html\Html;
+use Yiisoft\Html\Html;use Yiisoft\Yii\DataView\GridView\GridView;
 ?>
 
 <?= GridView::widget()
@@ -277,7 +272,7 @@ You can add custom column renderers for special rendering needs:
 
 ```php
 <?php
-use Yiisoft\Yii\DataView\GridView;
+use Yiisoft\Yii\DataView\GridView\GridView;
 ?>
 
 

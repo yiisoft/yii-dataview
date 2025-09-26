@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Yiisoft\Yii\DataView\Column\Base;
+namespace Yiisoft\Yii\DataView\GridView\Column\Base;
 
 use Yiisoft\Validator\Result;
-use Yiisoft\Yii\DataView\UrlParameterProviderInterface;
-use Yiisoft\Yii\DataView\UrlParameterType;
+use Yiisoft\Yii\DataView\Url\UrlParameterProviderInterface;
+use Yiisoft\Yii\DataView\Url\UrlParameterType;
 
 /**
  * `MakeFilterContext` provides context for creating and validating grid column filters.

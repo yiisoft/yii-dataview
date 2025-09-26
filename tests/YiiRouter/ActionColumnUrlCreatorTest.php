@@ -10,16 +10,16 @@ use Yiisoft\Data\Reader\ReadableDataInterface;
 use Yiisoft\Router\CurrentRoute;
 use Yiisoft\Router\Route;
 use Yiisoft\Router\UrlGeneratorInterface;
-use Yiisoft\Yii\DataView\Column\ActionColumn;
-use Yiisoft\Yii\DataView\Column\Base\DataContext;
-use Yiisoft\Yii\DataView\UrlParameterType;
+use Yiisoft\Yii\DataView\GridView\Column\ActionColumn;
+use Yiisoft\Yii\DataView\GridView\Column\Base\DataContext;
+use Yiisoft\Yii\DataView\Url\UrlParameterType;
 use Yiisoft\Yii\DataView\YiiRouter\ActionColumnUrlConfig;
 use Yiisoft\Yii\DataView\YiiRouter\ActionColumnUrlCreator;
 
 /**
  * @covers \Yiisoft\Yii\DataView\YiiRouter\ActionColumnUrlCreator
- * @uses \Yiisoft\Yii\DataView\Column\ActionColumn
- * @uses \Yiisoft\Yii\DataView\Column\Base\DataContext
+ * @uses \Yiisoft\Yii\DataView\GridView\Column\ActionColumn
+ * @uses \Yiisoft\Yii\DataView\GridView\Column\Base\DataContext
  * @uses \Yiisoft\Yii\DataView\YiiRouter\ActionColumnUrlConfig
  */
 final class ActionColumnUrlCreatorTest extends TestCase

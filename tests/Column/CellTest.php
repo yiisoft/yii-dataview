@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Yiisoft\Yii\DataView\Tests\Column\Base;
 
 use PHPUnit\Framework\TestCase;
-use Yiisoft\Yii\DataView\Column\Base\Cell;
+use Yiisoft\Yii\DataView\GridView\Column\Base\Cell;
 
 final class CellTest extends TestCase
 {

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Yiisoft\Yii\DataView\Column;
+namespace Yiisoft\Yii\DataView\GridView\Column;
 
 /**
  * `SerialColumn` displays a column of sequential row numbers (1-based) in a grid view.
