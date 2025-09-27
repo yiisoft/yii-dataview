@@ -2,9 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Yiisoft\Yii\DataView;
+namespace Yiisoft\Yii\DataView\Url;
 
 use Yiisoft\Data\Paginator\PageToken;
+use Yiisoft\Yii\DataView\BaseListView;
 
 /**
  * Factory for creating URL parameters for data view components.

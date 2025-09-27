@@ -9,7 +9,7 @@ use Yiisoft\Di\Container;
 use Yiisoft\Di\ContainerConfig;
 use Yiisoft\Widget\WidgetFactory;
 use Yiisoft\Yii\DataView\Exception\DataReaderNotSetException;
-use Yiisoft\Yii\DataView\GridView;
+use Yiisoft\Yii\DataView\GridView\GridView;
 
 final class ExceptionTest extends TestCase
 {

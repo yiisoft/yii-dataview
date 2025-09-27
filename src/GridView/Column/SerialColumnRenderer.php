@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Yiisoft\Yii\DataView\Column;
+namespace Yiisoft\Yii\DataView\GridView\Column;
 
 use Yiisoft\Data\Paginator\OffsetPaginator;
-use Yiisoft\Yii\DataView\Column\Base\Cell;
-use Yiisoft\Yii\DataView\Column\Base\DataContext;
-use Yiisoft\Yii\DataView\Column\Base\GlobalContext;
+use Yiisoft\Yii\DataView\GridView\Column\Base\Cell;
+use Yiisoft\Yii\DataView\GridView\Column\Base\DataContext;
+use Yiisoft\Yii\DataView\GridView\Column\Base\GlobalContext;
 
 /**
  * `SerialColumnRenderer` handles the rendering of sequential row number columns in a grid.

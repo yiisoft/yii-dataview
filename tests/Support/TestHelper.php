@@ -8,8 +8,8 @@ use Stringable;
 use Yiisoft\Data\Paginator\PageToken;
 use Yiisoft\Data\Reader\Sort;
 use Yiisoft\Translator\TranslatorInterface;
-use Yiisoft\Yii\DataView\Column\Base\GlobalContext;
-use Yiisoft\Yii\DataView\UrlConfig;
+use Yiisoft\Yii\DataView\GridView\Column\Base\GlobalContext;
+use Yiisoft\Yii\DataView\Url\UrlConfig;
 
 final class TestHelper
 {

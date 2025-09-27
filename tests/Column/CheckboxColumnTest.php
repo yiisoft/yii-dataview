@@ -10,10 +10,10 @@ use Yiisoft\Definitions\Exception\InvalidConfigException;
 use Yiisoft\Definitions\Exception\NotInstantiableException;
 use Yiisoft\Factory\NotFoundException;
 use Yiisoft\Html\Tag\Input\Checkbox;
-use Yiisoft\Yii\DataView\Column\Base\DataContext;
-use Yiisoft\Yii\DataView\Column\CheckboxColumn;
-use Yiisoft\Yii\DataView\Column\DataColumn;
-use Yiisoft\Yii\DataView\GridView;
+use Yiisoft\Yii\DataView\GridView\Column\Base\DataContext;
+use Yiisoft\Yii\DataView\GridView\Column\CheckboxColumn;
+use Yiisoft\Yii\DataView\GridView\Column\DataColumn;
+use Yiisoft\Yii\DataView\GridView\GridView;
 use Yiisoft\Yii\DataView\Tests\Support\Assert;
 use Yiisoft\Yii\DataView\Tests\Support\TestTrait;
 

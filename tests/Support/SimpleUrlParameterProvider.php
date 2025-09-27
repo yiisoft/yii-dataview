@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Yiisoft\Yii\DataView\Tests\Support;
 
-use Yiisoft\Yii\DataView\UrlParameterProviderInterface;
+use Yiisoft\Yii\DataView\Url\UrlParameterProviderInterface;
 
 final class SimpleUrlParameterProvider implements UrlParameterProviderInterface
 {

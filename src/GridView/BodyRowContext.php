@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Yiisoft\Yii\DataView;
+namespace Yiisoft\Yii\DataView\GridView;
 
 /**
  * `BodyRowContext` provides contextual information for rendering a table body row in data views.

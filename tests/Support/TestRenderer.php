@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Yiisoft\Yii\DataView\Tests\Support;
 
-use Yiisoft\Yii\DataView\Column\Base\Cell;
-use Yiisoft\Yii\DataView\Column\Base\DataContext;
-use Yiisoft\Yii\DataView\Column\Base\GlobalContext;
-use Yiisoft\Yii\DataView\Column\ColumnInterface;
-use Yiisoft\Yii\DataView\Column\ColumnRendererInterface;
+use Yiisoft\Yii\DataView\GridView\Column\Base\Cell;
+use Yiisoft\Yii\DataView\GridView\Column\Base\DataContext;
+use Yiisoft\Yii\DataView\GridView\Column\Base\GlobalContext;
+use Yiisoft\Yii\DataView\GridView\Column\ColumnInterface;
+use Yiisoft\Yii\DataView\GridView\Column\ColumnRendererInterface;
 
 /**
  * Test renderer implementation.

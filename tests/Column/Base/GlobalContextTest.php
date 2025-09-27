@@ -7,15 +7,15 @@ namespace Yiisoft\Yii\DataView\Tests\Column\Base;
 use PHPUnit\Framework\TestCase;
 use Yiisoft\Data\Reader\Sort;
 use Yiisoft\Html\Tag\A;
-use Yiisoft\Yii\DataView\Column\Base\Cell;
+use Yiisoft\Yii\DataView\GridView\Column\Base\Cell;
 use Yiisoft\Yii\DataView\Tests\Support\Mock;
 use Yiisoft\Yii\DataView\Tests\Support\TestHelper;
 
 /**
- * @covers \Yiisoft\Yii\DataView\Column\Base\GlobalContext
- * @covers \Yiisoft\Yii\DataView\Column\Base\Cell
- * @covers \Yiisoft\Yii\DataView\UrlConfig
- * @covers \Yiisoft\Yii\DataView\UrlParametersFactory
+ * @covers \Yiisoft\Yii\DataView\GridView\Column\Base\GlobalContext
+ * @covers \Yiisoft\Yii\DataView\GridView\Column\Base\Cell
+ * @covers \Yiisoft\Yii\DataView\Url\UrlConfig
+ * @covers \Yiisoft\Yii\DataView\Url\UrlParametersFactory
  */
 final class GlobalContextTest extends TestCase
 {

@@ -6,7 +6,7 @@ namespace Yiisoft\Yii\DataView\Tests\Pagination;
 
 use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
-use Yiisoft\Yii\DataView\GridView;
+use Yiisoft\Yii\DataView\GridView\GridView;
 use Yiisoft\Yii\DataView\Pagination\OffsetPagination;
 use Yiisoft\Yii\DataView\Pagination\PaginationContext;
 use Yiisoft\Yii\DataView\Pagination\PaginatorNotSetException;

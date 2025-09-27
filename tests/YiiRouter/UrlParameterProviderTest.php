@@ -7,7 +7,7 @@ namespace Yiisoft\Yii\DataView\Tests\YiiRouter;
 use PHPUnit\Framework\TestCase;
 use Yiisoft\Router\CurrentRoute;
 use Yiisoft\Router\Route;
-use Yiisoft\Yii\DataView\UrlParameterType;
+use Yiisoft\Yii\DataView\Url\UrlParameterType;
 use Yiisoft\Yii\DataView\YiiRouter\UrlParameterProvider;
 
 final class UrlParameterProviderTest extends TestCase

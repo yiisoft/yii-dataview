@@ -2,18 +2,18 @@
 
 declare(strict_types=1);
 
-namespace Yiisoft\Yii\DataView\Column\Base;
+namespace Yiisoft\Yii\DataView\GridView\Column\Base;
 
 use Stringable;
 use Yiisoft\Data\Paginator\PageToken;
+use Yiisoft\Data\Reader\OrderHelper;
 use Yiisoft\Data\Reader\Sort;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\A;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\Yii\DataView\BaseListView;
-use Yiisoft\Data\Reader\OrderHelper;
-use Yiisoft\Yii\DataView\UrlConfig;
-use Yiisoft\Yii\DataView\UrlParametersFactory;
+use Yiisoft\Yii\DataView\Url\UrlConfig;
+use Yiisoft\Yii\DataView\Url\UrlParametersFactory;
 
 use function call_user_func_array;
 use function count;

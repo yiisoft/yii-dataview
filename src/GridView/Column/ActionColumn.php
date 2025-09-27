@@ -2,11 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Yiisoft\Yii\DataView\Column;
+namespace Yiisoft\Yii\DataView\GridView\Column;
 
 use Closure;
 use Stringable;
-use Yiisoft\Yii\DataView\Column\Base\DataContext;
+use Yiisoft\Yii\DataView\GridView\Column\Base\DataContext;
+use Yiisoft\Yii\DataView\GridView\GridView;
 
 /**
  * `ActionColumn` is a column for the {@see GridView} widget that displays buttons for viewing and manipulating

@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Yiisoft\Yii\DataView\Column;
+namespace Yiisoft\Yii\DataView\GridView\Column;
 
 use Closure;
 use Stringable;
-use Yiisoft\Yii\DataView\Column\Base\DataContext;
+use Yiisoft\Yii\DataView\GridView\Column\Base\DataContext;
 
 /**
  * `ActionButton` represents a button in an action column of a grid.

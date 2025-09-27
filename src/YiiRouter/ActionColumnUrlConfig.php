@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Yiisoft\Yii\DataView\YiiRouter;
 
 use Stringable;
-use Yiisoft\Yii\DataView\UrlParameterType;
+use Yiisoft\Yii\DataView\Url\UrlParameterType;
 
 /**
  * Configuration class for generating URLs in action columns.

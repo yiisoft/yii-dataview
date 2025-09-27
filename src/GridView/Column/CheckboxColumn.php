@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Yiisoft\Yii\DataView\Column;
+namespace Yiisoft\Yii\DataView\GridView\Column;
 
 use Closure;
 use Stringable;
 use Yiisoft\Html\Tag\Input\Checkbox;
-use Yiisoft\Yii\DataView\Column\Base\DataContext;
+use Yiisoft\Yii\DataView\GridView\Column\Base\DataContext;
 
 /**
  * `CheckboxColumn` displays a column of checkboxes in a grid view.

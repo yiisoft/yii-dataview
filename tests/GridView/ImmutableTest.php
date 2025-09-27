@@ -9,11 +9,11 @@ use PHPUnit\Framework\TestCase;
 use Yiisoft\Data\Reader\ReadableDataInterface;
 use Yiisoft\Validator\Result;
 use Yiisoft\Yii\DataView\BaseListView;
-use Yiisoft\Yii\DataView\Column\DataColumn;
-use Yiisoft\Yii\DataView\GridView;
-use Yiisoft\Yii\DataView\NullUrlParameterProvider;
+use Yiisoft\Yii\DataView\GridView\Column\DataColumn;
+use Yiisoft\Yii\DataView\GridView\GridView;
 use Yiisoft\Yii\DataView\Pagination\OffsetPagination;
 use Yiisoft\Yii\DataView\Tests\Support\TestTrait;
+use Yiisoft\Yii\DataView\Url\NullUrlParameterProvider;
 
 final class ImmutableTest extends TestCase
 {

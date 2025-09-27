@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Yiisoft\Yii\DataView;
+namespace Yiisoft\Yii\DataView\Url;
 
 final class NullUrlParameterProvider implements UrlParameterProviderInterface
 {

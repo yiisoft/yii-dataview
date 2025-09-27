@@ -2,7 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Yiisoft\Yii\DataView;
+namespace Yiisoft\Yii\DataView\Url;
+
+use Stringable as UrlArguments;
+use Yiisoft\Yii\DataView\BaseListView;
 
 /**
  * `UrlConfig` provides configuration for URL parameter handling in data views.

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Yiisoft\Yii\DataView\Column;
+namespace Yiisoft\Yii\DataView\GridView\Column;
 
 use BackedEnum;
 use DateTimeInterface;
@@ -15,17 +15,17 @@ use Yiisoft\Html\NoEncodeStringableInterface;
 use Yiisoft\Validator\EmptyCondition\NeverEmpty;
 use Yiisoft\Validator\EmptyCondition\WhenEmpty;
 use Yiisoft\Validator\ValidatorInterface;
-use Yiisoft\Yii\DataView\Column\Base\Cell;
-use Yiisoft\Yii\DataView\Column\Base\DataContext;
-use Yiisoft\Yii\DataView\Column\Base\FilterContext;
-use Yiisoft\Yii\DataView\Column\Base\GlobalContext;
-use Yiisoft\Yii\DataView\Column\Base\MakeFilterContext;
 use Yiisoft\Yii\DataView\Filter\Factory\EqualsFilterFactory;
 use Yiisoft\Yii\DataView\Filter\Factory\FilterFactoryInterface;
 use Yiisoft\Yii\DataView\Filter\Factory\LikeFilterFactory;
 use Yiisoft\Yii\DataView\Filter\Widget\Context;
 use Yiisoft\Yii\DataView\Filter\Widget\DropdownFilter;
 use Yiisoft\Yii\DataView\Filter\Widget\TextInputFilter;
+use Yiisoft\Yii\DataView\GridView\Column\Base\Cell;
+use Yiisoft\Yii\DataView\GridView\Column\Base\DataContext;
+use Yiisoft\Yii\DataView\GridView\Column\Base\FilterContext;
+use Yiisoft\Yii\DataView\GridView\Column\Base\GlobalContext;
+use Yiisoft\Yii\DataView\GridView\Column\Base\MakeFilterContext;
 
 use function is_array;
 use function is_callable;

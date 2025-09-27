@@ -5,23 +5,23 @@ declare(strict_types=1);
 namespace Yiisoft\Yii\DataView\Tests\GridView;
 
 use PHPUnit\Framework\TestCase;
+use Yiisoft\Data\Paginator\KeysetPaginator;
+use Yiisoft\Data\Paginator\OffsetPaginator;
+use Yiisoft\Data\Paginator\PageToken;
+use Yiisoft\Data\Reader\Iterable\IterableDataReader;
+use Yiisoft\Data\Reader\Sort;
 use Yiisoft\Definitions\Exception\CircularReferenceException;
 use Yiisoft\Definitions\Exception\InvalidConfigException;
 use Yiisoft\Definitions\Exception\NotInstantiableException;
 use Yiisoft\Factory\NotFoundException;
 use Yiisoft\Html\Html;
-use Yiisoft\Yii\DataView\Column\DataColumn;
-use Yiisoft\Yii\DataView\Column\SerialColumn;
-use Yiisoft\Yii\DataView\GridView;
+use Yiisoft\Yii\DataView\GridView\Column\ActionButton;
+use Yiisoft\Yii\DataView\GridView\Column\ActionColumn;
+use Yiisoft\Yii\DataView\GridView\Column\DataColumn;
+use Yiisoft\Yii\DataView\GridView\Column\SerialColumn;
+use Yiisoft\Yii\DataView\GridView\GridView;
 use Yiisoft\Yii\DataView\Tests\Support\Assert;
 use Yiisoft\Yii\DataView\Tests\Support\TestTrait;
-use Yiisoft\Data\Paginator\OffsetPaginator;
-use Yiisoft\Data\Reader\Iterable\IterableDataReader;
-use Yiisoft\Data\Reader\Sort;
-use Yiisoft\Data\Paginator\KeysetPaginator;
-use Yiisoft\Data\Paginator\PageToken;
-use Yiisoft\Yii\DataView\Column\ActionColumn;
-use Yiisoft\Yii\DataView\Column\ActionButton;
 
 final class BaseTest extends TestCase
 {

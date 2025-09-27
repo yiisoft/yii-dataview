@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Yiisoft\Yii\DataView\Column\Base;
+namespace Yiisoft\Yii\DataView\GridView\Column\Base;
 
 use Yiisoft\Data\Reader\ReadableDataInterface;
-use Yiisoft\Yii\DataView\Column\ColumnInterface;
+use Yiisoft\Yii\DataView\GridView\Column\ColumnInterface;
 
 /**
  * `DataContext` provides context information for rendering a data cell in a grid.

@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Yiisoft\Yii\DataView\Tests;
 
 use PHPUnit\Framework\TestCase;
-use Yiisoft\Yii\DataView\UrlConfig;
-use Yiisoft\Yii\DataView\UrlParameterType;
+use Yiisoft\Yii\DataView\Url\UrlConfig;
+use Yiisoft\Yii\DataView\Url\UrlParameterType;
 
 final class UrlConfigTest extends TestCase
 {

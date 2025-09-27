@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Yiisoft\Yii\DataView;
+namespace Yiisoft\Yii\DataView\Url;
 
 /**
  * `UrlParameterType` defines constants for different types of URL parameters.
