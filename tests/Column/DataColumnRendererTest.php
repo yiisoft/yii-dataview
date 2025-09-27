@@ -27,7 +27,6 @@ use Yiisoft\Yii\DataView\Tests\Support\TestHelper;
 use Yiisoft\Yii\DataView\Tests\Support\TestTrait;
 use Yiisoft\Yii\DataView\Url\UrlConfig;
 use Yiisoft\Yii\DataView\Url\UrlParameterProviderInterface;
-
 use Yiisoft\Yii\DataView\ValuePresenter\SimpleValuePresenter;
 
 use function PHPUnit\Framework\assertNull;
