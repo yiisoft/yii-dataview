@@ -55,6 +55,22 @@ $column = new DataColumn(
 )
 ```
 
+You can also use [value presenters](value-presenters.md) to format cell content:
+
+```php
+use Yiisoft\Yii\DataView\ValuePresenter\SimpleValuePresenter;
+
+$column = new DataColumn(
+    property: 'status',
+    header: 'Status',
+    content: new SimpleValuePresenter(
+        null: 'Unknown',
+        true: 'Active',
+        false: 'Inactive'
+    )
+);
+```
+
 ### Action Column
 
 ActionColumn displays action buttons (e.g., view, edit, delete):
@@ -297,3 +313,4 @@ There are additional features common among all list widgets:
 - [URLs](urls.md)
 - [Translation](translation.md)
 - [Themes](themes.md)
+- [Value Presenters](value-presenters.md)

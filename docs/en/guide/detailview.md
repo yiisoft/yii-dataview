@@ -137,9 +137,11 @@ as either object property name or array key.
 
 ### Value Presentation
 
-Values are processed through a value presenter before rendering. By default, `SimpleValuePresenter` is used, which 
+Values are processed through a value presenter before rendering. By default, `SimpleValuePresenter` is used, which
 handles basic type conversion (e.g., boolean values to "True" / "False" strings).
 
 You can customize value presentation with:
 
 - `valuePresenter()` - set a custom value presenter implementing `ValuePresenterInterface`.
+
+For more information about value presenters, see the [Value Presenters](value-presenters.md) guide.

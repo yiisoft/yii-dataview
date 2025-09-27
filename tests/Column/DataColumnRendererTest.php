@@ -27,6 +27,7 @@ use Yiisoft\Yii\DataView\Tests\Support\TestHelper;
 use Yiisoft\Yii\DataView\Tests\Support\TestTrait;
 use Yiisoft\Yii\DataView\Url\UrlConfig;
 use Yiisoft\Yii\DataView\Url\UrlParameterProviderInterface;
+use Yiisoft\Yii\DataView\ValuePresenter\SimpleValuePresenter;
 
 use function PHPUnit\Framework\assertNull;
 
@@ -175,13 +176,19 @@ final class DataColumnRendererTest extends TestCase
         $this->assertStringContainsString('JOHN DOE', (string)$content[0]);
     }
 
-    public function testRenderBodyWithDateTime(): void
+    public function testRenderBodyWithCustomValuePresenter(): void
     {
-        $date = new DateTime('2025-03-06 02:00:22');
-        $column = new DataColumn('created_at', dateTimeFormat: 'Y-m-d');
-        $cell = new Cell();
-        $data = ['id' => 1, 'created_at' => $date];
+        $data = ['id' => 1, 'created_at' => new DateTime('2025-03-06 02:00:22')];
+        $column = new DataColumn(
+            'created_at',
+            content: new SimpleValuePresenter(dateTimeFormat: 'Y-m-d'),
+        );
+        $renderer = new DataColumnRenderer(
+            $this->filterFactoryContainer,
+            new Validator()
+        );
 
+        $cell = new Cell();
         $context = new DataContext(
             preparedDataReader: $this->dataReader,
             column: $column,
@@ -190,15 +197,9 @@ final class DataColumnRendererTest extends TestCase
             index: 0
         );
 
-        $renderer = new DataColumnRenderer(
-            $this->filterFactoryContainer,
-            new Validator()
-        );
+        $result = $renderer->renderBody($column, $cell, $context)->getContent();
 
-        $result = $renderer->renderBody($column, $cell, $context);
-        $content = $result->getContent();
-        $this->assertNotEmpty($content);
-        $this->assertStringContainsString('2025-03-06', (string)$content[0]);
+        $this->assertSame(['2025-03-06'], $result);
     }
 
     public function testRenderBodyWithDynamicAttributes(): void

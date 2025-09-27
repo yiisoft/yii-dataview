@@ -10,6 +10,7 @@ use Yiisoft\Yii\DataView\Filter\Factory\FilterFactoryInterface;
 use Yiisoft\Yii\DataView\Filter\Widget\FilterWidget;
 use Yiisoft\Yii\DataView\GridView\Column\Base\DataContext;
 use Yiisoft\Yii\DataView\GridView\GridView;
+use Yiisoft\Yii\DataView\ValuePresenter\ValuePresenterInterface;
 
 /**
  * `DataColumn` is the default column type for the {@see GridView} widget.
@@ -22,8 +23,8 @@ use Yiisoft\Yii\DataView\GridView\GridView;
 final class DataColumn implements ColumnInterface
 {
     /**
-     * @var callable|float|int|string|Stringable|null
-     * @psalm-var string|Stringable|int|float|(callable(TData, DataContext): (string|Stringable|int|float))|null
+     * @var callable|float|int|string|Stringable|ValuePresenterInterface|null
+     * @psalm-var string|Stringable|int|float|(callable(TData, DataContext): (string|Stringable|int|float))|ValuePresenterInterface|null
      */
     public readonly mixed $content;
 
@@ -92,14 +93,10 @@ final class DataColumn implements ColumnInterface
      * @param array|callable $bodyAttributes HTML attributes for the body cells. Can be a callable that returns attributes.
      * The callable signature is: `function(array|object $data, DataContext $context): array`.
      * @param bool $withSorting Whether this column is sortable.
-     * @param callable|float|int|string|Stringable|null $content Custom content for data cells. Can be a callable with signature:
+     * @param callable|float|int|string|Stringable|ValuePresenterInterface|null $content Custom content for data cells.
+     * Can be a callable with signature:
      * `function(array|object $data, DataContext $context): string|Stringable|int|float`.
-     * @param bool|null $encodeContent Whether to HTML-encode the cell content. Supported values:
-     *   - `null`: stringable objects implementing {@see NoEncodeStringableInterface} aren't encoded,
-     *     everything else is encoded (default behavior);
-     *   - `true`: any content is encoded, regardless of type;
-     *   - `false`: nothing is encoded, use with caution and only for trusted content.
-     * @param string|null $dateTimeFormat Format string for datetime values (e.g., 'Y-m-d H:i:s').
+     * @param bool $encodeContent Whether to HTML-encode the cell content.
      * @param array|bool|FilterWidget $filter Filter configuration. Can be:
      * - `false` (disabled)
      * - `array` (filter options)
@@ -124,7 +121,7 @@ final class DataColumn implements ColumnInterface
      * @param callable|string|string[]|null $bodyClass Additional CSS class for the body cells.
      *
      * @psalm-param array|(callable(TData, DataContext): array) $bodyAttributes
-     * @psalm-param string|Stringable|int|float|(callable(TData, DataContext): (string|Stringable|int|float))|null $content
+     * @psalm-param string|Stringable|int|float|(callable(TData, DataContext): (string|Stringable|int|float))|ValuePresenterInterface|null $content
      * @psalm-param bool|array<array-key,string|array<array-key,string>>|FilterWidget $filter
      * @psalm-param RuleInterface[]|RuleInterface|null $filterValidation
      * @psalm-param bool|FilterEmptyCallable|null $filterEmpty
@@ -139,9 +136,8 @@ final class DataColumn implements ColumnInterface
         public readonly array $headerAttributes = [],
         public readonly mixed $bodyAttributes = [],
         public readonly bool $withSorting = true,
-        string|Stringable|int|float|callable|null $content = null,
-        public bool|null $encodeContent = null,
-        public readonly ?string $dateTimeFormat = null,
+        string|Stringable|int|float|callable|ValuePresenterInterface|null $content = null,
+        public bool $encodeContent = true,
         public readonly bool|array|FilterWidget $filter = false,
         public readonly string|FilterFactoryInterface|null $filterFactory = null,
         public readonly array|RuleInterface|null $filterValidation = null,
