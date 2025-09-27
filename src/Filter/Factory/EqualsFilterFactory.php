@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Yiisoft\Yii\DataView\Filter\Factory;
 
 use Yiisoft\Data\Reader\Filter\Equals;
-use Yiisoft\Data\Reader\FilterInterface;
 
 /**
  * Factory for creating equality filters that match exact values.
@@ -16,7 +15,7 @@ use Yiisoft\Data\Reader\FilterInterface;
  */
 final class EqualsFilterFactory implements FilterFactoryInterface
 {
-    public function create(string $property, string $value): FilterInterface
+    public function create(string $property, string $value): Equals
     {
         return new Equals($property, $value);
     }
