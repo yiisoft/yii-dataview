@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Yiisoft\Yii\DataView\Tests\Column\Base;
+namespace Yiisoft\Yii\DataView\Tests\GridView\Column\Base;
 
 use PHPUnit\Framework\TestCase;
 use Yiisoft\Data\Reader\Sort;

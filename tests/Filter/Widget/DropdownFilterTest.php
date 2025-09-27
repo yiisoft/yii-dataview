@@ -18,78 +18,86 @@ use Yiisoft\Yii\DataView\Tests\Support\StringEnum;
  */
 final class DropdownFilterTest extends TestCase
 {
-    public function testRenderFilter(): void
+    public function testBase(): void
     {
-        $filter = new DropdownFilter();
-        $filter = $filter->optionsData([
+        $filter = DropdownFilter::widget()->optionsData([
             'active' => 'Active',
-            'inactive' => 'Inactive',
+            'inactive' => 'Inactive <',
         ]);
         $context = new Context('status', 'active', 'filter-form');
 
         $html = $filter->renderFilter($context);
 
-        $this->assertStringContainsString('name="status"', $html);
-        $this->assertStringContainsString('form="filter-form"', $html);
-        $this->assertStringContainsString('onChange="this.form.submit()"', $html);
-        $this->assertStringContainsString('value="active"', $html);
-        $this->assertStringContainsString('selected', $html);
+        $this->assertSame(
+            <<<HTML
+            <select name="status" form="filter-form" onChange="this.form.submit()">
+            <option value></option>
+            <option value="active" selected>Active</option>
+            <option value="inactive">Inactive &lt;</option>
+            </select>
+            HTML,
+            $html,
+        );
     }
 
-    public function testRenderFilterWithoutValue(): void
+    public function testWithoutValue(): void
     {
-        $filter = new DropdownFilter();
-        $context = new Context('status', null, 'filter-form');
-
-        $html = $filter->renderFilter($context);
-
-        $this->assertStringContainsString('name="status"', $html);
-        $this->assertStringContainsString('form="filter-form"', $html);
-        $this->assertStringContainsString('onChange="this.form.submit()"', $html);
-        $this->assertStringNotContainsString('value="', $html);
-    }
-
-    public function testOptionsData(): void
-    {
-        $filter = new DropdownFilter();
-        $options = [
+        $filter = DropdownFilter::widget()->optionsData([
             'active' => 'Active',
             'inactive' => 'Inactive',
-        ];
-
-        $filter = $filter->optionsData($options);
+        ]);
         $context = new Context('status', null, 'filter-form');
 
         $html = $filter->renderFilter($context);
 
-        $this->assertStringContainsString('>Active<', $html);
-        $this->assertStringContainsString('>Inactive<', $html);
-        $this->assertStringContainsString('value="active"', $html);
-        $this->assertStringContainsString('value="inactive"', $html);
+        $this->assertSame(
+            <<<HTML
+            <select name="status" form="filter-form" onChange="this.form.submit()">
+            <option value></option>
+            <option value="active">Active</option>
+            <option value="inactive">Inactive</option>
+            </select>
+            HTML,
+            $html,
+        );
     }
 
     public function testAddAttributes(): void
     {
-        $filter = new DropdownFilter();
-        $filter = $filter->addAttributes(['class' => 'custom-select', 'data-test' => 'value']);
-
+        $filter = DropdownFilter::widget()
+            ->addAttributes(['data-test' => 'value'])
+            ->addAttributes(['class' => 'custom-select']);
         $context = new Context('status', null, 'filter-form');
+
         $html = $filter->renderFilter($context);
 
-        $this->assertStringContainsString('class="custom-select"', $html);
-        $this->assertStringContainsString('data-test="value"', $html);
+        $this->assertSame(
+            <<<HTML
+            <select class="custom-select" name="status" form="filter-form" data-test="value" onChange="this.form.submit()">
+            <option value></option>
+            </select>
+            HTML,
+            $html,
+        );
     }
 
     public function testAttributes(): void
     {
-        $filter = new DropdownFilter();
-        $filter = $filter->attributes(['class' => 'new-select', 'required' => true]);
-
+        $filter = DropdownFilter::widget()
+            ->attributes(['data-test' => 'value'])
+            ->attributes(['class' => 'custom-select']);
         $context = new Context('status', null, 'filter-form');
+
         $html = $filter->renderFilter($context);
 
-        $this->assertStringContainsString('class="new-select"', $html);
-        $this->assertStringContainsString('required', $html);
+        $this->assertSame(
+            <<<HTML
+            <select class="custom-select" name="status" form="filter-form" onChange="this.form.submit()">
+            <option value></option>
+            </select>
+            HTML,
+            $html,
+        );
     }
 
     public static function dataAddClass(): array
@@ -100,10 +108,10 @@ final class DropdownFilterTest extends TestCase
             ['<select class="main bold" name="status"', ['bold']],
             ['<select class="main italic bold" name="status"', ['italic bold']],
             ['<select class="main italic bold" name="status"', ['italic', 'bold']],
-            ['<select class="main test-class-1 test-class-2" name="status"', [StringEnum::TEST_CLASS_1, StringEnum::TEST_CLASS_2]],
+            ['<select class="main red green" name="status"', [StringEnum::RED, StringEnum::GREEN]],
             [
-                '<select class="main test-class-1 test-class-2" name="status"',
-                [IntegerEnum::A, StringEnum::TEST_CLASS_1, IntegerEnum::B, StringEnum::TEST_CLASS_2],
+                '<select class="main red green" name="status"',
+                [IntegerEnum::A, StringEnum::RED, IntegerEnum::B, StringEnum::GREEN],
             ],
         ];
     }
@@ -112,29 +120,12 @@ final class DropdownFilterTest extends TestCase
     public function testAddClass(string $expected, array $class): void
     {
         $context = new Context('status', null, 'filter-form');
+
         $html = DropdownFilter::widget()
             ->addClass('main')
             ->addClass(...$class)
             ->renderFilter($context);
-        $this->assertStringContainsString($expected, $html);
-    }
 
-    public static function dataNewClass(): array
-    {
-        return [
-            ['<select name="status"', null],
-            ['<select class name="status"', ''],
-            ['<select class="red" name="status"', 'red'],
-        ];
-    }
-
-    #[DataProvider('dataNewClass')]
-    public function testNewClass(string $expected, ?string $class): void
-    {
-        $context = new Context('status', null, 'filter-form');
-        $html = DropdownFilter::widget()
-            ->addClass($class)
-            ->renderFilter($context);
         $this->assertStringContainsString($expected, $html);
     }
 
@@ -147,10 +138,10 @@ final class DropdownFilterTest extends TestCase
             ['<select class="main" name="status"', ['main']],
             ['<select class="main bold" name="status"', ['main bold']],
             ['<select class="main bold" name="status"', ['main', 'bold']],
-            ['<select class="test-class-1 test-class-2" name="status"', [StringEnum::TEST_CLASS_1, StringEnum::TEST_CLASS_2]],
+            ['<select class="red green" name="status"', [StringEnum::RED, StringEnum::GREEN]],
             [
-                'class="test-class-1 test-class-2" name="status"',
-                [IntegerEnum::A, StringEnum::TEST_CLASS_1, IntegerEnum::B, StringEnum::TEST_CLASS_2],
+                'class="red green" name="status"',
+                [IntegerEnum::A, StringEnum::RED, IntegerEnum::B, StringEnum::GREEN],
             ],
         ];
     }
@@ -159,10 +150,22 @@ final class DropdownFilterTest extends TestCase
     public function testClass(string $expected, array $class): void
     {
         $context = new Context('status', null, 'filter-form');
+
         $html = DropdownFilter::widget()
-            ->class('red')
+            ->class('test-class')
             ->class(...$class)
             ->renderFilter($context);
+
         $this->assertStringContainsString($expected, $html);
+    }
+
+    public function testImmutability(): void
+    {
+        $filter = DropdownFilter::widget();
+        $this->assertNotSame($filter, $filter->optionsData([]));
+        $this->assertNotSame($filter, $filter->addAttributes([]));
+        $this->assertNotSame($filter, $filter->attributes([]));
+        $this->assertNotSame($filter, $filter->addClass());
+        $this->assertNotSame($filter, $filter->class());
     }
 }

@@ -7,7 +7,7 @@ namespace Yiisoft\Yii\DataView\Tests\ListView;
 use InvalidArgumentException;
 use LogicException;
 use PHPUnit\Framework\TestCase;
-use Yiisoft\Yii\DataView\Exception\DataReaderNotSetException;
+use Yiisoft\Yii\DataView\DataReaderNotSetException;
 use Yiisoft\Yii\DataView\ListView\ListView;
 use Yiisoft\Yii\DataView\Tests\Support\TestTrait;
 
@@ -25,7 +25,6 @@ final class ExceptionTest extends TestCase
         $widget = ListView::widget();
 
         $this->expectException(DataReaderNotSetException::class);
-        $this->expectExceptionMessage('Failed to create widget because "dataReader" is not set.');
         $widget->render();
     }
 

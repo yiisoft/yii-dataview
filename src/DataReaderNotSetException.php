@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Yiisoft\Yii\DataView\Exception;
+namespace Yiisoft\Yii\DataView;
 
 use LogicException;
 
