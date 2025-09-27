@@ -60,7 +60,8 @@ $column = new DataColumn(
 ActionColumn displays action buttons (e.g., view, edit, delete):
 
 ```php
-use Yiisoft\Html\Html;use Yiisoft\Yii\DataView\GridView\Column\ActionColumn;
+use Yiisoft\Html\Html;
+use Yiisoft\Yii\DataView\GridView\Column\ActionColumn;
 
 $column = new ActionColumn(
     buttons: [
