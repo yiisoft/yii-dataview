@@ -17,7 +17,9 @@ Here's a basic example of using GridView:
 
 ```php
 <?php
-use Yiisoft\Yii\DataView\DataReader\DataReaderInterface;use Yiisoft\Yii\DataView\GridView\Column\DataColumn;use Yiisoft\Yii\DataView\GridView\GridView;
+use Yiisoft\Yii\DataView\DataReader\DataReaderInterface;
+use Yiisoft\Yii\DataView\GridView\Column\DataColumn;
+use Yiisoft\Yii\DataView\GridView\GridView;
 
 $dataReader = new DataReader($query);
 ?>
