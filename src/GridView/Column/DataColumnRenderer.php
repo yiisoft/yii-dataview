@@ -282,19 +282,13 @@ final class DataColumnRenderer implements FilterableColumnRendererInterface, Sor
             );
         }
 
-        if (is_callable($column->content)) {
-            return $this->defaultValuePresenter->present(
-                ($column->content)($context->data, $context),
-            );
-        }
+        $content = match (true) {
+            $column->content === null => $this->extractValue($column, $context),
+            is_callable($column->content) => ($column->content)($context->data, $context),
+            default => $column->content,
+        };
 
-        if ($column->content === null) {
-            return $this->defaultValuePresenter->present(
-                $this->extractValue($column, $context)
-            );
-        }
-
-        return $this->defaultValuePresenter->present($column->content);
+        return $this->defaultValuePresenter->present($content);
     }
 
     private function extractValue(DataColumn $column, DataContext $context): mixed
