@@ -96,12 +96,7 @@ final class DataColumn implements ColumnInterface
      * @param callable|float|int|string|Stringable|ValuePresenterInterface|null $content Custom content for data cells.
      * Can be a callable with signature:
      * `function(array|object $data, DataContext $context): string|Stringable|int|float`.
-     * @param bool|null $encodeContent Whether to HTML-encode the cell content. Supported values:
-     *   - `null`: stringable objects implementing {@see NoEncodeStringableInterface} aren't encoded,
-     *     everything else is encoded (default behavior);
-     *   - `true`: any content is encoded, regardless of type;
-     *   - `false`: nothing is encoded, use with caution and only for trusted content.
-     * @param string|null $dateTimeFormat Format string for datetime values (e.g., 'Y-m-d H:i:s').
+     * @param bool $encodeContent Whether to HTML-encode the cell content.
      * @param array|bool|FilterWidget $filter Filter configuration. Can be:
      * - `false` (disabled)
      * - `array` (filter options)
@@ -142,7 +137,7 @@ final class DataColumn implements ColumnInterface
         public readonly mixed $bodyAttributes = [],
         public readonly bool $withSorting = true,
         string|Stringable|int|float|callable|ValuePresenterInterface|null $content = null,
-        public bool|null $encodeContent = null,
+        public bool $encodeContent = true,
         public readonly bool|array|FilterWidget $filter = false,
         public readonly string|FilterFactoryInterface|null $filterFactory = null,
         public readonly array|RuleInterface|null $filterValidation = null,

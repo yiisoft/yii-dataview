@@ -5,11 +5,9 @@ declare(strict_types=1);
 namespace Yiisoft\Yii\DataView\GridView\Column;
 
 use Psr\Container\ContainerInterface;
-use Stringable;
 use Yiisoft\Arrays\ArrayHelper;
 use Yiisoft\Data\Reader\FilterInterface;
 use Yiisoft\Html\Html;
-use Yiisoft\Html\NoEncodeStringableInterface;
 use Yiisoft\Validator\EmptyCondition\NeverEmpty;
 use Yiisoft\Validator\EmptyCondition\WhenEmpty;
 use Yiisoft\Validator\ValidatorInterface;
@@ -187,20 +185,10 @@ final class DataColumnRenderer implements FilterableColumnRendererInterface, Sor
     {
         /** @var DataColumn $column This annotation is for IDE only */
 
-        if ($column->content === null) {
-            $content = $this->defaultValuePresenter->present(
-                $this->extractValue($column, $context)
-            );
-        } elseif ($column->content instanceof ValuePresenterInterface) {
-            $content = $column->content->present(
-                $this->extractValue($column, $context)
-            );
-        } elseif (is_callable($column->content)) {
-            $content = ($column->content)($context->data, $context);
-        } else {
-            $content = $column->content;
+        $content = $this->prepareRawBodyContent($column, $context);
+        if ($column->encodeContent) {
+            $content = Html::encode($content);
         }
-        $content = $this->encodeContent($content, $column->encodeContent);
 
         if (is_callable($column->bodyAttributes)) {
             /** @var array $attributes Remove annotation after fix https://github.com/vimeo/psalm/issues/11062 */
@@ -286,19 +274,33 @@ final class DataColumnRenderer implements FilterableColumnRendererInterface, Sor
         return $this->filterFactoryContainer->get($factory);
     }
 
+    private function prepareRawBodyContent(DataColumn $column, DataContext $context): string
+    {
+        if ($column->content instanceof ValuePresenterInterface) {
+            return $column->content->present(
+                $this->extractValue($column, $context)
+            );
+        }
+
+        if (is_callable($column->content)) {
+            return $this->defaultValuePresenter->present(
+                ($column->content)($context->data, $context),
+            );
+        }
+
+        if ($column->content === null) {
+            return $this->defaultValuePresenter->present(
+                $this->extractValue($column, $context)
+            );
+        }
+
+        return $this->defaultValuePresenter->present($column->content);
+    }
+
     private function extractValue(DataColumn $column, DataContext $context): mixed
     {
         return $column->property === null
             ? null
             : ArrayHelper::getValue($context->data, $column->property);
-    }
-
-    private function encodeContent(string|Stringable|int|float $content, ?bool $encode): string
-    {
-        $encode ??= !$content instanceof NoEncodeStringableInterface;
-
-        $contentAsString = (string) $content;
-
-        return $encode ? Html::encode($contentAsString) : $contentAsString;
     }
 }

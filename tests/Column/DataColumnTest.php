@@ -407,12 +407,6 @@ final class DataColumnTest extends TestCase
         );
     }
 
-    /**
-     * @throws InvalidConfigException
-     * @throws NotFoundException
-     * @throws NotInstantiableException
-     * @throws CircularReferenceException
-     */
     public function testValue(): void
     {
         Assert::equalsWithoutLE(
@@ -767,32 +761,25 @@ final class DataColumnTest extends TestCase
     public static function dataEncodeContent(): array
     {
         return [
-            ['John &gt;', null, null],
             ['John &gt;', null, true],
             ['John >', null, false],
-            ['123', 123, null],
             ['123', 123, true],
             ['123', 123, false],
-            ['20.12', 20.12, null],
             ['20.12', 20.12, true],
             ['20.12', 20.12, false],
-            ['1 &gt; 2', '1 > 2', null],
             ['1 &gt; 2', '1 > 2', true],
             ['1 > 2', '1 > 2', false],
-            ['1 > 2', NoEncode::string('1 > 2'), null],
             ['1 &gt; 2', NoEncode::string('1 > 2'), true],
             ['1 > 2', NoEncode::string('1 > 2'), false],
-            ['1 &gt; 2', static fn() => '1 > 2', null],
             ['1 &gt; 2', static fn() => '1 > 2', true],
             ['1 > 2', static fn() => '1 > 2', false],
-            ['1 > 2', static fn() => NoEncode::string('1 > 2'), null],
             ['1 &gt; 2', static fn() => NoEncode::string('1 > 2'), true],
             ['1 > 2', static fn() => NoEncode::string('1 > 2'), false],
         ];
     }
 
     #[DataProvider('dataEncodeContent')]
-    public function testEncodeContent(string $expected, mixed $content, ?bool $encodeContent): void
+    public function testEncodeContent(string $expected, mixed $content, bool $encodeContent): void
     {
         $output = GridView::widget()
             ->columns(
@@ -805,28 +792,6 @@ final class DataColumnTest extends TestCase
             ->dataReader(
                 new IterableDataReader([
                     ['id' => 1, 'name' => 'John >'],
-                ])
-            )
-            ->render();
-
-        $this->assertStringContainsString($expected, $output);
-    }
-
-    #[TestWith(['1 > 2', null])]
-    #[TestWith(['1 &gt; 2', true])]
-    #[TestWith(['1 > 2', false])]
-    public function testEncodeContentWithNoEncodeInData(string $expected, ?bool $encodeContent): void
-    {
-        $output = GridView::widget()
-            ->columns(
-                new DataColumn(
-                    'name',
-                    encodeContent: $encodeContent,
-                ),
-            )
-            ->dataReader(
-                new IterableDataReader([
-                    ['id' => 1, 'name' => NoEncode::string('1 > 2')],
                 ])
             )
             ->render();
