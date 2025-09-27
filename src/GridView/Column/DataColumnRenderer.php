@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Yiisoft\Yii\DataView\GridView\Column;
 
-use BackedEnum;
-use DateTimeInterface;
 use Psr\Container\ContainerInterface;
 use Stringable;
 use Yiisoft\Arrays\ArrayHelper;
@@ -26,6 +24,8 @@ use Yiisoft\Yii\DataView\GridView\Column\Base\DataContext;
 use Yiisoft\Yii\DataView\GridView\Column\Base\FilterContext;
 use Yiisoft\Yii\DataView\GridView\Column\Base\GlobalContext;
 use Yiisoft\Yii\DataView\GridView\Column\Base\MakeFilterContext;
+use Yiisoft\Yii\DataView\ValuePresenter\SimpleValuePresenter;
+use Yiisoft\Yii\DataView\ValuePresenter\ValuePresenterInterface;
 
 use function is_array;
 use function is_callable;
@@ -54,7 +54,8 @@ final class DataColumnRenderer implements FilterableColumnRendererInterface, Sor
      *
      * @param ContainerInterface $filterFactoryContainer Container for filter factory instances.
      * @param ValidatorInterface $validator Validator for filter values.
-     * @param string $dateTimeFormat Default format for datetime values (e.g., 'Y-m-d H:i:s').
+     * @param ValuePresenterInterface $defaultValuePresenter Service to present values when {@see DataColumn::$content}
+     * is not set.
      * @param FilterFactoryInterface|string $defaultFilterFactory Default filter factory for non-array filters.
      * @param FilterFactoryInterface|string $defaultArrayFilterFactory Default filter factory for array filters.
      * @param bool|callable $defaultFilterEmpty Default function to determine if a filter value is empty.
@@ -64,7 +65,7 @@ final class DataColumnRenderer implements FilterableColumnRendererInterface, Sor
     public function __construct(
         private readonly ContainerInterface $filterFactoryContainer,
         private readonly ValidatorInterface $validator,
-        private readonly string $dateTimeFormat = 'Y-m-d H:i:s',
+        private ValuePresenterInterface $defaultValuePresenter = new SimpleValuePresenter(),
         private readonly string|FilterFactoryInterface $defaultFilterFactory = LikeFilterFactory::class,
         private readonly string|FilterFactoryInterface $defaultArrayFilterFactory = EqualsFilterFactory::class,
         bool|callable $defaultFilterEmpty = true,
@@ -187,7 +188,13 @@ final class DataColumnRenderer implements FilterableColumnRendererInterface, Sor
         /** @var DataColumn $column This annotation is for IDE only */
 
         if ($column->content === null) {
-            $content = $this->extractValueFromData($column, $context);
+            $content = $this->defaultValuePresenter->present(
+                $this->extractValue($column, $context)
+            );
+        } elseif ($column->content instanceof ValuePresenterInterface) {
+            $content = $column->content->present(
+                $this->extractValue($column, $context)
+            );
         } elseif (is_callable($column->content)) {
             $content = ($column->content)($context->data, $context);
         } else {
@@ -279,31 +286,11 @@ final class DataColumnRenderer implements FilterableColumnRendererInterface, Sor
         return $this->filterFactoryContainer->get($factory);
     }
 
-    private function extractValueFromData(DataColumn $column, DataContext $context): string|Stringable
+    private function extractValue(DataColumn $column, DataContext $context): mixed
     {
-        if ($column->property === null) {
-            return '';
-        }
-
-        $value = ArrayHelper::getValue($context->data, $column->property);
-
-        if ($value === null) {
-            return '';
-        }
-
-        if ($value instanceof DateTimeInterface) {
-            return $value->format($column->dateTimeFormat ?? $this->dateTimeFormat);
-        }
-
-        if ($value instanceof BackedEnum) {
-            return $value->name;
-        }
-
-        if ($value instanceof Stringable) {
-            return $value;
-        }
-
-        return (string) $value;
+        return $column->property === null
+            ? null
+            : ArrayHelper::getValue($context->data, $column->property);
     }
 
     private function encodeContent(string|Stringable|int|float $content, ?bool $encode): string
