@@ -8,7 +8,8 @@ You can customize parameter names and types:
 
 ```php
 <?php
-use Yiisoft\Yii\DataView\GridView\GridView;use Yiisoft\Yii\DataView\Url\UrlParameterType;
+use Yiisoft\Yii\DataView\GridView\GridView;
+use Yiisoft\Yii\DataView\Url\UrlParameterType;
 ?>
 
 <?= GridView::widget()
