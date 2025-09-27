@@ -63,7 +63,7 @@ final class DataColumnRenderer implements FilterableColumnRendererInterface, Sor
     public function __construct(
         private readonly ContainerInterface $filterFactoryContainer,
         private readonly ValidatorInterface $validator,
-        private ValuePresenterInterface $defaultValuePresenter = new SimpleValuePresenter(),
+        private readonly ValuePresenterInterface $defaultValuePresenter = new SimpleValuePresenter(),
         private readonly string|FilterFactoryInterface $defaultFilterFactory = LikeFilterFactory::class,
         private readonly string|FilterFactoryInterface $defaultArrayFilterFactory = EqualsFilterFactory::class,
         bool|callable $defaultFilterEmpty = true,
