@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Yiisoft\Yii\DataView\Tests\Column;
+namespace Yiisoft\Yii\DataView\Tests\GridView\Column;
 
 use DateTime;
 use PHPUnit\Framework\TestCase;
