@@ -86,7 +86,9 @@ use Yiisoft\Yii\DataView\GridView\GridView;
 For Yii applications, you can use the built-in router integration:
 
 ```php
-use Yiisoft\Yii\DataView\GridView\GridView;use Yiisoft\Yii\DataView\YiiRouter\UrlCreator;use Yiisoft\Yii\DataView\YiiRouter\UrlParameterProvider;
+use Yiisoft\Yii\DataView\GridView\GridView;
+use Yiisoft\Yii\DataView\YiiRouter\UrlCreator;
+use Yiisoft\Yii\DataView\YiiRouter\UrlParameterProvider;
 
 echo GridView::widget()
     ->urlParameterProvider(new UrlParameterProvider($currentRoute))
