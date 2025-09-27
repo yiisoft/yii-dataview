@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace Yiisoft\Yii\DataView\ValuePresenter;
 
+use DateTimeInterface;
 use InvalidArgumentException;
 use Stringable;
+use UnitEnum;
 
 use function gettype;
 
@@ -18,11 +20,13 @@ final class SimpleValuePresenter implements ValuePresenterInterface
      * @param string $null Label to use for `null`.
      * @param string $true Label to use for `true`.
      * @param string $false Label to use for `false`.
+     * @param string $dateTimeFormat The format to use for `DateTimeInterface` objects.
      */
     public function __construct(
         private readonly string $null = '',
         private readonly string $true = 'True',
         private readonly string $false = 'False',
+        private readonly string $dateTimeFormat = 'Y-m-d H:i:s',
     ) {
     }
 
@@ -36,9 +40,12 @@ final class SimpleValuePresenter implements ValuePresenterInterface
             'boolean' => $value ? $this->true : $this->false,
             'string' => $value,
             'integer', 'double' => (string) $value,
-            'object' => $value instanceof Stringable
-                ? (string) $value
-                : $this->throwUnsupportedType($value),
+            'object' => match (true) {
+                $value instanceof Stringable => (string) $value,
+                $value instanceof DateTimeInterface => $value->format($this->dateTimeFormat),
+                $value instanceof UnitEnum => $value->name,
+                default => $this->throwUnsupportedType($value),
+            },
             default => $this->throwUnsupportedType($value),
         };
     }
