@@ -32,7 +32,6 @@ use Yiisoft\Translator\Translator;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\Validator\Result as ValidationResult;
 use Yiisoft\Widget\Widget;
-use Yiisoft\Yii\DataView\Exception\DataReaderNotSetException;
 use Yiisoft\Yii\DataView\GridView\GridView;
 use Yiisoft\Yii\DataView\ListView\ListView;
 use Yiisoft\Yii\DataView\PageSize\InputPageSize;
