@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Yiisoft\Yii\DataView\Tests\GridView\Column\Base;
 
 use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\Attributes\TestWith;
 use PHPUnit\Framework\TestCase;
 use Yiisoft\Yii\DataView\GridView\Column\Base\Cell;
 use Yiisoft\Yii\DataView\Tests\Support\StringableObject;
