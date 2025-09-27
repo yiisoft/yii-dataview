@@ -60,6 +60,7 @@ final class TextInputFilter extends FilterWidget
             ->name($context->property)
             ->value($context->value)
             ->form($context->formId)
+            ->type('text')
             ->render();
     }
 

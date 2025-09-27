@@ -15,71 +15,66 @@ use Yiisoft\Yii\DataView\Filter\Widget\TextInputFilter;
  */
 final class TextInputFilterTest extends TestCase
 {
-    public function testRenderFilter(): void
+    public function testBase(): void
     {
-        $filter = new TextInputFilter();
+        $filter = TextInputFilter::widget();
         $context = new Context('username', 'john', 'filter-form');
 
-        $result = $filter->renderFilter($context);
+        $html = $filter->renderFilter($context);
 
-        $this->assertStringContainsString('name="username"', $result);
-        $this->assertStringContainsString('value="john"', $result);
-        $this->assertStringContainsString('form="filter-form"', $result);
-        $this->assertStringContainsString('type="text"', $result);
+        $this->assertSame(
+            '<input type="text" name="username" value="john" form="filter-form">',
+            $html,
+        );
     }
 
-    public function testRenderWithNullValue(): void
+    public function testWithNullValue(): void
     {
-        $filter = new TextInputFilter();
+        $filter = TextInputFilter::widget();
         $context = new Context('username', null, 'filter-form');
 
-        $result = $filter->renderFilter($context);
+        $html = $filter->renderFilter($context);
 
-        $this->assertStringContainsString('name="username"', $result);
-        $this->assertStringNotContainsString('value=', $result);
-        $this->assertStringContainsString('form="filter-form"', $result);
+        $this->assertSame(
+            '<input type="text" name="username" form="filter-form">',
+            $html,
+        );
     }
 
     public function testAddAttributes(): void
     {
-        $filter = new TextInputFilter();
-        $newFilter = $filter->addAttributes(['class' => 'form-control', 'placeholder' => 'Enter username']);
-
-        $this->assertNotSame($filter, $newFilter);
-
+        $filter = TextInputFilter::widget()
+            ->addAttributes(['class' => 'form-control'])
+            ->addAttributes(['placeholder' => 'Enter username']);
         $context = new Context('username', 'john', 'filter-form');
-        $result = $newFilter->renderFilter($context);
 
-        $this->assertStringContainsString('class="form-control"', $result);
-        $this->assertStringContainsString('placeholder="Enter username"', $result);
+        $html = $filter->renderFilter($context);
+
+        $this->assertSame(
+            '<input type="text" class="form-control" name="username" value="john" form="filter-form" placeholder="Enter username">',
+            $html,
+        );
     }
 
     public function testAttributes(): void
     {
-        $filter = new TextInputFilter();
-        $filter = $filter->addAttributes(['data-test' => 'original']);
-
-        $newFilter = $filter->attributes(['class' => 'form-control', 'id' => 'username-filter']);
-
-        $this->assertNotSame($filter, $newFilter);
-
+        $filter = TextInputFilter::widget()
+            ->attributes(['data-test' => 'original'])
+            ->attributes(['class' => 'form-control', 'id' => 'username-filter']);
         $context = new Context('username', 'john', 'filter-form');
-        $result = $newFilter->renderFilter($context);
 
-        $this->assertStringContainsString('class="form-control"', $result);
-        $this->assertStringContainsString('id="username-filter"', $result);
-        $this->assertStringNotContainsString('data-test="original"', $result);
+        $html = $filter->renderFilter($context);
+
+        $this->assertSame(
+            '<input type="text" id="username-filter" class="form-control" name="username" value="john" form="filter-form">',
+            $html,
+        );
     }
 
-    public function testRender(): void
+    public function testImmutability(): void
     {
-        $context = new Context('username', 'john', 'filter-form');
-        $result = (new TextInputFilter())
-            ->withContext($context)
-            ->render();
-
-        $this->assertStringContainsString('name="username"', $result);
-        $this->assertStringContainsString('value="john"', $result);
-        $this->assertStringContainsString('form="filter-form"', $result);
+        $filter = TextInputFilter::widget();
+        $this->assertNotSame($filter, $filter->addAttributes([]));
+        $this->assertNotSame($filter, $filter->attributes([]));
     }
 }
