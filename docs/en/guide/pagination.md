@@ -62,7 +62,8 @@ By default, page size is fixed, but you can configure it to be dynamic:
 
 ```php
 <?php
-use Yiisoft\Yii\DataView\GridView\GridView;use Yiisoft\Yii\DataView\PageSize\SelectPageSize;
+use Yiisoft\Yii\DataView\GridView\GridView;
+use Yiisoft\Yii\DataView\PageSize\SelectPageSize;
 ?>
 
 <?= GridView::widget()
