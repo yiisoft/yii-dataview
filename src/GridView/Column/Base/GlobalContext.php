@@ -101,13 +101,13 @@ final class GlobalContext
      * @param Cell $cell The header cell to prepare.
      * @param string $property The property name for sorting.
      *
-     * @psalm-return list{Cell, ?A, string, string}
-     *
-     *  @return array Array containing:
+     * @return array Array containing:
      *   - Modified cell
      *   - Sort link (or null)
      *   - Content to prepend
      *   - Content to append
+     *
+     * @psalm-return list{Cell, ?A, string, string}
      */
     public function prepareSortable(Cell $cell, string $property): array
     {
