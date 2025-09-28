@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Yiisoft\Yii\DataView\Tests\Filter\Factory;
 
-use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\TestWith;
 use PHPUnit\Framework\TestCase;
 use Yiisoft\Yii\DataView\Filter\Factory\LikeFilterFactory;
 
@@ -24,14 +24,9 @@ final class LikeFilterFactoryTest extends TestCase
         $this->assertNull($filter->caseSensitive);
     }
 
-    public static function dataCaseSensitive(): iterable
-    {
-        yield [null];
-        yield [true];
-        yield [false];
-    }
-
-    #[DataProvider('dataCaseSensitive')]
+    #[TestWith([null])]
+    #[TestWith([true])]
+    #[TestWith([false])]
     public function testCaseSensitive(?bool $value): void
     {
         $factory = new LikeFilterFactory($value);

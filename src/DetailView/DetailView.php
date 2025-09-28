@@ -435,13 +435,7 @@ final class DetailView extends Widget
                 '{value}' => $context->value,
             ],
         );
-
-        if ($this->fieldPrepend !== '') {
-            $content = $this->fieldPrepend . "\n" . $content;
-        }
-        if ($this->fieldAppend !== '') {
-            $content .= "\n" . $this->fieldAppend;
-        }
+        $content = $this->fieldPrepend . $content . $this->fieldAppend;
 
         if ($this->fieldTag === null) {
             return $content;
@@ -468,12 +462,7 @@ final class DetailView extends Widget
             $content = Html::encode($content);
         }
 
-        if ($this->labelPrepend !== '') {
-            $content = $this->labelPrepend . "\n" . $content;
-        }
-        if ($this->labelAppend !== '') {
-            $content .= "\n" . $this->labelAppend;
-        }
+        $content = $this->labelPrepend . $content . $this->labelAppend;
 
         if ($this->labelTag === null) {
             return $content;
@@ -502,12 +491,7 @@ final class DetailView extends Widget
             $value = Html::encode($value);
         }
 
-        if ($this->valuePrepend !== '') {
-            $value = $this->valuePrepend . "\n" . $value;
-        }
-        if ($this->valueAppend !== '') {
-            $value .= "\n" . $this->valueAppend;
-        }
+        $value = $this->valuePrepend . $value . $this->valueAppend;
 
         if ($this->valueTag === null) {
             return $value;

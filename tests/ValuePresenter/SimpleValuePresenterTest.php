@@ -32,7 +32,7 @@ final class SimpleValuePresenterTest extends TestCase
         yield 'zero float' => ['0', 0.0];
         yield 'DateTime' => ['2023-05-15 14:30:00', new DateTime('2023-05-15 14:30:00')];
         yield 'DateTimeImmutable' => ['2023-05-15 14:30:00', new DateTimeImmutable('2023-05-15 14:30:00')];
-        yield 'string enum' => ['TEST_CLASS_1', StringEnum::TEST_CLASS_1];
+        yield 'string enum' => ['RED', StringEnum::RED];
         yield 'integer enum' => ['A', IntegerEnum::A];
         yield 'stringable object' => ['test', new StringableObject('test')];
     }
