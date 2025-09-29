@@ -1076,7 +1076,7 @@ final class GridView extends BaseListView
     {
         foreach ($attributes as $i => $attribute) {
             if (is_callable($attribute)) {
-                $attributes[$i] = $attribute($context);
+                $attributes[$i] = $attribute($context->data, $context);
             }
         }
 
