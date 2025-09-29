@@ -478,8 +478,8 @@ final class GridViewTest extends TestCase
         yield 'nested-closure' => [
             '<tr class="row-1" data-row="grid">',
             [
-                'class' =>  static fn(array $data, BodyRowContext $context) => 'row-' . $data['id'],
-                'data-row' => 'grid'
+                'class' => static fn(array $data, BodyRowContext $context) => 'row-' . $data['id'],
+                'data-row' => 'grid',
             ],
         ];
     }
@@ -637,7 +637,7 @@ final class GridViewTest extends TestCase
             '<td class="body-cell" data-body="Anna">',
             [
                 'class' => 'body-cell',
-                'data-body' => static fn(array $data, DataContext $context) => $data['name']
+                'data-body' => static fn(array $data, DataContext $context) => $data['name'],
             ],
         ];
     }
@@ -1044,7 +1044,7 @@ final class GridViewTest extends TestCase
             </tr>
             </tbody>
             HTML,
-            Sort::only(['id'])
+            Sort::only(['id']),
         ];
         yield [
             <<<HTML
@@ -1060,7 +1060,7 @@ final class GridViewTest extends TestCase
             </tr>
             </tbody>
             HTML,
-            Sort::only(['name'])
+            Sort::only(['name']),
         ];
     }
 
