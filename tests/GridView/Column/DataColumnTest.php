@@ -11,7 +11,6 @@ use Yiisoft\Data\Reader\Iterable\IterableDataReader;
 use Yiisoft\Di\Container;
 use Yiisoft\Di\ContainerConfig;
 use Yiisoft\Validator\Rule\Integer;
-use Yiisoft\Validator\Rule\Required;
 use Yiisoft\Validator\Validator;
 use Yiisoft\Validator\ValidatorInterface;
 use Yiisoft\Yii\DataView\Filter\Factory\EqualsFilterFactory;
@@ -111,16 +110,16 @@ final class DataColumnTest extends TestCase
         yield 'float' => ['3.14', 3.14];
         yield 'callable' => [
             'Name: John, Age: 25',
-            static fn(array $data, DataContext $context) => 'Name: ' . $data['name'] . ', Age: ' . $data['age']
+            static fn(array $data, DataContext $context) => 'Name: ' . $data['name'] . ', Age: ' . $data['age'],
         ];
         yield 'value-presenter' => [
             'john',
-            new class() implements ValuePresenterInterface {
+            new class () implements ValuePresenterInterface {
                 public function present(mixed $value): string
                 {
                     return strtolower($value);
                 }
-            }
+            },
         ];
     }
 
@@ -200,11 +199,11 @@ final class DataColumnTest extends TestCase
     {
         yield 'array' => [
             '<td class="body-class">John</td>',
-            ['class' => 'body-class']
+            ['class' => 'body-class'],
         ];
         yield 'callable' => [
             '<td class="body-class-7">John</td>',
-            static fn(array $data, DataContext $context) => ['class' => 'body-class-' . $data['id']]
+            static fn(array $data, DataContext $context) => ['class' => 'body-class-' . $data['id']],
         ];
     }
 
@@ -227,15 +226,15 @@ final class DataColumnTest extends TestCase
     {
         yield 'string' => [
             '<td class="body-class">John</td>',
-            'body-class'
+            'body-class',
         ];
         yield 'array' => [
             '<td class="class1 class2">John</td>',
-            ['class1', 'class2']
+            ['class1', 'class2'],
         ];
         yield 'callable' => [
             '<td class="body-class-7">John</td>',
-            static fn(array $data, DataContext $context) => 'body-class-' . $data['id']
+            static fn(array $data, DataContext $context) => 'body-class-' . $data['id'],
         ];
     }
 
