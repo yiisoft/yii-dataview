@@ -1098,4 +1098,44 @@ final class GridViewTest extends TestCase
 
         return (new GridView($container))->dataReader($dataReader);
     }
+
+    public function testImmutability(): void
+    {
+        $gridView = $this->createGridView();
+
+        $this->assertNotSame($gridView, $gridView->addColumnRendererConfigs([]));
+        $this->assertNotSame($gridView, $gridView->filterCellAttributes([]));
+        $this->assertNotSame($gridView, $gridView->filterCellInvalidClass('invalid'));
+        $this->assertNotSame($gridView, $gridView->filterErrorsContainerAttributes([]));
+        $this->assertNotSame($gridView, $gridView->filterFormId('form'));
+        $this->assertNotSame($gridView, $gridView->filterFormAttributes([]));
+        $this->assertNotSame($gridView, $gridView->keepPageOnSort());
+        $this->assertNotSame($gridView, $gridView->afterRow(null));
+        $this->assertNotSame($gridView, $gridView->beforeRow(null));
+        $this->assertNotSame($gridView, $gridView->columns());
+        $this->assertNotSame($gridView, $gridView->columnGrouping());
+        $this->assertNotSame($gridView, $gridView->emptyCell('test'));
+        $this->assertNotSame($gridView, $gridView->emptyCellAttributes([]));
+        $this->assertNotSame($gridView, $gridView->enableFooter());
+        $this->assertNotSame($gridView, $gridView->footerRowAttributes([]));
+        $this->assertNotSame($gridView, $gridView->enableHeader());
+        $this->assertNotSame($gridView, $gridView->headerRowAttributes([]));
+        $this->assertNotSame($gridView, $gridView->bodyRowAttributes([]));
+        $this->assertNotSame($gridView, $gridView->tableAttributes([]));
+        $this->assertNotSame($gridView, $gridView->addTableClass('test'));
+        $this->assertNotSame($gridView, $gridView->tableClass('test'));
+        $this->assertNotSame($gridView, $gridView->tbodyAttributes([]));
+        $this->assertNotSame($gridView, $gridView->addTbodyClass('test'));
+        $this->assertNotSame($gridView, $gridView->tbodyClass('test'));
+        $this->assertNotSame($gridView, $gridView->headerCellAttributes([]));
+        $this->assertNotSame($gridView, $gridView->bodyCellAttributes([]));
+        $this->assertNotSame($gridView, $gridView->sortableLinkAttributes([]));
+        $this->assertNotSame($gridView, $gridView->sortableHeaderPrepend('test'));
+        $this->assertNotSame($gridView, $gridView->sortableHeaderAppend('test'));
+        $this->assertNotSame($gridView, $gridView->sortableHeaderAscPrepend('test'));
+        $this->assertNotSame($gridView, $gridView->sortableHeaderAscAppend('test'));
+        $this->assertNotSame($gridView, $gridView->sortableHeaderDescPrepend('test'));
+        $this->assertNotSame($gridView, $gridView->sortableHeaderDescAppend('test'));
+        $this->assertNotSame($gridView, $gridView->noResultsCellAttributes([]));
+    }
 }
