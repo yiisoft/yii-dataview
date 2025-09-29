@@ -5,796 +5,548 @@ declare(strict_types=1);
 namespace Yiisoft\Yii\DataView\Tests\GridView\Column;
 
 use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\TestWith;
 use PHPUnit\Framework\TestCase;
 use Yiisoft\Data\Reader\Iterable\IterableDataReader;
-use Yiisoft\Definitions\Exception\CircularReferenceException;
-use Yiisoft\Definitions\Exception\InvalidConfigException;
-use Yiisoft\Definitions\Exception\NotInstantiableException;
-use Yiisoft\Factory\NotFoundException;
-use Yiisoft\Html\NoEncode;
+use Yiisoft\Di\Container;
+use Yiisoft\Di\ContainerConfig;
+use Yiisoft\Validator\Rule\Integer;
+use Yiisoft\Validator\Rule\Required;
+use Yiisoft\Validator\Validator;
+use Yiisoft\Validator\ValidatorInterface;
+use Yiisoft\Yii\DataView\Filter\Factory\EqualsFilterFactory;
+use Yiisoft\Yii\DataView\Filter\Widget\TextInputFilter;
 use Yiisoft\Yii\DataView\GridView\Column\DataColumn;
+use Yiisoft\Yii\DataView\GridView\Column\DataColumnRenderer;
+use Yiisoft\Yii\DataView\GridView\Column\Base\DataContext;
 use Yiisoft\Yii\DataView\GridView\GridView;
-use Yiisoft\Yii\DataView\Tests\Support\Assert;
-use Yiisoft\Yii\DataView\Tests\Support\TestTrait;
+use Yiisoft\Yii\DataView\Tests\Support\SimpleUrlParameterProvider;
+use Yiisoft\Yii\DataView\Tests\Support\StringableObject;
+use Yiisoft\Yii\DataView\ValuePresenter\ValuePresenterInterface;
 
 final class DataColumnTest extends TestCase
 {
-    use TestTrait;
-
-    private array $data = [
-        ['id' => 1, 'name' => 'John', 'age' => 20],
-        ['id' => 2, 'name' => 'Mary', 'age' => 21],
-    ];
-
-    /**
-     * @throws InvalidConfigException
-     * @throws NotFoundException
-     * @throws NotInstantiableException
-     * @throws CircularReferenceException
-     */
-    public function testContent(): void
+    public function testBase(): void
     {
-        Assert::equalsWithoutLE(
+        $html = $this->createGridView([['name' => 'John', 'age' => 25]])
+            ->columns(new DataColumn())
+            ->render();
+
+        $this->assertSame(
             <<<HTML
-            <div id="w1-grid">
             <table>
             <thead>
             <tr>
-            <th>Id</th>
-            <th>Name</th>
+            <th></th>
             </tr>
             </thead>
             <tbody>
             <tr>
-            <td>1</td>
+            <td>&nbsp;</td>
+            </tr>
+            </tbody>
+            </table>
+            HTML,
+            $html,
+        );
+    }
+
+    public function testProperty(): void
+    {
+        $html = $this->createGridView([['name' => 'John', 'age' => 25]])
+            ->columns(new DataColumn(property: 'name'))
+            ->render();
+
+        $this->assertStringContainsString(
+            <<<HTML
             <td>John</td>
-            </tr>
-            <tr>
-            <td>2</td>
-            <td>Mary</td>
-            </tr>
-            </tbody>
-            </table>
-            <div>Page <b>1</b> of <b>1</b></div>
-            </div>
             HTML,
-            GridView::widget()
-                ->columns(
-                    new DataColumn(
-                        'id',
-                        content: static fn(array $data): int => (int)$data['id'],
-                    ),
-                    new DataColumn(
-                        'name',
-                        content: static fn(array $data): string => (string)$data['name'],
-                    ),
-                )
-                ->id('w1-grid')
-                ->dataReader($this->createOffsetPaginator($this->data, 10))
-                ->render()
+            $html,
         );
     }
 
-    /**
-     * @throws InvalidConfigException
-     * @throws NotFoundException
-     * @throws NotInstantiableException
-     * @throws CircularReferenceException
-     */
-    public function testContentAttributes(): void
+    public function testHeader(): void
     {
-        Assert::equalsWithoutLE(
+        $html = $this->createGridView([['name' => 'John']])
+            ->columns(new DataColumn(property: 'name', header: 'Full Name'))
+            ->render();
+
+        $this->assertStringContainsString(
             <<<HTML
-            <div id="w1-grid">
-            <table>
             <thead>
             <tr>
-            <th>Id</th>
-            <th>Name</th>
+            <th>Full Name</th>
             </tr>
             </thead>
-            <tbody>
-            <tr>
-            <td class="test.class">1</td>
-            <td class="test.class">John</td>
-            </tr>
-            <tr>
-            <td class="test.class">2</td>
-            <td class="test.class">Mary</td>
-            </tr>
-            </tbody>
-            </table>
-            <div>Page <b>1</b> of <b>1</b></div>
-            </div>
             HTML,
-            GridView::widget()
-                ->columns(
-                    new DataColumn(
-                        'id',
-                        content: static fn(array $data): int => (int)$data['id'],
-                        bodyAttributes: ['class' => 'test.class'],
-                    ),
-                    new DataColumn(
-                        'name',
-                        content: static fn(array $data): string => (string)$data['name'],
-                        bodyAttributes: ['class' => 'test.class'],
-                    ),
-                )
-                ->id('w1-grid')
-                ->dataReader($this->createOffsetPaginator($this->data, 10))
-                ->render()
+            $html,
         );
     }
 
-    /**
-     * @throws InvalidConfigException
-     * @throws NotFoundException
-     * @throws NotInstantiableException
-     * @throws CircularReferenceException
-     */
-    public function testContentAttributesClosure(): void
+    #[TestWith(['&lt;b&gt;Header&lt;/b&gt;', true])]
+    #[TestWith(['<b>Header</b>', false])]
+    public function testEncodeHeader(string $expected, bool $encode): void
     {
-        Assert::equalsWithoutLE(
+        $html = $this->createGridView([['name' => 'John']])
+            ->columns(new DataColumn(property: 'name', header: '<b>Header</b>', encodeHeader: $encode))
+            ->render();
+
+        $this->assertStringContainsString(
             <<<HTML
-            <div id="w1-grid">
-            <table>
             <thead>
             <tr>
-            <th>Id</th>
-            <th>Name</th>
+            <th>$expected</th>
             </tr>
             </thead>
-            <tbody>
-            <tr>
-            <td class="test.class">1</td>
-            <td class="test.class">John</td>
-            </tr>
-            <tr>
-            <td class="test.class">2</td>
-            <td class="test.class">Mary</td>
-            </tr>
-            </tbody>
-            </table>
-            <div>Page <b>1</b> of <b>1</b></div>
-            </div>
             HTML,
-            GridView::widget()
-                ->columns(
-                    new DataColumn('id', bodyAttributes: ['class' => static fn(): string => 'test.class']),
-                    new DataColumn('name', bodyAttributes: ['class' => static fn(): string => 'test.class']),
-                )
-                ->id('w1-grid')
-                ->dataReader($this->createOffsetPaginator($this->data, 10))
-                ->render()
+            $html,
         );
     }
 
-    public function testLabel(): void
+    public static function dataContent(): iterable
     {
-        Assert::equalsWithoutLE(
-            <<<HTML
-            <div id="w1-grid">
-            <table>
-            <thead>
-            <tr>
-            <th>test.id</th>
-            <th>test.username</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr>
-            <td>1</td>
-            <td>John</td>
-            </tr>
-            <tr>
-            <td>2</td>
-            <td>Mary</td>
-            </tr>
-            </tbody>
-            </table>
-            <div>Page <b>1</b> of <b>1</b></div>
-            </div>
-            HTML,
-            GridView::widget()
-                ->columns(
-                    new DataColumn('id', header: 'test.id'),
-                    new DataColumn('name', header: 'test.username'),
-                )
-                ->id('w1-grid')
-                ->dataReader($this->createOffsetPaginator($this->data, 10))
-                ->render()
-        );
-    }
-
-    /**
-     * @throws InvalidConfigException
-     * @throws NotFoundException
-     * @throws NotInstantiableException
-     * @throws CircularReferenceException
-     */
-    public function testLabelMbString(): void
-    {
-        Assert::equalsWithoutLE(
-            <<<HTML
-            <div id="w1-grid">
-            <table>
-            <thead>
-            <tr>
-            <th>Id</th>
-            <th>Όνομα χρήστη</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr>
-            <td>1</td>
-            <td>John</td>
-            </tr>
-            <tr>
-            <td>2</td>
-            <td>Mary</td>
-            </tr>
-            </tbody>
-            </table>
-            <div>Page <b>1</b> of <b>1</b></div>
-            </div>
-            HTML,
-            GridView::widget()
-                ->columns(
-                    new DataColumn('id'),
-                    new DataColumn('name', header: 'Όνομα χρήστη'),
-                )
-                ->id('w1-grid')
-                ->dataReader($this->createOffsetPaginator($this->data, 10))
-                ->render()
-        );
-    }
-
-    /**
-     * @throws InvalidConfigException
-     * @throws NotFoundException
-     * @throws NotInstantiableException
-     * @throws CircularReferenceException
-     */
-    public function testLabelAttributes(): void
-    {
-        Assert::equalsWithoutLE(
-            <<<HTML
-            <div id="w1-grid">
-            <table>
-            <thead>
-            <tr>
-            <th class="test.class">test.id</th>
-            <th class="test.class">test.username</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr>
-            <td>1</td>
-            <td>John</td>
-            </tr>
-            <tr>
-            <td>2</td>
-            <td>Mary</td>
-            </tr>
-            </tbody>
-            </table>
-            <div>Page <b>1</b> of <b>1</b></div>
-            </div>
-            HTML,
-            GridView::widget()
-                ->columns(
-                    new DataColumn('id', header: 'test.id', headerAttributes: ['class' => 'test.class']),
-                    new DataColumn('name', header: 'test.username', headerAttributes: ['class' => 'test.class']),
-                )
-                ->id('w1-grid')
-                ->dataReader($this->createOffsetPaginator($this->data, 10))
-                ->render()
-        );
-    }
-
-    public function testNotSorting(): void
-    {
-        Assert::equalsWithoutLE(
-            <<<HTML
-            <div id="w1-grid">
-            <table>
-            <thead>
-            <tr>
-            <th>Id</th>
-            <th>Name</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr>
-            <td>1</td>
-            <td>test</td>
-            </tr>
-            <tr>
-            <td>2</td>
-            <td>test</td>
-            </tr>
-            </tbody>
-            </table>
-            <div>Page <b>1</b> of <b>1</b></div>
-            </div>
-            HTML,
-            GridView::widget()
-                ->columns(
-                    new DataColumn('id', withSorting: false),
-                    new DataColumn('name', content: 'test'),
-                )
-                ->id('w1-grid')
-                ->dataReader($this->createOffsetPaginator($this->data, 10, 1, true))
-                ->render()
-        );
-    }
-
-    /**
-     * @throws InvalidConfigException
-     * @throws NotFoundException
-     * @throws NotInstantiableException
-     * @throws CircularReferenceException
-     */
-    public function testNotVisible(): void
-    {
-        Assert::equalsWithoutLE(
-            <<<HTML
-            <div id="w1-grid">
-            <table>
-            <thead>
-            <tr>
-            <th>Id</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr>
-            <td>1</td>
-            </tr>
-            <tr>
-            <td>2</td>
-            </tr>
-            </tbody>
-            </table>
-            <div>Page <b>1</b> of <b>1</b></div>
-            </div>
-            HTML,
-            GridView::widget()
-                ->columns(
-                    new DataColumn('id'),
-                    new DataColumn('name', visible: false),
-                )
-                ->id('w1-grid')
-                ->dataReader($this->createOffsetPaginator($this->data, 10))
-                ->render()
-        );
-    }
-
-    public function testSort(): void
-    {
-        Assert::equalsWithoutLE(
-            <<<HTML
-            <div id="w1-grid">
-            <table>
-            <thead>
-            <tr>
-            <th>Id</th>
-            <th>Name</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr>
-            <td>1</td>
-            <td>John</td>
-            </tr>
-            <tr>
-            <td>2</td>
-            <td>Mary</td>
-            </tr>
-            </tbody>
-            </table>
-            <div>Page <b>1</b> of <b>1</b></div>
-            </div>
-            HTML,
-            GridView::widget()
-                ->columns(
-                    new DataColumn('id'),
-                    new DataColumn('name'),
-                )
-                ->id('w1-grid')
-                ->dataReader($this->createOffsetPaginator($this->data, 10, 1, true))
-                ->render()
-        );
-    }
-
-    public function testValue(): void
-    {
-        Assert::equalsWithoutLE(
-            <<<HTML
-            <div id="w1-grid">
-            <table>
-            <thead>
-            <tr>
-            <th>Id</th>
-            <th>Name</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr>
-            <td>1</td>
-            <td>test</td>
-            </tr>
-            <tr>
-            <td>1</td>
-            <td>test</td>
-            </tr>
-            </tbody>
-            </table>
-            <div>Page <b>1</b> of <b>1</b></div>
-            </div>
-            HTML,
-            GridView::widget()
-                ->columns(
-                    new DataColumn('id', content: 1),
-                    new DataColumn('name', content: 'test'),
-                )
-                ->id('w1-grid')
-                ->dataReader($this->createOffsetPaginator($this->data, 10))
-                ->render()
-        );
-    }
-
-    /**
-     * @throws InvalidConfigException
-     * @throws NotFoundException
-     * @throws NotInstantiableException
-     * @throws CircularReferenceException
-     */
-    public function testValueClosure(): void
-    {
-        Assert::equalsWithoutLE(
-            <<<HTML
-            <div id="w1-grid">
-            <table>
-            <thead>
-            <tr>
-            <th>Id</th>
-            <th>Name</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr>
-            <td>1</td>
-            <td>John</td>
-            </tr>
-            <tr>
-            <td>2</td>
-            <td>Mary</td>
-            </tr>
-            </tbody>
-            </table>
-            <div>Page <b>1</b> of <b>1</b></div>
-            </div>
-            HTML,
-            GridView::widget()
-                ->columns(
-                    new DataColumn(
-                        'id',
-                        content: static fn(array $data): string => (string)$data['id']
-                    ),
-                    new DataColumn(
-                        'name',
-                        content: static fn(array $data): string => (string)$data['name']
-                    ),
-                )
-                ->id('w1-grid')
-                ->dataReader($this->createOffsetPaginator($this->data, 10))
-                ->render()
-        );
-    }
-
-    public function testColumnClasses(): void
-    {
-        Assert::equalsWithoutLE(
-            <<<HTML
-            <div>
-            <table>
-            <colgroup>
-            <col class="columnClassAttr columnClass" custom="columnAttributes">
-            </colgroup>
-            <thead>
-            <tr>
-            <th class="headerClassAttr headerClass" custom="headerAttributes">Name</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr>
-            <td class="bodyClassAttr bodyClass" custom="bodyAttributes">John</td>
-            </tr>
-            <tr>
-            <td class="bodyClassAttr bodyClass" custom="bodyAttributes">Mary</td>
-            </tr>
-            </tbody>
-            </table>
-            <div>Page <b>1</b> of <b>1</b></div>
-            </div>
-            HTML,
-            GridView::widget()
-                ->columns(
-                    new DataColumn(
-                        'name',
-                        columnAttributes: [
-                            'custom' => 'columnAttributes',
-                            'class' => 'columnClassAttr',
-                        ],
-                        headerAttributes: [
-                            'custom' => 'headerAttributes',
-                            'class' => 'headerClassAttr',
-                        ],
-                        bodyAttributes: [
-                            'custom' => 'bodyAttributes',
-                            'class' => ['bodyClassAttr'],
-                        ],
-                        columnClass: 'columnClass',
-                        headerClass: 'headerClass',
-                        bodyClass: 'bodyClass'
-                    ),
-                )
-                ->columnGrouping()
-                ->dataReader(new IterableDataReader($this->data))
-                ->render()
-        );
-    }
-
-    public function testFilterEmptyDefault(): void
-    {
-        $data = [
-            ['id' => 1, 'status' => 0],
-            ['id' => 2, 'status' => 1],
+        yield 'string' => ['Custom Content', 'Custom Content'];
+        yield 'stringable' => ['Custom Content', new StringableObject('Custom Content')];
+        yield 'int' => ['42', 42];
+        yield 'float' => ['3.14', 3.14];
+        yield 'callable' => [
+            'Name: John, Age: 25',
+            static fn(array $data, DataContext $context) => 'Name: ' . $data['name'] . ', Age: ' . $data['age']
         ];
-
-        $output = GridView::widget()
-            ->columns(
-                new DataColumn(
-                    'status',
-                    filter: true,
-                    filterEmpty: true
-                ),
-            )
-            ->id('w1-grid')
-            ->dataReader($this->createOffsetPaginator($data, 10))
-            ->render();
-
-        $this->assertStringContainsString('<input type="text" name="status"', $output);
-        $this->assertStringContainsString('<td>0</td>', $output);
-        $this->assertStringContainsString('<td>1</td>', $output);
-    }
-
-    public function testFilterEmptyCustom(): void
-    {
-        $data = [
-            ['id' => 1, 'status' => 0],
-            ['id' => 2, 'status' => 1],
+        yield 'value-presenter' => [
+            'john',
+            new class() implements ValuePresenterInterface {
+                public function present(mixed $value): string
+                {
+                    return strtolower($value);
+                }
+            }
         ];
-
-        $output = GridView::widget()
-            ->columns(
-                new DataColumn(
-                    'status',
-                    filter: true,
-                    filterEmpty: fn($value): bool => $value === 0
-                ),
-            )
-            ->id('w1-grid')
-            ->dataReader($this->createOffsetPaginator($data, 10))
-            ->render();
-
-        $this->assertStringContainsString('<input type="text" name="status"', $output);
-        $this->assertStringContainsString('<td>0</td>', $output);
-        $this->assertStringContainsString('<td>1</td>', $output);
     }
 
-    public function testDropdownFilter(): void
+    #[DataProvider('dataContent')]
+    public function testContent(string $expected, mixed $content): void
     {
-        $data = [
-            ['id' => 1, 'status' => 'active'],
-            ['id' => 2, 'status' => 'inactive'],
-        ];
-
-        $output = GridView::widget()
-            ->columns(
-                new DataColumn(
-                    'status',
-                    filter: ['active' => 'Active', 'inactive' => 'Inactive']
-                ),
-            )
-            ->id('w1-grid')
-            ->dataReader($this->createOffsetPaginator($data, 10))
+        $html = $this->createGridView([['name' => 'John', 'age' => 25]])
+            ->columns(new DataColumn(property: 'name', content: $content))
             ->render();
 
-        $this->assertStringContainsString('<select name="status"', $output);
-        $this->assertStringContainsString('<option value="active">Active</option>', $output);
-        $this->assertStringContainsString('<option value="inactive">Inactive</option>', $output);
+        $this->assertStringContainsString(
+            <<<HTML
+            <td>$expected</td>
+            HTML,
+            $html,
+        );
     }
 
-    public function testHeaderWithoutProperty(): void
+    #[TestWith(['&lt;b&gt;Bold&lt;/b&gt;', true])]
+    #[TestWith(['<b>Bold</b>', false])]
+    public function testEncodeContent(string $expected, bool $encode): void
     {
-        $output = GridView::widget()
-            ->columns(
-                new DataColumn(
-                    content: fn($data) => $data['id']
-                ),
-            )
-            ->id('w1-grid')
-            ->dataReader($this->createOffsetPaginator($this->data, 10))
+        $html = $this->createGridView([['content' => '<b>Bold</b>']])
+            ->columns(new DataColumn(property: 'content', encodeContent: $encode))
             ->render();
 
-        $this->assertStringContainsString('<th></th>', $output);
+        $this->assertStringContainsString(
+            <<<HTML
+            <td>$expected</td>
+            HTML,
+            $html,
+        );
     }
 
-    public function testHeaderWithCustomText(): void
+    public function testColumnAttributes(): void
     {
-        $output = GridView::widget()
+        $html = $this->createGridView([['name' => 'John']])
             ->columns(
                 new DataColumn(
-                    property: 'id',
-                    header: '<b>ID</b>',
-                    encodeHeader: false
-                ),
+                    property: 'name',
+                    columnAttributes: ['class' => 'data-col']
+                )
             )
-            ->id('w1-grid')
-            ->dataReader($this->createOffsetPaginator($this->data, 10))
-            ->render();
-
-        $this->assertStringContainsString('<th><b>ID</b></th>', $output);
-    }
-
-    public function testHeaderWithDefaultText(): void
-    {
-        $output = GridView::widget()
-            ->columns(
-                new DataColumn('user_name'),
-            )
-            ->id('w1-grid')
-            ->dataReader($this->createOffsetPaginator($this->data, 10))
-            ->render();
-
-        $this->assertStringContainsString('<th>User_name</th>', $output);
-    }
-
-    public function testColumnAndHeaderClass(): void
-    {
-        $output = GridView::widget()
-            ->columns(
-                new DataColumn(
-                    'id',
-                    columnClass: 'column-class',
-                    headerClass: 'header-class'
-                ),
-            )
-            ->id('w1-grid')
-            ->dataReader($this->createOffsetPaginator($this->data, 10))
             ->columnGrouping()
             ->render();
 
-        $this->assertStringContainsString('<col class="column-class"', $output);
-        $this->assertStringContainsString('<th class="header-class"', $output);
+        $this->assertStringContainsString(
+            <<<HTML
+            <colgroup>
+            <col class="data-col">
+            </colgroup>
+            HTML,
+            $html,
+        );
     }
 
-    public function testFilterWithValidationError(): void
+    public function testHeaderAttributes(): void
     {
-        $data = [
-            ['id' => 1, 'email' => 'test@example.com'],
-            ['id' => 2, 'email' => 'invalid'],
-        ];
-
-        $_GET['email'] = 'not-an-email';
-
-        $output = GridView::widget()
+        $html = $this->createGridView([['name' => 'John']])
             ->columns(
                 new DataColumn(
-                    'email',
+                    property: 'name',
+                    headerAttributes: ['class' => 'header-class']
+                )
+            )
+            ->render();
+
+        $this->assertStringContainsString(
+            <<<HTML
+            <th class="header-class">Name</th>
+            HTML,
+            $html,
+        );
+    }
+
+    public static function dataBodyAttributes(): iterable
+    {
+        yield 'array' => [
+            '<td class="body-class">John</td>',
+            ['class' => 'body-class']
+        ];
+        yield 'callable' => [
+            '<td class="body-class-7">John</td>',
+            static fn(array $data, DataContext $context) => ['class' => 'body-class-' . $data['id']]
+        ];
+    }
+
+    #[DataProvider('dataBodyAttributes')]
+    public function testBodyAttributes(string $expected, mixed $attributes): void
+    {
+        $html = $this->createGridView([['id' => 7, 'name' => 'John']])
+            ->columns(
+                new DataColumn(
+                    property: 'name',
+                    bodyAttributes: $attributes,
+                )
+            )
+            ->render();
+
+        $this->assertStringContainsString($expected, $html);
+    }
+
+    public static function dataBodyClass(): iterable
+    {
+        yield 'string' => [
+            '<td class="body-class">John</td>',
+            'body-class'
+        ];
+        yield 'array' => [
+            '<td class="class1 class2">John</td>',
+            ['class1', 'class2']
+        ];
+        yield 'callable' => [
+            '<td class="body-class-7">John</td>',
+            static fn(array $data, DataContext $context) => 'body-class-' . $data['id']
+        ];
+    }
+
+    #[DataProvider('dataBodyClass')]
+    public function testBodyClass(string $expected, mixed $bodyClass): void
+    {
+        $html = $this->createGridView([['id' => 7, 'name' => 'John']])
+            ->columns(
+                new DataColumn(
+                    property: 'name',
+                    bodyClass: $bodyClass,
+                )
+            )
+            ->render();
+
+        $this->assertStringContainsString($expected, $html);
+    }
+
+    public function testFooter(): void
+    {
+        $html = $this->createGridView([['name' => 'John']])
+            ->columns(
+                new DataColumn(
+                    property: 'name',
+                    footer: 'Footer Content'
+                )
+            )
+            ->enableFooter()
+            ->render();
+
+        $this->assertStringContainsString(
+            <<<HTML
+            <tfoot>
+            <tr>
+            <td>Footer Content</td>
+            </tr>
+            </tfoot>
+            HTML,
+            $html,
+        );
+    }
+
+    public function testVisible(): void
+    {
+        $html = $this->createGridView([['name' => 'John']])
+            ->columns(new DataColumn(property: 'name', visible: false))
+            ->render();
+
+        $this->assertSame(
+            <<<HTML
+            <table>
+            <thead>
+            <tr></tr>
+            </thead>
+            <tbody>
+            <tr></tr>
+            </tbody>
+            </table>
+            HTML,
+            $html,
+        );
+    }
+
+    public function testFilterArray(): void
+    {
+        $html = $this->createGridView([['status' => 'active']])
+            ->filterFormId('FID')
+            ->columns(
+                new DataColumn(
+                    property: 'status',
+                    filter: ['active' => 'Active', 'inactive' => 'Inactive'],
+                )
+            )
+            ->render();
+
+        $this->assertStringContainsString(
+            <<<HTML
+            <thead>
+            <tr>
+            <th>Status</th>
+            </tr>
+            <tr>
+            <td><select name="status" form="FID" onChange="this.form.submit()">
+            <option value></option>
+            <option value="active">Active</option>
+            <option value="inactive">Inactive</option>
+            </select></td>
+            </tr>
+            </thead>
+            HTML,
+            $html,
+        );
+    }
+
+    public function testFilterArrayWithValue(): void
+    {
+        $html = $this->createGridView([['status' => 'active']])
+            ->filterFormId('FID')
+            ->urlParameterProvider(new SimpleUrlParameterProvider(['status' => 'inactive']))
+            ->columns(
+                new DataColumn(
+                    property: 'status',
+                    filter: ['active' => 'Active', 'inactive' => 'Inactive'],
+                )
+            )
+            ->render();
+
+        $this->assertStringContainsString(
+            <<<HTML
+            <thead>
+            <tr>
+            <th>Status</th>
+            </tr>
+            <tr>
+            <td><select name="status" form="FID" onChange="this.form.submit()">
+            <option value></option>
+            <option value="active">Active</option>
+            <option value="inactive" selected>Inactive</option>
+            </select></td>
+            </tr>
+            </thead>
+            HTML,
+            $html,
+        );
+    }
+
+    public function testFilterTrue(): void
+    {
+        $html = $this->createGridView([['name' => 'John']])
+            ->filterFormId('FID')
+            ->columns(
+                new DataColumn(
+                    property: 'name',
                     filter: true,
-                    filterValidation: new \Yiisoft\Validator\Rule\Email()
-                ),
+                )
             )
-            ->id('w1-grid')
-            ->dataReader($this->createOffsetPaginator($data, 10))
             ->render();
 
-        $this->assertStringContainsString('name="email"', $output);
-        $this->assertStringContainsString('test@example.com', $output);
-        $this->assertStringContainsString('invalid', $output);
-
-        unset($_GET['email']);
+        $this->assertStringContainsString(
+            <<<HTML
+            <thead>
+            <tr>
+            <th>Name</th>
+            </tr>
+            <tr>
+            <td><input type="text" name="name" form="FID"></td>
+            </tr>
+            </thead>
+            HTML,
+            $html,
+        );
     }
 
-    public function testCustomFilterFactory(): void
+    public function testFilterWidget(): void
     {
-        $data = [
-            ['id' => 1, 'status' => 'active'],
-            ['id' => 2, 'status' => 'inactive'],
-        ];
-
-        $_GET['status'] = 'active';
-
-        $output = GridView::widget()
+        $html = $this->createGridView([['email' => 'john@example.com']])
+            ->filterFormId('FID')
             ->columns(
                 new DataColumn(
-                    'status',
+                    property: 'email',
+                    filter: TextInputFilter::widget()->addAttributes(['class' => 'red']),
+                )
+            )
+            ->render();
+
+        $this->assertStringContainsString(
+            <<<HTML
+            <thead>
+            <tr>
+            <th>Email</th>
+            </tr>
+            <tr>
+            <td><input type="text" class="red" name="email" form="FID"></td>
+            </tr>
+            </thead>
+            HTML,
+            $html,
+        );
+    }
+
+    public function testFilterValidation(): void
+    {
+        $html = $this->createGridView([['age' => 23]])
+            ->filterFormId('FID')
+            ->urlParameterProvider(new SimpleUrlParameterProvider(['age' => '105']))
+            ->columns(
+                new DataColumn(
+                    property: 'age',
                     filter: true,
-                    filterFactory: new \Yiisoft\Yii\DataView\Filter\Factory\EqualsFilterFactory()
-                ),
+                    filterValidation: new Integer(min: 18, max: 99),
+                )
             )
-            ->id('w1-grid')
-            ->dataReader($this->createOffsetPaginator($data, 10))
             ->render();
 
-        $this->assertStringContainsString('<input type="text" name="status"', $output);
-        $this->assertStringContainsString('active', $output);
-
-        unset($_GET['status']);
+        $this->assertStringContainsString(
+            <<<HTML
+            <td><input type="text" name="age" value="105" form="FID"><div><div>Value must be no greater than 99.</div></div></td>
+            HTML,
+            $html,
+        );
     }
 
-    public function testContentWithNullValue(): void
+    public function testFilterEmptyCallable(): void
     {
-        $data = [
-            ['id' => 1, 'name' => null],
-            ['id' => 2, 'name' => 'Mary'],
-        ];
-
-        $output = GridView::widget()
+        $html = $this->createGridView([
+            ['name' => 'Anna'],
+            ['name' => 'Eva'],
+        ])
+            ->filterFormId('FID')
+            ->urlParameterProvider(new SimpleUrlParameterProvider(['name' => 'anna']))
             ->columns(
                 new DataColumn(
-                    'name',
-                    content: fn($data) => $data['name'] ?? 'N/A'
-                ),
+                    property: 'name',
+                    filter: true,
+                    filterEmpty: static fn(string $value) => $value === 'anna',
+                )
             )
-            ->id('w1-grid')
-            ->dataReader($this->createOffsetPaginator($data, 10))
             ->render();
 
-        $this->assertStringContainsString('<td>N/A</td>', $output);
-        $this->assertStringContainsString('<td>Mary</td>', $output);
+        $this->assertStringContainsString(
+            <<<HTML
+            <tbody>
+            <tr>
+            <td>Anna</td>
+            </tr>
+            <tr>
+            <td>Eva</td>
+            </tr>
+            </tbody>
+            HTML,
+            $html,
+        );
     }
 
-    public static function dataEncodeContent(): array
+    public function testFilterEmptyFalse(): void
     {
-        return [
-            ['John &gt;', null, true],
-            ['John >', null, false],
-            ['123', 123, true],
-            ['123', 123, false],
-            ['20.12', 20.12, true],
-            ['20.12', 20.12, false],
-            ['1 &gt; 2', '1 > 2', true],
-            ['1 > 2', '1 > 2', false],
-            ['1 &gt; 2', NoEncode::string('1 > 2'), true],
-            ['1 > 2', NoEncode::string('1 > 2'), false],
-            ['1 &gt; 2', static fn() => '1 > 2', true],
-            ['1 > 2', static fn() => '1 > 2', false],
-            ['1 &gt; 2', static fn() => NoEncode::string('1 > 2'), true],
-            ['1 > 2', static fn() => NoEncode::string('1 > 2'), false],
-        ];
-    }
-
-    #[DataProvider('dataEncodeContent')]
-    public function testEncodeContent(string $expected, mixed $content, bool $encodeContent): void
-    {
-        $output = GridView::widget()
+        $html = $this->createGridView([
+            ['name' => 'Anna'],
+            ['name' => 'Eva'],
+            ['name' => ''],
+        ])
+            ->filterFormId('FID')
+            ->urlParameterProvider(new SimpleUrlParameterProvider(['name' => '']))
             ->columns(
                 new DataColumn(
-                    'name',
-                    content: $content,
-                    encodeContent: $encodeContent,
-                ),
-            )
-            ->dataReader(
-                new IterableDataReader([
-                    ['id' => 1, 'name' => 'John >'],
-                ])
+                    property: 'name',
+                    filter: true,
+                    filterFactory: new EqualsFilterFactory(),
+                    filterEmpty: false,
+                )
             )
             ->render();
 
-        $this->assertStringContainsString($expected, $output);
+        $this->assertStringContainsString(
+            <<<HTML
+            <tbody>
+            <tr>
+            <td>&nbsp;</td>
+            </tr>
+            </tbody>
+            HTML,
+            $html,
+        );
+    }
+
+    public function testFilterData(): void
+    {
+        $html = $this->createGridView([
+            ['name' => 'Anna'],
+            ['name' => 'Eva'],
+            ['name' => 'Anna 2'],
+        ])
+            ->filterFormId('FID')
+            ->urlParameterProvider(new SimpleUrlParameterProvider(['name' => 'anna']))
+            ->columns(
+                new DataColumn(
+                    property: 'name',
+                    filter: true,
+                )
+            )
+            ->render();
+
+        $this->assertStringContainsString(
+            <<<HTML
+            <tbody>
+            <tr>
+            <td>Anna</td>
+            </tr>
+            <tr>
+            <td>Anna 2</td>
+            </tr>
+            </tbody>
+            HTML,
+            $html,
+        );
+    }
+
+    private function createGridView(array $data = []): GridView
+    {
+        $container = new Container(
+            ContainerConfig::create()->withDefinitions([
+                ValidatorInterface::class => Validator::class,
+            ])
+        );
+
+        return (new GridView($container))
+            ->layout('{items}')
+            ->containerTag(null)
+            ->dataReader(new IterableDataReader($data))
+            ->addColumnRendererConfigs([
+                DataColumnRenderer::class => [],
+            ]);
     }
 }
