@@ -13,8 +13,7 @@ final class SimpleActionColumnUrlCreator
 {
     public function __construct(
         private readonly string $primaryKey = 'id',
-    )
-    {
+    ) {
     }
 
     public function __invoke(string $action, DataContext $context): string
