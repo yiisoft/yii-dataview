@@ -5,448 +5,240 @@ declare(strict_types=1);
 namespace Yiisoft\Yii\DataView\Tests\GridView\Column;
 
 use PHPUnit\Framework\TestCase;
-use Yiisoft\Definitions\Exception\CircularReferenceException;
-use Yiisoft\Definitions\Exception\InvalidConfigException;
-use Yiisoft\Definitions\Exception\NotInstantiableException;
-use Yiisoft\Factory\NotFoundException;
+use Yiisoft\Data\Reader\Iterable\IterableDataReader;
+use Yiisoft\Di\Container;
 use Yiisoft\Html\Tag\Input\Checkbox;
-use Yiisoft\Yii\DataView\GridView\Column\Base\DataContext;
 use Yiisoft\Yii\DataView\GridView\Column\CheckboxColumn;
-use Yiisoft\Yii\DataView\GridView\Column\DataColumn;
+use Yiisoft\Yii\DataView\GridView\Column\Base\DataContext;
 use Yiisoft\Yii\DataView\GridView\GridView;
-use Yiisoft\Yii\DataView\Tests\Support\Assert;
-use Yiisoft\Yii\DataView\Tests\Support\TestTrait;
 
 final class CheckboxColumnTest extends TestCase
 {
-    use TestTrait;
-
-    private array $data = [
-        ['id' => 1, 'name' => 'John', 'age' => 20],
-        ['id' => 2, 'name' => 'Mary', 'age' => 21],
-    ];
-
-    /**
-     * @throws InvalidConfigException
-     * @throws NotFoundException
-     * @throws NotInstantiableException
-     * @throws CircularReferenceException
-     */
-    public function testContent(): void
+    public function testBase(): void
     {
-        Assert::equalsWithoutLE(
+        $html = $this->createGridView([['id' => 1], ['id' => 2], ['id' => 3]])
+            ->columns(new CheckboxColumn())
+            ->render();
+
+        $this->assertSame(
             <<<HTML
-            <div id="w1-grid">
             <table>
             <thead>
             <tr>
-            <th>Id</th>
-            <th>Name</th>
             <th><input type="checkbox" name="checkbox-selection-all" value="1"></th>
             </tr>
             </thead>
             <tbody>
             <tr>
-            <td>1</td>
-            <td>John</td>
-            <td><input name="checkbox-selection" type="checkbox" value="0"></td>
-            </tr>
-            <tr>
-            <td>2</td>
-            <td>Mary</td>
-            <td><input name="checkbox-selection" type="checkbox" value="1"></td>
-            </tr>
-            </tbody>
-            </table>
-            <div>Page <b>1</b> of <b>1</b></div>
-            </div>
-            HTML,
-            GridView::widget()
-                ->columns(
-                    new DataColumn('id'),
-                    new DataColumn('name'),
-                    new CheckboxColumn(content: static fn(Checkbox $input, DataContext $context): string => '<input name="checkbox-selection" type="checkbox" value="' . $context->index . '">'),
-                )
-                ->id('w1-grid')
-                ->dataReader($this->createOffsetPaginator($this->data, 10))
-                ->render()
-        );
-    }
-
-    /**
-     * @throws InvalidConfigException
-     * @throws NotFoundException
-     * @throws NotInstantiableException
-     * @throws CircularReferenceException
-     */
-    public function testContentAttributes(): void
-    {
-        Assert::equalsWithoutLE(
-            <<<HTML
-            <div id="w1-grid">
-            <table>
-            <thead>
-            <tr>
-            <th>Id</th>
-            <th>Name</th>
-            <th><input type="checkbox" name="checkbox-selection-all" value="1"></th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr>
-            <td>1</td>
-            <td>John</td>
-            <td class="test.class"><input name="checkbox-selection" type="checkbox" value="0"></td>
-            </tr>
-            <tr>
-            <td>2</td>
-            <td>Mary</td>
-            <td class="test.class"><input name="checkbox-selection" type="checkbox" value="1"></td>
-            </tr>
-            </tbody>
-            </table>
-            <div>Page <b>1</b> of <b>1</b></div>
-            </div>
-            HTML,
-            GridView::widget()
-                ->columns(
-                    new DataColumn('id'),
-                    new DataColumn('name'),
-                    new CheckboxColumn(
-                        content: static fn(Checkbox $input, DataContext $context): string => '<input name="checkbox-selection" type="checkbox" value="'
-                            . $context->index . '">',
-                        bodyAttributes: ['class' => 'test.class'],
-                    ),
-                )
-                ->id('w1-grid')
-                ->dataReader($this->createOffsetPaginator($this->data, 10))
-                ->render()
-        );
-    }
-
-    /**
-     * @throws InvalidConfigException
-     * @throws NotFoundException
-     * @throws NotInstantiableException
-     * @throws CircularReferenceException
-     */
-    public function testLabel(): void
-    {
-        Assert::equalsWithoutLE(
-            <<<HTML
-            <div id="w1-grid">
-            <table>
-            <thead>
-            <tr>
-            <th>Id</th>
-            <th>Name</th>
-            <th>test.label</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr>
-            <td>1</td>
-            <td>John</td>
             <td><input type="checkbox" name="checkbox-selection" value="0"></td>
             </tr>
             <tr>
-            <td>2</td>
-            <td>Mary</td>
             <td><input type="checkbox" name="checkbox-selection" value="1"></td>
             </tr>
+            <tr>
+            <td><input type="checkbox" name="checkbox-selection" value="2"></td>
+            </tr>
             </tbody>
             </table>
-            <div>Page <b>1</b> of <b>1</b></div>
-            </div>
             HTML,
-            GridView::widget()
-                ->columns(
-                    new DataColumn('id'),
-                    new DataColumn('name'),
-                    new CheckboxColumn(header: 'test.label'),
-                )
-                ->id('w1-grid')
-                ->dataReader($this->createOffsetPaginator($this->data, 10))
-                ->render()
+            $html,
         );
     }
 
-    /**
-     * @throws InvalidConfigException
-     * @throws NotFoundException
-     * @throws NotInstantiableException
-     * @throws CircularReferenceException
-     */
-    public function testLabelMbString(): void
+    public function testHeader(): void
     {
-        Assert::equalsWithoutLE(
+        $html = $this->createGridView([['id' => 1]])
+            ->columns(new CheckboxColumn(header: 'Select Items'))
+            ->render();
+
+        $this->assertStringContainsString(
             <<<HTML
-            <div id="w1-grid">
-            <table>
             <thead>
             <tr>
-            <th>Id</th>
-            <th>Name</th>
-            <th>Πλαίσιο ελέγχου</th>
+            <th>Select Items</th>
             </tr>
             </thead>
-            <tbody>
-            <tr>
-            <td>1</td>
-            <td>John</td>
-            <td><input type="checkbox" name="checkbox-selection" value="0"></td>
-            </tr>
-            <tr>
-            <td>2</td>
-            <td>Mary</td>
-            <td><input type="checkbox" name="checkbox-selection" value="1"></td>
-            </tr>
-            </tbody>
-            </table>
-            <div>Page <b>1</b> of <b>1</b></div>
-            </div>
             HTML,
-            GridView::widget()
-                ->columns(
-                    new DataColumn('id'),
-                    new DataColumn('name'),
-                    new CheckboxColumn(header: 'Πλαίσιο ελέγχου'),
-                )
-                ->id('w1-grid')
-                ->dataReader($this->createOffsetPaginator($this->data, 10))
-                ->render()
+            $html,
         );
     }
 
-    /**
-     * @throws InvalidConfigException
-     * @throws NotFoundException
-     * @throws NotInstantiableException
-     * @throws CircularReferenceException
-     */
-    public function testLabelAttributes(): void
+    public function testMultipleFalse(): void
     {
-        Assert::equalsWithoutLE(
-            <<<HTML
-            <div id="w1-grid">
-            <table>
-            <thead>
-            <tr>
-            <th>Id</th>
-            <th>Name</th>
-            <th class="test.class">test.label</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr>
-            <td>1</td>
-            <td>John</td>
-            <td><input type="checkbox" name="checkbox-selection" value="0"></td>
-            </tr>
-            <tr>
-            <td>2</td>
-            <td>Mary</td>
-            <td><input type="checkbox" name="checkbox-selection" value="1"></td>
-            </tr>
-            </tbody>
-            </table>
-            <div>Page <b>1</b> of <b>1</b></div>
-            </div>
-            HTML,
-            GridView::widget()
-                ->columns(
-                    new DataColumn('id'),
-                    new DataColumn('name'),
-                    new CheckboxColumn(header: 'test.label', headerAttributes: ['class' => 'test.class']),
-                )
-                ->id('w1-grid')
-                ->dataReader($this->createOffsetPaginator($this->data, 10))
-                ->render()
-        );
-    }
+        $html = $this->createGridView([['id' => 1], ['id' => 2]])
+            ->columns(new CheckboxColumn(multiple: false))
+            ->render();
 
-    /**
-     * @throws InvalidConfigException
-     * @throws NotFoundException
-     * @throws NotInstantiableException
-     * @throws CircularReferenceException
-     */
-    public function testName(): void
-    {
-        Assert::equalsWithoutLE(
+        $this->assertSame(
             <<<HTML
-            <div id="w1-grid">
             <table>
             <thead>
             <tr>
-            <th>Id</th>
-            <th>Name</th>
-            <th><input type="checkbox" name="checkbox-selection-all" value="1"></th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr>
-            <td>1</td>
-            <td>John</td>
-            <td><input type="checkbox" name="test.checkbox" value="0"></td>
-            </tr>
-            <tr>
-            <td>2</td>
-            <td>Mary</td>
-            <td><input type="checkbox" name="test.checkbox" value="1"></td>
-            </tr>
-            </tbody>
-            </table>
-            <div>Page <b>1</b> of <b>1</b></div>
-            </div>
-            HTML,
-            GridView::widget()
-                ->columns(
-                    new DataColumn('id'),
-                    new DataColumn('name'),
-                    new CheckboxColumn(name: 'test.checkbox'),
-                )
-                ->id('w1-grid')
-                ->dataReader($this->createOffsetPaginator($this->data, 10))
-                ->render()
-        );
-    }
-
-    /**
-     * @throws InvalidConfigException
-     * @throws NotFoundException
-     * @throws NotInstantiableException
-     * @throws CircularReferenceException
-     */
-    public function testNotMultiple(): void
-    {
-        Assert::equalsWithoutLE(
-            <<<HTML
-            <div id="w1-grid">
-            <table>
-            <thead>
-            <tr>
-            <th>Id</th>
-            <th>Name</th>
             <th>&nbsp;</th>
             </tr>
             </thead>
             <tbody>
             <tr>
-            <td>1</td>
-            <td>John</td>
             <td><input type="checkbox" name="checkbox-selection" value="0"></td>
             </tr>
             <tr>
-            <td>2</td>
-            <td>Mary</td>
             <td><input type="checkbox" name="checkbox-selection" value="1"></td>
             </tr>
             </tbody>
             </table>
-            <div>Page <b>1</b> of <b>1</b></div>
-            </div>
             HTML,
-            GridView::widget()
-                ->columns(
-                    new DataColumn('id'),
-                    new DataColumn('name'),
-                    new CheckboxColumn(multiple: false),
-                )
-                ->id('w1-grid')
-                ->dataReader($this->createOffsetPaginator($this->data, 10))
-                ->render()
+            $html,
         );
     }
 
-    /**
-     * @throws InvalidConfigException
-     * @throws NotFoundException
-     * @throws NotInstantiableException
-     * @throws CircularReferenceException
-     */
-    public function testNotVisible(): void
+    public function testName(): void
     {
-        Assert::equalsWithoutLE(
+        $html = $this->createGridView([['id' => 1]])
+            ->columns(new CheckboxColumn(name: 'selected_items'))
+            ->render();
+
+        $this->assertStringContainsString(
             <<<HTML
-            <div id="w1-grid">
-            <table>
-            <thead>
-            <tr>
-            <th>Id</th>
-            <th>Name</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr>
-            <td>1</td>
-            <td>John</td>
-            </tr>
-            <tr>
-            <td>2</td>
-            <td>Mary</td>
-            </tr>
-            </tbody>
-            </table>
-            <div>Page <b>1</b> of <b>1</b></div>
-            </div>
+            <td><input type="checkbox" name="selected_items" value="0"></td>
             HTML,
-            GridView::widget()
-                ->columns(
-                    new DataColumn('id'),
-                    new DataColumn('name'),
-                    new CheckboxColumn(visible: false),
-                )
-                ->id('w1-grid')
-                ->dataReader($this->createOffsetPaginator($this->data, 10))
-                ->render()
+            $html,
         );
     }
 
-    /**
-     * @throws InvalidConfigException
-     * @throws NotFoundException
-     * @throws NotInstantiableException
-     * @throws CircularReferenceException
-     */
-    public function testRender(): void
+    public function testInputAttributes(): void
     {
-        Assert::equalsWithoutLE(
+        $html = $this->createGridView([['id' => 1]])
+            ->columns(
+                new CheckboxColumn(
+                    inputAttributes: ['class' => 'custom-checkbox', 'data-id' => 'test']
+                ),
+            )
+            ->render();
+
+        $this->assertStringContainsString(
             <<<HTML
-            <div id="w1-grid">
+            <td><input type="checkbox" class="custom-checkbox" name="checkbox-selection" value="0" data-id="test"></td>
+            HTML,
+            $html,
+        );
+    }
+
+    public function testContent(): void
+    {
+        $html = $this->createGridView([['id' => 1]])
+            ->columns(
+                new CheckboxColumn(
+                    content: static fn(Checkbox $checkbox, DataContext $context) => '<label>' . $checkbox . ' Row ' . $context->data['id'] . '</label>'
+                ),
+            )
+            ->render();
+
+        $this->assertStringContainsString(
+            <<<HTML
+            <td><label><input type="checkbox" name="checkbox-selection" value="0"> Row 1</label></td>
+            HTML,
+            $html,
+        );
+    }
+
+    public function testHeaderAttributes(): void
+    {
+        $html = $this->createGridView([['id' => 1]])
+            ->columns(new CheckboxColumn(
+                headerAttributes: ['class' => 'header-class']
+            ))
+            ->render();
+
+        $this->assertStringContainsString(
+            <<<HTML
+            <th class="header-class"><input type="checkbox" name="checkbox-selection-all" value="1"></th>
+            HTML,
+            $html,
+        );
+    }
+
+    public function testBodyAttributes(): void
+    {
+        $html = $this->createGridView([['id' => 1]])
+            ->columns(new CheckboxColumn(
+                bodyAttributes: ['class' => 'body-class']
+            ))
+            ->render();
+
+        $this->assertStringContainsString(
+            <<<HTML
+            <td class="body-class"><input type="checkbox" name="checkbox-selection" value="0"></td>
+            HTML,
+            $html,
+        );
+    }
+
+    public function testFooter(): void
+    {
+        $html = $this->createGridView([['id' => 1]])
+            ->columns(new CheckboxColumn(
+                footer: 'Footer Content'
+            ))
+            ->enableFooter()
+            ->render();
+
+        $this->assertStringContainsString(
+            <<<HTML
+            <tfoot>
+            <tr>
+            <td>Footer Content</td>
+            </tr>
+            </tfoot>
+            HTML,
+            $html,
+        );
+    }
+
+    public function testColumnAttributes(): void
+    {
+        $html = $this->createGridView([['id' => 1]])
+            ->columns(new CheckboxColumn(
+                columnAttributes: ['class' => 'checkbox-col']
+            ))
+            ->columnGrouping()
+            ->render();
+
+        $this->assertStringContainsString(
+            <<<HTML
+            <colgroup>
+            <col class="checkbox-col">
+            </colgroup>
+            HTML,
+            $html,
+        );
+    }
+
+    public function testVisible(): void
+    {
+        $html = $this->createGridView([['id' => 1]])
+            ->columns(new CheckboxColumn(visible: false))
+            ->render();
+
+        $this->assertSame(
+            <<<HTML
             <table>
             <thead>
-            <tr>
-            <th>Id</th>
-            <th>Name</th>
-            <th><input type="checkbox" name="checkbox-selection-all" value="1"></th>
-            </tr>
+            <tr></tr>
             </thead>
             <tbody>
-            <tr>
-            <td>1</td>
-            <td>John</td>
-            <td><input type="checkbox" name="checkbox-selection" value="0"></td>
-            </tr>
-            <tr>
-            <td>2</td>
-            <td>Mary</td>
-            <td><input type="checkbox" name="checkbox-selection" value="1"></td>
-            </tr>
+            <tr></tr>
             </tbody>
             </table>
-            <div>Page <b>1</b> of <b>1</b></div>
-            </div>
             HTML,
-            GridView::widget()
-                ->columns(
-                    new DataColumn('id'),
-                    new DataColumn('name'),
-                    new CheckboxColumn(),
-                )
-                ->id('w1-grid')
-                ->dataReader($this->createOffsetPaginator($this->data, 10))
-                ->render()
+            $html,
         );
+    }
+
+    private function createGridView(array $data = []): GridView
+    {
+        return (new GridView(new Container()))
+            ->layout('{items}')
+            ->containerTag(null)
+            ->dataReader(new IterableDataReader($data));
     }
 }
