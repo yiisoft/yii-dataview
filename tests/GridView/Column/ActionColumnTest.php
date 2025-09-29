@@ -215,6 +215,7 @@ final class ActionColumnTest extends TestCase
                 new ActionColumn(
                     buttons: [
                         'view' => new ActionButton('V', '#view'),
+                        'send' => new ActionButton('S', '#send', title: 'Send to…'),
                         'edit' => static fn(string $url) => '<a href="' . $url . '">EDIT</a>',
                         'delete' => new ActionButton(
                             content: static fn(array $data, DataContext $context) => 'Del ' . $data['id'],
@@ -231,6 +232,7 @@ final class ActionColumnTest extends TestCase
             <<<HTML
             <td>
             <a href="#view">V</a>
+            <a href="#send" title="Send to…">S</a>
             <a href="/edit/1">EDIT</a>
             <a class="red1" href="/confirm-delete/1" data-id="id-1">Del 1</a>
             </td>
