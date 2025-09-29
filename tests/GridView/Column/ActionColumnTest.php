@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Yiisoft\Yii\DataView\Tests\GridView\Column;
 
 use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\TestWith;
 use PHPUnit\Framework\TestCase;
 use Yiisoft\Data\Reader\Iterable\IterableDataReader;
 use Yiisoft\Di\Container;
@@ -58,6 +59,22 @@ final class ActionColumnTest extends TestCase
     {
         $html = $this->createGridView([['id' => 1]])
             ->columns(new ActionColumn(template: '{view} / {delete}'))
+            ->render();
+
+        $this->assertStringContainsString(
+            <<<HTML
+            <td>
+            <a href="/view/1" title="View">🔎</a> / <a href="/delete/1" title="Delete">❌</a>
+            </td>
+            HTML,
+            $html,
+        );
+    }
+
+    public function testTemplateInRenderer(): void
+    {
+        $html = $this->createGridView([['id' => 1]], ['template' => '{view} / {delete}'])
+            ->columns(new ActionColumn())
             ->render();
 
         $this->assertStringContainsString(
@@ -199,6 +216,12 @@ final class ActionColumnTest extends TestCase
                     buttons: [
                         'view' => new ActionButton('V', '#view'),
                         'edit' => static fn(string $url) => '<a href="' . $url . '">EDIT</a>',
+                        'delete' => new ActionButton(
+                            content: static fn(array $data, DataContext $context) => 'Del ' . $data['id'],
+                            url: static fn(array $data, DataContext $context) => '/confirm-delete/' . $data['id'],
+                            attributes: static fn(array $data, DataContext $context) => ['data-id' => 'id-' . $data['id']],
+                            class: static fn(array $data, DataContext $context) => 'red' . $data['id'],
+                        ),
                     ]
                 ),
             )
@@ -209,6 +232,39 @@ final class ActionColumnTest extends TestCase
             <td>
             <a href="#view">V</a>
             <a href="/edit/1">EDIT</a>
+            <a class="red1" href="/confirm-delete/1" data-id="id-1">Del 1</a>
+            </td>
+            HTML,
+            $html,
+        );
+    }
+
+    #[TestWith(['<a href="#" title="View">V</a>', true])]
+    #[TestWith(['<a class="red" href="#" title="View">V</a>', false])]
+    public function testButtonOverrideAttribute(string $expected, bool $override): void
+    {
+        $html = $this->createGridView(
+            [['id' => 1, 'slug' => 'item1']],
+            ['buttonAttributes' => ['class' => 'red']],
+        )
+            ->columns(
+                new ActionColumn(
+                    buttons: [
+                        'view' => new ActionButton(
+                            'V',
+                            '#',
+                            attributes: ['title' => 'View'],
+                            overrideAttributes: $override,
+                        ),
+                    ]
+                ),
+            )
+            ->render();
+
+        $this->assertStringContainsString(
+            <<<HTML
+            <td>
+            $expected
             </td>
             HTML,
             $html,
@@ -390,16 +446,19 @@ final class ActionColumnTest extends TestCase
         );
     }
 
-    private function createGridView(array $data = []): GridView
+    private function createGridView(array $data = [], array $rendererConfig = []): GridView
     {
         return (new GridView(new Container()))
             ->layout('{items}')
             ->containerTag(null)
             ->dataReader(new IterableDataReader($data))
             ->addColumnRendererConfigs([
-                ActionColumnRenderer::class => [
-                    'urlCreator' => new SimpleActionColumnUrlCreator(),
-                ],
+                ActionColumnRenderer::class => array_merge(
+                    [
+                        'urlCreator' => new SimpleActionColumnUrlCreator(),
+                    ],
+                    $rendererConfig,
+                ),
             ]);
     }
 }
