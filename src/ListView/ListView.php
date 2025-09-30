@@ -29,15 +29,15 @@ use function is_string;
  *     ->listTag('ul')
  *     ->listAttributes(['class' => 'my-list'])
  *     ->itemTag('li')
- *     ->itemContent(fn($data, $context) => Html::encode($data['name']))
+ *     ->itemView(fn($data, $context) => Html::encode($data['name']))
  *     ->dataReader($dataReader);
  *
  * echo $listView->render();
  * ```
  *
- * @psalm-type ItemAffixClosure = Closure(ListItemContext): (string|Stringable)
- * @psalm-type ItemContentClosure = Closure(array|object, ListItemContext): (string|Stringable)
- * @psalm-type ItemAttributesClosure = Closure(ListItemContext): array
+ * @psalm-type ItemAffixClosure = Closure(array|object, ListItemContext): (string|Stringable)
+ * @psalm-type ItemViewClosure = Closure(array|object, ListItemContext): (string|Stringable)
+ * @psalm-type ItemAttributesClosure = Closure(array|object, ListItemContext): array
  */
 final class ListView extends BaseListView
 {
@@ -54,8 +54,8 @@ final class ListView extends BaseListView
     private Closure|string $beforeItem = '';
     /** @psalm-var ItemAffixClosure|string */
     private Closure|string $afterItem = '';
-    /** @psalm-var string|ItemContentClosure|null */
-    private string|Closure|null $itemContent = null;
+    /** @psalm-var string|ItemViewClosure|null */
+    private string|Closure|null $itemView = null;
     private array $itemViewParameters = [];
 
     /** @psalm-var non-empty-string|null */
@@ -218,19 +218,19 @@ final class ListView extends BaseListView
      *
      * @return self New instance.
      *
-     * @psalm-param string|ItemContentClosure $value
+     * @psalm-param string|ItemViewClosure $value
      */
-    public function itemContent(string|Closure $value): self
+    public function itemView(string|Closure $value): self
     {
         $new = clone $this;
-        $new->itemContent = $value;
+        $new->itemView = $value;
         return $new;
     }
 
     /**
      * Return new instance with the additional parameters for the view.
      *
-     * @param array $parameters Additional parameters to be passed to the view set in {@see itemContent()} when it is
+     * @param array $parameters Additional parameters to be passed to the view set in {@see itemView()} when it is
      * being rendered.
      *
      * @return self New instance with the specified view parameters.
@@ -316,7 +316,7 @@ final class ListView extends BaseListView
      * @param ListItemContext $context The context.
      *
      * @throws ViewNotFoundException If the item view file doesn't exist.
-     * @throws LogicException If {@see itemContent} isn't set.
+     * @throws LogicException If {@see itemView} isn't set.
      *
      * @return string The rendered HTML for the list item.
      */
@@ -339,7 +339,7 @@ final class ListView extends BaseListView
     private function prepareItemAttributes(ListItemContext $context): array
     {
         $attributes = is_callable($this->itemAttributes)
-            ? ($this->itemAttributes)($context)
+            ? ($this->itemAttributes)($context->data, $context)
             : $this->itemAttributes;
 
         return array_map(
@@ -352,19 +352,19 @@ final class ListView extends BaseListView
      * @param ListItemContext $context The context containing item data and rendering information.
      *
      * @throws ViewNotFoundException If the item view file doesn't exist.
-     * @throws LogicException If {@see $itemContent} is not configured.
+     * @throws LogicException If {@see $itemView} is not configured.
      *
      * @return string The rendered item content HTML.
      */
     private function renderItemContent(ListItemContext $context): string
     {
-        if ($this->itemContent === null) {
-            throw new LogicException('"itemContent" must be set.');
+        if ($this->itemView === null) {
+            throw new LogicException('"itemView" must be set.');
         }
 
-        if (is_string($this->itemContent)) {
+        if (is_string($this->itemView)) {
             return $this->view->render(
-                $this->itemContent,
+                $this->itemView,
                 array_merge(
                     $this->itemViewParameters,
                     [
@@ -375,7 +375,7 @@ final class ListView extends BaseListView
             );
         }
 
-        return (string) ($this->itemContent)($context->data, $context);
+        return (string) ($this->itemView)($context->data, $context);
     }
 
     /**
@@ -389,7 +389,7 @@ final class ListView extends BaseListView
     {
         return is_string($this->beforeItem)
             ? $this->beforeItem
-            : (string) ($this->beforeItem)($context);
+            : (string) ($this->beforeItem)($context->data, $context);
     }
 
     /**
@@ -403,7 +403,7 @@ final class ListView extends BaseListView
     {
         return is_string($this->afterItem)
             ? $this->afterItem
-            : (string) ($this->afterItem)($context);
+            : (string) ($this->afterItem)($context->data, $context);
     }
 
     private function renderNoResults(): string
