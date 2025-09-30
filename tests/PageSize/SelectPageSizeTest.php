@@ -4,105 +4,110 @@ declare(strict_types=1);
 
 namespace Yiisoft\Yii\DataView\Tests\PageSize;
 
+use PHPUnit\Framework\Attributes\TestWith;
 use PHPUnit\Framework\TestCase;
 use Yiisoft\Yii\DataView\PageSize\PageSizeContext;
 use Yiisoft\Yii\DataView\PageSize\SelectPageSize;
 
 final class SelectPageSizeTest extends TestCase
 {
-    public function testRenderWithArrayConstraint(): void
+    public function testBase(): void
     {
-        $context = new PageSizeContext(
-            currentValue: 10,
-            defaultValue: 20,
-            constraint: [10, 20, 50, 100],
-            urlPattern: '/test?pagesize=YII-DATAVIEW-PAGE-SIZE-PLACEHOLDER',
-            defaultUrl: '/test'
+        $html = (new SelectPageSize())
+            ->withContext(
+                new PageSizeContext(
+                    currentValue: 10,
+                    defaultValue: 20,
+                    constraint: [10, 20, 50],
+                    urlPattern: '/test?pagesize=YII-DATAVIEW-PAGE-SIZE-PLACEHOLDER',
+                    defaultUrl: '/test'
+                )
+            )
+            ->render();
+
+        $this->assertSame(
+            <<<HTML
+            <select data-default-page-size="20" data-url-pattern="/test?pagesize=YII-DATAVIEW-PAGE-SIZE-PLACEHOLDER" data-default-url="/test" onchange="window.location.href = this.value == this.dataset.defaultPageSize ? this.dataset.defaultUrl : this.dataset.urlPattern.replace(&quot;YII-DATAVIEW-PAGE-SIZE-PLACEHOLDER&quot;, this.value)">
+            <option value="10" selected>10</option>
+            <option value="20">20</option>
+            <option value="50">50</option>
+            </select>
+            HTML,
+            $html,
         );
-
-        $widget = new SelectPageSize();
-        $widget = $widget->withContext($context);
-
-        $html = $widget->render();
-
-        $this->assertStringContainsString('<option value="10" selected>', $html);
-        $this->assertStringContainsString('<option value="20">', $html);
-        $this->assertStringContainsString('<option value="50">', $html);
-        $this->assertStringContainsString('<option value="100">', $html);
-        $this->assertStringContainsString('data-default-page-size="20"', $html);
-        $this->assertStringContainsString('data-url-pattern="/test?pagesize=YII-DATAVIEW-PAGE-SIZE-PLACEHOLDER"', $html);
-        $this->assertStringContainsString('data-default-url="/test"', $html);
-        $this->assertStringContainsString('onchange=', $html);
     }
 
-    public function testRenderWithInsufficientOptions(): void
+    #[TestWith([true])]
+    #[TestWith([false])]
+    #[TestWith([10])]
+    #[TestWith([[10]])]
+    public function testConstraintWithoutRender(mixed $constraint): void
     {
-        // Test with a single option array (should return empty string)
-        $context = new PageSizeContext(
-            currentValue: 10,
-            defaultValue: 10,
-            constraint: [10],
-            urlPattern: '/test?pagesize=YII-DATAVIEW-PAGE-SIZE-PLACEHOLDER',
-            defaultUrl: '/test'
-        );
+        $html = (new SelectPageSize())
+            ->withContext(
+                new PageSizeContext(
+                    currentValue: 10,
+                    defaultValue: 20,
+                    constraint: $constraint,
+                    urlPattern: '/test?pagesize=YII-DATAVIEW-PAGE-SIZE-PLACEHOLDER',
+                    defaultUrl: '/test'
+                )
+            )
+            ->render();
 
-        $widget = new SelectPageSize();
-        $widget = $widget->withContext($context);
-
-        $html = $widget->render();
-        $this->assertSame('', $html);
-
-        // Test with non-array constraint (should return empty string)
-        $context = new PageSizeContext(
-            currentValue: 10,
-            defaultValue: 10,
-            constraint: true,
-            urlPattern: '/test?pagesize=YII-DATAVIEW-PAGE-SIZE-PLACEHOLDER',
-            defaultUrl: '/test'
-        );
-
-        $widget = $widget->withContext($context);
-        $html = $widget->render();
         $this->assertSame('', $html);
     }
 
     public function testAddAttributes(): void
     {
-        $context = new PageSizeContext(
-            currentValue: 10,
-            defaultValue: 20,
-            constraint: [10, 20, 50],
-            urlPattern: '/test?pagesize=YII-DATAVIEW-PAGE-SIZE-PLACEHOLDER',
-            defaultUrl: '/test'
+        $html = (new SelectPageSize())
+            ->withContext(
+                new PageSizeContext(
+                    currentValue: 10,
+                    defaultValue: 20,
+                    constraint: [10, 20, 50],
+                    urlPattern: '/test?pagesize=YII-DATAVIEW-PAGE-SIZE-PLACEHOLDER',
+                    defaultUrl: '/test'
+                )
+            )
+            ->attributes(['class' => 'form-select'])
+            ->addAttributes(['id' => 'page-size-select'])
+            ->render();
+
+        $this->assertStringStartsWith(
+            '<select id="page-size-select" class="form-select" data-default-page-size="20" ',
+            $html,
         );
-
-        $widget = new SelectPageSize();
-        $widget = $widget->withContext($context);
-        $widget = $widget->addAttributes(['class' => 'form-select', 'id' => 'page-size-select']);
-
-        $html = $widget->render();
-
-        $this->assertStringContainsString('class="form-select"', $html);
-        $this->assertStringContainsString('id="page-size-select"', $html);
     }
 
     public function testAttributes(): void
     {
-        $context = new PageSizeContext(
-            currentValue: 10,
-            defaultValue: 20,
-            constraint: [10, 20, 50],
-            urlPattern: '/test?pagesize=YII-DATAVIEW-PAGE-SIZE-PLACEHOLDER',
-            defaultUrl: '/test'
+        $html = (new SelectPageSize())
+            ->withContext(
+                new PageSizeContext(
+                    currentValue: 10,
+                    defaultValue: 20,
+                    constraint: [10, 20, 50],
+                    urlPattern: '/test?pagesize=YII-DATAVIEW-PAGE-SIZE-PLACEHOLDER',
+                    defaultUrl: '/test'
+                )
+            )
+            ->attributes(['class' => 'form-select'])
+            ->attributes(['id' => 'page-size-select'])
+            ->render();
+
+        $this->assertStringStartsWith(
+            '<select id="page-size-select" data-default-page-size="20" ',
+            $html,
         );
+    }
 
+    public function testImmutability(): void
+    {
         $widget = new SelectPageSize();
-        $widget = $widget->withContext($context);
-        $widget = $widget->attributes(['class' => 'custom-select', 'data-test' => 'value']);
 
-        $html = $widget->render();
-
-        $this->assertStringContainsString('class="custom-select"', $html);
-        $this->assertStringContainsString('data-test="value"', $html);
+        $this->assertNotSame($widget, $widget->addAttributes([]));
+        $this->assertNotSame($widget, $widget->attributes([]));
+        $this->assertNotSame($widget, $widget->withContext(new PageSizeContext(10, 20, [10, 20], '/', '/')));
     }
 }

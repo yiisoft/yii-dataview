@@ -273,6 +273,34 @@ final class KeysetPagination extends Widget implements PaginationWidgetInterface
     }
 
     /**
+     * Sets the label for the previous page link.
+     *
+     * @param string|Stringable $label The label for the previous page link.
+     *
+     * @return self New instance with the specified previous label.
+     */
+    public function labelPrevious(string|Stringable $label): self
+    {
+        $new = clone $this;
+        $new->labelPrevious = $label;
+        return $new;
+    }
+
+    /**
+     * Sets the label for the next page link.
+     *
+     * @param string|Stringable $label The label for the next page link.
+     *
+     * @return self New instance with the specified next label.
+     */
+    public function labelNext(string|Stringable $label): self
+    {
+        $new = clone $this;
+        $new->labelNext = $label;
+        return $new;
+    }
+
+    /**
      * Renders the pagination controls.
      *
      * @throws PaginatorNotSetException If paginator is not set.
