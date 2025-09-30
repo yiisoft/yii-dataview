@@ -397,6 +397,23 @@ final class ListViewTest extends TestCase
         $this->assertStringContainsString($expectedList, $html);
     }
 
+    public function testImmutability(): void
+    {
+        $listView = $this->createListView();
+
+        $this->assertNotSame($listView, $listView->listTag('div'));
+        $this->assertNotSame($listView, $listView->listAttributes([]));
+        $this->assertNotSame($listView, $listView->itemTag('div'));
+        $this->assertNotSame($listView, $listView->itemAttributes([]));
+        $this->assertNotSame($listView, $listView->beforeItem('test'));
+        $this->assertNotSame($listView, $listView->afterItem('test'));
+        $this->assertNotSame($listView, $listView->itemView(fn() => 'test'));
+        $this->assertNotSame($listView, $listView->itemViewParameters([]));
+        $this->assertNotSame($listView, $listView->noResultsTag('div'));
+        $this->assertNotSame($listView, $listView->noResultsAttributes([]));
+        $this->assertNotSame($listView, $listView->separator(' | '));
+    }
+
     private function createListView(ReadableDataInterface|array $data = []): ListView
     {
         $dataReader = $data instanceof ReadableDataInterface ? $data : new IterableDataReader($data);
