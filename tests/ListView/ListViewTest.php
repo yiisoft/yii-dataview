@@ -4,14 +4,17 @@ declare(strict_types=1);
 
 namespace Yiisoft\Yii\DataView\Tests\ListView;
 
+use LogicException;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Yiisoft\Data\Reader\Iterable\IterableDataReader;
 use Yiisoft\Data\Reader\ReadableDataInterface;
-use Yiisoft\Html\Html;
-use Yiisoft\Yii\DataView\ListView\ListView;
+use Yiisoft\Data\Reader\Sort;
 use Yiisoft\Yii\DataView\ListView\ListItemContext;
+use Yiisoft\Yii\DataView\ListView\ListView;
 use Yiisoft\Yii\DataView\Tests\Support\SimpleReadable;
 use InvalidArgumentException;
+use Yiisoft\Yii\DataView\Tests\Support\SimpleUrlParameterProvider;
 
 final class ListViewTest extends TestCase
 {
@@ -62,6 +65,15 @@ final class ListViewTest extends TestCase
         );
     }
 
+    public function testWithoutItemView(): void
+    {
+        $widget = $this->createListView([['id' => 1]]);
+
+        $this->expectException(LogicException::class);
+        $this->expectExceptionMessage('"itemView" must be set.');
+        $widget->render();
+    }
+
     public function testListTag(): void
     {
         $html = $this->createListView([
@@ -77,6 +89,28 @@ final class ListViewTest extends TestCase
             <div>
             <li>Anna</li>
             <li>Bob</li>
+            </div>
+            HTML,
+            $html,
+        );
+    }
+
+    public function testWithoutListTag(): void
+    {
+        $html = $this->createListView([
+            ['id' => 1, 'name' => 'Anna'],
+            ['id' => 2, 'name' => 'Bob'],
+        ])
+            ->listTag(null)
+            ->itemView(static fn(array $data): string => $data['name'])
+            ->render();
+
+        $this->assertSame(
+            <<<HTML
+            <div>
+            <li>Anna</li>
+            <li>Bob</li>
+            <div>Page <b>1</b> of <b>1</b></div>
             </div>
             HTML,
             $html,
@@ -128,6 +162,27 @@ final class ListViewTest extends TestCase
         );
     }
 
+    public function testWithoutItemTag(): void
+    {
+        $html = $this->createListView([
+            ['id' => 1, 'name' => 'Anna'],
+            ['id' => 2, 'name' => 'Bob'],
+        ])
+            ->itemTag(null)
+            ->itemView(static fn(array $data): string => $data['name'])
+            ->render();
+
+        $this->assertStringContainsString(
+            <<<HTML
+            <ul>
+            Anna
+            Bob
+            </ul>
+            HTML,
+            $html,
+        );
+    }
+
     public function testItemTagWithEmptyString(): void
     {
         $widget = new ListView();
@@ -152,6 +207,29 @@ final class ListViewTest extends TestCase
             <ul>
             <li class="list-item" data-test="item">Anna</li>
             <li class="list-item" data-test="item">Bob</li>
+            </ul>
+            HTML,
+            $html,
+        );
+    }
+
+    public function testItemAttributesClosure(): void
+    {
+        $html = $this->createListView([
+            ['id' => 1, 'name' => 'Anna'],
+            ['id' => 2, 'name' => 'Bob'],
+        ])
+            ->itemAttributes(
+                static fn(array $data, ListItemContext $context) => ['class' => 'list-item-' . $data['id']]
+            )
+            ->itemView(static fn(array $data): string => $data['name'])
+            ->render();
+
+        $this->assertStringContainsString(
+            <<<HTML
+            <ul>
+            <li class="list-item-1">Anna</li>
+            <li class="list-item-2">Bob</li>
             </ul>
             HTML,
             $html,
@@ -229,6 +307,19 @@ final class ListViewTest extends TestCase
         );
     }
 
+    public function testWithoutNoResultsTag(): void
+    {
+        $html = $this->createListView()
+            ->noResultsTag(null)
+            ->itemView(static fn(array $data): string => $data['name'])
+            ->render();
+
+        $this->assertSame(
+            "<div>\nNo results found.\n</div>",
+            $html,
+        );
+    }
+
     public function testNoResultsTagWithEmptyString(): void
     {
         $widget = new ListView();
@@ -249,6 +340,61 @@ final class ListViewTest extends TestCase
             '<p class="empty-state" data-test="empty">No results found.</p>',
             $html,
         );
+    }
+
+    public function testEmptyNoResults(): void
+    {
+        $html = $this->createListView()
+            ->noResultsText('')
+            ->itemView(static fn(array $data): string => $data['name'])
+            ->render();
+
+        $this->assertSame(
+            "<div>\n\n</div>",
+            $html,
+        );
+    }
+
+    public static function dataWithSortFromUrl(): iterable
+    {
+        yield [
+            <<<HTML
+            <ul>
+            <li>1</li>
+            <li>2</li>
+            <li>3</li>
+            </ul>
+            HTML,
+            Sort::only(['id']),
+        ];
+        yield [
+            <<<HTML
+            <ul>
+            <li>1</li>
+            <li>2</li>
+            <li>3</li>
+            </ul>
+            HTML,
+            Sort::only(['name']),
+        ];
+    }
+
+    #[DataProvider('dataWithSortFromUrl')]
+    public function testWithSortFromUrl(string $expectedList, Sort $sort): void
+    {
+        $data = [
+            ['id' => 1, 'name' => 'Anna'],
+            ['id' => 2, 'name' => 'Bob'],
+            ['id' => 3, 'name' => 'Charlie'],
+        ];
+        $dataReader = (new IterableDataReader($data))->withSort($sort);
+        $html = (new ListView())
+            ->dataReader($dataReader)
+            ->urlParameterProvider(new SimpleUrlParameterProvider(['sort' => '-id']))
+            ->itemView(static fn(array $data) => $data['id'])
+            ->render();
+
+        $this->assertStringContainsString($expectedList, $html);
     }
 
     private function createListView(ReadableDataInterface|array $data = []): ListView

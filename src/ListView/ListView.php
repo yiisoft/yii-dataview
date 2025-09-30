@@ -29,15 +29,15 @@ use function is_string;
  *     ->listTag('ul')
  *     ->listAttributes(['class' => 'my-list'])
  *     ->itemTag('li')
- *     ->itemContent(fn($data, $context) => Html::encode($data['name']))
+ *     ->itemView(fn($data, $context) => Html::encode($data['name']))
  *     ->dataReader($dataReader);
  *
  * echo $listView->render();
  * ```
  *
- * @psalm-type ItemAffixClosure = Closure(ListItemContext): (string|Stringable)
- * @psalm-type ItemContentClosure = Closure(array|object, ListItemContext): (string|Stringable)
- * @psalm-type ItemAttributesClosure = Closure(ListItemContext): array
+ * @psalm-type ItemAffixClosure = Closure(array|object, ListItemContext): (string|Stringable)
+ * @psalm-type ItemViewClosure = Closure(array|object, ListItemContext): (string|Stringable)
+ * @psalm-type ItemAttributesClosure = Closure(array|object, ListItemContext): array
  */
 final class ListView extends BaseListView
 {
@@ -54,7 +54,7 @@ final class ListView extends BaseListView
     private Closure|string $beforeItem = '';
     /** @psalm-var ItemAffixClosure|string */
     private Closure|string $afterItem = '';
-    /** @psalm-var string|ItemContentClosure|null */
+    /** @psalm-var string|ItemViewClosure|null */
     private string|Closure|null $itemView = null;
     private array $itemViewParameters = [];
 
@@ -218,7 +218,7 @@ final class ListView extends BaseListView
      *
      * @return self New instance.
      *
-     * @psalm-param string|ItemContentClosure $value
+     * @psalm-param string|ItemViewClosure $value
      */
     public function itemView(string|Closure $value): self
     {
@@ -339,7 +339,7 @@ final class ListView extends BaseListView
     private function prepareItemAttributes(ListItemContext $context): array
     {
         $attributes = is_callable($this->itemAttributes)
-            ? ($this->itemAttributes)($context)
+            ? ($this->itemAttributes)($context->data, $context)
             : $this->itemAttributes;
 
         return array_map(
@@ -359,7 +359,7 @@ final class ListView extends BaseListView
     private function renderItemContent(ListItemContext $context): string
     {
         if ($this->itemView === null) {
-            throw new LogicException('"itemContent" must be set.');
+            throw new LogicException('"itemView" must be set.');
         }
 
         if (is_string($this->itemView)) {
@@ -389,7 +389,7 @@ final class ListView extends BaseListView
     {
         return is_string($this->beforeItem)
             ? $this->beforeItem
-            : (string) ($this->beforeItem)($context);
+            : (string) ($this->beforeItem)($context->data, $context);
     }
 
     /**
@@ -403,7 +403,7 @@ final class ListView extends BaseListView
     {
         return is_string($this->afterItem)
             ? $this->afterItem
-            : (string) ($this->afterItem)($context);
+            : (string) ($this->afterItem)($context->data, $context);
     }
 
     private function renderNoResults(): string
