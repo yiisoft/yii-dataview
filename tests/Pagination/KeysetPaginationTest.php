@@ -25,7 +25,7 @@ final class KeysetPaginationTest extends TestCase
             <<<HTML
             <nav>
             <a>⟨</a>
-            <a href="/next/2">⟩</a>
+            <a href="/next/id1">⟩</a>
             </nav>
             HTML,
             $html,
@@ -73,7 +73,7 @@ final class KeysetPaginationTest extends TestCase
             <<<HTML
             <main>
             <a>⟨</a>
-            <a href="/next/2">⟩</a>
+            <a href="/next/id1">⟩</a>
             </main>
             HTML,
             $html,
@@ -90,7 +90,7 @@ final class KeysetPaginationTest extends TestCase
         $this->assertSame(
             <<<HTML
             <a>⟨</a>
-            <a href="/next/2">⟩</a>
+            <a href="/next/id1">⟩</a>
             HTML,
             $html,
         );
@@ -116,7 +116,7 @@ final class KeysetPaginationTest extends TestCase
             <<<HTML
             <nav id="main-nav" class="pagination-nav">
             <a>⟨</a>
-            <a href="/next/2">⟩</a>
+            <a href="/next/id1">⟩</a>
             </nav>
             HTML,
             $html,
@@ -135,7 +135,7 @@ final class KeysetPaginationTest extends TestCase
             <nav>
             <ul>
             <a>⟨</a>
-            <a href="/next/2">⟩</a>
+            <a href="/next/id1">⟩</a>
             </ul>
             </nav>
             HTML,
@@ -154,7 +154,7 @@ final class KeysetPaginationTest extends TestCase
             <<<HTML
             <nav>
             <a>⟨</a>
-            <a href="/next/2">⟩</a>
+            <a href="/next/id1">⟩</a>
             </nav>
             HTML,
             $html,
@@ -183,7 +183,7 @@ final class KeysetPaginationTest extends TestCase
             <nav>
             <ul class="pagination-list" data-role="navigation">
             <a>⟨</a>
-            <a href="/next/2">⟩</a>
+            <a href="/next/id1">⟩</a>
             </ul>
             </nav>
             HTML,
@@ -202,7 +202,7 @@ final class KeysetPaginationTest extends TestCase
             <<<HTML
             <nav>
             <li><a>⟨</a></li>
-            <li><a href="/next/2">⟩</a></li>
+            <li><a href="/next/id1">⟩</a></li>
             </nav>
             HTML,
             $html,
@@ -220,7 +220,7 @@ final class KeysetPaginationTest extends TestCase
             <<<HTML
             <nav>
             <a>⟨</a>
-            <a href="/next/2">⟩</a>
+            <a href="/next/id1">⟩</a>
             </nav>
             HTML,
             $html,
@@ -248,7 +248,7 @@ final class KeysetPaginationTest extends TestCase
             <<<HTML
             <nav>
             <li class="pagination-item" data-type="nav-button"><a>⟨</a></li>
-            <li class="pagination-item" data-type="nav-button"><a href="/next/2">⟩</a></li>
+            <li class="pagination-item" data-type="nav-button"><a href="/next/id1">⟩</a></li>
             </nav>
             HTML,
             $html,
@@ -267,7 +267,7 @@ final class KeysetPaginationTest extends TestCase
             <<<HTML
             <nav>
             <li class="disabled"><a>⟨</a></li>
-            <li><a href="/next/2">⟩</a></li>
+            <li><a href="/next/id1">⟩</a></li>
             </nav>
             HTML,
             $html,
@@ -285,7 +285,7 @@ final class KeysetPaginationTest extends TestCase
             <<<HTML
             <nav>
             <a class="pagination-link" data-action="navigate">⟨</a>
-            <a class="pagination-link" href="/next/2" data-action="navigate">⟩</a>
+            <a class="pagination-link" href="/next/id1" data-action="navigate">⟩</a>
             </nav>
             HTML,
             $html,
@@ -303,7 +303,7 @@ final class KeysetPaginationTest extends TestCase
             <<<HTML
             <nav>
             <a class="btn btn-primary">⟨</a>
-            <a class="btn btn-primary" href="/next/2">⟩</a>
+            <a class="btn btn-primary" href="/next/id1">⟩</a>
             </nav>
             HTML,
             $html,
@@ -322,7 +322,7 @@ final class KeysetPaginationTest extends TestCase
             <<<HTML
             <nav>
             <a class="btn btn-primary active">⟨</a>
-            <a class="btn btn-primary active" href="/next/2">⟩</a>
+            <a class="btn btn-primary active" href="/next/id1">⟩</a>
             </nav>
             HTML,
             $html,
@@ -341,7 +341,7 @@ final class KeysetPaginationTest extends TestCase
             <<<HTML
             <nav>
             <a class="btn btn-primary disabled">⟨</a>
-            <a class="btn btn-primary" href="/next/2">⟩</a>
+            <a class="btn btn-primary" href="/next/id1">⟩</a>
             </nav>
             HTML,
             $html,
@@ -359,7 +359,7 @@ final class KeysetPaginationTest extends TestCase
             <<<HTML
             <nav>
             <a>Prev</a>
-            <a href="/next/2">⟩</a>
+            <a href="/next/id1">⟩</a>
             </nav>
             HTML,
             $html,
@@ -377,7 +377,7 @@ final class KeysetPaginationTest extends TestCase
             <<<HTML
             <nav>
             <a>⟨</a>
-            <a href="/next/2">Next</a>
+            <a href="/next/id1">Next</a>
             </nav>
             HTML,
             $html,
@@ -407,12 +407,12 @@ final class KeysetPaginationTest extends TestCase
     private function createPagination(int $pageCount): KeysetPagination
     {
         $data = [];
-        for ($i = 1; $i <= $pageCount * 2; $i++) {
-            $data[] = ['id' => $i];
+        for ($i = 1; $i <= $pageCount; $i++) {
+            $data[] = ['id' => 'id' . $i];
         }
 
         $dataReader = (new IterableDataReader($data))->withSort(Sort::any(['id']));
-        $paginator = (new KeysetPaginator($dataReader))->withPageSize(2);
+        $paginator = (new KeysetPaginator($dataReader))->withPageSize(1);
         return KeysetPagination::create(
             $paginator,
             '/next/' . PaginationContext::URL_PLACEHOLDER,
