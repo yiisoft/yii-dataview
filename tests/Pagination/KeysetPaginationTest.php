@@ -49,7 +49,7 @@ final class KeysetPaginationTest extends TestCase
         <a>⟩</a>
         </nav>
         HTML,
-        true
+        true,
     ])]
     #[TestWith(['', false])]
     public function testShowOnSinglePage(string $expected, bool $show): void

@@ -73,7 +73,7 @@ final class OffsetPaginationTest extends TestCase
         <a href="/">⟫</a>
         </nav>
         HTML,
-        true
+        true,
     ])]
     #[TestWith(['', false])]
     public function testShowOnSinglePage(string $expected, bool $show): void
