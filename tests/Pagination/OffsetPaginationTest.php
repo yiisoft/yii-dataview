@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Yiisoft\Yii\DataView\Tests\Pagination;
 
 use InvalidArgumentException;
+use LogicException;
 use PHPUnit\Framework\Attributes\TestWith;
 use PHPUnit\Framework\TestCase;
 use Yiisoft\Data\Paginator\KeysetPaginator;
@@ -48,6 +49,18 @@ final class OffsetPaginationTest extends TestCase
         $this->expectException(PaginatorNotSupportedException::class);
         $this->expectExceptionMessage('Paginator "Yiisoft\Data\Paginator\KeysetPaginator" is not supported.');
         $widget->paginator($paginator);
+    }
+
+    public function testRenderWithoutContext(): void
+    {
+        $data = array_fill(0, 6, ['id' => 'uuid']);
+        $dataReader = new IterableDataReader($data);
+        $paginator = (new OffsetPaginator($dataReader))->withPageSize(1);
+        $widget = OffsetPagination::widget()->paginator($paginator);
+
+        $this->expectException(LogicException::class);
+        $this->expectExceptionMessage('Context is not set.');
+        $widget->render();
     }
 
     #[TestWith([
