@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Yiisoft\Yii\DataView\Tests;
+namespace Yiisoft\Yii\DataView\Tests\Url;
 
 use PHPUnit\Framework\TestCase;
 use Yiisoft\Data\Paginator\PageToken;
@@ -10,38 +10,37 @@ use Yiisoft\Yii\DataView\Url\UrlConfig;
 use Yiisoft\Yii\DataView\Url\UrlParametersFactory;
 use Yiisoft\Yii\DataView\Url\UrlParameterType;
 
-/**
- * @covers \Yiisoft\Yii\DataView\Url\UrlParametersFactory
- * @covers \Yiisoft\Yii\DataView\Url\UrlConfig
- */
 final class UrlParametersFactoryTest extends TestCase
 {
-    public function testCreateWithNextPageTokenInQueryParameter(): void
+    public function testNextPageTokenInQueryParameter(): void
     {
         $config = new UrlConfig(
             pageParameterType: UrlParameterType::QUERY,
             previousPageParameterType: UrlParameterType::QUERY,
             pageSizeParameterType: UrlParameterType::QUERY,
-            sortParameterType: UrlParameterType::QUERY
+            sortParameterType: UrlParameterType::QUERY,
         );
 
         [$arguments, $queryParameters] = UrlParametersFactory::create(
             PageToken::next('token123'),
             null,
             null,
-            $config
+            $config,
         );
 
         $this->assertSame([], $arguments);
-        $this->assertSame([
-            'page' => 'token123',
-            'prev-page' => null,
-            'pagesize' => null,
-            'sort' => null,
-        ], $queryParameters);
+        $this->assertSame(
+            [
+                'page' => 'token123',
+                'prev-page' => null,
+                'pagesize' => null,
+                'sort' => null,
+            ],
+            $queryParameters,
+        );
     }
 
-    public function testCreateWithNextPageTokenInPathParameter(): void
+    public function testNextPageTokenInPathParameter(): void
     {
         $config = new UrlConfig(
             pageParameterType: UrlParameterType::PATH,
@@ -58,14 +57,17 @@ final class UrlParametersFactoryTest extends TestCase
         );
 
         $this->assertSame(['page' => 'token123'], $arguments);
-        $this->assertSame([
-            'prev-page' => null,
-            'pagesize' => null,
-            'sort' => null,
-        ], $queryParameters);
+        $this->assertSame(
+            [
+                'prev-page' => null,
+                'pagesize' => null,
+                'sort' => null,
+            ],
+            $queryParameters,
+        );
     }
 
-    public function testCreateWithPreviousPageTokenInQueryParameter(): void
+    public function testPreviousPageTokenInQueryParameter(): void
     {
         $config = new UrlConfig(
             pageParameterType: UrlParameterType::QUERY,
@@ -78,19 +80,22 @@ final class UrlParametersFactoryTest extends TestCase
             PageToken::previous('token123'),
             null,
             null,
-            $config
+            $config,
         );
 
         $this->assertSame([], $arguments);
-        $this->assertSame([
-            'page' => null,
-            'prev-page' => 'token123',
-            'pagesize' => null,
-            'sort' => null,
-        ], $queryParameters);
+        $this->assertSame(
+            [
+                'page' => null,
+                'prev-page' => 'token123',
+                'pagesize' => null,
+                'sort' => null,
+            ],
+            $queryParameters,
+        );
     }
 
-    public function testCreateWithPreviousPageTokenInPathParameter(): void
+    public function testPreviousPageTokenInPathParameter(): void
     {
         $config = new UrlConfig(
             pageParameterType: UrlParameterType::QUERY,
@@ -103,18 +108,21 @@ final class UrlParametersFactoryTest extends TestCase
             PageToken::previous('token123'),
             null,
             null,
-            $config
+            $config,
         );
 
         $this->assertSame(['prev-page' => 'token123'], $arguments);
-        $this->assertSame([
-            'page' => null,
-            'pagesize' => null,
-            'sort' => null,
-        ], $queryParameters);
+        $this->assertSame(
+            [
+                'page' => null,
+                'pagesize' => null,
+                'sort' => null,
+            ],
+            $queryParameters,
+        );
     }
 
-    public function testCreateWithPageSizeInQueryParameter(): void
+    public function testPageSizeInQueryParameter(): void
     {
         $config = new UrlConfig(
             pageParameterType: UrlParameterType::QUERY,
@@ -127,19 +135,22 @@ final class UrlParametersFactoryTest extends TestCase
             null,
             20,
             null,
-            $config
+            $config,
         );
 
         $this->assertSame([], $arguments);
-        $this->assertSame([
-            'page' => null,
-            'prev-page' => null,
-            'pagesize' => 20,
-            'sort' => null,
-        ], $queryParameters);
+        $this->assertSame(
+            [
+                'page' => null,
+                'prev-page' => null,
+                'pagesize' => 20,
+                'sort' => null,
+            ],
+            $queryParameters,
+        );
     }
 
-    public function testCreateWithPageSizeInPathParameter(): void
+    public function testPageSizeInPathParameter(): void
     {
         $config = new UrlConfig(
             pageParameterType: UrlParameterType::QUERY,
@@ -152,18 +163,21 @@ final class UrlParametersFactoryTest extends TestCase
             null,
             20,
             null,
-            $config
+            $config,
         );
 
         $this->assertSame(['pagesize' => 20], $arguments);
-        $this->assertSame([
-            'page' => null,
-            'prev-page' => null,
-            'sort' => null,
-        ], $queryParameters);
+        $this->assertSame(
+            [
+                'page' => null,
+                'prev-page' => null,
+                'sort' => null,
+            ],
+            $queryParameters,
+        );
     }
 
-    public function testCreateWithSortInQueryParameter(): void
+    public function testSortInQueryParameter(): void
     {
         $config = new UrlConfig(
             pageParameterType: UrlParameterType::QUERY,
@@ -176,19 +190,22 @@ final class UrlParametersFactoryTest extends TestCase
             null,
             null,
             'name,-date',
-            $config
+            $config,
         );
 
         $this->assertSame([], $arguments);
-        $this->assertSame([
-            'page' => null,
-            'prev-page' => null,
-            'pagesize' => null,
-            'sort' => 'name,-date',
-        ], $queryParameters);
+        $this->assertSame(
+            [
+                'page' => null,
+                'prev-page' => null,
+                'pagesize' => null,
+                'sort' => 'name,-date',
+            ],
+            $queryParameters,
+        );
     }
 
-    public function testCreateWithSortInPathParameter(): void
+    public function testSortInPathParameter(): void
     {
         $config = new UrlConfig(
             pageParameterType: UrlParameterType::QUERY,
@@ -201,18 +218,21 @@ final class UrlParametersFactoryTest extends TestCase
             null,
             null,
             'name,-date',
-            $config
+            $config,
         );
 
         $this->assertSame(['sort' => 'name,-date'], $arguments);
-        $this->assertSame([
-            'page' => null,
-            'prev-page' => null,
-            'pagesize' => null,
-        ], $queryParameters);
+        $this->assertSame(
+            [
+                'page' => null,
+                'prev-page' => null,
+                'pagesize' => null,
+            ],
+            $queryParameters,
+        );
     }
 
-    public function testCreateWithCustomParameterNames(): void
+    public function testCustomParameterNames(): void
     {
         $config = new UrlConfig(
             pageParameterName: 'p',
@@ -229,18 +249,21 @@ final class UrlParametersFactoryTest extends TestCase
             PageToken::previous('token123'),
             null,
             null,
-            $config
+            $config,
         );
 
         $this->assertSame(['pp' => 'token123'], $arguments);
-        $this->assertSame([
-            'p' => null,
-            'ps' => null,
-            's' => null,
-        ], $queryParameters);
+        $this->assertSame(
+            [
+                'p' => null,
+                'ps' => null,
+                's' => null,
+            ],
+            $queryParameters,
+        );
     }
 
-    public function testCreateWithExistingArgumentsAndQueryParameters(): void
+    public function testExistingArgumentsAndQueryParameters(): void
     {
         $config = new UrlConfig(
             pageParameterType: UrlParameterType::QUERY,
@@ -255,20 +278,23 @@ final class UrlParametersFactoryTest extends TestCase
             null,
             null,
             null,
-            $config
+            $config,
         );
 
         $this->assertSame(['id' => 123], $arguments);
-        $this->assertSame([
-            'filter' => 'active',
-            'page' => null,
-            'prev-page' => null,
-            'pagesize' => null,
-            'sort' => null,
-        ], $queryParameters);
+        $this->assertSame(
+            [
+                'filter' => 'active',
+                'page' => null,
+                'prev-page' => null,
+                'pagesize' => null,
+                'sort' => null,
+            ],
+            $queryParameters,
+        );
     }
 
-    public function testCreateWithMixedParameterTypesAndValues(): void
+    public function testMixedParameterTypesAndValues(): void
     {
         $config = new UrlConfig(
             pageParameterType: UrlParameterType::PATH,
@@ -283,22 +309,28 @@ final class UrlParametersFactoryTest extends TestCase
             PageToken::next('token123'),
             20,
             'name,-date',
-            $config
+            $config,
         );
 
-        $this->assertSame([
-            'id' => 123,
-            'page' => 'token123',
-            'pagesize' => 20,
-        ], $arguments);
-        $this->assertSame([
-            'filter' => 'active',
-            'prev-page' => null,
-            'sort' => 'name,-date',
-        ], $queryParameters);
+        $this->assertSame(
+            [
+                'id' => 123,
+                'page' => 'token123',
+                'pagesize' => 20,
+            ],
+            $arguments,
+        );
+        $this->assertSame(
+            [
+                'filter' => 'active',
+                'prev-page' => null,
+                'sort' => 'name,-date',
+            ],
+            $queryParameters,
+        );
     }
 
-    public function testCreateWithNullPageToken(): void
+    public function testNullPageToken(): void
     {
         $config = new UrlConfig(
             pageParameterType: UrlParameterType::PATH,
@@ -311,16 +343,22 @@ final class UrlParametersFactoryTest extends TestCase
             null,
             20,
             'name,-date',
-            $config
+            $config,
         );
 
-        $this->assertSame([
-            'page' => null,
-            'prev-page' => null,
-        ], $arguments);
-        $this->assertSame([
-            'pagesize' => 20,
-            'sort' => 'name,-date',
-        ], $queryParameters);
+        $this->assertSame(
+            [
+                'page' => null,
+                'prev-page' => null,
+            ],
+            $arguments,
+        );
+        $this->assertSame(
+            [
+                'pagesize' => 20,
+                'sort' => 'name,-date',
+            ],
+            $queryParameters,
+        );
     }
 }
