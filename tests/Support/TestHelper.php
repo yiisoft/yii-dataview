@@ -7,7 +7,9 @@ namespace Yiisoft\Yii\DataView\Tests\Support;
 use Stringable;
 use Yiisoft\Data\Paginator\PageToken;
 use Yiisoft\Data\Reader\Sort;
+use Yiisoft\Translator\Translator;
 use Yiisoft\Translator\TranslatorInterface;
+use Yiisoft\Yii\DataView\BaseListView;
 use Yiisoft\Yii\DataView\GridView\Column\Base\GlobalContext;
 use Yiisoft\Yii\DataView\Url\UrlConfig;
 
@@ -16,7 +18,7 @@ final class TestHelper
     public static function createGlobalContext(
         ?Sort $sort = null,
         ?Sort $originalSort = null,
-        array $allowedProperties = ['name'],
+        array $allowedProperties = [],
         ?string $sortableHeaderClass = null,
         string|Stringable $sortableHeaderPrepend = '',
         string|Stringable $sortableHeaderAppend = '',
@@ -32,32 +34,12 @@ final class TestHelper
         ?PageToken $pageToken = null,
         ?int $pageSize = null,
         bool $multiSort = false,
-        ?TranslatorInterface $translator = null
+        ?TranslatorInterface $translator = null,
+        ?callable $urlCreator = null,
     ): GlobalContext {
-        if ($sort === null) {
-            $sort = Sort::any();
-        }
-
-        if ($originalSort === null) {
-            $originalSort = Sort::any();
-        }
-
-        if ($translator === null) {
-            $translator = Mock::translator('en');
-        }
-
-        $urlConfig = new UrlConfig(
-            pageParameterName: 'page',
-            previousPageParameterName: 'prev',
-            pageSizeParameterName: 'per-page',
-            sortParameterName: 'sort'
-        );
-
-        $urlCreator = fn(): string => '#';
-
         return new GlobalContext(
-            originalSort: $originalSort,
-            sort: $sort,
+            originalSort: $originalSort ?? Sort::any(),
+            sort: $sort ?? Sort::any(),
             allowedProperties: $allowedProperties,
             sortableHeaderClass: $sortableHeaderClass,
             sortableHeaderPrepend: $sortableHeaderPrepend,
@@ -74,10 +56,15 @@ final class TestHelper
             pageToken: $pageToken,
             pageSize: $pageSize,
             multiSort: $multiSort,
-            urlConfig: $urlConfig,
-            urlCreator: $urlCreator,
-            translator: $translator,
-            translationCategory: 'grid'
+            urlConfig: new UrlConfig(
+                pageParameterName: 'page',
+                previousPageParameterName: 'prev',
+                pageSizeParameterName: 'per-page',
+                sortParameterName: 'sort'
+            ),
+            urlCreator: $urlCreator ?? new SimplePaginationUrlCreator(),
+            translator: $translator ?? new Translator('en'),
+            translationCategory: BaseListView::DEFAULT_TRANSLATION_CATEGORY,
         );
     }
 }

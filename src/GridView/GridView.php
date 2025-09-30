@@ -927,7 +927,7 @@ final class GridView extends BaseListView
                 $cell = $renderers[$i]->renderBody($column, new Cell($this->bodyCellAttributes), $context);
                 $tags[] = $cell->isEmptyContent()
                     ? Html::td($this->emptyCell, $this->emptyCellAttributes)->encode(false)
-                    : Html::td(attributes: $this->prepareBodyAttributes($cell->getAttributes(), $context))
+                    : Html::td(attributes: $this->prepareBodyCellAttributes($cell->getAttributes(), $context))
                         ->content(...$cell->getContent())
                         ->encode($cell->shouldEncode())
                         ->doubleEncode($cell->shouldDoubleEncode());
@@ -1072,11 +1072,11 @@ final class GridView extends BaseListView
      *
      * @return array The prepared attributes.
      */
-    private function prepareBodyAttributes(array $attributes, DataContext $context): array
+    private function prepareBodyCellAttributes(array $attributes, DataContext $context): array
     {
         foreach ($attributes as $i => $attribute) {
             if (is_callable($attribute)) {
-                $attributes[$i] = $attribute($context);
+                $attributes[$i] = $attribute($context->data, $context);
             }
         }
 

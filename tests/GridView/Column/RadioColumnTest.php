@@ -5,396 +5,222 @@ declare(strict_types=1);
 namespace Yiisoft\Yii\DataView\Tests\GridView\Column;
 
 use PHPUnit\Framework\TestCase;
-use Yiisoft\Definitions\Exception\CircularReferenceException;
-use Yiisoft\Definitions\Exception\InvalidConfigException;
-use Yiisoft\Definitions\Exception\NotInstantiableException;
-use Yiisoft\Factory\NotFoundException;
+use Yiisoft\Data\Reader\Iterable\IterableDataReader;
+use Yiisoft\Di\Container;
 use Yiisoft\Html\Tag\Input\Radio;
-use Yiisoft\Yii\DataView\GridView\Column\Base\DataContext;
-use Yiisoft\Yii\DataView\GridView\Column\DataColumn;
 use Yiisoft\Yii\DataView\GridView\Column\RadioColumn;
+use Yiisoft\Yii\DataView\GridView\Column\RadioColumnRenderer;
+use Yiisoft\Yii\DataView\GridView\Column\Base\DataContext;
 use Yiisoft\Yii\DataView\GridView\GridView;
-use Yiisoft\Yii\DataView\Tests\Support\Assert;
-use Yiisoft\Yii\DataView\Tests\Support\TestTrait;
 
 final class RadioColumnTest extends TestCase
 {
-    use TestTrait;
-
-    private array $data = [
-        ['id' => 1, 'name' => 'John', 'age' => 20],
-        ['id' => 2, 'name' => 'Mary', 'age' => 21],
-    ];
-
-    /**
-     * @throws InvalidConfigException
-     * @throws NotFoundException
-     * @throws NotInstantiableException
-     * @throws CircularReferenceException
-     */
-    public function testContent(): void
+    public function testBase(): void
     {
-        Assert::equalsWithoutLE(
+        $html = $this->createGridView([['id' => 1], ['id' => 2]])
+            ->columns(new RadioColumn())
+            ->render();
+
+        $this->assertSame(
             <<<HTML
-            <div id="w1-grid">
             <table>
             <thead>
             <tr>
-            <th>Id</th>
-            <th>Name</th>
             <th>&nbsp;</th>
             </tr>
             </thead>
             <tbody>
             <tr>
-            <td>1</td>
-            <td>John</td>
-            <td><input name="radio-selection" type="radio" value="0"></td>
-            </tr>
-            <tr>
-            <td>2</td>
-            <td>Mary</td>
-            <td><input name="radio-selection" type="radio" value="1"></td>
-            </tr>
-            </tbody>
-            </table>
-            <div>Page <b>1</b> of <b>1</b></div>
-            </div>
-            HTML,
-            GridView::widget()
-                ->columns(
-                    new DataColumn('id'),
-                    new DataColumn('name'),
-                    new RadioColumn(
-                        content: static fn(
-                            Radio $input,
-                            DataContext $context
-                        ): string => '<input name="radio-selection" type="radio" value="' . $context->index . '">'
-                    ),
-                )
-                ->id('w1-grid')
-                ->dataReader($this->createOffsetPaginator($this->data, 10))
-                ->render()
-        );
-    }
-
-    /**
-     * @throws InvalidConfigException
-     * @throws NotFoundException
-     * @throws NotInstantiableException
-     * @throws CircularReferenceException
-     */
-    public function testContentAttributes(): void
-    {
-        Assert::equalsWithoutLE(
-            <<<HTML
-            <div id="w1-grid">
-            <table>
-            <thead>
-            <tr>
-            <th>Id</th>
-            <th>Name</th>
-            <th>&nbsp;</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr>
-            <td>1</td>
-            <td>John</td>
-            <td class="test-class"><input name="radio-selection" type="radio" value="0"></td>
-            </tr>
-            <tr>
-            <td>2</td>
-            <td>Mary</td>
-            <td class="test-class"><input name="radio-selection" type="radio" value="1"></td>
-            </tr>
-            </tbody>
-            </table>
-            <div>Page <b>1</b> of <b>1</b></div>
-            </div>
-            HTML,
-            GridView::widget()
-                ->columns(
-                    new DataColumn('id'),
-                    new DataColumn('name'),
-                    new RadioColumn(
-                        content: static fn(
-                            Radio $input,
-                            DataContext $context
-                        ): string => '<input name="radio-selection" type="radio" value="' . $context->index . '">',
-                        bodyAttributes: ['class' => 'test-class']
-                    ),
-                )
-                ->id('w1-grid')
-                ->dataReader($this->createOffsetPaginator($this->data, 10))
-                ->render()
-        );
-    }
-
-    /**
-     * @throws InvalidConfigException
-     * @throws NotFoundException
-     * @throws NotInstantiableException
-     * @throws CircularReferenceException
-     */
-    public function testLabel(): void
-    {
-        Assert::equalsWithoutLE(
-            <<<HTML
-            <div id="w1-grid">
-            <table>
-            <thead>
-            <tr>
-            <th>Id</th>
-            <th>Name</th>
-            <th>test.label</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr>
-            <td>1</td>
-            <td>John</td>
             <td><input type="radio" name="radio-selection" value="0"></td>
             </tr>
             <tr>
-            <td>2</td>
-            <td>Mary</td>
             <td><input type="radio" name="radio-selection" value="1"></td>
             </tr>
             </tbody>
             </table>
-            <div>Page <b>1</b> of <b>1</b></div>
-            </div>
             HTML,
-            GridView::widget()
-                ->columns(
-                    new DataColumn('id'),
-                    new DataColumn('name'),
-                    new RadioColumn(header: 'test.label'),
-                )
-                ->id('w1-grid')
-                ->dataReader($this->createOffsetPaginator($this->data, 10))
-                ->render()
+            $html,
         );
     }
 
-    public function testLabelMbString(): void
-    {
-        Assert::equalsWithoutLE(
-            <<<HTML
-            <div id="w1-grid">
-            <table>
-            <thead>
-            <tr>
-            <th>Id</th>
-            <th>Name</th>
-            <th>Ραδιόφωνο</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr>
-            <td>1</td>
-            <td>John</td>
-            <td><input type="radio" name="radio-selection" value="0"></td>
-            </tr>
-            <tr>
-            <td>2</td>
-            <td>Mary</td>
-            <td><input type="radio" name="radio-selection" value="1"></td>
-            </tr>
-            </tbody>
-            </table>
-            <div>Page <b>1</b> of <b>1</b></div>
-            </div>
-            HTML,
-            GridView::widget()
-                ->columns(
-                    new DataColumn('id'),
-                    new DataColumn('name'),
-                    new RadioColumn(header: 'Ραδιόφωνο'),
-                )
-                ->id('w1-grid')
-                ->dataReader($this->createOffsetPaginator($this->data, 10))
-                ->render()
-        );
-    }
-
-    public function testLabelAttributes(): void
-    {
-        Assert::equalsWithoutLE(
-            <<<HTML
-            <div id="w1-grid">
-            <table>
-            <thead>
-            <tr>
-            <th>Id</th>
-            <th>Name</th>
-            <th class="test-class">test.label</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr>
-            <td>1</td>
-            <td>John</td>
-            <td><input type="radio" name="radio-selection" value="0"></td>
-            </tr>
-            <tr>
-            <td>2</td>
-            <td>Mary</td>
-            <td><input type="radio" name="radio-selection" value="1"></td>
-            </tr>
-            </tbody>
-            </table>
-            <div>Page <b>1</b> of <b>1</b></div>
-            </div>
-            HTML,
-            GridView::widget()
-                ->columns(
-                    new DataColumn('id'),
-                    new DataColumn('name'),
-                    new RadioColumn(header: 'test.label', headerAttributes: ['class' => 'test-class']),
-                )
-                ->id('w1-grid')
-                ->dataReader($this->createOffsetPaginator($this->data, 10))
-                ->render()
-        );
-    }
-
-    /**
-     * @throws InvalidConfigException
-     * @throws NotFoundException
-     * @throws NotInstantiableException
-     * @throws CircularReferenceException
-     */
     public function testName(): void
     {
-        Assert::equalsWithoutLE(
+        $html = $this->createGridView([['id' => 1]])
+            ->columns(new RadioColumn(name: 'selected_item'))
+            ->render();
+
+        $this->assertStringContainsString(
             <<<HTML
-            <div id="w1-grid">
-            <table>
-            <thead>
-            <tr>
-            <th>Id</th>
-            <th>Name</th>
-            <th>&nbsp;</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr>
-            <td>1</td>
-            <td>John</td>
-            <td><input type="radio" name="test.radio" value="0"></td>
-            </tr>
-            <tr>
-            <td>2</td>
-            <td>Mary</td>
-            <td><input type="radio" name="test.radio" value="1"></td>
-            </tr>
-            </tbody>
-            </table>
-            <div>Page <b>1</b> of <b>1</b></div>
-            </div>
+            <td><input type="radio" name="selected_item" value="0"></td>
             HTML,
-            GridView::widget()
-                ->columns(
-                    new DataColumn('id'),
-                    new DataColumn('name'),
-                    new RadioColumn(name: 'test.radio'),
-                )
-                ->id('w1-grid')
-                ->dataReader($this->createOffsetPaginator($this->data, 10))
-                ->render()
+            $html,
         );
     }
 
-    /**
-     * @throws InvalidConfigException
-     * @throws NotFoundException
-     * @throws NotInstantiableException
-     * @throws CircularReferenceException
-     */
-    public function testNotVisible(): void
+    public function testInputAttributes(): void
     {
-        Assert::equalsWithoutLE(
-            <<<HTML
-            <div id="w1-grid">
-            <table>
-            <thead>
-            <tr>
-            <th>Id</th>
-            <th>Name</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr>
-            <td>1</td>
-            <td>John</td>
-            </tr>
-            <tr>
-            <td>2</td>
-            <td>Mary</td>
-            </tr>
-            </tbody>
-            </table>
-            <div>Page <b>1</b> of <b>1</b></div>
-            </div>
-            HTML,
-            GridView::widget()
-                ->columns(
-                    new DataColumn('id'),
-                    new DataColumn('name'),
-                    new RadioColumn(visible: false),
+        $html = $this->createGridView([['id' => 1]])
+            ->columns(
+                new RadioColumn(
+                    inputAttributes: ['class' => 'custom-radio', 'data-id' => 'test']
                 )
-                ->id('w1-grid')
-                ->dataReader($this->createOffsetPaginator($this->data, 10))
-                ->render()
+            )
+            ->render();
+
+        $this->assertStringContainsString(
+            <<<HTML
+            <td><input type="radio" class="custom-radio" name="radio-selection" value="0" data-id="test"></td>
+            HTML,
+            $html,
         );
     }
 
-    /**
-     * @throws InvalidConfigException
-     * @throws NotFoundException
-     * @throws NotInstantiableException
-     * @throws CircularReferenceException
-     */
-    public function testRender1(): void
+    public function testContent(): void
     {
-        Assert::equalsWithoutLE(
+        $html = $this->createGridView([['id' => 1, 'name' => 'John']])
+            ->columns(
+                new RadioColumn(
+                    content: static fn(Radio $radio, DataContext $context) => '<label>' . $radio . ' User ' . $context->data['name'] . '</label>'
+                )
+            )
+            ->render();
+
+        $this->assertStringContainsString(
             <<<HTML
-            <div id="w1-grid">
-            <table>
+            <td><label><input type="radio" name="radio-selection" value="0"> User John</label></td>
+            HTML,
+            $html,
+        );
+    }
+
+    public function testHeader(): void
+    {
+        $html = $this->createGridView([['id' => 1]])
+            ->columns(new RadioColumn(header: 'Select One'))
+            ->render();
+
+        $this->assertStringContainsString(
+            <<<HTML
             <thead>
             <tr>
-            <th>Id</th>
-            <th>Name</th>
-            <th>&nbsp;</th>
+            <th>Select One</th>
             </tr>
             </thead>
+            HTML,
+            $html,
+        );
+    }
+
+    public function testHeaderAttributes(): void
+    {
+        $html = $this->createGridView([['id' => 1]])
+            ->columns(
+                new RadioColumn(
+                    header: 'Select',
+                    headerAttributes: ['class' => 'header-class']
+                )
+            )
+            ->render();
+
+        $this->assertStringContainsString(
+            <<<HTML
+            <th class="header-class">Select</th>
+            HTML,
+            $html,
+        );
+    }
+
+    public function testBodyAttributes(): void
+    {
+        $html = $this->createGridView([['id' => 1]])
+            ->columns(
+                new RadioColumn(
+                    bodyAttributes: ['class' => 'body-class']
+                )
+            )
+            ->render();
+
+        $this->assertStringContainsString(
+            <<<HTML
+            <td class="body-class"><input type="radio" name="radio-selection" value="0"></td>
+            HTML,
+            $html,
+        );
+    }
+
+    public function testColumnAttributes(): void
+    {
+        $html = $this->createGridView([['id' => 1]])
+            ->columns(
+                new RadioColumn(
+                    columnAttributes: ['class' => 'radio-col']
+                )
+            )
+            ->columnGrouping()
+            ->render();
+
+        $this->assertStringContainsString(
+            <<<HTML
+            <colgroup>
+            <col class="radio-col">
+            </colgroup>
+            HTML,
+            $html,
+        );
+    }
+
+    public function testFooter(): void
+    {
+        $html = $this->createGridView([['id' => 1]])
+            ->columns(
+                new RadioColumn(
+                    footer: 'Footer Content'
+                ),
+            )
+            ->enableFooter()
+            ->render();
+
+        $this->assertStringContainsString(
+            <<<HTML
+            <tfoot>
+            <tr>
+            <td>Footer Content</td>
+            </tr>
+            </tfoot>
+            HTML,
+            $html,
+        );
+    }
+
+    public function testVisible(): void
+    {
+        $html = $this->createGridView([['id' => 1]])
+            ->columns(new RadioColumn(visible: false))
+            ->render();
+
+        $this->assertSame(
+            <<<HTML
+            <table>
+            <thead>
+            <tr></tr>
+            </thead>
             <tbody>
-            <tr>
-            <td>1</td>
-            <td>John</td>
-            <td><input type="radio" name="radio-selection" value="0"></td>
-            </tr>
-            <tr>
-            <td>2</td>
-            <td>Mary</td>
-            <td><input type="radio" name="radio-selection" value="1"></td>
-            </tr>
+            <tr></tr>
             </tbody>
             </table>
-            <div>Page <b>1</b> of <b>1</b></div>
-            </div>
             HTML,
-            GridView::widget()
-                ->columns(
-                    new DataColumn('id'),
-                    new DataColumn('name'),
-                    new RadioColumn(),
-                )
-                ->id('w1-grid')
-                ->dataReader($this->createOffsetPaginator($this->data, 10))
-                ->render()
+            $html,
         );
+    }
+
+    private function createGridView(array $data = []): GridView
+    {
+        return (new GridView(new Container()))
+            ->layout('{items}')
+            ->containerTag(null)
+            ->dataReader(new IterableDataReader($data))
+            ->addColumnRendererConfigs([
+                RadioColumnRenderer::class => [],
+            ]);
     }
 }
