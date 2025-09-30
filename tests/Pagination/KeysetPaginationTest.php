@@ -19,15 +19,7 @@ final class KeysetPaginationTest extends TestCase
 {
     public function testBase(): void
     {
-        $data = [
-            ['id' => 1],
-            ['id' => 2],
-            ['id' => 3],
-            ['id' => 4],
-            ['id' => 5],
-        ];
-
-        $html = $this->createPagination($data, Sort::any(['id']))->render();
+        $html = $this->createPagination(2)->render();
 
         $this->assertSame(
             <<<HTML
@@ -63,7 +55,7 @@ final class KeysetPaginationTest extends TestCase
     public function testShowOnSinglePage(string $expected, bool $show): void
     {
         $html = $this
-            ->createPagination([['id' => 1]], Sort::any(['id']))
+            ->createPagination(1)
             ->showOnSinglePage($show)
             ->render();
 
@@ -73,7 +65,7 @@ final class KeysetPaginationTest extends TestCase
     public function testContainerTag(): void
     {
         $html = $this
-            ->createPagination([['id' => 1], ['id' => 2], ['id' => 3]], Sort::any(['id']))
+            ->createPagination(3)
             ->containerTag('main')
             ->render();
 
@@ -91,7 +83,7 @@ final class KeysetPaginationTest extends TestCase
     public function testWithoutContainerTag(): void
     {
         $html = $this
-            ->createPagination([['id' => 1], ['id' => 2], ['id' => 3]], Sort::any(['id']))
+            ->createPagination(3)
             ->containerTag(null)
             ->render();
 
@@ -116,7 +108,7 @@ final class KeysetPaginationTest extends TestCase
     public function testContainerAttributes(): void
     {
         $html = $this
-            ->createPagination([['id' => 1], ['id' => 2], ['id' => 3]], Sort::any(['id']))
+            ->createPagination(3)
             ->containerAttributes(['class' => 'pagination-nav', 'id' => 'main-nav'])
             ->render();
 
@@ -134,7 +126,7 @@ final class KeysetPaginationTest extends TestCase
     public function testListTag(): void
     {
         $html = $this
-            ->createPagination([['id' => 1], ['id' => 2], ['id' => 3]], Sort::any(['id']))
+            ->createPagination(3)
             ->listTag('ul')
             ->render();
 
@@ -154,7 +146,7 @@ final class KeysetPaginationTest extends TestCase
     public function testWithoutListTag(): void
     {
         $html = $this
-            ->createPagination([['id' => 1], ['id' => 2], ['id' => 3]], Sort::any(['id']))
+            ->createPagination(3)
             ->listTag(null)
             ->render();
 
@@ -181,7 +173,7 @@ final class KeysetPaginationTest extends TestCase
     public function testListAttributes(): void
     {
         $html = $this
-            ->createPagination([['id' => 1], ['id' => 2], ['id' => 3]], Sort::any(['id']))
+            ->createPagination(3)
             ->listTag('ul')
             ->listAttributes(['class' => 'pagination-list', 'data-role' => 'navigation'])
             ->render();
@@ -202,7 +194,7 @@ final class KeysetPaginationTest extends TestCase
     public function testItemTag(): void
     {
         $html = $this
-            ->createPagination([['id' => 1], ['id' => 2], ['id' => 3]], Sort::any(['id']))
+            ->createPagination(3)
             ->itemTag('li')
             ->render();
 
@@ -220,7 +212,7 @@ final class KeysetPaginationTest extends TestCase
     public function testWithoutItemTag(): void
     {
         $html = $this
-            ->createPagination([['id' => 1], ['id' => 2], ['id' => 3]], Sort::any(['id']))
+            ->createPagination(3)
             ->itemTag(null)
             ->render();
 
@@ -247,7 +239,7 @@ final class KeysetPaginationTest extends TestCase
     public function testItemAttributes(): void
     {
         $html = $this
-            ->createPagination([['id' => 1], ['id' => 2], ['id' => 3]], Sort::any(['id']))
+            ->createPagination(3)
             ->itemTag('li')
             ->itemAttributes(['class' => 'pagination-item', 'data-type' => 'nav-button'])
             ->render();
@@ -266,7 +258,7 @@ final class KeysetPaginationTest extends TestCase
     public function testDisabledItemClass(): void
     {
         $html = $this
-            ->createPagination([['id' => 1], ['id' => 2], ['id' => 3]], Sort::any(['id']))
+            ->createPagination(2)
             ->itemTag('li')
             ->disabledItemClass('disabled')
             ->render();
@@ -285,7 +277,7 @@ final class KeysetPaginationTest extends TestCase
     public function testLinkAttributes(): void
     {
         $html = $this
-            ->createPagination([['id' => 1], ['id' => 2], ['id' => 3]], Sort::any(['id']))
+            ->createPagination(3)
             ->linkAttributes(['class' => 'pagination-link', 'data-action' => 'navigate'])
             ->render();
 
@@ -303,7 +295,7 @@ final class KeysetPaginationTest extends TestCase
     public function testLinkClass(): void
     {
         $html = $this
-            ->createPagination([['id' => 1], ['id' => 2], ['id' => 3]], Sort::any(['id']))
+            ->createPagination(3)
             ->linkClass('btn', 'btn-primary')
             ->render();
 
@@ -321,7 +313,7 @@ final class KeysetPaginationTest extends TestCase
     public function testAddLinkClass(): void
     {
         $html = $this
-            ->createPagination([['id' => 1], ['id' => 2], ['id' => 3]], Sort::any(['id']))
+            ->createPagination(3)
             ->linkClass('btn')
             ->addLinkClass('btn-primary', 'active')
             ->render();
@@ -340,7 +332,7 @@ final class KeysetPaginationTest extends TestCase
     public function testDisabledLinkClass(): void
     {
         $html = $this
-            ->createPagination([['id' => 1], ['id' => 2], ['id' => 3]], Sort::any(['id']))
+            ->createPagination(3)
             ->linkClass('btn', 'btn-primary')
             ->disabledLinkClass('disabled')
             ->render();
@@ -356,10 +348,71 @@ final class KeysetPaginationTest extends TestCase
         );
     }
 
-    private function createPagination(array $data, Sort $sort, int $pageSize = 2): KeysetPagination
+    public function testLabelPrevious(): void
     {
-        $dataReader = (new IterableDataReader($data))->withSort($sort);
-        $paginator = (new KeysetPaginator($dataReader))->withPageSize($pageSize);
+        $html = $this
+            ->createPagination(3)
+            ->labelPrevious('Prev')
+            ->render();
+
+        $this->assertSame(
+            <<<HTML
+            <nav>
+            <a>Prev</a>
+            <a href="/next/2">⟩</a>
+            </nav>
+            HTML,
+            $html,
+        );
+    }
+
+    public function testLabelNext(): void
+    {
+        $html = $this
+            ->createPagination(3)
+            ->labelNext('Next')
+            ->render();
+
+        $this->assertSame(
+            <<<HTML
+            <nav>
+            <a>⟨</a>
+            <a href="/next/2">Next</a>
+            </nav>
+            HTML,
+            $html,
+        );
+    }
+
+    public function testImmutability(): void
+    {
+        $widget = new KeysetPagination();
+
+        $this->assertNotSame($widget, $widget->showOnSinglePage());
+        $this->assertNotSame($widget, $widget->containerTag('div'));
+        $this->assertNotSame($widget, $widget->containerAttributes([]));
+        $this->assertNotSame($widget, $widget->listTag('ul'));
+        $this->assertNotSame($widget, $widget->listAttributes([]));
+        $this->assertNotSame($widget, $widget->itemTag('li'));
+        $this->assertNotSame($widget, $widget->itemAttributes([]));
+        $this->assertNotSame($widget, $widget->disabledItemClass('disabled'));
+        $this->assertNotSame($widget, $widget->linkAttributes([]));
+        $this->assertNotSame($widget, $widget->linkClass('btn'));
+        $this->assertNotSame($widget, $widget->addLinkClass('btn-primary'));
+        $this->assertNotSame($widget, $widget->disabledLinkClass('disabled'));
+        $this->assertNotSame($widget, $widget->labelPrevious('Prev'));
+        $this->assertNotSame($widget, $widget->labelNext('Next'));
+    }
+
+    private function createPagination(int $pageCount): KeysetPagination
+    {
+        $data = [];
+        for ($i = 1; $i <= $pageCount * 2; $i++) {
+            $data[] = ['id' => $i];
+        }
+
+        $dataReader = (new IterableDataReader($data))->withSort(Sort::any(['id']));
+        $paginator = (new KeysetPaginator($dataReader))->withPageSize(2);
         return KeysetPagination::create(
             $paginator,
             '/next/' . PaginationContext::URL_PLACEHOLDER,
