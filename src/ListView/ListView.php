@@ -55,7 +55,7 @@ final class ListView extends BaseListView
     /** @psalm-var ItemAffixClosure|string */
     private Closure|string $afterItem = '';
     /** @psalm-var string|ItemContentClosure|null */
-    private string|Closure|null $itemContent = null;
+    private string|Closure|null $itemView = null;
     private array $itemViewParameters = [];
 
     /** @psalm-var non-empty-string|null */
@@ -220,17 +220,17 @@ final class ListView extends BaseListView
      *
      * @psalm-param string|ItemContentClosure $value
      */
-    public function itemContent(string|Closure $value): self
+    public function itemView(string|Closure $value): self
     {
         $new = clone $this;
-        $new->itemContent = $value;
+        $new->itemView = $value;
         return $new;
     }
 
     /**
      * Return new instance with the additional parameters for the view.
      *
-     * @param array $parameters Additional parameters to be passed to the view set in {@see itemContent()} when it is
+     * @param array $parameters Additional parameters to be passed to the view set in {@see itemView()} when it is
      * being rendered.
      *
      * @return self New instance with the specified view parameters.
@@ -316,7 +316,7 @@ final class ListView extends BaseListView
      * @param ListItemContext $context The context.
      *
      * @throws ViewNotFoundException If the item view file doesn't exist.
-     * @throws LogicException If {@see itemContent} isn't set.
+     * @throws LogicException If {@see itemView} isn't set.
      *
      * @return string The rendered HTML for the list item.
      */
@@ -352,19 +352,19 @@ final class ListView extends BaseListView
      * @param ListItemContext $context The context containing item data and rendering information.
      *
      * @throws ViewNotFoundException If the item view file doesn't exist.
-     * @throws LogicException If {@see $itemContent} is not configured.
+     * @throws LogicException If {@see $itemView} is not configured.
      *
      * @return string The rendered item content HTML.
      */
     private function renderItemContent(ListItemContext $context): string
     {
-        if ($this->itemContent === null) {
+        if ($this->itemView === null) {
             throw new LogicException('"itemContent" must be set.');
         }
 
-        if (is_string($this->itemContent)) {
+        if (is_string($this->itemView)) {
             return $this->view->render(
-                $this->itemContent,
+                $this->itemView,
                 array_merge(
                     $this->itemViewParameters,
                     [
@@ -375,7 +375,7 @@ final class ListView extends BaseListView
             );
         }
 
-        return (string) ($this->itemContent)($context->data, $context);
+        return (string) ($this->itemView)($context->data, $context);
     }
 
     /**
