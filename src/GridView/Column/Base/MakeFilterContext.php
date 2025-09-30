@@ -32,6 +32,6 @@ final class MakeFilterContext
      */
     public function getQueryValue(string $name): ?string
     {
-        return $this->urlParameterProvider->get($name, UrlParameterType::QUERY);
+        return $this->urlParameterProvider->get($name, UrlParameterType::Query);
     }
 }

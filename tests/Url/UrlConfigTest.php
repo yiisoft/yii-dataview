@@ -18,10 +18,10 @@ final class UrlConfigTest extends TestCase
         $this->assertSame('prev-page', $urlConfig->getPreviousPageParameterName());
         $this->assertSame('pagesize', $urlConfig->getPageSizeParameterName());
         $this->assertSame('sort', $urlConfig->getSortParameterName());
-        $this->assertSame(UrlParameterType::QUERY, $urlConfig->getPageParameterType());
-        $this->assertSame(UrlParameterType::QUERY, $urlConfig->getPreviousPageParameterType());
-        $this->assertSame(UrlParameterType::QUERY, $urlConfig->getPageSizeParameterType());
-        $this->assertSame(UrlParameterType::QUERY, $urlConfig->getSortParameterType());
+        $this->assertSame(UrlParameterType::Query, $urlConfig->getPageParameterType());
+        $this->assertSame(UrlParameterType::Query, $urlConfig->getPreviousPageParameterType());
+        $this->assertSame(UrlParameterType::Query, $urlConfig->getPageSizeParameterType());
+        $this->assertSame(UrlParameterType::Query, $urlConfig->getSortParameterType());
         $this->assertSame([], $urlConfig->getArguments());
         $this->assertSame([], $urlConfig->getQueryParameters());
     }
@@ -69,41 +69,41 @@ final class UrlConfigTest extends TestCase
     public function testWithPageParameterType(): void
     {
         $urlConfig = new UrlConfig();
-        $new = $urlConfig->withPageParameterType(UrlParameterType::PATH);
+        $new = $urlConfig->withPageParameterType(UrlParameterType::Path);
 
         $this->assertNotSame($urlConfig, $new);
-        $this->assertSame(UrlParameterType::QUERY, $urlConfig->getPageParameterType());
-        $this->assertSame(UrlParameterType::PATH, $new->getPageParameterType());
+        $this->assertSame(UrlParameterType::Query, $urlConfig->getPageParameterType());
+        $this->assertSame(UrlParameterType::Path, $new->getPageParameterType());
     }
 
     public function testWithPreviousPageParameterType(): void
     {
         $urlConfig = new UrlConfig();
-        $new = $urlConfig->withPreviousPageParameterType(UrlParameterType::PATH);
+        $new = $urlConfig->withPreviousPageParameterType(UrlParameterType::Path);
 
         $this->assertNotSame($urlConfig, $new);
-        $this->assertSame(UrlParameterType::QUERY, $urlConfig->getPreviousPageParameterType());
-        $this->assertSame(UrlParameterType::PATH, $new->getPreviousPageParameterType());
+        $this->assertSame(UrlParameterType::Query, $urlConfig->getPreviousPageParameterType());
+        $this->assertSame(UrlParameterType::Path, $new->getPreviousPageParameterType());
     }
 
     public function testWithPageSizeParameterType(): void
     {
         $urlConfig = new UrlConfig();
-        $new = $urlConfig->withPageSizeParameterType(UrlParameterType::PATH);
+        $new = $urlConfig->withPageSizeParameterType(UrlParameterType::Path);
 
         $this->assertNotSame($urlConfig, $new);
-        $this->assertSame(UrlParameterType::QUERY, $urlConfig->getPageSizeParameterType());
-        $this->assertSame(UrlParameterType::PATH, $new->getPageSizeParameterType());
+        $this->assertSame(UrlParameterType::Query, $urlConfig->getPageSizeParameterType());
+        $this->assertSame(UrlParameterType::Path, $new->getPageSizeParameterType());
     }
 
     public function testWithSortParameterType(): void
     {
         $urlConfig = new UrlConfig();
-        $new = $urlConfig->withSortParameterType(UrlParameterType::PATH);
+        $new = $urlConfig->withSortParameterType(UrlParameterType::Path);
 
         $this->assertNotSame($urlConfig, $new);
-        $this->assertSame(UrlParameterType::QUERY, $urlConfig->getSortParameterType());
-        $this->assertSame(UrlParameterType::PATH, $new->getSortParameterType());
+        $this->assertSame(UrlParameterType::Query, $urlConfig->getSortParameterType());
+        $this->assertSame(UrlParameterType::Path, $new->getSortParameterType());
     }
 
     public function testWithArguments(): void

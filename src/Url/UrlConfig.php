@@ -20,14 +20,10 @@ final class UrlConfig
      * @param string $previousPageParameterName Name of the parameter for the previous page.
      * @param string $pageSizeParameterName Name of the parameter for items per page.
      * @param string $sortParameterName Name of the parameter for sorting configuration.
-     * @param int $pageParameterType Type of the page parameter (query or path).
-     * @psalm-param UrlParameterType::* $pageParameterType
-     * @param int $previousPageParameterType Type of the previous page parameter.
-     * @psalm-param UrlParameterType::* $previousPageParameterType
-     * @param int $pageSizeParameterType Type of the page size parameter.
-     * @psalm-param UrlParameterType::* $pageSizeParameterType
-     * @param int $sortParameterType Type of the sort parameter.
-     * @psalm-param UrlParameterType::* $sortParameterType
+     * @param UrlParameterType $pageParameterType Type of the page parameter (query or path).
+     * @param UrlParameterType $previousPageParameterType Type of the previous page parameter.
+     * @param UrlParameterType $pageSizeParameterType Type of the page size parameter.
+     * @param UrlParameterType $sortParameterType Type of the sort parameter.
      * @param array $arguments Additional URL arguments to be included in generated URLs.
      * @psalm-param UrlArguments $arguments
      * @param array $queryParameters Additional query parameters to be included in generated URLs.
@@ -37,10 +33,10 @@ final class UrlConfig
         private string $previousPageParameterName = 'prev-page',
         private string $pageSizeParameterName = 'pagesize',
         private string $sortParameterName = 'sort',
-        private int $pageParameterType = UrlParameterType::QUERY,
-        private int $previousPageParameterType = UrlParameterType::QUERY,
-        private int $pageSizeParameterType = UrlParameterType::QUERY,
-        private int $sortParameterType = UrlParameterType::QUERY,
+        private UrlParameterType $pageParameterType = UrlParameterType::Query,
+        private UrlParameterType $previousPageParameterType = UrlParameterType::Query,
+        private UrlParameterType $pageSizeParameterType = UrlParameterType::Query,
+        private UrlParameterType $sortParameterType = UrlParameterType::Query,
         private array $arguments = [],
         private array $queryParameters = [],
     ) {
@@ -105,15 +101,11 @@ final class UrlConfig
     /**
      * Creates a new instance with the specified page parameter type.
      *
-     * @param int $type The new page parameter type. Must be one of:
-     *  - `UrlParameterType::PATH` for path parameters
-     *  - `UrlParameterType::QUERY` for query parameters
+     * @param UrlParameterType $type The new page parameter type.
      *
      * @return self A new instance with the updated page parameter type.
-     *
-     * @psalm-param UrlParameterType::* $type
      */
-    public function withPageParameterType(int $type): self
+    public function withPageParameterType(UrlParameterType $type): self
     {
         $new = clone $this;
         $new->pageParameterType = $type;
@@ -123,15 +115,11 @@ final class UrlConfig
     /**
      * Creates a new instance with the specified previous page parameter type.
      *
-     * @param int $type The new previous page parameter type. Must be one of:
-     *  - `UrlParameterType::PATH` for path parameters
-     *  - `UrlParameterType::QUERY` for query parameters
+     * @param UrlParameterType $type The new previous page parameter type.
      *
      * @return self A new instance with the updated previous page parameter type.
-     *
-     * @psalm-param UrlParameterType::* $type
      */
-    public function withPreviousPageParameterType(int $type): self
+    public function withPreviousPageParameterType(UrlParameterType $type): self
     {
         $new = clone $this;
         $new->previousPageParameterType = $type;
@@ -141,15 +129,11 @@ final class UrlConfig
     /**
      * Creates a new instance with the specified page size parameter type.
      *
-     * @param int $type The new page size parameter type. Must be one of:
-     *  - `UrlParameterType::PATH` for path parameters
-     *  - `UrlParameterType::QUERY` for query parameters
+     * @param UrlParameterType $type The new page size parameter type.
      *
      * @return self A new instance with the updated page size parameter type.
-     *
-     * @psalm-param UrlParameterType::* $type
      */
-    public function withPageSizeParameterType(int $type): self
+    public function withPageSizeParameterType(UrlParameterType $type): self
     {
         $new = clone $this;
         $new->pageSizeParameterType = $type;
@@ -159,15 +143,11 @@ final class UrlConfig
     /**
      * Creates a new instance with the specified sort parameter type.
      *
-     * @param int $type The new sort parameter type. Must be one of:
-     *  - `UrlParameterType::PATH` for path parameters
-     *  - `UrlParameterType::QUERY` for query parameters
+     * @param UrlParameterType $type The new sort parameter type.
      *
      * @return self A new instance with the updated sort parameter type.
-     *
-     * @psalm-param UrlParameterType::* $type
      */
-    public function withSortParameterType(int $type): self
+    public function withSortParameterType(UrlParameterType $type): self
     {
         $new = clone $this;
         $new->sortParameterType = $type;
@@ -249,11 +229,9 @@ final class UrlConfig
     /**
      * Returns the page parameter type.
      *
-     * @return int The page parameter type ({@see UrlParameterType::PATH} or {@see UrlParameterType::QUERY}).
-     *
-     * @psalm-return UrlParameterType::*
+     * @return UrlParameterType The page parameter type.
      */
-    public function getPageParameterType(): int
+    public function getPageParameterType(): UrlParameterType
     {
         return $this->pageParameterType;
     }
@@ -261,11 +239,9 @@ final class UrlConfig
     /**
      * Returns the previous page parameter type.
      *
-     * @return int The previous page parameter type ({@see UrlParameterType::PATH} or {@see UrlParameterType::QUERY}).
-     *
-     * @psalm-return UrlParameterType::*
+     * @return UrlParameterType The previous page parameter type.
      */
-    public function getPreviousPageParameterType(): int
+    public function getPreviousPageParameterType(): UrlParameterType
     {
         return $this->previousPageParameterType;
     }
@@ -273,11 +249,9 @@ final class UrlConfig
     /**
      * Returns the page size parameter type.
      *
-     * @return int The page size parameter type ({@see UrlParameterType::PATH} or {@see UrlParameterType::QUERY}).
-     *
-     * @psalm-return UrlParameterType::*
+     * @return UrlParameterType The page size parameter type.
      */
-    public function getPageSizeParameterType(): int
+    public function getPageSizeParameterType(): UrlParameterType
     {
         return $this->pageSizeParameterType;
     }
@@ -285,11 +259,9 @@ final class UrlConfig
     /**
      * Returns the sort parameter type.
      *
-     * @return int The sort parameter type ({@see UrlParameterType::PATH} or {@see UrlParameterType::QUERY}).
-     *
-     * @psalm-return UrlParameterType::*
+     * @return UrlParameterType The sort parameter type.
      */
-    public function getSortParameterType(): int
+    public function getSortParameterType(): UrlParameterType
     {
         return $this->sortParameterType;
     }

@@ -13,11 +13,9 @@ interface UrlParameterProviderInterface
      * Retrieves a URL parameter value by its name and type.
      *
      * @param string $name The name of the parameter to retrieve.
-     * @param int $type The type of the parameter (query string, path, etc.).
+     * @param UrlParameterType $type The type of the parameter.
      *
      * @return string|null The parameter value if found, `null` otherwise.
-     *
-     * @psalm-param UrlParameterType::* $type
      */
-    public function get(string $name, int $type): string|null;
+    public function get(string $name, UrlParameterType $type): string|null;
 }

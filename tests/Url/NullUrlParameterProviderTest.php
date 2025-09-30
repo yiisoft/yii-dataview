@@ -14,7 +14,7 @@ final class NullUrlParameterProviderTest extends TestCase
     {
         $provider = new NullUrlParameterProvider();
 
-        $result = $provider->get('test', UrlParameterType::PATH);
+        $result = $provider->get('test', UrlParameterType::Path);
 
         $this->assertNull($result);
     }
