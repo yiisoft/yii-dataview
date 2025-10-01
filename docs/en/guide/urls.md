@@ -25,7 +25,7 @@ use Yiisoft\Yii\DataView\Url\UrlParameterType;
     
     // Page size parameters
     ->pageSizeParameterName('limit') // Name of the parameter for items per page. Default is `pagesize`.
-    ->pageSizeParameterType(UrlParameterType::Query); // Type of the page size parameter. Default is `UrlParameterType::QUERY`.
+    ->pageSizeParameterType(UrlParameterType::Query); // Type of the page size parameter. Default is `UrlParameterType::Query`.
 ?>
 ```
 
