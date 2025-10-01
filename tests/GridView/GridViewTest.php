@@ -33,6 +33,8 @@ use Yiisoft\Yii\DataView\GridView\Column\DataColumn;
 use Yiisoft\Yii\DataView\GridView\GridView;
 use Yiisoft\Yii\DataView\PageSize\SelectPageSize;
 use Yiisoft\Yii\DataView\Pagination\OffsetPagination;
+use Yiisoft\Yii\DataView\Tests\Support\FakePaginator;
+use Yiisoft\Yii\DataView\Tests\Support\FilterableSortableLimitableDataReader;
 use Yiisoft\Yii\DataView\Tests\Support\SimplePaginationUrlCreator;
 use Yiisoft\Yii\DataView\Tests\Support\SimpleReadable;
 use Yiisoft\Yii\DataView\Tests\Support\SimpleUrlParameterProvider;
@@ -1818,6 +1820,150 @@ final class GridViewTest extends TestCase
             ->render();
 
         $this->assertStringContainsString('Page <b>1</b> of <b>' . $expectedCountPages . '</b>', $html);
+    }
+
+    public function testAutoCreateKeysetPaginator(): void
+    {
+        $data = [];
+        for ($i = 1; $i <= 20; $i++) {
+            $data[] = ['id' => $i];
+        }
+
+        $sort = Sort::any()->withOrder(['id' => 'asc']);
+        $dataReader = (new FilterableSortableLimitableDataReader($data))->withSort($sort);
+
+        $html = $this->createGridView($dataReader)
+            ->urlCreator(new SimplePaginationUrlCreator())
+            ->columns(new DataColumn('id'))
+            ->render();
+
+        $this->assertStringContainsString(
+            <<<HTML
+            <nav>
+            <a>⟨</a>
+            <a href="/route?page=10">⟩</a>
+            </nav>
+            HTML,
+            $html,
+        );
+    }
+
+    public function testWithoutPaginator(): void
+    {
+        $data = array_fill(0, 20, ['id' => 1]);
+        $dataReader = new FilterableSortableLimitableDataReader($data);
+
+        $html = $this->createGridView($dataReader)
+            ->columns(new DataColumn('id'))
+            ->render();
+
+        $this->assertStringContainsString(
+            <<<HTML
+            </table>
+            </div>
+            HTML,
+            $html,
+        );
+    }
+
+    public function testPreviousPageParameter(): void
+    {
+        $data = [['id' => 1], ['id' => 2], ['id' => 3], ['id' => 4], ['id' => 5]];
+        $dataReader = (new IterableDataReader($data))->withSort(Sort::any()->withOrder(['id' => 'asc']));
+        $paginator = (new KeysetPaginator($dataReader))->withPageSize(2);
+
+        $html = $this->createGridView($paginator)
+            ->urlParameterProvider(new SimpleUrlParameterProvider(['prev-page' => '5']))
+            ->urlCreator(new SimplePaginationUrlCreator())
+            ->columns(new DataColumn('id'))
+            ->render();
+
+        $this->assertStringContainsString(
+            <<<HTML
+            <tbody>
+            <tr>
+            <td>3</td>
+            </tr>
+            <tr>
+            <td>4</td>
+            </tr>
+            </tbody>
+            HTML,
+            $html,
+        );
+    }
+
+    public function testInvalidPageSizeWithoutPageSizeConstraint(): void
+    {
+        $data = array_fill(0, 20, ['id' => 1]);
+        $paginator = new OffsetPaginator(new IterableDataReader($data));
+
+        $html = $this->createGridView($paginator)
+            ->pageSizeConstraint(false)
+            ->urlParameterProvider(new SimpleUrlParameterProvider(['pagesize' => '0']))
+            ->columns(new DataColumn('id'))
+            ->render();
+
+        $this->assertStringContainsString('Page <b>1</b> of <b>2</b>', $html);
+    }
+
+    public function testPageSizeWithIntConstraint(): void
+    {
+        $data = array_fill(0, 50, ['id' => 1]);
+        $paginator = new OffsetPaginator(new IterableDataReader($data));
+
+        $html = $this->createGridView($paginator)
+            ->pageSizeConstraint(20)
+            ->urlParameterProvider(new SimpleUrlParameterProvider(['pagesize' => '5']))
+            ->columns(new DataColumn('id'))
+            ->render();
+
+        $this->assertStringContainsString('Page <b>1</b> of <b>10</b>', $html);
+    }
+
+    public function testPageSizeWithArrayConstraint(): void
+    {
+        $data = array_fill(0, 50, ['id' => 1]);
+        $paginator = new OffsetPaginator(new IterableDataReader($data));
+
+        $html = $this->createGridView($paginator)
+            ->pageSizeConstraint([5, 10, 20])
+            ->urlParameterProvider(new SimpleUrlParameterProvider(['pagesize' => '20']))
+            ->columns(new DataColumn('id'))
+            ->render();
+
+        // Should have 5 pages (50 items / 10 per page)
+        $this->assertStringContainsString('Page <b>1</b> of <b>3</b>', $html);
+    }
+
+    public function testPageSizeExceedsIntConstraint(): void
+    {
+        $data = array_fill(0, 50, ['id' => 1]);
+        $paginator = new OffsetPaginator(new IterableDataReader($data));
+
+        $html = $this->createGridView($paginator)
+            ->pageSizeConstraint(20)
+            ->urlParameterProvider(new SimpleUrlParameterProvider(['pagesize' => '30']))
+            ->columns(new DataColumn('id'))
+            ->render();
+
+        // Should use default page size (10), resulting in 5 pages
+        $this->assertStringContainsString('Page <b>1</b> of <b>5</b>', $html);
+    }
+
+    public function testUnsupportedPaginator(): void
+    {
+        $html = $this->createGridView(new FakePaginator([['id' => 1]]))
+            ->columns(new DataColumn('id'))
+            ->render();
+
+        $this->assertStringEndsWith(
+            <<<HTML
+            </table>
+            </div>
+            HTML,
+            $html,
+        );
     }
 
     public function testImmutability(): void
