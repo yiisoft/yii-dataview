@@ -10,19 +10,14 @@ use Yiisoft\Di\ContainerConfig;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\Widget\WidgetFactory;
 use Yiisoft\Yii\DataView\BaseListView;
-
 use Yiisoft\Yii\DataView\DetailView\DetailView;
 use Yiisoft\Yii\DataView\Filter\Widget\DropdownFilter;
 use Yiisoft\Yii\DataView\Filter\Widget\TextInputFilter;
 use Yiisoft\Yii\DataView\GridView\GridView;
-
 use Yiisoft\Yii\DataView\ListView\ListView;
-
 use Yiisoft\Yii\DataView\PageSize\InputPageSize;
 use Yiisoft\Yii\DataView\PageSize\SelectPageSize;
-
 use Yiisoft\Yii\DataView\Pagination\KeysetPagination;
-
 use Yiisoft\Yii\DataView\Pagination\OffsetPagination;
 
 use function dirname;

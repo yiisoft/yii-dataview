@@ -23,7 +23,7 @@ final class ActionColumnUrlCreatorTest extends TestCase
     {
         yield 'array' => [['id' => 2, 'name' => 'john']];
         yield 'object' => [
-            new class() {
+            new class () {
                 public int $id = 2;
             },
         ];
