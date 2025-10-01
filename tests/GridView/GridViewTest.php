@@ -1953,14 +1953,35 @@ final class GridViewTest extends TestCase
 
     public function testUnsupportedPaginator(): void
     {
-        $html = $this->createGridView(new FakePaginator([['id' => 1]]))
+        $paginator = new FakePaginator([['id' => 1], ['id' => 2]]);
+
+        $html = $this->createGridView($paginator)
+            ->urlCreator(new SimplePaginationUrlCreator())
+            ->pageSizeConstraint(10)
             ->columns(new DataColumn('id'))
             ->render();
 
-        $this->assertStringEndsWith(
+        $this->assertStringStartsWith(
             <<<HTML
+            <div>
+            <table>
+            <thead>
+            <tr>
+            <th>Id</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+            <td>1</td>
+            </tr>
+            <tr>
+            <td>2</td>
+            </tr>
+            </tbody>
             </table>
-            </div>
+
+
+            <div>Results per page
             HTML,
             $html,
         );
