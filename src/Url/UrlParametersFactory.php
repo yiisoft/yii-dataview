@@ -43,7 +43,7 @@ final class UrlParametersFactory
         $queryParameters = $context->getQueryParameters();
 
         switch ($context->getPageParameterType()) {
-            case UrlParameterType::PATH:
+            case UrlParameterType::Path:
                 /**
                  * @psalm-suppress PossiblyNullPropertyFetch https://github.com/vimeo/psalm/issues/10591
                  */
@@ -51,7 +51,7 @@ final class UrlParametersFactory
                     ? $pageToken->value
                     : null;
                 break;
-            case UrlParameterType::QUERY:
+            case UrlParameterType::Query:
                 /**
                  * @psalm-suppress PossiblyNullPropertyFetch https://github.com/vimeo/psalm/issues/10591
                  */
@@ -62,7 +62,7 @@ final class UrlParametersFactory
         }
 
         switch ($context->getPreviousPageParameterType()) {
-            case UrlParameterType::PATH:
+            case UrlParameterType::Path:
                 /**
                  * @psalm-suppress PossiblyNullPropertyFetch https://github.com/vimeo/psalm/issues/10591
                  */
@@ -70,7 +70,7 @@ final class UrlParametersFactory
                     ? $pageToken->value
                     : null;
                 break;
-            case UrlParameterType::QUERY:
+            case UrlParameterType::Query:
                 /**
                  * @psalm-suppress PossiblyNullPropertyFetch https://github.com/vimeo/psalm/issues/10591
                  */
@@ -81,19 +81,19 @@ final class UrlParametersFactory
         }
 
         switch ($context->getPageSizeParameterType()) {
-            case UrlParameterType::PATH:
+            case UrlParameterType::Path:
                 $arguments[$context->getPageSizeParameterName()] = $pageSize;
                 break;
-            case UrlParameterType::QUERY:
+            case UrlParameterType::Query:
                 $queryParameters[$context->getPageSizeParameterName()] = $pageSize;
                 break;
         }
 
         switch ($context->getSortParameterType()) {
-            case UrlParameterType::PATH:
+            case UrlParameterType::Path:
                 $arguments[$context->getSortParameterName()] = $sort;
                 break;
-            case UrlParameterType::QUERY:
+            case UrlParameterType::Query:
                 $queryParameters[$context->getSortParameterName()] = $sort;
                 break;
         }

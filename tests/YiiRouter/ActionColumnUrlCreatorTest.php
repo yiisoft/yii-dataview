@@ -73,7 +73,7 @@ final class ActionColumnUrlCreatorTest extends TestCase
         $config = new ActionColumnUrlConfig(
             baseRouteName: 'custom',
             primaryKey: 'user_id',
-            primaryKeyParameterType: UrlParameterType::PATH,
+            primaryKeyParameterType: UrlParameterType::Path,
             queryParameters: ['page' => '1']
         );
 
@@ -144,7 +144,7 @@ final class ActionColumnUrlCreatorTest extends TestCase
             $urlGenerator,
             $currentRoute,
             'custom_id',
-            UrlParameterType::PATH
+            UrlParameterType::Path
         );
         $this->assertInstanceOf(ActionColumnUrlCreator::class, $creator);
     }

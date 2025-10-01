@@ -25,15 +25,14 @@ final class ActionColumnUrlCreator
      * @param CurrentRoute $currentRoute The current route service.
      * @param string $defaultPrimaryKey The default primary key field name.
      * Used when not specified in the URL config.
-     * @param int $defaultPrimaryKeyParameterType The default parameter type for
-     * primary key values. Used when not specified in the URL config.
-     * @psalm-param UrlParameterType::* $defaultPrimaryKeyParameterType
+     * @param UrlParameterType $defaultPrimaryKeyParameterType The default parameter type for primary key values.
+     * Used when not specified in the URL config.
      */
     public function __construct(
         private readonly UrlGeneratorInterface $urlGenerator,
         private readonly CurrentRoute $currentRoute,
         private readonly string $defaultPrimaryKey = 'id',
-        private readonly int $defaultPrimaryKeyParameterType = UrlParameterType::QUERY,
+        private readonly UrlParameterType $defaultPrimaryKeyParameterType = UrlParameterType::Query,
     ) {
     }
 
@@ -70,10 +69,10 @@ final class ActionColumnUrlCreator
         $arguments = $config->arguments;
         $queryParameters = $config->queryParameters;
         switch ($primaryKeyParameterType) {
-            case UrlParameterType::PATH:
+            case UrlParameterType::Path:
                 $arguments = array_merge($arguments, [$primaryKey => (string) $primaryKeyValue]);
                 break;
-            case UrlParameterType::QUERY:
+            case UrlParameterType::Query:
                 $queryParameters = array_merge($queryParameters, [$primaryKey => (string) $primaryKeyValue]);
                 break;
         }

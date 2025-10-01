@@ -20,13 +20,13 @@ final class SimpleUrlParameterProvider implements UrlParameterProviderInterface
         array $path = [],
     ) {
         $this->parameters = [
-            UrlParameterType::QUERY => $query,
-            UrlParameterType::PATH => $path,
+            UrlParameterType::Query->name => $query,
+            UrlParameterType::Path->name => $path,
         ];
     }
 
-    public function get(string $name, int $type): ?string
+    public function get(string $name, UrlParameterType $type): ?string
     {
-        return $this->parameters[$type][$name] ?? null;
+        return $this->parameters[$type->name][$name] ?? null;
     }
 }

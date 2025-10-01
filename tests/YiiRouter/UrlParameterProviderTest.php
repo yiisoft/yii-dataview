@@ -22,8 +22,8 @@ final class UrlParameterProviderTest extends TestCase
         /** @var CurrentRoute $currentRoute */
         $provider = new UrlParameterProvider($currentRoute);
 
-        $this->assertNull($provider->get($paramName, UrlParameterType::PATH));
-        $this->assertNull($provider->get($paramName, UrlParameterType::QUERY));
+        $this->assertNull($provider->get($paramName, UrlParameterType::Path));
+        $this->assertNull($provider->get($paramName, UrlParameterType::Query));
     }
 
     public function testGetRouteWithArgument(): void
@@ -37,7 +37,7 @@ final class UrlParameterProviderTest extends TestCase
         /** @var CurrentRoute $currentRoute */
         $provider = new UrlParameterProvider($currentRoute);
 
-        $this->assertSame($paramValue, $provider->get($paramName, UrlParameterType::PATH));
+        $this->assertSame($paramValue, $provider->get($paramName, UrlParameterType::Path));
     }
 
     public function testGetRouteWithQueryParameter(): void
@@ -55,21 +55,8 @@ final class UrlParameterProviderTest extends TestCase
         /** @var CurrentRoute $currentRoute */
         $provider = new UrlParameterProvider($currentRoute);
 
-        $this->assertSame($paramValue, $provider->get($paramName, UrlParameterType::QUERY));
+        $this->assertSame($paramValue, $provider->get($paramName, UrlParameterType::Query));
 
         $_GET = [];
-    }
-
-    public function testGetWithInvalidType(): void
-    {
-        $paramName = 'id';
-
-        $currentRoute = new CurrentRoute();
-        $currentRoute->setRouteWithArguments(Route::get('/test')->name('test'), [$paramName => '42']);
-
-        /** @var CurrentRoute $currentRoute */
-        $provider = new UrlParameterProvider($currentRoute);
-
-        $this->assertNull($provider->get($paramName, 0));
     }
 }

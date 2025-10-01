@@ -20,18 +20,14 @@ final class ActionColumnUrlConfig
      * @param array $arguments Additional route arguments to include in the URL.
      * @psalm-param array<string,scalar|Stringable|null> $arguments
      * @param array $queryParameters Additional query parameters to append to the URL.
-     * @param int|null $primaryKeyParameterType How to include the primary key in the URL.
-     * Use constants from {@see UrlParameterType}.
-     * - {@see UrlParameterType::PATH} for /user/view/123
-     * - {@see UrlParameterType::QUERY} for /user/view?id=123
-     * @psalm-param UrlParameterType::*|null $primaryKeyParameterType
+     * @param UrlParameterType|null $primaryKeyParameterType How to include the primary key in the URL.
      */
     public function __construct(
         public readonly ?string $primaryKey = null,
         public readonly ?string $baseRouteName = null,
         public readonly array $arguments = [],
         public readonly array $queryParameters = [],
-        public readonly ?int $primaryKeyParameterType = null,
+        public readonly ?UrlParameterType $primaryKeyParameterType = null,
     ) {
     }
 }

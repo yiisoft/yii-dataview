@@ -8,6 +8,8 @@ use Yiisoft\Router\CurrentRoute;
 use Yiisoft\Yii\DataView\Url\UrlParameterProviderInterface;
 use Yiisoft\Yii\DataView\Url\UrlParameterType;
 
+use function is_string;
+
 /**
  * Provider for accessing URL parameters from both path and query string.
  */
@@ -31,23 +33,16 @@ final class UrlParameterProvider implements UrlParameterProviderInterface
      * - Query: Using $_GET parameters (e.g., ?sort=name)
      *
      * @param string $name The parameter name to retrieve.
-     * @param int $type The parameter type, use constants from {@see UrlParameterType}.
-     * - {@see UrlParameterType::PATH} for route arguments
-     * - {@see UrlParameterType::QUERY} for query parameters
+     * @param UrlParameterType $type The parameter type.
      *
      * @return string|null The parameter value if found, `null` otherwise.
      * For query parameters, only string values are returned; other types result in `null`.
      */
-    public function get(string $name, int $type): ?string
+    public function get(string $name, UrlParameterType $type): ?string
     {
-        switch ($type) {
-            case UrlParameterType::PATH:
-                return $this->currentRoute->getArgument($name);
-            case UrlParameterType::QUERY:
-                $value = $_GET[$name] ?? null;
-                return is_string($value) ? $value : null;
-            default:
-                return null;
-        }
+        return match ($type) {
+            UrlParameterType::Path => $this->currentRoute->getArgument($name),
+            UrlParameterType::Query => (isset($_GET[$name]) && is_string($_GET[$name])) ? $_GET[$name] : null,
+        };
     }
 }

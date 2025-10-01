@@ -15,17 +15,17 @@ use Yiisoft\Yii\DataView\Url\UrlParameterType;
 <?= GridView::widget()
     // Page parameters
     ->pageParameterName('p') // Name of the parameter for the current page number. Default is `page`.
-    ->pageParameterType(UrlParameterType::PATH) // Type of the page parameter. Default is `UrlParameterType::QUERY`.
+    ->pageParameterType(UrlParameterType::Path) // Type of the page parameter. Default is `UrlParameterType::Query`.
     ->previousPageParameterName('prev') // Name of the parameter for the previous page. Default is `prev-page`.
-    ->previousPageParameterType(UrlParameterType::PATH) // Type of the previous page parameter. Default is `UrlParameterType::QUERY`.
+    ->previousPageParameterType(UrlParameterType::Path) // Type of the previous page parameter. Default is `UrlParameterType::Query`.
     
     // Sorting parameter
     ->sortParameterName('orderBy') // Name of the parameter for sorting configuration. Default is `sort`.
-    ->sortParameterType(UrlParameterType::QUERY) // Type of the sort parameter. Default is `UrlParameterType::QUERY`.
+    ->sortParameterType(UrlParameterType::Query) // Type of the sort parameter. Default is `UrlParameterType::Query`.
     
     // Page size parameters
     ->pageSizeParameterName('limit') // Name of the parameter for items per page. Default is `pagesize`.
-    ->pageSizeParameterType(UrlParameterType::QUERY); // Type of the page size parameter. Default is `UrlParameterType::QUERY`.
+    ->pageSizeParameterType(UrlParameterType::Query); // Type of the page size parameter. Default is `UrlParameterType::Query`.
 ?>
 ```
 

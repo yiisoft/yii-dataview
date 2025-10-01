@@ -840,16 +840,16 @@ final class GridView extends BaseListView
                 $this->urlCreator,
                 UrlParametersFactory::create(
                     null,
-                    $this->urlConfig->getPageSizeParameterType() === UrlParameterType::PATH ? $pageSize : null,
-                    $this->urlConfig->getSortParameterType() === UrlParameterType::PATH ? $sort : null,
+                    $this->urlConfig->getPageSizeParameterType() === UrlParameterType::Path ? $pageSize : null,
+                    $this->urlConfig->getSortParameterType() === UrlParameterType::Path ? $sort : null,
                     $this->urlConfig,
                 )
             );
             $content = [Html::submitButton()];
-            if (!empty($pageSize) && $this->urlConfig->getPageSizeParameterType() === UrlParameterType::QUERY) {
+            if (!empty($pageSize) && $this->urlConfig->getPageSizeParameterType() === UrlParameterType::Query) {
                 $content[] = Html::hiddenInput($this->urlConfig->getPageSizeParameterName(), $pageSize);
             }
-            if (!empty($sort) && $this->urlConfig->getSortParameterType() === UrlParameterType::QUERY) {
+            if (!empty($sort) && $this->urlConfig->getSortParameterType() === UrlParameterType::Query) {
                 $content[] = Html::hiddenInput($this->urlConfig->getSortParameterName(), $sort);
             }
             $formAttributes = $this->filterFormAttributes;

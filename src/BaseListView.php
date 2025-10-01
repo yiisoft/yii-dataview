@@ -262,15 +262,11 @@ abstract class BaseListView extends Widget
     /**
      * Creates a new instance with the specified page parameter type.
      *
-     * @param int $type The new page parameter type. Must be one of:
-     *  - `UrlParameterType::PATH` for path parameters
-     *  - `UrlParameterType::QUERY` for query parameters
+     * @param UrlParameterType $type The new page parameter type.
      *
      * @return static A new instance with the updated page parameter type.
-     *
-     * @psalm-param UrlParameterType::* $type
      */
-    final public function pageParameterType(int $type): static
+    final public function pageParameterType(UrlParameterType $type): static
     {
         $new = clone $this;
         $new->urlConfig = $this->urlConfig->withPageParameterType($type);
@@ -280,15 +276,11 @@ abstract class BaseListView extends Widget
     /**
      * Creates a new instance with the specified previous page parameter type.
      *
-     * @param int $type The new previous page parameter type. Must be one of:
-     *  - `UrlParameterType::PATH` for path parameters
-     *  - `UrlParameterType::QUERY` for query parameters
+     * @param UrlParameterType $type The new previous page parameter type.
      *
      * @return static A new instance with the updated previous page parameter type.
-     *
-     * @psalm-param UrlParameterType::* $type
      */
-    final public function previousPageParameterType(int $type): static
+    final public function previousPageParameterType(UrlParameterType $type): static
     {
         $new = clone $this;
         $new->urlConfig = $this->urlConfig->withPreviousPageParameterType($type);
@@ -298,15 +290,11 @@ abstract class BaseListView extends Widget
     /**
      * Creates a new instance with the specified page size parameter type.
      *
-     * @param int $type The new page size parameter type. Must be one of:
-     *  - `UrlParameterType::PATH` for path parameters
-     *  - `UrlParameterType::QUERY` for query parameters
+     * @param UrlParameterType $type The new page size parameter type.
      *
      * @return static A new instance with the updated page size parameter type.
-     *
-     * @psalm-param UrlParameterType::* $type
      */
-    final public function pageSizeParameterType(int $type): static
+    final public function pageSizeParameterType(UrlParameterType $type): static
     {
         $new = clone $this;
         $new->urlConfig = $this->urlConfig->withPageSizeParameterType($type);
@@ -316,15 +304,11 @@ abstract class BaseListView extends Widget
     /**
      * Creates a new instance with the specified sort parameter type.
      *
-     * @param int $type The new sort parameter type. Must be one of:
-     *  - `UrlParameterType::PATH` for path parameters
-     *  - `UrlParameterType::QUERY` for query parameters
+     * @param UrlParameterType $type The new sort parameter type.
      *
      * @return static A new instance with the updated sort parameter type.
-     *
-     * @psalm-param UrlParameterType::* $type
      */
-    final public function sortParameterType(int $type): static
+    final public function sortParameterType(UrlParameterType $type): static
     {
         $new = clone $this;
         $new->urlConfig = $this->urlConfig->withSortParameterType($type);
