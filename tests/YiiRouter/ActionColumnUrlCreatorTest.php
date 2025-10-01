@@ -4,148 +4,105 @@ declare(strict_types=1);
 
 namespace Yiisoft\Yii\DataView\Tests\YiiRouter;
 
-use LogicException;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
-use Yiisoft\Data\Reader\ReadableDataInterface;
 use Yiisoft\Router\CurrentRoute;
+use Yiisoft\Router\FastRoute\UrlGenerator;
 use Yiisoft\Router\Route;
-use Yiisoft\Router\UrlGeneratorInterface;
+use Yiisoft\Router\RouteCollection;
+use Yiisoft\Router\RouteCollector;
 use Yiisoft\Yii\DataView\GridView\Column\ActionColumn;
-use Yiisoft\Yii\DataView\GridView\Column\Base\DataContext;
+use Yiisoft\Yii\DataView\Tests\Support\TestHelper;
 use Yiisoft\Yii\DataView\Url\UrlParameterType;
-use Yiisoft\Yii\DataView\YiiRouter\ActionColumnUrlConfig;
 use Yiisoft\Yii\DataView\YiiRouter\ActionColumnUrlCreator;
+use Yiisoft\Yii\DataView\YiiRouter\ActionColumnUrlConfig;
 
-/**
- * @covers \Yiisoft\Yii\DataView\YiiRouter\ActionColumnUrlCreator
- * @uses \Yiisoft\Yii\DataView\GridView\Column\ActionColumn
- * @uses \Yiisoft\Yii\DataView\GridView\Column\Base\DataContext
- * @uses \Yiisoft\Yii\DataView\YiiRouter\ActionColumnUrlConfig
- */
 final class ActionColumnUrlCreatorTest extends TestCase
 {
-    private UrlGeneratorInterface $urlGenerator;
-    private CurrentRoute $currentRoute;
-
-    protected function setUp(): void
+    public static function dataBase(): iterable
     {
-        $this->urlGenerator = $this->createMock(UrlGeneratorInterface::class);
-        $this->currentRoute = new CurrentRoute();
-        $this->currentRoute->setRouteWithArguments(Route::get('/test')->name('test'), []);
+        yield 'array' => [['id' => 2, 'name' => 'john']];
+        yield 'object' => [
+            new class() {
+                public int $id = 2;
+            },
+        ];
     }
 
-    public function testInvokeWithDefaultConfig(): void
+    #[DataProvider('dataBase')]
+    public function testBase($data): void
     {
-        $this->urlGenerator
-            ->expects($this->once())
-            ->method('generate')
-            ->with(
-                'test/view',
-                [],
-                ['id' => '123']
-            )
-            ->willReturn('/test/view?id=123');
-
-        $creator = new ActionColumnUrlCreator($this->urlGenerator, $this->currentRoute);
-
-        $column = new ActionColumn();
-        $data = ['id' => 123];
-        $dataReader = $this->createStub(ReadableDataInterface::class);
-        $context = new DataContext($dataReader, $column, $data, 123, 0);
-
-        $url = $creator('view', $context);
-
-        $this->assertSame('/test/view?id=123', $url);
-    }
-
-    public function testInvokeWithCustomConfig(): void
-    {
-        $this->urlGenerator
-            ->expects($this->once())
-            ->method('generate')
-            ->with(
-                'custom/edit',
-                ['user_id' => '456'],
-                ['page' => '1']
-            )
-            ->willReturn('/custom/edit/456?page=1');
-
-        $config = new ActionColumnUrlConfig(
-            baseRouteName: 'custom',
-            primaryKey: 'user_id',
-            primaryKeyParameterType: UrlParameterType::Path,
-            queryParameters: ['page' => '1']
+        $routeMain = Route::get('/post')->name('post');
+        $routeView = Route::get('/post/view')->name('post/view');
+        $currentRoute = new CurrentRoute();
+        $currentRoute->setRouteWithArguments($routeMain, []);
+        $urlGenerator = new UrlGenerator(
+            new RouteCollection(
+                (new RouteCollector())->addRoute($routeMain, $routeView)
+            ),
+            $currentRoute,
         );
 
-        $creator = new ActionColumnUrlCreator($this->urlGenerator, $this->currentRoute);
-
-        $column = new ActionColumn(urlConfig: $config);
-        $data = ['user_id' => 456];
-        $dataReader = $this->createStub(ReadableDataInterface::class);
-        $context = new DataContext($dataReader, $column, $data, 456, 0);
-
-        $url = $creator('edit', $context);
-
-        $this->assertSame('/custom/edit/456?page=1', $url);
-    }
-
-    public function testInvokeWithObjectData(): void
-    {
-        $this->urlGenerator
-            ->expects($this->once())
-            ->method('generate')
-            ->with(
-                'test/view',
-                [],
-                ['id' => '789']
-            )
-            ->willReturn('/test/view?id=789');
-
-        $creator = new ActionColumnUrlCreator($this->urlGenerator, $this->currentRoute);
-
-        $column = new ActionColumn();
-        $data = new class () {
-            public int $id = 789;
-        };
-        $dataReader = $this->createStub(ReadableDataInterface::class);
-        $context = new DataContext($dataReader, $column, $data, 789, 0);
-
-        $url = $creator('view', $context);
-
-        $this->assertSame('/test/view?id=789', $url);
-    }
-
-    public function testInvokeWithInvalidConfig(): void
-    {
-        $creator = new ActionColumnUrlCreator($this->urlGenerator, $this->currentRoute);
-
-        $column = new ActionColumn(urlConfig: 'invalid');
-        $data = ['id' => 123];
-        $dataReader = $this->createStub(ReadableDataInterface::class);
-        $context = new DataContext($dataReader, $column, $data, 123, 0);
-
-        $this->expectException(LogicException::class);
-        $this->expectExceptionMessage(ActionColumnUrlCreator::class . ' supports ' . ActionColumnUrlConfig::class . ' only.');
-
-        $creator('view', $context);
-    }
-
-    public function testConstructor(): void
-    {
-        $urlGenerator = $this->createMock(UrlGeneratorInterface::class);
-        $currentRoute = new CurrentRoute();
-
-        // Test with default values
-        $creator = new ActionColumnUrlCreator($urlGenerator, $currentRoute);
-        $this->assertInstanceOf(ActionColumnUrlCreator::class, $creator);
-
-        // Test with custom values
-        $creator = new ActionColumnUrlCreator(
+        $context = TestHelper::createDataContext(data: $data);
+        $urlCreator = new ActionColumnUrlCreator(
             $urlGenerator,
             $currentRoute,
-            'custom_id',
-            UrlParameterType::Path
         );
-        $this->assertInstanceOf(ActionColumnUrlCreator::class, $creator);
+
+        $result = ($urlCreator)('view', $context);
+
+        $this->assertSame('/post/view?id=2', $result);
+    }
+
+    public function testUrlArgumentInPath(): void
+    {
+        $routeMain = Route::get('/post')->name('post');
+        $routeView = Route::get('/post/view/{id}/')->name('post/view');
+        $currentRoute = new CurrentRoute();
+        $currentRoute->setRouteWithArguments($routeMain, []);
+        $urlGenerator = new UrlGenerator(
+            new RouteCollection(
+                (new RouteCollector())->addRoute($routeMain, $routeView)
+            ),
+            $currentRoute,
+        );
+
+        $context = TestHelper::createDataContext(
+            column: new ActionColumn(
+                urlConfig: new ActionColumnUrlConfig(primaryKeyParameterType: UrlParameterType::Path),
+            ),
+            data: ['id' => 2],
+        );
+        $urlCreator = new ActionColumnUrlCreator(
+            $urlGenerator,
+            $currentRoute,
+        );
+
+        $result = ($urlCreator)('view', $context);
+
+        $this->assertSame('/post/view/2/', $result);
+    }
+
+    public function testUnsupportedUrlConfig(): void
+    {
+        $currentRoute = new CurrentRoute();
+        $urlGenerator = new UrlGenerator(
+            new RouteCollection(new RouteCollector()),
+            $currentRoute,
+        );
+
+        $context = TestHelper::createDataContext(
+            column: new ActionColumn(urlConfig: ['primaryKey' => 'id'])
+        );
+        $urlCreator = new ActionColumnUrlCreator(
+            $urlGenerator,
+            $currentRoute,
+        );
+
+        $this->expectException(\LogicException::class);
+        $this->expectExceptionMessage(
+            ActionColumnUrlCreator::class . ' supports ' . ActionColumnUrlConfig::class . ' only.'
+        );
+        ($urlCreator)('view', $context);
     }
 }
