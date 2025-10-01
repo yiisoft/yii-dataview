@@ -24,12 +24,15 @@ use Yiisoft\Validator\ValidatorInterface;
 use Yiisoft\Html\Html;
 use Yiisoft\Html\Tag\Td;
 use Yiisoft\Html\Tag\Tr;
+use Yiisoft\Yii\DataView\DataReaderNotSetException;
 use Yiisoft\Yii\DataView\Filter\Factory\FilterFactoryInterface;
 use Yiisoft\Yii\DataView\Filter\Factory\IncorrectValueException;
 use Yiisoft\Yii\DataView\GridView\BodyRowContext;
 use Yiisoft\Yii\DataView\GridView\Column\Base\DataContext;
 use Yiisoft\Yii\DataView\GridView\Column\DataColumn;
 use Yiisoft\Yii\DataView\GridView\GridView;
+use Yiisoft\Yii\DataView\PageSize\SelectPageSize;
+use Yiisoft\Yii\DataView\Pagination\OffsetPagination;
 use Yiisoft\Yii\DataView\Tests\Support\SimplePaginationUrlCreator;
 use Yiisoft\Yii\DataView\Tests\Support\SimpleReadable;
 use Yiisoft\Yii\DataView\Tests\Support\SimpleUrlParameterProvider;
@@ -1327,6 +1330,18 @@ final class GridViewTest extends TestCase
         $this->assertStringContainsString('<div>Page <b>1</b> of <b>2</b></div>', $html);
     }
 
+    public function testIgnoreMissingPage2(): void
+    {
+        $dataReader = new IterableDataReader([]);
+        $paginator = (new OffsetPaginator($dataReader))->withPageSize(1)->withCurrentPage(999);
+
+        $widget = $this->createGridView($paginator);
+
+        $this->expectException(PageNotFoundException::class);
+        $this->expectExceptionMessage('Page 999 not found.');
+        $widget->render();
+    }
+
     public function testNotIgnoreMissingPage(): void
     {
         $data = [['id' => 1], ['id' => 2]];
@@ -1652,6 +1667,159 @@ final class GridViewTest extends TestCase
         $this->assertStringContainsString('<div>Showing 1-3 of 3 items</div>', $html);
     }
 
+    public function testPaginationWidget(): void
+    {
+        $data = array_fill(0, 20, ['id' => 1]);
+        $paginator = (new OffsetPaginator(new IterableDataReader($data)))->withPageSize(5);
+        $paginationWidget = (new OffsetPagination())
+            ->labelPrevious('Previous PAGE')
+            ->labelNext('Next PAGE');
+
+        $html = $this->createGridView($paginator)
+            ->paginationWidget($paginationWidget)
+            ->render();
+
+        $this->assertStringContainsString('Previous PAGE', $html);
+        $this->assertStringContainsString('Next PAGE', $html);
+    }
+
+    public function testOffsetPaginationConfig(): void
+    {
+        $data = array_fill(0, 20, ['id' => 1]);
+        $paginator = (new OffsetPaginator(new IterableDataReader($data)))->withPageSize(5);
+
+        $html = $this->createGridView($paginator)
+            ->offsetPaginationConfig([
+                'labelPrevious()' => ['Custom Previous'],
+                'labelNext()' => ['Custom Next'],
+            ])
+            ->render();
+
+        $this->assertStringContainsString('Custom Previous', $html);
+        $this->assertStringContainsString('Custom Next', $html);
+    }
+
+    public function testKeysetPaginationConfig(): void
+    {
+        $data = [];
+        for ($i = 1; $i <= 20; $i++) {
+            $data[] = ['id' => $i];
+        }
+        $dataReader = (new IterableDataReader($data))->withSort(Sort::any()->withOrder(['id' => 'asc']));
+        $paginator = (new KeysetPaginator($dataReader))->withPageSize(5);
+
+        $html = $this->createGridView($paginator)
+            ->keysetPaginationConfig([
+                'labelPrevious()' => ['Custom Prev'],
+                'labelNext()' => ['Custom Nxt'],
+            ])
+            ->urlCreator(new SimplePaginationUrlCreator())
+            ->render();
+
+        $this->assertStringContainsString('Custom Prev', $html);
+        $this->assertStringContainsString('Custom Nxt', $html);
+    }
+
+    public function testPageSizeWidget(): void
+    {
+        $data = array_fill(0, 20, ['id' => 1]);
+        $paginator = (new OffsetPaginator(new IterableDataReader($data)));
+        $pageSizeWidget = (new SelectPageSize())->addAttributes(['class' => 'custom-select']);
+
+        $html = $this->createGridView($paginator)
+            ->pageSizeConstraint([5, 10, 20])
+            ->pageSizeWidget($pageSizeWidget)
+            ->render();
+
+        $this->assertStringContainsString('class="custom-select"', $html);
+    }
+
+    public function testPageSizeTag(): void
+    {
+        $paginator = new OffsetPaginator(new IterableDataReader(array_fill(0, 20, ['id' => 1])));
+        $html = $this->createGridView($paginator)
+            ->pageSizeConstraint([5, 10, 20])
+            ->pageSizeTag('section')
+            ->render();
+
+        $this->assertStringContainsString('<section>Results per page', $html);
+    }
+
+    public function testWithoutPageSizeTag(): void
+    {
+        $paginator = new OffsetPaginator(new IterableDataReader(array_fill(0, 20, ['id' => 1])));
+        $html = $this->createGridView($paginator)
+            ->pageSizeConstraint([5, 10, 20])
+            ->pageSizeTag(null)
+            ->render();
+
+        $this->assertStringContainsString(
+            <<<HTML
+            </nav>
+            Results per page
+            HTML,
+            $html,
+        );
+    }
+
+    public function testPageSizeTagEmptyString(): void
+    {
+        $gridView = $this->createGridView();
+
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Tag name cannot be empty.');
+        $gridView->pageSizeTag('');
+    }
+
+    public function testPageSizeAttributes(): void
+    {
+        $paginator = new OffsetPaginator(new IterableDataReader(array_fill(0, 20, ['id' => 1])));
+        $html = $this->createGridView($paginator)
+            ->pageSizeConstraint([5, 10, 20])
+            ->pageSizeAttributes(['class' => 'page-size-wrapper', 'data-test' => 'pagesize'])
+            ->render();
+
+        $this->assertStringContainsString(
+            '<div class="page-size-wrapper" data-test="pagesize">Results per page',
+            $html,
+        );
+    }
+
+    public function testPageSizeTemplate(): void
+    {
+        $paginator = new OffsetPaginator(new IterableDataReader(array_fill(0, 20, ['id' => 1])));
+        $html = $this->createGridView($paginator)
+            ->pageSizeConstraint([5, 10, 20])
+            ->pageSizeTemplate('Items: {widget}')
+            ->render();
+
+        $this->assertStringContainsString('<div>Items: <select', $html);
+    }
+
+    public function testRenderWithoutDataReader(): void
+    {
+        $gridView = new GridView(new Container());
+
+        $this->expectException(DataReaderNotSetException::class);
+        $this->expectExceptionMessage('Failed to create widget because "dataReader" is not set.');
+        $gridView->render();
+    }
+
+    #[TestWith([4, 5])]
+    #[TestWith([2, 20])]
+    public function testPageSizeConstraintWithInt(int $expectedCountPages, int $constraint): void
+    {
+        $data = array_fill(0, 20, ['id' => 1]);
+        $dataReader = new IterableDataReader($data);
+        $paginator = (new OffsetPaginator($dataReader));
+        $html = $this->createGridView($paginator)
+            ->urlCreator(new SimplePaginationUrlCreator())
+            ->pageSizeConstraint($constraint)
+            ->render();
+
+        $this->assertStringContainsString('Page <b>1</b> of <b>' . $expectedCountPages . '</b>', $html);
+    }
+
     public function testImmutability(): void
     {
         $gridView = $this->createGridView();
@@ -1715,6 +1883,17 @@ final class GridViewTest extends TestCase
         $this->assertNotSame($gridView, $gridView->headerClass('test'));
         $this->assertNotSame($gridView, $gridView->addHeaderClass('test'));
         $this->assertNotSame($gridView, $gridView->encodeHeader(false));
+        $this->assertNotSame($gridView, $gridView->toolbar('test'));
+        $this->assertNotSame($gridView, $gridView->summaryTag('p'));
+        $this->assertNotSame($gridView, $gridView->summaryAttributes([]));
+        $this->assertNotSame($gridView, $gridView->summaryTemplate('test'));
+        $this->assertNotSame($gridView, $gridView->paginationWidget(null));
+        $this->assertNotSame($gridView, $gridView->offsetPaginationConfig([]));
+        $this->assertNotSame($gridView, $gridView->keysetPaginationConfig([]));
+        $this->assertNotSame($gridView, $gridView->pageSizeWidget(null));
+        $this->assertNotSame($gridView, $gridView->pageSizeTag('p'));
+        $this->assertNotSame($gridView, $gridView->pageSizeAttributes([]));
+        $this->assertNotSame($gridView, $gridView->pageSizeTemplate('test'));
     }
 
     private function createGridView(ReadableDataInterface|array $data = []): GridView
