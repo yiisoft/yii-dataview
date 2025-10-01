@@ -21,7 +21,7 @@ use Yiisoft\Yii\DataView\Url\UrlParameterType;
     
     // Sorting parameter
     ->sortParameterName('orderBy') // Name of the parameter for sorting configuration. Default is `sort`.
-    ->sortParameterType(UrlParameterType::Query) // Type of the sort parameter. Default is `UrlParameterType::QUERY`.
+    ->sortParameterType(UrlParameterType::Query) // Type of the sort parameter. Default is `UrlParameterType::Query`.
     
     // Page size parameters
     ->pageSizeParameterName('limit') // Name of the parameter for items per page. Default is `pagesize`.
