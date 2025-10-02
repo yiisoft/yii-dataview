@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Yiisoft\Yii\DataView\Tests\YiiRouter;
 
+use PHPUnit\Framework\Attributes\TestWith;
 use PHPUnit\Framework\TestCase;
 use Yiisoft\Router\CurrentRoute;
 use Yiisoft\Router\Route;
@@ -12,51 +13,41 @@ use Yiisoft\Yii\DataView\YiiRouter\UrlParameterProvider;
 
 final class UrlParameterProviderTest extends TestCase
 {
-    public function testGetNonExistentParameter(): void
+    #[TestWith([UrlParameterType::Query])]
+    #[TestWith([UrlParameterType::Path])]
+    public function testGetNonExistentParameter(UrlParameterType $parameterType): void
     {
-        $paramName = 'nonexistent';
+        $provider = new UrlParameterProvider(new CurrentRoute());
 
-        $currentRoute = new CurrentRoute();
-        $currentRoute->setRouteWithArguments(Route::get('/test')->name('test'), [$paramName => null]);
+        $result = $provider->get('non-exists', $parameterType);
 
-        /** @var CurrentRoute $currentRoute */
-        $provider = new UrlParameterProvider($currentRoute);
-
-        $this->assertNull($provider->get($paramName, UrlParameterType::Path));
-        $this->assertNull($provider->get($paramName, UrlParameterType::Query));
+        $this->assertNull($result);
     }
 
-    public function testGetRouteWithArgument(): void
+    public function testGetFromPath(): void
     {
         $paramName = 'id';
         $paramValue = '42';
 
         $currentRoute = new CurrentRoute();
-        $currentRoute->setRouteWithArguments(Route::get('/test')->name('test'), [$paramName => $paramValue]);
-
-        /** @var CurrentRoute $currentRoute */
+        $currentRoute->setRouteWithArguments(Route::get('/test'), [$paramName => $paramValue]);
         $provider = new UrlParameterProvider($currentRoute);
 
-        $this->assertSame($paramValue, $provider->get($paramName, UrlParameterType::Path));
+        $result = $provider->get($paramName, UrlParameterType::Path);
+
+        $this->assertSame($paramValue, $result);
     }
 
-    public function testGetRouteWithQueryParameter(): void
+    public function testGetFromQuery(): void
     {
-        $_GET = [];
-
         $paramName = 'sort';
         $paramValue = 'name';
 
-        $_GET[$paramName] = $paramValue;
+        $_GET = [$paramName => $paramValue];
+        $provider = new UrlParameterProvider(new CurrentRoute());
 
-        $currentRoute = new CurrentRoute();
-        $currentRoute->setRouteWithArguments(Route::get('/test')->name('test'), []);
+        $result = $provider->get($paramName, UrlParameterType::Query);
 
-        /** @var CurrentRoute $currentRoute */
-        $provider = new UrlParameterProvider($currentRoute);
-
-        $this->assertSame($paramValue, $provider->get($paramName, UrlParameterType::Query));
-
-        $_GET = [];
+        $this->assertSame($paramValue, $result);
     }
 }

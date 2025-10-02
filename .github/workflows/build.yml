@@ -28,6 +28,7 @@ jobs:
     secrets:
       codecovToken: ${{ secrets.CODECOV_TOKEN }}
     with:
+      ini-values: pcov.directory=$GITHUB_WORKSPACE, pcov.exclude=#^(?!($GITHUB_WORKSPACE/config/|$GITHUB_WORKSPACE/src/)).*#
       extensions: intl
       os: >-
         ['ubuntu-latest', 'windows-latest']

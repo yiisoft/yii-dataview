@@ -19,7 +19,7 @@ return [
 
             $formatter = extension_loaded('intl')
                 ? new IntlMessageFormatter()
-                : new SimpleMessageFormatter();
+                : new SimpleMessageFormatter(); // @codeCoverageIgnore
 
             return new CategorySource($params['yiisoft/yii-dataview']['translation.category'], $reader, $formatter);
         },
