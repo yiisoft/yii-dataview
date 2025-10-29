@@ -96,7 +96,11 @@ final class DataColumn implements ColumnInterface
      * @param callable|float|int|string|Stringable|ValuePresenterInterface|null $content Custom content for data cells.
      * Can be a callable with signature:
      * `function(array|object $data, DataContext $context): string|Stringable|int|float`.
-     * @param bool $encodeContent Whether to HTML-encode the cell content.
+     * @param bool|null $encodeContent Whether to HTML-encode the cell content. Supported values:
+     *  - `null`: stringable objects implementing {@see NoEncodeStringableInterface} aren't encoded, everything else is
+     *    encoded (default behavior);
+     *  - `true`: any content is encoded, regardless of type;
+     *  - `false`: nothing is encoded, use with caution and only for trusted content.
      * @param array|bool|FilterWidget $filter Filter configuration. Can be:
      * - `false` (disabled)
      * - `array` (filter options)
@@ -105,16 +109,16 @@ final class DataColumn implements ColumnInterface
      * @param array|RuleInterface|null $filterValidation Validation rules for filter values.
      * Can be a single rule or array of rules.
      * @param bool|callable|null $filterEmpty Function to determine if a filter value is empty. Can be:
-     * - `null`: Uses default empty value checking (`empty()` function)
-     * - `true`: Always considers the value empty (disables filtering)
-     * - `false`: Always considers the value non-empty (enables filtering)
-     * - `callable`: Custom function to determine emptiness with signature:
-     *   ```php
-     *   function (mixed $value): bool {
-     *       // Return true if value should be considered empty
-     *       return $value === '' || $value === null;
-     *   }
-     *   ```
+     *  - `null`: Uses default empty value checking (`empty()` function)
+     *  - `true`: Always considers the value empty (disables filtering)
+     *  - `false`: Always considers the value non-empty (enables filtering)
+     *  - `callable`: Custom function to determine emptiness with signature:
+     *    ```php
+     *    function (mixed $value): bool {
+     *        // Return true if value should be considered empty
+     *        return $value === '' || $value === null;
+     *    }
+     *    ```
      * @param bool $visible Whether the column is visible.
      * @param string|null $columnClass Additional CSS class for all column cells.
      * @param string|null $headerClass Additional CSS class for the header cell.
@@ -137,7 +141,7 @@ final class DataColumn implements ColumnInterface
         public readonly mixed $bodyAttributes = [],
         public readonly bool $withSorting = true,
         string|Stringable|int|float|callable|ValuePresenterInterface|null $content = null,
-        public bool $encodeContent = true,
+        public readonly ?bool $encodeContent = null,
         public readonly bool|array|FilterWidget $filter = false,
         public readonly string|FilterFactoryInterface|null $filterFactory = null,
         public readonly array|RuleInterface|null $filterValidation = null,

@@ -9,6 +9,7 @@ use InvalidArgumentException;
 use Stringable;
 use Yiisoft\Arrays\ArrayHelper;
 use Yiisoft\Html\Html;
+use Yiisoft\Html\NoEncodeStringableInterface;
 use Yiisoft\Widget\Widget;
 use Yiisoft\Yii\DataView\ValuePresenter\SimpleValuePresenter;
 use Yiisoft\Yii\DataView\ValuePresenter\ValuePresenterInterface;
@@ -487,7 +488,9 @@ final class DetailView extends Widget
     {
         $value = $this->getValue($field);
         $value = $this->valuePresenter->present($value);
-        if ($field->valueEncode) {
+        if ($field->valueEncode
+            || ($field->valueEncode === null && !($value instanceof NoEncodeStringableInterface))
+        ) {
             $value = Html::encode($value);
         }
 

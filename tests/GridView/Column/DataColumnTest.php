@@ -10,6 +10,7 @@ use PHPUnit\Framework\TestCase;
 use Yiisoft\Data\Reader\Iterable\IterableDataReader;
 use Yiisoft\Di\Container;
 use Yiisoft\Di\ContainerConfig;
+use Yiisoft\Html\NoEncode;
 use Yiisoft\Validator\Rule\Integer;
 use Yiisoft\Validator\Validator;
 use Yiisoft\Validator\ValidatorInterface;
@@ -138,11 +139,23 @@ final class DataColumnTest extends TestCase
         );
     }
 
-    #[TestWith(['&lt;b&gt;Bold&lt;/b&gt;', true])]
-    #[TestWith(['<b>Bold</b>', false])]
-    public function testEncodeContent(string $expected, bool $encode): void
+    public static function dataEncodeContent(): iterable
     {
-        $html = $this->createGridView([['content' => '<b>Bold</b>']])
+        yield ['&lt;b&gt;Bold&lt;/b&gt;', '<b>Bold</b>', null];
+        yield ['&lt;b&gt;Bold&lt;/b&gt;', '<b>Bold</b>', true];
+        yield ['<b>Bold</b>', '<b>Bold</b>', false];
+        yield ['&lt;b&gt;Bold&lt;/b&gt;', new StringableObject('<b>Bold</b>'), null];
+        yield ['&lt;b&gt;Bold&lt;/b&gt;', new StringableObject('<b>Bold</b>'), true];
+        yield ['<b>Bold</b>', new StringableObject('<b>Bold</b>'), false];
+        yield ['<b>Bold</b>', NoEncode::string('<b>Bold</b>'), null];
+        yield ['&lt;b&gt;Bold&lt;/b&gt;', NoEncode::string('<b>Bold</b>'), true];
+        yield ['<b>Bold</b>', NoEncode::string('<b>Bold</b>'), false];
+    }
+
+    #[DataProvider('dataEncodeContent')]
+    public function testEncodeContent(string $expected, mixed $content, ?bool $encode): void
+    {
+        $html = $this->createGridView([['content' => $content]])
             ->columns(new DataColumn(property: 'content', encodeContent: $encode))
             ->render();
 

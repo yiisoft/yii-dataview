@@ -33,7 +33,7 @@ final class SimpleValuePresenter implements ValuePresenterInterface
     /**
      * @throws InvalidArgumentException
      */
-    public function present(mixed $value): string
+    public function present(mixed $value): string|Stringable
     {
         return match (gettype($value)) {
             'NULL' => $this->null,
@@ -41,7 +41,7 @@ final class SimpleValuePresenter implements ValuePresenterInterface
             'string' => $value,
             'integer', 'double' => (string) $value,
             'object' => match (true) {
-                $value instanceof Stringable => (string) $value,
+                $value instanceof Stringable => $value,
                 $value instanceof DateTimeInterface => $value->format($this->dateTimeFormat),
                 $value instanceof UnitEnum => $value->name,
                 default => $this->throwUnsupportedType($value),
