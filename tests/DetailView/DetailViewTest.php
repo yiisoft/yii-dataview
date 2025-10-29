@@ -5,13 +5,16 @@ declare(strict_types=1);
 namespace DetailView;
 
 use InvalidArgumentException;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
+use Yiisoft\Html\NoEncode;
 use Yiisoft\Yii\DataView\DetailView\DataField;
 use Yiisoft\Yii\DataView\DetailView\DetailView;
 use Yiisoft\Yii\DataView\DetailView\FieldContext;
 use Yiisoft\Yii\DataView\DetailView\GetValueContext;
 use Yiisoft\Yii\DataView\DetailView\LabelContext;
 use Yiisoft\Yii\DataView\DetailView\ValueContext;
+use Yiisoft\Yii\DataView\Tests\Support\StringableObject;
 use Yiisoft\Yii\DataView\ValuePresenter\SimpleValuePresenter;
 
 final class DetailViewTest extends TestCase
@@ -558,6 +561,40 @@ final class DetailViewTest extends TestCase
             <dd>&lt;bold&gt;</dd>
             <dt>Name</dt>
             <dd><bold></dd>
+            </dl>
+            HTML,
+            $html,
+        );
+    }
+
+    public static function dataValueEncode(): iterable
+    {
+        yield ['&lt;b&gt;Bold&lt;/b&gt;', '<b>Bold</b>', null];
+        yield ['&lt;b&gt;Bold&lt;/b&gt;', '<b>Bold</b>', true];
+        yield ['<b>Bold</b>', '<b>Bold</b>', false];
+        yield ['&lt;b&gt;Bold&lt;/b&gt;', new StringableObject('<b>Bold</b>'), null];
+        yield ['&lt;b&gt;Bold&lt;/b&gt;', new StringableObject('<b>Bold</b>'), true];
+        yield ['<b>Bold</b>', new StringableObject('<b>Bold</b>'), false];
+        yield ['<b>Bold</b>', NoEncode::string('<b>Bold</b>'), null];
+        yield ['&lt;b&gt;Bold&lt;/b&gt;', NoEncode::string('<b>Bold</b>'), true];
+        yield ['<b>Bold</b>', NoEncode::string('<b>Bold</b>'), false];
+    }
+
+    #[DataProvider('dataValueEncode')]
+    public function testValueEncode(string $expected, mixed $content, ?bool $encode): void
+    {
+        $html = DetailView::widget()
+            ->data(['name' => $content])
+            ->fields(
+                new DataField(property: 'name', valueEncode: $encode),
+            )
+            ->render();
+
+        $this->assertSame(
+            <<<HTML
+            <dl>
+            <dt>name</dt>
+            <dd>$expected</dd>
             </dl>
             HTML,
             $html,

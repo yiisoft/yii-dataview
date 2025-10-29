@@ -32,7 +32,11 @@ final class DataField
      *  - other value that will be used as is.
      * @param array|Closure $valueAttributes An array of value's HTML attribute values indexed by attribute names or
      * a function accepting data and returning the array.
-     * @param bool $valueEncode Whether the value is HTML encoded.
+     * @param bool|null $valueEncode Whether the value is HTML encoded. Supported values:
+     *  - `null`: stringable objects implementing {@see NoEncodeStringableInterface} aren't encoded, everything else is
+     *    encoded (default behavior);
+     *  - `true`: any content is encoded, regardless of type;
+     *  - `false`: nothing is encoded, use with caution and only for trusted content.
      * @param array|Closure $fieldAttributes An array of label's HTML attribute values indexed by attribute names or
      *  a function accepting data and returning the array.
      * @param bool $visible Whether the field is visible.
@@ -48,7 +52,7 @@ final class DataField
         public readonly bool $labelEncode = true,
         public readonly array|Closure $labelAttributes = [],
         public readonly mixed $value = null,
-        public readonly bool $valueEncode = true,
+        public readonly ?bool $valueEncode = null,
         public readonly array|Closure $valueAttributes = [],
         public readonly array|Closure $fieldAttributes = [],
         public readonly bool $visible = true,

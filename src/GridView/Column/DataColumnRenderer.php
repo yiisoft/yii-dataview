@@ -5,9 +5,11 @@ declare(strict_types=1);
 namespace Yiisoft\Yii\DataView\GridView\Column;
 
 use Psr\Container\ContainerInterface;
+use Stringable;
 use Yiisoft\Arrays\ArrayHelper;
 use Yiisoft\Data\Reader\FilterInterface;
 use Yiisoft\Html\Html;
+use Yiisoft\Html\NoEncodeStringableInterface;
 use Yiisoft\Validator\EmptyCondition\NeverEmpty;
 use Yiisoft\Validator\EmptyCondition\WhenEmpty;
 use Yiisoft\Validator\ValidatorInterface;
@@ -186,7 +188,9 @@ final class DataColumnRenderer implements FilterableColumnRendererInterface, Sor
         /** @var DataColumn $column This annotation is for IDE only */
 
         $content = $this->prepareRawBodyContent($column, $context);
-        if ($column->encodeContent) {
+        if ($column->encodeContent
+            || ($column->encodeContent === null && !($content instanceof NoEncodeStringableInterface))
+        ) {
             $content = Html::encode($content);
         }
 
@@ -274,7 +278,7 @@ final class DataColumnRenderer implements FilterableColumnRendererInterface, Sor
         return $this->filterFactoryContainer->get($factory);
     }
 
-    private function prepareRawBodyContent(DataColumn $column, DataContext $context): string
+    private function prepareRawBodyContent(DataColumn $column, DataContext $context): string|Stringable
     {
         if ($column->content instanceof ValuePresenterInterface) {
             return $column->content->present(

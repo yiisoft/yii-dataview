@@ -34,11 +34,13 @@ final class SimpleValuePresenterTest extends TestCase
         yield 'DateTimeImmutable' => ['2023-05-15 14:30:00', new DateTimeImmutable('2023-05-15 14:30:00')];
         yield 'string enum' => ['RED', StringEnum::RED];
         yield 'integer enum' => ['A', IntegerEnum::A];
-        yield 'stringable object' => ['test', new StringableObject('test')];
+
+        $object = new StringableObject('test');
+        yield 'stringable object' => [$object, $object];
     }
 
     #[DataProvider('dataPresent')]
-    public function testPresent(string $expected, mixed $value): void
+    public function testPresent(mixed $expected, mixed $value): void
     {
         $presenter = new SimpleValuePresenter();
 
