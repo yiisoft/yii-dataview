@@ -14,8 +14,7 @@ final class FakePaginator implements PaginatorInterface
 {
     public function __construct(
         private readonly array $data,
-    ) {
-    }
+    ) {}
 
     public function read(): array
     {

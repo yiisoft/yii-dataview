@@ -47,8 +47,8 @@ final class DataField
      * @psalm-param array|FieldAttributesClosure $fieldAttributes
      */
     public function __construct(
-        public readonly string|null $property = null,
-        public readonly string|null $label = null,
+        public readonly ?string $property = null,
+        public readonly ?string $label = null,
         public readonly bool $labelEncode = true,
         public readonly array|Closure $labelAttributes = [],
         public readonly mixed $value = null,

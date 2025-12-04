@@ -27,8 +27,7 @@ final class SimpleValuePresenter implements ValuePresenterInterface
         private readonly string $true = 'True',
         private readonly string $false = 'False',
         private readonly string $dateTimeFormat = 'Y-m-d H:i:s',
-    ) {
-    }
+    ) {}
 
     /**
      * @throws InvalidArgumentException

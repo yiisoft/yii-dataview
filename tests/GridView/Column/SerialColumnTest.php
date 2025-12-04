@@ -144,8 +144,8 @@ final class SerialColumnTest extends TestCase
         $html = $this->createGridView([['name' => 'John']])
             ->columns(
                 new SerialColumn(
-                    bodyAttributes: ['class' => 'serial-body']
-                )
+                    bodyAttributes: ['class' => 'serial-body'],
+                ),
             )
             ->render();
 
@@ -162,8 +162,8 @@ final class SerialColumnTest extends TestCase
         $html = $this->createGridView([['name' => 'John']])
             ->columns(
                 new SerialColumn(
-                    columnAttributes: ['class' => 'serial-col']
-                )
+                    columnAttributes: ['class' => 'serial-col'],
+                ),
             )
             ->columnGrouping()
             ->render();
@@ -183,8 +183,8 @@ final class SerialColumnTest extends TestCase
         $html = $this->createGridView([['name' => 'John']])
             ->columns(
                 new SerialColumn(
-                    footer: 'Total Rows'
-                )
+                    footer: 'Total Rows',
+                ),
             )
             ->enableFooter()
             ->render();

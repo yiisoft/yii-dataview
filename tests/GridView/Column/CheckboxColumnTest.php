@@ -110,7 +110,7 @@ final class CheckboxColumnTest extends TestCase
         $html = $this->createGridView([['id' => 1]])
             ->columns(
                 new CheckboxColumn(
-                    inputAttributes: ['class' => 'custom-checkbox', 'data-id' => 'test']
+                    inputAttributes: ['class' => 'custom-checkbox', 'data-id' => 'test'],
                 ),
             )
             ->render();
@@ -128,7 +128,7 @@ final class CheckboxColumnTest extends TestCase
         $html = $this->createGridView([['id' => 1]])
             ->columns(
                 new CheckboxColumn(
-                    content: static fn(Checkbox $checkbox, DataContext $context) => '<label>' . $checkbox . ' Row ' . $context->data['id'] . '</label>'
+                    content: static fn(Checkbox $checkbox, DataContext $context) => '<label>' . $checkbox . ' Row ' . $context->data['id'] . '</label>',
                 ),
             )
             ->render();
@@ -145,7 +145,7 @@ final class CheckboxColumnTest extends TestCase
     {
         $html = $this->createGridView([['id' => 1]])
             ->columns(new CheckboxColumn(
-                headerAttributes: ['class' => 'header-class']
+                headerAttributes: ['class' => 'header-class'],
             ))
             ->render();
 
@@ -161,7 +161,7 @@ final class CheckboxColumnTest extends TestCase
     {
         $html = $this->createGridView([['id' => 1]])
             ->columns(new CheckboxColumn(
-                bodyAttributes: ['class' => 'body-class']
+                bodyAttributes: ['class' => 'body-class'],
             ))
             ->render();
 
@@ -177,7 +177,7 @@ final class CheckboxColumnTest extends TestCase
     {
         $html = $this->createGridView([['id' => 1]])
             ->columns(new CheckboxColumn(
-                footer: 'Footer Content'
+                footer: 'Footer Content',
             ))
             ->enableFooter()
             ->render();
@@ -198,7 +198,7 @@ final class CheckboxColumnTest extends TestCase
     {
         $html = $this->createGridView([['id' => 1]])
             ->columns(new CheckboxColumn(
-                columnAttributes: ['class' => 'checkbox-col']
+                columnAttributes: ['class' => 'checkbox-col'],
             ))
             ->columnGrouping()
             ->render();

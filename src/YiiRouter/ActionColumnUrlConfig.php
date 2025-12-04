@@ -28,6 +28,5 @@ final class ActionColumnUrlConfig
         public readonly array $arguments = [],
         public readonly array $queryParameters = [],
         public readonly ?UrlParameterType $primaryKeyParameterType = null,
-    ) {
-    }
+    ) {}
 }

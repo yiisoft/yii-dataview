@@ -115,7 +115,7 @@ final class DataColumnTest extends TestCase
         ];
         yield 'value-presenter' => [
             'john',
-            new class () implements ValuePresenterInterface {
+            new class implements ValuePresenterInterface {
                 public function present(mixed $value): string
                 {
                     return strtolower($value);
@@ -173,8 +173,8 @@ final class DataColumnTest extends TestCase
             ->columns(
                 new DataColumn(
                     property: 'name',
-                    columnAttributes: ['class' => 'data-col']
-                )
+                    columnAttributes: ['class' => 'data-col'],
+                ),
             )
             ->columnGrouping()
             ->render();
@@ -195,8 +195,8 @@ final class DataColumnTest extends TestCase
             ->columns(
                 new DataColumn(
                     property: 'name',
-                    headerAttributes: ['class' => 'header-class']
-                )
+                    headerAttributes: ['class' => 'header-class'],
+                ),
             )
             ->render();
 
@@ -228,7 +228,7 @@ final class DataColumnTest extends TestCase
                 new DataColumn(
                     property: 'name',
                     bodyAttributes: $attributes,
-                )
+                ),
             )
             ->render();
 
@@ -259,7 +259,7 @@ final class DataColumnTest extends TestCase
                 new DataColumn(
                     property: 'name',
                     bodyClass: $bodyClass,
-                )
+                ),
             )
             ->render();
 
@@ -272,8 +272,8 @@ final class DataColumnTest extends TestCase
             ->columns(
                 new DataColumn(
                     property: 'name',
-                    footer: 'Footer Content'
-                )
+                    footer: 'Footer Content',
+                ),
             )
             ->enableFooter()
             ->render();
@@ -319,7 +319,7 @@ final class DataColumnTest extends TestCase
                 new DataColumn(
                     property: 'status',
                     filter: ['active' => 'Active', 'inactive' => 'Inactive'],
-                )
+                ),
             )
             ->render();
 
@@ -351,7 +351,7 @@ final class DataColumnTest extends TestCase
                 new DataColumn(
                     property: 'status',
                     filter: ['active' => 'Active', 'inactive' => 'Inactive'],
-                )
+                ),
             )
             ->render();
 
@@ -382,7 +382,7 @@ final class DataColumnTest extends TestCase
                 new DataColumn(
                     property: 'name',
                     filter: true,
-                )
+                ),
             )
             ->render();
 
@@ -409,7 +409,7 @@ final class DataColumnTest extends TestCase
                 new DataColumn(
                     property: 'email',
                     filter: TextInputFilter::widget()->addAttributes(['class' => 'red']),
-                )
+                ),
             )
             ->render();
 
@@ -438,7 +438,7 @@ final class DataColumnTest extends TestCase
                     property: 'age',
                     filter: true,
                     filterValidation: new Integer(min: 18, max: 99),
-                )
+                ),
             )
             ->render();
 
@@ -463,7 +463,7 @@ final class DataColumnTest extends TestCase
                     property: 'name',
                     filter: true,
                     filterEmpty: static fn(string $value) => $value === 'anna',
-                )
+                ),
             )
             ->render();
 
@@ -497,7 +497,7 @@ final class DataColumnTest extends TestCase
                     filter: true,
                     filterFactory: new EqualsFilterFactory(),
                     filterEmpty: false,
-                )
+                ),
             )
             ->render();
 
@@ -526,7 +526,7 @@ final class DataColumnTest extends TestCase
                 new DataColumn(
                     property: 'name',
                     filter: true,
-                )
+                ),
             )
             ->render();
 
@@ -550,7 +550,7 @@ final class DataColumnTest extends TestCase
         $container = new Container(
             ContainerConfig::create()->withDefinitions([
                 ValidatorInterface::class => Validator::class,
-            ])
+            ]),
         );
 
         return (new GridView($container))

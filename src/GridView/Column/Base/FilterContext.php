@@ -33,8 +33,7 @@ final class FilterContext
         public readonly ?string $cellInvalidClass,
         public readonly array $errorsContainerAttributes,
         private readonly UrlParameterProviderInterface $urlParameterProvider,
-    ) {
-    }
+    ) {}
 
     /**
      * Get the value of a query parameter from the URL.

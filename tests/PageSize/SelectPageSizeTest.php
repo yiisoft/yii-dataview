@@ -20,8 +20,8 @@ final class SelectPageSizeTest extends TestCase
                     defaultValue: 20,
                     constraint: [10, 20, 50],
                     urlPattern: '/test?pagesize=YII-DATAVIEW-PAGE-SIZE-PLACEHOLDER',
-                    defaultUrl: '/test'
-                )
+                    defaultUrl: '/test',
+                ),
             )
             ->render();
 
@@ -50,8 +50,8 @@ final class SelectPageSizeTest extends TestCase
                     defaultValue: 20,
                     constraint: $constraint,
                     urlPattern: '/test?pagesize=YII-DATAVIEW-PAGE-SIZE-PLACEHOLDER',
-                    defaultUrl: '/test'
-                )
+                    defaultUrl: '/test',
+                ),
             )
             ->render();
 
@@ -67,8 +67,8 @@ final class SelectPageSizeTest extends TestCase
                     defaultValue: 20,
                     constraint: [10, 20, 50],
                     urlPattern: '/test?pagesize=YII-DATAVIEW-PAGE-SIZE-PLACEHOLDER',
-                    defaultUrl: '/test'
-                )
+                    defaultUrl: '/test',
+                ),
             )
             ->attributes(['class' => 'form-select'])
             ->addAttributes(['id' => 'page-size-select'])
@@ -89,8 +89,8 @@ final class SelectPageSizeTest extends TestCase
                     defaultValue: 20,
                     constraint: [10, 20, 50],
                     urlPattern: '/test?pagesize=YII-DATAVIEW-PAGE-SIZE-PLACEHOLDER',
-                    defaultUrl: '/test'
-                )
+                    defaultUrl: '/test',
+                ),
             )
             ->attributes(['class' => 'form-select'])
             ->attributes(['id' => 'page-size-select'])

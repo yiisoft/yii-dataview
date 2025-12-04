@@ -20,8 +20,7 @@ final class MakeFilterContext
     public function __construct(
         public readonly Result $validationResult,
         private readonly UrlParameterProviderInterface $urlParameterProvider,
-    ) {
-    }
+    ) {}
 
     /**
      * Get the value of a query parameter from the URL.

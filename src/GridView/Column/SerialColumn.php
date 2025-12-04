@@ -24,8 +24,7 @@ final class SerialColumn implements ColumnInterface
         public readonly array $columnAttributes = [],
         public readonly array $bodyAttributes = [],
         private readonly bool $visible = true,
-    ) {
-    }
+    ) {}
 
     public function isVisible(): bool
     {

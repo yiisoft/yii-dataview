@@ -20,8 +20,8 @@ final class InputPageSizeTest extends TestCase
                     defaultValue: 20,
                     constraint: false,
                     urlPattern: '/test?pagesize=YII-DATAVIEW-PAGE-SIZE-PLACEHOLDER',
-                    defaultUrl: '/test'
-                )
+                    defaultUrl: '/test',
+                ),
             )
             ->render();
 
@@ -40,8 +40,8 @@ final class InputPageSizeTest extends TestCase
                     defaultValue: 20,
                     constraint: false,
                     urlPattern: '/test?pagesize=YII-DATAVIEW-PAGE-SIZE-PLACEHOLDER',
-                    defaultUrl: '/test'
-                )
+                    defaultUrl: '/test',
+                ),
             )
             ->attributes(['class' => 'form-control'])
             ->addAttributes(['id' => 'page-size-input'])
@@ -62,8 +62,8 @@ final class InputPageSizeTest extends TestCase
                     defaultValue: 20,
                     constraint: false,
                     urlPattern: '/test?pagesize=YII-DATAVIEW-PAGE-SIZE-PLACEHOLDER',
-                    defaultUrl: '/test'
-                )
+                    defaultUrl: '/test',
+                ),
             )
             ->attributes(['class' => 'form-control'])
             ->attributes(['id' => 'page-size-input'])

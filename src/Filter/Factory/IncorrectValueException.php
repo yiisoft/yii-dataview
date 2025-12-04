@@ -18,6 +18,4 @@ use Exception;
  *
  * @see FilterFactoryInterface The interface whose implementations may throw this exception.
  */
-final class IncorrectValueException extends Exception
-{
-}
+final class IncorrectValueException extends Exception {}

@@ -86,7 +86,7 @@ final class ActionColumnRenderer implements ColumnRendererInterface
         $contentSource = $column->content;
 
         if ($contentSource !== null) {
-            $content = (string)(is_callable($contentSource) ? $contentSource($context->data, $context) : $contentSource);
+            $content = (string) (is_callable($contentSource) ? $contentSource($context->data, $context) : $contentSource);
         } else {
             $buttons = $column->buttons ?? $this->buttons;
             /**
@@ -99,8 +99,8 @@ final class ActionColumnRenderer implements ColumnRendererInterface
                     $name = $matches[1];
 
                     if (
-                        isset($buttons[$name]) &&
-                        $this->isVisibleButton(
+                        isset($buttons[$name])
+                        && $this->isVisibleButton(
                             $column,
                             $name,
                             $context->data,
@@ -247,7 +247,7 @@ final class ActionColumnRenderer implements ColumnRendererInterface
         string $name,
         array|object $data,
         mixed $key,
-        int $index
+        int $index,
     ): bool {
         $visibleButtons = $column->visibleButtons;
 

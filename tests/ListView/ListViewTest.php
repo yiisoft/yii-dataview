@@ -47,7 +47,7 @@ final class ListViewTest extends TestCase
             new SimpleReadable([
                 ['id' => 1, 'name' => 'Anna'],
                 ['id' => 2, 'name' => 'Eva'],
-            ])
+            ]),
         )
             ->itemView(static fn(array $data): string => $data['id'] . '. ' . $data['name'])
             ->render();
@@ -220,7 +220,7 @@ final class ListViewTest extends TestCase
             ['id' => 2, 'name' => 'Bob'],
         ])
             ->itemAttributes(
-                static fn(array $data, ListItemContext $context) => ['class' => 'list-item-' . $data['id']]
+                static fn(array $data, ListItemContext $context) => ['class' => 'list-item-' . $data['id']],
             )
             ->itemView(static fn(array $data): string => $data['name'])
             ->render();

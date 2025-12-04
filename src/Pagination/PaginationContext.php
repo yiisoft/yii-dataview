@@ -25,8 +25,7 @@ final class PaginationContext
         public readonly string $nextUrlPattern,
         public readonly string $previousUrlPattern,
         public readonly string $firstPageUrl,
-    ) {
-    }
+    ) {}
 
     /**
      * Creates a URL for the given page token.

@@ -27,8 +27,7 @@ final class FilterableSortableLimitableDataReader implements
 
     public function __construct(
         private readonly array $data,
-    ) {
-    }
+    ) {}
 
     public function withFilter(FilterInterface $filter): static
     {

@@ -29,6 +29,5 @@ final class ListItemContext
         public readonly int|string $key,
         public readonly int $index,
         public readonly ListView $widget,
-    ) {
-    }
+    ) {}
 }

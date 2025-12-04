@@ -159,7 +159,7 @@ final class ActionColumnTest extends TestCase
                 new ActionColumn(
                     header: 'ACTIONS UP',
                     footer: 'ACTIONS DOWN',
-                )
+                ),
             )
             ->enableFooter()
             ->render();
@@ -223,7 +223,7 @@ final class ActionColumnTest extends TestCase
                             attributes: static fn(array $data, DataContext $context) => ['data-id' => 'id-' . $data['id']],
                             class: static fn(array $data, DataContext $context) => 'red' . $data['id'],
                         ),
-                    ]
+                    ],
                 ),
             )
             ->render();
@@ -258,7 +258,7 @@ final class ActionColumnTest extends TestCase
                             attributes: ['title' => 'View'],
                             overrideAttributes: $override,
                         ),
-                    ]
+                    ],
                 ),
             )
             ->render();

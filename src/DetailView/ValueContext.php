@@ -18,6 +18,5 @@ final class ValueContext
         public readonly DataField $field,
         public readonly array|object $data,
         public string $value,
-    ) {
-    }
+    ) {}
 }

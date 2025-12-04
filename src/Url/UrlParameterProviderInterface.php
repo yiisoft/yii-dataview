@@ -17,5 +17,5 @@ interface UrlParameterProviderInterface
      *
      * @return string|null The parameter value if found, `null` otherwise.
      */
-    public function get(string $name, UrlParameterType $type): string|null;
+    public function get(string $name, UrlParameterType $type): ?string;
 }

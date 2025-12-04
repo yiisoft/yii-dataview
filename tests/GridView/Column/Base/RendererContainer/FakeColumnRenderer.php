@@ -16,8 +16,7 @@ final class FakeColumnRenderer implements ColumnRendererInterface
     public function __construct(
         public readonly string $id = '',
         public readonly string $name = '',
-    ) {
-    }
+    ) {}
 
     public function renderColumn(ColumnInterface $column, Cell $cell, GlobalContext $context): Cell
     {

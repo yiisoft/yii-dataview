@@ -131,8 +131,8 @@ final class DataColumnRenderer implements FilterableColumnRendererInterface, Sor
                 new Context(
                     $column->property,
                     $context->getQueryValue($column->property),
-                    $context->formId
-                )
+                    $context->formId,
+                ),
             ),
         ];
 
@@ -171,7 +171,7 @@ final class DataColumnRenderer implements FilterableColumnRendererInterface, Sor
                     $context->validationResult->addError(
                         $error->getMessage(),
                         $error->getParameters(),
-                        [$column->property]
+                        [$column->property],
                     );
                 }
                 return null;
@@ -226,6 +226,17 @@ final class DataColumnRenderer implements FilterableColumnRendererInterface, Sor
         return $cell;
     }
 
+    public function getOrderProperties(ColumnInterface $column): array
+    {
+        /** @var DataColumn $column This annotation is for IDE only */
+
+        if (!$column->withSorting || $column->property === null) {
+            return [];
+        }
+
+        return [$column->property];
+    }
+
     /**
      * Normalize a filter empty value to a callable.
      *
@@ -247,17 +258,6 @@ final class DataColumnRenderer implements FilterableColumnRendererInterface, Sor
         }
 
         return $value;
-    }
-
-    public function getOrderProperties(ColumnInterface $column): array
-    {
-        /** @var DataColumn $column This annotation is for IDE only */
-
-        if (!$column->withSorting || $column->property === null) {
-            return [];
-        }
-
-        return [$column->property];
     }
 
     private function getFilterFactory(DataColumn $column): FilterFactoryInterface
@@ -282,7 +282,7 @@ final class DataColumnRenderer implements FilterableColumnRendererInterface, Sor
     {
         if ($column->content instanceof ValuePresenterInterface) {
             return $column->content->present(
-                $this->extractValue($column, $context)
+                $this->extractValue($column, $context),
             );
         }
 

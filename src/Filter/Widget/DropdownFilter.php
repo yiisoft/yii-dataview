@@ -51,7 +51,7 @@ final class DropdownFilter extends FilterWidget
         array $data,
         bool $encode = true,
         array $optionsAttributes = [],
-        array $groupsAttributes = []
+        array $groupsAttributes = [],
     ): self {
         $new = clone $this;
         $new->select = $this->getSelect()->optionsData($data, $encode, $optionsAttributes, $groupsAttributes);

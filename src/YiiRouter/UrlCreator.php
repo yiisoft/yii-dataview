@@ -22,8 +22,7 @@ final class UrlCreator
      */
     public function __construct(
         private readonly UrlGeneratorInterface $urlGenerator,
-    ) {
-    }
+    ) {}
 
     /**
      * Generates a URL based on the current route with modified parameters.

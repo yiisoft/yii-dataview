@@ -21,6 +21,5 @@ final class Context
         public readonly string $property,
         public readonly ?string $value,
         public readonly string $formId,
-    ) {
-    }
+    ) {}
 }
