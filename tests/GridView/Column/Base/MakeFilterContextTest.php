@@ -21,7 +21,7 @@ final class MakeFilterContextTest extends TestCase
             new SimpleUrlParameterProvider(
                 query: ['search' => 'test-value'],
                 path: ['id' => '123'],
-            )
+            ),
         );
 
         $this->assertSame('test-value', $context->getQueryValue('search'));

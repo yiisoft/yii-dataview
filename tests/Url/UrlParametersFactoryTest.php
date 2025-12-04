@@ -46,14 +46,14 @@ final class UrlParametersFactoryTest extends TestCase
             pageParameterType: UrlParameterType::Path,
             previousPageParameterType: UrlParameterType::Query,
             pageSizeParameterType: UrlParameterType::Query,
-            sortParameterType: UrlParameterType::Query
+            sortParameterType: UrlParameterType::Query,
         );
 
         [$arguments, $queryParameters] = UrlParametersFactory::create(
             PageToken::next('token123'),
             null,
             null,
-            $config
+            $config,
         );
 
         $this->assertSame(['page' => 'token123'], $arguments);
@@ -73,7 +73,7 @@ final class UrlParametersFactoryTest extends TestCase
             pageParameterType: UrlParameterType::Query,
             previousPageParameterType: UrlParameterType::Query,
             pageSizeParameterType: UrlParameterType::Query,
-            sortParameterType: UrlParameterType::Query
+            sortParameterType: UrlParameterType::Query,
         );
 
         [$arguments, $queryParameters] = UrlParametersFactory::create(
@@ -101,7 +101,7 @@ final class UrlParametersFactoryTest extends TestCase
             pageParameterType: UrlParameterType::Query,
             previousPageParameterType: UrlParameterType::Path,
             pageSizeParameterType: UrlParameterType::Query,
-            sortParameterType: UrlParameterType::Query
+            sortParameterType: UrlParameterType::Query,
         );
 
         [$arguments, $queryParameters] = UrlParametersFactory::create(
@@ -128,7 +128,7 @@ final class UrlParametersFactoryTest extends TestCase
             pageParameterType: UrlParameterType::Query,
             previousPageParameterType: UrlParameterType::Query,
             pageSizeParameterType: UrlParameterType::Query,
-            sortParameterType: UrlParameterType::Query
+            sortParameterType: UrlParameterType::Query,
         );
 
         [$arguments, $queryParameters] = UrlParametersFactory::create(
@@ -156,7 +156,7 @@ final class UrlParametersFactoryTest extends TestCase
             pageParameterType: UrlParameterType::Query,
             previousPageParameterType: UrlParameterType::Query,
             pageSizeParameterType: UrlParameterType::Path,
-            sortParameterType: UrlParameterType::Query
+            sortParameterType: UrlParameterType::Query,
         );
 
         [$arguments, $queryParameters] = UrlParametersFactory::create(
@@ -183,7 +183,7 @@ final class UrlParametersFactoryTest extends TestCase
             pageParameterType: UrlParameterType::Query,
             previousPageParameterType: UrlParameterType::Query,
             pageSizeParameterType: UrlParameterType::Query,
-            sortParameterType: UrlParameterType::Query
+            sortParameterType: UrlParameterType::Query,
         );
 
         [$arguments, $queryParameters] = UrlParametersFactory::create(
@@ -211,7 +211,7 @@ final class UrlParametersFactoryTest extends TestCase
             pageParameterType: UrlParameterType::Query,
             previousPageParameterType: UrlParameterType::Query,
             pageSizeParameterType: UrlParameterType::Query,
-            sortParameterType: UrlParameterType::Path
+            sortParameterType: UrlParameterType::Path,
         );
 
         [$arguments, $queryParameters] = UrlParametersFactory::create(
@@ -242,7 +242,7 @@ final class UrlParametersFactoryTest extends TestCase
             pageParameterType: UrlParameterType::Query,
             previousPageParameterType: UrlParameterType::Path,
             pageSizeParameterType: UrlParameterType::Query,
-            sortParameterType: UrlParameterType::Query
+            sortParameterType: UrlParameterType::Query,
         );
 
         [$arguments, $queryParameters] = UrlParametersFactory::create(
@@ -271,7 +271,7 @@ final class UrlParametersFactoryTest extends TestCase
             pageSizeParameterType: UrlParameterType::Query,
             sortParameterType: UrlParameterType::Query,
             arguments: ['id' => 123],
-            queryParameters: ['filter' => 'active']
+            queryParameters: ['filter' => 'active'],
         );
 
         [$arguments, $queryParameters] = UrlParametersFactory::create(
@@ -302,7 +302,7 @@ final class UrlParametersFactoryTest extends TestCase
             pageSizeParameterType: UrlParameterType::Path,
             sortParameterType: UrlParameterType::Query,
             arguments: ['id' => 123],
-            queryParameters: ['filter' => 'active']
+            queryParameters: ['filter' => 'active'],
         );
 
         [$arguments, $queryParameters] = UrlParametersFactory::create(
@@ -336,7 +336,7 @@ final class UrlParametersFactoryTest extends TestCase
             pageParameterType: UrlParameterType::Path,
             previousPageParameterType: UrlParameterType::Path,
             pageSizeParameterType: UrlParameterType::Query,
-            sortParameterType: UrlParameterType::Query
+            sortParameterType: UrlParameterType::Query,
         );
 
         [$arguments, $queryParameters] = UrlParametersFactory::create(

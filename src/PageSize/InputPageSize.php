@@ -63,7 +63,7 @@ final class InputPageSize extends Widget implements PageSizeWidgetInterface
 
         return Html::textInput(
             value: $context->currentValue,
-            attributes: $attributes
+            attributes: $attributes,
         )->render();
     }
 }

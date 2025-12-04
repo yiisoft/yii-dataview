@@ -72,14 +72,22 @@ abstract class BaseListView extends Widget
      */
     final public const DEFAULT_TRANSLATION_CATEGORY = 'yii-dataview';
 
-    private ReadableDataInterface|null $dataReader = null;
-
     /**
      * @psalm-var UrlCreator|null
      */
     protected $urlCreator = null;
     protected UrlConfig $urlConfig;
     protected UrlParameterProviderInterface $urlParameterProvider;
+
+    protected bool $multiSort = false;
+
+    /**
+     * @var TranslatorInterface A translator instance used for translations of messages. If it wasn't set
+     * explicitly in the constructor, a default one created automatically in {@see createDefaultTranslator()}.
+     */
+    protected readonly TranslatorInterface $translator;
+
+    private ?ReadableDataInterface $dataReader = null;
 
     /**
      * @var array|bool|int Page size constraint.
@@ -94,8 +102,6 @@ abstract class BaseListView extends Widget
      * @psalm-var PageSizeConstraint
      */
     private bool|int|array $pageSizeConstraint = true;
-
-    protected bool $multiSort = false;
 
     private bool $ignoreMissingPage = true;
 
@@ -123,33 +129,27 @@ abstract class BaseListView extends Widget
     /**
      * @psalm-var non-empty-string|null
      */
-    private string|null $summaryTag = 'div';
+    private ?string $summaryTag = 'div';
     private array $summaryAttributes = [];
-    private string|null $summaryTemplate = 'Page <b>{currentPage}</b> of <b>{totalPages}</b>';
+    private ?string $summaryTemplate = 'Page <b>{currentPage}</b> of <b>{totalPages}</b>';
 
-    private PaginationWidgetInterface|null $paginationWidget = null;
+    private ?PaginationWidgetInterface $paginationWidget = null;
     private array $offsetPaginationConfig = [];
     private array $keysetPaginationConfig = [];
 
-    private PageSizeWidgetInterface|null $pageSizeWidget = null;
+    private ?PageSizeWidgetInterface $pageSizeWidget = null;
     /**
      * @psalm-var non-empty-string|null
      */
-    private string|null $pageSizeTag = 'div';
+    private ?string $pageSizeTag = 'div';
     private array $pageSizeAttributes = [];
-    private string|null $pageSizeTemplate = 'Results per page {widget}';
+    private ?string $pageSizeTemplate = 'Results per page {widget}';
 
     private string $noResultsText = 'No results found.';
     private string $noResultsTemplate = '{text}';
 
-    /**
-     * @var TranslatorInterface A translator instance used for translations of messages. If it wasn't set
-     * explicitly in the constructor, a default one created automatically in {@see createDefaultTranslator()}.
-     */
-    protected readonly TranslatorInterface $translator;
-
     public function __construct(
-        TranslatorInterface|null $translator = null,
+        ?TranslatorInterface $translator = null,
         protected readonly string $translationCategory = self::DEFAULT_TRANSLATION_CATEGORY,
     ) {
         $this->translator = $translator ?? $this->createDefaultTranslator();
@@ -175,7 +175,7 @@ abstract class BaseListView extends Widget
                     '{pager}' => $this->renderPagination($preparedDataReader),
                     '{pageSize}' => $this->renderPageSize($preparedDataReader),
                 ],
-            )
+            ),
         );
 
         if ($this->prepend !== '') {
@@ -207,7 +207,7 @@ abstract class BaseListView extends Widget
     /**
      * @psalm-param UrlCreator|null $urlCreator
      */
-    final public function urlCreator(callable|null $urlCreator): static
+    final public function urlCreator(?callable $urlCreator): static
     {
         $new = clone $this;
         $new->urlCreator = $urlCreator;
@@ -391,7 +391,7 @@ abstract class BaseListView extends Widget
         return $new;
     }
 
-    final public function containerTag(string|null $tag): static
+    final public function containerTag(?string $tag): static
     {
         if ($tag === '') {
             throw new InvalidArgumentException('Tag name cannot be empty.');
@@ -515,7 +515,7 @@ abstract class BaseListView extends Widget
         return $new;
     }
 
-    final public function headerTag(string|null $tag): static
+    final public function headerTag(?string $tag): static
     {
         if ($tag === '') {
             throw new InvalidArgumentException('Tag name cannot be empty.');
@@ -574,7 +574,7 @@ abstract class BaseListView extends Widget
         return $new;
     }
 
-    final public function summaryTag(string|null $tag): static
+    final public function summaryTag(?string $tag): static
     {
         if ($tag === '') {
             throw new InvalidArgumentException('Tag name cannot be empty.');
@@ -619,7 +619,7 @@ abstract class BaseListView extends Widget
         return $new;
     }
 
-    final public function paginationWidget(PaginationWidgetInterface|null $widget): static
+    final public function paginationWidget(?PaginationWidgetInterface $widget): static
     {
         $new = clone $this;
         $new->paginationWidget = $widget;
@@ -650,14 +650,14 @@ abstract class BaseListView extends Widget
         return $new;
     }
 
-    final public function pageSizeWidget(PageSizeWidgetInterface|null $widget): static
+    final public function pageSizeWidget(?PageSizeWidgetInterface $widget): static
     {
         $new = clone $this;
         $new->pageSizeWidget = $widget;
         return $new;
     }
 
-    final public function pageSizeTag(string|null $tag): static
+    final public function pageSizeTag(?string $tag): static
     {
         if ($tag === '') {
             throw new InvalidArgumentException('Tag name cannot be empty.');
@@ -690,7 +690,7 @@ abstract class BaseListView extends Widget
      *
      * - `{widget}` — page size widget.
      */
-    final public function pageSizeTemplate(string|null $template): static
+    final public function pageSizeTemplate(?string $template): static
     {
         $new = clone $this;
         $new->pageSizeTemplate = $template;
@@ -745,7 +745,7 @@ abstract class BaseListView extends Widget
     abstract protected function renderItems(
         array $items,
         ValidationResult $filterValidationResult,
-        ReadableDataInterface|null $preparedDataReader,
+        ?ReadableDataInterface $preparedDataReader,
     ): string;
 
     final protected function getDataReader(): ReadableDataInterface
@@ -803,7 +803,7 @@ abstract class BaseListView extends Widget
     {
         $page = $this->urlParameterProvider->get(
             $this->urlConfig->getPageParameterName(),
-            $this->urlConfig->getPageParameterType()
+            $this->urlConfig->getPageParameterType(),
         );
         $previousPage = $this->urlParameterProvider->get(
             $this->urlConfig->getPreviousPageParameterName(),
@@ -896,8 +896,8 @@ abstract class BaseListView extends Widget
                 }
                 $dataReader = $dataReader->withSort(
                     $sortObject->withOrder(
-                        $this->prepareOrder($order)
-                    )
+                        $this->prepareOrder($order),
+                    ),
                 );
             }
         }
@@ -968,7 +968,7 @@ abstract class BaseListView extends Widget
                 ->render();
     }
 
-    private function renderSummary(ReadableDataInterface|null $dataReader): string|Stringable
+    private function renderSummary(?ReadableDataInterface $dataReader): string|Stringable
     {
         if (empty($this->summaryTemplate) || !$dataReader instanceof OffsetPaginator) {
             return '';
@@ -1012,7 +1012,7 @@ abstract class BaseListView extends Widget
             : Html::tag($this->summaryTag, $content, $this->summaryAttributes)->encode(false);
     }
 
-    private function renderPagination(ReadableDataInterface|null $dataReader): string|Stringable
+    private function renderPagination(?ReadableDataInterface $dataReader): string|Stringable
     {
         if (!$dataReader instanceof PaginatorInterface) {
             return '';
@@ -1043,7 +1043,7 @@ abstract class BaseListView extends Widget
                     PageToken::next(PaginationContext::URL_PLACEHOLDER),
                     $pageSize,
                     $sort,
-                    $this->urlConfig
+                    $this->urlConfig,
                 ),
             );
             $previousUrlPattern = call_user_func_array(
@@ -1052,7 +1052,7 @@ abstract class BaseListView extends Widget
                     PageToken::previous(PaginationContext::URL_PLACEHOLDER),
                     $pageSize,
                     $sort,
-                    $this->urlConfig
+                    $this->urlConfig,
                 ),
             );
             $defaultUrl = call_user_func_array(
@@ -1070,7 +1070,7 @@ abstract class BaseListView extends Widget
         return $widget->context($context)->render();
     }
 
-    private function renderPageSize(ReadableDataInterface|null $dataReader): string
+    private function renderPageSize(?ReadableDataInterface $dataReader): string
     {
         if (empty($this->pageSizeTemplate) || !$dataReader instanceof PaginatorInterface) {
             return '';
@@ -1099,7 +1099,7 @@ abstract class BaseListView extends Widget
                     null,
                     PageSizeContext::URL_PLACEHOLDER,
                     $sort,
-                    $this->urlConfig
+                    $this->urlConfig,
                 ),
             );
             $defaultUrl = call_user_func_array(
@@ -1151,7 +1151,7 @@ abstract class BaseListView extends Widget
         return OrderHelper::arrayToString($sort->getOrder());
     }
 
-    private function getSort(ReadableDataInterface|null $dataReader): ?Sort
+    private function getSort(?ReadableDataInterface $dataReader): ?Sort
     {
         if ($dataReader instanceof PaginatorInterface && $dataReader->isSortable()) {
             return $dataReader->getSort();

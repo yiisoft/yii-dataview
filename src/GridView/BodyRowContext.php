@@ -23,6 +23,5 @@ final class BodyRowContext
         public readonly array|object $data,
         public readonly int|string $key,
         public readonly int $index,
-    ) {
-    }
+    ) {}
 }

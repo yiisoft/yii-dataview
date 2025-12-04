@@ -42,7 +42,7 @@ final class DetailView extends Widget
     private array $fields = [];
 
     /** @psalm-var non-empty-string|null */
-    private string|null $containerTag = null;
+    private ?string $containerTag = null;
     private array $containerAttributes = [];
     private string $prepend = '';
     private string $append = '';
@@ -52,7 +52,7 @@ final class DetailView extends Widget
     private array $listAttributes = [];
 
     /** @psalm-var non-empty-string|null */
-    private string|null $fieldTag = null;
+    private ?string $fieldTag = null;
     /** @psalm-var array|FieldAttributesClosure */
     private array|Closure $fieldAttributes = [];
     private string $fieldPrepend = '';
@@ -60,14 +60,14 @@ final class DetailView extends Widget
     private string $fieldTemplate = "{label}\n{value}";
 
     /** @psalm-var non-empty-string|null */
-    private string|null $labelTag = 'dt';
+    private ?string $labelTag = 'dt';
     /** @psalm-var array|LabelAttributesClosure */
     private array|Closure $labelAttributes = [];
     private string $labelPrepend = '';
     private string $labelAppend = '';
 
     /** @psalm-var non-empty-string|null */
-    private string|null $valueTag = 'dd';
+    private ?string $valueTag = 'dd';
     /** @psalm-var array|ValueAttributesClosure */
     private array|Closure $valueAttributes = [];
     private string $valuePrepend = '';
@@ -315,7 +315,7 @@ final class DetailView extends Widget
      *
      * @param string|null $tag HTML tag.
      */
-    public function valueTag(string|null $tag): self
+    public function valueTag(?string $tag): self
     {
         if ($tag === '') {
             throw new InvalidArgumentException('Tag name cannot be empty.');

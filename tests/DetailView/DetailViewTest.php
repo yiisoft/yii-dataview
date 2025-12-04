@@ -490,13 +490,13 @@ final class DetailViewTest extends TestCase
             ->fields(
                 new DataField(
                     label: 'Full Name',
-                    value: static fn(GetValueContext $context) =>
-                        $context->data['firstName'] . ' ' . $context->data['lastName']
+                    value: static fn(GetValueContext $context)
+                        => $context->data['firstName'] . ' ' . $context->data['lastName'],
                 ),
                 new DataField(
                     label: 'Status',
-                    value: static fn(GetValueContext $context) =>
-                        $context->data['age'] >= 18 ? 'Adult' : 'Minor'
+                    value: static fn(GetValueContext $context)
+                        => $context->data['age'] >= 18 ? 'Adult' : 'Minor',
                 ),
             )
             ->render();

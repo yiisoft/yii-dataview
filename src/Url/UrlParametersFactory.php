@@ -36,7 +36,7 @@ final class UrlParametersFactory
     public static function create(
         ?PageToken $pageToken,
         int|string|null $pageSize,
-        string|null $sort,
+        ?string $sort,
         UrlConfig $context,
     ): array {
         $arguments = $context->getArguments();

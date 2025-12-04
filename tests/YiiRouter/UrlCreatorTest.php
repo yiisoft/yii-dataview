@@ -21,7 +21,7 @@ final class UrlCreatorTest extends TestCase
         $currentRoute->setRouteWithArguments($route, ['name' => 'john', 'page' => '1']);
         $urlGenerator = new UrlGenerator(
             new RouteCollection(
-                (new RouteCollector())->addRoute($route)
+                (new RouteCollector())->addRoute($route),
             ),
             $currentRoute,
         );

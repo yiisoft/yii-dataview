@@ -28,7 +28,7 @@ final class GlobalContextTest extends TestCase
         );
         $translator = (new Translator('en'))
             ->addCategorySources(
-                new CategorySource(BaseListView::DEFAULT_TRANSLATION_CATEGORY, $messageSource)
+                new CategorySource(BaseListView::DEFAULT_TRANSLATION_CATEGORY, $messageSource),
             );
         $context = TestHelper::createGlobalContext(translator: $translator);
 
@@ -82,7 +82,7 @@ final class GlobalContextTest extends TestCase
             sortableHeaderAscClass: 'asc',
             sortableHeaderAscPrepend: '↑',
             sortableHeaderAscAppend: '!',
-            sortableLinkAscClass: 'link-asc'
+            sortableLinkAscClass: 'link-asc',
         );
 
         $result = $context->prepareSortable($cell, 'name');
@@ -113,7 +113,7 @@ final class GlobalContextTest extends TestCase
             sortableHeaderDescClass: 'desc',
             sortableHeaderDescPrepend: '↓',
             sortableHeaderDescAppend: '!',
-            sortableLinkDescClass: 'link-desc'
+            sortableLinkDescClass: 'link-desc',
         );
 
         $result = $context->prepareSortable($cell, 'name');
@@ -144,7 +144,7 @@ final class GlobalContextTest extends TestCase
             sortableHeaderClass: 'sortable',
             sortableHeaderPrepend: '↕',
             sortableHeaderAppend: '!',
-            multiSort: true
+            multiSort: true,
         );
 
         $result = $context->prepareSortable($cell, 'age');
@@ -178,7 +178,7 @@ final class GlobalContextTest extends TestCase
             sortableHeaderAscPrepend: '↑',
             sortableHeaderAscAppend: '!',
             sortableLinkAscClass: 'link-asc',
-            multiSort: true
+            multiSort: true,
         );
 
         $result = $context->prepareSortable($cell, 'age');
@@ -217,7 +217,7 @@ final class GlobalContextTest extends TestCase
             sortableHeaderDescPrepend: '↓',
             sortableHeaderDescAppend: '!',
             sortableLinkDescClass: 'link-desc',
-            multiSort: true
+            multiSort: true,
         );
 
         $result = $context->prepareSortable($cell, 'age');
@@ -248,7 +248,7 @@ final class GlobalContextTest extends TestCase
             sortableHeaderDescClass: 'desc',
             sortableHeaderDescPrepend: '↓',
             sortableHeaderDescAppend: '!',
-            sortableLinkDescClass: 'link-desc'
+            sortableLinkDescClass: 'link-desc',
         );
 
         $result = $context->prepareSortable($cell, 'name');
@@ -301,13 +301,13 @@ final class GlobalContextTest extends TestCase
         string $property,
         ?Sort $sort = null,
         ?Sort $originalSort = null,
-        array $allowedProperties = []
+        array $allowedProperties = [],
     ): void {
         $cell = new Cell();
         $context = TestHelper::createGlobalContext(
             sort: $sort,
             originalSort: $originalSort,
-            allowedProperties: $allowedProperties
+            allowedProperties: $allowedProperties,
         );
 
         $result = $context->prepareSortable($cell, $property);

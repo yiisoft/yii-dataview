@@ -23,7 +23,7 @@ final class ActionColumnUrlCreatorTest extends TestCase
     {
         yield 'array' => [['id' => 2, 'name' => 'john']];
         yield 'object' => [
-            new class () {
+            new class {
                 public int $id = 2;
             },
         ];
@@ -38,7 +38,7 @@ final class ActionColumnUrlCreatorTest extends TestCase
         $currentRoute->setRouteWithArguments($routeMain, []);
         $urlGenerator = new UrlGenerator(
             new RouteCollection(
-                (new RouteCollector())->addRoute($routeMain, $routeView)
+                (new RouteCollector())->addRoute($routeMain, $routeView),
             ),
             $currentRoute,
         );
@@ -62,7 +62,7 @@ final class ActionColumnUrlCreatorTest extends TestCase
         $currentRoute->setRouteWithArguments($routeMain, []);
         $urlGenerator = new UrlGenerator(
             new RouteCollection(
-                (new RouteCollector())->addRoute($routeMain, $routeView)
+                (new RouteCollector())->addRoute($routeMain, $routeView),
             ),
             $currentRoute,
         );
@@ -92,7 +92,7 @@ final class ActionColumnUrlCreatorTest extends TestCase
         );
 
         $context = TestHelper::createDataContext(
-            column: new ActionColumn(urlConfig: ['primaryKey' => 'id'])
+            column: new ActionColumn(urlConfig: ['primaryKey' => 'id']),
         );
         $urlCreator = new ActionColumnUrlCreator(
             $urlGenerator,
@@ -101,7 +101,7 @@ final class ActionColumnUrlCreatorTest extends TestCase
 
         $this->expectException(\LogicException::class);
         $this->expectExceptionMessage(
-            ActionColumnUrlCreator::class . ' supports ' . ActionColumnUrlConfig::class . ' only.'
+            ActionColumnUrlCreator::class . ' supports ' . ActionColumnUrlConfig::class . ' only.',
         );
         ($urlCreator)('view', $context);
     }

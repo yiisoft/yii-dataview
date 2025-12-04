@@ -25,7 +25,7 @@ final class OffsetPagination extends Widget implements PaginationWidgetInterface
 {
     use PaginationContextTrait;
 
-    private OffsetPaginator|null $paginator = null;
+    private ?OffsetPaginator $paginator = null;
 
     private bool $showOnSinglePage = false;
 

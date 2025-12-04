@@ -21,7 +21,7 @@ final class KeysetPagination extends Widget implements PaginationWidgetInterface
 {
     use PaginationContextTrait;
 
-    private KeysetPaginator|null $paginator = null;
+    private ?KeysetPaginator $paginator = null;
 
     private bool $showOnSinglePage = false;
 

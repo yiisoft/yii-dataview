@@ -74,14 +74,13 @@ final class GlobalContext
         public readonly ?string $sortableLinkAscClass,
         public readonly ?string $sortableLinkDescClass,
         private readonly ?PageToken $pageToken,
-        private readonly int|null $pageSize,
+        private readonly ?int $pageSize,
         private readonly bool $multiSort,
         private readonly UrlConfig $urlConfig,
         private $urlCreator,
         private readonly TranslatorInterface $translator,
         private readonly string $translationCategory,
-    ) {
-    }
+    ) {}
 
     /**
      * Translate a message using the grid's translation category.
@@ -128,7 +127,7 @@ final class GlobalContext
             $append = $this->sortableHeaderAppend;
         } else {
             $cell = $cell->addClass(
-                $propertyOrder === 'asc' ? $this->sortableHeaderAscClass : $this->sortableHeaderDescClass
+                $propertyOrder === 'asc' ? $this->sortableHeaderAscClass : $this->sortableHeaderDescClass,
             );
             $prepend = $propertyOrder === 'asc' ? $this->sortableHeaderAscPrepend : $this->sortableHeaderDescPrepend;
             $append = $propertyOrder === 'asc' ? $this->sortableHeaderAscAppend : $this->sortableHeaderDescAppend;
@@ -144,7 +143,7 @@ final class GlobalContext
                 $this->pageSize,
                 $this->getLinkSortValue($this->originalSort, $this->sort, $property),
                 $this->urlConfig,
-            )
+            ),
         );
 
         return [

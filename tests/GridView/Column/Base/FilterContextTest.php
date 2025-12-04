@@ -24,7 +24,7 @@ final class FilterContextTest extends TestCase
             new SimpleUrlParameterProvider(
                 query: ['id' => '1'],
                 path: ['id' => '2'],
-            )
+            ),
         );
 
         $this->assertSame('1', $context->getQueryValue('id'));

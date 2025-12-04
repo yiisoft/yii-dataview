@@ -55,7 +55,7 @@ final class SimpleValuePresenterTest extends TestCase
             'N/A',
             'Yes',
             'No',
-            'd/m/Y'
+            'd/m/Y',
         );
 
         $this->assertSame('N/A', $presenter->present(null));

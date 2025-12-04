@@ -62,8 +62,8 @@ final class RadioColumnTest extends TestCase
         $html = $this->createGridView([['id' => 1]])
             ->columns(
                 new RadioColumn(
-                    inputAttributes: ['class' => 'custom-radio', 'data-id' => 'test']
-                )
+                    inputAttributes: ['class' => 'custom-radio', 'data-id' => 'test'],
+                ),
             )
             ->render();
 
@@ -80,8 +80,8 @@ final class RadioColumnTest extends TestCase
         $html = $this->createGridView([['id' => 1, 'name' => 'John']])
             ->columns(
                 new RadioColumn(
-                    content: static fn(Radio $radio, DataContext $context) => '<label>' . $radio . ' User ' . $context->data['name'] . '</label>'
-                )
+                    content: static fn(Radio $radio, DataContext $context) => '<label>' . $radio . ' User ' . $context->data['name'] . '</label>',
+                ),
             )
             ->render();
 
@@ -117,8 +117,8 @@ final class RadioColumnTest extends TestCase
             ->columns(
                 new RadioColumn(
                     header: 'Select',
-                    headerAttributes: ['class' => 'header-class']
-                )
+                    headerAttributes: ['class' => 'header-class'],
+                ),
             )
             ->render();
 
@@ -135,8 +135,8 @@ final class RadioColumnTest extends TestCase
         $html = $this->createGridView([['id' => 1]])
             ->columns(
                 new RadioColumn(
-                    bodyAttributes: ['class' => 'body-class']
-                )
+                    bodyAttributes: ['class' => 'body-class'],
+                ),
             )
             ->render();
 
@@ -153,8 +153,8 @@ final class RadioColumnTest extends TestCase
         $html = $this->createGridView([['id' => 1]])
             ->columns(
                 new RadioColumn(
-                    columnAttributes: ['class' => 'radio-col']
-                )
+                    columnAttributes: ['class' => 'radio-col'],
+                ),
             )
             ->columnGrouping()
             ->render();
@@ -174,7 +174,7 @@ final class RadioColumnTest extends TestCase
         $html = $this->createGridView([['id' => 1]])
             ->columns(
                 new RadioColumn(
-                    footer: 'Footer Content'
+                    footer: 'Footer Content',
                 ),
             )
             ->enableFooter()

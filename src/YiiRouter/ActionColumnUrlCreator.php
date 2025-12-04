@@ -33,8 +33,7 @@ final class ActionColumnUrlCreator
         private readonly CurrentRoute $currentRoute,
         private readonly string $defaultPrimaryKey = 'id',
         private readonly UrlParameterType $defaultPrimaryKeyParameterType = UrlParameterType::Query,
-    ) {
-    }
+    ) {}
 
     /**
      * Generates a URL for an action button.

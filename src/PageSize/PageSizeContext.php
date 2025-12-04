@@ -54,6 +54,5 @@ final class PageSizeContext
         public readonly array|int|bool $constraint,
         public readonly string $urlPattern,
         public readonly string $defaultUrl,
-    ) {
-    }
+    ) {}
 }

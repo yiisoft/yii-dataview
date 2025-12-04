@@ -39,8 +39,7 @@ final class UrlConfig
         private UrlParameterType $sortParameterType = UrlParameterType::Query,
         private array $arguments = [],
         private array $queryParameters = [],
-    ) {
-    }
+    ) {}
 
     /**
      * Creates a new instance with the specified page parameter name.

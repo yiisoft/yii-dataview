@@ -53,13 +53,13 @@ final class GridView extends BaseListView
      * @var Closure|null Callback executed after rendering each data row. The Result is appended after the row.
      * @psalm-var (Closure(TData, array-key, int, GridView): (Tr|null))|null
      */
-    private Closure|null $afterRowCallback = null;
+    private ?Closure $afterRowCallback = null;
 
     /**
      * @var Closure|null Callback executed before rendering each data row. The Result is prepended before the row.
      * @psalm-var (Closure(TData, array-key, int, GridView): (Tr|null))|null
      */
-    private Closure|null $beforeRowCallback = null;
+    private ?Closure $beforeRowCallback = null;
 
     /**
      * @var ColumnInterface[] Grid column configurations.
@@ -234,7 +234,7 @@ final class GridView extends BaseListView
      */
     public function __construct(
         ContainerInterface $columnRenderersDependencyContainer,
-        TranslatorInterface|null $translator = null,
+        ?TranslatorInterface $translator = null,
     ) {
         $this->filterFormId = Html::generateId();
         $this->columnRendererContainer = new RendererContainer($columnRenderersDependencyContainer);
@@ -350,7 +350,7 @@ final class GridView extends BaseListView
      *
      * @psalm-param (Closure(TData, array-key, int, GridView): (Tr|null))|null $callback
      */
-    public function afterRow(Closure|null $callback): self
+    public function afterRow(?Closure $callback): self
     {
         $new = clone $this;
         $new->afterRowCallback = $callback;
@@ -379,7 +379,7 @@ final class GridView extends BaseListView
      *
      * @psalm-param (Closure(TData, array-key, int, GridView): (Tr|null))|null $callback
      */
-    public function beforeRow(Closure|null $callback): self
+    public function beforeRow(?Closure $callback): self
     {
         $new = clone $this;
         $new->beforeRowCallback = $callback;
@@ -580,7 +580,7 @@ final class GridView extends BaseListView
     public function tableClass(?string ...$class): self
     {
         $new = clone $this;
-        $new->tableAttributes['class'] = array_filter($class, static fn ($c) => $c !== null);
+        $new->tableAttributes['class'] = array_filter($class, static fn($c) => $c !== null);
         return $new;
     }
 
@@ -622,7 +622,7 @@ final class GridView extends BaseListView
     public function tbodyClass(?string ...$class): self
     {
         $new = clone $this;
-        $new->tbodyAttributes['class'] = array_filter($class, static fn ($c) => $c !== null);
+        $new->tbodyAttributes['class'] = array_filter($class, static fn($c) => $c !== null);
         return $new;
     }
 
@@ -834,7 +834,7 @@ final class GridView extends BaseListView
         if ($hasFilters) {
             $sort = $this->urlParameterProvider->get(
                 $this->urlConfig->getSortParameterName(),
-                $this->urlConfig->getSortParameterType()
+                $this->urlConfig->getSortParameterType(),
             );
             $url = $this->urlCreator === null ? '' : call_user_func_array(
                 $this->urlCreator,
@@ -843,7 +843,7 @@ final class GridView extends BaseListView
                     $this->urlConfig->getPageSizeParameterType() === UrlParameterType::Path ? $pageSize : null,
                     $this->urlConfig->getSortParameterType() === UrlParameterType::Path ? $sort : null,
                     $this->urlConfig,
-                )
+                ),
             );
             $content = [Html::submitButton()];
             if (!empty($pageSize) && $this->urlConfig->getPageSizeParameterType() === UrlParameterType::Query) {
@@ -897,7 +897,7 @@ final class GridView extends BaseListView
                 $cell = $renderers[$i]->renderFooter(
                     $column,
                     (new Cell())->content('&nbsp;')->encode(false),
-                    $globalContext
+                    $globalContext,
                 );
                 $tags[] = Html::td(attributes: $cell->getAttributes())
                     ->content(...$cell->getContent())
@@ -957,8 +957,8 @@ final class GridView extends BaseListView
             : Html::tbody($this->tbodyAttributes)->rows(...$rows)->render();
 
         return
-            $filtersForm .
-            Html::tag('table', attributes: $this->tableAttributes)->open()
+            $filtersForm
+            . Html::tag('table', attributes: $this->tableAttributes)->open()
             . "\n"
             . implode("\n", $blocks)
             . "\n"
@@ -1006,7 +1006,7 @@ final class GridView extends BaseListView
 
         return array_filter(
             $order,
-            static fn (string $property): bool => in_array($property, $allowedProperties, true),
+            static fn(string $property): bool => in_array($property, $allowedProperties, true),
             ARRAY_FILTER_USE_KEY,
         );
     }
@@ -1057,7 +1057,7 @@ final class GridView extends BaseListView
         }
 
         return array_map(
-            static fn ($attribute): mixed => is_callable($attribute)
+            static fn($attribute): mixed => is_callable($attribute)
                 ? $attribute($context->data, $context)
                 : $attribute,
             $attributes,
@@ -1113,7 +1113,7 @@ final class GridView extends BaseListView
         if ($this->columnsCache === null) {
             $this->columnsCache = array_filter(
                 $this->columns,
-                static fn(ColumnInterface $column) => $column->isVisible()
+                static fn(ColumnInterface $column) => $column->isVisible(),
             );
         }
 
@@ -1130,7 +1130,7 @@ final class GridView extends BaseListView
         if ($this->columnRenderersCache === null) {
             $this->columnRenderersCache = array_map(
                 fn(ColumnInterface $column) => $this->columnRendererContainer->get($column->getRenderer()),
-                $this->getColumns()
+                $this->getColumns(),
             );
         }
 

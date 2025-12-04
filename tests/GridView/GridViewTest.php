@@ -89,7 +89,7 @@ final class GridViewTest extends TestCase
             new SimpleReadable([
                 ['id' => 1, 'name' => 'Anna'],
                 ['id' => 2, 'name' => 'Eva'],
-            ])
+            ]),
         )
             ->columns(
                 new DataColumn('id'),
@@ -154,7 +154,7 @@ final class GridViewTest extends TestCase
                 new DataColumn(
                     property: 'age',
                     filter: true,
-                    filterValidation: new Integer(max: 120)
+                    filterValidation: new Integer(max: 120),
                 ),
             )
             ->render();
@@ -177,7 +177,7 @@ final class GridViewTest extends TestCase
                 new DataColumn(
                     property: 'age',
                     filter: true,
-                    filterValidation: new Integer(max: 120)
+                    filterValidation: new Integer(max: 120),
                 ),
             )
             ->render();
@@ -271,7 +271,7 @@ final class GridViewTest extends TestCase
                 static function (array $data, mixed $key, int $index, GridView $widget): Tr {
                     return Html::tr(['class' => 'after-row'])
                         ->cells(Td::tag()->content('After row ' . $data['id'])->colSpan(2));
-                }
+                },
             )
             ->columns(
                 new DataColumn(property: 'id'),
@@ -963,12 +963,12 @@ final class GridViewTest extends TestCase
                 new DataColumn(
                     'name',
                     filter: true,
-                    filterFactory: new class () implements FilterFactoryInterface {
+                    filterFactory: new class implements FilterFactoryInterface {
                         public function create(string $property, string $value): FilterInterface
                         {
                             throw new IncorrectValueException();
                         }
-                    }
+                    },
                 ),
             )
             ->render();
@@ -1374,7 +1374,7 @@ final class GridViewTest extends TestCase
             ->pageNotFoundExceptionCallback(
                 function ($exception) use (&$capturedException) {
                     $capturedException = $exception;
-                }
+                },
             )
             ->columns(new DataColumn('id'));
 

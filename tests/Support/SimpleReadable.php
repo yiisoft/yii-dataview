@@ -12,8 +12,7 @@ final class SimpleReadable implements ReadableDataInterface
 {
     public function __construct(
         private readonly array $data,
-    ) {
-    }
+    ) {}
 
     public function read(): array
     {

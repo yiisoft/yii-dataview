@@ -64,7 +64,7 @@ final class TestHelper
                 pageParameterName: 'page',
                 previousPageParameterName: 'prev',
                 pageSizeParameterName: 'per-page',
-                sortParameterName: 'sort'
+                sortParameterName: 'sort',
             ),
             urlCreator: $urlCreator ?? new SimplePaginationUrlCreator(),
             translator: $translator ?? new Translator('en'),

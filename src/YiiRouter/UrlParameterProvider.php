@@ -21,9 +21,7 @@ final class UrlParameterProvider implements UrlParameterProviderInterface
      * @param CurrentRoute $currentRoute The current route service used to
      * access route arguments.
      */
-    public function __construct(private readonly CurrentRoute $currentRoute)
-    {
-    }
+    public function __construct(private readonly CurrentRoute $currentRoute) {}
 
     /**
      * Gets a URL parameter value by name and type.

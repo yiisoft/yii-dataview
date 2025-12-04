@@ -22,7 +22,7 @@ final class PaginatorNotSupportedException extends LogicException
     public function __construct(PaginatorInterface $paginator)
     {
         parent::__construct(
-            sprintf('Paginator "%s" is not supported.', $paginator::class)
+            sprintf('Paginator "%s" is not supported.', $paginator::class),
         );
     }
 }

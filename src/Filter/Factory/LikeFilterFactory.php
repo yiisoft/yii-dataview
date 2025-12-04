@@ -27,8 +27,7 @@ final class LikeFilterFactory implements FilterFactoryInterface
      */
     public function __construct(
         private readonly ?bool $caseSensitive = null,
-    ) {
-    }
+    ) {}
 
     public function create(string $property, string $value): Like
     {

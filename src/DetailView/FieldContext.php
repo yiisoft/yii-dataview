@@ -20,6 +20,5 @@ final class FieldContext
         public readonly array|object $data,
         public readonly string $value,
         public readonly string $label,
-    ) {
-    }
+    ) {}
 }

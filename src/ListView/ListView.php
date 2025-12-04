@@ -42,11 +42,11 @@ use function is_string;
 final class ListView extends BaseListView
 {
     /** @psalm-var non-empty-string|null */
-    private string|null $listTag = 'ul';
+    private ?string $listTag = 'ul';
     private array $listAttributes = [];
 
     /** @psalm-var non-empty-string|null */
-    private string|null $itemTag = 'li';
+    private ?string $itemTag = 'li';
     /** @psalm-var array|ItemAttributesClosure */
     private array|Closure $itemAttributes = [];
 
@@ -59,7 +59,7 @@ final class ListView extends BaseListView
     private array $itemViewParameters = [];
 
     /** @psalm-var non-empty-string|null */
-    private string|null $noResultsTag = 'p';
+    private ?string $noResultsTag = 'p';
     private array $noResultsAttributes = [];
 
     private string $separator = "\n";
@@ -67,7 +67,7 @@ final class ListView extends BaseListView
     private readonly View $view;
 
     public function __construct(
-        TranslatorInterface|null $translator = null,
+        ?TranslatorInterface $translator = null,
         string $translationCategory = self::DEFAULT_TRANSLATION_CATEGORY,
     ) {
         $this->view = new View();
@@ -81,7 +81,7 @@ final class ListView extends BaseListView
      *
      * @return self New instance with the specified list tag.
      */
-    public function listTag(string|null $tag): self
+    public function listTag(?string $tag): self
     {
         if ($tag === '') {
             throw new InvalidArgumentException('Tag name cannot be empty.');
@@ -287,7 +287,7 @@ final class ListView extends BaseListView
     protected function renderItems(
         array $items,
         ValidationResult $filterValidationResult,
-        ReadableDataInterface|null $preparedDataReader,
+        ?ReadableDataInterface $preparedDataReader,
     ): string {
         if (empty($items)) {
             return $this->renderNoResults();
@@ -371,7 +371,7 @@ final class ListView extends BaseListView
                         'data' => $context->data,
                         'context' => $context,
                     ],
-                )
+                ),
             );
         }
 
