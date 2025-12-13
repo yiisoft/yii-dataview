@@ -2,7 +2,7 @@
     <a href="https://github.com/yiisoft" target="_blank">
         <img src="https://yiisoft.github.io/docs/images/yii_logo.svg" height="100px" alt="Yii">
     </a>
-    <h1 align="center">Yii Data Displaying Extension</h1>
+    <h1 align="center">Yii DataView</h1>
     <br>
 </p>
 

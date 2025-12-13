@@ -1,7 +1,7 @@
 {
     "name": "yiisoft/yii-dataview",
     "type": "library",
-    "description": "Yii Framework Data Widgets Package",
+    "description": "Yii data displaying widgets",
     "keywords": [
         "yii",
         "view",
