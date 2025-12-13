@@ -27,7 +27,7 @@ jobs:
       os: >-
         ['ubuntu-latest']
       php: >-
-        ['8.4']
+        ['8.5']
       required-packages: >-
         ['data']
     secrets:
