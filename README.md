@@ -2,7 +2,7 @@
     <a href="https://github.com/yiisoft" target="_blank">
         <img src="https://yiisoft.github.io/docs/images/yii_logo.svg" height="100px" alt="Yii">
     </a>
-    <h1 align="center">Yii Data Displaying Extension</h1>
+    <h1 align="center">Yii DataView</h1>
     <br>
 </p>
 
@@ -42,7 +42,7 @@ that. You may also check out other [Yii Community Resources](https://www.yiifram
 
 ## License
 
-The Yii Data Displaying Extension is free software. It is released under the terms of the BSD License.
+The Yii DataView is free software. It is released under the terms of the BSD License.
 Please see [`LICENSE`](./LICENSE.md) for more information.
 
 Maintained by [Yii Software](https://www.yiiframework.com/).
