@@ -14,6 +14,8 @@ use Yiisoft\Data\Reader\LimitableDataInterface;
 use Yiisoft\Data\Reader\Sort;
 use Yiisoft\Data\Reader\SortableDataInterface;
 
+use function array_slice;
+
 /**
  * Test data reader that implements interfaces needed for {@see KeysetPaginator} auto-creation.
  */

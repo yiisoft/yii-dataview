@@ -26,7 +26,7 @@ return [
                     <div class="col-md-8">{pager}</div>
                     <div class="col-md-4 text-end">{pageSize}</div>
                 </div>
-                HTML
+                HTML,
             ],
             'pageSizeTag()' => [null],
             'headerClass()' => ['fs-4 mb-3'],
@@ -64,7 +64,7 @@ return [
                     <div class="col-md-8">{pager}</div>
                     <div class="col-md-4 text-end">{pageSize}</div>
                 </div>
-                HTML
+                HTML,
             ],
             'pageSizeTag()' => [null],
             'headerClass()' => ['fs-4 mb-3'],

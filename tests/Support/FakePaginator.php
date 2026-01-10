@@ -7,6 +7,8 @@ namespace Yiisoft\Yii\DataView\Tests\Support;
 use LogicException;
 use Yiisoft\Data\Paginator\PageToken;
 use Yiisoft\Data\Paginator\PaginatorInterface;
+use Yiisoft\Data\Reader\FilterInterface;
+use Yiisoft\Data\Reader\Sort;
 
 use function count;
 
@@ -112,22 +114,22 @@ final class FakePaginator implements PaginatorInterface
         throw new LogicException('Not implemented.');
     }
 
-    public function withSort(?\Yiisoft\Data\Reader\Sort $sort): static
+    public function withSort(?Sort $sort): static
     {
         throw new LogicException('Not implemented.');
     }
 
-    public function getSort(): ?\Yiisoft\Data\Reader\Sort
+    public function getSort(): ?Sort
     {
         throw new LogicException('Not implemented.');
     }
 
-    public function getFilter(): \Yiisoft\Data\Reader\FilterInterface
+    public function getFilter(): FilterInterface
     {
         throw new LogicException('Not implemented.');
     }
 
-    public function withFilter(\Yiisoft\Data\Reader\FilterInterface $filter): static
+    public function withFilter(FilterInterface $filter): static
     {
         throw new LogicException('Not implemented.');
     }

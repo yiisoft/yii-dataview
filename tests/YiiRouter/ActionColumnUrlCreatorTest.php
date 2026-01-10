@@ -16,6 +16,7 @@ use Yiisoft\Yii\DataView\Tests\Support\TestHelper;
 use Yiisoft\Yii\DataView\Url\UrlParameterType;
 use Yiisoft\Yii\DataView\YiiRouter\ActionColumnUrlCreator;
 use Yiisoft\Yii\DataView\YiiRouter\ActionColumnUrlConfig;
+use LogicException;
 
 final class ActionColumnUrlCreatorTest extends TestCase
 {
@@ -99,7 +100,7 @@ final class ActionColumnUrlCreatorTest extends TestCase
             $currentRoute,
         );
 
-        $this->expectException(\LogicException::class);
+        $this->expectException(LogicException::class);
         $this->expectExceptionMessage(
             ActionColumnUrlCreator::class . ' supports ' . ActionColumnUrlConfig::class . ' only.',
         );

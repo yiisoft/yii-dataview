@@ -36,6 +36,8 @@ use function count;
 use function in_array;
 use function is_callable;
 
+use const ARRAY_FILTER_USE_KEY;
+
 /**
  * The GridView widget displays data in a grid.
  *
