@@ -977,10 +977,15 @@ final class GridView extends BaseListView
                 ->render()
             : Html::tbody($this->tbodyAttributes)->rows(...$rows)->render();
 
+        $caption = $this->caption === null
+            ? ''
+            : Html::tag('caption')->content((string) $this->caption)->render() . "\n";
+
         return
             $filtersForm
             . Html::tag('table', attributes: $this->tableAttributes)->open()
             . "\n"
+            . $caption
             . implode("\n", $blocks)
             . "\n"
             . '</table>';
