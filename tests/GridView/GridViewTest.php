@@ -536,6 +536,25 @@ final class GridViewTest extends TestCase
         );
     }
 
+    public function testCaption(): void
+    {
+        $html = $this->createGridView()
+            ->caption('Users list')
+            ->columns(
+                new DataColumn('id'),
+            )
+            ->render();
+
+        $this->assertStringContainsString(
+            <<<HTML
+            <table>
+            <caption>Users list</caption>
+            <thead>
+            HTML,
+            $html,
+        );
+    }
+
     public function testAddTableClass(): void
     {
         $html = $this->createGridView()
@@ -2010,6 +2029,7 @@ final class GridViewTest extends TestCase
         $this->assertNotSame($gridView, $gridView->headerRowAttributes([]));
         $this->assertNotSame($gridView, $gridView->bodyRowAttributes([]));
         $this->assertNotSame($gridView, $gridView->tableAttributes([]));
+        $this->assertNotSame($gridView, $gridView->caption('test'));
         $this->assertNotSame($gridView, $gridView->addTableClass('test'));
         $this->assertNotSame($gridView, $gridView->tableClass('test'));
         $this->assertNotSame($gridView, $gridView->tbodyAttributes([]));

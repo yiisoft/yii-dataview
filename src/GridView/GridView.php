@@ -120,6 +120,11 @@ final class GridView extends BaseListView
     private array $tableAttributes = [];
 
     /**
+     * @var string|Stringable|null Content for the `caption` tag. `null` means no caption.
+     */
+    private string|Stringable|null $caption = null;
+
+    /**
      * @var array HTML attributes for the tbody tag.
      */
     private array $tbodyAttributes = [];
@@ -555,6 +560,20 @@ final class GridView extends BaseListView
     {
         $new = clone $this;
         $new->tableAttributes = $attributes;
+        return $new;
+    }
+
+    /**
+     * Return new instance with the content for the `caption` tag.
+     *
+     * @param string|Stringable|null $content Caption content. Set to `null` to remove caption.
+     *
+     * @return self New instance with the caption content.
+     */
+    public function caption(string|Stringable|null $content): self
+    {
+        $new = clone $this;
+        $new->caption = $content;
         return $new;
     }
 
