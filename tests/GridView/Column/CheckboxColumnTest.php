@@ -25,18 +25,18 @@ final class CheckboxColumnTest extends TestCase
             <table>
             <thead>
             <tr>
-            <th><input type="checkbox" name="checkbox-selection-all" value="1"></th>
+            <th><input name="checkbox-selection-all" value="1" type="checkbox"></th>
             </tr>
             </thead>
             <tbody>
             <tr>
-            <td><input type="checkbox" name="checkbox-selection" value="0"></td>
+            <td><input name="checkbox-selection" value="0" type="checkbox"></td>
             </tr>
             <tr>
-            <td><input type="checkbox" name="checkbox-selection" value="1"></td>
+            <td><input name="checkbox-selection" value="1" type="checkbox"></td>
             </tr>
             <tr>
-            <td><input type="checkbox" name="checkbox-selection" value="2"></td>
+            <td><input name="checkbox-selection" value="2" type="checkbox"></td>
             </tr>
             </tbody>
             </table>
@@ -79,10 +79,10 @@ final class CheckboxColumnTest extends TestCase
             </thead>
             <tbody>
             <tr>
-            <td><input type="checkbox" name="checkbox-selection" value="0"></td>
+            <td><input name="checkbox-selection" value="0" type="checkbox"></td>
             </tr>
             <tr>
-            <td><input type="checkbox" name="checkbox-selection" value="1"></td>
+            <td><input name="checkbox-selection" value="1" type="checkbox"></td>
             </tr>
             </tbody>
             </table>
@@ -99,7 +99,7 @@ final class CheckboxColumnTest extends TestCase
 
         $this->assertStringContainsString(
             <<<HTML
-            <td><input type="checkbox" name="selected_items" value="0"></td>
+            <td><input value="0" name="selected_items" type="checkbox"></td>
             HTML,
             $html,
         );
@@ -117,7 +117,7 @@ final class CheckboxColumnTest extends TestCase
 
         $this->assertStringContainsString(
             <<<HTML
-            <td><input type="checkbox" class="custom-checkbox" name="checkbox-selection" value="0" data-id="test"></td>
+            <td><input name="checkbox-selection" value="0" class="custom-checkbox" data-id="test" type="checkbox"></td>
             HTML,
             $html,
         );
@@ -135,7 +135,7 @@ final class CheckboxColumnTest extends TestCase
 
         $this->assertStringContainsString(
             <<<HTML
-            <td><label><input type="checkbox" name="checkbox-selection" value="0"> Row 1</label></td>
+            <td><label><input name="checkbox-selection" value="0" type="checkbox"> Row 1</label></td>
             HTML,
             $html,
         );
@@ -151,7 +151,7 @@ final class CheckboxColumnTest extends TestCase
 
         $this->assertStringContainsString(
             <<<HTML
-            <th class="header-class"><input type="checkbox" name="checkbox-selection-all" value="1"></th>
+            <th class="header-class"><input name="checkbox-selection-all" value="1" type="checkbox"></th>
             HTML,
             $html,
         );
@@ -167,7 +167,7 @@ final class CheckboxColumnTest extends TestCase
 
         $this->assertStringContainsString(
             <<<HTML
-            <td class="body-class"><input type="checkbox" name="checkbox-selection" value="0"></td>
+            <td class="body-class"><input name="checkbox-selection" value="0" type="checkbox"></td>
             HTML,
             $html,
         );

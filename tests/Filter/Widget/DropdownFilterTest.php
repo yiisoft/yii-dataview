@@ -73,7 +73,7 @@ final class DropdownFilterTest extends TestCase
 
         $this->assertSame(
             <<<HTML
-            <select class="custom-select" name="status" form="filter-form" data-test="value" onChange="this.form.submit()">
+            <select data-test="value" class="custom-select" name="status" form="filter-form" onChange="this.form.submit()">
             <option value></option>
             </select>
             HTML,

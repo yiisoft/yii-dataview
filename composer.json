@@ -36,7 +36,7 @@
         "yiisoft/arrays": "^3.1",
         "yiisoft/data": "^2.0",
         "yiisoft/friendly-exception": "^1.0",
-        "yiisoft/html": "^3.11",
+        "yiisoft/html": "^3.13 || ^4.0",
         "yiisoft/injector": "^1.2",
         "yiisoft/router": "^4.0",
         "yiisoft/translator": "^3.2",

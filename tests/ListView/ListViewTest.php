@@ -136,7 +136,7 @@ final class ListViewTest extends TestCase
             ->render();
 
         $this->assertStringContainsString(
-            '<ul id="my-list" class="custom-list">',
+            '<ul class="custom-list" id="my-list">',
             $html,
         );
     }

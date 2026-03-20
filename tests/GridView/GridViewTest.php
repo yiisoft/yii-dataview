@@ -203,7 +203,7 @@ final class GridViewTest extends TestCase
             ->render();
 
         $this->assertStringContainsString(
-            '<form id="FID" action method="GET" style="display:none"><button type="submit">Submit</button></form><table>',
+            '<form id="FID" style="display:none" action method="GET"><button type="submit">Submit</button></form><table>',
             $html,
         );
         $this->assertStringContainsString(
@@ -226,7 +226,7 @@ final class GridViewTest extends TestCase
             ->render();
 
         $this->assertStringContainsString(
-            '<form id="FID" class="filter-form" action method="GET" data-form="grid-filter" style="display:none">',
+            '<form class="filter-form" data-form="grid-filter" id="FID" style="display:none" action method="GET">',
             $html,
         );
     }
@@ -531,7 +531,7 @@ final class GridViewTest extends TestCase
             ->render();
 
         $this->assertStringContainsString(
-            '<table id="my-grid" class="custom-table">',
+            '<table class="custom-table" id="my-grid">',
             $html,
         );
     }
@@ -717,8 +717,8 @@ final class GridViewTest extends TestCase
             <<<HTML
             <thead>
             <tr>
-            <th><a class="sort-link" href="/route?sort=id" data-sort="enabled">Id</a></th>
-            <th><a class="sort-link" href="/route?sort=name" data-sort="enabled">Name</a></th>
+            <th><a class="sort-link" data-sort="enabled" href="/route?sort=id">Id</a></th>
+            <th><a class="sort-link" data-sort="enabled" href="/route?sort=name">Name</a></th>
             </tr>
             </thead>
             HTML,
@@ -920,7 +920,7 @@ final class GridViewTest extends TestCase
             <<<HTML
             <tbody>
             <tr>
-            <td class="no-results" colspan="2" data-empty="true">No results found.</td>
+            <td colspan="2" class="no-results" data-empty="true">No results found.</td>
             </tr>
             </tbody>
             HTML,
@@ -995,7 +995,7 @@ final class GridViewTest extends TestCase
         $this->assertStringContainsString(
             <<<HTML
             <div>
-            <form id="FID" action method="GET" style="display:none"><button type="submit">Submit</button></form><table>
+            <form id="FID" style="display:none" action method="GET"><button type="submit">Submit</button></form><table>
             <thead>
             <tr>
             <th>Name</th>
@@ -1032,7 +1032,7 @@ final class GridViewTest extends TestCase
             ->render();
 
         $this->assertStringContainsString(
-            '<form id="FID" action method="GET" style="display:none"><button type="submit">Submit</button><input type="hidden" name="pagesize" value="2"></form>',
+            '<form id="FID" style="display:none" action method="GET"><button type="submit">Submit</button><input type="hidden" name="pagesize" value="2"></form>',
             $html,
         );
     }
@@ -1053,7 +1053,7 @@ final class GridViewTest extends TestCase
             ->render();
 
         $this->assertStringContainsString(
-            '<form id="FID" action method="GET" style="display:none"><button type="submit">Submit</button><input type="hidden" name="sort" value="id"></form>',
+            '<form id="FID" style="display:none" action method="GET"><button type="submit">Submit</button><input type="hidden" name="sort" value="id"></form>',
             $html,
         );
     }

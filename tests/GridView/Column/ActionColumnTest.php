@@ -36,16 +36,16 @@ final class ActionColumnTest extends TestCase
             <tbody>
             <tr>
             <td>
-            <a href="/view/1" title="View">🔎</a>
-            <a href="/update/1" title="Update">✎</a>
-            <a href="/delete/1" title="Delete">❌</a>
+            <a title="View" href="/view/1">🔎</a>
+            <a title="Update" href="/update/1">✎</a>
+            <a title="Delete" href="/delete/1">❌</a>
             </td>
             </tr>
             <tr>
             <td>
-            <a href="/view/2" title="View">🔎</a>
-            <a href="/update/2" title="Update">✎</a>
-            <a href="/delete/2" title="Delete">❌</a>
+            <a title="View" href="/view/2">🔎</a>
+            <a title="Update" href="/update/2">✎</a>
+            <a title="Delete" href="/delete/2">❌</a>
             </td>
             </tr>
             </tbody>
@@ -64,7 +64,7 @@ final class ActionColumnTest extends TestCase
         $this->assertStringContainsString(
             <<<HTML
             <td>
-            <a href="/view/1" title="View">🔎</a> / <a href="/delete/1" title="Delete">❌</a>
+            <a title="View" href="/view/1">🔎</a> / <a title="Delete" href="/delete/1">❌</a>
             </td>
             HTML,
             $html,
@@ -80,7 +80,7 @@ final class ActionColumnTest extends TestCase
         $this->assertStringContainsString(
             <<<HTML
             <td>
-            <a href="/view/1" title="View">🔎</a> / <a href="/delete/1" title="Delete">❌</a>
+            <a title="View" href="/view/1">🔎</a> / <a title="Delete" href="/delete/1">❌</a>
             </td>
             HTML,
             $html,
@@ -101,9 +101,9 @@ final class ActionColumnTest extends TestCase
         $this->assertStringContainsString(
             <<<HTML
             <td>
-            <span class="bold"><a href="/view/1" title="View">🔎</a>
-            <a href="/update/1" title="Update">✎</a>
-            <a href="/delete/1" title="Delete">❌</a></span>
+            <span class="bold"><a title="View" href="/view/1">🔎</a>
+            <a title="Update" href="/update/1">✎</a>
+            <a title="Delete" href="/delete/1">❌</a></span>
             </td>
             HTML,
             $html,
@@ -124,7 +124,7 @@ final class ActionColumnTest extends TestCase
         $this->assertStringContainsString(
             <<<HTML
             <td>
-            <a href="/view/item1" title="View">🔎</a>
+            <a title="View" href="/view/item1">🔎</a>
             </td>
             HTML,
             $html,
@@ -145,7 +145,7 @@ final class ActionColumnTest extends TestCase
         $this->assertStringContainsString(
             <<<HTML
             <td>
-            <a href="/view/item1" title="View">🔎</a>
+            <a title="View" href="/view/item1">🔎</a>
             </td>
             HTML,
             $html,
@@ -232,17 +232,17 @@ final class ActionColumnTest extends TestCase
             <<<HTML
             <td>
             <a href="#view">V</a>
-            <a href="#send" title="Send to…">S</a>
+            <a title="Send to…" href="#send">S</a>
             <a href="/edit/1">EDIT</a>
-            <a class="red1" href="/confirm-delete/1" data-id="id-1">Del 1</a>
+            <a data-id="id-1" class="red1" href="/confirm-delete/1">Del 1</a>
             </td>
             HTML,
             $html,
         );
     }
 
-    #[TestWith(['<a href="#" title="View">V</a>', true])]
-    #[TestWith(['<a class="red" href="#" title="View">V</a>', false])]
+    #[TestWith(['<a title="View" href="#">V</a>', true])]
+    #[TestWith(['<a class="red" title="View" href="#">V</a>', false])]
     public function testButtonOverrideAttribute(string $expected, bool $override): void
     {
         $html = $this->createGridView(
@@ -290,9 +290,9 @@ final class ActionColumnTest extends TestCase
         $this->assertStringContainsString(
             <<<HTML
             <td>
-            <a href="/view/1" title="View">🔎</a>
+            <a title="View" href="/view/1">🔎</a>
 
-            <a href="/delete/1" title="Delete">❌</a>
+            <a title="Delete" href="/delete/1">❌</a>
             </td>
             HTML,
             $html,
@@ -321,14 +321,14 @@ final class ActionColumnTest extends TestCase
             <tbody>
             <tr>
             <td>
-            <a href="/view/1" title="View">🔎</a>
+            <a title="View" href="/view/1">🔎</a>
 
-            <a href="/delete/1" title="Delete">❌</a>
+            <a title="Delete" href="/delete/1">❌</a>
             </td>
             </tr>
             <tr>
             <td>
-            <a href="/update/2" title="Update">✎</a>
+            <a title="Update" href="/update/2">✎</a>
             </td>
             </tr>
             </tbody>

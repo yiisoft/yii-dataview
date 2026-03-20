@@ -146,7 +146,7 @@ final class OffsetPaginationTest extends TestCase
 
         $this->assertSame(
             <<<HTML
-            <nav id="main-nav" class="pagination-nav">
+            <nav class="pagination-nav" id="main-nav">
             <a href="/">⟪</a>
             <a href="/">⟨</a>
             <a href="/">1</a>
@@ -374,12 +374,12 @@ final class OffsetPaginationTest extends TestCase
         $this->assertSame(
             <<<HTML
             <nav>
-            <a class="pagination-link" href="/" data-action="navigate">⟪</a>
-            <a class="pagination-link" href="/" data-action="navigate">⟨</a>
-            <a class="pagination-link" href="/" data-action="navigate">1</a>
-            <a class="pagination-link" href="/page/2" data-action="navigate">2</a>
-            <a class="pagination-link" href="/page/2" data-action="navigate">⟩</a>
-            <a class="pagination-link" href="/page/2" data-action="navigate">⟫</a>
+            <a class="pagination-link" data-action="navigate" href="/">⟪</a>
+            <a class="pagination-link" data-action="navigate" href="/">⟨</a>
+            <a class="pagination-link" data-action="navigate" href="/">1</a>
+            <a class="pagination-link" data-action="navigate" href="/page/2">2</a>
+            <a class="pagination-link" data-action="navigate" href="/page/2">⟩</a>
+            <a class="pagination-link" data-action="navigate" href="/page/2">⟫</a>
             </nav>
             HTML,
             $html,
@@ -397,12 +397,12 @@ final class OffsetPaginationTest extends TestCase
         $this->assertSame(
             <<<HTML
             <nav>
-            <a class="pagination-link" href="/" data-action="navigate" role="button">⟪</a>
-            <a class="pagination-link" href="/" data-action="navigate" role="button">⟨</a>
-            <a class="pagination-link" href="/" data-action="navigate" role="button">1</a>
-            <a class="pagination-link" href="/page/2" data-action="navigate" role="button">2</a>
-            <a class="pagination-link" href="/page/2" data-action="navigate" role="button">⟩</a>
-            <a class="pagination-link" href="/page/2" data-action="navigate" role="button">⟫</a>
+            <a class="pagination-link" data-action="navigate" role="button" href="/">⟪</a>
+            <a class="pagination-link" data-action="navigate" role="button" href="/">⟨</a>
+            <a class="pagination-link" data-action="navigate" role="button" href="/">1</a>
+            <a class="pagination-link" data-action="navigate" role="button" href="/page/2">2</a>
+            <a class="pagination-link" data-action="navigate" role="button" href="/page/2">⟩</a>
+            <a class="pagination-link" data-action="navigate" role="button" href="/page/2">⟫</a>
             </nav>
             HTML,
             $html,
