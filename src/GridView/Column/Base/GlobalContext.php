@@ -148,7 +148,7 @@ final class GlobalContext
 
         return [
             $cell,
-            A::tag()->attributes($linkAttributes)->url($url),
+            (new A())->attributes($linkAttributes)->url($url),
             (string) $prepend,
             (string) $append,
         ];

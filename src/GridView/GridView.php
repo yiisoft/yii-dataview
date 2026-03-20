@@ -1015,7 +1015,7 @@ final class GridView extends BaseListView
 
     private function renderEmptyCell(int $colspan): Td
     {
-        return Td::tag()
+        return (new Td())
             ->attributes(['colspan' => $colspan] + $this->noResultsCellAttributes)
             ->content($this->getNoResultsContent())
             ->encode(false);

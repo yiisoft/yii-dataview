@@ -51,7 +51,7 @@ final class TextInputFilterTest extends TestCase
         $html = $filter->renderFilter($context);
 
         $this->assertSame(
-            '<input type="text" class="form-control" name="username" value="john" form="filter-form" placeholder="Enter username">',
+            '<input type="text" name="username" value="john" class="form-control" placeholder="Enter username" form="filter-form">',
             $html,
         );
     }
@@ -66,7 +66,7 @@ final class TextInputFilterTest extends TestCase
         $html = $filter->renderFilter($context);
 
         $this->assertSame(
-            '<input type="text" id="username-filter" class="form-control" name="username" value="john" form="filter-form">',
+            '<input class="form-control" id="username-filter" name="username" value="john" form="filter-form" type="text">',
             $html,
         );
     }
