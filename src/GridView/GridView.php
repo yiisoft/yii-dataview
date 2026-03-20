@@ -979,7 +979,7 @@ final class GridView extends BaseListView
 
         $caption = $this->caption === null
             ? ''
-            : Html::tag('caption')->content($this->caption)->render() . "\n";
+            : Html::tag('caption', $this->caption) . "\n";
 
         return
             $filtersForm
