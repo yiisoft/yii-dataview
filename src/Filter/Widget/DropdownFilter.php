@@ -147,6 +147,6 @@ final class DropdownFilter extends FilterWidget
      */
     private function getSelect(): Select
     {
-        return $this->select ?? Select::tag()->prompt('');
+        return $this->select ?? (new Select())->prompt('');
     }
 }

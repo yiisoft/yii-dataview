@@ -114,7 +114,7 @@ final class KeysetPaginationTest extends TestCase
 
         $this->assertSame(
             <<<HTML
-            <nav id="main-nav" class="pagination-nav">
+            <nav class="pagination-nav" id="main-nav">
             <a>⟨</a>
             <a href="/next/id1">⟩</a>
             </nav>
@@ -285,7 +285,7 @@ final class KeysetPaginationTest extends TestCase
             <<<HTML
             <nav>
             <a class="pagination-link" data-action="navigate">⟨</a>
-            <a class="pagination-link" href="/next/id1" data-action="navigate">⟩</a>
+            <a class="pagination-link" data-action="navigate" href="/next/id1">⟩</a>
             </nav>
             HTML,
             $html,

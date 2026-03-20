@@ -420,7 +420,7 @@ final class DataColumnTest extends TestCase
             <th>Email</th>
             </tr>
             <tr>
-            <td><input type="text" class="red" name="email" form="FID"></td>
+            <td><input type="text" name="email" class="red" form="FID"></td>
             </tr>
             </thead>
             HTML,

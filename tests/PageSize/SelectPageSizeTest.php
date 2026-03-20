@@ -75,7 +75,7 @@ final class SelectPageSizeTest extends TestCase
             ->render();
 
         $this->assertStringStartsWith(
-            '<select id="page-size-select" class="form-select" data-default-page-size="20" ',
+            '<select class="form-select" id="page-size-select" data-default-page-size="20" ',
             $html,
         );
     }

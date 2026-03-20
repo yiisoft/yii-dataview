@@ -31,10 +31,10 @@ final class RadioColumnTest extends TestCase
             </thead>
             <tbody>
             <tr>
-            <td><input type="radio" name="radio-selection" value="0"></td>
+            <td><input name="radio-selection" value="0" type="radio"></td>
             </tr>
             <tr>
-            <td><input type="radio" name="radio-selection" value="1"></td>
+            <td><input name="radio-selection" value="1" type="radio"></td>
             </tr>
             </tbody>
             </table>
@@ -51,7 +51,7 @@ final class RadioColumnTest extends TestCase
 
         $this->assertStringContainsString(
             <<<HTML
-            <td><input type="radio" name="selected_item" value="0"></td>
+            <td><input value="0" name="selected_item" type="radio"></td>
             HTML,
             $html,
         );
@@ -69,7 +69,7 @@ final class RadioColumnTest extends TestCase
 
         $this->assertStringContainsString(
             <<<HTML
-            <td><input type="radio" class="custom-radio" name="radio-selection" value="0" data-id="test"></td>
+            <td><input name="radio-selection" value="0" class="custom-radio" data-id="test" type="radio"></td>
             HTML,
             $html,
         );
@@ -87,7 +87,7 @@ final class RadioColumnTest extends TestCase
 
         $this->assertStringContainsString(
             <<<HTML
-            <td><label><input type="radio" name="radio-selection" value="0"> User John</label></td>
+            <td><label><input name="radio-selection" value="0" type="radio"> User John</label></td>
             HTML,
             $html,
         );
@@ -142,7 +142,7 @@ final class RadioColumnTest extends TestCase
 
         $this->assertStringContainsString(
             <<<HTML
-            <td class="body-class"><input type="radio" name="radio-selection" value="0"></td>
+            <td class="body-class"><input name="radio-selection" value="0" type="radio"></td>
             HTML,
             $html,
         );

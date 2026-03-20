@@ -48,7 +48,7 @@ final class InputPageSizeTest extends TestCase
             ->render();
 
         $this->assertStringStartsWith(
-            '<input type="text" id="page-size-input" class="form-control" value="10" ',
+            '<input type="text" value="10" class="form-control" id="page-size-input" ',
             $html,
         );
     }
@@ -70,7 +70,7 @@ final class InputPageSizeTest extends TestCase
             ->render();
 
         $this->assertStringStartsWith(
-            '<input type="text" id="page-size-input" value="10" ',
+            '<input type="text" value="10" id="page-size-input" ',
             $html,
         );
     }
