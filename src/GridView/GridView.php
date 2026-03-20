@@ -120,6 +120,11 @@ final class GridView extends BaseListView
     private array $tableAttributes = [];
 
     /**
+     * @var string|Stringable|null Content for the `caption` tag. `null` means no caption.
+     */
+    private string|Stringable|null $caption = null;
+
+    /**
      * @var array HTML attributes for the tbody tag.
      */
     private array $tbodyAttributes = [];
@@ -559,6 +564,20 @@ final class GridView extends BaseListView
     }
 
     /**
+     * Return new instance with the content for the `caption` tag.
+     *
+     * @param string|Stringable|null $content Caption content. Set to `null` to remove caption.
+     *
+     * @return self New instance with the caption content.
+     */
+    public function caption(string|Stringable|null $content): self
+    {
+        $new = clone $this;
+        $new->caption = $content;
+        return $new;
+    }
+
+    /**
      * Add one or more CSS classes to the `table` tag.
      *
      * @param string|null ...$class One or many CSS classes.
@@ -958,10 +977,15 @@ final class GridView extends BaseListView
                 ->render()
             : Html::tbody($this->tbodyAttributes)->rows(...$rows)->render();
 
+        $caption = $this->caption === null
+            ? ''
+            : Html::tag('caption', $this->caption) . "\n";
+
         return
             $filtersForm
             . Html::tag('table', attributes: $this->tableAttributes)->open()
             . "\n"
+            . $caption
             . implode("\n", $blocks)
             . "\n"
             . '</table>';

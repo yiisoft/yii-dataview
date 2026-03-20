@@ -285,6 +285,21 @@ use Yiisoft\Html\Html;use Yiisoft\Yii\DataView\GridView\GridView;
 ?>
 ```
 
+### Caption
+
+You can add a caption to the grid table using the `caption()` method:
+
+```php
+use Yiisoft\Yii\DataView\GridView\GridView;
+
+echo GridView::widget()
+    ->caption('List of Users');
+```
+
+The method accepts `string`, `Stringable`, or `null`. Pass `null` to remove the caption.
+
+The caption is rendered as a `<caption>` tag inside the `<table>` element.
+
 ## Custom Column Renderers
 
 You can add custom column renderers for special rendering needs:
