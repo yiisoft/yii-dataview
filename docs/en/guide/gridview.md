@@ -505,8 +505,8 @@ The entire GridView output is wrapped in a container element (a `<div>` by defau
 |--------|-------------|
 | `containerTag(?string $tag)` | Set the container tag (`null` to disable container wrapping) |
 | `containerAttributes(array $attributes)` | HTML attributes for the container |
-| `containerClass(string\|null ...$class)` | Replace container CSS classes |
-| `addContainerClass(string\|null ...$class)` | Add CSS classes to the container |
+| `containerClass(BackedEnum\|string\|null ...$class)` | Replace container CSS classes |
+| `addContainerClass(BackedEnum\|string\|null ...$class)` | Add CSS classes to the container |
 | `id(string $id)` | Set the container `id` attribute |
 
 ```php
@@ -528,8 +528,8 @@ This is the header section above the grid table (not the table header row). It i
 | `header(string $content)` | Set the header content |
 | `headerTag(?string $tag)` | Set the header tag (`null` to disable) |
 | `headerAttributes(array $attributes)` | HTML attributes for the header element |
-| `headerClass(string\|null ...$class)` | Replace header CSS classes |
-| `addHeaderClass(string\|null ...$class)` | Add CSS classes to the header element |
+| `headerClass(BackedEnum\|string\|null ...$class)` | Replace header CSS classes |
+| `addHeaderClass(BackedEnum\|string\|null ...$class)` | Add CSS classes to the header element |
 | `encodeHeader(bool $encode)` | Whether to HTML-encode the header content |
 
 ```php

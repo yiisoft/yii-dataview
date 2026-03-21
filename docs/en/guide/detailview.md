@@ -84,7 +84,8 @@ The field list can be customized with:
 Each field uses this template by default:
 
 ```
-{label} {value}
+{label}
+{value}
 ```
 
 Field rendering can be customized with:

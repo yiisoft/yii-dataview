@@ -79,7 +79,7 @@ The widget rendering could be customized.
 
 ### Item list
 
-Item list is rendered as `<ul>` by default and there's no separator between items.
+Item list is rendered as `<ul>` by default with a newline separator between items.
 It can be changed:
 
 ```php
@@ -127,7 +127,7 @@ use Yiisoft\Yii\DataView\ListView\ListItemContext;
     ->dataReader($dataReader)
     ->listTag('section')
     ->itemTag('div')
-    ->listAttributes(['class' => 'item'])
+    ->listAttributes(['class' => 'items'])
     ->itemViewParameters(['time' => time()])
     ->beforeItem(function (array $data, ListItemContext $context): string {
         return $context->data['important'] ? '! ' : '';
@@ -142,11 +142,11 @@ The above will result in:
 
 ```html
 <div>
-    <section>
-        <div class="item">
+    <section class="items">
+        <div>
             ! 1 - Bread
         </div>
-        <div class="item">
+        <div>
             2 - Milk ×
         </div>
     </section>

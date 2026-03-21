@@ -266,8 +266,9 @@ the value changes. The URL is built from a pattern provided by the framework thr
 
 These methods are on `GridView` / `ListView` (via `BaseListView`):
 
-- `pageSizeWidget(?PageSizeWidgetInterface $widget)` - Set the page size widget instance. Pass `null` to use
-  the default `SelectPageSize`.
+- `pageSizeWidget(?PageSizeWidgetInterface $widget)` - Set the page size widget instance. When `null`, the default
+  depends on the `pageSizeConstraint`: `array` constraint uses `SelectPageSize`, `int` or `false` constraint uses
+  `InputPageSize`, `true` constraint (fixed page size) renders nothing.
 - `pageSizeTag(?string $tag)` - Wrapper tag around the page size control. Default: `'div'`. Pass `null` to remove
   the wrapper.
 - `pageSizeAttributes(array $attributes)` - HTML attributes for the wrapper tag.
