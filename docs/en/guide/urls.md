@@ -31,8 +31,8 @@ use Yiisoft\Yii\DataView\Url\UrlParameterType;
 
 `UrlParameterType` is an enum with two cases:
 
-- `UrlParameterType::Path` — the parameter is part of the URL path, e.g. `/page/2/sort/name-desc`.
-- `UrlParameterType::Query` — the parameter is in the query string, e.g. `?page=2&sort=name-desc`.
+- `UrlParameterType::Path` - the parameter is part of the URL path, e.g. `/page/2/sort/name-desc`.
+- `UrlParameterType::Query` - the parameter is in the query string, e.g. `?page=2&sort=name-desc`.
 
 If needed, you can add fixed arguments and query parameters to the URL generated:
 
@@ -113,10 +113,10 @@ route names by appending the action name to a base route name, e.g. `user/view`,
 
 Constructor parameters:
 
-- `UrlGeneratorInterface $urlGenerator` — The URL generator service.
-- `CurrentRoute $currentRoute` — The current route service.
-- `string $defaultPrimaryKey` — Default primary key field name. Default: `'id'`.
-- `UrlParameterType $defaultPrimaryKeyParameterType` — Default parameter type for the primary key value.
+- `UrlGeneratorInterface $urlGenerator` - The URL generator service.
+- `CurrentRoute $currentRoute` - The current route service.
+- `string $defaultPrimaryKey` - Default primary key field name. Default: `'id'`.
+- `UrlParameterType $defaultPrimaryKeyParameterType` - Default parameter type for the primary key value.
   Default: `UrlParameterType::Query`.
 
 Usage:
@@ -168,13 +168,13 @@ new ActionColumn(
 
 Constructor parameters (all optional):
 
-- `?string $primaryKey` — The field name of the primary key in the data. When `null`, falls back to the
+- `?string $primaryKey` - The field name of the primary key in the data. When `null`, falls back to the
   `$defaultPrimaryKey` from `ActionColumnUrlCreator` (which defaults to `'id'`).
-- `?string $baseRouteName` — The base route name. The action name is appended to it (e.g. `'admin/user'` becomes
+- `?string $baseRouteName` - The base route name. The action name is appended to it (e.g. `'admin/user'` becomes
   `'admin/user/view'`). When `null`, the current route name is used.
-- `array $arguments` — Additional route arguments to include in the generated URL. Default: `[]`.
-- `array $queryParameters` — Additional query parameters to append to the URL. Default: `[]`.
-- `?UrlParameterType $primaryKeyParameterType` — How to pass the primary key in the URL. `UrlParameterType::Path`
+- `array $arguments` - Additional route arguments to include in the generated URL. Default: `[]`.
+- `array $queryParameters` - Additional query parameters to append to the URL. Default: `[]`.
+- `?UrlParameterType $primaryKeyParameterType` - How to pass the primary key in the URL. `UrlParameterType::Path`
   puts it in route arguments (e.g. `/user/view/42`), `UrlParameterType::Query` puts it in the query string
   (e.g. `/user/view?id=42`). When `null`, falls back to `$defaultPrimaryKeyParameterType` from
   `ActionColumnUrlCreator` (which defaults to `UrlParameterType::Query`).
