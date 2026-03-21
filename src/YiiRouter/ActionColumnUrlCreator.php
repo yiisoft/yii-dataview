@@ -72,7 +72,7 @@ final class ActionColumnUrlCreator
         if ($config->includeRequestParams) {
             $requestParams = array_filter(
                 $_GET,
-                static fn($value): bool => is_string($value),
+                is_string(...),
             );
             $queryParameters = array_merge($requestParams, $queryParameters);
         }
