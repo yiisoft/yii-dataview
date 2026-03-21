@@ -1,6 +1,6 @@
 # Theming
 
-The data view package provides extensive theming capabilities through HTML attributes and CSS classes.
+The data view package supports theming through HTML attributes and CSS classes.
 You can customize the appearance of all widgets and individual elements.
 
 Themes are part of [yiisoft/widget](https://github.com/yiisoft/widget) and are defined in application parameters which
