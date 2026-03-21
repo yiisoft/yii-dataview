@@ -110,6 +110,53 @@ final class ActionColumnTest extends TestCase
         );
     }
 
+    public function testBeforeAfterColumnTakesPriorityOverRenderer(): void
+    {
+        $html = $this->createGridView(
+            [['id' => 1]],
+            ['before' => '<div class="renderer">', 'after' => '</div>'],
+        )
+            ->columns(
+                new ActionColumn(
+                    content: 'buttons',
+                    before: '<span class="column">',
+                    after: '</span>',
+                ),
+            )
+            ->render();
+
+        $this->assertStringContainsString(
+            <<<HTML
+            <td>
+            <span class="column">buttons</span>
+            </td>
+            HTML,
+            $html,
+        );
+        $this->assertStringNotContainsString('renderer', $html);
+    }
+
+    public function testBeforeAfterFallbackToRenderer(): void
+    {
+        $html = $this->createGridView(
+            [['id' => 1]],
+            ['before' => '<div class="renderer">', 'after' => '</div>'],
+        )
+            ->columns(
+                new ActionColumn(content: 'buttons'),
+            )
+            ->render();
+
+        $this->assertStringContainsString(
+            <<<HTML
+            <td>
+            <div class="renderer">buttons</div>
+            </td>
+            HTML,
+            $html,
+        );
+    }
+
     public function testUrlConfig(): void
     {
         $html = $this->createGridView([['id' => 1, 'slug' => 'item1']])
@@ -188,6 +235,11 @@ final class ActionColumnTest extends TestCase
         yield 'callable' => [
             '"1"',
             static fn(array $data, DataContext $context) => '"' . $data['id'] . '"',
+        ];
+        yield 'integer' => ['42', 42];
+        yield 'callable-returning-integer' => [
+            '1',
+            static fn(array $data, DataContext $context) => $data['id'],
         ];
     }
 
@@ -271,6 +323,97 @@ final class ActionColumnTest extends TestCase
             HTML,
             $html,
         );
+    }
+
+    public function testButtonClassAppliedWhenButtonClassIsFalse(): void
+    {
+        $html = $this->createGridView(
+            [['id' => 1]],
+            ['buttonClass' => 'btn'],
+        )
+            ->columns(
+                new ActionColumn(
+                    buttons: [
+                        'view' => new ActionButton('V', '#'),
+                    ],
+                ),
+            )
+            ->render();
+
+        $this->assertStringContainsString(
+            '<a class="btn" href="#">V</a>',
+            $html,
+        );
+    }
+
+    public function testButtonClassNotAppliedWhenOverrideAttributes(): void
+    {
+        $html = $this->createGridView(
+            [['id' => 1]],
+            ['buttonClass' => 'btn'],
+        )
+            ->columns(
+                new ActionColumn(
+                    buttons: [
+                        'view' => new ActionButton(
+                            'V',
+                            '#',
+                            class: 'custom-class',
+                            overrideAttributes: true,
+                        ),
+                    ],
+                ),
+            )
+            ->render();
+
+        $this->assertStringContainsString(
+            '<a class="custom-class" href="#">V</a>',
+            $html,
+        );
+        $this->assertStringNotContainsString('btn', $html);
+    }
+
+    public function testButtonClassMergedWhenNotOverrideAttributes(): void
+    {
+        $html = $this->createGridView(
+            [['id' => 1]],
+            ['buttonClass' => 'btn'],
+        )
+            ->columns(
+                new ActionColumn(
+                    buttons: [
+                        'view' => new ActionButton(
+                            'V',
+                            '#',
+                            class: 'custom-class',
+                            overrideAttributes: false,
+                        ),
+                    ],
+                ),
+            )
+            ->render();
+
+        $this->assertStringContainsString(
+            '<a class="btn custom-class" href="#">V</a>',
+            $html,
+        );
+    }
+
+    public function testVisibleButtonsUnlistedAreHidden(): void
+    {
+        $html = $this->createGridView([['id' => 1]])
+            ->columns(
+                new ActionColumn(
+                    visibleButtons: [
+                        'view' => true,
+                    ],
+                ),
+            )
+            ->render();
+
+        $this->assertStringContainsString('<a title="View" href="/view/1">', $html);
+        $this->assertStringNotContainsString('Update', $html);
+        $this->assertStringNotContainsString('Delete', $html);
     }
 
     public function testVisibleButtons(): void
@@ -422,6 +565,13 @@ final class ActionColumnTest extends TestCase
             HTML,
             $html,
         );
+    }
+
+    public function testActionButtonDefaultOverrideAttributes(): void
+    {
+        $button = new ActionButton();
+
+        $this->assertFalse($button->overrideAttributes);
     }
 
     public function testVisible(): void

@@ -102,6 +102,63 @@ final class SelectPageSizeTest extends TestCase
         );
     }
 
+    public function testConstraintWithExactlyTwoItemsRenders(): void
+    {
+        $html = (new SelectPageSize())
+            ->withContext(
+                new PageSizeContext(
+                    currentValue: 10,
+                    defaultValue: 20,
+                    constraint: [10, 20],
+                    urlPattern: '/test?pagesize=YII-DATAVIEW-PAGE-SIZE-PLACEHOLDER',
+                    defaultUrl: '/test',
+                ),
+            )
+            ->render();
+
+        $this->assertNotSame('', $html);
+        $this->assertStringContainsString('<option value="10" selected>10</option>', $html);
+        $this->assertStringContainsString('<option value="20">20</option>', $html);
+    }
+
+    public function testIntegerValuesInConstraint(): void
+    {
+        $html = (new SelectPageSize())
+            ->withContext(
+                new PageSizeContext(
+                    currentValue: 5,
+                    defaultValue: 10,
+                    constraint: [5, 10, 25],
+                    urlPattern: '/test?pagesize=YII-DATAVIEW-PAGE-SIZE-PLACEHOLDER',
+                    defaultUrl: '/test',
+                ),
+            )
+            ->render();
+
+        $this->assertStringContainsString('<option value="5" selected>5</option>', $html);
+        $this->assertStringContainsString('<option value="10">10</option>', $html);
+        $this->assertStringContainsString('<option value="25">25</option>', $html);
+    }
+
+    public function testOptionsNotEncoded(): void
+    {
+        $html = (new SelectPageSize())
+            ->withContext(
+                new PageSizeContext(
+                    currentValue: 10,
+                    defaultValue: 20,
+                    constraint: [10, 20],
+                    urlPattern: '/test?pagesize=YII-DATAVIEW-PAGE-SIZE-PLACEHOLDER',
+                    defaultUrl: '/test',
+                ),
+            )
+            ->render();
+
+        $this->assertStringContainsString('>10</option>', $html);
+        $this->assertStringNotContainsString('&gt;', $html);
+        $this->assertStringNotContainsString('&lt;', $html);
+    }
+
     public function testImmutability(): void
     {
         $widget = new SelectPageSize();
