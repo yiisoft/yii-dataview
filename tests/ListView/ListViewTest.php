@@ -397,10 +397,56 @@ final class ListViewTest extends TestCase
         $this->assertStringContainsString($expectedList, $html);
     }
 
+    public function testItemAttributesWithCallableValue(): void
+    {
+        $html = $this->createListView([
+            ['id' => 1, 'name' => 'Anna'],
+            ['id' => 2, 'name' => 'Bob'],
+        ])
+            ->itemAttributes([
+                'class' => 'item',
+                'data-id' => static fn(ListItemContext $context) => 'item-' . $context->data['id'],
+            ])
+            ->itemView(static fn(array $data): string => $data['name'])
+            ->render();
+
+        $this->assertStringContainsString(
+            '<li class="item" data-id="item-1">Anna</li>',
+            $html,
+        );
+        $this->assertStringContainsString(
+            '<li class="item" data-id="item-2">Bob</li>',
+            $html,
+        );
+    }
+
+    public function testNoResultsWithHtmlContent(): void
+    {
+        $html = $this->createListView()
+            ->noResultsTemplate('<strong>{text}</strong>')
+            ->itemView(static fn(array $data): string => $data['name'])
+            ->render();
+
+        $this->assertStringContainsString(
+            '<p><strong>No results found.</strong></p>',
+            $html,
+        );
+        $this->assertStringNotContainsString('&lt;strong&gt;', $html);
+    }
+
     public function testImmutability(): void
     {
         $listView = $this->createListView();
+        $dataReader = new IterableDataReader([]);
 
+        $this->assertNotSame($listView, $listView->dataReader($dataReader));
+        $this->assertNotSame($listView, $listView->urlCreator(null));
+        $this->assertNotSame($listView, $listView->urlParameterProvider(new SimpleUrlParameterProvider()));
+        $this->assertNotSame($listView, $listView->pageSizeConstraint(false));
+        $this->assertNotSame($listView, $listView->containerTag('section'));
+        $this->assertNotSame($listView, $listView->layout('{items}'));
+        $this->assertNotSame($listView, $listView->noResultsText('empty'));
+        $this->assertNotSame($listView, $listView->noResultsTemplate('{text}'));
         $this->assertNotSame($listView, $listView->listTag('div'));
         $this->assertNotSame($listView, $listView->listAttributes([]));
         $this->assertNotSame($listView, $listView->itemTag('div'));

@@ -78,6 +78,29 @@ final class DetailViewTest extends TestCase
         $this->assertSame('', $html);
     }
 
+    public function testWithoutFieldsReturnsEmptyString(): void
+    {
+        $result = DetailView::widget()
+            ->data(['name' => 'John'])
+            ->fields()
+            ->render();
+
+        $this->assertSame('', $result);
+        $this->assertIsString($result);
+    }
+
+    public function testAllFieldsInvisibleReturnsEmptyString(): void
+    {
+        $result = DetailView::widget()
+            ->data(['name' => 'John'])
+            ->fields(
+                new DataField(property: 'name', visible: false),
+            )
+            ->render();
+
+        $this->assertSame('', $result);
+    }
+
     public function testWithContainerAndPrependAndAppend(): void
     {
         $html = DetailView::widget()
@@ -634,6 +657,31 @@ final class DetailViewTest extends TestCase
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('Tag name cannot be empty.');
         DetailView::widget()->valueTag('');
+    }
+
+    public function testWithPrependAndNoFieldsReturnsEmptyString(): void
+    {
+        $result = DetailView::widget()
+            ->data(['name' => 'John'])
+            ->fields()
+            ->prepend('<div>Before</div>')
+            ->append('<div>After</div>')
+            ->render();
+
+        $this->assertSame('', $result);
+    }
+
+    public function testWithContainerPrependAndNoFieldsReturnsEmptyString(): void
+    {
+        $result = DetailView::widget()
+            ->data(['name' => 'John'])
+            ->fields()
+            ->containerTag('div')
+            ->containerAttributes(['id' => 'detail'])
+            ->prepend('<header>Header</header>')
+            ->render();
+
+        $this->assertSame('', $result);
     }
 
     public function testImmutability(): void

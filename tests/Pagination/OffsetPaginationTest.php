@@ -622,6 +622,14 @@ final class OffsetPaginationTest extends TestCase
         $pagination->render();
     }
 
+    public function testContextImmutability(): void
+    {
+        $widget = new OffsetPagination();
+        $context = new PaginationContext('/page/test', '/page/test', '/');
+
+        $this->assertNotSame($widget, $widget->context($context));
+    }
+
     public function testImmutability(): void
     {
         $widget = new OffsetPagination();
@@ -646,6 +654,124 @@ final class OffsetPaginationTest extends TestCase
         $this->assertNotSame($widget, $widget->labelFirst('First'));
         $this->assertNotSame($widget, $widget->labelLast('Last'));
         $this->assertNotSame($widget, $widget->maxNavLinkCount(5));
+    }
+
+    public function testShowOnSinglePageDefaultTrue(): void
+    {
+        $html = $this->createPagination(1)
+            ->showOnSinglePage()
+            ->render();
+
+        $this->assertNotSame('', $html);
+        $this->assertStringContainsString('<nav>', $html);
+    }
+
+    public function testContextReturnsNewInstance(): void
+    {
+        $widget = new OffsetPagination();
+        $context = new PaginationContext('/page/test', '/page/test', '/');
+
+        $new = $widget->context($context);
+
+        $this->assertNotSame($widget, $new);
+    }
+
+    public function testPageRangeMiddlePage(): void
+    {
+        $html = $this->createPagination(20, 10)
+            ->maxNavLinkCount(5)
+            ->render();
+
+        $this->assertStringContainsString('<a href="/page/8">8</a>', $html);
+        $this->assertStringContainsString('<a href="/page/9">9</a>', $html);
+        $this->assertStringContainsString('<a href="/page/10">10</a>', $html);
+        $this->assertStringContainsString('<a href="/page/11">11</a>', $html);
+        $this->assertStringContainsString('<a href="/page/12">12</a>', $html);
+        $this->assertStringNotContainsString('>7</a>', $html);
+        $this->assertStringNotContainsString('>13</a>', $html);
+    }
+
+    public function testPageRangeNearEnd(): void
+    {
+        $html = $this->createPagination(10, 9)
+            ->maxNavLinkCount(5)
+            ->render();
+
+        $this->assertStringContainsString('<a href="/page/6">6</a>', $html);
+        $this->assertStringContainsString('<a href="/page/7">7</a>', $html);
+        $this->assertStringContainsString('<a href="/page/8">8</a>', $html);
+        $this->assertStringContainsString('<a href="/page/9">9</a>', $html);
+        $this->assertStringContainsString('<a href="/page/10">10</a>', $html);
+        $this->assertStringNotContainsString('>5</a>', $html);
+    }
+
+    public function testPageRangeAtEnd(): void
+    {
+        $html = $this->createPagination(10, 10)
+            ->maxNavLinkCount(5)
+            ->render();
+
+        $this->assertStringContainsString('<a href="/page/6">6</a>', $html);
+        $this->assertStringContainsString('<a href="/page/7">7</a>', $html);
+        $this->assertStringContainsString('<a href="/page/8">8</a>', $html);
+        $this->assertStringContainsString('<a href="/page/9">9</a>', $html);
+        $this->assertStringContainsString('<a href="/page/10">10</a>', $html);
+        $this->assertStringNotContainsString('>5</a>', $html);
+    }
+
+    public function testPageRangeAtStart(): void
+    {
+        $html = $this->createPagination(20, 1)
+            ->maxNavLinkCount(5)
+            ->render();
+
+        $this->assertStringContainsString('<a href="/">1</a>', $html);
+        $this->assertStringContainsString('<a href="/page/2">2</a>', $html);
+        $this->assertStringContainsString('<a href="/page/3">3</a>', $html);
+        $this->assertStringContainsString('<a href="/page/4">4</a>', $html);
+        $this->assertStringContainsString('<a href="/page/5">5</a>', $html);
+        $this->assertStringNotContainsString('>6</a>', $html);
+    }
+
+    public function testPageRangeWithFewerPagesThanMaxLinks(): void
+    {
+        $html = $this->createPagination(3, 2)
+            ->maxNavLinkCount(5)
+            ->render();
+
+        $this->assertStringContainsString('<a href="/">1</a>', $html);
+        $this->assertStringContainsString('<a href="/page/2">2</a>', $html);
+        $this->assertStringContainsString('<a href="/page/3">3</a>', $html);
+    }
+
+    public function testPageRangeWithZeroTotalPages(): void
+    {
+        $data = [];
+        $dataReader = new IterableDataReader($data);
+        $paginator = (new OffsetPaginator($dataReader))->withPageSize(1);
+        $pagination = OffsetPagination::create(
+            $paginator,
+            '/page/' . PaginationContext::URL_PLACEHOLDER,
+            '/',
+        )->showOnSinglePage(true);
+
+        $html = $pagination->render();
+
+        $this->assertStringContainsString('<nav>', $html);
+    }
+
+    public function testPageRangeRecalculationWhenEndExceedsTotal(): void
+    {
+        $html = $this->createPagination(6, 5)
+            ->maxNavLinkCount(5)
+            ->render();
+
+        $this->assertStringContainsString('<a href="/page/2">2</a>', $html);
+        $this->assertStringContainsString('<a href="/page/3">3</a>', $html);
+        $this->assertStringContainsString('<a href="/page/4">4</a>', $html);
+        $this->assertStringContainsString('<a href="/page/5">5</a>', $html);
+        $this->assertStringContainsString('<a href="/page/6">6</a>', $html);
+        $this->assertStringNotContainsString('>1</a>', $html);
     }
 
     private function createPagination(int $pageCount, ?int $currentPage = null): OffsetPagination

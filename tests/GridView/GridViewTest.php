@@ -2006,10 +2006,508 @@ final class GridViewTest extends TestCase
         );
     }
 
+    public function testPageSizeNotInArrayConstraintFallsBackToDefault(): void
+    {
+        $data = array_fill(0, 50, ['id' => 1]);
+        $paginator = new OffsetPaginator(new IterableDataReader($data));
+
+        $html = $this->createGridView($paginator)
+            ->pageSizeConstraint([5, 10, 25])
+            ->urlParameterProvider(new SimpleUrlParameterProvider(['pagesize' => '7']))
+            ->columns(new DataColumn('id'))
+            ->render();
+
+        $this->assertStringContainsString('Page <b>1</b> of <b>5</b>', $html);
+    }
+
+    public function testSingleSortWithMultipleFieldsInUrl(): void
+    {
+        $data = [
+            ['id' => 1, 'name' => 'Anna'],
+            ['id' => 3, 'name' => 'Anna'],
+            ['id' => 2, 'name' => 'Bob'],
+        ];
+        $dataReader = (new IterableDataReader($data))->withSort(Sort::any(['id', 'name']));
+
+        $html = $this->createGridView($dataReader)
+            ->urlCreator(new SimplePaginationUrlCreator())
+            ->urlParameterProvider(new SimpleUrlParameterProvider(['sort' => 'name,-id']))
+            ->columns(
+                new DataColumn('id'),
+                new DataColumn('name'),
+            )
+            ->render();
+
+        $this->assertStringContainsString(
+            <<<HTML
+            <tbody>
+            <tr>
+            <td>1</td>
+            <td>Anna</td>
+            </tr>
+            <tr>
+            <td>3</td>
+            <td>Anna</td>
+            </tr>
+            <tr>
+            <td>2</td>
+            <td>Bob</td>
+            </tr>
+            </tbody>
+            HTML,
+            $html,
+        );
+    }
+
+    public function testPreparePageSizeWithConstraintTrue(): void
+    {
+        $data = array_fill(0, 50, ['id' => 1]);
+        $paginator = (new OffsetPaginator(new IterableDataReader($data)))->withPageSize(5);
+
+        $html = $this->createGridView($paginator)
+            ->pageSizeConstraint(true)
+            ->urlParameterProvider(new SimpleUrlParameterProvider(['pagesize' => '25']))
+            ->columns(new DataColumn('id'))
+            ->render();
+
+        $this->assertStringContainsString('Page <b>1</b> of <b>10</b>', $html);
+    }
+
+    public function testPreparePageSizeWithNullRawPageSize(): void
+    {
+        $data = array_fill(0, 50, ['id' => 1]);
+        $paginator = (new OffsetPaginator(new IterableDataReader($data)))->withPageSize(5);
+
+        $html = $this->createGridView($paginator)
+            ->pageSizeConstraint(false)
+            ->columns(new DataColumn('id'))
+            ->render();
+
+        $this->assertStringContainsString('Page <b>1</b> of <b>10</b>', $html);
+    }
+
+    public function testPreparePageSizeWithPageSizeOne(): void
+    {
+        $data = array_fill(0, 10, ['id' => 1]);
+        $paginator = new OffsetPaginator(new IterableDataReader($data));
+
+        $html = $this->createGridView($paginator)
+            ->pageSizeConstraint(false)
+            ->urlParameterProvider(new SimpleUrlParameterProvider(['pagesize' => '1']))
+            ->columns(new DataColumn('id'))
+            ->render();
+
+        $this->assertStringContainsString('Page <b>1</b> of <b>10</b>', $html);
+    }
+
+    public function testPreparePageSizeEqualsIntConstraint(): void
+    {
+        $data = array_fill(0, 50, ['id' => 1]);
+        $paginator = (new OffsetPaginator(new IterableDataReader($data)))->withPageSize(5);
+
+        $html = $this->createGridView($paginator)
+            ->pageSizeConstraint(25)
+            ->urlParameterProvider(new SimpleUrlParameterProvider(['pagesize' => '25']))
+            ->columns(new DataColumn('id'))
+            ->render();
+
+        $this->assertStringContainsString('Page <b>1</b> of <b>2</b>', $html);
+    }
+
+    public function testPaginationUrlPatternsWithoutUrlCreator(): void
+    {
+        $data = array_fill(0, 20, ['id' => 1]);
+        $paginator = (new OffsetPaginator(new IterableDataReader($data)))->withPageSize(5);
+
+        $html = $this->createGridView($paginator)
+            ->columns(new DataColumn('id'))
+            ->render();
+
+        $this->assertStringContainsString('#page=2', $html);
+        $this->assertStringContainsString('href="#"', $html);
+    }
+
+    public function testPageSizeUrlPatternWithoutUrlCreator(): void
+    {
+        $data = array_fill(0, 20, ['id' => 1]);
+        $paginator = (new OffsetPaginator(new IterableDataReader($data)))->withPageSize(5);
+
+        $html = $this->createGridView($paginator)
+            ->pageSizeConstraint(false)
+            ->columns(new DataColumn('id'))
+            ->render();
+
+        $this->assertStringContainsString('#pagesize=', $html);
+        $this->assertStringContainsString('data-default-url="#"', $html);
+    }
+
+    public function testPreviousPageUrlPatternWithoutUrlCreator(): void
+    {
+        $data = [['id' => 1], ['id' => 2], ['id' => 3], ['id' => 4], ['id' => 5]];
+        $dataReader = (new IterableDataReader($data))->withSort(Sort::any()->withOrder(['id' => 'asc']));
+        $paginator = (new KeysetPaginator($dataReader))->withPageSize(2)->withToken(PageToken::next('2'));
+
+        $html = $this->createGridView($paginator)
+            ->columns(new DataColumn('id'))
+            ->render();
+
+        $this->assertStringContainsString('#previous-page=', $html);
+    }
+
+    public function testGetSortFromPaginator(): void
+    {
+        $data = [
+            ['id' => 2, 'name' => 'Bob'],
+            ['id' => 1, 'name' => 'Anna'],
+        ];
+        $dataReader = (new IterableDataReader($data))->withSort(Sort::any(['id', 'name']));
+        $paginator = (new OffsetPaginator($dataReader))->withPageSize(10);
+
+        $html = $this->createGridView($paginator)
+            ->urlCreator(new SimplePaginationUrlCreator())
+            ->urlParameterProvider(new SimpleUrlParameterProvider(['sort' => '-id']))
+            ->columns(
+                new DataColumn('id'),
+                new DataColumn('name'),
+            )
+            ->render();
+
+        $this->assertStringContainsString(
+            <<<HTML
+            <tbody>
+            <tr>
+            <td>2</td>
+            <td>Bob</td>
+            </tr>
+            <tr>
+            <td>1</td>
+            <td>Anna</td>
+            </tr>
+            </tbody>
+            HTML,
+            $html,
+        );
+    }
+
+    public function testKeepPageOnSortDefaultParameter(): void
+    {
+        $data = [
+            ['id' => 1],
+            ['id' => 2],
+            ['id' => 3],
+        ];
+        $dataReader = (new IterableDataReader($data))
+            ->withSort(Sort::any(['id']));
+        $paginator = (new OffsetPaginator($dataReader))
+            ->withPageSize(2)
+            ->withCurrentPage(2);
+
+        $html = $this->createGridView()
+            ->dataReader($paginator)
+            ->urlCreator(new SimplePaginationUrlCreator())
+            ->keepPageOnSort()
+            ->columns(
+                new DataColumn(property: 'id'),
+            )
+            ->render();
+
+        $this->assertStringContainsString(
+            '<th><a href="/route?page=2&amp;sort=id">Id</a></th>',
+            $html,
+        );
+    }
+
+    public function testEnableHeaderDefaultParameter(): void
+    {
+        $html = $this->createGridView([['id' => 1]])
+            ->enableHeader()
+            ->columns(
+                new DataColumn('id'),
+            )
+            ->render();
+
+        $this->assertStringContainsString('<thead>', $html);
+    }
+
+    public function testTableClassWithNullValues(): void
+    {
+        $html = $this->createGridView()
+            ->tableClass('table', null, 'striped')
+            ->columns(
+                new DataColumn('id'),
+            )
+            ->render();
+
+        $this->assertStringContainsString('<table class="table striped">', $html);
+    }
+
+    public function testTbodyClassWithNullValues(): void
+    {
+        $html = $this->createGridView()
+            ->tbodyClass('tbody', null, 'custom')
+            ->columns(
+                new DataColumn('id'),
+            )
+            ->render();
+
+        $this->assertStringContainsString('<tbody class="tbody custom">', $html);
+    }
+
+    public function testFilterCellNonFilterableColumnShowsNbsp(): void
+    {
+        $html = $this->createGridView([['id' => 1, 'name' => 'Anna']])
+            ->filterFormId('FID')
+            ->columns(
+                new DataColumn(property: 'id'),
+                new DataColumn(property: 'name', filter: true),
+            )
+            ->render();
+
+        $this->assertStringContainsString(
+            <<<HTML
+            <tr>
+            <td>&nbsp;</td>
+            <td><input type="text" name="name" form="FID"></td>
+            </tr>
+            HTML,
+            $html,
+        );
+    }
+
+    public function testFilterFormUrlWithPathPageSize(): void
+    {
+        $data = [['id' => 1], ['id' => 2], ['id' => 3]];
+        $dataReader = new IterableDataReader($data);
+        $paginator = (new OffsetPaginator($dataReader))->withPageSize(2);
+
+        $html = $this->createGridView($paginator)
+            ->filterFormId('FID')
+            ->urlCreator(new SimplePaginationUrlCreator())
+            ->pageSizeParameterType(UrlParameterType::Path)
+            ->pageSizeConstraint(false)
+            ->urlParameterProvider(new SimpleUrlParameterProvider(path: ['pagesize' => '5']))
+            ->columns(
+                new DataColumn('id', filter: true),
+            )
+            ->render();
+
+        $this->assertStringContainsString(
+            '<form id="FID" style="display:none" action="/route/pagesize-5?" method="GET">',
+            $html,
+        );
+        $this->assertStringNotContainsString('<input type="hidden" name="pagesize"', $html);
+    }
+
+    public function testFilterFormUrlWithPathSort(): void
+    {
+        $data = [['id' => 1], ['id' => 2]];
+        $dataReader = (new IterableDataReader($data))->withSort(Sort::any(['id']));
+
+        $html = $this->createGridView($dataReader)
+            ->filterFormId('FID')
+            ->urlCreator(new SimplePaginationUrlCreator())
+            ->sortParameterType(UrlParameterType::Path)
+            ->urlParameterProvider(new SimpleUrlParameterProvider(path: ['sort' => 'id']))
+            ->columns(
+                new DataColumn('id', filter: true),
+            )
+            ->render();
+
+        $this->assertStringContainsString(
+            '<form id="FID" style="display:none" action="/route/sort-id?" method="GET">',
+            $html,
+        );
+        $this->assertStringNotContainsString('<input type="hidden" name="sort"', $html);
+    }
+
+    public function testMakeFiltersBreakOnIncorrectValue(): void
+    {
+        $html = $this->createGridView([['id' => 1, 'name' => 'Anna']])
+            ->filterFormId('FID')
+            ->urlParameterProvider(new SimpleUrlParameterProvider(['id' => 'bad', 'name' => 'Anna']))
+            ->columns(
+                new DataColumn(
+                    'id',
+                    filter: true,
+                    filterFactory: new class implements FilterFactoryInterface {
+                        public function create(string $property, string $value): FilterInterface
+                        {
+                            throw new IncorrectValueException();
+                        }
+                    },
+                ),
+                new DataColumn('name', filter: true),
+            )
+            ->render();
+
+        $this->assertStringContainsString(
+            '<td colspan="2">No results found.</td>',
+            $html,
+        );
+    }
+
+    public function testSortOrderFilteredByColumns(): void
+    {
+        $data = [
+            ['id' => 1, 'name' => 'Charlie'],
+            ['id' => 2, 'name' => 'Anna'],
+            ['id' => 3, 'name' => 'Bob'],
+        ];
+        $dataReader = (new IterableDataReader($data))->withSort(Sort::any(['id', 'name']));
+
+        $html = $this->createGridView($dataReader)
+            ->urlCreator(new SimplePaginationUrlCreator())
+            ->urlParameterProvider(new SimpleUrlParameterProvider(['sort' => '-name']))
+            ->columns(
+                new DataColumn('id'),
+            )
+            ->render();
+
+        $this->assertStringContainsString(
+            <<<HTML
+            <tbody>
+            <tr>
+            <td>1</td>
+            </tr>
+            <tr>
+            <td>2</td>
+            </tr>
+            <tr>
+            <td>3</td>
+            </tr>
+            </tbody>
+            HTML,
+            $html,
+        );
+    }
+
+    public function testDefaultPageSizeWithIntConstraintBoundary(): void
+    {
+        $data = array_fill(0, 20, ['id' => 1]);
+        $paginator = (new OffsetPaginator(new IterableDataReader($data)))->withPageSize(10);
+
+        $html = $this->createGridView($paginator)
+            ->pageSizeConstraint(10)
+            ->columns(new DataColumn('id'))
+            ->render();
+
+        $this->assertStringContainsString('Page <b>1</b> of <b>2</b>', $html);
+    }
+
+    public function testDefaultPageSizeWithArrayConstraintNotInList(): void
+    {
+        $data = array_fill(0, 30, ['id' => 1]);
+        $paginator = (new OffsetPaginator(new IterableDataReader($data)))->withPageSize(7);
+
+        $html = $this->createGridView($paginator)
+            ->pageSizeConstraint([5, 10, 20])
+            ->columns(new DataColumn('id'))
+            ->render();
+
+        $this->assertStringContainsString('Page <b>1</b> of <b>6</b>', $html);
+    }
+
+    public function testPreparePageSizeWithConstraintTrueIgnoresUrlPageSize(): void
+    {
+        $data = array_fill(0, 50, ['id' => 1]);
+        $paginator = (new OffsetPaginator(new IterableDataReader($data)))->withPageSize(10);
+
+        $html = $this->createGridView($paginator)
+            ->pageSizeConstraint(true)
+            ->urlParameterProvider(new SimpleUrlParameterProvider(['pagesize' => '5']))
+            ->columns(new DataColumn('id'))
+            ->render();
+
+        $this->assertStringContainsString('Page <b>1</b> of <b>5</b>', $html);
+    }
+
+    public function testPreparePageSizeWithNoUrlParamUsesDefault(): void
+    {
+        $data = array_fill(0, 30, ['id' => 1]);
+        $paginator = (new OffsetPaginator(new IterableDataReader($data)))->withPageSize(10);
+
+        $html = $this->createGridView($paginator)
+            ->pageSizeConstraint(false)
+            ->urlParameterProvider(new SimpleUrlParameterProvider([]))
+            ->columns(new DataColumn('id'))
+            ->render();
+
+        $this->assertStringContainsString('Page <b>1</b> of <b>3</b>', $html);
+    }
+
+    public function testPaginationWithoutUrlCreatorContainsExactPreviousPagePattern(): void
+    {
+        $data = [['id' => 1], ['id' => 2], ['id' => 3], ['id' => 4], ['id' => 5]];
+        $dataReader = (new IterableDataReader($data))->withSort(Sort::any()->withOrder(['id' => 'asc']));
+        $paginator = (new KeysetPaginator($dataReader))->withPageSize(2)->withToken(PageToken::next('2'));
+
+        $html = $this->createGridView($paginator)
+            ->columns(new DataColumn('id'))
+            ->render();
+
+        $this->assertMatchesRegularExpression('/href="#previous-page=\w+"/', $html);
+    }
+
+    public function testPaginationWithoutUrlCreatorContainsExactPagePattern(): void
+    {
+        $data = array_fill(0, 20, ['id' => 1]);
+        $paginator = (new OffsetPaginator(new IterableDataReader($data)))->withPageSize(5);
+
+        $html = $this->createGridView($paginator)
+            ->columns(new DataColumn('id'))
+            ->render();
+
+        $this->assertStringContainsString('href="#page=2"', $html);
+        $this->assertStringContainsString('href="#page=4"', $html);
+    }
+
+    public function testPageSizeWithoutUrlCreatorContainsExactPageSizePattern(): void
+    {
+        $data = array_fill(0, 20, ['id' => 1]);
+        $paginator = (new OffsetPaginator(new IterableDataReader($data)))->withPageSize(5);
+
+        $html = $this->createGridView($paginator)
+            ->pageSizeConstraint(false)
+            ->columns(new DataColumn('id'))
+            ->render();
+
+        $this->assertStringContainsString(
+            'data-url-pattern="#pagesize=YII-DATAVIEW-PAGE-SIZE-PLACEHOLDER"',
+            $html,
+        );
+    }
+
+    public function testGetSortFromPaginatorPreservesSortInPaginationUrls(): void
+    {
+        $data = array_fill(0, 10, ['id' => 1, 'name' => 'Anna']);
+        $dataReader = (new IterableDataReader($data))->withSort(Sort::any(['id', 'name']));
+        $paginator = (new OffsetPaginator($dataReader))->withPageSize(5);
+
+        $html = $this->createGridView($paginator)
+            ->urlCreator(new SimplePaginationUrlCreator())
+            ->urlParameterProvider(new SimpleUrlParameterProvider(['sort' => 'name']))
+            ->columns(
+                new DataColumn('id'),
+                new DataColumn('name'),
+            )
+            ->render();
+
+        $this->assertStringContainsString('page=2&amp;sort=name', $html);
+    }
+
     public function testImmutability(): void
     {
         $gridView = $this->createGridView();
+        $dataReader = new IterableDataReader([]);
 
+        $this->assertNotSame($gridView, $gridView->dataReader($dataReader));
+        $this->assertNotSame($gridView, $gridView->urlCreator(null));
+        $this->assertNotSame($gridView, $gridView->urlParameterProvider(new SimpleUrlParameterProvider()));
+        $this->assertNotSame($gridView, $gridView->pageSizeConstraint(false));
+        $this->assertNotSame($gridView, $gridView->containerTag('section'));
+        $this->assertNotSame($gridView, $gridView->layout('{items}'));
+        $this->assertNotSame($gridView, $gridView->noResultsText('empty'));
+        $this->assertNotSame($gridView, $gridView->noResultsTemplate('{text}'));
         $this->assertNotSame($gridView, $gridView->addColumnRendererConfigs([]));
         $this->assertNotSame($gridView, $gridView->filterCellAttributes([]));
         $this->assertNotSame($gridView, $gridView->filterCellInvalidClass('invalid'));

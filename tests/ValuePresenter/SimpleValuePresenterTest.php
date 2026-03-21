@@ -81,4 +81,22 @@ final class SimpleValuePresenterTest extends TestCase
         $this->expectExceptionMessage('Unsupported value type:');
         $presenter->present($value);
     }
+
+    public function testInvalidValueMessageContainsType(): void
+    {
+        $presenter = new SimpleValuePresenter();
+
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Unsupported value type: stdClass');
+        $presenter->present(new stdClass());
+    }
+
+    public function testInvalidValueMessageContainsArrayType(): void
+    {
+        $presenter = new SimpleValuePresenter();
+
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Unsupported value type: array');
+        $presenter->present(['key' => 'value']);
+    }
 }

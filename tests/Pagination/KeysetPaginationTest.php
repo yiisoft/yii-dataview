@@ -384,6 +384,40 @@ final class KeysetPaginationTest extends TestCase
         );
     }
 
+    public function testContextImmutability(): void
+    {
+        $context1 = new PaginationContext('/next/YII-DATAVIEW-PAGE-PLACEHOLDER', '/prev/YII-DATAVIEW-PAGE-PLACEHOLDER', '');
+        $context2 = new PaginationContext('/other/YII-DATAVIEW-PAGE-PLACEHOLDER', '/other/YII-DATAVIEW-PAGE-PLACEHOLDER', '');
+
+        $widget1 = $this->createPagination(2)->context($context1);
+        $widget2 = $widget1->context($context2);
+
+        $html1 = $widget1->render();
+        $html2 = $widget2->render();
+
+        $this->assertStringContainsString('/next/', $html1);
+        $this->assertStringNotContainsString('/other/', $html1);
+        $this->assertStringContainsString('/other/', $html2);
+        $this->assertStringNotContainsString('/next/', $html2);
+    }
+
+    public function testDefaultShowOnSinglePageIsFalse(): void
+    {
+        $html = $this->createPagination(1)->render();
+
+        $this->assertSame('', $html);
+    }
+
+    public function testShowOnSinglePageDefaultTrue(): void
+    {
+        $html = $this->createPagination(1)
+            ->showOnSinglePage()
+            ->render();
+
+        $this->assertNotSame('', $html);
+        $this->assertStringContainsString('<nav>', $html);
+    }
+
     public function testImmutability(): void
     {
         $widget = new KeysetPagination();

@@ -8,6 +8,7 @@ use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\TestWith;
 use PHPUnit\Framework\TestCase;
 use Yiisoft\Data\Reader\Iterable\IterableDataReader;
+use Yiisoft\Data\Reader\Sort;
 use Yiisoft\Di\Container;
 use Yiisoft\Di\ContainerConfig;
 use Yiisoft\Html\NoEncode;
@@ -20,6 +21,7 @@ use Yiisoft\Yii\DataView\GridView\Column\DataColumn;
 use Yiisoft\Yii\DataView\GridView\Column\DataColumnRenderer;
 use Yiisoft\Yii\DataView\GridView\Column\Base\DataContext;
 use Yiisoft\Yii\DataView\GridView\GridView;
+use Yiisoft\Yii\DataView\Tests\Support\SimplePaginationUrlCreator;
 use Yiisoft\Yii\DataView\Tests\Support\SimpleUrlParameterProvider;
 use Yiisoft\Yii\DataView\Tests\Support\StringableObject;
 use Yiisoft\Yii\DataView\ValuePresenter\ValuePresenterInterface;
@@ -290,6 +292,13 @@ final class DataColumnTest extends TestCase
         );
     }
 
+    public function testDefaultEncodeHeader(): void
+    {
+        $column = new DataColumn();
+
+        $this->assertTrue($column->encodeHeader);
+    }
+
     public function testVisible(): void
     {
         $html = $this->createGridView([['name' => 'John']])
@@ -543,6 +552,105 @@ final class DataColumnTest extends TestCase
             HTML,
             $html,
         );
+    }
+
+    public function testDefaultFilterEmptyTrue(): void
+    {
+        $html = $this->createGridView([
+            ['name' => 'Anna'],
+            ['name' => 'Eva'],
+            ['name' => ''],
+        ])
+            ->filterFormId('FID')
+            ->urlParameterProvider(new SimpleUrlParameterProvider(['name' => '']))
+            ->columns(
+                new DataColumn(
+                    property: 'name',
+                    filter: true,
+                    filterFactory: new EqualsFilterFactory(),
+                ),
+            )
+            ->render();
+
+        $this->assertStringContainsString('<td>Anna</td>', $html);
+        $this->assertStringContainsString('<td>Eva</td>', $html);
+    }
+
+    public function testSortLinkNotDoubleEncoded(): void
+    {
+        $dataReader = (new IterableDataReader([
+            ['name' => 'Anna'],
+        ]))->withSort(Sort::any(['name']));
+
+        $html = $this->createGridView()
+            ->dataReader($dataReader)
+            ->urlCreator(new SimplePaginationUrlCreator())
+            ->columns(
+                new DataColumn(
+                    property: 'name',
+                    header: '<b>Name</b>',
+                    encodeHeader: false,
+                ),
+            )
+            ->render();
+
+        $this->assertStringContainsString(
+            '<th><a href="/route?sort=name"><b>Name</b></a></th>',
+            $html,
+        );
+    }
+
+    public function testFilterFalseReturnsNoFilterRow(): void
+    {
+        $html = $this->createGridView([['name' => 'John']])
+            ->filterFormId('FID')
+            ->columns(
+                new DataColumn(
+                    property: 'name',
+                    filter: false,
+                ),
+            )
+            ->render();
+
+        $this->assertStringNotContainsString('<input', $html);
+        $this->assertStringNotContainsString('<select', $html);
+    }
+
+    public function testFilterWithNullPropertyReturnsNoFilterRow(): void
+    {
+        $html = $this->createGridView([['name' => 'John']])
+            ->filterFormId('FID')
+            ->columns(
+                new DataColumn(
+                    filter: true,
+                ),
+            )
+            ->render();
+
+        $this->assertStringNotContainsString('<input', $html);
+    }
+
+    public function testFilterValidationFailureDoesNotApplyFilter(): void
+    {
+        $html = $this->createGridView([
+            ['age' => 23],
+            ['age' => 45],
+            ['age' => 67],
+        ])
+            ->filterFormId('FID')
+            ->urlParameterProvider(new SimpleUrlParameterProvider(['age' => '200']))
+            ->columns(
+                new DataColumn(
+                    property: 'age',
+                    filter: true,
+                    filterValidation: new Integer(min: 1, max: 99),
+                ),
+            )
+            ->render();
+
+        $this->assertStringContainsString('<td>23</td>', $html);
+        $this->assertStringContainsString('<td>45</td>', $html);
+        $this->assertStringContainsString('<td>67</td>', $html);
     }
 
     private function createGridView(array $data = []): GridView
