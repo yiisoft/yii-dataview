@@ -3,7 +3,7 @@
 The DataView package provides built-in internationalization support through the `TranslatorInterface` from
 [yiisoft/translator](https://github.com/yiisoft/translator) package.
 
-This allows you to create multilingual data views with minimal effort.
+This allows you to create multilingual data views.
 
 By default, DataView uses the `yii-dataview` translation category.
 
@@ -12,7 +12,8 @@ You can change this using the `translationCategory()` method:
 ```php
 use Yiisoft\Yii\DataView\GridView\GridView;
 
-echo GridView::widget(['translationCategory' => 'my-category'])
+echo GridView::widget()
+    ->translationCategory('my-category')
     ->dataReader($dataReader)
     ->render();
 ```

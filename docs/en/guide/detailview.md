@@ -1,7 +1,6 @@
 # Detail View
 
-The `DetailView` widget is designed to display details about a single data item.
-It provides a flexible way to render detailed views with customizable attribute layouts.
+The `DetailView` widget displays details of a single data item with customizable layout.
 
 ## Basic Usage
 
@@ -34,7 +33,11 @@ the following constructor parameters:
   the array.
 - `value` - Explicit value. If `null`, the value is obtained from the data by its property name. Could be a
   function accepting a `GetValueContext` and returning the value.
-- `valueEncode` - Whether the value should be HTML encoded (default: `true`).
+- `valueEncode` - Whether the value should be HTML encoded. Has three possible states:
+  - `null` (default): Stringable objects that implement `NoEncodeStringableInterface` from the `yiisoft/html` package
+    are not encoded; everything else is encoded. This is the default behavior.
+  - `true`: Any content is always encoded, regardless of type.
+  - `false`: Nothing is encoded. Use with caution and only for trusted content.
 - `valueAttributes` - An array of value's HTML attributes or a function accepting a `ValueContext` and returning
   the array.
 - `fieldAttributes` - An array of field container's HTML attributes or a function accepting a `FieldContext` and
@@ -81,7 +84,8 @@ The field list can be customized with:
 Each field uses this template by default:
 
 ```
-{label} {value}
+{label}
+{value}
 ```
 
 Field rendering can be customized with:
@@ -132,7 +136,7 @@ Value rendering can be customized with:
 - `valuePrepend()` - add content before the value;
 - `valueAppend()` - add content after the value.
 
-If `DataField`'s `value` is set, it is used as is, otherwise the value is retrieved from the data using `property` 
+If `DataField`'s `value` is set, it is used as is, otherwise the value is retrieved from the data using `property`
 as either object property name or array key.
 
 ### Value Presentation
