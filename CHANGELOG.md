@@ -2,7 +2,7 @@
 
 ## 1.1.1 under development
 
-- no changes in this release.
+- Enh #332: Add `includeRequestParams` option to `ActionColumnUrlConfig` to preserve filters, sorting and pagination in action button URLs (@WarLikeLaux)
 
 ## 1.1.0 March 21, 2026
 
