@@ -1,5 +1,9 @@
 # Yii DataView Change Log
 
+## 1.1.1 under development
+
+- no changes in this release.
+
 ## 1.1.0 March 21, 2026
 
 - New #329: Add caption support for GridView (@Roc755)
