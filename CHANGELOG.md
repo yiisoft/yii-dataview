@@ -1,6 +1,6 @@
 # Yii DataView Change Log
 
-## 1.0.1 under development
+## 1.1.0 March 21, 2026
 
 - New #329: Add caption support for GridView (@Roc755)
 - Enh #328: Explicitly import constants in "use" section (@mspirkov)
