@@ -389,11 +389,11 @@ echo GridView::widget()
 
 ### `GridView` filter options
 
-- `filterCellAttributes(array $attributes)` -- HTML attributes for the filter cell (`td`) tag.
-- `filterCellInvalidClass(?string $class)` -- CSS class for the filter cell when the filter value is invalid.
-- `filterErrorsContainerAttributes(array $attributes)` -- HTML attributes for the filter errors container.
-- `filterFormId(string $id)` -- set a custom ID for the filter form.
-- `filterFormAttributes(array $attributes)` -- HTML attributes for the filter form tag.
+- `filterCellAttributes(array $attributes)` — HTML attributes for the filter cell (`td`) tag.
+- `filterCellInvalidClass(?string $class)` — CSS class for the filter cell when the filter value is invalid.
+- `filterErrorsContainerAttributes(array $attributes)` — HTML attributes for the filter errors container.
+- `filterFormId(string $id)` — set a custom ID for the filter form.
+- `filterFormAttributes(array $attributes)` — HTML attributes for the filter form tag.
 
 ### `DataColumn` filter parameters
 
@@ -401,28 +401,28 @@ echo GridView::widget()
 
 Available values:
 
-- `false` -- no filter;
-- `true` -- text input;
-- `array` -- dropdown list (select) with these options;
-- `\Yiisoft\Yii\DataView\Filter\Widget\FilterWidget` instance -- custom filter widget.
+- `false` — no filter;
+- `true` — text input;
+- `array` — dropdown list (select) with these options;
+- `\Yiisoft\Yii\DataView\Filter\Widget\FilterWidget` instance — custom filter widget.
 
 Filter widgets out of the box:
 
-- `\Yiisoft\Yii\DataView\Filter\Widget\TextInputFilter` -- text input;
-- `\Yiisoft\Yii\DataView\Filter\Widget\DropdownFilter` -- dropdown list (select).
+- `\Yiisoft\Yii\DataView\Filter\Widget\TextInputFilter` — text input;
+- `\Yiisoft\Yii\DataView\Filter\Widget\DropdownFilter` — dropdown list (select).
 
 #### `$filterFactory`
 
 Available values:
 
-- `null` -- if `$filter` is array, then `EqualsFilterFactory` is used, otherwise `LikeFilterFactory`;
-- class name -- filter factory will be resolved from the container;
-- `\Yiisoft\Yii\DataView\Filter\Factory\FilterFactoryInterface` instance -- custom filter factory.
+- `null` — if `$filter` is array, then `EqualsFilterFactory` is used, otherwise `LikeFilterFactory`;
+- class name — filter factory will be resolved from the container;
+- `\Yiisoft\Yii\DataView\Filter\Factory\FilterFactoryInterface` instance — custom filter factory.
 
 Filter factories out of the box:
 
-- `\Yiisoft\Yii\DataView\Filter\Factory\EqualsFilterFactory` -- creates `Equals` data filter;
-- `\Yiisoft\Yii\DataView\Filter\Factory\LikeFilterFactory` -- creates `Like` data filter.
+- `\Yiisoft\Yii\DataView\Filter\Factory\EqualsFilterFactory` — creates `Equals` data filter;
+- `\Yiisoft\Yii\DataView\Filter\Factory\LikeFilterFactory` — creates `Like` data filter.
 
 #### `$filterValidation`
 
@@ -430,9 +430,9 @@ Set [validation rules](https://github.com/yiisoft/validator/tree/master/docs/gui
 
 Available values:
 
-- `null` -- without validation;
-- `array` -- list of validation rules;
-- `\Yiisoft\Validator\RuleInterface` instance -- single validation rule.
+- `null` — without validation;
+- `array` — list of validation rules;
+- `\Yiisoft\Validator\RuleInterface` instance — single validation rule.
 
 #### `$filterEmpty`
 
@@ -440,9 +440,9 @@ Condition for determining when a filter value is empty. If the value is empty, t
 
 Available values:
 
-- `null` or `true` -- `\Yiisoft\Validator\EmptyCondition\WhenEmpty` is used, empty values: `null`, `[]`, or `''`;
-- `false` -- `\Yiisoft\Validator\EmptyCondition\NeverEmpty` is used, every value is considered non-empty;
-- `callable` -- custom condition with signature `callable(mixed $value): bool`.
+- `null` or `true` — `\Yiisoft\Validator\EmptyCondition\WhenEmpty` is used, empty values: `null`, `[]`, or `''`;
+- `false` — `\Yiisoft\Validator\EmptyCondition\NeverEmpty` is used, every value is considered non-empty;
+- `callable` — custom condition with signature `callable(mixed $value): bool`.
 
 ## Sorting
 
