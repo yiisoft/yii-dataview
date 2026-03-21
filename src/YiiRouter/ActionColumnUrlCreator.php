@@ -12,6 +12,7 @@ use Yiisoft\Yii\DataView\GridView\Column\Base\DataContext;
 use Yiisoft\Yii\DataView\Url\UrlParameterType;
 
 use function is_object;
+use function is_string;
 
 /**
  * URL creator for action columns in `GridView`.
@@ -67,6 +68,15 @@ final class ActionColumnUrlCreator
 
         $arguments = $config->arguments;
         $queryParameters = $config->queryParameters;
+
+        if ($config->includeRequestParams) {
+            $requestParams = array_filter(
+                $_GET,
+                static fn($value): bool => is_string($value),
+            );
+            $queryParameters = array_merge($requestParams, $queryParameters);
+        }
+
         switch ($primaryKeyParameterType) {
             case UrlParameterType::Path:
                 $arguments = array_merge($arguments, [$primaryKey => (string) $primaryKeyValue]);

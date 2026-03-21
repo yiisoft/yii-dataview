@@ -21,6 +21,10 @@ final class ActionColumnUrlConfig
      * @psalm-param array<string,scalar|Stringable|null> $arguments
      * @param array $queryParameters Additional query parameters to append to the URL.
      * @param UrlParameterType|null $primaryKeyParameterType How to include the primary key in the URL.
+     * @param bool $includeRequestParams Whether to include current request query parameters
+     * (such as filters, sorting and pagination) in generated URLs. When `true`, clicking
+     * an action button preserves the current grid state (filters, sort, page) so that
+     * after the action completes and a redirect happens, the user returns to the same view.
      */
     public function __construct(
         public readonly ?string $primaryKey = null,
@@ -28,5 +32,6 @@ final class ActionColumnUrlConfig
         public readonly array $arguments = [],
         public readonly array $queryParameters = [],
         public readonly ?UrlParameterType $primaryKeyParameterType = null,
+        public readonly bool $includeRequestParams = false,
     ) {}
 }
