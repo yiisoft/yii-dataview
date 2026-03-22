@@ -102,6 +102,25 @@ final class SelectPageSizeTest extends TestCase
         );
     }
 
+    public function testConstraintWithExactlyTwoItemsRenders(): void
+    {
+        $html = (new SelectPageSize())
+            ->withContext(
+                new PageSizeContext(
+                    currentValue: 10,
+                    defaultValue: 20,
+                    constraint: [10, 20],
+                    urlPattern: '/test?pagesize=YII-DATAVIEW-PAGE-SIZE-PLACEHOLDER',
+                    defaultUrl: '/test',
+                ),
+            )
+            ->render();
+
+        $this->assertNotSame('', $html);
+        $this->assertStringContainsString('<option value="10" selected>10</option>', $html);
+        $this->assertStringContainsString('<option value="20">20</option>', $html);
+    }
+
     public function testImmutability(): void
     {
         $widget = new SelectPageSize();
