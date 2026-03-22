@@ -219,7 +219,7 @@ new ActionColumn(
         'delete' => new ActionButton(
             content: 'Delete',
             title: 'Delete this post',
-            attributes: static fn(array|object $data, DataContext $context): array => [
+            attributes: static fn(object $data, DataContext $context): array => [
                 'data-confirm' => 'Are you sure you want to delete ' . $data->title . '?',
             ],
         ),
@@ -256,7 +256,7 @@ new ActionColumn(
     visibleButtons: [
         'view' => true,
         'update' => true,
-        'delete' => static fn(array|object $data, mixed $key, int $index): bool => $data->canDelete(),
+        'delete' => static fn(object $data, mixed $key, int $index): bool => $data->canDelete(),
     ],
 )
 ```
