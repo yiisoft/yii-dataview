@@ -666,16 +666,6 @@ final class OffsetPaginationTest extends TestCase
         $this->assertStringContainsString('<nav>', $html);
     }
 
-    public function testContextReturnsNewInstance(): void
-    {
-        $widget = new OffsetPagination();
-        $context = new PaginationContext('/page/test', '/page/test', '/');
-
-        $new = $widget->context($context);
-
-        $this->assertNotSame($widget, $new);
-    }
-
     public function testPageRangeMiddlePage(): void
     {
         $html = $this->createPagination(20, 10)

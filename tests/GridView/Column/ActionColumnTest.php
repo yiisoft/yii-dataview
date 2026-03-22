@@ -325,7 +325,7 @@ final class ActionColumnTest extends TestCase
         );
     }
 
-    public function testButtonClassAppliedWhenButtonClassIsFalse(): void
+    public function testRendererButtonClassAppliedWhenButtonDoesNotOverride(): void
     {
         $html = $this->createGridView(
             [['id' => 1]],

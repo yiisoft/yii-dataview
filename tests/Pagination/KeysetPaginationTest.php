@@ -386,8 +386,9 @@ final class KeysetPaginationTest extends TestCase
 
     public function testContextImmutability(): void
     {
-        $context1 = new PaginationContext('/next/YII-DATAVIEW-PAGE-PLACEHOLDER', '/prev/YII-DATAVIEW-PAGE-PLACEHOLDER', '');
-        $context2 = new PaginationContext('/other/YII-DATAVIEW-PAGE-PLACEHOLDER', '/other/YII-DATAVIEW-PAGE-PLACEHOLDER', '');
+        $placeholder = PaginationContext::URL_PLACEHOLDER;
+        $context1 = new PaginationContext("/next/$placeholder", "/prev/$placeholder", '');
+        $context2 = new PaginationContext("/other/$placeholder", "/other/$placeholder", '');
 
         $widget1 = $this->createPagination(2)->context($context1);
         $widget2 = $widget1->context($context2);
