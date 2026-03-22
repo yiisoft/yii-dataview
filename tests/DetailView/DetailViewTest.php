@@ -86,7 +86,6 @@ final class DetailViewTest extends TestCase
             ->render();
 
         $this->assertSame('', $result);
-        $this->assertIsString($result);
     }
 
     public function testAllFieldsInvisibleReturnsEmptyString(): void

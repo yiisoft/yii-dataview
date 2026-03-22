@@ -74,15 +74,10 @@ final class TextInputFilterTest extends TestCase
     public function testImmutability(): void
     {
         $filter = TextInputFilter::widget();
-        $this->assertNotSame($filter, $filter->addAttributes([]));
-        $this->assertNotSame($filter, $filter->attributes([]));
-    }
-
-    public function testWithContextImmutability(): void
-    {
-        $filter = TextInputFilter::widget();
         $context = new Context('username', 'john', 'filter-form');
 
+        $this->assertNotSame($filter, $filter->addAttributes([]));
+        $this->assertNotSame($filter, $filter->attributes([]));
         $this->assertNotSame($filter, $filter->withContext($context));
     }
 }

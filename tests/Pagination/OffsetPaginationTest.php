@@ -622,18 +622,12 @@ final class OffsetPaginationTest extends TestCase
         $pagination->render();
     }
 
-    public function testContextImmutability(): void
+    public function testImmutability(): void
     {
         $widget = new OffsetPagination();
         $context = new PaginationContext('/page/test', '/page/test', '/');
 
         $this->assertNotSame($widget, $widget->context($context));
-    }
-
-    public function testImmutability(): void
-    {
-        $widget = new OffsetPagination();
-
         $this->assertNotSame($widget, $widget->showOnSinglePage());
         $this->assertNotSame($widget, $widget->containerTag('div'));
         $this->assertNotSame($widget, $widget->containerAttributes([]));
@@ -748,6 +742,7 @@ final class OffsetPaginationTest extends TestCase
         $html = $pagination->render();
 
         $this->assertStringContainsString('<nav>', $html);
+        $this->assertStringNotContainsString('href="/page/2"', $html);
     }
 
     public function testPageRangeRecalculationWhenEndExceedsTotal(): void
