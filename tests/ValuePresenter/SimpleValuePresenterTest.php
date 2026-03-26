@@ -66,19 +66,19 @@ final class SimpleValuePresenterTest extends TestCase
 
     public static function dataInvalidValue(): iterable
     {
-        yield 'stdClass' => [new stdClass()];
-        yield 'array' => [['key' => 'value']];
-        yield 'resource' => [fopen('php://memory', 'r')];
-        yield 'closure' => [fn() => 'test'];
+        yield 'stdClass' => [new stdClass(), 'Unsupported value type: stdClass'];
+        yield 'array' => [['key' => 'value'], 'Unsupported value type: array'];
+        yield 'resource' => [fopen('php://memory', 'r'), 'Unsupported value type: resource'];
+        yield 'closure' => [fn() => 'test', 'Unsupported value type: Closure'];
     }
 
     #[DataProvider('dataInvalidValue')]
-    public function testInvalidValue(mixed $value): void
+    public function testInvalidValue(mixed $value, string $expectedMessage): void
     {
         $presenter = new SimpleValuePresenter();
 
         $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage('Unsupported value type:');
+        $this->expectExceptionMessage($expectedMessage);
         $presenter->present($value);
     }
 }
