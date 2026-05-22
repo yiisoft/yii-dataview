@@ -78,6 +78,7 @@ ActionColumn displays action buttons (e.g., view, edit, delete):
 ```php
 use Yiisoft\Html\Html;
 use Yiisoft\Yii\DataView\GridView\Column\ActionColumn;
+use Yiisoft\Yii\DataView\GridView\Column\Base\DataContext;
 
 $column = new ActionColumn(
     buttons: [
@@ -87,10 +88,10 @@ $column = new ActionColumn(
                 return '/posts/view' . $data->id; 
             }
         ),
-        'edit' => function (string $url): string {
+        'edit' => function (string $url, DataContext $context): string {
             return (string) Html::a('Edit', $url);
         },
-        'delete' => function (string $url): string {
+        'delete' => function (string $url, DataContext $context): string {
             return (string) Html::a('Delete', $url);
         },
     ],
