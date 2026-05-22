@@ -574,6 +574,23 @@ final class ActionColumnTest extends TestCase
         $this->assertFalse($button->overrideAttributes);
     }
 
+    #[TestWith(['<a href="#"><b>text</b></a>', false])]
+    #[TestWith(['<a href="#">&lt;b&gt;text&lt;/b&gt;</a>', true])]
+    public function testButtonEncode(string $expected, bool $encode): void
+    {
+        $html = $this->createGridView([['id' => 1]])
+            ->columns(
+                new ActionColumn(
+                    buttons: [
+                        'view' => new ActionButton('<b>text</b>', '#', encode: $encode),
+                    ],
+                ),
+            )
+            ->render();
+
+        $this->assertStringContainsString($expected, $html);
+    }
+
     public function testVisible(): void
     {
         $html = $this->createGridView([['id' => 1], ['id' => 2]])

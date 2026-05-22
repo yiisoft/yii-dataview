@@ -2,7 +2,7 @@
 
 ## 1.1.1 under development
 
-- no changes in this release.
+- New #337: Add `encode` option to `ActionButton` (@vjik)
 
 ## 1.1.0 March 21, 2026
 

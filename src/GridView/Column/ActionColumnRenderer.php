@@ -210,7 +210,7 @@ final class ActionColumnRenderer implements ColumnRendererInterface
             $attributes['title'] = $button->title;
         }
 
-        return Html::a($content, $url, $attributes)->render();
+        return Html::a($content, $url, $attributes)->encode($button->encode)->render();
     }
 
     /**

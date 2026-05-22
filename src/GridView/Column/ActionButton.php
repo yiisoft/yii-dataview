@@ -6,6 +6,7 @@ namespace Yiisoft\Yii\DataView\GridView\Column;
 
 use Closure;
 use Stringable;
+use Yiisoft\Html\Tag\Base\TagContentTrait;
 use Yiisoft\Yii\DataView\GridView\Column\Base\DataContext;
 
 /**
@@ -24,6 +25,7 @@ final class ActionButton
      * `function(array|object $data, DataContext $context): string|array<array-key,string|null>|null`.
      * @param string|null $title Button title attribute.
      * @param bool $overrideAttributes Whether to override default attributes with custom ones instead of merging.
+     * @param bool|null $encode Whether to encode button content, {@see TagContentTrait::encode()}.
      *
      * @template TData as array|object
      * @psalm-param (Closure(TData, DataContext): string)|string|null $url
@@ -38,5 +40,6 @@ final class ActionButton
         public readonly Closure|string|array|false|null $class = false,
         public readonly ?string $title = null,
         public readonly bool $overrideAttributes = false,
+        public readonly ?bool $encode = null,
     ) {}
 }
