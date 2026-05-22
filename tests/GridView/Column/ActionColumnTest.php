@@ -267,7 +267,7 @@ final class ActionColumnTest extends TestCase
                 new ActionColumn(
                     buttons: [
                         'view' => new ActionButton('V', '#view'),
-                        'send' => new ActionButton('S', '#send', title: 'Send to…'),
+                        'send' => static fn(string $url, DataContext $context): string => '<a href="' . $url . '">S ' . $context->data['slug'] . '</a>',
                         'edit' => static fn(string $url) => '<a href="' . $url . '">EDIT</a>',
                         'delete' => new ActionButton(
                             content: static fn(array $data, DataContext $context) => 'Del ' . $data['id'],
@@ -284,31 +284,9 @@ final class ActionColumnTest extends TestCase
             <<<HTML
             <td>
             <a href="#view">V</a>
-            <a title="Send to…" href="#send">S</a>
+            <a href="/send/1">S item1</a>
             <a href="/edit/1">EDIT</a>
             <a data-id="id-1" class="red1" href="/confirm-delete/1">Del 1</a>
-            </td>
-            HTML,
-            $html,
-        );
-    }
-
-    public function testCallableButtonReceivesDataContext(): void
-    {
-        $html = $this->createGridView([['id' => 1, 'slug' => 'item1']])
-            ->columns(
-                new ActionColumn(
-                    buttons: [
-                        'edit' => static fn(string $url, DataContext $context): string => '<a href="' . $url . '">EDIT ' . $context->data['slug'] . '</a>',
-                    ],
-                ),
-            )
-            ->render();
-
-        $this->assertStringContainsString(
-            <<<HTML
-            <td>
-            <a href="/edit/1">EDIT item1</a>
             </td>
             HTML,
             $html,
