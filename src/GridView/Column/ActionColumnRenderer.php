@@ -154,7 +154,7 @@ final class ActionColumnRenderer implements ColumnRendererInterface
     {
         if (is_callable($button)) {
             $url = $this->createUrl($name, $context);
-            return $button($url);
+            return $button($url, $context);
         }
 
         if ($button->content instanceof Closure) {

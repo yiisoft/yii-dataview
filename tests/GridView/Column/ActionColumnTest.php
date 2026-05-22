@@ -293,6 +293,28 @@ final class ActionColumnTest extends TestCase
         );
     }
 
+    public function testCallableButtonReceivesDataContext(): void
+    {
+        $html = $this->createGridView([['id' => 1, 'slug' => 'item1']])
+            ->columns(
+                new ActionColumn(
+                    buttons: [
+                        'edit' => static fn(string $url, DataContext $context): string => '<a href="' . $url . '">EDIT ' . $context->data['slug'] . '</a>',
+                    ],
+                ),
+            )
+            ->render();
+
+        $this->assertStringContainsString(
+            <<<HTML
+            <td>
+            <a href="/edit/1">EDIT item1</a>
+            </td>
+            HTML,
+            $html,
+        );
+    }
+
     #[TestWith(['<a title="View" href="#">V</a>', true])]
     #[TestWith(['<a class="red" title="View" href="#">V</a>', false])]
     public function testButtonOverrideAttribute(string $expected, bool $override): void
