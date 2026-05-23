@@ -28,16 +28,14 @@ use Yiisoft\Yii\DataView\GridView\GridView;
 ?>
 ```
 
-### OffsetPagination options
-
 All configuration methods return a new immutable instance.
 
-**Visibility:**
+Visibility:
 
 - `showOnSinglePage(bool $show = true)` - Show pagination even when all data fits on one page. Default: `false`
   (pagination is hidden when only one page exists).
 
-**Labels:**
+Labels:
 
 - `labelFirst(string|Stringable|null $label)` - Label for the "first page" link. Default: `'⟪'`. Pass `null` to hide
   this link.
@@ -48,12 +46,12 @@ All configuration methods return a new immutable instance.
 - `labelNext(string|Stringable|null $label)` - Label for the "next page" link. Default: `'⟩'`. Pass `null` to hide
   this link.
 
-**Navigation:**
+Navigation:
 
 - `maxNavLinkCount(int $value)` - Maximum number of page number links to show. Default: `10`. When there are more pages
   than this limit, a sliding window of links is shown around the current page.
 
-**CSS classes for current/disabled states:**
+CSS classes for current/disabled states:
 
 - `currentItemClass(?string $class)` - CSS class added to the item tag (`itemTag`) of the current page.
 - `disabledItemClass(?string $class)` - CSS class added to the item tag of disabled links (first/previous on page 1,
@@ -61,14 +59,14 @@ All configuration methods return a new immutable instance.
 - `currentLinkClass(?string $class)` - CSS class added to the `<a>` tag of the current page link.
 - `disabledLinkClass(?string $class)` - CSS class added to the `<a>` tag of disabled links.
 
-**Link attributes:**
+Link attributes:
 
 - `linkAttributes(array $attributes)` - Set HTML attributes for all `<a>` link elements (replaces existing attributes).
 - `addLinkAttributes(array $attributes)` - Merge additional HTML attributes into existing link attributes.
 - `linkClass(BackedEnum|string|null ...$class)` - Set CSS classes on link elements (replaces existing classes).
 - `addLinkClass(BackedEnum|string|null ...$class)` - Add CSS classes to link elements without removing existing ones.
 
-**HTML structure:**
+HTML structure:
 
 The pagination markup is structured as container > list > item > link. Each level can be customized or removed.
 
@@ -79,7 +77,7 @@ The pagination markup is structured as container > list > item > link. Each leve
 - `itemTag(?string $tag)` - Tag wrapping each individual link. Default: `null` (no item wrapper). Common value: `'li'`.
 - `itemAttributes(array $attributes)` - HTML attributes for item tags.
 
-**Example with Bootstrap 5 styling:**
+Example with Bootstrap 5 styling:
 
 ```php
 <?php
@@ -131,33 +129,31 @@ use Yiisoft\Yii\DataView\GridView\GridView;
 ?>
 ```
 
-### KeysetPagination options
-
 Keyset pagination only shows "previous" and "next" links (no page numbers). All configuration methods return a new
 immutable instance.
 
-**Visibility:**
+Visibility:
 
 - `showOnSinglePage(bool $show = true)` - Show pagination even when all data fits on one page. Default: `false`.
 
-**Labels:**
+Labels:
 
 - `labelPrevious(string|Stringable $label)` - Label for the "previous page" link. Default: `'⟨'`.
 - `labelNext(string|Stringable $label)` - Label for the "next page" link. Default: `'⟩'`.
 
-**CSS classes for disabled state:**
+CSS classes for disabled state:
 
 - `disabledItemClass(?string $class)` - CSS class added to the item tag of disabled links (previous on the first page,
   next on the last page).
 - `disabledLinkClass(?string $class)` - CSS class added to the `<a>` tag of disabled links.
 
-**Link attributes:**
+Link attributes:
 
 - `linkAttributes(array $attributes)` - Set HTML attributes for all `<a>` link elements (replaces existing attributes).
 - `linkClass(BackedEnum|string|null ...$class)` - Set CSS classes on link elements (replaces existing classes).
 - `addLinkClass(BackedEnum|string|null ...$class)` - Add CSS classes to link elements without removing existing ones.
 
-**HTML structure:**
+HTML structure:
 
 - `containerTag(?string $tag)` - Outer container tag. Default: `'nav'`. Pass `null` to remove the container.
 - `containerAttributes(array $attributes)` - HTML attributes for the container tag.
