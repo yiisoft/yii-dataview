@@ -239,7 +239,7 @@ use Yiisoft\Yii\DataView\GridView\Column\Base\DataContext;
 
 new ActionColumn(
     buttons: [
-        'view' => static fn(string $url): string => (string) Html::a('View', $url, ['class' => 'btn']),
+        'view' => static fn(string $url, DataContext $context): string => (string) Html::a('View', $url, ['class' => 'btn']),
     ],
     urlCreator: static fn(string $action, DataContext $context): string => "/posts/$action/" . $context->key,
 )

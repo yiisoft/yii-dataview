@@ -14,7 +14,7 @@ use Yiisoft\Yii\DataView\GridView\GridView;
  * the items.
  *
  * @psalm-type UrlCreator = callable(string, DataContext): string
- * @psalm-type ButtonRenderer = ActionButton|callable(string): string
+ * @psalm-type ButtonRenderer = ActionButton|callable(string, DataContext): string
  * @psalm-type TContent = scalar|Stringable|null|callable(array|object, DataContext): string
  */
 final class ActionColumn implements ColumnInterface
@@ -36,7 +36,8 @@ final class ActionColumn implements ColumnInterface
      * @param string|null $footer The footer cell content.
      * @param mixed $content The content to be rendered in each data cell.
      * @param array|null $buttons Array of buttons. Keys are button names. Values are either instances
-     * of {@see ActionButton} or a callable with the following signature: `function(string $url): string`.
+     * of {@see ActionButton} or a callable with the following signature:
+     * `function(string $url, DataContext $context): string`.
      * @param array|null $visibleButtons Array of button visibility rules.
      * @param array $columnAttributes HTML attributes for the column cells.
      * @param array $headerAttributes HTML attributes for the header cell.
