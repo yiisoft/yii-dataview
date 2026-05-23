@@ -13,6 +13,48 @@ use Yiisoft\Yii\DataView\GridView\GridView;
  * `ActionColumn` is a column for the {@see GridView} widget that displays buttons for viewing and manipulating
  * the items.
  *
+ * ```php
+ * // Basic usage with default view, update, and delete buttons
+ * $column = new ActionColumn();
+ *
+ * // Custom URL creator
+ * $column = new ActionColumn(
+ *     urlCreator: static fn(string $action, DataContext $context): string => "/$action/{$context->data->id},
+ * );
+ *
+ * // Custom buttons using ActionButton instances
+ * $column = new ActionColumn(
+ *     buttons: [
+ *         'view' => new ActionButton(
+ *             content: '🔎',
+ *             url: static fn(array|object $data, DataContext $context): string => "/view/$data->id",
+ *             title: 'View',
+ *         ),
+ *         'delete' => new ActionButton(
+ *             content: '❌',
+ *             url: static fn(array|object $data, DataContext $context): string => "/delete/$data->id",
+ *             title: 'Delete',
+ *             attributes: ['onclick' => "return confirm('Are you sure?')"],
+ *         ),
+ *     ],
+ * );
+ *
+ * // Custom buttons using callables
+ * $column = new ActionColumn(
+ *     buttons: [
+ *         'approve' => static fn(string $url): string => Html::a('Approve', $url, ['class' => 'btn btn-success']),
+ *     ],
+ *     template: '{approve}',
+ * );
+ *
+ * // Conditionally visible buttons
+ * $column = new ActionColumn(
+ *     visibleButtons: [
+ *         'delete' => static fn(array|object $data, DataContext $context): bool => $data['deletable'],
+ *     ],
+ * );
+ * ```
+ *
  * @psalm-type UrlCreator = callable(string, DataContext): string
  * @psalm-type ButtonRenderer = ActionButton|callable(string, DataContext): string
  * @psalm-type TContent = scalar|Stringable|null|callable(array|object, DataContext): string
@@ -47,7 +89,7 @@ final class ActionColumn implements ColumnInterface
      *
      * @psalm-param TContent $content
      * @psalm-param UrlCreator|null $urlCreator
-     * @psalm-param array<array-key, ButtonRenderer>|null $buttons
+     * @psalm-param ButtonRenderer[]|null $buttons
      * @psalm-param array<string, bool|Closure>|null $visibleButtons
      */
     public function __construct(
