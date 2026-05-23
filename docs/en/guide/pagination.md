@@ -68,7 +68,7 @@ Link attributes:
 
 HTML structure:
 
-The pagination markup is structured as container > list > item > link. Each level can be customized or removed.
+The pagination markup is structured as "container > list > item > link". Each level can be customized or removed.
 
 - `containerTag(?string $tag)` - Outer container tag. Default: `'nav'`. Pass `null` to remove the container.
 - `containerAttributes(array $attributes)` - HTML attributes for the container tag.
@@ -179,6 +179,19 @@ several types of values:
   with `SelectPageSize` to show a dropdown. The `SelectPageSize` widget will only render when the array contains
   at least 2 values.
 
+### Page size wrapper options
+
+These methods are on `GridView` / `ListView`:
+
+- `pageSizeWidget(?PageSizeWidgetInterface $widget)` - Set the page size widget instance. When `null`, the default
+  depends on the `pageSizeConstraint`: `array` constraint uses `SelectPageSize`, `int` or `false` constraint uses
+  `InputPageSize`, `true` constraint (fixed page size) renders nothing.
+- `pageSizeTag(?string $tag)` - Wrapper tag around the page size control. Default: `'div'`. Pass `null` to remove
+  the wrapper.
+- `pageSizeAttributes(array $attributes)` - HTML attributes for the wrapper tag.
+- `pageSizeTemplate(?string $template)` - Template string. Use `{widget}` as a placeholder for the page size widget.
+  Default: `'Results per page {widget}'`. Pass `null` or an empty string to hide the control entirely.
+
 ### SelectPageSize widget
 
 `SelectPageSize` renders a `<select>` dropdown for choosing a page size from a predefined list. Pair it with an
@@ -254,19 +267,3 @@ use Yiisoft\Yii\DataView\PageSize\InputPageSize;
 
 - `attributes(array $attributes)` - Replace all HTML attributes on the `<input>` element.
 - `addAttributes(array $attributes)` - Merge additional attributes into existing ones.
-
-Both `SelectPageSize` and `InputPageSize` use JavaScript `onchange` handlers to navigate to the new URL when
-the value changes. The URL is built from a pattern provided by the framework through `PageSizeContext`.
-
-### Page size wrapper options
-
-These methods are on `GridView` / `ListView` (via `BaseListView`):
-
-- `pageSizeWidget(?PageSizeWidgetInterface $widget)` - Set the page size widget instance. When `null`, the default
-  depends on the `pageSizeConstraint`: `array` constraint uses `SelectPageSize`, `int` or `false` constraint uses
-  `InputPageSize`, `true` constraint (fixed page size) renders nothing.
-- `pageSizeTag(?string $tag)` - Wrapper tag around the page size control. Default: `'div'`. Pass `null` to remove
-  the wrapper.
-- `pageSizeAttributes(array $attributes)` - HTML attributes for the wrapper tag.
-- `pageSizeTemplate(?string $template)` - Template string. Use `{widget}` as a placeholder for the page size widget.
-  Default: `'Results per page {widget}'`. Pass `null` or an empty string to hide the control entirely.
