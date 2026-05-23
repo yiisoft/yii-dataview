@@ -24,8 +24,12 @@ Data reader is usually an instance of paginator and `itemView` is a template lik
 ```php
 <?php
 use Yiisoft\Html\Html;
+use Yiisoft\Yii\DataView\ListView\ListItemContext;
 
-/** @var array $data */
+/** 
+ * @var array $data 
+ * @var ListItemContext $context
+ */
 ?>
 
 ★ <?= Html::encode($data['id']) ?> - <?= Html::encode($data['name']) ?>
