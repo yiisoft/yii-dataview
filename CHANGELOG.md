@@ -3,6 +3,9 @@
 ## 1.1.1 under development
 
 - Enh #338: Pass `DataContext` to `callable` buttons in `ActionColumn` (@vjik)
+- Bug #344: Add `DropdownFilter::submitOnChange()` to allow disabling the inline
+  `onChange="this.form.submit()"` handler, which a Content Security Policy `script-src`
+  without `unsafe-inline` silently blocks (@rossaddison)
 
 ## 1.1.0 March 21, 2026
 
