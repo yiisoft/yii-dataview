@@ -2381,6 +2381,58 @@ final class GridViewTest extends TestCase
         );
     }
 
+    public function testPrepareDataReaderWithoutPagination(): void
+    {
+        $data = [
+            ['id' => 1, 'status' => 'active'],
+            ['id' => 2, 'status' => 'inactive'],
+            ['id' => 3, 'status' => 'active'],
+        ];
+        $dataReader = (new IterableDataReader($data))->withSort(Sort::any(['id']));
+
+        $preparedDataReader = $this->createGridView($dataReader)
+            ->pageSizeConstraint(false)
+            ->urlParameterProvider(
+                new SimpleUrlParameterProvider(['status' => 'active', 'sort' => '-id', 'pagesize' => '1']),
+            )
+            ->columns(
+                new DataColumn('id'),
+                new DataColumn('status', filter: ['active' => 'Active', 'inactive' => 'Inactive']),
+            )
+            ->prepareDataReader(false);
+
+        $this->assertNotNull($preparedDataReader);
+        $this->assertSame(
+            [
+                ['id' => 3, 'status' => 'active'],
+                ['id' => 1, 'status' => 'active'],
+            ],
+            array_values($preparedDataReader->read()),
+        );
+    }
+
+    public function testPrepareDataReaderReturnsNullOnIncorrectFilterValue(): void
+    {
+        $preparedDataReader = $this->createGridView([['id' => 1, 'name' => 'Anna']])
+            ->urlParameterProvider(new SimpleUrlParameterProvider(['id' => 'bad', 'name' => 'Anna']))
+            ->columns(
+                new DataColumn(
+                    'id',
+                    filter: true,
+                    filterFactory: new class implements FilterFactoryInterface {
+                        public function create(string $property, string $value): FilterInterface
+                        {
+                            throw new IncorrectValueException();
+                        }
+                    },
+                ),
+                new DataColumn('name', filter: true),
+            )
+            ->prepareDataReader(false);
+
+        $this->assertNull($preparedDataReader);
+    }
+
     public function testDefaultPageSizeWithIntConstraintBoundary(): void
     {
         $data = array_fill(0, 20, ['id' => 1]);
