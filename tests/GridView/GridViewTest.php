@@ -2402,12 +2402,13 @@ final class GridViewTest extends TestCase
             ->prepareDataReader(false);
 
         $this->assertNotNull($preparedDataReader);
+        $items = $preparedDataReader->read();
         $this->assertSame(
             [
                 ['id' => 3, 'status' => 'active'],
                 ['id' => 1, 'status' => 'active'],
             ],
-            array_values($preparedDataReader->read()),
+            array_values(is_array($items) ? $items : iterator_to_array($items)),
         );
     }
 

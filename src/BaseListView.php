@@ -195,7 +195,7 @@ abstract class BaseListView extends Widget
     /**
      * Prepares data reader using current URL parameters, filters, and sorting.
      *
-     * Returns `null` when filter values are invalid and there are definitely no entries for the current filter.
+     * Returns `null` when filter values are invalid and the data reader can't be prepared for the current filter.
      * Pass `false` to prepare data for exports: filters and sorting will be applied, but pagination URL parameters
      * won't be used and a non-paginator data reader won't be wrapped into a paginator.
      *
