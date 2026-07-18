@@ -41,6 +41,8 @@ use Yiisoft\Yii\DataView\Tests\Support\SimpleUrlParameterProvider;
 use Yiisoft\Yii\DataView\Tests\Support\StringEnum;
 use Yiisoft\Yii\DataView\Url\UrlParameterType;
 
+use function is_array;
+
 final class GridViewTest extends TestCase
 {
     public function testBase(): void
