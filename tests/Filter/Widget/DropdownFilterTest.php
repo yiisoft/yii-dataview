@@ -62,6 +62,52 @@ final class DropdownFilterTest extends TestCase
         );
     }
 
+    public function testSubmitOnChangeDisabled(): void
+    {
+        $filter = DropdownFilter::widget()
+            ->optionsData(['active' => 'Active'])
+            ->submitOnChange(false);
+        $context = new Context('status', 'active', 'filter-form');
+
+        $html = $filter->renderFilter($context);
+
+        $this->assertSame(
+            <<<HTML
+            <select name="status" form="filter-form">
+            <option value></option>
+            <option value="active" selected>Active</option>
+            </select>
+            HTML,
+            $html,
+        );
+    }
+
+    public function testSubmitOnChangeExplicitlyEnabled(): void
+    {
+        $filter = DropdownFilter::widget()
+            ->optionsData(['active' => 'Active'])
+            ->submitOnChange(false)
+            ->submitOnChange(true);
+        $context = new Context('status', null, 'filter-form');
+
+        $html = $filter->renderFilter($context);
+
+        $this->assertStringContainsString('onChange="this.form.submit()"', $html);
+    }
+
+    public function testSubmitOnChangeDisabledCanStillBeCombinedWithCustomAttributes(): void
+    {
+        $filter = DropdownFilter::widget()
+            ->addAttributes(['data-role' => 'auto-submit-select'])
+            ->submitOnChange(false);
+        $context = new Context('status', null, 'filter-form');
+
+        $html = $filter->renderFilter($context);
+
+        $this->assertStringContainsString('data-role="auto-submit-select"', $html);
+        $this->assertStringNotContainsString('onChange', $html);
+    }
+
     public function testAddAttributes(): void
     {
         $filter = DropdownFilter::widget()
@@ -167,5 +213,6 @@ final class DropdownFilterTest extends TestCase
         $this->assertNotSame($filter, $filter->attributes([]));
         $this->assertNotSame($filter, $filter->addClass());
         $this->assertNotSame($filter, $filter->class());
+        $this->assertNotSame($filter, $filter->submitOnChange(false));
     }
 }
