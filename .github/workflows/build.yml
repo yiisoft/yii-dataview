@@ -27,11 +27,11 @@ permissions:
 
 jobs:
   phpunit:
-    uses: yiisoft/actions/.github/workflows/phpunit.yml@master
+    uses: yiisoft/actions/.github/workflows/phpunit.yml@075ec53cb638ec4c91f135d85faeead4d08dac98
     secrets:
       codecovToken: ${{ secrets.CODECOV_TOKEN }}
     with:
-      ini-values: "pcov.directory=$GITHUB_WORKSPACE, pcov.exclude=#^(?!($GITHUB_WORKSPACE/config/|$GITHUB_WORKSPACE/src/)).*#"
+      ini-values: pcov.directory=$GITHUB_WORKSPACE, pcov.exclude=#^(?!($GITHUB_WORKSPACE/config/|$GITHUB_WORKSPACE/src/)).*#
       extensions: intl
       os: >-
         ['ubuntu-latest', 'windows-latest']
