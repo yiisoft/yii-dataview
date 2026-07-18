@@ -325,6 +325,32 @@ final class ActionColumnTest extends TestCase
         );
     }
 
+    public function testButtonTitleProperty(): void
+    {
+        $html = $this->createGridView([['id' => 1, 'slug' => 'item1']])
+            ->columns(
+                new ActionColumn(
+                    buttons: [
+                        'view' => new ActionButton(
+                            'V',
+                            '#',
+                            title: 'View item',
+                        ),
+                    ],
+                ),
+            )
+            ->render();
+
+        $this->assertStringContainsString(
+            <<<HTML
+            <td>
+            <a title="View item" href="#">V</a>
+            </td>
+            HTML,
+            $html,
+        );
+    }
+
     public function testRendererButtonClassAppliedWhenButtonDoesNotOverride(): void
     {
         $html = $this->createGridView(
