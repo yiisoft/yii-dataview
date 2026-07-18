@@ -41,6 +41,8 @@ use Yiisoft\Yii\DataView\Tests\Support\SimpleUrlParameterProvider;
 use Yiisoft\Yii\DataView\Tests\Support\StringEnum;
 use Yiisoft\Yii\DataView\Url\UrlParameterType;
 
+use function is_array;
+
 final class GridViewTest extends TestCase
 {
     public function testBase(): void
@@ -2379,6 +2381,145 @@ final class GridViewTest extends TestCase
             HTML,
             $html,
         );
+    }
+
+    public function testPrepareDataReaderWithoutPagination(): void
+    {
+        $data = [
+            ['id' => 1, 'status' => 'active'],
+            ['id' => 2, 'status' => 'inactive'],
+            ['id' => 3, 'status' => 'active'],
+        ];
+        $dataReader = (new IterableDataReader($data))->withSort(Sort::any(['id']));
+
+        $preparedDataReader = $this->createGridView($dataReader)
+            ->pageSizeConstraint(false)
+            ->urlParameterProvider(
+                new SimpleUrlParameterProvider(['status' => 'active', 'sort' => '-id', 'pagesize' => '1']),
+            )
+            ->columns(
+                new DataColumn('id'),
+                new DataColumn('status', filter: ['active' => 'Active', 'inactive' => 'Inactive']),
+            )
+            ->prepareDataReader(false);
+
+        $this->assertNotNull($preparedDataReader);
+        $items = $preparedDataReader->read();
+        $this->assertSame(
+            [
+                ['id' => 3, 'status' => 'active'],
+                ['id' => 1, 'status' => 'active'],
+            ],
+            array_values(is_array($items) ? $items : iterator_to_array($items)),
+        );
+    }
+
+    public function testPrepareDataReaderWithPagination(): void
+    {
+        $data = [
+            ['id' => 1, 'status' => 'active'],
+            ['id' => 2, 'status' => 'inactive'],
+            ['id' => 3, 'status' => 'active'],
+        ];
+        $dataReader = (new IterableDataReader($data))->withSort(Sort::any(['id']));
+
+        $preparedDataReader = $this->createGridView($dataReader)
+            ->pageSizeConstraint(false)
+            ->urlParameterProvider(
+                new SimpleUrlParameterProvider([
+                    'status' => 'active',
+                    'sort' => '-id',
+                    'pagesize' => '1',
+                ]),
+            )
+            ->columns(
+                new DataColumn('id'),
+                new DataColumn('status', filter: ['active' => 'Active', 'inactive' => 'Inactive']),
+            )
+            ->prepareDataReader();
+
+        $this->assertInstanceOf(OffsetPaginator::class, $preparedDataReader);
+        $this->assertSame(1, $preparedDataReader->getPageSize());
+
+        $items = $preparedDataReader->read();
+
+        $this->assertSame(
+            [
+                ['id' => 3, 'status' => 'active'],
+            ],
+            array_values(is_array($items) ? $items : iterator_to_array($items)),
+        );
+    }
+
+    public function testPrepareDataReaderIgnoresMissingPage(): void
+    {
+        $paginator = new FakePaginator(
+            [['id' => 1], ['id' => 2]],
+            paginationRequired: true,
+            throwOnToken: true,
+        );
+
+        $preparedDataReader = $this->createGridView($paginator)
+            ->urlParameterProvider(new SimpleUrlParameterProvider(['page' => '999']))
+            ->columns(new DataColumn('id'))
+            ->prepareDataReader();
+
+        $this->assertSame($paginator, $preparedDataReader);
+
+        $items = $preparedDataReader->read();
+
+        $this->assertSame([['id' => 1], ['id' => 2]], array_values($items));
+    }
+
+    public function testPrepareDataReaderPageNotFoundExceptionCallback(): void
+    {
+        $paginator = new FakePaginator(
+            [['id' => 1], ['id' => 2]],
+            paginationRequired: true,
+            throwOnToken: true,
+        );
+        $capturedException = null;
+        $thrownException = null;
+
+        $widget = $this->createGridView($paginator)
+            ->urlParameterProvider(new SimpleUrlParameterProvider(['page' => '999']))
+            ->ignoreMissingPage(false)
+            ->pageNotFoundExceptionCallback(
+                function ($exception) use (&$capturedException) {
+                    $capturedException = $exception;
+                },
+            )
+            ->columns(new DataColumn('id'));
+
+        try {
+            $widget->prepareDataReader();
+        } catch (PageNotFoundException $thrownException) {
+        }
+
+        $this->assertInstanceOf(PageNotFoundException::class, $thrownException);
+        $this->assertSame($thrownException, $capturedException);
+    }
+
+    public function testPrepareDataReaderReturnsNullOnIncorrectFilterValue(): void
+    {
+        $preparedDataReader = $this->createGridView([['id' => 1, 'name' => 'Anna']])
+            ->urlParameterProvider(new SimpleUrlParameterProvider(['id' => 'bad', 'name' => 'Anna']))
+            ->columns(
+                new DataColumn(
+                    'id',
+                    filter: true,
+                    filterFactory: new class implements FilterFactoryInterface {
+                        public function create(string $property, string $value): FilterInterface
+                        {
+                            throw new IncorrectValueException();
+                        }
+                    },
+                ),
+                new DataColumn('name', filter: true),
+            )
+            ->prepareDataReader(false);
+
+        $this->assertNull($preparedDataReader);
     }
 
     public function testDefaultPageSizeWithIntConstraintBoundary(): void

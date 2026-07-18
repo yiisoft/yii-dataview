@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Yiisoft\Yii\DataView\Tests\Support;
 
 use LogicException;
+use Yiisoft\Data\Paginator\PageNotFoundException;
 use Yiisoft\Data\Paginator\PageToken;
 use Yiisoft\Data\Paginator\PaginatorInterface;
 use Yiisoft\Data\Reader\FilterInterface;
@@ -16,6 +17,8 @@ final class FakePaginator implements PaginatorInterface
 {
     public function __construct(
         private readonly array $data,
+        private readonly bool $paginationRequired = false,
+        private readonly bool $throwOnToken = false,
     ) {}
 
     public function read(): array
@@ -30,7 +33,7 @@ final class FakePaginator implements PaginatorInterface
 
     public function isPaginationRequired(): bool
     {
-        return false;
+        return $this->paginationRequired;
     }
 
     public function getCurrentPageSize(): int
@@ -51,7 +54,11 @@ final class FakePaginator implements PaginatorInterface
 
     public function withToken(?PageToken $token): static
     {
-        throw new LogicException('Not implemented.');
+        if ($this->throwOnToken && $token !== null) {
+            throw new PageNotFoundException((int) $token->value);
+        }
+
+        return $this;
     }
 
     public function getToken(): ?PageToken
