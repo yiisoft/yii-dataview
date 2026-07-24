@@ -15,6 +15,7 @@ use function count;
 
 final class FakePaginator implements PaginatorInterface
 {
+    private int $readCallCount = 0;
     private int $withPageSizeCallCount = 0;
 
     public function __construct(
@@ -22,12 +23,13 @@ final class FakePaginator implements PaginatorInterface
         private readonly bool $paginationRequired = false,
         private readonly bool $throwOnToken = false,
         private readonly bool $throwOnRead = false,
+        private readonly bool $throwOnFirstRead = false,
         private readonly bool $throwOnSecondPageSize = false,
     ) {}
 
     public function read(): array
     {
-        if ($this->throwOnRead) {
+        if ($this->throwOnRead || ($this->throwOnFirstRead && ++$this->readCallCount === 1)) {
             throw new PageNotFoundException(999);
         }
 

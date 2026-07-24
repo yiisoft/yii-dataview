@@ -2500,12 +2500,58 @@ final class GridViewTest extends TestCase
         $this->assertSame([['id' => 1], ['id' => 2]], array_values($items));
     }
 
+    public function testPrepareDataReaderIgnoresMissingPageRaisedOnRead(): void
+    {
+        $paginator = new FakePaginator(
+            [['id' => 1], ['id' => 2]],
+            paginationRequired: true,
+            throwOnFirstRead: true,
+        );
+
+        $preparedDataReader = $this->createGridView($paginator)
+            ->urlParameterProvider(new SimpleUrlParameterProvider(['page' => '999']))
+            ->columns(new DataColumn('id'))
+            ->prepareDataReader();
+
+        $this->assertSame($paginator, $preparedDataReader);
+        $this->assertSame([['id' => 1], ['id' => 2]], array_values($preparedDataReader->read()));
+    }
+
     public function testPrepareDataReaderPageNotFoundExceptionCallback(): void
     {
         $paginator = new FakePaginator(
             [['id' => 1], ['id' => 2]],
             paginationRequired: true,
             throwOnToken: true,
+        );
+        $capturedException = null;
+        $thrownException = null;
+
+        $widget = $this->createGridView($paginator)
+            ->urlParameterProvider(new SimpleUrlParameterProvider(['page' => '999']))
+            ->ignoreMissingPage(false)
+            ->pageNotFoundExceptionCallback(
+                function ($exception) use (&$capturedException) {
+                    $capturedException = $exception;
+                },
+            )
+            ->columns(new DataColumn('id'));
+
+        try {
+            $widget->prepareDataReader();
+        } catch (PageNotFoundException $thrownException) {
+        }
+
+        $this->assertInstanceOf(PageNotFoundException::class, $thrownException);
+        $this->assertSame($thrownException, $capturedException);
+    }
+
+    public function testPrepareDataReaderPageNotFoundExceptionCallbackWhenRaisedOnRead(): void
+    {
+        $paginator = new FakePaginator(
+            [['id' => 1], ['id' => 2]],
+            paginationRequired: true,
+            throwOnRead: true,
         );
         $capturedException = null;
         $thrownException = null;
