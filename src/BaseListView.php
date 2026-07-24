@@ -850,8 +850,15 @@ abstract class BaseListView extends Widget
         }
 
         if ($this->ignoreMissingPage) {
-            $preparedDataReader = $this->prepareDataReaderByParams(null, null, $pageSize, $sort, $filters, true);
             try {
+                $preparedDataReader = $this->prepareDataReaderByParams(
+                    null,
+                    null,
+                    $pageSize,
+                    $sort,
+                    $filters,
+                    true,
+                );
                 return [$preparedDataReader, $this->getItems($preparedDataReader)];
             } catch (InvalidPageException $exception) {
             }
