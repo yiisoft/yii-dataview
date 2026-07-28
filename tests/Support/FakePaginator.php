@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Yiisoft\Yii\DataView\Tests\Support;
 
 use LogicException;
+use Yiisoft\Data\Paginator\PageNotFoundException;
 use Yiisoft\Data\Paginator\PageToken;
 use Yiisoft\Data\Paginator\PaginatorInterface;
 use Yiisoft\Data\Reader\FilterInterface;
@@ -14,12 +15,24 @@ use function count;
 
 final class FakePaginator implements PaginatorInterface
 {
+    private int $readCallCount = 0;
+    private int $withPageSizeCallCount = 0;
+
     public function __construct(
         private readonly array $data,
+        private readonly bool $paginationRequired = false,
+        private readonly bool $throwOnToken = false,
+        private readonly bool $throwOnRead = false,
+        private readonly bool $throwOnFirstRead = false,
+        private readonly bool $throwOnSecondPageSize = false,
     ) {}
 
     public function read(): array
     {
+        if ($this->throwOnRead || ($this->throwOnFirstRead && ++$this->readCallCount === 1)) {
+            throw new PageNotFoundException(999);
+        }
+
         return $this->data;
     }
 
@@ -30,7 +43,7 @@ final class FakePaginator implements PaginatorInterface
 
     public function isPaginationRequired(): bool
     {
-        return false;
+        return $this->paginationRequired;
     }
 
     public function getCurrentPageSize(): int
@@ -40,6 +53,10 @@ final class FakePaginator implements PaginatorInterface
 
     public function withPageSize(int $pageSize): static
     {
+        if ($this->throwOnSecondPageSize && ++$this->withPageSizeCallCount === 2) {
+            throw new PageNotFoundException(1);
+        }
+
         // do nothing
         return $this;
     }
@@ -51,7 +68,11 @@ final class FakePaginator implements PaginatorInterface
 
     public function withToken(?PageToken $token): static
     {
-        throw new LogicException('Not implemented.');
+        if ($this->throwOnToken && $token !== null) {
+            throw new PageNotFoundException((int) $token->value);
+        }
+
+        return $this;
     }
 
     public function getToken(): ?PageToken

@@ -387,6 +387,32 @@ echo GridView::widget()
 > If a property name in the URL has the same name as pagination or sort parameters, you should choose different names for those
 > parameters (see [URLs](./urls.md)).
 
+### Exporting filtered data
+
+Use `prepareDataReader(false)` when another action, such as CSV export, must use the same filters and sorting as
+`GridView` without applying pagination:
+
+```php
+$gridView = GridView::widget()
+    ->dataReader($dataReader)
+    ->urlParameterProvider($urlParameterProvider)
+    ->columns(
+        new DataColumn('id'),
+        new DataColumn('name', filter: true),
+        new DataColumn('type', filter: ['on' => 'Enabled', 'off' => 'Disabled']),
+    );
+
+$exportDataReader = $gridView->prepareDataReader(false);
+
+if ($exportDataReader !== null) {
+    exportToCsv($exportDataReader->read());
+}
+```
+
+`prepareDataReader(false)` applies filters and sorting from URL parameters, but ignores page and page size parameters.
+If the original data reader is already a paginator, it can't be unwrapped through the generic paginator interface; pass
+the underlying data reader to `GridView` when unpaginated export is required.
+
 ### `GridView` filter options
 
 - `filterCellAttributes(array $attributes)` - HTML attributes for the filter cell (`td`) tag.
