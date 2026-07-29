@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Yiisoft\Yii\DataView\Tests\GridView;
 
 use InvalidArgumentException;
+use LogicException;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\TestWith;
 use PHPUnit\Framework\TestCase;
@@ -2441,7 +2442,7 @@ final class GridViewTest extends TestCase
         );
     }
 
-    public function testPrepareDataReaderWithoutPaginationKeepsExistingPaginator(): void
+    public function testPrepareDataReaderWithoutPaginationRejectsExistingPaginator(): void
     {
         $paginator = (new OffsetPaginator(
             new IterableDataReader([
@@ -2450,16 +2451,14 @@ final class GridViewTest extends TestCase
             ]),
         ))->withPageSize(1);
 
-        $preparedDataReader = $this->createGridView($paginator)
-            ->columns(new DataColumn('id'))
-            ->prepareDataReader(false);
+        $gridView = $this->createGridView($paginator)
+            ->columns(new DataColumn('id'));
 
-        $this->assertSame($paginator, $preparedDataReader);
-        $items = $preparedDataReader->read();
-        $this->assertSame(
-            [['id' => 1]],
-            array_values(is_array($items) ? $items : iterator_to_array($items)),
+        $this->expectException(LogicException::class);
+        $this->expectExceptionMessage(
+            'Cannot prepare a data reader without pagination because the configured data reader is a paginator.',
         );
+        $gridView->prepareDataReader(false);
     }
 
     public function testPrepareDataReaderWithPagination(): void
