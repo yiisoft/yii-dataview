@@ -17,17 +17,10 @@ final class FakePaginator implements PaginatorInterface
 {
     public function __construct(
         private readonly array $data,
-        private readonly bool $paginationRequired = false,
-        private readonly bool $throwOnToken = false,
-        private readonly bool $throwOnRead = false,
     ) {}
 
     public function read(): array
     {
-        if ($this->throwOnRead) {
-            throw new PageNotFoundException(999);
-        }
-
         return $this->data;
     }
 
@@ -38,7 +31,7 @@ final class FakePaginator implements PaginatorInterface
 
     public function isPaginationRequired(): bool
     {
-        return $this->paginationRequired;
+        return false;
     }
 
     public function getCurrentPageSize(): int
@@ -59,10 +52,6 @@ final class FakePaginator implements PaginatorInterface
 
     public function withToken(?PageToken $token): static
     {
-        if ($this->throwOnToken && $token !== null) {
-            throw new PageNotFoundException((int) $token->value);
-        }
-
         return $this;
     }
 

@@ -205,22 +205,44 @@ abstract class BaseListView extends Widget
     final public function prepareDataReader(bool $withPagination = true): ?ReadableDataInterface
     {
         [$filters] = $this->makeFilters();
-
         if ($filters === null) {
             return null;
-        }
-
-        if ($withPagination) {
-            return $this->prepareDataReaderAndItems($filters)[0];
         }
 
         $sort = $this->urlParameterProvider->get(
             $this->urlConfig->getSortParameterName(),
             $this->urlConfig->getSortParameterType(),
         );
+        if (!$withPagination) {
+            return $this->prepareDataReaderByParams(null, $sort, $filters);
+        }
 
-        $dataReader =  $this->getDataReader();
-        return $this->prepareDataReaderFilterAndSort($dataReader, $sort, $filters);
+        $page = $this->urlParameterProvider->get(
+            $this->urlConfig->getPageParameterName(),
+            $this->urlConfig->getPageParameterType(),
+        );
+        $previousPage = $this->urlParameterProvider->get(
+            $this->urlConfig->getPreviousPageParameterName(),
+            $this->urlConfig->getPreviousPageParameterType(),
+        );
+        $pageSize = $this->urlParameterProvider->get(
+            $this->urlConfig->getPageSizeParameterName(),
+            $this->urlConfig->getPageSizeParameterType(),
+        );
+        try {
+            return $this->prepareDataReaderByParams([$page, $previousPage, $pageSize], $sort, $filters);
+        } catch (InvalidPageException $exception) {
+        }
+
+        if ($this->ignoreMissingPage) {
+            return $this->prepareDataReaderByParams([null, null, $pageSize], $sort, $filters);
+        }
+
+        if ($this->pageNotFoundExceptionCallback !== null) {
+            ($this->pageNotFoundExceptionCallback)($exception);
+        }
+
+        throw $exception;
     }
 
     /**
@@ -850,13 +872,13 @@ abstract class BaseListView extends Widget
         );
 
         try {
-            $preparedDataReader = $this->prepareDataReaderByParams($page, $previousPage, $pageSize, $sort, $filters);
+            $preparedDataReader = $this->prepareDataReaderByParams([$page, $previousPage, $pageSize], $sort, $filters);
             return [$preparedDataReader, $this->getItems($preparedDataReader)];
         } catch (InvalidPageException $exception) {
         }
 
         if ($this->ignoreMissingPage) {
-            $preparedDataReader = $this->prepareDataReaderByParams(null, null, $pageSize, $sort, $filters);
+            $preparedDataReader = $this->prepareDataReaderByParams([null, null, $pageSize], $sort, $filters);
             try {
                 return [$preparedDataReader, $this->getItems($preparedDataReader)];
             } catch (InvalidPageException $exception) {
@@ -874,16 +896,41 @@ abstract class BaseListView extends Widget
      * @param FilterInterface[] $filters
      *
      * @throws InvalidPageException
+     *
+     * @psalm-param list{?string, ?string, ?string}|null $pagination
      */
     private function prepareDataReaderByParams(
-        ?string $page,
-        ?string $previousPage,
-        ?string $pageSize,
+        ?array $pagination,
         ?string $sort,
         array $filters,
     ): ReadableDataInterface {
         $dataReader = $this->getDataReader();
 
+        if ($pagination !== null) {
+            $dataReader = $this->applyPagination($dataReader, ...$pagination);
+        }
+
+        if ($dataReader instanceof PaginatorInterface) {
+            $dataReader = $this->applySort($dataReader, $sort);
+            $dataReader = $this->applyFilters($dataReader, $filters);
+            return $dataReader;
+        }
+
+        if ($dataReader instanceof SortableDataInterface) {
+            $dataReader = $this->applySort($dataReader, $sort);
+        }
+        if ($dataReader instanceof FilterableDataInterface) {
+            $dataReader = $this->applyFilters($dataReader, $filters);
+        }
+        return $dataReader;
+    }
+
+    private function applyPagination(
+        ReadableDataInterface $dataReader,
+        ?string $page,
+        ?string $previousPage,
+        ?string $pageSize
+    ): ReadableDataInterface {
         if (!$dataReader instanceof PaginatorInterface) {
             if (
                 $dataReader instanceof OffsetableDataInterface
@@ -918,65 +965,58 @@ abstract class BaseListView extends Widget
             }
         }
 
-        return $this->prepareDataReaderFilterAndSort($dataReader, $sort, $filters);
-    }
-
-    /**
-     * @param FilterInterface[] $filters
-     */
-    private function prepareDataReaderFilterAndSort(
-        ReadableDataInterface $dataReader,
-        ?string $sort,
-        array $filters,
-    ): ReadableDataInterface {
-        if (!empty($sort)) {
-            if ($dataReader instanceof PaginatorInterface) {
-                if ($dataReader->isSortable()) {
-                    $sortObject = $dataReader->getSort();
-                    if ($sortObject !== null) {
-                        $dataReader = $dataReader->withSort(
-                            $sortObject->withOrder($this->prepareSortOrder($sort)),
-                        );
-                    }
-                }
-            } elseif ($dataReader instanceof SortableDataInterface) {
-                $sortObject = $dataReader->getSort();
-                if ($sortObject !== null) {
-                    $dataReader = $dataReader->withSort(
-                        $sortObject->withOrder($this->prepareSortOrder($sort)),
-                    );
-                }
-            }
-        }
-
-        if (!empty($filters)) {
-            if ($dataReader instanceof PaginatorInterface) {
-                if ($dataReader->isFilterable()) {
-                    $dataReader = $dataReader->withFilter(
-                        new AndX($dataReader->getFilter(), ...$filters),
-                    );
-                }
-            } elseif ($dataReader instanceof FilterableDataInterface) {
-                $dataReader = $dataReader->withFilter(
-                    new AndX($dataReader->getFilter(), ...$filters),
-                );
-            }
-        }
-
         return $dataReader;
     }
 
     /**
-     * @psalm-return TOrder
+     * @template T as SortableDataInterface|PaginatorInterface
+     * @psalm-param T $dataReader
+     * @psalm-return T
      */
-    private function prepareSortOrder(string $sort): array
+    private function applySort(SortableDataInterface|PaginatorInterface $dataReader, ?string $sort): ReadableDataInterface
     {
+        if (empty($sort)) {
+            return $dataReader;
+        }
+
+        if ($dataReader instanceof PaginatorInterface && !$dataReader->isSortable()) {
+            return $dataReader;
+        }
+
+        $sortObject = $dataReader->getSort();
+        if ($sortObject === null) {
+            return $dataReader;
+        }
+
         $order = OrderHelper::stringToArray($sort);
         if (!$this->multiSort) {
             $order = array_slice($order, 0, 1, true);
         }
+        return $dataReader->withSort(
+            $sortObject->withOrder(
+                $this->prepareOrder($order),
+            ),
+        );
+    }
 
-        return $this->prepareOrder($order);
+    /**
+     * @template T as FilterableDataInterface|PaginatorInterface
+     * @psalm-param T $dataReader
+     * @psalm-return T
+     */
+    private function applyFilters(FilterableDataInterface|PaginatorInterface $dataReader, array $filters): ReadableDataInterface
+    {
+        if (empty($filters)) {
+            return $dataReader;
+        }
+
+        if ($dataReader instanceof PaginatorInterface && !$dataReader->isFilterable()) {
+            return $dataReader;
+        }
+
+        return $dataReader->withFilter(
+            new AndX($dataReader->getFilter(), ...$filters),
+        );
     }
 
     /**
