@@ -15,22 +15,23 @@ use function count;
 
 final class FakePaginator implements PaginatorInterface
 {
-    private int $readCallCount = 0;
-    private int $withPageSizeCallCount = 0;
+    private ?PageToken $token = null;
+    private int $pageSize;
 
     public function __construct(
         private readonly array $data,
         private readonly bool $paginationRequired = false,
         private readonly bool $throwOnToken = false,
         private readonly bool $throwOnRead = false,
-        private readonly bool $throwOnFirstRead = false,
-        private readonly bool $throwOnSecondPageSize = false,
-    ) {}
+        private readonly bool $throwOnReadWithToken = false,
+    ) {
+        $this->pageSize = count($data);
+    }
 
     public function read(): array
     {
-        if ($this->throwOnRead || ($this->throwOnFirstRead && ++$this->readCallCount === 1)) {
-            throw new PageNotFoundException(999);
+        if ($this->throwOnRead || ($this->throwOnReadWithToken && $this->token !== null)) {
+            throw new PageNotFoundException((int) ($this->token?->value ?? 999));
         }
 
         return $this->data;
@@ -53,17 +54,14 @@ final class FakePaginator implements PaginatorInterface
 
     public function withPageSize(int $pageSize): static
     {
-        if ($this->throwOnSecondPageSize && ++$this->withPageSizeCallCount === 2) {
-            throw new PageNotFoundException(1);
-        }
-
-        // do nothing
-        return $this;
+        $new = clone $this;
+        $new->pageSize = $pageSize;
+        return $new;
     }
 
     public function getPageSize(): int
     {
-        return count($this->data);
+        return $this->pageSize;
     }
 
     public function withToken(?PageToken $token): static
@@ -72,12 +70,14 @@ final class FakePaginator implements PaginatorInterface
             throw new PageNotFoundException((int) $token->value);
         }
 
-        return $this;
+        $new = clone $this;
+        $new->token = $token;
+        return $new;
     }
 
     public function getToken(): ?PageToken
     {
-        throw new LogicException('Not implemented.');
+        return $this->token;
     }
 
     public function getNextToken(): ?PageToken

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Yiisoft\Yii\DataView\Tests\GridView;
 
 use InvalidArgumentException;
+use LogicException;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\TestWith;
 use PHPUnit\Framework\TestCase;
@@ -1407,19 +1408,17 @@ final class GridViewTest extends TestCase
         $this->assertSame($thrownException, $capturedException);
     }
 
-    public function testPageNotFoundExceptionCallbackWhenFallbackPreparationFails(): void
+    public function testPageNotFoundExceptionCallbackWhenFallbackFails(): void
     {
-        $paginator = new FakePaginator(
-            [['id' => 1], ['id' => 2]],
-            paginationRequired: true,
-            throwOnRead: true,
-            throwOnSecondPageSize: true,
-        );
+        $paginator = (new OffsetPaginator(
+            new IterableDataReader([['id' => 1], ['id' => 2]]),
+        ))
+            ->withPageSize(1)
+            ->withCurrentPage(999);
         $capturedException = null;
         $thrownException = null;
 
         $widget = $this->createGridView($paginator)
-            ->urlParameterProvider(new SimpleUrlParameterProvider(['page' => '999']))
             ->pageNotFoundExceptionCallback(
                 function ($exception) use (&$capturedException) {
                     $capturedException = $exception;
@@ -2443,6 +2442,25 @@ final class GridViewTest extends TestCase
         );
     }
 
+    public function testPrepareDataReaderWithoutPaginationRejectsExistingPaginator(): void
+    {
+        $paginator = (new OffsetPaginator(
+            new IterableDataReader([
+                ['id' => 1],
+                ['id' => 2],
+            ]),
+        ))->withPageSize(1);
+
+        $gridView = $this->createGridView($paginator)
+            ->columns(new DataColumn('id'));
+
+        $this->expectException(LogicException::class);
+        $this->expectExceptionMessage(
+            'Cannot prepare a data reader without pagination because the configured data reader is a paginator.',
+        );
+        $gridView->prepareDataReader(false);
+    }
+
     public function testPrepareDataReaderWithPagination(): void
     {
         $data = [
@@ -2489,12 +2507,12 @@ final class GridViewTest extends TestCase
         );
 
         $preparedDataReader = $this->createGridView($paginator)
-            ->urlParameterProvider(new SimpleUrlParameterProvider(['page' => '999']))
+            ->pageSizeConstraint(false)
+            ->urlParameterProvider(new SimpleUrlParameterProvider(['page' => '999', 'pagesize' => '1']))
             ->columns(new DataColumn('id'))
             ->prepareDataReader();
 
-        $this->assertSame($paginator, $preparedDataReader);
-
+        $this->assertSame(1, $preparedDataReader->getPageSize());
         $items = $preparedDataReader->read();
 
         $this->assertSame([['id' => 1], ['id' => 2]], array_values($items));
@@ -2505,7 +2523,7 @@ final class GridViewTest extends TestCase
         $paginator = new FakePaginator(
             [['id' => 1], ['id' => 2]],
             paginationRequired: true,
-            throwOnFirstRead: true,
+            throwOnReadWithToken: true,
         );
 
         $preparedDataReader = $this->createGridView($paginator)
@@ -2513,7 +2531,6 @@ final class GridViewTest extends TestCase
             ->columns(new DataColumn('id'))
             ->prepareDataReader();
 
-        $this->assertSame($paginator, $preparedDataReader);
         $this->assertSame([['id' => 1], ['id' => 2]], array_values($preparedDataReader->read()));
     }
 
