@@ -198,7 +198,9 @@ abstract class BaseListView extends Widget
      * Returns `null` when filter values are invalid and the data reader can't be prepared for the current filter.
      * With pagination enabled, the current page is read to validate it and apply missing-page handling.
      * Pass `false` to prepare data for exports: filters and sorting will be applied, but pagination URL parameters
-     * won't be used and a non-paginator data reader won't be wrapped into a paginator.
+     * won't be used and a non-paginator data reader won't be wrapped into a paginator. If the configured data reader
+     * is already a {@see PaginatorInterface}, it remains paginated. To export all data, configure the view with the
+     * original non-paginated data reader or traverse all paginator pages separately.
      *
      * @throws PageNotFoundException
      */

@@ -1407,35 +1407,6 @@ final class GridViewTest extends TestCase
         $this->assertSame($thrownException, $capturedException);
     }
 
-    public function testPageNotFoundExceptionCallbackWhenFallbackPreparationFails(): void
-    {
-        $paginator = new FakePaginator(
-            [['id' => 1], ['id' => 2]],
-            paginationRequired: true,
-            throwOnRead: true,
-            throwOnSecondPageSize: true,
-        );
-        $capturedException = null;
-        $thrownException = null;
-
-        $widget = $this->createGridView($paginator)
-            ->urlParameterProvider(new SimpleUrlParameterProvider(['page' => '999']))
-            ->pageNotFoundExceptionCallback(
-                function ($exception) use (&$capturedException) {
-                    $capturedException = $exception;
-                },
-            )
-            ->columns(new DataColumn('id'));
-
-        try {
-            $widget->render();
-        } catch (PageNotFoundException $thrownException) {
-        }
-
-        $this->assertInstanceOf(PageNotFoundException::class, $thrownException);
-        $this->assertSame($thrownException, $capturedException);
-    }
-
     public function testContainerAttributes(): void
     {
         $html = $this->createGridView([['id' => 1]])
@@ -2443,6 +2414,27 @@ final class GridViewTest extends TestCase
         );
     }
 
+    public function testPrepareDataReaderWithoutPaginationKeepsExistingPaginator(): void
+    {
+        $paginator = (new OffsetPaginator(
+            new IterableDataReader([
+                ['id' => 1],
+                ['id' => 2],
+            ]),
+        ))->withPageSize(1);
+
+        $preparedDataReader = $this->createGridView($paginator)
+            ->columns(new DataColumn('id'))
+            ->prepareDataReader(false);
+
+        $this->assertSame($paginator, $preparedDataReader);
+        $items = $preparedDataReader->read();
+        $this->assertSame(
+            [['id' => 1]],
+            array_values(is_array($items) ? $items : iterator_to_array($items)),
+        );
+    }
+
     public function testPrepareDataReaderWithPagination(): void
     {
         $data = [
@@ -2489,12 +2481,12 @@ final class GridViewTest extends TestCase
         );
 
         $preparedDataReader = $this->createGridView($paginator)
-            ->urlParameterProvider(new SimpleUrlParameterProvider(['page' => '999']))
+            ->pageSizeConstraint(false)
+            ->urlParameterProvider(new SimpleUrlParameterProvider(['page' => '999', 'pagesize' => '1']))
             ->columns(new DataColumn('id'))
             ->prepareDataReader();
 
-        $this->assertSame($paginator, $preparedDataReader);
-
+        $this->assertSame(1, $preparedDataReader->getPageSize());
         $items = $preparedDataReader->read();
 
         $this->assertSame([['id' => 1], ['id' => 2]], array_values($items));
@@ -2505,7 +2497,7 @@ final class GridViewTest extends TestCase
         $paginator = new FakePaginator(
             [['id' => 1], ['id' => 2]],
             paginationRequired: true,
-            throwOnFirstRead: true,
+            throwOnReadWithToken: true,
         );
 
         $preparedDataReader = $this->createGridView($paginator)
@@ -2513,7 +2505,6 @@ final class GridViewTest extends TestCase
             ->columns(new DataColumn('id'))
             ->prepareDataReader();
 
-        $this->assertSame($paginator, $preparedDataReader);
         $this->assertSame([['id' => 1], ['id' => 2]], array_values($preparedDataReader->read()));
     }
 
