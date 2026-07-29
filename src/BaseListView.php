@@ -219,7 +219,8 @@ abstract class BaseListView extends Widget
             $this->urlConfig->getSortParameterType(),
         );
 
-        return $this->prepareDataReaderByParams(null, null, null, $sort, $filters, false);
+        $dataReader =  $this->getDataReader();
+        return $this->prepareDataReaderFilterAndSort($dataReader, $sort, $filters);
     }
 
     /**
@@ -880,13 +881,8 @@ abstract class BaseListView extends Widget
         ?string $pageSize,
         ?string $sort,
         array $filters,
-        bool $withPagination = true,
     ): ReadableDataInterface {
         $dataReader = $this->getDataReader();
-
-        if (!$withPagination) {
-            return $this->prepareDataReaderFilterAndSort($dataReader, $sort, $filters);
-        }
 
         if (!$dataReader instanceof PaginatorInterface) {
             if (

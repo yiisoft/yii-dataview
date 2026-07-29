@@ -15,9 +15,6 @@ use function count;
 
 final class FakePaginator implements PaginatorInterface
 {
-    private int $readCallCount = 0;
-    private int $withPageSizeCallCount = 0;
-
     public function __construct(
         private readonly array $data,
         private readonly bool $paginationRequired = false,
