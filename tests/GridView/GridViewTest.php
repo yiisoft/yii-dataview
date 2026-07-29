@@ -1407,6 +1407,33 @@ final class GridViewTest extends TestCase
         $this->assertSame($thrownException, $capturedException);
     }
 
+    public function testPageNotFoundExceptionCallbackWhenFallbackFails(): void
+    {
+        $paginator = (new OffsetPaginator(
+            new IterableDataReader([['id' => 1], ['id' => 2]]),
+        ))
+            ->withPageSize(1)
+            ->withCurrentPage(999);
+        $capturedException = null;
+        $thrownException = null;
+
+        $widget = $this->createGridView($paginator)
+            ->pageNotFoundExceptionCallback(
+                function ($exception) use (&$capturedException) {
+                    $capturedException = $exception;
+                },
+            )
+            ->columns(new DataColumn('id'));
+
+        try {
+            $widget->render();
+        } catch (PageNotFoundException $thrownException) {
+        }
+
+        $this->assertInstanceOf(PageNotFoundException::class, $thrownException);
+        $this->assertSame($thrownException, $capturedException);
+    }
+
     public function testContainerAttributes(): void
     {
         $html = $this->createGridView([['id' => 1]])
