@@ -8,6 +8,8 @@ use InvalidArgumentException;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\TestWith;
 use PHPUnit\Framework\TestCase;
+use Throwable;
+use Yiisoft\Data\Paginator\InvalidPageException;
 use Yiisoft\Data\Paginator\KeysetPaginator;
 use Yiisoft\Data\Paginator\OffsetPaginator;
 use Yiisoft\Data\Paginator\PageNotFoundException;
@@ -2451,6 +2453,57 @@ final class GridViewTest extends TestCase
         );
     }
 
+    public function testPrepareDataReaderIgnoresMissingPage(): void
+    {
+        $dataReader = $this
+            ->createGridView([['id' => 1], ['id' => 2]])
+            ->pageSizeConstraint(1)
+            ->urlParameterProvider(new SimpleUrlParameterProvider(['page' => '-1']))
+            ->columns(new DataColumn('id'))
+            ->prepareDataReader();
+
+        $this->assertSame([['id' => 1]], iterator_to_array($dataReader->read()));
+    }
+
+    public function testPrepareDataReaderNotIgnoresMissingPage(): void
+    {
+        $widget = $this
+            ->createGridView([['id' => 1], ['id' => 2]])
+            ->pageSizeConstraint(1)
+            ->urlParameterProvider(new SimpleUrlParameterProvider(['page' => '-1']))
+            ->ignoreMissingPage(false)
+            ->columns(new DataColumn('id'));
+
+        $this->expectException(InvalidPageException::class);
+        $widget->prepareDataReader();
+    }
+
+    public function testPrepareDataReaderExceptionCallback(): void
+    {
+        $thrownException = null;
+        $capturedException = null;
+
+        $widget = $this
+            ->createGridView([['id' => 1], ['id' => 2]])
+            ->pageSizeConstraint(1)
+            ->urlParameterProvider(new SimpleUrlParameterProvider(['page' => '-1']))
+            ->ignoreMissingPage(false)
+            ->pageNotFoundExceptionCallback(
+                function ($exception) use (&$capturedException) {
+                    $capturedException = $exception;
+                },
+            )
+            ->columns(new DataColumn('id'));
+
+        try {
+            $widget->prepareDataReader();
+        } catch (Throwable $thrownException) {
+        }
+
+        $this->assertInstanceOf(InvalidPageException::class, $capturedException);
+        $this->assertSame($capturedException, $thrownException);
+    }
+
     public function testPrepareDataReaderReturnsNullOnIncorrectFilterValue(): void
     {
         $preparedDataReader = $this->createGridView([['id' => 1, 'name' => 'Anna']])
@@ -2471,6 +2524,21 @@ final class GridViewTest extends TestCase
             ->prepareDataReader(false);
 
         $this->assertNull($preparedDataReader);
+    }
+
+    public function testFilterNotAppliedWhenPaginatorIsNotFilterable(): void
+    {
+        $paginator = new FakePaginator([['id' => 1], ['id' => 2]]);
+
+        $preparedDataReader = $this->createGridView($paginator)
+            ->urlParameterProvider(new SimpleUrlParameterProvider(['id' => '1']))
+            ->columns(
+                new DataColumn('id', filter: true),
+            )
+            ->prepareDataReader(false);
+
+        $this->assertSame($paginator, $preparedDataReader);
+        $this->assertSame([['id' => 1], ['id' => 2]], $preparedDataReader->read());
     }
 
     public function testDefaultPageSizeWithIntConstraintBoundary(): void

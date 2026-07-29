@@ -112,7 +112,7 @@ final class FakePaginator implements PaginatorInterface
 
     public function isFilterable(): bool
     {
-        throw new LogicException('Not implemented.');
+        return false;
     }
 
     public function withSort(?Sort $sort): static
