@@ -929,7 +929,7 @@ abstract class BaseListView extends Widget
         ReadableDataInterface $dataReader,
         ?string $page,
         ?string $previousPage,
-        ?string $pageSize
+        ?string $pageSize,
     ): ReadableDataInterface {
         if (!$dataReader instanceof PaginatorInterface) {
             if (
