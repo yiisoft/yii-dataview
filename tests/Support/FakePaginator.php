@@ -23,13 +23,11 @@ final class FakePaginator implements PaginatorInterface
         private readonly bool $paginationRequired = false,
         private readonly bool $throwOnToken = false,
         private readonly bool $throwOnRead = false,
-        private readonly bool $throwOnFirstRead = false,
-        private readonly bool $throwOnSecondPageSize = false,
     ) {}
 
     public function read(): array
     {
-        if ($this->throwOnRead || ($this->throwOnFirstRead && ++$this->readCallCount === 1)) {
+        if ($this->throwOnRead) {
             throw new PageNotFoundException(999);
         }
 
@@ -53,10 +51,6 @@ final class FakePaginator implements PaginatorInterface
 
     public function withPageSize(int $pageSize): static
     {
-        if ($this->throwOnSecondPageSize && ++$this->withPageSizeCallCount === 2) {
-            throw new PageNotFoundException(1);
-        }
-
         // do nothing
         return $this;
     }

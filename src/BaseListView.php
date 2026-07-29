@@ -849,28 +849,14 @@ abstract class BaseListView extends Widget
         );
 
         try {
-            $preparedDataReader = $this->prepareDataReaderByParams(
-                $page,
-                $previousPage,
-                $pageSize,
-                $sort,
-                $filters,
-                true,
-            );
+            $preparedDataReader = $this->prepareDataReaderByParams($page, $previousPage, $pageSize, $sort, $filters);
             return [$preparedDataReader, $this->getItems($preparedDataReader)];
         } catch (InvalidPageException $exception) {
         }
 
         if ($this->ignoreMissingPage) {
+            $preparedDataReader = $this->prepareDataReaderByParams(null, null, $pageSize, $sort, $filters);
             try {
-                $preparedDataReader = $this->prepareDataReaderByParams(
-                    null,
-                    null,
-                    $pageSize,
-                    $sort,
-                    $filters,
-                    true,
-                );
                 return [$preparedDataReader, $this->getItems($preparedDataReader)];
             } catch (InvalidPageException $exception) {
             }
@@ -894,7 +880,7 @@ abstract class BaseListView extends Widget
         ?string $pageSize,
         ?string $sort,
         array $filters,
-        bool $withPagination,
+        bool $withPagination = true,
     ): ReadableDataInterface {
         $dataReader = $this->getDataReader();
 
