@@ -8,7 +8,6 @@ use LogicException;
 use Yiisoft\Data\Paginator\KeysetPaginator;
 use Yiisoft\Data\Reader\Filter\All;
 use Yiisoft\Data\Reader\FilterableDataInterface;
-use Yiisoft\Data\Reader\FilterHandlerInterface;
 use Yiisoft\Data\Reader\FilterInterface;
 use Yiisoft\Data\Reader\LimitableDataInterface;
 use Yiisoft\Data\Reader\Sort;
@@ -48,11 +47,6 @@ final class FilterableSortableLimitableDataReader implements
         $new = clone $this;
         $new->limit = $limit;
         return $new;
-    }
-
-    public function withAddedFilterHandlers(FilterHandlerInterface ...$filterHandlers): static
-    {
-        throw new LogicException('Not supported.');
     }
 
     public function getFilter(): FilterInterface
