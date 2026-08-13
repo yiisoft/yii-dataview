@@ -1013,8 +1013,10 @@ abstract class BaseListView extends Widget
      * @psalm-param T $dataReader
      * @psalm-return T
      */
-    private function applyFilters(FilterableDataInterface|PaginatorInterface $dataReader, array $filters): ReadableDataInterface
-    {
+    private function applyFilters(
+        FilterableDataInterface|PaginatorInterface $dataReader,
+        array $filters,
+    ): ReadableDataInterface {
         if (empty($filters)) {
             return $dataReader;
         }
