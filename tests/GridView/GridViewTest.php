@@ -2550,7 +2550,7 @@ final class GridViewTest extends TestCase
     public function testFilterNotAppliedWhenPaginatorIsNotFilterable(): void
     {
         $paginator = new OffsetPaginator(
-            new SimpleOffsetableCountableLimitableReadable([['id' => 1], ['id' => 2]])
+            new SimpleOffsetableCountableLimitableReadable([['id' => 1], ['id' => 2]]),
         );
 
         $preparedDataReader = $this->createGridView($paginator)
