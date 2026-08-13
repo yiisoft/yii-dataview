@@ -203,7 +203,6 @@ abstract class BaseListView extends Widget
      * implement {@see PaginatorInterface}; configure the view with the original non-paginated data reader instead.
      *
      * @throws LogicException If pagination is disabled and the configured data reader is a paginator.
-     * @throws PageNotFoundException
      * @throws InvalidPageException
      */
     final public function prepareDataReader(bool $withPagination = true): ?ReadableDataInterface
