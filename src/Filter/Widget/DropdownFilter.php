@@ -15,6 +15,7 @@ use Yiisoft\Html\Tag\Select;
 final class DropdownFilter extends FilterWidget
 {
     private ?Select $select = null;
+    private bool $submitOnChange = true;
 
     /**
      * Sets the options data for the dropdown.
@@ -118,6 +119,31 @@ final class DropdownFilter extends FilterWidget
     }
 
     /**
+     * Whether to render an inline `onChange="this.form.submit()"` attribute that automatically
+     * submits the containing form when the dropdown's value changes. Enabled by default.
+     *
+     * Under a Content Security Policy `script-src` directive that does not include
+     * `unsafe-inline` — the standard hardening recommendation, and required for any serious XSS
+     * mitigation — browsers block this inline handler outright. Selecting an option then does
+     * nothing, silently: no exception is thrown anywhere in the application, the only signal is
+     * a CSP violation logged to the browser console.
+     *
+     * Disable it with `submitOnChange(false)` and wire up your own CSP-safe submission instead,
+     * for example a delegated `change` listener in an external script targeting a `class` or
+     * `data-*` marker set via {@see addAttributes()}.
+     *
+     * @param bool $enabled Whether to render the inline auto-submit handler.
+     *
+     * @return self New instance with the given auto-submit setting.
+     */
+    public function submitOnChange(bool $enabled): self
+    {
+        $new = clone $this;
+        $new->submitOnChange = $enabled;
+        return $new;
+    }
+
+    /**
      * Renders the dropdown filter with the given context.
      *
      * @param Context $context The filter context.
@@ -128,8 +154,11 @@ final class DropdownFilter extends FilterWidget
     {
         $select = $this->getSelect()
             ->name($context->property)
-            ->form($context->formId)
-            ->attribute('onChange', 'this.form.submit()');
+            ->form($context->formId);
+
+        if ($this->submitOnChange) {
+            $select = $select->attribute('onChange', 'this.form.submit()');
+        }
 
         if ($context->value !== null) {
             $select = $select->value($context->value);
