@@ -38,6 +38,7 @@ use Yiisoft\Yii\DataView\PageSize\SelectPageSize;
 use Yiisoft\Yii\DataView\Pagination\OffsetPagination;
 use Yiisoft\Yii\DataView\Tests\Support\FakePaginator;
 use Yiisoft\Yii\DataView\Tests\Support\FilterableSortableLimitableDataReader;
+use Yiisoft\Yii\DataView\Tests\Support\SimpleOffsetableCountableLimitableReadable;
 use Yiisoft\Yii\DataView\Tests\Support\SimplePaginationUrlCreator;
 use Yiisoft\Yii\DataView\Tests\Support\SimpleReadable;
 use Yiisoft\Yii\DataView\Tests\Support\SimpleUrlParameterProvider;
@@ -2548,17 +2549,21 @@ final class GridViewTest extends TestCase
 
     public function testFilterNotAppliedWhenPaginatorIsNotFilterable(): void
     {
-        $paginator = new FakePaginator([['id' => 1], ['id' => 2]]);
+        $paginator = new OffsetPaginator(
+            new SimpleOffsetableCountableLimitableReadable([['id' => 1], ['id' => 2]])
+        );
 
         $preparedDataReader = $this->createGridView($paginator)
             ->urlParameterProvider(new SimpleUrlParameterProvider(['id' => '1']))
             ->columns(
                 new DataColumn('id', filter: true),
             )
-            ->prepareDataReader(false);
+            ->prepareDataReader();
 
-        $this->assertSame($paginator, $preparedDataReader);
-        $this->assertSame([['id' => 1], ['id' => 2]], $preparedDataReader->read());
+        $this->assertSame(
+            [['id' => 1], ['id' => 2]],
+            iterator_to_array($preparedDataReader->read()),
+        );
     }
 
     public function testDefaultPageSizeWithIntConstraintBoundary(): void
