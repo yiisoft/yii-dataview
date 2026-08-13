@@ -982,7 +982,7 @@ abstract class BaseListView extends Widget
      * @psalm-param T $dataReader
      * @psalm-return T
      */
-    private function applySort(SortableDataInterface|PaginatorInterface $dataReader, ?string $sort): ReadableDataInterface
+    private function applySort(SortableDataInterface|PaginatorInterface $dataReader, ?string $sort): SortableDataInterface|PaginatorInterface
     {
         if (empty($sort)) {
             return $dataReader;
