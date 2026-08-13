@@ -2566,6 +2566,25 @@ final class GridViewTest extends TestCase
         );
     }
 
+    public function testSortNotAppliedWhenPaginatorIsNotSortable(): void
+    {
+        $paginator = new OffsetPaginator(
+            new SimpleOffsetableCountableLimitableReadable([['id' => 2], ['id' => 1]]),
+        );
+
+        $preparedDataReader = $this->createGridView($paginator)
+            ->urlParameterProvider(new SimpleUrlParameterProvider(['sort' => 'id']))
+            ->columns(
+                new DataColumn('id'),
+            )
+            ->prepareDataReader();
+
+        $this->assertSame(
+            [['id' => 2], ['id' => 1]],
+            iterator_to_array($preparedDataReader->read()),
+        );
+    }
+
     public function testDefaultPageSizeWithIntConstraintBoundary(): void
     {
         $data = array_fill(0, 20, ['id' => 1]);
