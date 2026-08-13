@@ -1016,7 +1016,7 @@ abstract class BaseListView extends Widget
     private function applyFilters(
         FilterableDataInterface|PaginatorInterface $dataReader,
         array $filters,
-    ): ReadableDataInterface {
+    ): FilterableDataInterface|PaginatorInterface {
         if (empty($filters)) {
             return $dataReader;
         }
