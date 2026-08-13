@@ -2472,12 +2472,14 @@ final class GridViewTest extends TestCase
         );
     }
 
-    public function testPrepareDataReaderIgnoresMissingPage(): void
+    #[TestWith(['-1'])]
+    #[TestWith(['999'])]
+    public function testPrepareDataReaderIgnoresMissingPage(string $page): void
     {
         $dataReader = $this
             ->createGridView([['id' => 1], ['id' => 2]])
             ->pageSizeConstraint(1)
-            ->urlParameterProvider(new SimpleUrlParameterProvider(['page' => '-1']))
+            ->urlParameterProvider(new SimpleUrlParameterProvider(['page' => $page]))
             ->columns(new DataColumn('id'))
             ->prepareDataReader();
 

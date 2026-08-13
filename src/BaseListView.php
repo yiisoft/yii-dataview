@@ -218,40 +218,19 @@ abstract class BaseListView extends Widget
             return null;
         }
 
+        if ($withPagination) {
+            // Items are read (and discarded) here so an out-of-range page is detected and handled
+            // via `ignoreMissingPage`/`pageNotFoundExceptionCallback`, instead of surfacing later
+            // when the caller reads the returned data reader.
+            [$dataReader] = $this->prepareDataReaderAndItems($filters);
+            return $dataReader;
+        }
+
         $sort = $this->urlParameterProvider->get(
             $this->urlConfig->getSortParameterName(),
             $this->urlConfig->getSortParameterType(),
         );
-        if (!$withPagination) {
-            return $this->prepareDataReaderByParams(null, $sort, $filters);
-        }
-
-        $page = $this->urlParameterProvider->get(
-            $this->urlConfig->getPageParameterName(),
-            $this->urlConfig->getPageParameterType(),
-        );
-        $previousPage = $this->urlParameterProvider->get(
-            $this->urlConfig->getPreviousPageParameterName(),
-            $this->urlConfig->getPreviousPageParameterType(),
-        );
-        $pageSize = $this->urlParameterProvider->get(
-            $this->urlConfig->getPageSizeParameterName(),
-            $this->urlConfig->getPageSizeParameterType(),
-        );
-        try {
-            return $this->prepareDataReaderByParams([$page, $previousPage, $pageSize], $sort, $filters);
-        } catch (InvalidPageException $exception) {
-        }
-
-        if ($this->ignoreMissingPage) {
-            return $this->prepareDataReaderByParams([null, null, $pageSize], $sort, $filters);
-        }
-
-        if ($this->pageNotFoundExceptionCallback !== null) {
-            ($this->pageNotFoundExceptionCallback)($exception);
-        }
-
-        throw $exception;
+        return $this->prepareDataReaderByParams(null, $sort, $filters);
     }
 
     /**
