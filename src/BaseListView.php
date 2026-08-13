@@ -6,6 +6,7 @@ namespace Yiisoft\Yii\DataView;
 
 use BackedEnum;
 use InvalidArgumentException;
+use LogicException;
 use Stringable;
 use Yiisoft\Data\Paginator\InvalidPageException;
 use Yiisoft\Data\Paginator\KeysetPaginator;
@@ -198,12 +199,20 @@ abstract class BaseListView extends Widget
      * Returns `null` when filter values are invalid and the data reader can't be prepared for the current filter.
      * With pagination enabled, the current page is read to validate it and apply missing-page handling.
      * Pass `false` to prepare data for exports: filters and sorting will be applied, but pagination URL parameters
-     * won't be used and a non-paginator data reader won't be wrapped into a paginator.
+     * won't be used and the data reader won't be wrapped into a paginator. The configured data reader must not
+     * implement {@see PaginatorInterface}; configure the view with the original non-paginated data reader instead.
      *
+     * @throws LogicException If pagination is disabled and the configured data reader is a paginator.
      * @throws PageNotFoundException
      */
     final public function prepareDataReader(bool $withPagination = true): ?ReadableDataInterface
     {
+        if (!$withPagination && $this->getDataReader() instanceof PaginatorInterface) {
+            throw new LogicException(
+                'Cannot prepare a data reader without pagination because the configured data reader is a paginator.',
+            );
+        }
+
         [$filters] = $this->makeFilters();
         if ($filters === null) {
             return null;
