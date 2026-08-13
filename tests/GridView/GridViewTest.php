@@ -2486,7 +2486,7 @@ final class GridViewTest extends TestCase
         $this->assertSame([['id' => 1]], iterator_to_array($dataReader->read()));
     }
 
-    public function testPrepareDataReaderNotIgnoresMissingPage(): void
+    public function testPrepareDataReaderDoesNotIgnoreMissingPage(): void
     {
         $widget = $this
             ->createGridView([['id' => 1], ['id' => 2]])
