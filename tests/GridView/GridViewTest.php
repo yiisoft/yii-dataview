@@ -38,6 +38,7 @@ use Yiisoft\Yii\DataView\PageSize\SelectPageSize;
 use Yiisoft\Yii\DataView\Pagination\OffsetPagination;
 use Yiisoft\Yii\DataView\Tests\Support\FakePaginator;
 use Yiisoft\Yii\DataView\Tests\Support\FilterableSortableLimitableDataReader;
+use Yiisoft\Yii\DataView\Tests\Support\AssertTrait;
 use Yiisoft\Yii\DataView\Tests\Support\SimpleOffsetableCountableLimitableReadable;
 use Yiisoft\Yii\DataView\Tests\Support\SimplePaginationUrlCreator;
 use Yiisoft\Yii\DataView\Tests\Support\SimpleReadable;
@@ -45,10 +46,10 @@ use Yiisoft\Yii\DataView\Tests\Support\SimpleUrlParameterProvider;
 use Yiisoft\Yii\DataView\Tests\Support\StringEnum;
 use Yiisoft\Yii\DataView\Url\UrlParameterType;
 
-use function is_array;
-
 final class GridViewTest extends TestCase
 {
+    use AssertTrait;
+
     public function testBase(): void
     {
         $html = $this->createGridView([
@@ -2408,13 +2409,12 @@ final class GridViewTest extends TestCase
             ->prepareDataReader(false);
 
         $this->assertNotNull($preparedDataReader);
-        $items = $preparedDataReader->read();
-        $this->assertSame(
+        $this->assertSameItems(
             [
                 ['id' => 3, 'status' => 'active'],
                 ['id' => 1, 'status' => 'active'],
             ],
-            array_values(is_array($items) ? $items : iterator_to_array($items)),
+            $preparedDataReader->read(),
         );
     }
 
@@ -2464,13 +2464,11 @@ final class GridViewTest extends TestCase
         $this->assertInstanceOf(OffsetPaginator::class, $preparedDataReader);
         $this->assertSame(1, $preparedDataReader->getPageSize());
 
-        $items = $preparedDataReader->read();
-
-        $this->assertSame(
+        $this->assertSameItems(
             [
                 ['id' => 3, 'status' => 'active'],
             ],
-            array_values(is_array($items) ? $items : iterator_to_array($items)),
+            $preparedDataReader->read(),
         );
     }
 
@@ -2483,7 +2481,7 @@ final class GridViewTest extends TestCase
             ->columns(new DataColumn('id'))
             ->prepareDataReader();
 
-        $this->assertSame([['id' => 1]], iterator_to_array($dataReader->read()));
+        $this->assertSameItems([['id' => 1]], $dataReader->read());
     }
 
     public function testPrepareDataReaderDoesNotIgnoreMissingPage(): void
@@ -2560,10 +2558,7 @@ final class GridViewTest extends TestCase
             )
             ->prepareDataReader();
 
-        $this->assertSame(
-            [['id' => 1], ['id' => 2]],
-            iterator_to_array($preparedDataReader->read()),
-        );
+        $this->assertSameItems([['id' => 1], ['id' => 2]], $preparedDataReader->read());
     }
 
     public function testSortNotAppliedWhenPaginatorIsNotSortable(): void
@@ -2579,10 +2574,7 @@ final class GridViewTest extends TestCase
             )
             ->prepareDataReader();
 
-        $this->assertSame(
-            [['id' => 2], ['id' => 1]],
-            iterator_to_array($preparedDataReader->read()),
-        );
+        $this->assertSameItems([['id' => 2], ['id' => 1]], $preparedDataReader->read());
     }
 
     public function testDefaultPageSizeWithIntConstraintBoundary(): void
