@@ -9,6 +9,8 @@ use LogicException;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\TestWith;
 use PHPUnit\Framework\TestCase;
+use Throwable;
+use Yiisoft\Data\Paginator\InvalidPageException;
 use Yiisoft\Data\Paginator\KeysetPaginator;
 use Yiisoft\Data\Paginator\OffsetPaginator;
 use Yiisoft\Data\Paginator\PageNotFoundException;
@@ -36,16 +38,18 @@ use Yiisoft\Yii\DataView\PageSize\SelectPageSize;
 use Yiisoft\Yii\DataView\Pagination\OffsetPagination;
 use Yiisoft\Yii\DataView\Tests\Support\FakePaginator;
 use Yiisoft\Yii\DataView\Tests\Support\FilterableSortableLimitableDataReader;
+use Yiisoft\Yii\DataView\Tests\Support\AssertTrait;
+use Yiisoft\Yii\DataView\Tests\Support\SimpleOffsetableCountableLimitableReadable;
 use Yiisoft\Yii\DataView\Tests\Support\SimplePaginationUrlCreator;
 use Yiisoft\Yii\DataView\Tests\Support\SimpleReadable;
 use Yiisoft\Yii\DataView\Tests\Support\SimpleUrlParameterProvider;
 use Yiisoft\Yii\DataView\Tests\Support\StringEnum;
 use Yiisoft\Yii\DataView\Url\UrlParameterType;
 
-use function is_array;
-
 final class GridViewTest extends TestCase
 {
+    use AssertTrait;
+
     public function testBase(): void
     {
         $html = $this->createGridView([
@@ -1408,33 +1412,6 @@ final class GridViewTest extends TestCase
         $this->assertSame($thrownException, $capturedException);
     }
 
-    public function testPageNotFoundExceptionCallbackWhenFallbackFails(): void
-    {
-        $paginator = (new OffsetPaginator(
-            new IterableDataReader([['id' => 1], ['id' => 2]]),
-        ))
-            ->withPageSize(1)
-            ->withCurrentPage(999);
-        $capturedException = null;
-        $thrownException = null;
-
-        $widget = $this->createGridView($paginator)
-            ->pageNotFoundExceptionCallback(
-                function ($exception) use (&$capturedException) {
-                    $capturedException = $exception;
-                },
-            )
-            ->columns(new DataColumn('id'));
-
-        try {
-            $widget->render();
-        } catch (PageNotFoundException $thrownException) {
-        }
-
-        $this->assertInstanceOf(PageNotFoundException::class, $thrownException);
-        $this->assertSame($thrownException, $capturedException);
-    }
-
     public function testContainerAttributes(): void
     {
         $html = $this->createGridView([['id' => 1]])
@@ -2432,13 +2409,12 @@ final class GridViewTest extends TestCase
             ->prepareDataReader(false);
 
         $this->assertNotNull($preparedDataReader);
-        $items = $preparedDataReader->read();
-        $this->assertSame(
+        $this->assertSameItems(
             [
                 ['id' => 3, 'status' => 'active'],
                 ['id' => 1, 'status' => 'active'],
             ],
-            array_values(is_array($items) ? $items : iterator_to_array($items)),
+            $preparedDataReader->read(),
         );
     }
 
@@ -2488,64 +2464,52 @@ final class GridViewTest extends TestCase
         $this->assertInstanceOf(OffsetPaginator::class, $preparedDataReader);
         $this->assertSame(1, $preparedDataReader->getPageSize());
 
-        $items = $preparedDataReader->read();
-
-        $this->assertSame(
+        $this->assertSameItems(
             [
                 ['id' => 3, 'status' => 'active'],
             ],
-            array_values(is_array($items) ? $items : iterator_to_array($items)),
+            $preparedDataReader->read(),
         );
     }
 
-    public function testPrepareDataReaderIgnoresMissingPage(): void
+    #[TestWith(['-1'])]
+    #[TestWith(['999'])]
+    public function testPrepareDataReaderIgnoresMissingPage(string $page): void
     {
-        $paginator = new FakePaginator(
-            [['id' => 1], ['id' => 2]],
-            paginationRequired: true,
-            throwOnToken: true,
-        );
-
-        $preparedDataReader = $this->createGridView($paginator)
-            ->pageSizeConstraint(false)
-            ->urlParameterProvider(new SimpleUrlParameterProvider(['page' => '999', 'pagesize' => '1']))
+        $dataReader = $this
+            ->createGridView([['id' => 1], ['id' => 2]])
+            ->pageSizeConstraint(1)
+            ->urlParameterProvider(new SimpleUrlParameterProvider(['page' => $page]))
             ->columns(new DataColumn('id'))
             ->prepareDataReader();
 
-        $this->assertSame(1, $preparedDataReader->getPageSize());
-        $items = $preparedDataReader->read();
-
-        $this->assertSame([['id' => 1], ['id' => 2]], array_values($items));
+        $this->assertSameItems([['id' => 1]], $dataReader->read());
     }
 
-    public function testPrepareDataReaderIgnoresMissingPageRaisedOnRead(): void
+    public function testPrepareDataReaderDoesNotIgnoreMissingPage(): void
     {
-        $paginator = new FakePaginator(
-            [['id' => 1], ['id' => 2]],
-            paginationRequired: true,
-            throwOnReadWithToken: true,
-        );
+        $widget = $this
+            ->createGridView([['id' => 1], ['id' => 2]])
+            ->pageSizeConstraint(1)
+            ->urlParameterProvider(new SimpleUrlParameterProvider(['page' => '-1']))
+            ->ignoreMissingPage(false)
+            ->columns(new DataColumn('id'));
 
-        $preparedDataReader = $this->createGridView($paginator)
-            ->urlParameterProvider(new SimpleUrlParameterProvider(['page' => '999']))
-            ->columns(new DataColumn('id'))
-            ->prepareDataReader();
-
-        $this->assertSame([['id' => 1], ['id' => 2]], array_values($preparedDataReader->read()));
+        $this->expectException(InvalidPageException::class);
+        $widget->prepareDataReader();
     }
 
-    public function testPrepareDataReaderPageNotFoundExceptionCallback(): void
+    #[TestWith(['-1', InvalidPageException::class])]
+    #[TestWith(['999', PageNotFoundException::class])]
+    public function testPrepareDataReaderExceptionCallback(string $page, string $expectedExceptionClass): void
     {
-        $paginator = new FakePaginator(
-            [['id' => 1], ['id' => 2]],
-            paginationRequired: true,
-            throwOnToken: true,
-        );
-        $capturedException = null;
         $thrownException = null;
+        $capturedException = null;
 
-        $widget = $this->createGridView($paginator)
-            ->urlParameterProvider(new SimpleUrlParameterProvider(['page' => '999']))
+        $widget = $this
+            ->createGridView([['id' => 1], ['id' => 2]])
+            ->pageSizeConstraint(1)
+            ->urlParameterProvider(new SimpleUrlParameterProvider(['page' => $page]))
             ->ignoreMissingPage(false)
             ->pageNotFoundExceptionCallback(
                 function ($exception) use (&$capturedException) {
@@ -2556,40 +2520,11 @@ final class GridViewTest extends TestCase
 
         try {
             $widget->prepareDataReader();
-        } catch (PageNotFoundException $thrownException) {
+        } catch (Throwable $thrownException) {
         }
 
-        $this->assertInstanceOf(PageNotFoundException::class, $thrownException);
-        $this->assertSame($thrownException, $capturedException);
-    }
-
-    public function testPrepareDataReaderPageNotFoundExceptionCallbackWhenRaisedOnRead(): void
-    {
-        $paginator = new FakePaginator(
-            [['id' => 1], ['id' => 2]],
-            paginationRequired: true,
-            throwOnRead: true,
-        );
-        $capturedException = null;
-        $thrownException = null;
-
-        $widget = $this->createGridView($paginator)
-            ->urlParameterProvider(new SimpleUrlParameterProvider(['page' => '999']))
-            ->ignoreMissingPage(false)
-            ->pageNotFoundExceptionCallback(
-                function ($exception) use (&$capturedException) {
-                    $capturedException = $exception;
-                },
-            )
-            ->columns(new DataColumn('id'));
-
-        try {
-            $widget->prepareDataReader();
-        } catch (PageNotFoundException $thrownException) {
-        }
-
-        $this->assertInstanceOf(PageNotFoundException::class, $thrownException);
-        $this->assertSame($thrownException, $capturedException);
+        $this->assertSame($expectedExceptionClass, $capturedException::class);
+        $this->assertSame($capturedException, $thrownException);
     }
 
     public function testPrepareDataReaderReturnsNullOnIncorrectFilterValue(): void
@@ -2612,6 +2547,38 @@ final class GridViewTest extends TestCase
             ->prepareDataReader(false);
 
         $this->assertNull($preparedDataReader);
+    }
+
+    public function testFilterNotAppliedWhenPaginatorIsNotFilterable(): void
+    {
+        $paginator = new OffsetPaginator(
+            new SimpleOffsetableCountableLimitableReadable([['id' => 1], ['id' => 2]]),
+        );
+
+        $preparedDataReader = $this->createGridView($paginator)
+            ->urlParameterProvider(new SimpleUrlParameterProvider(['id' => '1']))
+            ->columns(
+                new DataColumn('id', filter: true),
+            )
+            ->prepareDataReader();
+
+        $this->assertSameItems([['id' => 1], ['id' => 2]], $preparedDataReader->read());
+    }
+
+    public function testSortNotAppliedWhenPaginatorIsNotSortable(): void
+    {
+        $paginator = new OffsetPaginator(
+            new SimpleOffsetableCountableLimitableReadable([['id' => 2], ['id' => 1]]),
+        );
+
+        $preparedDataReader = $this->createGridView($paginator)
+            ->urlParameterProvider(new SimpleUrlParameterProvider(['sort' => 'id']))
+            ->columns(
+                new DataColumn('id'),
+            )
+            ->prepareDataReader();
+
+        $this->assertSameItems([['id' => 2], ['id' => 1]], $preparedDataReader->read());
     }
 
     public function testDefaultPageSizeWithIntConstraintBoundary(): void

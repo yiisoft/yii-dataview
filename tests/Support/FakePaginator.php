@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Yiisoft\Yii\DataView\Tests\Support;
 
 use LogicException;
-use Yiisoft\Data\Paginator\PageNotFoundException;
 use Yiisoft\Data\Paginator\PageToken;
 use Yiisoft\Data\Paginator\PaginatorInterface;
 use Yiisoft\Data\Reader\FilterInterface;
@@ -15,25 +14,12 @@ use function count;
 
 final class FakePaginator implements PaginatorInterface
 {
-    private ?PageToken $token = null;
-    private int $pageSize;
-
     public function __construct(
         private readonly array $data,
-        private readonly bool $paginationRequired = false,
-        private readonly bool $throwOnToken = false,
-        private readonly bool $throwOnRead = false,
-        private readonly bool $throwOnReadWithToken = false,
-    ) {
-        $this->pageSize = count($data);
-    }
+    ) {}
 
     public function read(): array
     {
-        if ($this->throwOnRead || ($this->throwOnReadWithToken && $this->token !== null)) {
-            throw new PageNotFoundException((int) ($this->token?->value ?? 999));
-        }
-
         return $this->data;
     }
 
@@ -44,7 +30,7 @@ final class FakePaginator implements PaginatorInterface
 
     public function isPaginationRequired(): bool
     {
-        return $this->paginationRequired;
+        return false;
     }
 
     public function getCurrentPageSize(): int
@@ -54,30 +40,23 @@ final class FakePaginator implements PaginatorInterface
 
     public function withPageSize(int $pageSize): static
     {
-        $new = clone $this;
-        $new->pageSize = $pageSize;
-        return $new;
+        // do nothing
+        return $this;
     }
 
     public function getPageSize(): int
     {
-        return $this->pageSize;
+        return count($this->data);
     }
 
     public function withToken(?PageToken $token): static
     {
-        if ($this->throwOnToken && $token !== null) {
-            throw new PageNotFoundException((int) $token->value);
-        }
-
-        $new = clone $this;
-        $new->token = $token;
-        return $new;
+        return $this;
     }
 
     public function getToken(): ?PageToken
     {
-        return $this->token;
+        throw new LogicException('Not implemented.');
     }
 
     public function getNextToken(): ?PageToken
@@ -132,7 +111,7 @@ final class FakePaginator implements PaginatorInterface
 
     public function isFilterable(): bool
     {
-        throw new LogicException('Not implemented.');
+        return false;
     }
 
     public function withSort(?Sort $sort): static

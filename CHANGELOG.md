@@ -2,7 +2,7 @@
 
 ## 1.1.1 under development
 
-- Enh #347: Add `prepareDataReader()` to reuse filtered data reader (@samdark)
+- New #347, #352: Add `prepareDataReader()` to reuse filtered data reader (@samdark, @vjik)
 - Enh #338: Pass `DataContext` to `callable` buttons in `ActionColumn` (@vjik)
 
 ## 1.1.0 March 21, 2026
