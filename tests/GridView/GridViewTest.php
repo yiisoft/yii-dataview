@@ -2499,7 +2499,9 @@ final class GridViewTest extends TestCase
         $widget->prepareDataReader();
     }
 
-    public function testPrepareDataReaderExceptionCallback(): void
+    #[TestWith(['-1', InvalidPageException::class])]
+    #[TestWith(['999', PageNotFoundException::class])]
+    public function testPrepareDataReaderExceptionCallback(string $page, string $expectedExceptionClass): void
     {
         $thrownException = null;
         $capturedException = null;
@@ -2507,7 +2509,7 @@ final class GridViewTest extends TestCase
         $widget = $this
             ->createGridView([['id' => 1], ['id' => 2]])
             ->pageSizeConstraint(1)
-            ->urlParameterProvider(new SimpleUrlParameterProvider(['page' => '-1']))
+            ->urlParameterProvider(new SimpleUrlParameterProvider(['page' => $page]))
             ->ignoreMissingPage(false)
             ->pageNotFoundExceptionCallback(
                 function ($exception) use (&$capturedException) {
@@ -2521,7 +2523,7 @@ final class GridViewTest extends TestCase
         } catch (Throwable $thrownException) {
         }
 
-        $this->assertInstanceOf(InvalidPageException::class, $capturedException);
+        $this->assertSame($expectedExceptionClass, $capturedException::class);
         $this->assertSame($capturedException, $thrownException);
     }
 
