@@ -166,6 +166,10 @@ HTML structure:
 
 By default, page size is fixed, but you can configure it to be dynamic.
 
+> [!note]
+> Some page size widgets use inline JavaScript, which may cause issues under a strict Content-Security-Policy.
+> See [CSP and inline JavaScript](csp.md) for details.
+
 ### Page size constraint
 
 The `pageSizeConstraint()` method on GridView/ListView controls what page sizes users are allowed to pick. It accepts

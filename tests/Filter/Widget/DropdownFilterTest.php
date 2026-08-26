@@ -159,6 +159,36 @@ final class DropdownFilterTest extends TestCase
         $this->assertStringContainsString($expected, $html);
     }
 
+    public function testUseInlineJsDisabled(): void
+    {
+        $filter = DropdownFilter::widget()
+            ->optionsData(['active' => 'Active'])
+            ->useInlineJs(false);
+        $context = new Context('status', null, 'filter-form');
+
+        $html = $filter->renderFilter($context);
+
+        $this->assertSame(
+            <<<HTML
+            <select name="status" form="filter-form" data-yii-dataview-dropdown-filter-onchange>
+            <option value></option>
+            <option value="active">Active</option>
+            </select>
+            HTML,
+            $html,
+        );
+    }
+
+    public function testUseInlineJsEnabledExplicitly(): void
+    {
+        $filter = DropdownFilter::widget()->useInlineJs(true);
+        $context = new Context('status', null, 'filter-form');
+
+        $html = $filter->renderFilter($context);
+
+        $this->assertStringContainsString('onChange="this.form.submit()"', $html);
+    }
+
     public function testImmutability(): void
     {
         $filter = DropdownFilter::widget();
@@ -167,5 +197,6 @@ final class DropdownFilterTest extends TestCase
         $this->assertNotSame($filter, $filter->attributes([]));
         $this->assertNotSame($filter, $filter->addClass());
         $this->assertNotSame($filter, $filter->class());
+        $this->assertNotSame($filter, $filter->useInlineJs(false));
     }
 }

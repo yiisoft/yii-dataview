@@ -6,14 +6,18 @@ namespace Yiisoft\Yii\DataView\Filter\Widget;
 
 use BackedEnum;
 use Yiisoft\Html\Tag\Select;
+use Yiisoft\Yii\DataView\UseInlineJsInterface;
+use Yiisoft\Yii\DataView\UseInlineJsTrait;
 
 /**
  * Filter widget that renders a dropdown (select) input for filtering data.
  *
  * @psalm-import-type OptionsData from Select
  */
-final class DropdownFilter extends FilterWidget
+final class DropdownFilter extends FilterWidget implements UseInlineJsInterface
 {
+    use UseInlineJsTrait;
+
     private ?Select $select = null;
 
     /**
@@ -128,8 +132,12 @@ final class DropdownFilter extends FilterWidget
     {
         $select = $this->getSelect()
             ->name($context->property)
-            ->form($context->formId)
-            ->attribute('onChange', 'this.form.submit()');
+            ->form($context->formId);
+        if ($this->useInlineJs) {
+            $select = $select->attribute('onChange', 'this.form.submit()');
+        } else {
+            $select = $select->attribute('data-yii-dataview-dropdown-filter-onchange', true);
+        }
 
         if ($context->value !== null) {
             $select = $select->value($context->value);

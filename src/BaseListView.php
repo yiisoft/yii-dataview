@@ -149,6 +149,8 @@ abstract class BaseListView extends Widget
     private string $noResultsText = 'No results found.';
     private string $noResultsTemplate = '{text}';
 
+    private ?bool $useInlineJs = null;
+
     public function __construct(
         ?TranslatorInterface $translator = null,
         protected readonly string $translationCategory = self::DEFAULT_TRANSLATION_CATEGORY,
@@ -753,6 +755,20 @@ abstract class BaseListView extends Widget
     }
 
     /**
+     * Return a new instance forcing inline JavaScript for every rendered {@see UseInlineJsInterface} widget.
+     *
+     * @param bool|null $enabled `null` (default) leaves each widget's own inline JavaScript setting untouched.
+     * `true`/`false` overrides it for every {@see UseInlineJsInterface} widget involved in rendering,
+     * regardless of what was set directly on that widget instance.
+     */
+    final public function useInlineJs(?bool $enabled): static
+    {
+        $new = clone $this;
+        $new->useInlineJs = $enabled;
+        return $new;
+    }
+
+    /**
      * @return array The array with format:
      * ```
      * [
@@ -821,6 +837,14 @@ abstract class BaseListView extends Widget
         }
 
         return $pageSize;
+    }
+
+    /**
+     * @see useInlineJs()
+     */
+    final protected function getUseInlineJs(): ?bool
+    {
+        return $this->useInlineJs;
     }
 
     final protected function getNoResultsContent(): string
@@ -1184,6 +1208,10 @@ abstract class BaseListView extends Widget
             }
         } else {
             $widget = $this->pageSizeWidget;
+        }
+
+        if ($this->useInlineJs !== null && $widget instanceof UseInlineJsInterface) {
+            $widget = $widget->useInlineJs($this->useInlineJs);
         }
 
         if ($this->urlCreator === null) {

@@ -837,6 +837,7 @@ final class GridView extends BaseListView
             cellInvalidClass: $this->filterCellInvalidClass,
             errorsContainerAttributes: $this->filterErrorsContainerAttributes,
             urlParameterProvider: $this->urlParameterProvider,
+            useInlineJs: $this->getUseInlineJs(),
         );
         foreach ($columns as $i => $column) {
             $cell = $renderers[$i] instanceof FilterableColumnRendererInterface

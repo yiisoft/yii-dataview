@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Yiisoft\Yii\DataView\GridView\Column\Base;
 
 use Yiisoft\Validator\Result;
+use Yiisoft\Yii\DataView\UseInlineJsInterface;
 use Yiisoft\Yii\DataView\Url\UrlParameterProviderInterface;
 use Yiisoft\Yii\DataView\Url\UrlParameterType;
 
@@ -26,6 +27,9 @@ final class FilterContext
      * errors. Use these to style and position error messages.
      * @param UrlParameterProviderInterface $urlParameterProvider Provider for accessing URL parameters.
      * Used to retrieve filter values from the current request.
+     * @param bool|null $useInlineJs `null` leaves each filter widget's own inline JavaScript setting
+     * untouched. `true`/`false` overrides it for every {@see UseInlineJsInterface}
+     * filter widget.
      */
     public function __construct(
         public readonly string $formId,
@@ -33,6 +37,7 @@ final class FilterContext
         public readonly ?string $cellInvalidClass,
         public readonly array $errorsContainerAttributes,
         private readonly UrlParameterProviderInterface $urlParameterProvider,
+        public readonly ?bool $useInlineJs = null,
     ) {}
 
     /**

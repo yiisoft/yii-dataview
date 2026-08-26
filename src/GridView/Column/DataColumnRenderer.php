@@ -24,6 +24,7 @@ use Yiisoft\Yii\DataView\GridView\Column\Base\DataContext;
 use Yiisoft\Yii\DataView\GridView\Column\Base\FilterContext;
 use Yiisoft\Yii\DataView\GridView\Column\Base\GlobalContext;
 use Yiisoft\Yii\DataView\GridView\Column\Base\MakeFilterContext;
+use Yiisoft\Yii\DataView\UseInlineJsInterface;
 use Yiisoft\Yii\DataView\ValuePresenter\SimpleValuePresenter;
 use Yiisoft\Yii\DataView\ValuePresenter\ValuePresenterInterface;
 
@@ -124,6 +125,10 @@ final class DataColumnRenderer implements FilterableColumnRendererInterface, Sor
             $widget = DropdownFilter::widget()->optionsData($column->filter);
         } else {
             $widget = $column->filter;
+        }
+
+        if ($context->useInlineJs !== null && $widget instanceof UseInlineJsInterface) {
+            $widget = $widget->useInlineJs($context->useInlineJs);
         }
 
         $content = [
