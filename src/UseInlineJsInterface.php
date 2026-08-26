@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Yiisoft\Yii\DataView;
 
 /**
- * Interface for widgets that can toggle inline JavaScript, e.g. an `onChange`/`onchange` attribute, on or off.
+ * Interface for widgets that can toggle inline JavaScript, e.g. an `onchange` attribute, on or off.
  */
 interface UseInlineJsInterface
 {
