@@ -51,9 +51,7 @@ final class RendererContainer
      */
     public function get(string $class): ColumnRendererInterface
     {
-        if (!isset($this->cache[$class])) {
-            $this->cache[$class] = $this->injector->make($class, $this->configs[$class] ?? []);
-        }
+        $this->cache[$class] ??= $this->injector->make($class, $this->configs[$class] ?? []);
 
         return $this->cache[$class];
     }
