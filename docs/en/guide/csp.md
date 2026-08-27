@@ -2,7 +2,7 @@
 
 Some Yii DataView widgets render their behavior as inline JavaScript — an `onChange`/`onchange` HTML attribute.
 Under a strict [Content-Security-Policy](https://developer.mozilla.org/docs/Web/HTTP/Guides/CSP) `script-src`
-(without `unsafe-inline`), the browser silently drops that attribute, and the widget stops working.
+(without `unsafe-inline`), the browser blocks the execution, and the widget stops working without any user-facing feedback.
 
 ## Overriding from `GridView`/`ListView`
 
@@ -25,6 +25,8 @@ through your asset pipeline of choice:
 ```html
 <script src="/path/to/no-inline-js.js"></script>
 ```
+
+Since this is an external script, make sure the URL it is served from is allowed by your `script-src` policy.
 
 It listens for `change` events on the document and reacts to the marker attributes rendered by the built-in
 widgets below. A custom widget implementing `UseInlineJsInterface` needs its own listener for its own marker
