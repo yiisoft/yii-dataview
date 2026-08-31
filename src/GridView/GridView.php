@@ -837,6 +837,7 @@ final class GridView extends BaseListView
             cellInvalidClass: $this->filterCellInvalidClass,
             errorsContainerAttributes: $this->filterErrorsContainerAttributes,
             urlParameterProvider: $this->urlParameterProvider,
+            useInlineJs: $this->getUseInlineJs(),
         );
         foreach ($columns as $i => $column) {
             $cell = $renderers[$i] instanceof FilterableColumnRendererInterface
@@ -1136,12 +1137,10 @@ final class GridView extends BaseListView
      */
     private function getColumns(): array
     {
-        if ($this->columnsCache === null) {
-            $this->columnsCache = array_filter(
-                $this->columns,
-                static fn(ColumnInterface $column) => $column->isVisible(),
-            );
-        }
+        $this->columnsCache ??= array_filter(
+            $this->columns,
+            static fn(ColumnInterface $column) => $column->isVisible(),
+        );
 
         return $this->columnsCache;
     }
@@ -1153,12 +1152,10 @@ final class GridView extends BaseListView
      */
     private function getColumnRenderers(): array
     {
-        if ($this->columnRenderersCache === null) {
-            $this->columnRenderersCache = array_map(
-                fn(ColumnInterface $column) => $this->columnRendererContainer->get($column->getRenderer()),
-                $this->getColumns(),
-            );
-        }
+        $this->columnRenderersCache ??= array_map(
+            fn(ColumnInterface $column) => $this->columnRendererContainer->get($column->getRenderer()),
+            $this->getColumns(),
+        );
 
         return $this->columnRenderersCache;
     }

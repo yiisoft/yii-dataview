@@ -387,6 +387,10 @@ echo GridView::widget()
 > If a property name in the URL has the same name as pagination or sort parameters, you should choose different names for those
 > parameters (see [URLs](./urls.md)).
 
+> [!note]
+> Some filter widgets use inline JavaScript, which may cause issues under a strict Content-Security-Policy.
+> See [CSP and inline JavaScript](csp.md) for details.
+
 ### Exporting filtered data
 
 Use `prepareDataReader(false)` when another action, such as CSV export, must use the same filters and sorting as
@@ -761,6 +765,7 @@ use Yiisoft\Yii\DataView\GridView\GridView;
 
 Features shared by all list widgets:
 
+- [CSP and inline JavaScript](csp.md)
 - [Pagination](pagination.md)
 - [URLs](urls.md)
 - [Translation](translation.md)

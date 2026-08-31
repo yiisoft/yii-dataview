@@ -30,6 +30,7 @@ use Yiisoft\Html\Tag\Tr;
 use Yiisoft\Yii\DataView\DataReaderNotSetException;
 use Yiisoft\Yii\DataView\Filter\Factory\FilterFactoryInterface;
 use Yiisoft\Yii\DataView\Filter\Factory\IncorrectValueException;
+use Yiisoft\Yii\DataView\Filter\Widget\DropdownFilter;
 use Yiisoft\Yii\DataView\GridView\BodyRowContext;
 use Yiisoft\Yii\DataView\GridView\Column\Base\DataContext;
 use Yiisoft\Yii\DataView\GridView\Column\DataColumn;
@@ -1762,6 +1763,83 @@ final class GridViewTest extends TestCase
         $this->assertStringContainsString('class="custom-select"', $html);
     }
 
+    public function testUseInlineJsForcesPageSizeWidget(): void
+    {
+        $data = array_fill(0, 20, ['id' => 1]);
+        $paginator = new OffsetPaginator(new IterableDataReader($data));
+
+        $html = $this->createGridView($paginator)
+            ->pageSizeConstraint([5, 10, 20])
+            ->useInlineJs(false)
+            ->render();
+
+        $this->assertStringContainsString('data-yii-dataview-page-size-onchange', $html);
+        $this->assertStringNotContainsString('onchange=', $html);
+    }
+
+    public function testUseInlineJsNullDoesNotOverridePageSizeWidget(): void
+    {
+        $data = array_fill(0, 20, ['id' => 1]);
+        $paginator = new OffsetPaginator(new IterableDataReader($data));
+
+        $html = $this->createGridView($paginator)
+            ->pageSizeConstraint([5, 10, 20])
+            ->pageSizeWidget((new SelectPageSize())->useInlineJs(false))
+            ->useInlineJs(null)
+            ->render();
+
+        $this->assertStringContainsString('data-yii-dataview-page-size-onchange', $html);
+        $this->assertStringNotContainsString('onchange=', $html);
+    }
+
+    public function testUseInlineJsForcesArrayShorthandDropdownFilter(): void
+    {
+        $html = $this->createGridView()
+            ->filterFormId('FID')
+            ->useInlineJs(false)
+            ->columns(
+                new DataColumn('status', filter: ['active' => 'Active', 'inactive' => 'Inactive']),
+            )
+            ->render();
+
+        $this->assertStringContainsString('data-yii-dataview-dropdown-filter-onchange', $html);
+        $this->assertStringNotContainsString('onChange=', $html);
+    }
+
+    public function testUseInlineJsForcesExplicitDropdownFilter(): void
+    {
+        $html = $this->createGridView()
+            ->filterFormId('FID')
+            ->useInlineJs(false)
+            ->columns(
+                new DataColumn(
+                    'status',
+                    filter: DropdownFilter::widget()->optionsData(['active' => 'Active']),
+                ),
+            )
+            ->render();
+
+        $this->assertStringContainsString('data-yii-dataview-dropdown-filter-onchange', $html);
+        $this->assertStringNotContainsString('onChange=', $html);
+    }
+
+    public function testUseInlineJsNullDoesNotOverrideFilterWidget(): void
+    {
+        $html = $this->createGridView()
+            ->filterFormId('FID')
+            ->useInlineJs(null)
+            ->columns(
+                new DataColumn(
+                    'status',
+                    filter: DropdownFilter::widget()->optionsData(['active' => 'Active'])->useInlineJs(false),
+                ),
+            )
+            ->render();
+
+        $this->assertStringContainsString('data-yii-dataview-dropdown-filter-onchange', $html);
+        $this->assertStringNotContainsString('onChange=', $html);
+    }
+
     public function testPageSizeTag(): void
     {
         $paginator = new OffsetPaginator(new IterableDataReader(array_fill(0, 20, ['id' => 1])));
@@ -2779,6 +2857,7 @@ final class GridViewTest extends TestCase
         $this->assertNotSame($gridView, $gridView->pageSizeTag('p'));
         $this->assertNotSame($gridView, $gridView->pageSizeAttributes([]));
         $this->assertNotSame($gridView, $gridView->pageSizeTemplate('test'));
+        $this->assertNotSame($gridView, $gridView->useInlineJs(false));
     }
 
     private function createGridView(ReadableDataInterface|array $data = []): GridView

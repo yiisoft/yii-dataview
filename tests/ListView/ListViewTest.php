@@ -7,11 +7,13 @@ namespace Yiisoft\Yii\DataView\Tests\ListView;
 use LogicException;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
+use Yiisoft\Data\Paginator\OffsetPaginator;
 use Yiisoft\Data\Reader\Iterable\IterableDataReader;
 use Yiisoft\Data\Reader\ReadableDataInterface;
 use Yiisoft\Data\Reader\Sort;
 use Yiisoft\Yii\DataView\ListView\ListItemContext;
 use Yiisoft\Yii\DataView\ListView\ListView;
+use Yiisoft\Yii\DataView\PageSize\SelectPageSize;
 use Yiisoft\Yii\DataView\Tests\Support\SimpleReadable;
 use InvalidArgumentException;
 use Yiisoft\Yii\DataView\Tests\Support\SimpleUrlParameterProvider;
@@ -434,6 +436,35 @@ final class ListViewTest extends TestCase
         $this->assertStringNotContainsString('&lt;strong&gt;', $html);
     }
 
+    public function testUseInlineJsForcesPageSizeWidget(): void
+    {
+        $paginator = new OffsetPaginator(new IterableDataReader(array_fill(0, 20, ['id' => 1])));
+
+        $html = $this->createListView($paginator)
+            ->pageSizeConstraint([5, 10, 20])
+            ->itemView(static fn(array $data): string => (string) $data['id'])
+            ->useInlineJs(false)
+            ->render();
+
+        $this->assertStringContainsString('data-yii-dataview-page-size-onchange', $html);
+        $this->assertStringNotContainsString('onchange=', $html);
+    }
+
+    public function testUseInlineJsNullDoesNotOverridePageSizeWidget(): void
+    {
+        $paginator = new OffsetPaginator(new IterableDataReader(array_fill(0, 20, ['id' => 1])));
+
+        $html = $this->createListView($paginator)
+            ->pageSizeConstraint([5, 10, 20])
+            ->itemView(static fn(array $data): string => (string) $data['id'])
+            ->pageSizeWidget((new SelectPageSize())->useInlineJs(false))
+            ->useInlineJs(null)
+            ->render();
+
+        $this->assertStringContainsString('data-yii-dataview-page-size-onchange', $html);
+        $this->assertStringNotContainsString('onchange=', $html);
+    }
+
     public function testImmutability(): void
     {
         $listView = $this->createListView();
@@ -458,6 +489,7 @@ final class ListViewTest extends TestCase
         $this->assertNotSame($listView, $listView->noResultsTag('div'));
         $this->assertNotSame($listView, $listView->noResultsAttributes([]));
         $this->assertNotSame($listView, $listView->separator(' | '));
+        $this->assertNotSame($listView, $listView->useInlineJs(false));
     }
 
     private function createListView(ReadableDataInterface|array $data = []): ListView

@@ -121,6 +121,51 @@ final class SelectPageSizeTest extends TestCase
         $this->assertStringContainsString('<option value="20">20</option>', $html);
     }
 
+    public function testUseInlineJsDisabled(): void
+    {
+        $html = (new SelectPageSize())
+            ->withContext(
+                new PageSizeContext(
+                    currentValue: 10,
+                    defaultValue: 20,
+                    constraint: [10, 20, 50],
+                    urlPattern: '/test?pagesize=YII-DATAVIEW-PAGE-SIZE-PLACEHOLDER',
+                    defaultUrl: '/test',
+                ),
+            )
+            ->useInlineJs(false)
+            ->render();
+
+        $this->assertSame(
+            <<<HTML
+            <select data-default-page-size="20" data-url-pattern="/test?pagesize=YII-DATAVIEW-PAGE-SIZE-PLACEHOLDER" data-default-url="/test" data-yii-dataview-page-size-onchange>
+            <option value="10" selected>10</option>
+            <option value="20">20</option>
+            <option value="50">50</option>
+            </select>
+            HTML,
+            $html,
+        );
+    }
+
+    public function testUseInlineJsEnabledExplicitly(): void
+    {
+        $html = (new SelectPageSize())
+            ->withContext(
+                new PageSizeContext(
+                    currentValue: 10,
+                    defaultValue: 20,
+                    constraint: [10, 20, 50],
+                    urlPattern: '/test?pagesize=YII-DATAVIEW-PAGE-SIZE-PLACEHOLDER',
+                    defaultUrl: '/test',
+                ),
+            )
+            ->useInlineJs(true)
+            ->render();
+
+        $this->assertStringContainsString('onchange="window.location.href', $html);
+    }
+
     public function testImmutability(): void
     {
         $widget = new SelectPageSize();
@@ -128,5 +173,6 @@ final class SelectPageSizeTest extends TestCase
         $this->assertNotSame($widget, $widget->addAttributes([]));
         $this->assertNotSame($widget, $widget->attributes([]));
         $this->assertNotSame($widget, $widget->withContext(new PageSizeContext(10, 20, [10, 20], '/', '/')));
+        $this->assertNotSame($widget, $widget->useInlineJs(false));
     }
 }

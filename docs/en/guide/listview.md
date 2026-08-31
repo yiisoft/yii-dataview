@@ -285,6 +285,7 @@ You can rearrange or remove sections:
 
 As for every data widget that renders a set of data, you can additionally customize it with:
 
+- [CSP and inline JavaScript](csp.md)
 - [Pagination](pagination.md)
 - [URLs](urls.md)
 - [Translation](translation.md)

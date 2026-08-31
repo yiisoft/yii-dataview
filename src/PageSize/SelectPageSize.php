@@ -6,6 +6,8 @@ namespace Yiisoft\Yii\DataView\PageSize;
 
 use Yiisoft\Html\Html;
 use Yiisoft\Widget\Widget;
+use Yiisoft\Yii\DataView\UseInlineJsInterface;
+use Yiisoft\Yii\DataView\UseInlineJsTrait;
 
 use function count;
 use function is_array;
@@ -13,9 +15,10 @@ use function is_array;
 /**
  * Widget that renders a dropdown (select) input for choosing the page size.
  */
-final class SelectPageSize extends Widget implements PageSizeWidgetInterface
+final class SelectPageSize extends Widget implements PageSizeWidgetInterface, UseInlineJsInterface
 {
     use PageSizeContextTrait;
+    use UseInlineJsTrait;
 
     private array $attributes = [];
 
@@ -70,8 +73,12 @@ final class SelectPageSize extends Widget implements PageSizeWidgetInterface
             'data-default-page-size' => $context->defaultValue,
             'data-url-pattern' => $context->urlPattern,
             'data-default-url' => $context->defaultUrl,
-            'onchange' => 'window.location.href = this.value == this.dataset.defaultPageSize ? this.dataset.defaultUrl : this.dataset.urlPattern.replace("' . PageSizeContext::URL_PLACEHOLDER . '", this.value)',
         ]);
+        if ($this->useInlineJs) {
+            $attributes['onchange'] = 'window.location.href = this.value == this.dataset.defaultPageSize ? this.dataset.defaultUrl : this.dataset.urlPattern.replace("' . PageSizeContext::URL_PLACEHOLDER . '", this.value)';
+        } else {
+            $attributes['data-yii-dataview-page-size-onchange'] = true;
+        }
 
         return Html::select()
             ->optionsData($options, encode: false)
