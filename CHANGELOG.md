@@ -1,11 +1,11 @@
 # Yii DataView Change Log
 
-## 1.1.1 under development
+## 1.2.0 September 02, 2026
 
+- New #347, #352: Add `prepareDataReader()` to reuse filtered data reader (@samdark, @vjik)
 - New #355: Add `UseInlineJsInterface::useInlineJs()` to `DropdownFilter`, `SelectPageSize` and
   `InputPageSize`, and `BaseListView::useInlineJs()` to override it for every rendered widget, so their
   `onChange`/`onchange` handler can be replaced with the shipped `no-inline-js.js` script (@vjik)
-- New #347, #352: Add `prepareDataReader()` to reuse filtered data reader (@samdark, @vjik)
 - Enh #338: Pass `DataContext` to `callable` buttons in `ActionColumn` (@vjik)
 
 ## 1.1.0 March 21, 2026
