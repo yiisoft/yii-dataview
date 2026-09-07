@@ -2,7 +2,7 @@
 
 ## 1.2.1 under development
 
-- no changes in this release.
+- Enh #358: Make dependency container in `GridView` constructor optional (@vjik)
 
 ## 1.2.0 September 02, 2026
 
