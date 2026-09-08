@@ -235,12 +235,13 @@ final class GridView extends BaseListView
     private array $noResultsCellAttributes = [];
 
     /**
-     * @param ContainerInterface $columnRenderersDependencyContainer Container used to resolve
-     * {@see ColumnRendererInterface column renderer} dependencies.
+     * @param ContainerInterface|null $columnRenderersDependencyContainer Container used to resolve
+     * {@see ColumnRendererInterface column renderer} dependencies. When `null`, renderer dependencies are resolved
+     * from their default values only.
      * @param TranslatorInterface|null $translator Translator instance or `null` if no translation is needed.
      */
     public function __construct(
-        ContainerInterface $columnRenderersDependencyContainer,
+        ?ContainerInterface $columnRenderersDependencyContainer = null,
         ?TranslatorInterface $translator = null,
     ) {
         $this->filterFormId = Html::generateId();

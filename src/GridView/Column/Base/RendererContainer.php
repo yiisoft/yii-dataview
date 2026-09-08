@@ -30,9 +30,10 @@ final class RendererContainer
     private array $configs = [];
 
     /**
-     * @param ContainerInterface $container The dependency injection container for creating renderers.
+     * @param ContainerInterface|null $container The dependency injection container for creating renderers. When `null`,
+     * renderer dependencies are resolved from their default values only.
      */
-    public function __construct(ContainerInterface $container)
+    public function __construct(?ContainerInterface $container = null)
     {
         $this->injector = new Injector($container);
     }

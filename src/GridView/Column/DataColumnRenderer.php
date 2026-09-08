@@ -12,6 +12,7 @@ use Yiisoft\Html\Html;
 use Yiisoft\Html\NoEncodeStringableInterface;
 use Yiisoft\Validator\EmptyCondition\NeverEmpty;
 use Yiisoft\Validator\EmptyCondition\WhenEmpty;
+use Yiisoft\Validator\Validator;
 use Yiisoft\Validator\ValidatorInterface;
 use Yiisoft\Yii\DataView\Filter\Factory\EqualsFilterFactory;
 use Yiisoft\Yii\DataView\Filter\Factory\FilterFactoryInterface;
@@ -53,7 +54,8 @@ final class DataColumnRenderer implements FilterableColumnRendererInterface, Sor
     /**
      * Creates a new `DataColumnRenderer` instance.
      *
-     * @param ContainerInterface $filterFactoryContainer Container for filter factory instances.
+     * @param ContainerInterface|null $filterFactoryContainer Container for filter factory instances. When `null`,
+     * a filter factory specified by class name is created directly, without constructor arguments.
      * @param ValidatorInterface $validator Validator for filter values.
      * @param ValuePresenterInterface $defaultValuePresenter Service to present values when {@see DataColumn::$content}
      * is not set.
@@ -64,8 +66,8 @@ final class DataColumnRenderer implements FilterableColumnRendererInterface, Sor
      * @psalm-param bool|FilterEmptyCallable $defaultFilterEmpty
      */
     public function __construct(
-        private readonly ContainerInterface $filterFactoryContainer,
-        private readonly ValidatorInterface $validator,
+        private readonly ?ContainerInterface $filterFactoryContainer = null,
+        private readonly ValidatorInterface $validator = new Validator(),
         private readonly ValuePresenterInterface $defaultValuePresenter = new SimpleValuePresenter(),
         private readonly string|FilterFactoryInterface $defaultFilterFactory = LikeFilterFactory::class,
         private readonly string|FilterFactoryInterface $defaultArrayFilterFactory = EqualsFilterFactory::class,
@@ -279,8 +281,13 @@ final class DataColumnRenderer implements FilterableColumnRendererInterface, Sor
             return $factory;
         }
 
-        /** @var FilterFactoryInterface */
-        return $this->filterFactoryContainer->get($factory);
+        if ($this->filterFactoryContainer !== null) {
+            /** @var FilterFactoryInterface */
+            return $this->filterFactoryContainer->get($factory);
+        }
+
+        /** @psalm-var class-string<FilterFactoryInterface> $factory */
+        return new $factory();
     }
 
     private function prepareRawBodyContent(DataColumn $column, DataContext $context): string|Stringable

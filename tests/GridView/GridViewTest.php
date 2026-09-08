@@ -2860,6 +2860,50 @@ final class GridViewTest extends TestCase
         $this->assertNotSame($gridView, $gridView->useInlineJs(false));
     }
 
+    public function testWithoutColumnRenderersDependencyContainer(): void
+    {
+        $html = (new GridView())
+            ->layout('{items}')
+            ->containerTag(null)
+            ->filterFormId('FID')
+            ->dataReader(
+                new IterableDataReader([
+                    ['id' => 1, 'name' => 'Anna'],
+                    ['id' => 2, 'name' => 'Eva'],
+                ]),
+            )
+            ->urlParameterProvider(new SimpleUrlParameterProvider(['name' => 'Ann']))
+            ->columns(
+                new DataColumn('id'),
+                new DataColumn('name', filter: true),
+            )
+            ->render();
+
+        $this->assertSame(
+            <<<HTML
+            <form id="FID" style="display:none" action method="GET"><button type="submit">Submit</button></form><table>
+            <thead>
+            <tr>
+            <th>Id</th>
+            <th>Name</th>
+            </tr>
+            <tr>
+            <td>&nbsp;</td>
+            <td><input type="text" name="name" value="Ann" form="FID"></td>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+            <td>1</td>
+            <td>Anna</td>
+            </tr>
+            </tbody>
+            </table>
+            HTML,
+            $html,
+        );
+    }
+
     private function createGridView(ReadableDataInterface|array $data = []): GridView
     {
         $container = new Container(

@@ -446,7 +446,8 @@ Filter widgets out of the box:
 Available values:
 
 - `null` - if `$filter` is array, then `EqualsFilterFactory` is used, otherwise `LikeFilterFactory`;
-- class name — filter factory will be resolved from the container;
+- class name — filter factory will be resolved from the container. Without a container, it's created directly,
+  so it must not have required constructor arguments; pass an instance instead if it does;
 - `\Yiisoft\Yii\DataView\Filter\Factory\FilterFactoryInterface` instance — custom filter factory.
 
 Filter factories out of the box:
