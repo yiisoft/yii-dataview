@@ -121,6 +121,10 @@ final class DataColumnRenderer implements FilterableColumnRendererInterface, Sor
             return null;
         }
 
+        $cell = $cell
+            ->addAttributes($column->filterAttributes)
+            ->addClass($column->filterClass);
+
         if ($column->filter === true) {
             $widget = TextInputFilter::widget();
         } elseif (is_array($column->filter)) {

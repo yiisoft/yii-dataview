@@ -3,6 +3,8 @@
 ## 1.2.1 under development
 
 - New #359: Add `GridView::keepColumnAttributesInEmptyCell()` to keep column body cell attributes on empty cells (@vjik)
+- New #360: Add `GridView::filterRowAttributes()`, and `filterAttributes` and `filterClass` parameters to `DataColumn`
+  to set HTML attributes and a CSS class for filter cells (@vjik)
 - Enh #358: Make dependency container in `GridView` constructor optional (@vjik)
 
 ## 1.2.0 September 02, 2026

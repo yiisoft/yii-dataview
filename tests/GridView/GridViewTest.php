@@ -152,6 +152,26 @@ final class GridViewTest extends TestCase
         );
     }
 
+    public function testFilterRowAttributes(): void
+    {
+        $html = $this->createGridView()
+            ->filterFormId('FID')
+            ->filterRowAttributes(['class' => 'filter-row', 'data-test' => 'filter'])
+            ->columns(
+                new DataColumn(property: 'name', filter: true),
+            )
+            ->render();
+
+        $this->assertStringContainsString(
+            <<<HTML
+            <tr class="filter-row" data-test="filter">
+            <td><input type="text" name="name" form="FID"></td>
+            </tr>
+            HTML,
+            $html,
+        );
+    }
+
     public function testFilterCellInvalidClass(): void
     {
         $html = $this->createGridView()

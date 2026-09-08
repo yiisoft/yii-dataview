@@ -217,6 +217,11 @@ final class GridView extends BaseListView
     private array $filterCellAttributes = [];
 
     /**
+     * @var array HTML attributes for the filter row.
+     */
+    private array $filterRowAttributes = [];
+
+    /**
      * @var string|null CSS class for invalid filter cells.
      */
     private ?string $filterCellInvalidClass = null;
@@ -283,6 +288,20 @@ final class GridView extends BaseListView
     {
         $new = clone $this;
         $new->filterCellAttributes = $attributes;
+        return $new;
+    }
+
+    /**
+     * Return new instance with the HTML attributes for the filter row.
+     *
+     * @param array $attributes Attribute values indexed by attribute names.
+     *
+     * @return self New instance with the filter row attributes.
+     */
+    public function filterRowAttributes(array $attributes): self
+    {
+        $new = clone $this;
+        $new->filterRowAttributes = $attributes;
         return $new;
     }
 
@@ -907,7 +926,7 @@ final class GridView extends BaseListView
             $filtersForm = Html::form($url, 'GET', $formAttributes)
                 ->content(...$content)
                 ->render();
-            $filterRow = Html::tr()->cells(...$tags);
+            $filterRow = Html::tr($this->filterRowAttributes)->cells(...$tags);
         } else {
             $filterRow = null;
         }
