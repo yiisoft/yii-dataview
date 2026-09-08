@@ -972,6 +972,130 @@ final class GridViewTest extends TestCase
         );
     }
 
+    public function testSortableHeaderClasses(): void
+    {
+        $dataReader = (new IterableDataReader([
+            ['id' => 1, 'name' => 'Anna', 'age' => 20],
+            ['id' => 2, 'name' => 'Bob', 'age' => 25],
+        ]))->withSort(Sort::any(['id', 'name', 'age'])->withOrderString('id,-name'));
+
+        $html = $this->createGridView()
+            ->dataReader($dataReader)
+            ->sortableHeaderClass('sortable')
+            ->sortableHeaderAscClass('asc')
+            ->sortableHeaderDescClass('desc')
+            ->columns(
+                new DataColumn('id'),
+                new DataColumn('name'),
+                new DataColumn('age'),
+            )
+            ->render();
+
+        $this->assertStringContainsString(
+            <<<HTML
+            <thead>
+            <tr>
+            <th class="asc"><a href="#">Id</a></th>
+            <th class="desc"><a href="#">Name</a></th>
+            <th class="sortable"><a href="#">Age</a></th>
+            </tr>
+            </thead>
+            HTML,
+            $html,
+        );
+    }
+
+    public function testSortableLinkAscClass(): void
+    {
+        $dataReader = (new IterableDataReader([
+            ['id' => 1, 'name' => 'Anna'],
+            ['id' => 2, 'name' => 'Bob'],
+        ]))->withSort(Sort::any(['id', 'name'])->withOrderString('id'));
+
+        $html = $this->createGridView()
+            ->dataReader($dataReader)
+            ->sortableLinkAscClass('asc-link')
+            ->columns(
+                new DataColumn('id'),
+                new DataColumn('name'),
+            )
+            ->render();
+
+        $this->assertStringContainsString(
+            <<<HTML
+            <thead>
+            <tr>
+            <th><a class="asc-link" href="#">Id</a></th>
+            <th><a href="#">Name</a></th>
+            </tr>
+            </thead>
+            HTML,
+            $html,
+        );
+    }
+
+    public function testSortableLinkDescClass(): void
+    {
+        $dataReader = (new IterableDataReader([
+            ['id' => 1, 'name' => 'Anna'],
+            ['id' => 2, 'name' => 'Bob'],
+        ]))->withSort(Sort::any(['id', 'name'])->withOrderString('-id'));
+
+        $html = $this->createGridView()
+            ->dataReader($dataReader)
+            ->sortableLinkDescClass('desc-link')
+            ->columns(
+                new DataColumn('id'),
+                new DataColumn('name'),
+            )
+            ->render();
+
+        $this->assertStringContainsString(
+            <<<HTML
+            <thead>
+            <tr>
+            <th><a class="desc-link" href="#">Id</a></th>
+            <th><a href="#">Name</a></th>
+            </tr>
+            </thead>
+            HTML,
+            $html,
+        );
+    }
+
+    public function testSortableLinkClassesWithSortableLinkAttributes(): void
+    {
+        $dataReader = (new IterableDataReader([
+            ['id' => 1, 'name' => 'Anna', 'age' => 20],
+            ['id' => 2, 'name' => 'Bob', 'age' => 25],
+        ]))->withSort(Sort::any(['id', 'name', 'age'])->withOrderString('id,-name'));
+
+        $html = $this->createGridView()
+            ->dataReader($dataReader)
+            ->sortableLinkAttributes(['class' => 'sort-link', 'data-sort' => 'enabled'])
+            ->sortableLinkAscClass('asc-link')
+            ->sortableLinkDescClass('desc-link')
+            ->columns(
+                new DataColumn('id'),
+                new DataColumn('name'),
+                new DataColumn('age'),
+            )
+            ->render();
+
+        $this->assertStringContainsString(
+            <<<HTML
+            <thead>
+            <tr>
+            <th><a class="sort-link asc-link" data-sort="enabled" href="#">Id</a></th>
+            <th><a class="sort-link desc-link" data-sort="enabled" href="#">Name</a></th>
+            <th><a class="sort-link" data-sort="enabled" href="#">Age</a></th>
+            </tr>
+            </thead>
+            HTML,
+            $html,
+        );
+    }
+
     public function testNoResultsCellAttributes(): void
     {
         $html = $this->createGridView()
@@ -2879,6 +3003,11 @@ final class GridViewTest extends TestCase
         $this->assertNotSame($gridView, $gridView->sortableHeaderAscAppend('test'));
         $this->assertNotSame($gridView, $gridView->sortableHeaderDescPrepend('test'));
         $this->assertNotSame($gridView, $gridView->sortableHeaderDescAppend('test'));
+        $this->assertNotSame($gridView, $gridView->sortableHeaderClass('test'));
+        $this->assertNotSame($gridView, $gridView->sortableHeaderAscClass('test'));
+        $this->assertNotSame($gridView, $gridView->sortableHeaderDescClass('test'));
+        $this->assertNotSame($gridView, $gridView->sortableLinkAscClass('test'));
+        $this->assertNotSame($gridView, $gridView->sortableLinkDescClass('test'));
         $this->assertNotSame($gridView, $gridView->noResultsCellAttributes([]));
         $this->assertNotSame($gridView, $gridView->pageParameterName('p'));
         $this->assertNotSame($gridView, $gridView->previousPageParameterName('pp'));

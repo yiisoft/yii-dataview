@@ -3,6 +3,9 @@
 ## 1.2.1 under development
 
 - New #359: Add `GridView::keepColumnAttributesInEmptyCell()` to keep column body cell attributes on empty cells (@vjik)
+- New #361: Add `GridView` methods `sortableHeaderClass()`, `sortableHeaderAscClass()`, `sortableHeaderDescClass()`,
+  `sortableLinkAscClass()` and `sortableLinkDescClass()` to configure CSS classes for sortable column headers and 
+  links (@vjik)
 - Enh #358: Make dependency container in `GridView` constructor optional (@vjik)
 
 ## 1.2.0 September 02, 2026
