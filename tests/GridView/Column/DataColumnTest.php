@@ -383,6 +383,70 @@ final class DataColumnTest extends TestCase
         );
     }
 
+    public function testFilterAttributes(): void
+    {
+        $html = $this->createGridView([['name' => 'John']])
+            ->filterFormId('FID')
+            ->columns(
+                new DataColumn(
+                    property: 'name',
+                    filter: true,
+                    filterAttributes: ['class' => 'filter-class', 'data-test' => 'filter'],
+                ),
+            )
+            ->render();
+
+        $this->assertStringContainsString(
+            <<<HTML
+            <td class="filter-class" data-test="filter"><input type="text" name="name" form="FID"></td>
+            HTML,
+            $html,
+        );
+    }
+
+    public function testFilterClass(): void
+    {
+        $html = $this->createGridView([['name' => 'John']])
+            ->filterFormId('FID')
+            ->columns(
+                new DataColumn(
+                    property: 'name',
+                    filter: true,
+                    filterClass: 'filter-class',
+                ),
+            )
+            ->render();
+
+        $this->assertStringContainsString(
+            <<<HTML
+            <td class="filter-class"><input type="text" name="name" form="FID"></td>
+            HTML,
+            $html,
+        );
+    }
+
+    public function testFilterAttributesAndClassTogether(): void
+    {
+        $html = $this->createGridView([['name' => 'John']])
+            ->filterFormId('FID')
+            ->columns(
+                new DataColumn(
+                    property: 'name',
+                    filter: true,
+                    filterAttributes: ['class' => 'attr-class', 'data-test' => 'filter'],
+                    filterClass: 'extra-class',
+                ),
+            )
+            ->render();
+
+        $this->assertStringContainsString(
+            <<<HTML
+            <td class="attr-class extra-class" data-test="filter"><input type="text" name="name" form="FID"></td>
+            HTML,
+            $html,
+        );
+    }
+
     public function testFilterTrue(): void
     {
         $html = $this->createGridView([['name' => 'John']])

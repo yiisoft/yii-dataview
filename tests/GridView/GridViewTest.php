@@ -152,6 +152,26 @@ final class GridViewTest extends TestCase
         );
     }
 
+    public function testFilterRowAttributes(): void
+    {
+        $html = $this->createGridView()
+            ->filterFormId('FID')
+            ->filterRowAttributes(['class' => 'filter-row', 'data-test' => 'filter'])
+            ->columns(
+                new DataColumn(property: 'name', filter: true),
+            )
+            ->render();
+
+        $this->assertStringContainsString(
+            <<<HTML
+            <tr class="filter-row" data-test="filter">
+            <td><input type="text" name="name" form="FID"></td>
+            </tr>
+            HTML,
+            $html,
+        );
+    }
+
     public function testFilterCellInvalidClass(): void
     {
         $html = $this->createGridView()
@@ -2846,6 +2866,7 @@ final class GridViewTest extends TestCase
         $this->assertNotSame($gridView, $gridView->noResultsTemplate('{text}'));
         $this->assertNotSame($gridView, $gridView->addColumnRendererConfigs([]));
         $this->assertNotSame($gridView, $gridView->filterCellAttributes([]));
+        $this->assertNotSame($gridView, $gridView->filterRowAttributes([]));
         $this->assertNotSame($gridView, $gridView->filterCellInvalidClass('invalid'));
         $this->assertNotSame($gridView, $gridView->filterErrorsContainerAttributes([]));
         $this->assertNotSame($gridView, $gridView->filterFormId('form'));
