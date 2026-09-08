@@ -708,6 +708,7 @@ When a cell has no content, GridView renders an empty cell. You can customize it
 |--------|-------------|
 | `emptyCell(string $content, ?array $attributes = null)` | Set empty cell HTML content and optionally its attributes. Default content: `&nbsp;` |
 | `emptyCellAttributes(array $attributes)` | Set HTML attributes for empty cells |
+| `keepColumnAttributesInEmptyCell(bool $enabled = true)` | Keep the attributes set by the column (grid-level `bodyCellAttributes()` and column-level `bodyAttributes`/`bodyClass`) on empty cells. Disabled by default |
 
 ```php
 echo GridView::widget()
@@ -715,6 +716,11 @@ echo GridView::widget()
     ->emptyCell('-', ['class' => 'empty'])
     ->columns(/* ... */);
 ```
+
+By default an empty cell uses `emptyCellAttributes()` only. Enable `keepColumnAttributesInEmptyCell()` to preserve
+the column's own body cell attributes (for example, responsive CSS classes) on empty cells. In that case the empty
+cell attributes are layered on top of the column's attributes: CSS classes are merged, other attributes from
+`emptyCellAttributes()` take precedence on conflict.
 
 ## No Results Customization
 

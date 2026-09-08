@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Yiisoft\Yii\DataView\GridView;
 
+use BackedEnum;
 use Closure;
 use Psr\Container\ContainerInterface;
 use Stringable;
@@ -31,10 +32,14 @@ use Yiisoft\Yii\DataView\GridView\Column\SortableColumnRendererInterface;
 use Yiisoft\Yii\DataView\Url\UrlParametersFactory;
 use Yiisoft\Yii\DataView\Url\UrlParameterType;
 
+use function array_key_exists;
+use function array_merge;
 use function call_user_func_array;
 use function count;
 use function in_array;
+use function is_array;
 use function is_callable;
+use function is_string;
 
 use const ARRAY_FILTER_USE_KEY;
 
@@ -87,6 +92,11 @@ final class GridView extends BaseListView
      * @var array HTML attributes for empty cells
      */
     private array $emptyCellAttributes = [];
+
+    /**
+     * @var bool Whether an empty body cell keeps the HTML attributes set by its column.
+     */
+    private bool $keepColumnAttributesInEmptyCell = false;
 
     /**
      * @var bool Whether the footer section is enabled.
@@ -463,6 +473,25 @@ final class GridView extends BaseListView
     {
         $new = clone $this;
         $new->emptyCellAttributes = $attributes;
+        return $new;
+    }
+
+    /**
+     * Returns a new instance with a flag defining whether an empty body cell keeps the HTML attributes set by its
+     * column (grid-level {@see bodyCellAttributes()} and column-level `bodyAttributes`/`bodyClass`).
+     *
+     * When enabled, {@see emptyCellAttributes()} are layered on top of the column's attributes: CSS classes are
+     * merged, other attributes from {@see emptyCellAttributes()} take precedence on conflict. When disabled
+     * (default), an empty cell uses {@see emptyCellAttributes()} only.
+     *
+     * @param bool $enabled Whether an empty body cell keeps the attributes set by its column.
+     *
+     * @return self New instance with the flag applied.
+     */
+    public function keepColumnAttributesInEmptyCell(bool $enabled = true): self
+    {
+        $new = clone $this;
+        $new->keepColumnAttributesInEmptyCell = $enabled;
         return $new;
     }
 
@@ -949,7 +978,10 @@ final class GridView extends BaseListView
                 $context = new DataContext($preparedDataReader, $column, $value, $key, $index);
                 $cell = $renderers[$i]->renderBody($column, new Cell($this->bodyCellAttributes), $context);
                 $tags[] = $cell->isEmptyContent()
-                    ? Html::td($this->emptyCell, $this->emptyCellAttributes)->encode(false)
+                    ? Html::td(
+                        $this->emptyCell,
+                        $this->prepareEmptyBodyCellAttributes($cell->getAttributes(), $context)
+                    )->encode(false)
                     : Html::td(attributes: $this->prepareBodyCellAttributes($cell->getAttributes(), $context))
                         ->content(...$cell->getContent())
                         ->encode($cell->shouldEncode())
@@ -1109,6 +1141,33 @@ final class GridView extends BaseListView
         }
 
         return $attributes;
+    }
+
+    /**
+     * Prepares the attributes for an empty body cell.
+     *
+     * @param array $attributes The column's body cell attributes.
+     * @param DataContext $context The data context.
+     *
+     * @return array The prepared attributes.
+     */
+    private function prepareEmptyBodyCellAttributes(array $attributes, DataContext $context): array
+    {
+        if (!$this->keepColumnAttributesInEmptyCell) {
+            return $this->emptyCellAttributes;
+        }
+
+        $attributes = $this->prepareBodyCellAttributes($attributes, $context);
+
+        $emptyCellAttributes = $this->emptyCellAttributes;
+        if (array_key_exists('class', $emptyCellAttributes)) {
+            $class = $emptyCellAttributes['class'];
+            unset($emptyCellAttributes['class']);
+            /** @psalm-suppress MixedArgument We assume that class is valid value. */
+            Html::addCssClass($attributes, $class);
+        }
+
+        return array_merge($attributes, $emptyCellAttributes);
     }
 
     /**

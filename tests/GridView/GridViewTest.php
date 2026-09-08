@@ -418,6 +418,64 @@ final class GridViewTest extends TestCase
         );
     }
 
+    #[TestWith([false, '<td class="empty-cell">N/A</td>'])]
+    #[TestWith([true, '<td data-label="Name" class="d-none d-md-table-cell empty-cell">N/A</td>'])]
+    public function testKeepColumnAttributesInEmptyCell(bool $keep, string $expectedCell): void
+    {
+        $gridView = $this->createGridView([
+            ['id' => 1, 'name' => null],
+        ])
+            ->emptyCell('N/A', ['class' => 'empty-cell'])
+            ->columns(
+                new DataColumn(property: 'id'),
+                new DataColumn(
+                    property: 'name',
+                    bodyAttributes: ['data-label' => 'Name'],
+                    bodyClass: 'd-none d-md-table-cell',
+                ),
+            );
+
+        if ($keep) {
+            $gridView = $gridView->keepColumnAttributesInEmptyCell();
+        }
+
+        $this->assertStringContainsString($expectedCell, $gridView->render());
+    }
+
+    public function testKeepColumnAttributesInEmptyCellWithEmptyCellAttributesTakingPrecedence(): void
+    {
+        $html = $this->createGridView([
+            ['id' => 1, 'name' => null],
+        ])
+            ->emptyCell('N/A')
+            ->emptyCellAttributes(['data-label' => 'Empty'])
+            ->keepColumnAttributesInEmptyCell()
+            ->columns(
+                new DataColumn(property: 'id'),
+                new DataColumn(property: 'name', bodyAttributes: ['data-label' => 'Name']),
+            )
+            ->render();
+
+        $this->assertStringContainsString('<td data-label="Empty">N/A</td>', $html);
+    }
+
+    public function testKeepColumnAttributesInEmptyCellDisabled(): void
+    {
+        $html = $this->createGridView([
+            ['id' => 1, 'name' => null],
+        ])
+            ->emptyCell('N/A', ['class' => 'empty-cell'])
+            ->keepColumnAttributesInEmptyCell()
+            ->keepColumnAttributesInEmptyCell(false)
+            ->columns(
+                new DataColumn(property: 'id'),
+                new DataColumn(property: 'name', bodyClass: 'd-none d-md-table-cell'),
+            )
+            ->render();
+
+        $this->assertStringContainsString('<td class="empty-cell">N/A</td>', $html);
+    }
+
     public function testFooterRowAttributes(): void
     {
         $html = $this->createGridView()
@@ -2799,6 +2857,7 @@ final class GridViewTest extends TestCase
         $this->assertNotSame($gridView, $gridView->columnGrouping());
         $this->assertNotSame($gridView, $gridView->emptyCell('test'));
         $this->assertNotSame($gridView, $gridView->emptyCellAttributes([]));
+        $this->assertNotSame($gridView, $gridView->keepColumnAttributesInEmptyCell());
         $this->assertNotSame($gridView, $gridView->enableFooter());
         $this->assertNotSame($gridView, $gridView->footerRowAttributes([]));
         $this->assertNotSame($gridView, $gridView->enableHeader());
