@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Yiisoft\Yii\DataView\GridView;
 
-use BackedEnum;
 use Closure;
 use Psr\Container\ContainerInterface;
 use Stringable;
@@ -37,9 +36,7 @@ use function array_merge;
 use function call_user_func_array;
 use function count;
 use function in_array;
-use function is_array;
 use function is_callable;
-use function is_string;
 
 use const ARRAY_FILTER_USE_KEY;
 
@@ -980,7 +977,7 @@ final class GridView extends BaseListView
                 $tags[] = $cell->isEmptyContent()
                     ? Html::td(
                         $this->emptyCell,
-                        $this->prepareEmptyBodyCellAttributes($cell->getAttributes(), $context)
+                        $this->prepareEmptyBodyCellAttributes($cell->getAttributes(), $context),
                     )->encode(false)
                     : Html::td(attributes: $this->prepareBodyCellAttributes($cell->getAttributes(), $context))
                         ->content(...$cell->getContent())
