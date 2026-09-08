@@ -2866,6 +2866,7 @@ final class GridViewTest extends TestCase
         $this->assertNotSame($gridView, $gridView->noResultsTemplate('{text}'));
         $this->assertNotSame($gridView, $gridView->addColumnRendererConfigs([]));
         $this->assertNotSame($gridView, $gridView->filterCellAttributes([]));
+        $this->assertNotSame($gridView, $gridView->filterRowAttributes([]));
         $this->assertNotSame($gridView, $gridView->filterCellInvalidClass('invalid'));
         $this->assertNotSame($gridView, $gridView->filterErrorsContainerAttributes([]));
         $this->assertNotSame($gridView, $gridView->filterFormId('form'));
