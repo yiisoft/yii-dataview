@@ -420,6 +420,7 @@ the underlying data reader to `GridView` when unpaginated export is required.
 ### `GridView` filter options
 
 - `filterCellAttributes(array $attributes)` - HTML attributes for the filter cell (`td`) tag.
+- `filterRowAttributes(array $attributes)` - HTML attributes for the filter row (`tr`) tag.
 - `filterCellInvalidClass(?string $class)` - CSS class for the filter cell when the filter value is invalid.
 - `filterErrorsContainerAttributes(array $attributes)` - HTML attributes for the filter errors container.
 - `filterFormId(string $id)` - set a custom ID for the filter form.
@@ -474,6 +475,15 @@ Available values:
 - `null` or `true` - `\Yiisoft\Validator\EmptyCondition\WhenEmpty` is used, empty values: `null`, `[]`, or `''`;
 - `false` - `\Yiisoft\Validator\EmptyCondition\NeverEmpty` is used, every value is considered non-empty;
 - `callable` - custom condition with signature `callable(mixed $value): bool`.
+
+#### `$filterAttributes`
+
+HTML attributes for the filter cell (`td`) tag of this column. Applied on top of the grid-wide
+`filterCellAttributes()`.
+
+#### `$filterClass`
+
+Additional CSS class for the filter cell (`td`) tag of this column.
 
 ## Sorting
 
