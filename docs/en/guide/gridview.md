@@ -658,8 +658,30 @@ echo GridView::widget()
     ->columns(/* ... */);
 ```
 
-The `caption()` method accepts `string`, `Stringable`, or `null`. Pass `null` to remove the caption.
-The caption is rendered as a `<caption>` tag inside the `<table>` element.
+The `caption()` method accepts `string`, `Stringable`, or `null` as the first argument. Pass `null` to remove the
+caption. The caption is rendered as a `<caption>` tag inside the `<table>` element.
+
+The second argument sets HTML attributes for the `<caption>` tag. Pass `null` (the default) to keep the current
+attributes:
+
+```php
+use Yiisoft\Yii\DataView\GridView\GridView;
+
+echo GridView::widget()
+    ->dataReader($dataReader)
+    ->caption('List of Users', ['class' => 'grid-caption'])
+    ->columns(/* ... */);
+```
+
+The `captionAttributes()` method sets the same attributes independently of the caption content:
+
+```php
+echo GridView::widget()
+    ->dataReader($dataReader)
+    ->caption('List of Users')
+    ->captionAttributes(['class' => 'grid-caption'])
+    ->columns(/* ... */);
+```
 
 ### Column grouping
 
