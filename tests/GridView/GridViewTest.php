@@ -641,6 +641,51 @@ final class GridViewTest extends TestCase
         );
     }
 
+    public function testCaptionWithAttributes(): void
+    {
+        $html = $this->createGridView()
+            ->caption('Users list', ['class' => 'caption', 'aria-hidden' => 'true'])
+            ->columns(
+                new DataColumn('id'),
+            )
+            ->render();
+
+        $this->assertStringContainsString(
+            <<<HTML
+            <table>
+            <caption class="caption" aria-hidden="true">Users list</caption>
+            <thead>
+            HTML,
+            $html,
+        );
+    }
+
+    public function testCaptionKeepsAttributesWhenAttributesNotPassed(): void
+    {
+        $html = $this->createGridView()
+            ->captionAttributes(['class' => 'caption'])
+            ->caption('Second')
+            ->columns(
+                new DataColumn('id'),
+            )
+            ->render();
+
+        $this->assertStringContainsString('<caption class="caption">Second</caption>', $html);
+    }
+
+    public function testCaptionAttributesMethod(): void
+    {
+        $html = $this->createGridView()
+            ->caption('Users list')
+            ->captionAttributes(['class' => 'caption'])
+            ->columns(
+                new DataColumn('id'),
+            )
+            ->render();
+
+        $this->assertStringContainsString('<caption class="caption">Users list</caption>', $html);
+    }
+
     public function testAddTableClass(): void
     {
         $html = $this->createGridView()
@@ -2886,6 +2931,7 @@ final class GridViewTest extends TestCase
         $this->assertNotSame($gridView, $gridView->bodyRowAttributes([]));
         $this->assertNotSame($gridView, $gridView->tableAttributes([]));
         $this->assertNotSame($gridView, $gridView->caption('test'));
+        $this->assertNotSame($gridView, $gridView->captionAttributes([]));
         $this->assertNotSame($gridView, $gridView->addTableClass('test'));
         $this->assertNotSame($gridView, $gridView->tableClass('test'));
         $this->assertNotSame($gridView, $gridView->tbodyAttributes([]));
