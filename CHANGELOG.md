@@ -8,6 +8,8 @@
   links (@vjik)
 - New #360: Add `GridView::filterRowAttributes()`, and `filterAttributes` and `filterClass` parameters to `DataColumn`
   to set HTML attributes and a CSS class for filter cells (@vjik)
+- New #362: Add `GridView::captionAttributes()` method and `$attributes` parameter to `GridView::caption()` to set
+  HTML attributes for the `caption` tag (@vjik)
 - Enh #358: Make dependency container in `GridView` constructor optional (@vjik)
 
 ## 1.2.0 September 02, 2026

@@ -132,6 +132,11 @@ final class GridView extends BaseListView
     private string|Stringable|null $caption = null;
 
     /**
+     * @var array HTML attributes for the `caption` tag.
+     */
+    private array $captionAttributes = [];
+
+    /**
      * @var array HTML attributes for the tbody tag.
      */
     private array $tbodyAttributes = [];
@@ -613,13 +618,32 @@ final class GridView extends BaseListView
      * Return new instance with the content for the `caption` tag.
      *
      * @param string|Stringable|null $content Caption content. Set to `null` to remove caption.
+     * @param array|null $attributes HTML attributes for the `caption` tag in terms of name-value pairs. Set to `null`
+     * to keep the current attributes.
      *
      * @return self New instance with the caption content.
      */
-    public function caption(string|Stringable|null $content): self
+    public function caption(string|Stringable|null $content, ?array $attributes = null): self
     {
         $new = clone $this;
         $new->caption = $content;
+        if ($attributes !== null) {
+            $new->captionAttributes = $attributes;
+        }
+        return $new;
+    }
+
+    /**
+     * Return new instance with the HTML attributes for the `caption` tag.
+     *
+     * @param array $attributes The tag attributes in terms of name-value pairs.
+     *
+     * @return self New instance with the caption attributes.
+     */
+    public function captionAttributes(array $attributes): self
+    {
+        $new = clone $this;
+        $new->captionAttributes = $attributes;
         return $new;
     }
 
@@ -1099,7 +1123,7 @@ final class GridView extends BaseListView
 
         $caption = $this->caption === null
             ? ''
-            : Html::tag('caption', $this->caption) . "\n";
+            : Html::tag('caption', $this->caption, $this->captionAttributes) . "\n";
 
         return
             $filtersForm
