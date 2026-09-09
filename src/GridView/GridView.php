@@ -720,6 +720,9 @@ final class GridView extends BaseListView
     /**
      * Return new instance with the HTML attributes for the `th` tag.
      *
+     * By default, header cells are rendered with `scope="col"`. Pass `['scope' => null]` to remove it, or another
+     * value to override it.
+     *
      * @param array $attributes The tag attributes in terms of name-value pairs.
      *
      * @return self New instance with the header cell attributes.
@@ -1037,9 +1040,13 @@ final class GridView extends BaseListView
         if ($this->isHeaderEnabled) {
             $tags = [];
             foreach ($columns as $i => $column) {
-                $cell = $renderers[$i]->renderHeader($column, new Cell($this->headerCellAttributes), $globalContext);
+                $cell = $renderers[$i]->renderHeader(
+                    $column,
+                    new Cell(array_merge(['scope' => 'col'], $this->headerCellAttributes)),
+                    $globalContext,
+                );
                 $tags[] = $cell === null
-                    ? Html::th('&nbsp;')->encode(false)
+                    ? Html::th('&nbsp;', ['scope' => 'col'])->encode(false)
                     : Html::th(attributes: $cell->getAttributes())
                         ->content(...$cell->getContent())
                         ->encode($cell->shouldEncode())

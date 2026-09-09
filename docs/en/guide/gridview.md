@@ -700,6 +700,46 @@ echo GridView::widget()
     );
 ```
 
+## Accessibility
+
+`GridView` renders a semantic HTML table so assistive technologies (screen readers, braille displays, voice control)
+can announce it as a table and let users navigate it by row and column.
+
+### What `GridView` does automatically
+
+- The table is split into `<thead>`, `<tbody>`, and (when enabled) `<tfoot>` sections.
+- Every header cell is a `<th>` element carrying `scope="col"`, so screen readers announce the corresponding column
+  header when the user moves through the body cells.
+
+### Overriding or removing `scope`
+
+The `scope="col"` attribute is a default value that can be overridden or removed through the regular header cell
+attribute methods. Pass `['scope' => null]` to drop it, or another value (for example `'colgroup'`) to change it:
+
+```php
+use Yiisoft\Yii\DataView\GridView\GridView;
+use Yiisoft\Yii\DataView\GridView\Column\DataColumn;
+
+echo GridView::widget()
+    ->dataReader($dataReader)
+    // For all header cells:
+    ->headerCellAttributes(['scope' => null])
+    ->columns(
+        // ...or for a single column:
+        new DataColumn(property: 'name', headerAttributes: ['scope' => 'colgroup']),
+    );
+```
+
+### Recommendations
+
+- Give the table an accessible name with `caption()`. It is exposed to assistive technologies and helps users tell
+  several tables on a page apart.
+- Provide meaningful header text for every column. When a `DataColumn` has no `header`, the property name is used as
+  a fallback, which is rarely a good label.
+- For sortable columns you can expose the current sort state and a clearer action label by adding ARIA attributes
+  through the attribute methods, for example `headerAttributes: ['aria-sort' => 'ascending']` on the sorted column
+  and `sortableLinkAttributes(['aria-label' => 'Sort by name'])` for the sort links.
+
 ## Row Customization
 
 ```php

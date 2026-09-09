@@ -25,7 +25,7 @@ final class CheckboxColumnTest extends TestCase
             <table>
             <thead>
             <tr>
-            <th><input name="checkbox-selection-all" value="1" type="checkbox"></th>
+            <th scope="col"><input name="checkbox-selection-all" value="1" type="checkbox"></th>
             </tr>
             </thead>
             <tbody>
@@ -55,7 +55,7 @@ final class CheckboxColumnTest extends TestCase
             <<<HTML
             <thead>
             <tr>
-            <th>Select Items</th>
+            <th scope="col">Select Items</th>
             </tr>
             </thead>
             HTML,
@@ -74,7 +74,7 @@ final class CheckboxColumnTest extends TestCase
             <table>
             <thead>
             <tr>
-            <th>&nbsp;</th>
+            <th scope="col">&nbsp;</th>
             </tr>
             </thead>
             <tbody>
@@ -151,7 +151,7 @@ final class CheckboxColumnTest extends TestCase
 
         $this->assertStringContainsString(
             <<<HTML
-            <th class="header-class"><input name="checkbox-selection-all" value="1" type="checkbox"></th>
+            <th scope="col" class="header-class"><input name="checkbox-selection-all" value="1" type="checkbox"></th>
             HTML,
             $html,
         );

@@ -69,8 +69,8 @@ final class GridViewTest extends TestCase
             <table>
             <thead>
             <tr>
-            <th>Id</th>
-            <th>Name</th>
+            <th scope="col">Id</th>
+            <th scope="col">Name</th>
             </tr>
             </thead>
             <tbody>
@@ -111,8 +111,8 @@ final class GridViewTest extends TestCase
             <table>
             <thead>
             <tr>
-            <th>Id</th>
-            <th>Name</th>
+            <th scope="col">Id</th>
+            <th scope="col">Name</th>
             </tr>
             </thead>
             <tbody>
@@ -284,7 +284,7 @@ final class GridViewTest extends TestCase
             ->render();
 
         $this->assertStringContainsString(
-            '<th><a href="' . $expectedUrl . '">Id</a></th>',
+            '<th scope="col"><a href="' . $expectedUrl . '">Id</a></th>',
             $html,
         );
     }
@@ -554,7 +554,7 @@ final class GridViewTest extends TestCase
             <<<HTML
             <thead>
             <tr class="header-row" data-header="grid">
-            <th>Id</th>
+            <th scope="col">Id</th>
             </tr>
             </thead>
             HTML,
@@ -779,8 +779,49 @@ final class GridViewTest extends TestCase
             <<<HTML
             <thead>
             <tr>
-            <th class="header-cell" data-sort="enabled">Id</th>
-            <th class="header-cell" data-sort="enabled">Name</th>
+            <th scope="col" class="header-cell" data-sort="enabled">Id</th>
+            <th scope="col" class="header-cell" data-sort="enabled">Name</th>
+            </tr>
+            </thead>
+            HTML,
+            $html,
+        );
+    }
+
+    public function testHeaderCellScopeByDefault(): void
+    {
+        $html = $this->createGridView()
+            ->columns(new DataColumn('id'))
+            ->render();
+
+        $this->assertStringContainsString('<th scope="col">Id</th>', $html);
+    }
+
+    public function testHeaderCellScopeOverride(): void
+    {
+        $html = $this->createGridView()
+            ->headerCellAttributes(['scope' => null])
+            ->columns(new DataColumn('id'))
+            ->render();
+
+        $this->assertStringContainsString('<th>Id</th>', $html);
+    }
+
+    public function testHeaderCellScopeColumnOverride(): void
+    {
+        $html = $this->createGridView()
+            ->columns(
+                new DataColumn('id', headerAttributes: ['scope' => 'colgroup']),
+                new DataColumn('name'),
+            )
+            ->render();
+
+        $this->assertStringContainsString(
+            <<<HTML
+            <thead>
+            <tr>
+            <th scope="colgroup">Id</th>
+            <th scope="col">Name</th>
             </tr>
             </thead>
             HTML,
@@ -848,8 +889,8 @@ final class GridViewTest extends TestCase
             <<<HTML
             <thead>
             <tr>
-            <th><a class="sort-link" data-sort="enabled" href="/route?sort=id">Id</a></th>
-            <th><a class="sort-link" data-sort="enabled" href="/route?sort=name">Name</a></th>
+            <th scope="col"><a class="sort-link" data-sort="enabled" href="/route?sort=id">Id</a></th>
+            <th scope="col"><a class="sort-link" data-sort="enabled" href="/route?sort=name">Name</a></th>
             </tr>
             </thead>
             HTML,
@@ -876,8 +917,8 @@ final class GridViewTest extends TestCase
             <<<HTML
             <thead>
             <tr>
-            <th>↕ <a href="#">Id</a></th>
-            <th>↕ <a href="#">Name</a></th>
+            <th scope="col">↕ <a href="#">Id</a></th>
+            <th scope="col">↕ <a href="#">Name</a></th>
             </tr>
             </thead>
             HTML,
@@ -904,8 +945,8 @@ final class GridViewTest extends TestCase
             <<<HTML
             <thead>
             <tr>
-            <th><a href="#">Id</a> ⟷</th>
-            <th><a href="#">Name</a> ⟷</th>
+            <th scope="col"><a href="#">Id</a> ⟷</th>
+            <th scope="col"><a href="#">Name</a> ⟷</th>
             </tr>
             </thead>
             HTML,
@@ -935,8 +976,8 @@ final class GridViewTest extends TestCase
             <<<HTML
             <thead>
             <tr>
-            <th>↑ <a href="#">Id</a></th>
-            <th>↕ <a href="#">Name</a> ⟷</th>
+            <th scope="col">↑ <a href="#">Id</a></th>
+            <th scope="col">↕ <a href="#">Name</a> ⟷</th>
             </tr>
             </thead>
             HTML,
@@ -966,8 +1007,8 @@ final class GridViewTest extends TestCase
             <<<HTML
             <thead>
             <tr>
-            <th><a href="#">Id</a> ↑</th>
-            <th>↕ <a href="#">Name</a> ⟷</th>
+            <th scope="col"><a href="#">Id</a> ↑</th>
+            <th scope="col">↕ <a href="#">Name</a> ⟷</th>
             </tr>
             </thead>
             HTML,
@@ -997,8 +1038,8 @@ final class GridViewTest extends TestCase
             <<<HTML
             <thead>
             <tr>
-            <th>↓ <a href="#">Id</a></th>
-            <th>↕ <a href="#">Name</a> ⟷</th>
+            <th scope="col">↓ <a href="#">Id</a></th>
+            <th scope="col">↕ <a href="#">Name</a> ⟷</th>
             </tr>
             </thead>
             HTML,
@@ -1028,8 +1069,8 @@ final class GridViewTest extends TestCase
             <<<HTML
             <thead>
             <tr>
-            <th><a href="#">Id</a> ↓</th>
-            <th>↕ <a href="#">Name</a> ⟷</th>
+            <th scope="col"><a href="#">Id</a> ↓</th>
+            <th scope="col">↕ <a href="#">Name</a> ⟷</th>
             </tr>
             </thead>
             HTML,
@@ -1060,9 +1101,9 @@ final class GridViewTest extends TestCase
             <<<HTML
             <thead>
             <tr>
-            <th class="asc"><a href="#">Id</a></th>
-            <th class="desc"><a href="#">Name</a></th>
-            <th class="sortable"><a href="#">Age</a></th>
+            <th scope="col" class="asc"><a href="#">Id</a></th>
+            <th scope="col" class="desc"><a href="#">Name</a></th>
+            <th scope="col" class="sortable"><a href="#">Age</a></th>
             </tr>
             </thead>
             HTML,
@@ -1090,8 +1131,8 @@ final class GridViewTest extends TestCase
             <<<HTML
             <thead>
             <tr>
-            <th><a class="asc-link" href="#">Id</a></th>
-            <th><a href="#">Name</a></th>
+            <th scope="col"><a class="asc-link" href="#">Id</a></th>
+            <th scope="col"><a href="#">Name</a></th>
             </tr>
             </thead>
             HTML,
@@ -1119,8 +1160,8 @@ final class GridViewTest extends TestCase
             <<<HTML
             <thead>
             <tr>
-            <th><a class="desc-link" href="#">Id</a></th>
-            <th><a href="#">Name</a></th>
+            <th scope="col"><a class="desc-link" href="#">Id</a></th>
+            <th scope="col"><a href="#">Name</a></th>
             </tr>
             </thead>
             HTML,
@@ -1151,9 +1192,9 @@ final class GridViewTest extends TestCase
             <<<HTML
             <thead>
             <tr>
-            <th><a class="sort-link asc-link" data-sort="enabled" href="#">Id</a></th>
-            <th><a class="sort-link desc-link" data-sort="enabled" href="#">Name</a></th>
-            <th><a class="sort-link" data-sort="enabled" href="#">Age</a></th>
+            <th scope="col"><a class="sort-link asc-link" data-sort="enabled" href="#">Id</a></th>
+            <th scope="col"><a class="sort-link desc-link" data-sort="enabled" href="#">Name</a></th>
+            <th scope="col"><a class="sort-link" data-sort="enabled" href="#">Age</a></th>
             </tr>
             </thead>
             HTML,
@@ -1253,7 +1294,7 @@ final class GridViewTest extends TestCase
             <form id="FID" style="display:none" action method="GET"><button type="submit">Submit</button></form><table>
             <thead>
             <tr>
-            <th>Name</th>
+            <th scope="col">Name</th>
             </tr>
             <tr>
             <td><input type="text" name="name" value="Hello" form="FID"></td>
@@ -1448,7 +1489,7 @@ final class GridViewTest extends TestCase
             ->columns(new DataColumn('id'))
             ->render();
 
-        $this->assertStringContainsString('<th><a href="/route?s=id">Id</a></th>', $html);
+        $this->assertStringContainsString('<th scope="col"><a href="/route?s=id">Id</a></th>', $html);
     }
 
     public function testPageParameterType(): void
@@ -1506,7 +1547,7 @@ final class GridViewTest extends TestCase
             ->columns(new DataColumn('id'))
             ->render();
 
-        $this->assertStringContainsString('<th><a href="/route/sort-id?">Id</a></th>', $html);
+        $this->assertStringContainsString('<th scope="col"><a href="/route/sort-id?">Id</a></th>', $html);
     }
 
     public function testUrlArguments(): void
@@ -1560,8 +1601,8 @@ final class GridViewTest extends TestCase
             <<<HTML
             <thead>
             <tr>
-            <th><a href="/route?sort=-id%2Cname">Id</a></th>
-            <th><a href="/route?sort=id%2C-name">Name</a></th>
+            <th scope="col"><a href="/route?sort=-id%2Cname">Id</a></th>
+            <th scope="col"><a href="/route?sort=id%2C-name">Name</a></th>
             </tr>
             </thead>
             <tbody>
@@ -2318,7 +2359,7 @@ final class GridViewTest extends TestCase
             <table>
             <thead>
             <tr>
-            <th>Id</th>
+            <th scope="col">Id</th>
             </tr>
             </thead>
             <tbody>
@@ -2544,7 +2585,7 @@ final class GridViewTest extends TestCase
             ->render();
 
         $this->assertStringContainsString(
-            '<th><a href="/route?page=2&amp;sort=id">Id</a></th>',
+            '<th scope="col"><a href="/route?page=2&amp;sort=id">Id</a></th>',
             $html,
         );
     }
@@ -3139,8 +3180,8 @@ final class GridViewTest extends TestCase
             <form id="FID" style="display:none" action method="GET"><button type="submit">Submit</button></form><table>
             <thead>
             <tr>
-            <th>Id</th>
-            <th>Name</th>
+            <th scope="col">Id</th>
+            <th scope="col">Name</th>
             </tr>
             <tr>
             <td>&nbsp;</td>

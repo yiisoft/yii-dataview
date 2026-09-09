@@ -39,7 +39,7 @@ final class DataColumnTest extends TestCase
             <table>
             <thead>
             <tr>
-            <th></th>
+            <th scope="col"></th>
             </tr>
             </thead>
             <tbody>
@@ -77,7 +77,7 @@ final class DataColumnTest extends TestCase
             <<<HTML
             <thead>
             <tr>
-            <th>Full Name</th>
+            <th scope="col">Full Name</th>
             </tr>
             </thead>
             HTML,
@@ -97,7 +97,7 @@ final class DataColumnTest extends TestCase
             <<<HTML
             <thead>
             <tr>
-            <th>$expected</th>
+            <th scope="col">$expected</th>
             </tr>
             </thead>
             HTML,
@@ -204,7 +204,7 @@ final class DataColumnTest extends TestCase
 
         $this->assertStringContainsString(
             <<<HTML
-            <th class="header-class">Name</th>
+            <th scope="col" class="header-class">Name</th>
             HTML,
             $html,
         );
@@ -336,7 +336,7 @@ final class DataColumnTest extends TestCase
             <<<HTML
             <thead>
             <tr>
-            <th>Status</th>
+            <th scope="col">Status</th>
             </tr>
             <tr>
             <td><select name="status" form="FID" onChange="this.form.submit()">
@@ -368,7 +368,7 @@ final class DataColumnTest extends TestCase
             <<<HTML
             <thead>
             <tr>
-            <th>Status</th>
+            <th scope="col">Status</th>
             </tr>
             <tr>
             <td><select name="status" form="FID" onChange="this.form.submit()">
@@ -463,7 +463,7 @@ final class DataColumnTest extends TestCase
             <<<HTML
             <thead>
             <tr>
-            <th>Name</th>
+            <th scope="col">Name</th>
             </tr>
             <tr>
             <td><input type="text" name="name" form="FID"></td>
@@ -490,7 +490,7 @@ final class DataColumnTest extends TestCase
             <<<HTML
             <thead>
             <tr>
-            <th>Email</th>
+            <th scope="col">Email</th>
             </tr>
             <tr>
             <td><input type="text" name="email" class="red" form="FID"></td>
@@ -659,7 +659,7 @@ final class DataColumnTest extends TestCase
             ->render();
 
         $this->assertStringContainsString(
-            '<th><a href="/route?sort=name"><b>Name</b></a></th>',
+            '<th scope="col"><a href="/route?sort=name"><b>Name</b></a></th>',
             $html,
         );
     }
