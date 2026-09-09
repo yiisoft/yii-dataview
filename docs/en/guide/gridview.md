@@ -711,6 +711,8 @@ can announce it as a table and let users navigate it by row and column.
 - The table is split into `<thead>`, `<tbody>`, and (when enabled) `<tfoot>` sections.
 - Every header cell is a `<th>` element carrying `scope="col"`, so screen readers announce the corresponding column
   header when the user moves through the body cells.
+- Every sortable header cell carries an `aria-sort` attribute reflecting the current sort state: `ascending` or
+  `descending` on the column that is sorted, and `none` on the other sortable columns.
 
 ### Overriding or removing `scope="col"`
 
@@ -754,15 +756,30 @@ The `scope="row"` attribute is a default value. Change or remove it through the 
 example `bodyAttributes: ['scope' => 'rowgroup']` or `bodyAttributes: ['scope' => null]`. An empty cell renders as a
 plain `<th>` without `scope` — there is no value to label the row with.
 
+### Overriding `aria-sort`
+
+The automatically added `aria-sort` value is only used when the header cell does not already have the attribute. To
+change or remove it for a column, set `aria-sort` in the column's `headerAttributes`:
+
+```php
+use Yiisoft\Yii\DataView\GridView\GridView;
+use Yiisoft\Yii\DataView\GridView\Column\DataColumn;
+
+echo GridView::widget()
+    ->dataReader($dataReader)
+    ->columns(
+        new DataColumn(property: 'name', headerAttributes: ['aria-sort' => 'other']),
+    );
+```
+
 ### Recommendations
 
 - Give the table an accessible name with `caption()`. It is exposed to assistive technologies and helps users tell
   several tables on a page apart.
 - Provide meaningful header text for every column. When a `DataColumn` has no `header`, the property name is used as
   a fallback, which is rarely a good label.
-- For sortable columns you can expose the current sort state and a clearer action label by adding ARIA attributes
-  through the attribute methods, for example `headerAttributes: ['aria-sort' => 'ascending']` on the sorted column
-  and `sortableLinkAttributes(['aria-label' => 'Sort by name'])` for the sort links.
+- For sortable columns you can give the sort links a clearer action label with
+  `sortableLinkAttributes(['aria-label' => 'Sort by name'])`.
 
 ## Row Customization
 

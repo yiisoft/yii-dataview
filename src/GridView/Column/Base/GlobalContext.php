@@ -15,6 +15,7 @@ use Yiisoft\Yii\DataView\BaseListView;
 use Yiisoft\Yii\DataView\Url\UrlConfig;
 use Yiisoft\Yii\DataView\Url\UrlParametersFactory;
 
+use function array_key_exists;
 use function call_user_func_array;
 use function count;
 use function in_array;
@@ -95,7 +96,7 @@ final class GlobalContext
     }
 
     /**
-     * Prepare a sortable header cell with appropriate styling and links.
+     * Prepare a sortable header cell with appropriate styling, links and the `aria-sort` accessibility attribute.
      *
      * @param Cell $cell The header cell to prepare.
      * @param string $property The property name for sorting.
@@ -125,6 +126,7 @@ final class GlobalContext
             $cell = $cell->addClass($this->sortableHeaderClass);
             $prepend = $this->sortableHeaderPrepend;
             $append = $this->sortableHeaderAppend;
+            $ariaSort = 'none';
         } else {
             $cell = $cell->addClass(
                 $propertyOrder === 'asc' ? $this->sortableHeaderAscClass : $this->sortableHeaderDescClass,
@@ -135,6 +137,11 @@ final class GlobalContext
                 $linkAttributes,
                 $propertyOrder === 'asc' ? $this->sortableLinkAscClass : $this->sortableLinkDescClass,
             );
+            $ariaSort = $propertyOrder === 'asc' ? 'ascending' : 'descending';
+        }
+
+        if (!array_key_exists('aria-sort', $cell->getAttributes())) {
+            $cell = $cell->attribute('aria-sort', $ariaSort);
         }
         $url = $this->urlCreator === null ? '#' : call_user_func_array(
             $this->urlCreator,

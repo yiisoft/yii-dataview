@@ -13,6 +13,7 @@
 - New #363: Add `rowHeader` parameter to `DataColumn` to render body cells as `<th scope="row">` (@vjik)
 - Enh #358: Make dependency container in `GridView` constructor optional (@vjik)
 - Enh #363: Add `scope="col"` attribute to `GridView` header cells by default (@vjik)
+- Enh #363: Add `aria-sort` attribute to sortable `GridView` header cells by default (@vjik)
 
 ## 1.2.0 September 02, 2026
 

@@ -722,7 +722,7 @@ final class DataColumnTest extends TestCase
             ->render();
 
         $this->assertStringContainsString(
-            '<th scope="col"><a href="/route?sort=name"><b>Name</b></a></th>',
+            '<th scope="col" aria-sort="none"><a href="/route?sort=name"><b>Name</b></a></th>',
             $html,
         );
     }
