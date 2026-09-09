@@ -67,15 +67,20 @@ final class OffsetPagination extends Widget implements PaginationWidgetInterface
      * @param OffsetPaginator $paginator The paginator to use.
      * @param string $urlPattern URL pattern for page links. Must contain {@see PaginationContext::URL_PLACEHOLDER}.
      * @param string $firstPageUrl URL used on the first page.
+     * @param bool $enableAccessibility Whether to add `aria-current` and `aria-disabled` attributes automatically.
      *
      * @return self New instance with the specified paginator and context.
      */
-    public static function create(OffsetPaginator $paginator, string $urlPattern, string $firstPageUrl): self
-    {
+    public static function create(
+        OffsetPaginator $paginator,
+        string $urlPattern,
+        string $firstPageUrl,
+        bool $enableAccessibility = false,
+    ): self {
         return self::widget()
             ->paginator($paginator)
             ->context(
-                new PaginationContext($urlPattern, $urlPattern, $firstPageUrl),
+                new PaginationContext($urlPattern, $urlPattern, $firstPageUrl, $enableAccessibility),
             );
     }
 
@@ -364,15 +369,16 @@ final class OffsetPagination extends Widget implements PaginationWidgetInterface
 
     private function renderItem(string|Stringable $label, string $url, bool $isCurrent, bool $isDisabled): Stringable
     {
+        $enableAccessibility = $this->getContext()->enableAccessibility;
         $linkAttributes = $this->linkAttributes;
         if ($isDisabled) {
-            if (!array_key_exists('aria-disabled', $linkAttributes)) {
+            if ($enableAccessibility && !array_key_exists('aria-disabled', $linkAttributes)) {
                 $linkAttributes['aria-disabled'] = 'true';
             }
             Html::addCssClass($linkAttributes, $this->disabledLinkClass);
         }
         if ($isCurrent) {
-            if (!array_key_exists('aria-current', $linkAttributes)) {
+            if ($enableAccessibility && !array_key_exists('aria-current', $linkAttributes)) {
                 $linkAttributes['aria-current'] = 'page';
             }
             Html::addCssClass($linkAttributes, $this->currentLinkClass);

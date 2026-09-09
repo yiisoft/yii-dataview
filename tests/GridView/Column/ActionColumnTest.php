@@ -30,7 +30,7 @@ final class ActionColumnTest extends TestCase
             <table>
             <thead>
             <tr>
-            <th scope="col">Actions</th>
+            <th>Actions</th>
             </tr>
             </thead>
             <tbody>
@@ -215,7 +215,7 @@ final class ActionColumnTest extends TestCase
             <<<HTML
             <thead>
             <tr>
-            <th scope="col">ACTIONS UP</th>
+            <th>ACTIONS UP</th>
             </tr>
             </thead>
             <tfoot>
@@ -541,7 +541,7 @@ final class ActionColumnTest extends TestCase
             <<<HTML
             <thead>
             <tr>
-            <th scope="col" class="red">Actions</th>
+            <th class="red">Actions</th>
             </tr>
             </thead>
             HTML,

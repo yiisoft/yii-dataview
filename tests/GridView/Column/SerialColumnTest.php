@@ -29,7 +29,7 @@ final class SerialColumnTest extends TestCase
             <table>
             <thead>
             <tr>
-            <th scope="col">#</th>
+            <th>#</th>
             </tr>
             </thead>
             <tbody>
@@ -68,7 +68,7 @@ final class SerialColumnTest extends TestCase
             <table>
             <thead>
             <tr>
-            <th scope="col">#</th>
+            <th>#</th>
             </tr>
             </thead>
             <tbody>
@@ -104,7 +104,7 @@ final class SerialColumnTest extends TestCase
             <table>
             <thead>
             <tr>
-            <th scope="col">#</th>
+            <th>#</th>
             </tr>
             </thead>
             <tbody>
@@ -131,7 +131,7 @@ final class SerialColumnTest extends TestCase
             <<<HTML
             <thead>
             <tr>
-            <th scope="col">Row Number</th>
+            <th>Row Number</th>
             </tr>
             </thead>
             HTML,

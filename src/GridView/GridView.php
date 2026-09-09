@@ -720,8 +720,8 @@ final class GridView extends BaseListView
     /**
      * Return new instance with the HTML attributes for the `th` tag.
      *
-     * By default, header cells are rendered with `scope="col"`. Pass `['scope' => null]` to remove it, or another
-     * value to override it.
+     * When accessibility attributes are enabled via {@see accessibility()}, header cells are rendered with
+     * `scope="col"`. Pass `['scope' => null]` to remove it, or another value to override it.
      *
      * @param array $attributes The tag attributes in terms of name-value pairs.
      *
@@ -970,6 +970,7 @@ final class GridView extends BaseListView
             $this->urlCreator,
             $this->translator,
             $this->translationCategory,
+            $this->accessibility,
         );
 
         $tags = [];
@@ -1042,11 +1043,15 @@ final class GridView extends BaseListView
             foreach ($columns as $i => $column) {
                 $cell = $renderers[$i]->renderHeader(
                     $column,
-                    new Cell(array_merge(['scope' => 'col'], $this->headerCellAttributes)),
+                    new Cell(
+                        $this->accessibility
+                            ? array_merge(['scope' => 'col'], $this->headerCellAttributes)
+                            : $this->headerCellAttributes,
+                    ),
                     $globalContext,
                 );
                 $tags[] = $cell === null
-                    ? Html::th('&nbsp;', ['scope' => 'col'])->encode(false)
+                    ? Html::th('&nbsp;', $this->accessibility ? ['scope' => 'col'] : [])->encode(false)
                     : Html::th(attributes: $cell->getAttributes())
                         ->content(...$cell->getContent())
                         ->encode($cell->shouldEncode())
@@ -1077,6 +1082,7 @@ final class GridView extends BaseListView
             $blocks[] = Html::tfoot()->rows($footerRow)->render();
         }
 
+        $scopeRowAttributes = $this->accessibility ? ['scope' => 'row'] : [];
         $rows = [];
         $index = 0;
         foreach ($items as $key => $value) {
@@ -1103,7 +1109,7 @@ final class GridView extends BaseListView
                 } else {
                     $cellAttributes = $this->prepareBodyCellAttributes($cell->getAttributes(), $context);
                     $tag = $cell->isHeader()
-                        ? Html::th(attributes: array_merge(['scope' => 'row'], $cellAttributes))
+                        ? Html::th(attributes: array_merge($scopeRowAttributes, $cellAttributes))
                         : Html::td(attributes: $cellAttributes);
                     $tags[] = $tag
                         ->content(...$cell->getContent())

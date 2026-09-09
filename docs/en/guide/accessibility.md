@@ -1,17 +1,35 @@
 # Accessibility
 
-This guide collects the accessibility behavior of the data view widgets: what they do automatically for
-assistive technologies (screen readers, braille displays, voice control), how to override it, and what
-you still need to provide yourself.
+This guide collects the accessibility behavior of the data view widgets: what they can add for assistive
+technologies (screen readers, braille displays, voice control), how to override it, and what you still need
+to provide yourself.
+
+## Enabling the automatic attributes
+
+`GridView` and `ListView` do not add accessibility attributes by default. Call `accessibility()` to opt in —
+rendering then adds `scope="col"` and `aria-sort` on header cells, `scope="row"` on row header cells, and
+`aria-current`/`aria-disabled` on pagination links:
+
+```php
+use Yiisoft\Yii\DataView\GridView\GridView;
+
+echo GridView::widget()
+    ->dataReader($dataReader)
+    ->accessibility();
+```
+
+Pass `accessibility(false)` to turn it back off. The rest of this guide describes what the option adds and
+how to fine-tune the individual attributes; all of it applies only when `accessibility()` is enabled.
 
 ## GridView
 
 `GridView` renders a semantic HTML table so assistive technologies can announce it as a table and let
 users navigate it by row and column.
 
-### What `GridView` does automatically
+### What `GridView` adds with `accessibility()` enabled
 
-- The table is split into `<thead>`, `<tbody>`, and (when enabled) `<tfoot>` sections.
+- The table is always split into `<thead>`, `<tbody>`, and (when enabled) `<tfoot>` sections, regardless of the
+  option.
 - Every header cell is a `<th>` element carrying `scope="col"`, so screen readers announce the corresponding column
   header when the user moves through the body cells.
 - Every sortable header cell carries an `aria-sort` attribute reflecting the current sort state: `ascending` or
@@ -39,8 +57,9 @@ echo GridView::widget()
 ### Row headers
 
 When one column identifies each row (a name, a title, an ID), mark it as a row header with the `DataColumn`
-`rowHeader` parameter. Its body cells are then rendered as `<th scope="row">` instead of `<td>`, so screen readers
-announce that value together with the column header when the user moves across the row.
+`rowHeader` parameter. Its body cells are then rendered as `<th>` instead of `<td>`, and with `accessibility()`
+enabled they also carry `scope="row"`, so screen readers announce that value together with the column header when
+the user moves across the row.
 
 ```php
 use Yiisoft\Yii\DataView\GridView\GridView;
@@ -89,7 +108,11 @@ echo GridView::widget()
 Both pagination widgets (`OffsetPagination` and `KeysetPagination`) render an HTML `nav` landmark with a list of
 links, so assistive technologies can announce and navigate the control.
 
-### What the widgets do automatically
+### What the widgets add with `accessibility()` enabled
+
+When driven by `GridView`/`ListView`, the pagination widgets follow the view's `accessibility()` setting. Used
+directly, they take the flag from `PaginationContext` (also exposed as the `$enableAccessibility` argument of
+`OffsetPagination::create()` and `KeysetPagination::create()`).
 
 - `OffsetPagination` adds `aria-current="page"` to the `<a>` element of the current page, so screen
   readers announce which page is active.

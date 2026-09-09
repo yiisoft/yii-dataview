@@ -83,6 +83,11 @@ abstract class BaseListView extends Widget
     protected bool $multiSort = false;
 
     /**
+     * @var bool Whether to add accessibility attributes (such as `scope` and `aria-*`) automatically during rendering.
+     */
+    protected bool $accessibility = false;
+
+    /**
      * @var TranslatorInterface A translator instance used for translations of messages. If it wasn't set
      * explicitly in the constructor, a default one created automatically in {@see createDefaultTranslator()}.
      */
@@ -414,6 +419,22 @@ abstract class BaseListView extends Widget
     {
         $new = clone $this;
         $new->multiSort = $enable;
+        return $new;
+    }
+
+    /**
+     * Return a new instance that toggles automatically added accessibility attributes.
+     *
+     * When enabled, rendering adds machine-readable accessibility attributes: `scope="col"` and `aria-sort` on
+     * `GridView` header cells, `scope="row"` on row header cells, and `aria-current`/`aria-disabled` on pagination
+     * links. Disabled by default.
+     *
+     * @param bool $enabled Whether to add accessibility attributes automatically.
+     */
+    final public function accessibility(bool $enabled = true): static
+    {
+        $new = clone $this;
+        $new->accessibility = $enabled;
         return $new;
     }
 
@@ -1187,6 +1208,7 @@ abstract class BaseListView extends Widget
             $nextUrlPattern,
             $previousUrlPattern,
             $defaultUrl,
+            $this->accessibility,
         );
 
         return $widget->context($context)->render();

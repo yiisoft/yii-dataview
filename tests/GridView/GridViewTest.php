@@ -69,8 +69,8 @@ final class GridViewTest extends TestCase
             <table>
             <thead>
             <tr>
-            <th scope="col">Id</th>
-            <th scope="col">Name</th>
+            <th>Id</th>
+            <th>Name</th>
             </tr>
             </thead>
             <tbody>
@@ -111,8 +111,8 @@ final class GridViewTest extends TestCase
             <table>
             <thead>
             <tr>
-            <th scope="col">Id</th>
-            <th scope="col">Name</th>
+            <th>Id</th>
+            <th>Name</th>
             </tr>
             </thead>
             <tbody>
@@ -284,7 +284,7 @@ final class GridViewTest extends TestCase
             ->render();
 
         $this->assertStringContainsString(
-            '<th scope="col" aria-sort="none"><a href="' . $expectedUrl . '">Id</a></th>',
+            '<th><a href="' . $expectedUrl . '">Id</a></th>',
             $html,
         );
     }
@@ -554,7 +554,7 @@ final class GridViewTest extends TestCase
             <<<HTML
             <thead>
             <tr class="header-row" data-header="grid">
-            <th scope="col">Id</th>
+            <th>Id</th>
             </tr>
             </thead>
             HTML,
@@ -779,49 +779,8 @@ final class GridViewTest extends TestCase
             <<<HTML
             <thead>
             <tr>
-            <th scope="col" class="header-cell" data-sort="enabled">Id</th>
-            <th scope="col" class="header-cell" data-sort="enabled">Name</th>
-            </tr>
-            </thead>
-            HTML,
-            $html,
-        );
-    }
-
-    public function testHeaderCellScopeByDefault(): void
-    {
-        $html = $this->createGridView()
-            ->columns(new DataColumn('id'))
-            ->render();
-
-        $this->assertStringContainsString('<th scope="col">Id</th>', $html);
-    }
-
-    public function testHeaderCellScopeOverride(): void
-    {
-        $html = $this->createGridView()
-            ->headerCellAttributes(['scope' => null])
-            ->columns(new DataColumn('id'))
-            ->render();
-
-        $this->assertStringContainsString('<th>Id</th>', $html);
-    }
-
-    public function testHeaderCellScopeColumnOverride(): void
-    {
-        $html = $this->createGridView()
-            ->columns(
-                new DataColumn('id', headerAttributes: ['scope' => 'colgroup']),
-                new DataColumn('name'),
-            )
-            ->render();
-
-        $this->assertStringContainsString(
-            <<<HTML
-            <thead>
-            <tr>
-            <th scope="colgroup">Id</th>
-            <th scope="col">Name</th>
+            <th class="header-cell" data-sort="enabled">Id</th>
+            <th class="header-cell" data-sort="enabled">Name</th>
             </tr>
             </thead>
             HTML,
@@ -832,6 +791,7 @@ final class GridViewTest extends TestCase
     public function testRowHeaderColumn(): void
     {
         $html = $this->createGridView([['id' => 1, 'name' => 'John']])
+            ->accessibility()
             ->columns(
                 new DataColumn('name', withSorting: false, rowHeader: true),
                 new DataColumn('id', withSorting: false),
@@ -852,6 +812,120 @@ final class GridViewTest extends TestCase
             <td>1</td>
             </tr>
             </tbody>
+            HTML,
+            $html,
+        );
+    }
+
+    public function testAccessibilityDisabledByDefault(): void
+    {
+        $dataReader = (new IterableDataReader([['id' => 1, 'name' => 'John']]))
+            ->withSort(Sort::any(['id', 'name'])->withOrderString('id'));
+
+        $html = $this->createGridView($dataReader)
+            ->columns(
+                new DataColumn('name', rowHeader: true),
+                new DataColumn('id'),
+            )
+            ->render();
+
+        $this->assertStringContainsString(
+            <<<HTML
+            <thead>
+            <tr>
+            <th><a href="#">Name</a></th>
+            <th><a href="#">Id</a></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+            <th>John</th>
+            <td>1</td>
+            </tr>
+            </tbody>
+            HTML,
+            $html,
+        );
+    }
+
+    public function testAccessibilityEnabled(): void
+    {
+        $dataReader = (new IterableDataReader([['id' => 1, 'name' => 'John']]))
+            ->withSort(Sort::any(['id', 'name'])->withOrderString('id'));
+
+        $html = $this->createGridView($dataReader)
+            ->accessibility()
+            ->columns(
+                new DataColumn('name', rowHeader: true),
+                new DataColumn('id'),
+            )
+            ->render();
+
+        $this->assertStringContainsString(
+            <<<HTML
+            <thead>
+            <tr>
+            <th scope="col" aria-sort="none"><a href="#">Name</a></th>
+            <th scope="col" aria-sort="ascending"><a href="#">Id</a></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+            <th scope="row">John</th>
+            <td>1</td>
+            </tr>
+            </tbody>
+            HTML,
+            $html,
+        );
+    }
+
+    public function testAccessibilityDisabledByDefaultForPagination(): void
+    {
+        $paginator = (new OffsetPaginator(new IterableDataReader([['id' => 1], ['id' => 2]])))
+            ->withPageSize(1)
+            ->withCurrentPage(1);
+
+        $html = $this->createGridView($paginator)
+            ->urlCreator(new SimplePaginationUrlCreator())
+            ->render();
+
+        $this->assertStringContainsString(
+            <<<HTML
+            <nav>
+            <a href="/route?">⟪</a>
+            <a href="/route?">⟨</a>
+            <a href="/route?">1</a>
+            <a href="/route?page=2">2</a>
+            <a href="/route?page=2">⟩</a>
+            <a href="/route?page=2">⟫</a>
+            </nav>
+            HTML,
+            $html,
+        );
+    }
+
+    public function testAccessibilityEnabledForPagination(): void
+    {
+        $paginator = (new OffsetPaginator(new IterableDataReader([['id' => 1], ['id' => 2]])))
+            ->withPageSize(1)
+            ->withCurrentPage(1);
+
+        $html = $this->createGridView($paginator)
+            ->urlCreator(new SimplePaginationUrlCreator())
+            ->accessibility()
+            ->render();
+
+        $this->assertStringContainsString(
+            <<<HTML
+            <nav>
+            <a aria-disabled="true" href="/route?">⟪</a>
+            <a aria-disabled="true" href="/route?">⟨</a>
+            <a aria-current="page" href="/route?">1</a>
+            <a href="/route?page=2">2</a>
+            <a href="/route?page=2">⟩</a>
+            <a href="/route?page=2">⟫</a>
+            </nav>
             HTML,
             $html,
         );
@@ -917,8 +991,8 @@ final class GridViewTest extends TestCase
             <<<HTML
             <thead>
             <tr>
-            <th scope="col" aria-sort="none"><a class="sort-link" data-sort="enabled" href="/route?sort=id">Id</a></th>
-            <th scope="col" aria-sort="none"><a class="sort-link" data-sort="enabled" href="/route?sort=name">Name</a></th>
+            <th><a class="sort-link" data-sort="enabled" href="/route?sort=id">Id</a></th>
+            <th><a class="sort-link" data-sort="enabled" href="/route?sort=name">Name</a></th>
             </tr>
             </thead>
             HTML,
@@ -945,8 +1019,8 @@ final class GridViewTest extends TestCase
             <<<HTML
             <thead>
             <tr>
-            <th scope="col" aria-sort="none">↕ <a href="#">Id</a></th>
-            <th scope="col" aria-sort="none">↕ <a href="#">Name</a></th>
+            <th>↕ <a href="#">Id</a></th>
+            <th>↕ <a href="#">Name</a></th>
             </tr>
             </thead>
             HTML,
@@ -973,8 +1047,8 @@ final class GridViewTest extends TestCase
             <<<HTML
             <thead>
             <tr>
-            <th scope="col" aria-sort="none"><a href="#">Id</a> ⟷</th>
-            <th scope="col" aria-sort="none"><a href="#">Name</a> ⟷</th>
+            <th><a href="#">Id</a> ⟷</th>
+            <th><a href="#">Name</a> ⟷</th>
             </tr>
             </thead>
             HTML,
@@ -1004,8 +1078,8 @@ final class GridViewTest extends TestCase
             <<<HTML
             <thead>
             <tr>
-            <th scope="col" aria-sort="ascending">↑ <a href="#">Id</a></th>
-            <th scope="col" aria-sort="none">↕ <a href="#">Name</a> ⟷</th>
+            <th>↑ <a href="#">Id</a></th>
+            <th>↕ <a href="#">Name</a> ⟷</th>
             </tr>
             </thead>
             HTML,
@@ -1035,8 +1109,8 @@ final class GridViewTest extends TestCase
             <<<HTML
             <thead>
             <tr>
-            <th scope="col" aria-sort="ascending"><a href="#">Id</a> ↑</th>
-            <th scope="col" aria-sort="none">↕ <a href="#">Name</a> ⟷</th>
+            <th><a href="#">Id</a> ↑</th>
+            <th>↕ <a href="#">Name</a> ⟷</th>
             </tr>
             </thead>
             HTML,
@@ -1066,8 +1140,8 @@ final class GridViewTest extends TestCase
             <<<HTML
             <thead>
             <tr>
-            <th scope="col" aria-sort="descending">↓ <a href="#">Id</a></th>
-            <th scope="col" aria-sort="none">↕ <a href="#">Name</a> ⟷</th>
+            <th>↓ <a href="#">Id</a></th>
+            <th>↕ <a href="#">Name</a> ⟷</th>
             </tr>
             </thead>
             HTML,
@@ -1097,8 +1171,8 @@ final class GridViewTest extends TestCase
             <<<HTML
             <thead>
             <tr>
-            <th scope="col" aria-sort="descending"><a href="#">Id</a> ↓</th>
-            <th scope="col" aria-sort="none">↕ <a href="#">Name</a> ⟷</th>
+            <th><a href="#">Id</a> ↓</th>
+            <th>↕ <a href="#">Name</a> ⟷</th>
             </tr>
             </thead>
             HTML,
@@ -1129,9 +1203,9 @@ final class GridViewTest extends TestCase
             <<<HTML
             <thead>
             <tr>
-            <th scope="col" class="asc" aria-sort="ascending"><a href="#">Id</a></th>
-            <th scope="col" class="desc" aria-sort="descending"><a href="#">Name</a></th>
-            <th scope="col" class="sortable" aria-sort="none"><a href="#">Age</a></th>
+            <th class="asc"><a href="#">Id</a></th>
+            <th class="desc"><a href="#">Name</a></th>
+            <th class="sortable"><a href="#">Age</a></th>
             </tr>
             </thead>
             HTML,
@@ -1159,8 +1233,8 @@ final class GridViewTest extends TestCase
             <<<HTML
             <thead>
             <tr>
-            <th scope="col" aria-sort="ascending"><a class="asc-link" href="#">Id</a></th>
-            <th scope="col" aria-sort="none"><a href="#">Name</a></th>
+            <th><a class="asc-link" href="#">Id</a></th>
+            <th><a href="#">Name</a></th>
             </tr>
             </thead>
             HTML,
@@ -1188,8 +1262,8 @@ final class GridViewTest extends TestCase
             <<<HTML
             <thead>
             <tr>
-            <th scope="col" aria-sort="descending"><a class="desc-link" href="#">Id</a></th>
-            <th scope="col" aria-sort="none"><a href="#">Name</a></th>
+            <th><a class="desc-link" href="#">Id</a></th>
+            <th><a href="#">Name</a></th>
             </tr>
             </thead>
             HTML,
@@ -1220,66 +1294,9 @@ final class GridViewTest extends TestCase
             <<<HTML
             <thead>
             <tr>
-            <th scope="col" aria-sort="ascending"><a class="sort-link asc-link" data-sort="enabled" href="#">Id</a></th>
-            <th scope="col" aria-sort="descending"><a class="sort-link desc-link" data-sort="enabled" href="#">Name</a></th>
-            <th scope="col" aria-sort="none"><a class="sort-link" data-sort="enabled" href="#">Age</a></th>
-            </tr>
-            </thead>
-            HTML,
-            $html,
-        );
-    }
-
-    public function testSortableHeaderAriaSort(): void
-    {
-        $dataReader = (new IterableDataReader([
-            ['id' => 1, 'name' => 'Anna', 'age' => 20],
-            ['id' => 2, 'name' => 'Bob', 'age' => 25],
-        ]))->withSort(Sort::any(['id', 'name', 'age'])->withOrderString('id,-name'));
-
-        $html = $this->createGridView()
-            ->dataReader($dataReader)
-            ->columns(
-                new DataColumn('id'),
-                new DataColumn('name'),
-                new DataColumn('age'),
-            )
-            ->render();
-
-        $this->assertStringContainsString(
-            <<<HTML
-            <thead>
-            <tr>
-            <th scope="col" aria-sort="ascending"><a href="#">Id</a></th>
-            <th scope="col" aria-sort="descending"><a href="#">Name</a></th>
-            <th scope="col" aria-sort="none"><a href="#">Age</a></th>
-            </tr>
-            </thead>
-            HTML,
-            $html,
-        );
-    }
-
-    public function testSortableHeaderAriaSortColumnOverride(): void
-    {
-        $dataReader = (new IterableDataReader([
-            ['id' => 1, 'name' => 'Anna'],
-        ]))->withSort(Sort::any(['id', 'name'])->withOrderString('id'));
-
-        $html = $this->createGridView()
-            ->dataReader($dataReader)
-            ->columns(
-                new DataColumn('id', headerAttributes: ['aria-sort' => 'other']),
-                new DataColumn('name'),
-            )
-            ->render();
-
-        $this->assertStringContainsString(
-            <<<HTML
-            <thead>
-            <tr>
-            <th scope="col" aria-sort="other"><a href="#">Id</a></th>
-            <th scope="col" aria-sort="none"><a href="#">Name</a></th>
+            <th><a class="sort-link asc-link" data-sort="enabled" href="#">Id</a></th>
+            <th><a class="sort-link desc-link" data-sort="enabled" href="#">Name</a></th>
+            <th><a class="sort-link" data-sort="enabled" href="#">Age</a></th>
             </tr>
             </thead>
             HTML,
@@ -1379,7 +1396,7 @@ final class GridViewTest extends TestCase
             <form id="FID" style="display:none" action method="GET"><button type="submit">Submit</button></form><table>
             <thead>
             <tr>
-            <th scope="col">Name</th>
+            <th>Name</th>
             </tr>
             <tr>
             <td><input type="text" name="name" value="Hello" form="FID"></td>
@@ -1510,9 +1527,9 @@ final class GridViewTest extends TestCase
         $this->assertStringContainsString(
             <<<HTML
             <nav>
-            <a aria-disabled="true" href="/route?">⟪</a>
-            <a aria-disabled="true" href="/route?">⟨</a>
-            <a aria-current="page" href="/route?">1</a>
+            <a href="/route?">⟪</a>
+            <a href="/route?">⟨</a>
+            <a href="/route?">1</a>
             <a href="/route?p=2">2</a>
             <a href="/route?p=2">⟩</a>
             <a href="/route?p=2">⟫</a>
@@ -1574,7 +1591,7 @@ final class GridViewTest extends TestCase
             ->columns(new DataColumn('id'))
             ->render();
 
-        $this->assertStringContainsString('<th scope="col" aria-sort="none"><a href="/route?s=id">Id</a></th>', $html);
+        $this->assertStringContainsString('<th><a href="/route?s=id">Id</a></th>', $html);
     }
 
     public function testPageParameterType(): void
@@ -1632,7 +1649,7 @@ final class GridViewTest extends TestCase
             ->columns(new DataColumn('id'))
             ->render();
 
-        $this->assertStringContainsString('<th scope="col" aria-sort="none"><a href="/route/sort-id?">Id</a></th>', $html);
+        $this->assertStringContainsString('<th><a href="/route/sort-id?">Id</a></th>', $html);
     }
 
     public function testUrlArguments(): void
@@ -1686,8 +1703,8 @@ final class GridViewTest extends TestCase
             <<<HTML
             <thead>
             <tr>
-            <th scope="col" aria-sort="ascending"><a href="/route?sort=-id%2Cname">Id</a></th>
-            <th scope="col" aria-sort="ascending"><a href="/route?sort=id%2C-name">Name</a></th>
+            <th><a href="/route?sort=-id%2Cname">Id</a></th>
+            <th><a href="/route?sort=id%2C-name">Name</a></th>
             </tr>
             </thead>
             <tbody>
@@ -2317,7 +2334,7 @@ final class GridViewTest extends TestCase
         $this->assertStringContainsString(
             <<<HTML
             <nav>
-            <a aria-disabled="true">⟨</a>
+            <a>⟨</a>
             <a href="/route?page=10">⟩</a>
             </nav>
             HTML,
@@ -2444,7 +2461,7 @@ final class GridViewTest extends TestCase
             <table>
             <thead>
             <tr>
-            <th scope="col">Id</th>
+            <th>Id</th>
             </tr>
             </thead>
             <tbody>
@@ -2670,7 +2687,7 @@ final class GridViewTest extends TestCase
             ->render();
 
         $this->assertStringContainsString(
-            '<th scope="col" aria-sort="none"><a href="/route?page=2&amp;sort=id">Id</a></th>',
+            '<th><a href="/route?page=2&amp;sort=id">Id</a></th>',
             $html,
         );
     }
@@ -3213,6 +3230,7 @@ final class GridViewTest extends TestCase
         $this->assertNotSame($gridView, $gridView->urlArguments(['id' => 1]));
         $this->assertNotSame($gridView, $gridView->urlQueryParameters(['filter' => 'active']));
         $this->assertNotSame($gridView, $gridView->multiSort());
+        $this->assertNotSame($gridView, $gridView->accessibility());
         $this->assertNotSame($gridView, $gridView->ignoreMissingPage(false));
         $this->assertNotSame($gridView, $gridView->pageNotFoundExceptionCallback(fn() => null));
         $this->assertNotSame($gridView, $gridView->containerAttributes([]));
@@ -3265,8 +3283,8 @@ final class GridViewTest extends TestCase
             <form id="FID" style="display:none" action method="GET"><button type="submit">Submit</button></form><table>
             <thead>
             <tr>
-            <th scope="col">Id</th>
-            <th scope="col">Name</th>
+            <th>Id</th>
+            <th>Name</th>
             </tr>
             <tr>
             <td>&nbsp;</td>

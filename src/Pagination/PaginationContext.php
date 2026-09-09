@@ -20,11 +20,14 @@ final class PaginationContext
      * @param string $nextUrlPattern URL pattern for next page links. Must contain {@see URL_PLACEHOLDER}.
      * @param string $previousUrlPattern URL pattern for previous page links. Must contain {@see URL_PLACEHOLDER}.
      * @param string $firstPageUrl URL used on the first page.
+     * @param bool $enableAccessibility Whether pagination widgets should add accessibility attributes `aria-*`
+     * automatically.
      */
     public function __construct(
         public readonly string $nextUrlPattern,
         public readonly string $previousUrlPattern,
         public readonly string $firstPageUrl,
+        public readonly bool $enableAccessibility = false,
     ) {}
 
     /**

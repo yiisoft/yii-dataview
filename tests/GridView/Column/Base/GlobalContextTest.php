@@ -52,7 +52,7 @@ final class GlobalContextTest extends TestCase
 
         $this->assertSame(
             [
-                ['class' => 'sortable', 'aria-sort' => 'none'],
+                ['class' => 'sortable'],
                 '<a href="/route?sort=name"></a>',
                 '↕',
                 '!',
@@ -89,7 +89,7 @@ final class GlobalContextTest extends TestCase
 
         $this->assertSame(
             [
-                ['class' => 'asc', 'aria-sort' => 'ascending'],
+                ['class' => 'asc'],
                 '<a class="link-asc" href="/route?' . $expectedUrlSort . '"></a>',
                 '↑',
                 '!',
@@ -120,7 +120,7 @@ final class GlobalContextTest extends TestCase
 
         $this->assertSame(
             [
-                ['class' => 'desc', 'aria-sort' => 'descending'],
+                ['class' => 'desc'],
                 '<a class="link-desc" href="/route?"></a>',
                 '↓',
                 '!',
@@ -151,7 +151,7 @@ final class GlobalContextTest extends TestCase
 
         $this->assertSame(
             [
-                ['class' => 'sortable', 'aria-sort' => 'none'],
+                ['class' => 'sortable'],
                 '<a href="/route?sort=name%2Cage"></a>',
                 '↕',
                 '!',
@@ -185,7 +185,7 @@ final class GlobalContextTest extends TestCase
 
         $this->assertSame(
             [
-                ['class' => 'asc', 'aria-sort' => 'ascending'],
+                ['class' => 'asc'],
                 '<a class="link-asc" href="/route?' . $expectedUrlSort . '"></a>',
                 '↑',
                 '!',
@@ -224,7 +224,7 @@ final class GlobalContextTest extends TestCase
 
         $this->assertSame(
             [
-                ['class' => 'desc', 'aria-sort' => 'descending'],
+                ['class' => 'desc'],
                 '<a class="link-desc" href="/route?' . $expectedUrlSort . '"></a>',
                 '↓',
                 '!',
@@ -255,7 +255,7 @@ final class GlobalContextTest extends TestCase
 
         $this->assertSame(
             [
-                ['class' => 'desc', 'aria-sort' => 'descending'],
+                ['class' => 'desc'],
                 '<a class="link-desc" href="/route?"></a>',
                 '↓',
                 '!',

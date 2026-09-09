@@ -58,15 +58,20 @@ final class KeysetPagination extends Widget implements PaginationWidgetInterface
      * @param KeysetPaginator $paginator The paginator to use.
      * @param string $nextUrlPattern URL pattern for next page links. Must contain {@see PaginationContext::URL_PLACEHOLDER}.
      * @param string $previousUrlPattern URL pattern for previous page links. Must contain {@see PaginationContext::URL_PLACEHOLDER}.
+     * @param bool $enableAccessibility Whether to add the `aria-disabled` attribute automatically.
      *
      * @return self New instance with the specified paginator and context.
      */
-    public static function create(KeysetPaginator $paginator, string $nextUrlPattern, string $previousUrlPattern): self
-    {
+    public static function create(
+        KeysetPaginator $paginator,
+        string $nextUrlPattern,
+        string $previousUrlPattern,
+        bool $enableAccessibility = false,
+    ): self {
         return self::widget()
             ->paginator($paginator)
             ->context(
-                new PaginationContext($nextUrlPattern, $previousUrlPattern, ''),
+                new PaginationContext($nextUrlPattern, $previousUrlPattern, '', $enableAccessibility),
             );
     }
 
@@ -362,7 +367,7 @@ final class KeysetPagination extends Widget implements PaginationWidgetInterface
     {
         $linkAttributes = $this->linkAttributes;
         if ($isDisabled) {
-            if (!array_key_exists('aria-disabled', $linkAttributes)) {
+            if ($this->getContext()->enableAccessibility && !array_key_exists('aria-disabled', $linkAttributes)) {
                 $linkAttributes['aria-disabled'] = 'true';
             }
             Html::addCssClass($linkAttributes, $this->disabledLinkClass);

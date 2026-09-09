@@ -26,7 +26,7 @@ final class RadioColumnTest extends TestCase
             <table>
             <thead>
             <tr>
-            <th scope="col">&nbsp;</th>
+            <th>&nbsp;</th>
             </tr>
             </thead>
             <tbody>
@@ -103,7 +103,7 @@ final class RadioColumnTest extends TestCase
             <<<HTML
             <thead>
             <tr>
-            <th scope="col">Select One</th>
+            <th>Select One</th>
             </tr>
             </thead>
             HTML,
@@ -124,7 +124,7 @@ final class RadioColumnTest extends TestCase
 
         $this->assertStringContainsString(
             <<<HTML
-            <th scope="col" class="header-class">Select</th>
+            <th class="header-class">Select</th>
             HTML,
             $html,
         );

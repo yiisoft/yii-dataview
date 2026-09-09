@@ -164,9 +164,11 @@ HTML structure:
 
 ## Accessibility
 
-Both pagination widgets render an HTML `nav` landmark and set `aria-current` / `aria-disabled` on the page links
-by default. See the [Accessibility](accessibility.md#pagination) guide for details, for how to override those
-attributes, and for what you should still provide yourself (a `nav` label, meaningful link labels).
+Both pagination widgets render an HTML `nav` landmark, and — when accessibility is enabled (via the view's
+`accessibility()` method or the `$enableAccessibility` argument of `create()`) — set `aria-current` /
+`aria-disabled` on the page links. See the [Accessibility](accessibility.md#pagination) guide for details, for how
+to override those attributes, and for what you should still provide yourself (a `nav` label, meaningful link
+labels).
 
 ## Page sizes
 

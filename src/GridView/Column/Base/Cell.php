@@ -87,7 +87,8 @@ final class Cell
      * Set whether the cell is a header cell.
      *
      * When enabled, the cell is rendered with the `th` tag instead of `td`. This is used for row header cells
-     * (`<th scope="row">`) that identify a row for assistive technologies.
+     * that identify a row for assistive technologies (`GridView` adds `scope="row"` to them when accessibility
+     * attributes are enabled).
      *
      * @param bool $enabled Whether the cell is a header cell.
      *

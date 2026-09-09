@@ -10,12 +10,13 @@
   to set HTML attributes and a CSS class for filter cells (@vjik)
 - New #362: Add `GridView::captionAttributes()` method and `$attributes` parameter to `GridView::caption()` to set
   HTML attributes for the `caption` tag (@vjik)
-- New #363: Add `rowHeader` parameter to `DataColumn` to render body cells as `<th scope="row">` (@vjik)
+- New #363: Add `rowHeader` parameter to `DataColumn` to render body cells as `<th>` row headers (@vjik)
+- New #363: Add `BaseListView::accessibility()` that opts into automatically added accessibility attributes:
+  `scope="col"` and `aria-sort` on `GridView` header cells, `scope="row"` on row header cells, and
+  `aria-current`/`aria-disabled` on pagination links (@vjik)
+- New #363: Add `$enableAccessibility` parameter to the `PaginationContext` constructor and to
+  `OffsetPagination::create()` and `KeysetPagination::create()` (@vjik)
 - Enh #358: Make dependency container in `GridView` constructor optional (@vjik)
-- Enh #363: Add `scope="col"` attribute to `GridView` header cells by default (@vjik)
-- Enh #363: Add `aria-sort` attribute to sortable `GridView` header cells by default (@vjik)
-- Enh #363: Add `aria-current` attribute to the current page link in `OffsetPagination`, and `aria-disabled`
-  attribute to disabled links in `OffsetPagination` and `KeysetPagination` by default (@vjik)
 
 ## 1.2.0 September 02, 2026
 
