@@ -1094,15 +1094,22 @@ final class GridView extends BaseListView
             foreach ($columns as $i => $column) {
                 $context = new DataContext($preparedDataReader, $column, $value, $key, $index);
                 $cell = $renderers[$i]->renderBody($column, new Cell($this->bodyCellAttributes), $context);
-                $tags[] = $cell->isEmptyContent()
-                    ? Html::td(
-                        $this->emptyCell,
-                        $this->prepareEmptyBodyCellAttributes($cell->getAttributes(), $context),
-                    )->encode(false)
-                    : Html::td(attributes: $this->prepareBodyCellAttributes($cell->getAttributes(), $context))
+                if ($cell->isEmptyContent()) {
+                    $cellAttributes = $this->prepareEmptyBodyCellAttributes($cell->getAttributes(), $context);
+                    $tag = $cell->isHeader()
+                        ? Html::th($this->emptyCell, $cellAttributes)
+                        : Html::td($this->emptyCell, $cellAttributes);
+                    $tags[] = $tag->encode(false);
+                } else {
+                    $cellAttributes = $this->prepareBodyCellAttributes($cell->getAttributes(), $context);
+                    $tag = $cell->isHeader()
+                        ? Html::th(attributes: array_merge(['scope' => 'row'], $cellAttributes))
+                        : Html::td(attributes: $cellAttributes);
+                    $tags[] = $tag
                         ->content(...$cell->getContent())
                         ->encode($cell->shouldEncode())
                         ->doubleEncode($cell->shouldDoubleEncode());
+                }
             }
             $bodyRowAttributes = $this->prepareBodyRowAttributes(
                 $this->bodyRowAttributes,

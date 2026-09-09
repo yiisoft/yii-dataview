@@ -19,6 +19,11 @@ final class Cell
     private bool $doubleEncode = true;
 
     /**
+     * @var bool Whether to render the cell as a header cell (`th` tag instead of `td`).
+     */
+    private bool $header = false;
+
+    /**
      * @psalm-var array<array-key,string|Stringable>
      */
     private array $content;
@@ -75,6 +80,23 @@ final class Cell
     {
         $new = clone $this;
         $new->doubleEncode = $enabled;
+        return $new;
+    }
+
+    /**
+     * Set whether the cell is a header cell.
+     *
+     * When enabled, the cell is rendered with the `th` tag instead of `td`. This is used for row header cells
+     * (`<th scope="row">`) that identify a row for assistive technologies.
+     *
+     * @param bool $enabled Whether the cell is a header cell.
+     *
+     * @return self New instance with the updated header setting.
+     */
+    public function header(bool $enabled = true): self
+    {
+        $new = clone $this;
+        $new->header = $enabled;
         return $new;
     }
 
@@ -195,6 +217,16 @@ final class Cell
     public function shouldDoubleEncode(): bool
     {
         return $this->doubleEncode;
+    }
+
+    /**
+     * Check whether the cell is a header cell.
+     *
+     * @return bool Whether the cell is rendered with the `th` tag instead of `td`.
+     */
+    public function isHeader(): bool
+    {
+        return $this->header;
     }
 
     /**

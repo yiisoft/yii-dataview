@@ -268,6 +268,69 @@ final class DataColumnTest extends TestCase
         $this->assertStringContainsString($expected, $html);
     }
 
+    public function testRowHeader(): void
+    {
+        $html = $this->createGridView([['name' => 'John']])
+            ->columns(
+                new DataColumn(property: 'name', rowHeader: true),
+            )
+            ->render();
+
+        $this->assertStringContainsString(
+            <<<HTML
+            <tbody>
+            <tr>
+            <th scope="row">John</th>
+            </tr>
+            </tbody>
+            HTML,
+            $html,
+        );
+    }
+
+    public function testRowHeaderScopeOverride(): void
+    {
+        $html = $this->createGridView([['name' => 'John']])
+            ->columns(
+                new DataColumn(property: 'name', bodyAttributes: ['scope' => 'rowgroup'], rowHeader: true),
+            )
+            ->render();
+
+        $this->assertStringContainsString('<th scope="rowgroup">John</th>', $html);
+    }
+
+    public function testRowHeaderScopeRemove(): void
+    {
+        $html = $this->createGridView([['name' => 'John']])
+            ->columns(
+                new DataColumn(property: 'name', bodyAttributes: ['scope' => null], rowHeader: true),
+            )
+            ->render();
+
+        $this->assertStringContainsString('<th>John</th>', $html);
+    }
+
+    public function testRowHeaderEmptyContent(): void
+    {
+        $html = $this->createGridView([['name' => '']])
+            ->columns(
+                new DataColumn(property: 'name', rowHeader: true),
+            )
+            ->render();
+
+        // An empty cell renders as `th` for structural consistency, but without `scope` as it labels nothing.
+        $this->assertStringContainsString(
+            <<<HTML
+            <tbody>
+            <tr>
+            <th>&nbsp;</th>
+            </tr>
+            </tbody>
+            HTML,
+            $html,
+        );
+    }
+
     public function testFooter(): void
     {
         $html = $this->createGridView([['name' => 'John']])

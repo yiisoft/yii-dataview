@@ -219,6 +219,10 @@ final class DataColumnRenderer implements FilterableColumnRendererInterface, Sor
             ? ($column->bodyClass)($context->data, $context)
             : $column->bodyClass;
 
+        if ($column->rowHeader) {
+            $cell = $cell->header();
+        }
+
         return $cell
             ->addAttributes($attributes)
             ->addClass($bodyClass)

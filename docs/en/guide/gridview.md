@@ -67,6 +67,7 @@ GridView has several built-in column types.
 | `columnClass` | `?string` | `null` | CSS class for all column cells |
 | `headerClass` | `?string` | `null` | CSS class for the header cell |
 | `bodyClass` | `string\|array\|callable\|null` | `null` | CSS class for body cells. Can be a callable: `fn(array\|object $data, DataContext $context): string\|array\|null` |
+| `rowHeader` | `bool` | `false` | Render body cells of this column as row headers (`<th scope="row">`). See [Accessibility](#accessibility) |
 
 Basic example:
 
@@ -711,7 +712,7 @@ can announce it as a table and let users navigate it by row and column.
 - Every header cell is a `<th>` element carrying `scope="col"`, so screen readers announce the corresponding column
   header when the user moves through the body cells.
 
-### Overriding or removing `scope`
+### Overriding or removing `scope="col"`
 
 The `scope="col"` attribute is a default value that can be overridden or removed through the regular header cell
 attribute methods. Pass `['scope' => null]` to drop it, or another value (for example `'colgroup'`) to change it:
@@ -729,6 +730,29 @@ echo GridView::widget()
         new DataColumn(property: 'name', headerAttributes: ['scope' => 'colgroup']),
     );
 ```
+
+### Row headers
+
+When one column identifies each row (a name, a title, an ID), mark it as a row header with the `DataColumn`
+`rowHeader` parameter. Its body cells are then rendered as `<th scope="row">` instead of `<td>`, so screen readers
+announce that value together with the column header when the user moves across the row.
+
+```php
+use Yiisoft\Yii\DataView\GridView\GridView;
+use Yiisoft\Yii\DataView\GridView\Column\DataColumn;
+
+echo GridView::widget()
+    ->dataReader($dataReader)
+    ->columns(
+        new DataColumn(property: 'name', rowHeader: true),
+        new DataColumn(property: 'email'),
+        new DataColumn(property: 'createdAt'),
+    );
+```
+
+The `scope="row"` attribute is a default value. Change or remove it through the column's `bodyAttributes`, for
+example `bodyAttributes: ['scope' => 'rowgroup']` or `bodyAttributes: ['scope' => null]`. An empty cell renders as a
+plain `<th>` without `scope` — there is no value to label the row with.
 
 ### Recommendations
 

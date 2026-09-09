@@ -829,6 +829,34 @@ final class GridViewTest extends TestCase
         );
     }
 
+    public function testRowHeaderColumn(): void
+    {
+        $html = $this->createGridView([['id' => 1, 'name' => 'John']])
+            ->columns(
+                new DataColumn('name', withSorting: false, rowHeader: true),
+                new DataColumn('id', withSorting: false),
+            )
+            ->render();
+
+        $this->assertStringContainsString(
+            <<<HTML
+            <thead>
+            <tr>
+            <th scope="col">Name</th>
+            <th scope="col">Id</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+            <th scope="row">John</th>
+            <td>1</td>
+            </tr>
+            </tbody>
+            HTML,
+            $html,
+        );
+    }
+
     public static function dataBodyCellAttributes(): iterable
     {
         yield 'array' => [
