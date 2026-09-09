@@ -534,9 +534,11 @@ use Yiisoft\Yii\DataView\GridView\GridView;
 | `sortableHeaderDescPrepend(string\|Stringable $content)` | Prepend content to descending sorted headers |
 | `sortableHeaderDescAppend(string\|Stringable $content)` | Append content to descending sorted headers |
 | `sortableLinkAttributes(array $attributes)` | HTML attributes for sortable header links |
-
-> The `sortableHeaderClass`, `sortableHeaderAscClass`, `sortableHeaderDescClass`, `sortableLinkAscClass`,
-> and `sortableLinkDescClass` properties can be set via [widget theming](themes.md).
+| `sortableHeaderClass(?string $class)` | CSS class for sortable headers that are not currently sorted |
+| `sortableHeaderAscClass(?string $class)` | CSS class for ascending sorted headers |
+| `sortableHeaderDescClass(?string $class)` | CSS class for descending sorted headers |
+| `sortableLinkAscClass(?string $class)` | CSS class for links in ascending sorted headers |
+| `sortableLinkDescClass(?string $class)` | CSS class for links in descending sorted headers |
 
 ## Container Customization
 

@@ -788,6 +788,20 @@ final class GridView extends BaseListView
     }
 
     /**
+     * Return new instance with the CSS class for sortable column headers that are not currently sorted.
+     *
+     * @param string|null $class The CSS class name. Set to `null` to remove the class.
+     *
+     * @return self New instance with the sortable header class.
+     */
+    public function sortableHeaderClass(?string $class): self
+    {
+        $new = clone $this;
+        $new->sortableHeaderClass = $class;
+        return $new;
+    }
+
+    /**
      * Return new instance with the content to be prepended to ascending sorted column headers.
      *
      * @param string|Stringable $content The content to prepend.
@@ -816,6 +830,20 @@ final class GridView extends BaseListView
     }
 
     /**
+     * Return new instance with the CSS class for ascending sorted column headers.
+     *
+     * @param string|null $class The CSS class name. Set to `null` to remove the class.
+     *
+     * @return self New instance with the ascending sorted header class.
+     */
+    public function sortableHeaderAscClass(?string $class): self
+    {
+        $new = clone $this;
+        $new->sortableHeaderAscClass = $class;
+        return $new;
+    }
+
+    /**
      * Return new instance with the content to be prepended to descending sorted column headers.
      *
      * @param string|Stringable $content The content to prepend.
@@ -840,6 +868,48 @@ final class GridView extends BaseListView
     {
         $new = clone $this;
         $new->sortableHeaderDescAppend = $content;
+        return $new;
+    }
+
+    /**
+     * Return new instance with the CSS class for descending sorted column headers.
+     *
+     * @param string|null $class The CSS class name. Set to `null` to remove the class.
+     *
+     * @return self New instance with the descending sorted header class.
+     */
+    public function sortableHeaderDescClass(?string $class): self
+    {
+        $new = clone $this;
+        $new->sortableHeaderDescClass = $class;
+        return $new;
+    }
+
+    /**
+     * Return new instance with the CSS class for links in ascending sorted column headers.
+     *
+     * @param string|null $class The CSS class name. Set to `null` to remove the class.
+     *
+     * @return self New instance with the ascending sort link class.
+     */
+    public function sortableLinkAscClass(?string $class): self
+    {
+        $new = clone $this;
+        $new->sortableLinkAscClass = $class;
+        return $new;
+    }
+
+    /**
+     * Return new instance with the CSS class for links in descending sorted column headers.
+     *
+     * @param string|null $class The CSS class name. Set to `null` to remove the class.
+     *
+     * @return self New instance with the descending sort link class.
+     */
+    public function sortableLinkDescClass(?string $class): self
+    {
+        $new = clone $this;
+        $new->sortableLinkDescClass = $class;
         return $new;
     }
 
