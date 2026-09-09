@@ -12,6 +12,8 @@ use Yiisoft\Data\Paginator\PaginatorInterface;
 use Yiisoft\Html\Html;
 use Yiisoft\Widget\Widget;
 
+use function array_key_exists;
+
 /**
  * Widget for rendering {@see KeysetPaginator}.
  *
@@ -360,6 +362,9 @@ final class KeysetPagination extends Widget implements PaginationWidgetInterface
     {
         $linkAttributes = $this->linkAttributes;
         if ($isDisabled) {
+            if (!array_key_exists('aria-disabled', $linkAttributes)) {
+                $linkAttributes['aria-disabled'] = 'true';
+            }
             Html::addCssClass($linkAttributes, $this->disabledLinkClass);
         }
         $link = Html::a($label, $url, $linkAttributes);

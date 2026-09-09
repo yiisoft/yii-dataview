@@ -6,6 +6,7 @@
 - [Grid view](gridview.md)
 - [Value presenters](value-presenters.md)
 - [Pagination and page sizes](pagination.md)
+- [Accessibility](accessibility.md)
 - [CSP and inline JavaScript](csp.md)
 - [URLs](urls.md)
 - [Themes](themes.md)

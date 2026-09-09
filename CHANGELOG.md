@@ -14,6 +14,8 @@
 - Enh #358: Make dependency container in `GridView` constructor optional (@vjik)
 - Enh #363: Add `scope="col"` attribute to `GridView` header cells by default (@vjik)
 - Enh #363: Add `aria-sort` attribute to sortable `GridView` header cells by default (@vjik)
+- Enh #363: Add `aria-current` attribute to the current page link in `OffsetPagination`, and `aria-disabled`
+  attribute to disabled links in `OffsetPagination` and `KeysetPagination` by default (@vjik)
 
 ## 1.2.0 September 02, 2026
 
