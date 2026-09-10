@@ -141,17 +141,22 @@ Labels:
 - `labelPrevious(string|Stringable $label)` - Label for the "previous page" link. Default: `'⟨'`.
 - `labelNext(string|Stringable $label)` - Label for the "next page" link. Default: `'⟩'`.
 
+A disabled item ("previous" on the first page, "next" on the last page) has no URL and is rendered as a `<span>` instead
+of an `<a>` element.
+
 CSS classes for disabled state:
 
-- `disabledItemClass(?string $class)` - CSS class added to the item tag of disabled links (previous on the first page,
-  next on the last page).
-- `disabledLinkClass(?string $class)` - CSS class added to the `<a>` tag of disabled links.
+- `disabledItemClass(?string $class)` - CSS class added to the item tag of disabled items.
+- `disabledLinkClass(?string $class)` - CSS class added to the `<span>` tag of disabled items.
 
 Link attributes:
 
-- `linkAttributes(array $attributes)` - Set HTML attributes for all `<a>` link elements (replaces existing attributes).
-- `linkClass(BackedEnum|string|null ...$class)` - Set CSS classes on link elements (replaces existing classes).
-- `addLinkClass(BackedEnum|string|null ...$class)` - Add CSS classes to link elements without removing existing ones.
+- `linkAttributes(array $attributes)` - Set HTML attributes for each link, or the `<span>` that replaces it when
+  disabled (replaces existing attributes).
+- `linkClass(BackedEnum|string|null ...$class)` - Set CSS classes on each link (or the disabled `<span>`), replacing
+  existing classes.
+- `addLinkClass(BackedEnum|string|null ...$class)` - Add CSS classes to each link (or the disabled `<span>`) without
+  removing existing ones.
 
 HTML structure:
 
@@ -159,7 +164,7 @@ HTML structure:
 - `containerAttributes(array $attributes)` - HTML attributes for the container tag.
 - `listTag(?string $tag)` - Tag wrapping all pagination items. Default: `null`. Common value: `'ul'`.
 - `listAttributes(array $attributes)` - HTML attributes for the list tag.
-- `itemTag(?string $tag)` - Tag wrapping each link. Default: `null`. Common value: `'li'`.
+- `itemTag(?string $tag)` - Tag wrapping each link (or the disabled `<span>`). Default: `null`. Common value: `'li'`.
 - `itemAttributes(array $attributes)` - HTML attributes for item tags.
 
 ## Page sizes

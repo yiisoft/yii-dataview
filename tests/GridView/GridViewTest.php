@@ -2191,7 +2191,7 @@ final class GridViewTest extends TestCase
         $this->assertStringContainsString(
             <<<HTML
             <nav>
-            <a>⟨</a>
+            <span>⟨</span>
             <a href="/route?page=10">⟩</a>
             </nav>
             HTML,
