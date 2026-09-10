@@ -13,7 +13,9 @@ use Yiisoft\Data\Paginator\OffsetPaginator;
 use Yiisoft\Data\Reader\Iterable\IterableDataReader;
 use Yiisoft\Data\Reader\Sort;
 use Yiisoft\Translator\CategorySource;
+use Yiisoft\Translator\IdMessageReader;
 use Yiisoft\Translator\InMemoryMessageSource;
+use Yiisoft\Translator\SimpleMessageFormatter;
 use Yiisoft\Translator\Translator;
 use Yiisoft\Yii\DataView\BaseListView;
 use Yiisoft\Yii\DataView\Pagination\OffsetPagination;
@@ -932,6 +934,33 @@ final class OffsetPaginationTest extends TestCase
         $this->assertStringContainsString('<a aria-label="Seite 2" href="/page/2">2</a>', $html);
     }
 
+    public function testAriaLabelPageParametersArePassedToTranslator(): void
+    {
+        $paginator = (new OffsetPaginator(new IterableDataReader(array_fill(0, 2, ['id' => 'uuid']))))
+            ->withPageSize(1)
+            ->withCurrentPage(1);
+        $translator = new Translator();
+        $translator->addCategorySources(
+            new CategorySource(
+                BaseListView::DEFAULT_TRANSLATION_CATEGORY,
+                new IdMessageReader(),
+                new SimpleMessageFormatter(),
+            ),
+        );
+        $context = new PaginationContext(
+            '/page/' . PaginationContext::URL_PLACEHOLDER,
+            '/page/' . PaginationContext::URL_PLACEHOLDER,
+            '/',
+            true,
+            $translator,
+        );
+
+        $html = OffsetPagination::widget()->paginator($paginator)->context($context)->render();
+
+        $this->assertStringContainsString('<a aria-label="Page 1" aria-current="page" href="/">1</a>', $html);
+        $this->assertStringContainsString('<a aria-label="Page 2" href="/page/2">2</a>', $html);
+    }
+
     private function createAriaLabelTranslator(): Translator
     {
         $messageSource = new InMemoryMessageSource();
@@ -949,7 +978,11 @@ final class OffsetPaginationTest extends TestCase
         );
 
         return (new Translator('en'))->addCategorySources(
-            new CategorySource(BaseListView::DEFAULT_TRANSLATION_CATEGORY, $messageSource),
+            new CategorySource(
+                BaseListView::DEFAULT_TRANSLATION_CATEGORY,
+                $messageSource,
+                new SimpleMessageFormatter(),
+            ),
         );
     }
 

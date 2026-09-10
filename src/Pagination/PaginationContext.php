@@ -41,12 +41,23 @@ final class PaginationContext
      * Translate a message using the pagination translation category.
      *
      * @param string|Stringable $id Message ID to translate.
+     * @param array $parameters Parameters for the message.
+     * @psalm-param array<string, string|Stringable> $parameters
      *
-     * @return string Translated message, or the message ID unchanged when no translator is set.
+     * @return string Translated message. When no translator is set, the message ID is returned with `{name}`
+     * placeholders replaced by the given parameters.
      */
-    public function translate(string|Stringable $id): string
+    public function translate(string|Stringable $id, array $parameters = []): string
     {
-        return $this->translator?->translate($id, category: $this->translationCategory) ?? (string) $id;
+        if ($this->translator !== null) {
+            return $this->translator->translate($id, $parameters, $this->translationCategory);
+        }
+
+        $replacements = [];
+        foreach ($parameters as $name => $value) {
+            $replacements['{' . $name . '}'] = (string) $value;
+        }
+        return strtr((string) $id, $replacements);
     }
 
     /**

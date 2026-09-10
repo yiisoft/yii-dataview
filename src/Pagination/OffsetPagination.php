@@ -455,7 +455,7 @@ final class OffsetPagination extends Widget implements PaginationWidgetInterface
                 isCurrent: $page === $currentPage,
                 isDisabled: false,
                 ariaLabel: $this->ariaLabelPage,
-                ariaLabelParameters: ['{page}' => (string) $page],
+                ariaLabelParameters: ['page' => (string) $page],
             );
         } while (++$page <= $endPage);
 
@@ -483,7 +483,7 @@ final class OffsetPagination extends Widget implements PaginationWidgetInterface
     }
 
     /**
-     * @param array<string, string> $ariaLabelParameters Replacements applied to the translated `aria-label`.
+     * @param array<string, string> $ariaLabelParameters Parameters for the `aria-label` translation.
      */
     private function renderItem(
         string|Stringable $label,
@@ -501,7 +501,7 @@ final class OffsetPagination extends Widget implements PaginationWidgetInterface
             && $ariaLabel !== null
             && !array_key_exists('aria-label', $linkAttributes)
         ) {
-            $linkAttributes['aria-label'] = strtr($context->translate($ariaLabel), $ariaLabelParameters);
+            $linkAttributes['aria-label'] = $context->translate($ariaLabel, $ariaLabelParameters);
         }
         if ($isDisabled) {
             if ($accessibility && !array_key_exists('aria-disabled', $linkAttributes)) {
