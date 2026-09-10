@@ -52,7 +52,7 @@ final class GlobalContext
      * @param UrlCreator|null $urlCreator Callback for creating sort URLs.
      * @param TranslatorInterface $translator Translator service for header content.
      * @param string $translationCategory Category for header translations.
-     * @param bool $enableAccessibility Whether to add the `aria-sort` accessibility attribute to sortable header cells.
+     * @param bool $accessibility Whether to add the `aria-sort` accessibility attribute to sortable header cells.
      *
      * @internal
      *
@@ -82,7 +82,7 @@ final class GlobalContext
         private $urlCreator,
         private readonly TranslatorInterface $translator,
         private readonly string $translationCategory,
-        private readonly bool $enableAccessibility = false,
+        private readonly bool $accessibility = false,
     ) {}
 
     /**
@@ -142,7 +142,7 @@ final class GlobalContext
             $ariaSort = $propertyOrder === 'asc' ? 'ascending' : 'descending';
         }
 
-        if ($this->enableAccessibility && !array_key_exists('aria-sort', $cell->getAttributes())) {
+        if ($this->accessibility && !array_key_exists('aria-sort', $cell->getAttributes())) {
             $cell = $cell->attribute('aria-sort', $ariaSort);
         }
         $url = $this->urlCreator === null ? '#' : call_user_func_array(

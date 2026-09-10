@@ -64,7 +64,7 @@ final class KeysetPagination extends Widget implements PaginationWidgetInterface
      * @param KeysetPaginator $paginator The paginator to use.
      * @param string $nextUrlPattern URL pattern for next page links. Must contain {@see PaginationContext::URL_PLACEHOLDER}.
      * @param string $previousUrlPattern URL pattern for previous page links. Must contain {@see PaginationContext::URL_PLACEHOLDER}.
-     * @param bool $enableAccessibility Whether to add the `aria-disabled` and `aria-label` attributes automatically.
+     * @param bool $accessibility Whether to add the `aria-disabled` and `aria-label` attributes automatically.
      * @param TranslatorInterface|null $translator Translator used for the `aria-label` texts. When `null`, the
      * English defaults are emitted as is.
      * @param string $translationCategory Category used with the translator.
@@ -75,7 +75,7 @@ final class KeysetPagination extends Widget implements PaginationWidgetInterface
         KeysetPaginator $paginator,
         string $nextUrlPattern,
         string $previousUrlPattern,
-        bool $enableAccessibility = false,
+        bool $accessibility = false,
         ?TranslatorInterface $translator = null,
         string $translationCategory = BaseListView::DEFAULT_TRANSLATION_CATEGORY,
     ): self {
@@ -86,7 +86,7 @@ final class KeysetPagination extends Widget implements PaginationWidgetInterface
                     $nextUrlPattern,
                     $previousUrlPattern,
                     '',
-                    $enableAccessibility,
+                    $accessibility,
                     $translator,
                     $translationCategory,
                 ),
@@ -395,7 +395,7 @@ final class KeysetPagination extends Widget implements PaginationWidgetInterface
         if ($this->containerTag !== null) {
             $containerAttributes = $this->containerAttributes;
             if (
-                $context->enableAccessibility
+                $context->accessibility
                 && $this->ariaLabelNav !== null
                 && !array_key_exists('aria-label', $containerAttributes)
             ) {
@@ -451,17 +451,17 @@ final class KeysetPagination extends Widget implements PaginationWidgetInterface
         ?string $ariaLabel = null,
     ): Stringable {
         $context = $this->getContext();
-        $enableAccessibility = $context->enableAccessibility;
+        $accessibility = $context->accessibility;
         $linkAttributes = $this->linkAttributes;
         if (
-            $enableAccessibility
+            $accessibility
             && $ariaLabel !== null
             && !array_key_exists('aria-label', $linkAttributes)
         ) {
             $linkAttributes['aria-label'] = $context->translate($ariaLabel);
         }
         if ($isDisabled) {
-            if ($enableAccessibility && !array_key_exists('aria-disabled', $linkAttributes)) {
+            if ($accessibility && !array_key_exists('aria-disabled', $linkAttributes)) {
                 $linkAttributes['aria-disabled'] = 'true';
             }
             Html::addCssClass($linkAttributes, $this->disabledLinkClass);

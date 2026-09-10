@@ -14,7 +14,7 @@
 - New #363: Add `BaseListView::accessibility()` that opts into automatically added accessibility attributes:
   `scope="col"` and `aria-sort` on `GridView` header cells, `scope="row"` on row header cells, and
   `aria-current`/`aria-disabled` on pagination links (@vjik)
-- New #363: Add `$enableAccessibility` parameter to the `PaginationContext` constructor and to
+- New #363: Add `$accessibility` parameter to the `PaginationContext` constructor and to
   `OffsetPagination::create()` and `KeysetPagination::create()` (@vjik)
 - New #363: Add `ariaLabelNav()`, `ariaLabelFirst()`, `ariaLabelPrevious()`, `ariaLabelNext()`, `ariaLabelLast()`
   and `ariaLabelPage()` methods to `OffsetPagination` (subset `ariaLabelNav()`, `ariaLabelPrevious()`,

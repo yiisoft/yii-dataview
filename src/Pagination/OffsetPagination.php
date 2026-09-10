@@ -76,7 +76,7 @@ final class OffsetPagination extends Widget implements PaginationWidgetInterface
      * @param OffsetPaginator $paginator The paginator to use.
      * @param string $urlPattern URL pattern for page links. Must contain {@see PaginationContext::URL_PLACEHOLDER}.
      * @param string $firstPageUrl URL used on the first page.
-     * @param bool $enableAccessibility Whether to add `aria-current`, `aria-disabled` and `aria-label` attributes
+     * @param bool $accessibility Whether to add `aria-current`, `aria-disabled` and `aria-label` attributes
      * automatically.
      * @param TranslatorInterface|null $translator Translator used for the `aria-label` texts. When `null`, the
      * English defaults are emitted as is.
@@ -88,7 +88,7 @@ final class OffsetPagination extends Widget implements PaginationWidgetInterface
         OffsetPaginator $paginator,
         string $urlPattern,
         string $firstPageUrl,
-        bool $enableAccessibility = false,
+        bool $accessibility = false,
         ?TranslatorInterface $translator = null,
         string $translationCategory = BaseListView::DEFAULT_TRANSLATION_CATEGORY,
     ): self {
@@ -99,7 +99,7 @@ final class OffsetPagination extends Widget implements PaginationWidgetInterface
                     $urlPattern,
                     $urlPattern,
                     $firstPageUrl,
-                    $enableAccessibility,
+                    $accessibility,
                     $translator,
                     $translationCategory,
                 ),
@@ -389,7 +389,7 @@ final class OffsetPagination extends Widget implements PaginationWidgetInterface
         if ($this->containerTag !== null) {
             $containerAttributes = $this->containerAttributes;
             if (
-                $this->getContext()->enableAccessibility
+                $this->getContext()->accessibility
                 && $this->ariaLabelNav !== null
                 && !array_key_exists('aria-label', $containerAttributes)
             ) {
@@ -494,23 +494,23 @@ final class OffsetPagination extends Widget implements PaginationWidgetInterface
         array $ariaLabelParameters = [],
     ): Stringable {
         $context = $this->getContext();
-        $enableAccessibility = $context->enableAccessibility;
+        $accessibility = $context->accessibility;
         $linkAttributes = $this->linkAttributes;
         if (
-            $enableAccessibility
+            $accessibility
             && $ariaLabel !== null
             && !array_key_exists('aria-label', $linkAttributes)
         ) {
             $linkAttributes['aria-label'] = strtr($context->translate($ariaLabel), $ariaLabelParameters);
         }
         if ($isDisabled) {
-            if ($enableAccessibility && !array_key_exists('aria-disabled', $linkAttributes)) {
+            if ($accessibility && !array_key_exists('aria-disabled', $linkAttributes)) {
                 $linkAttributes['aria-disabled'] = 'true';
             }
             Html::addCssClass($linkAttributes, $this->disabledLinkClass);
         }
         if ($isCurrent) {
-            if ($enableAccessibility && !array_key_exists('aria-current', $linkAttributes)) {
+            if ($accessibility && !array_key_exists('aria-current', $linkAttributes)) {
                 $linkAttributes['aria-current'] = 'page';
             }
             Html::addCssClass($linkAttributes, $this->currentLinkClass);

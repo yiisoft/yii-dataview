@@ -456,7 +456,7 @@ final class KeysetPaginationTest extends TestCase
             $paginator,
             '/next/' . PaginationContext::URL_PLACEHOLDER,
             '/prev/' . PaginationContext::URL_PLACEHOLDER,
-            enableAccessibility: true,
+            accessibility: true,
         )->render();
 
         $this->assertSame(
@@ -495,7 +495,7 @@ final class KeysetPaginationTest extends TestCase
             $paginator,
             '/next/' . PaginationContext::URL_PLACEHOLDER,
             '/prev/' . PaginationContext::URL_PLACEHOLDER,
-            enableAccessibility: true,
+            accessibility: true,
         )
             ->ariaLabelNav(null)
             ->ariaLabelPrevious('To previous')

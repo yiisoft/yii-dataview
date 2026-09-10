@@ -779,7 +779,7 @@ final class OffsetPaginationTest extends TestCase
             $paginator,
             '/page/' . PaginationContext::URL_PLACEHOLDER,
             '/',
-            enableAccessibility: true,
+            accessibility: true,
         )->render();
 
         $this->assertSame(
@@ -815,7 +815,7 @@ final class OffsetPaginationTest extends TestCase
             $paginator,
             '/page/' . PaginationContext::URL_PLACEHOLDER,
             '/',
-            enableAccessibility: true,
+            accessibility: true,
         )
             ->ariaLabelNav('Pages')
             ->ariaLabelFirst('To first')
@@ -851,7 +851,7 @@ final class OffsetPaginationTest extends TestCase
             $paginator,
             '/page/' . PaginationContext::URL_PLACEHOLDER,
             '/',
-            enableAccessibility: true,
+            accessibility: true,
         )
             ->ariaLabelNav(null)
             ->ariaLabelFirst(null)
@@ -874,7 +874,7 @@ final class OffsetPaginationTest extends TestCase
             $paginator,
             '/page/' . PaginationContext::URL_PLACEHOLDER,
             '/',
-            enableAccessibility: true,
+            accessibility: true,
         )
             ->linkAttributes(['aria-label' => 'Custom'])
             ->render();
@@ -923,7 +923,7 @@ final class OffsetPaginationTest extends TestCase
             $paginator,
             '/page/' . PaginationContext::URL_PLACEHOLDER,
             '/',
-            enableAccessibility: true,
+            accessibility: true,
             translator: $this->createAriaLabelTranslator(),
         )->render();
 

@@ -111,7 +111,7 @@ links, so assistive technologies can announce and navigate the control.
 ### What the widgets add with `accessibility()` enabled
 
 When driven by `GridView`/`ListView`, the pagination widgets follow the view's `accessibility()` setting. Used
-directly, they take the flag from `PaginationContext` (also exposed as the `$enableAccessibility` argument of
+directly, they take the flag from `PaginationContext` (also exposed as the `$accessibility` argument of
 `OffsetPagination::create()` and `KeysetPagination::create()`).
 
 - `OffsetPagination` adds `aria-current="page"` to the `<a>` element of the current page, so screen
