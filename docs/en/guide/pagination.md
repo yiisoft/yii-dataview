@@ -141,11 +141,13 @@ Labels:
 - `labelPrevious(string|Stringable $label)` - Label for the "previous page" link. Default: `'⟨'`.
 - `labelNext(string|Stringable $label)` - Label for the "next page" link. Default: `'⟩'`.
 
+A disabled item ("previous" on the first page, "next" on the last page) has no URL and is rendered as a `<span>` instead
+of an `<a>` element.
+
 CSS classes for disabled state:
 
-- `disabledItemClass(?string $class)` - CSS class added to the item tag of disabled links (previous on the first page,
-  next on the last page).
-- `disabledLinkClass(?string $class)` - CSS class added to the `<a>` tag of disabled links.
+- `disabledItemClass(?string $class)` - CSS class added to the item tag of disabled items.
+- `disabledLinkClass(?string $class)` - CSS class added to the `<span>` tag of disabled items.
 
 Link attributes:
 

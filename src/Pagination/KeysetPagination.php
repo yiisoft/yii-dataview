@@ -328,13 +328,11 @@ final class KeysetPagination extends Widget implements PaginationWidgetInterface
         $result .= $this->renderItem(
             $this->labelPrevious,
             $previousToken === null ? null : $context->createUrl($previousToken),
-            $previousToken === null,
         )
             . "\n"
             . $this->renderItem(
                 $this->labelNext,
                 $nextToken === null ? null : $context->createUrl($nextToken),
-                $nextToken === null,
             );
 
         if ($this->listTag !== null) {
@@ -351,28 +349,32 @@ final class KeysetPagination extends Widget implements PaginationWidgetInterface
      * Renders a single pagination item (previous or next).
      *
      * @param string|Stringable $label The item label.
-     * @param string|null $url The item URL, or null if disabled.
-     * @param bool $isDisabled Whether the item should be rendered as disabled.
+     * @param string|null $url The item URL, or `null` when the item is disabled. A disabled item is rendered as
+     * a `span` instead of an `a` element.
      *
      * @return Stringable The rendered HTML for the pagination item.
      */
-    private function renderItem(string|Stringable $label, ?string $url, bool $isDisabled): Stringable
+    private function renderItem(string|Stringable $label, ?string $url): Stringable
     {
+        $isDisabled = $url === null;
+
         $linkAttributes = $this->linkAttributes;
         if ($isDisabled) {
             Html::addCssClass($linkAttributes, $this->disabledLinkClass);
         }
-        $link = Html::a($label, $url, $linkAttributes);
+        $element = $isDisabled
+            ? Html::span($label, $linkAttributes)
+            : Html::a($label, $url, $linkAttributes);
 
         if ($this->itemTag === null) {
-            return $link;
+            return $element;
         }
 
         $attributes = $this->itemAttributes;
         if ($isDisabled) {
             Html::addCssClass($attributes, $this->disabledItemClass);
         }
-        return Html::tag($this->itemTag, $link, $attributes);
+        return Html::tag($this->itemTag, $element, $attributes);
     }
 
     /**

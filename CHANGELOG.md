@@ -11,6 +11,8 @@
 - New #362: Add `GridView::captionAttributes()` method and `$attributes` parameter to `GridView::caption()` to set
   HTML attributes for the `caption` tag (@vjik)
 - Enh #358: Make dependency container in `GridView` constructor optional (@vjik)
+- Bug #363: Render disabled `KeysetPagination` items ("previous" on the first page, "next" on the last page) as
+  `span` elements instead of `a` elements without an `href` (@vjik)
 
 ## 1.2.0 September 02, 2026
 
