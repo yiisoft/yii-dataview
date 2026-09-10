@@ -246,7 +246,7 @@ final class KeysetPagination extends Widget implements PaginationWidgetInterface
     }
 
     /**
-     * Adds one or more CSS classes to the existing link classes are applied to the "previous"/"next" control.
+     * Adds one or more CSS classes to the existing classes of the "previous"/"next" control.
      *
      * Multiple classes can be added by passing them as separate arguments. `null` values are filtered out
      * automatically.
