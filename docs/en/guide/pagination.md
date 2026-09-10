@@ -153,7 +153,7 @@ Link attributes:
 
 - `linkAttributes(array $attributes)` - Set HTML attributes for each link, or the `<span>` that replaces it when
   disabled (replaces existing attributes).
-- `linkClass(BackedEnum|string|null ...$class)` - Set CSS classes on each link (or the disabled `<span>`), replaces
+- `linkClass(BackedEnum|string|null ...$class)` - Set CSS classes on each link (or the disabled `<span>`), replacing
   existing classes.
 - `addLinkClass(BackedEnum|string|null ...$class)` - Add CSS classes to each link (or the disabled `<span>`) without
   removing existing ones.
