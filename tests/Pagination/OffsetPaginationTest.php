@@ -25,8 +25,8 @@ final class OffsetPaginationTest extends TestCase
         $this->assertSame(
             <<<HTML
             <nav>
-            <a href="/">⟪</a>
-            <a href="/">⟨</a>
+            <span>⟪</span>
+            <span>⟨</span>
             <a href="/">1</a>
             <a href="/page/2">2</a>
             <a href="/page/3">3</a>
@@ -66,11 +66,11 @@ final class OffsetPaginationTest extends TestCase
     #[TestWith([
         <<<HTML
         <nav>
-        <a href="/">⟪</a>
-        <a href="/">⟨</a>
+        <span>⟪</span>
+        <span>⟨</span>
         <a href="/">1</a>
-        <a href="/">⟩</a>
-        <a href="/">⟫</a>
+        <span>⟩</span>
+        <span>⟫</span>
         </nav>
         HTML,
         true,
@@ -96,8 +96,8 @@ final class OffsetPaginationTest extends TestCase
         $this->assertSame(
             <<<HTML
             <main>
-            <a href="/">⟪</a>
-            <a href="/">⟨</a>
+            <span>⟪</span>
+            <span>⟨</span>
             <a href="/">1</a>
             <a href="/page/2">2</a>
             <a href="/page/2">⟩</a>
@@ -117,8 +117,8 @@ final class OffsetPaginationTest extends TestCase
 
         $this->assertSame(
             <<<HTML
-            <a href="/">⟪</a>
-            <a href="/">⟨</a>
+            <span>⟪</span>
+            <span>⟨</span>
             <a href="/">1</a>
             <a href="/page/2">2</a>
             <a href="/page/2">⟩</a>
@@ -147,8 +147,8 @@ final class OffsetPaginationTest extends TestCase
         $this->assertSame(
             <<<HTML
             <nav class="pagination-nav" id="main-nav">
-            <a href="/">⟪</a>
-            <a href="/">⟨</a>
+            <span>⟪</span>
+            <span>⟨</span>
             <a href="/">1</a>
             <a href="/page/2">2</a>
             <a href="/page/2">⟩</a>
@@ -170,8 +170,8 @@ final class OffsetPaginationTest extends TestCase
             <<<HTML
             <nav>
             <ul>
-            <a href="/">⟪</a>
-            <a href="/">⟨</a>
+            <span>⟪</span>
+            <span>⟨</span>
             <a href="/">1</a>
             <a href="/page/2">2</a>
             <a href="/page/2">⟩</a>
@@ -193,8 +193,8 @@ final class OffsetPaginationTest extends TestCase
         $this->assertSame(
             <<<HTML
             <nav>
-            <a href="/">⟪</a>
-            <a href="/">⟨</a>
+            <span>⟪</span>
+            <span>⟨</span>
             <a href="/">1</a>
             <a href="/page/2">2</a>
             <a href="/page/2">⟩</a>
@@ -226,8 +226,8 @@ final class OffsetPaginationTest extends TestCase
             <<<HTML
             <nav>
             <ul class="pagination-list" data-role="navigation">
-            <a href="/">⟪</a>
-            <a href="/">⟨</a>
+            <span>⟪</span>
+            <span>⟨</span>
             <a href="/">1</a>
             <a href="/page/2">2</a>
             <a href="/page/2">⟩</a>
@@ -249,8 +249,8 @@ final class OffsetPaginationTest extends TestCase
         $this->assertSame(
             <<<HTML
             <nav>
-            <li><a href="/">⟪</a></li>
-            <li><a href="/">⟨</a></li>
+            <li><span>⟪</span></li>
+            <li><span>⟨</span></li>
             <li><a href="/">1</a></li>
             <li><a href="/page/2">2</a></li>
             <li><a href="/page/2">⟩</a></li>
@@ -271,8 +271,8 @@ final class OffsetPaginationTest extends TestCase
         $this->assertSame(
             <<<HTML
             <nav>
-            <a href="/">⟪</a>
-            <a href="/">⟨</a>
+            <span>⟪</span>
+            <span>⟨</span>
             <a href="/">1</a>
             <a href="/page/2">2</a>
             <a href="/page/2">⟩</a>
@@ -303,8 +303,8 @@ final class OffsetPaginationTest extends TestCase
         $this->assertSame(
             <<<HTML
             <nav>
-            <li class="pagination-item" data-type="nav-button"><a href="/">⟪</a></li>
-            <li class="pagination-item" data-type="nav-button"><a href="/">⟨</a></li>
+            <li class="pagination-item" data-type="nav-button"><span>⟪</span></li>
+            <li class="pagination-item" data-type="nav-button"><span>⟨</span></li>
             <li class="pagination-item" data-type="nav-button"><a href="/">1</a></li>
             <li class="pagination-item" data-type="nav-button"><a href="/page/2">2</a></li>
             <li class="pagination-item" data-type="nav-button"><a href="/page/2">⟩</a></li>
@@ -326,8 +326,8 @@ final class OffsetPaginationTest extends TestCase
         $this->assertSame(
             <<<HTML
             <nav>
-            <li><a href="/">⟪</a></li>
-            <li><a href="/">⟨</a></li>
+            <li><span>⟪</span></li>
+            <li><span>⟨</span></li>
             <li class="current"><a href="/">1</a></li>
             <li><a href="/page/2">2</a></li>
             <li><a href="/page/2">⟩</a></li>
@@ -349,8 +349,8 @@ final class OffsetPaginationTest extends TestCase
         $this->assertSame(
             <<<HTML
             <nav>
-            <li class="disabled"><a href="/">⟪</a></li>
-            <li class="disabled"><a href="/">⟨</a></li>
+            <li class="disabled"><span>⟪</span></li>
+            <li class="disabled"><span>⟨</span></li>
             <li><a href="/">1</a></li>
             <li><a href="/page/2">2</a></li>
             <li><a href="/page/3">3</a></li>
@@ -374,8 +374,8 @@ final class OffsetPaginationTest extends TestCase
         $this->assertSame(
             <<<HTML
             <nav>
-            <a class="pagination-link" data-action="navigate" href="/">⟪</a>
-            <a class="pagination-link" data-action="navigate" href="/">⟨</a>
+            <span class="pagination-link" data-action="navigate">⟪</span>
+            <span class="pagination-link" data-action="navigate">⟨</span>
             <a class="pagination-link" data-action="navigate" href="/">1</a>
             <a class="pagination-link" data-action="navigate" href="/page/2">2</a>
             <a class="pagination-link" data-action="navigate" href="/page/2">⟩</a>
@@ -397,8 +397,8 @@ final class OffsetPaginationTest extends TestCase
         $this->assertSame(
             <<<HTML
             <nav>
-            <a class="pagination-link" data-action="navigate" role="button" href="/">⟪</a>
-            <a class="pagination-link" data-action="navigate" role="button" href="/">⟨</a>
+            <span class="pagination-link" data-action="navigate" role="button">⟪</span>
+            <span class="pagination-link" data-action="navigate" role="button">⟨</span>
             <a class="pagination-link" data-action="navigate" role="button" href="/">1</a>
             <a class="pagination-link" data-action="navigate" role="button" href="/page/2">2</a>
             <a class="pagination-link" data-action="navigate" role="button" href="/page/2">⟩</a>
@@ -419,8 +419,8 @@ final class OffsetPaginationTest extends TestCase
         $this->assertSame(
             <<<HTML
             <nav>
-            <a class="btn btn-primary" href="/">⟪</a>
-            <a class="btn btn-primary" href="/">⟨</a>
+            <span class="btn btn-primary">⟪</span>
+            <span class="btn btn-primary">⟨</span>
             <a class="btn btn-primary" href="/">1</a>
             <a class="btn btn-primary" href="/page/2">2</a>
             <a class="btn btn-primary" href="/page/2">⟩</a>
@@ -442,8 +442,8 @@ final class OffsetPaginationTest extends TestCase
         $this->assertSame(
             <<<HTML
             <nav>
-            <a class="btn btn-primary active" href="/">⟪</a>
-            <a class="btn btn-primary active" href="/">⟨</a>
+            <span class="btn btn-primary active">⟪</span>
+            <span class="btn btn-primary active">⟨</span>
             <a class="btn btn-primary active" href="/">1</a>
             <a class="btn btn-primary active" href="/page/2">2</a>
             <a class="btn btn-primary active" href="/page/2">⟩</a>
@@ -465,8 +465,8 @@ final class OffsetPaginationTest extends TestCase
         $this->assertSame(
             <<<HTML
             <nav>
-            <a class="btn btn-primary" href="/">⟪</a>
-            <a class="btn btn-primary" href="/">⟨</a>
+            <span class="btn btn-primary">⟪</span>
+            <span class="btn btn-primary">⟨</span>
             <a class="btn btn-primary current" href="/">1</a>
             <a class="btn btn-primary" href="/page/2">2</a>
             <a class="btn btn-primary" href="/page/2">⟩</a>
@@ -488,8 +488,8 @@ final class OffsetPaginationTest extends TestCase
         $this->assertSame(
             <<<HTML
             <nav>
-            <a class="btn btn-primary disabled" href="/">⟪</a>
-            <a class="btn btn-primary disabled" href="/">⟨</a>
+            <span class="btn btn-primary disabled">⟪</span>
+            <span class="btn btn-primary disabled">⟨</span>
             <a class="btn btn-primary" href="/">1</a>
             <a class="btn btn-primary" href="/page/2">2</a>
             <a class="btn btn-primary" href="/page/3">3</a>
@@ -513,8 +513,8 @@ final class OffsetPaginationTest extends TestCase
         $this->assertSame(
             <<<HTML
             <nav>
-            <a href="/">⟪</a>
-            <a href="/">Prev</a>
+            <span>⟪</span>
+            <span>Prev</span>
             <a href="/">1</a>
             <a href="/page/2">2</a>
             <a href="/page/2">⟩</a>
@@ -535,8 +535,8 @@ final class OffsetPaginationTest extends TestCase
         $this->assertSame(
             <<<HTML
             <nav>
-            <a href="/">⟪</a>
-            <a href="/">⟨</a>
+            <span>⟪</span>
+            <span>⟨</span>
             <a href="/">1</a>
             <a href="/page/2">2</a>
             <a href="/page/2">Next</a>
@@ -557,8 +557,8 @@ final class OffsetPaginationTest extends TestCase
         $this->assertSame(
             <<<HTML
             <nav>
-            <a href="/">First</a>
-            <a href="/">⟨</a>
+            <span>First</span>
+            <span>⟨</span>
             <a href="/">1</a>
             <a href="/page/2">2</a>
             <a href="/page/2">⟩</a>
@@ -579,8 +579,8 @@ final class OffsetPaginationTest extends TestCase
         $this->assertSame(
             <<<HTML
             <nav>
-            <a href="/">⟪</a>
-            <a href="/">⟨</a>
+            <span>⟪</span>
+            <span>⟨</span>
             <a href="/">1</a>
             <a href="/page/2">2</a>
             <a href="/page/2">⟩</a>

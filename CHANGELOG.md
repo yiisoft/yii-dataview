@@ -13,6 +13,8 @@
 - Enh #358: Make dependency container in `GridView` constructor optional (@vjik)
 - Bug #363: Render disabled `KeysetPagination` items ("previous" on the first page, "next" on the last page) as
   `span` elements instead of `a` elements without an `href` (@vjik)
+- Bug #364: Render disabled `OffsetPagination` controls ("first"/"previous" on the first page, "next"/"last" on the
+  last page) as `span` elements instead of clickable `a` elements (@vjik)
 
 ## 1.2.0 September 02, 2026
 
