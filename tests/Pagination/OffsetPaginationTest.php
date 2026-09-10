@@ -12,6 +12,10 @@ use Yiisoft\Data\Paginator\KeysetPaginator;
 use Yiisoft\Data\Paginator\OffsetPaginator;
 use Yiisoft\Data\Reader\Iterable\IterableDataReader;
 use Yiisoft\Data\Reader\Sort;
+use Yiisoft\Translator\CategorySource;
+use Yiisoft\Translator\InMemoryMessageSource;
+use Yiisoft\Translator\Translator;
+use Yiisoft\Yii\DataView\BaseListView;
 use Yiisoft\Yii\DataView\Pagination\OffsetPagination;
 use Yiisoft\Yii\DataView\Pagination\PaginationContext;
 use Yiisoft\Yii\DataView\Pagination\PaginatorNotSupportedException;
@@ -647,6 +651,12 @@ final class OffsetPaginationTest extends TestCase
         $this->assertNotSame($widget, $widget->labelNext('Next'));
         $this->assertNotSame($widget, $widget->labelFirst('First'));
         $this->assertNotSame($widget, $widget->labelLast('Last'));
+        $this->assertNotSame($widget, $widget->ariaLabelNav('Pagination'));
+        $this->assertNotSame($widget, $widget->ariaLabelFirst('First page'));
+        $this->assertNotSame($widget, $widget->ariaLabelPrevious('Previous page'));
+        $this->assertNotSame($widget, $widget->ariaLabelNext('Next page'));
+        $this->assertNotSame($widget, $widget->ariaLabelLast('Last page'));
+        $this->assertNotSame($widget, $widget->ariaLabelPage('Page {page}'));
         $this->assertNotSame($widget, $widget->maxNavLinkCount(5));
     }
 
@@ -774,17 +784,172 @@ final class OffsetPaginationTest extends TestCase
 
         $this->assertSame(
             <<<HTML
-            <nav>
-            <a aria-disabled="true" href="/">⟪</a>
-            <a aria-disabled="true" href="/">⟨</a>
-            <a aria-current="page" href="/">1</a>
-            <a href="/page/2">2</a>
-            <a href="/page/3">3</a>
-            <a href="/page/2">⟩</a>
-            <a href="/page/3">⟫</a>
+            <nav aria-label="Pagination">
+            <a aria-label="First page" aria-disabled="true" href="/">⟪</a>
+            <a aria-label="Previous page" aria-disabled="true" href="/">⟨</a>
+            <a aria-label="Page 1" aria-current="page" href="/">1</a>
+            <a aria-label="Page 2" href="/page/2">2</a>
+            <a aria-label="Page 3" href="/page/3">3</a>
+            <a aria-label="Next page" href="/page/2">⟩</a>
+            <a aria-label="Last page" href="/page/3">⟫</a>
             </nav>
             HTML,
             $html,
+        );
+    }
+
+    public function testAriaLabelsAreNotRenderedWhenAccessibilityDisabled(): void
+    {
+        $html = $this->createPagination(3, 1)->render();
+
+        $this->assertStringNotContainsString('aria-label', $html);
+    }
+
+    public function testAriaLabelsCanBeCustomized(): void
+    {
+        $paginator = (new OffsetPaginator(new IterableDataReader(array_fill(0, 3, ['id' => 'uuid']))))
+            ->withPageSize(1)
+            ->withCurrentPage(2);
+
+        $html = OffsetPagination::create(
+            $paginator,
+            '/page/' . PaginationContext::URL_PLACEHOLDER,
+            '/',
+            enableAccessibility: true,
+        )
+            ->ariaLabelNav('Pages')
+            ->ariaLabelFirst('To first')
+            ->ariaLabelPrevious('To previous')
+            ->ariaLabelNext('To next')
+            ->ariaLabelLast('To last')
+            ->ariaLabelPage('Open page {page}')
+            ->render();
+
+        $this->assertSame(
+            <<<HTML
+            <nav aria-label="Pages">
+            <a aria-label="To first" href="/">⟪</a>
+            <a aria-label="To previous" href="/">⟨</a>
+            <a aria-label="Open page 1" href="/">1</a>
+            <a aria-label="Open page 2" aria-current="page" href="/page/2">2</a>
+            <a aria-label="Open page 3" href="/page/3">3</a>
+            <a aria-label="To next" href="/page/3">⟩</a>
+            <a aria-label="To last" href="/page/3">⟫</a>
+            </nav>
+            HTML,
+            $html,
+        );
+    }
+
+    public function testAriaLabelsCanBeDisabledWithNull(): void
+    {
+        $paginator = (new OffsetPaginator(new IterableDataReader(array_fill(0, 3, ['id' => 'uuid']))))
+            ->withPageSize(1)
+            ->withCurrentPage(1);
+
+        $html = OffsetPagination::create(
+            $paginator,
+            '/page/' . PaginationContext::URL_PLACEHOLDER,
+            '/',
+            enableAccessibility: true,
+        )
+            ->ariaLabelNav(null)
+            ->ariaLabelFirst(null)
+            ->ariaLabelPrevious(null)
+            ->ariaLabelNext(null)
+            ->ariaLabelLast(null)
+            ->ariaLabelPage(null)
+            ->render();
+
+        $this->assertStringNotContainsString('aria-label', $html);
+    }
+
+    public function testAriaLabelIsNotOverriddenWhenPresentInLinkAttributes(): void
+    {
+        $paginator = (new OffsetPaginator(new IterableDataReader(array_fill(0, 2, ['id' => 'uuid']))))
+            ->withPageSize(1)
+            ->withCurrentPage(1);
+
+        $html = OffsetPagination::create(
+            $paginator,
+            '/page/' . PaginationContext::URL_PLACEHOLDER,
+            '/',
+            enableAccessibility: true,
+        )
+            ->linkAttributes(['aria-label' => 'Custom'])
+            ->render();
+
+        $this->assertStringContainsString('<a aria-label="Custom"', $html);
+        $this->assertStringNotContainsString('aria-label="Page 1"', $html);
+    }
+
+    public function testAriaLabelsAreTranslated(): void
+    {
+        $paginator = (new OffsetPaginator(new IterableDataReader(array_fill(0, 2, ['id' => 'uuid']))))
+            ->withPageSize(1)
+            ->withCurrentPage(1);
+        $context = new PaginationContext(
+            '/page/' . PaginationContext::URL_PLACEHOLDER,
+            '/page/' . PaginationContext::URL_PLACEHOLDER,
+            '/',
+            true,
+            $this->createAriaLabelTranslator(),
+        );
+
+        $html = OffsetPagination::widget()->paginator($paginator)->context($context)->render();
+
+        $this->assertSame(
+            <<<HTML
+            <nav aria-label="Seitennavigation">
+            <a aria-label="Erste Seite" aria-disabled="true" href="/">⟪</a>
+            <a aria-label="Vorherige Seite" aria-disabled="true" href="/">⟨</a>
+            <a aria-label="Seite 1" aria-current="page" href="/">1</a>
+            <a aria-label="Seite 2" href="/page/2">2</a>
+            <a aria-label="Nächste Seite" href="/page/2">⟩</a>
+            <a aria-label="Letzte Seite" href="/page/2">⟫</a>
+            </nav>
+            HTML,
+            $html,
+        );
+    }
+
+    public function testAriaLabelsAreTranslatedWithTranslatorPassedToCreate(): void
+    {
+        $paginator = (new OffsetPaginator(new IterableDataReader(array_fill(0, 2, ['id' => 'uuid']))))
+            ->withPageSize(1)
+            ->withCurrentPage(1);
+
+        $html = OffsetPagination::create(
+            $paginator,
+            '/page/' . PaginationContext::URL_PLACEHOLDER,
+            '/',
+            enableAccessibility: true,
+            translator: $this->createAriaLabelTranslator(),
+        )->render();
+
+        $this->assertStringContainsString('<nav aria-label="Seitennavigation">', $html);
+        $this->assertStringContainsString('<a aria-label="Erste Seite" aria-disabled="true" href="/">⟪</a>', $html);
+        $this->assertStringContainsString('<a aria-label="Seite 2" href="/page/2">2</a>', $html);
+    }
+
+    private function createAriaLabelTranslator(): Translator
+    {
+        $messageSource = new InMemoryMessageSource();
+        $messageSource->write(
+            BaseListView::DEFAULT_TRANSLATION_CATEGORY,
+            'en',
+            [
+                'Pagination' => 'Seitennavigation',
+                'First page' => 'Erste Seite',
+                'Previous page' => 'Vorherige Seite',
+                'Next page' => 'Nächste Seite',
+                'Last page' => 'Letzte Seite',
+                'Page {page}' => 'Seite {page}',
+            ],
+        );
+
+        return (new Translator('en'))->addCategorySources(
+            new CategorySource(BaseListView::DEFAULT_TRANSLATION_CATEGORY, $messageSource),
         );
     }
 

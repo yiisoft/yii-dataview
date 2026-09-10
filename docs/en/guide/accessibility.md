@@ -119,6 +119,19 @@ directly, they take the flag from `PaginationContext` (also exposed as the `$ena
 - Both widgets add `aria-disabled="true"` to links that are currently not actionable: the "first" and
   "previous" links on the first page, and the "next" and "last" links on the last page (`KeysetPagination`
   renders these without an `href`).
+- Both widgets add an `aria-label` to the `nav` container and to every page link, so several navigation
+  landmarks on a page can be told apart and the purpose of each link (whose visible content is a bare glyph
+  or a bare number) is announced. The default texts are: `Pagination` on the `nav`; `First page`,
+  `Previous page`, `Next page`, `Last page` on the corresponding links; and `Page {page}` (with the number
+  substituted for `{page}`) on the numbered links of `OffsetPagination`.
+
+### Translating the `aria-label` texts
+
+When the pagination is rendered through `GridView`/`ListView`, the `aria-label` texts are passed through the
+view's translator using the `yii-dataview` category, so a translation supplied for `First page`,
+`Previous page`, `Next page`, `Last page`, `Page {page}` or `Pagination` is used automatically. Used directly,
+the widgets emit the English defaults unless a translator is passed — either as the `$translator` argument of
+`OffsetPagination::create()` / `KeysetPagination::create()`, or through a custom `PaginationContext`.
 
 ### Overriding or removing the attributes
 
@@ -135,12 +148,21 @@ echo GridView::widget()
     ]);
 ```
 
-### Recommendations
+The `nav` and link `aria-label` texts are configured with dedicated methods — `ariaLabelNav()`,
+`ariaLabelFirst()`, `ariaLabelPrevious()`, `ariaLabelNext()`, `ariaLabelLast()` and `ariaLabelPage()` on
+`OffsetPagination` (`KeysetPagination` has `ariaLabelNav()`, `ariaLabelPrevious()` and `ariaLabelNext()`).
+Pass a string to change the text, or `null` to omit that `aria-label`:
 
-The widgets do not set these for you:
+```php
+use Yiisoft\Yii\DataView\GridView\GridView;
 
-- Give the `nav` an accessible name so several navigation landmarks on a page can be told apart, for
-  example `containerAttributes(['aria-label' => 'Pagination'])`.
-- The default first/previous/next/last labels are bare glyphs (`⟪ ⟨ ⟩ ⟫`). Replace them with text
-  labels (`labelPrevious('Previous')`, ...), or pass a `Stringable` label that carries its own
-  `aria-label`, so the purpose of each link is announced.
+echo GridView::widget()
+    ->dataReader($paginator)
+    ->offsetPaginationConfig([
+        'ariaLabelPage()' => ['Go to page {page}'],
+        'ariaLabelNav()' => [null],
+    ]);
+```
+
+An `aria-label` already present in `containerAttributes()` (for the `nav`) or `linkAttributes()` (for the
+links) is kept as is and takes precedence over these methods.

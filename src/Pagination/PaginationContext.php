@@ -4,7 +4,10 @@ declare(strict_types=1);
 
 namespace Yiisoft\Yii\DataView\Pagination;
 
+use Stringable;
 use Yiisoft\Data\Paginator\PageToken;
+use Yiisoft\Translator\TranslatorInterface;
+use Yiisoft\Yii\DataView\BaseListView;
 
 /**
  * Context class for pagination widgets that provides URL generation and configuration.
@@ -22,13 +25,29 @@ final class PaginationContext
      * @param string $firstPageUrl URL used on the first page.
      * @param bool $enableAccessibility Whether pagination widgets should add accessibility attributes `aria-*`
      * automatically.
+     * @param TranslatorInterface|null $translator Translator used for pagination messages.
+     * @param string $translationCategory Category used with the translator.
      */
     public function __construct(
         public readonly string $nextUrlPattern,
         public readonly string $previousUrlPattern,
         public readonly string $firstPageUrl,
         public readonly bool $enableAccessibility = false,
+        private readonly ?TranslatorInterface $translator = null,
+        private readonly string $translationCategory = BaseListView::DEFAULT_TRANSLATION_CATEGORY,
     ) {}
+
+    /**
+     * Translate a message using the pagination translation category.
+     *
+     * @param string|Stringable $id Message ID to translate.
+     *
+     * @return string Translated message, or the message ID unchanged when no translator is set.
+     */
+    public function translate(string|Stringable $id): string
+    {
+        return $this->translator?->translate($id, category: $this->translationCategory) ?? (string) $id;
+    }
 
     /**
      * Creates a URL for the given page token.

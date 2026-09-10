@@ -11,6 +11,10 @@ use Yiisoft\Data\Paginator\KeysetPaginator;
 use Yiisoft\Data\Paginator\OffsetPaginator;
 use Yiisoft\Data\Reader\Iterable\IterableDataReader;
 use Yiisoft\Data\Reader\Sort;
+use Yiisoft\Translator\CategorySource;
+use Yiisoft\Translator\InMemoryMessageSource;
+use Yiisoft\Translator\Translator;
+use Yiisoft\Yii\DataView\BaseListView;
 use Yiisoft\Yii\DataView\Pagination\KeysetPagination;
 use Yiisoft\Yii\DataView\Pagination\PaginationContext;
 use Yiisoft\Yii\DataView\Pagination\PaginatorNotSupportedException;
@@ -437,6 +441,9 @@ final class KeysetPaginationTest extends TestCase
         $this->assertNotSame($widget, $widget->disabledLinkClass('disabled'));
         $this->assertNotSame($widget, $widget->labelPrevious('Prev'));
         $this->assertNotSame($widget, $widget->labelNext('Next'));
+        $this->assertNotSame($widget, $widget->ariaLabelNav('Pagination'));
+        $this->assertNotSame($widget, $widget->ariaLabelPrevious('Previous page'));
+        $this->assertNotSame($widget, $widget->ariaLabelNext('Next page'));
     }
 
     public function testEnableAccessibility(): void
@@ -454,9 +461,92 @@ final class KeysetPaginationTest extends TestCase
 
         $this->assertSame(
             <<<HTML
+            <nav aria-label="Pagination">
+            <a aria-label="Previous page" aria-disabled="true">⟨</a>
+            <a aria-label="Next page" href="/next/id1">⟩</a>
+            </nav>
+            HTML,
+            $html,
+        );
+    }
+
+    public function testAriaLabelsAreNotRenderedWhenAccessibilityDisabled(): void
+    {
+        $dataReader = (new IterableDataReader([['id' => 'id1'], ['id' => 'id2'], ['id' => 'id3']]))
+            ->withSort(Sort::any(['id']));
+        $paginator = (new KeysetPaginator($dataReader))->withPageSize(1);
+
+        $html = KeysetPagination::create(
+            $paginator,
+            '/next/' . PaginationContext::URL_PLACEHOLDER,
+            '/prev/' . PaginationContext::URL_PLACEHOLDER,
+        )->render();
+
+        $this->assertStringNotContainsString('aria-label', $html);
+    }
+
+    public function testAriaLabelsCanBeCustomizedAndDisabled(): void
+    {
+        $dataReader = (new IterableDataReader([['id' => 'id1'], ['id' => 'id2'], ['id' => 'id3']]))
+            ->withSort(Sort::any(['id']));
+        $paginator = (new KeysetPaginator($dataReader))->withPageSize(1);
+
+        $html = KeysetPagination::create(
+            $paginator,
+            '/next/' . PaginationContext::URL_PLACEHOLDER,
+            '/prev/' . PaginationContext::URL_PLACEHOLDER,
+            enableAccessibility: true,
+        )
+            ->ariaLabelNav(null)
+            ->ariaLabelPrevious('To previous')
+            ->ariaLabelNext('To next')
+            ->render();
+
+        $this->assertSame(
+            <<<HTML
             <nav>
-            <a aria-disabled="true">⟨</a>
-            <a href="/next/id1">⟩</a>
+            <a aria-label="To previous" aria-disabled="true">⟨</a>
+            <a aria-label="To next" href="/next/id1">⟩</a>
+            </nav>
+            HTML,
+            $html,
+        );
+    }
+
+    public function testAriaLabelsAreTranslated(): void
+    {
+        $messageSource = new InMemoryMessageSource();
+        $messageSource->write(
+            BaseListView::DEFAULT_TRANSLATION_CATEGORY,
+            'en',
+            [
+                'Pagination' => 'Seitennavigation',
+                'Previous page' => 'Vorherige Seite',
+                'Next page' => 'Nächste Seite',
+            ],
+        );
+        $translator = (new Translator('en'))->addCategorySources(
+            new CategorySource(BaseListView::DEFAULT_TRANSLATION_CATEGORY, $messageSource),
+        );
+
+        $dataReader = (new IterableDataReader([['id' => 'id1'], ['id' => 'id2'], ['id' => 'id3']]))
+            ->withSort(Sort::any(['id']));
+        $paginator = (new KeysetPaginator($dataReader))->withPageSize(1);
+        $context = new PaginationContext(
+            '/next/' . PaginationContext::URL_PLACEHOLDER,
+            '/prev/' . PaginationContext::URL_PLACEHOLDER,
+            '/',
+            true,
+            $translator,
+        );
+
+        $html = KeysetPagination::widget()->paginator($paginator)->context($context)->render();
+
+        $this->assertSame(
+            <<<HTML
+            <nav aria-label="Seitennavigation">
+            <a aria-label="Vorherige Seite" aria-disabled="true">⟨</a>
+            <a aria-label="Nächste Seite" href="/next/id1">⟩</a>
             </nav>
             HTML,
             $html,

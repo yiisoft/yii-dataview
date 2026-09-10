@@ -426,8 +426,8 @@ abstract class BaseListView extends Widget
      * Return a new instance that toggles automatically added accessibility attributes.
      *
      * When enabled, rendering adds machine-readable accessibility attributes: `scope="col"` and `aria-sort` on
-     * `GridView` header cells, `scope="row"` on row header cells, and `aria-current`/`aria-disabled` on pagination
-     * links. Disabled by default.
+     * `GridView` header cells, `scope="row"` on row header cells, and `aria-current`, `aria-disabled` and
+     * `aria-label` on pagination links (and `aria-label` on the pagination `nav` container). Disabled by default.
      *
      * @param bool $enabled Whether to add accessibility attributes automatically.
      */
@@ -1209,6 +1209,8 @@ abstract class BaseListView extends Widget
             $previousUrlPattern,
             $defaultUrl,
             $this->accessibility,
+            $this->translator,
+            $this->translationCategory,
         );
 
         return $widget->context($context)->render();

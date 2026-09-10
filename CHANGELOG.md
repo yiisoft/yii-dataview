@@ -16,6 +16,12 @@
   `aria-current`/`aria-disabled` on pagination links (@vjik)
 - New #363: Add `$enableAccessibility` parameter to the `PaginationContext` constructor and to
   `OffsetPagination::create()` and `KeysetPagination::create()` (@vjik)
+- New #363: Add `ariaLabelNav()`, `ariaLabelFirst()`, `ariaLabelPrevious()`, `ariaLabelNext()`, `ariaLabelLast()`
+  and `ariaLabelPage()` methods to `OffsetPagination` (subset `ariaLabelNav()`, `ariaLabelPrevious()`,
+  `ariaLabelNext()` in `KeysetPagination`) to set `aria-label` on the `nav` container and page links when
+  accessibility is enabled (@vjik)
+- New #363: Add `PaginationContext::translate()` method and `$translator` and `$translationCategory` parameters
+  to the `PaginationContext` constructor and to `OffsetPagination::create()` and `KeysetPagination::create()` (@vjik)
 - Enh #358: Make dependency container in `GridView` constructor optional (@vjik)
 
 ## 1.2.0 September 02, 2026

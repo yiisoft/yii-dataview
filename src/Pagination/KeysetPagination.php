@@ -10,7 +10,9 @@ use Stringable;
 use Yiisoft\Data\Paginator\KeysetPaginator;
 use Yiisoft\Data\Paginator\PaginatorInterface;
 use Yiisoft\Html\Html;
+use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\Widget\Widget;
+use Yiisoft\Yii\DataView\BaseListView;
 
 use function array_key_exists;
 
@@ -52,13 +54,20 @@ final class KeysetPagination extends Widget implements PaginationWidgetInterface
     private string|Stringable $labelPrevious = '⟨';
     private string|Stringable $labelNext = '⟩';
 
+    private ?string $ariaLabelNav = 'Pagination';
+    private ?string $ariaLabelPrevious = 'Previous page';
+    private ?string $ariaLabelNext = 'Next page';
+
     /**
      * Creates a new instance with the specified paginator and context.
      *
      * @param KeysetPaginator $paginator The paginator to use.
      * @param string $nextUrlPattern URL pattern for next page links. Must contain {@see PaginationContext::URL_PLACEHOLDER}.
      * @param string $previousUrlPattern URL pattern for previous page links. Must contain {@see PaginationContext::URL_PLACEHOLDER}.
-     * @param bool $enableAccessibility Whether to add the `aria-disabled` attribute automatically.
+     * @param bool $enableAccessibility Whether to add the `aria-disabled` and `aria-label` attributes automatically.
+     * @param TranslatorInterface|null $translator Translator used for the `aria-label` texts. When `null`, the
+     * English defaults are emitted as is.
+     * @param string $translationCategory Category used with the translator.
      *
      * @return self New instance with the specified paginator and context.
      */
@@ -67,11 +76,20 @@ final class KeysetPagination extends Widget implements PaginationWidgetInterface
         string $nextUrlPattern,
         string $previousUrlPattern,
         bool $enableAccessibility = false,
+        ?TranslatorInterface $translator = null,
+        string $translationCategory = BaseListView::DEFAULT_TRANSLATION_CATEGORY,
     ): self {
         return self::widget()
             ->paginator($paginator)
             ->context(
-                new PaginationContext($nextUrlPattern, $previousUrlPattern, '', $enableAccessibility),
+                new PaginationContext(
+                    $nextUrlPattern,
+                    $previousUrlPattern,
+                    '',
+                    $enableAccessibility,
+                    $translator,
+                    $translationCategory,
+                ),
             );
     }
 
@@ -308,6 +326,57 @@ final class KeysetPagination extends Widget implements PaginationWidgetInterface
     }
 
     /**
+     * Sets the `aria-label` of the `nav` container. Pass `null` to omit it.
+     *
+     * The value is applied only when accessibility is enabled and only when `aria-label` is not already present
+     * in {@see containerAttributes()}. When rendered via `GridView`/`ListView`, it is translated.
+     *
+     * @param string|null $label The `aria-label` for the `nav` container.
+     *
+     * @return self New instance with the specified `nav` `aria-label`.
+     */
+    public function ariaLabelNav(?string $label): self
+    {
+        $new = clone $this;
+        $new->ariaLabelNav = $label;
+        return $new;
+    }
+
+    /**
+     * Sets the `aria-label` of the "previous page" link. Pass `null` to omit it.
+     *
+     * The value is applied only when accessibility is enabled and only when `aria-label` is not already present
+     * in {@see linkAttributes()}. When rendered via `GridView`/`ListView`, it is translated.
+     *
+     * @param string|null $label The `aria-label` for the "previous page" link.
+     *
+     * @return self New instance with the specified previous link `aria-label`.
+     */
+    public function ariaLabelPrevious(?string $label): self
+    {
+        $new = clone $this;
+        $new->ariaLabelPrevious = $label;
+        return $new;
+    }
+
+    /**
+     * Sets the `aria-label` of the "next page" link. Pass `null` to omit it.
+     *
+     * The value is applied only when accessibility is enabled and only when `aria-label` is not already present
+     * in {@see linkAttributes()}. When rendered via `GridView`/`ListView`, it is translated.
+     *
+     * @param string|null $label The `aria-label` for the "next page" link.
+     *
+     * @return self New instance with the specified next link `aria-label`.
+     */
+    public function ariaLabelNext(?string $label): self
+    {
+        $new = clone $this;
+        $new->ariaLabelNext = $label;
+        return $new;
+    }
+
+    /**
      * Renders the pagination controls.
      *
      * @throws PaginatorNotSetException If paginator is not set.
@@ -321,14 +390,23 @@ final class KeysetPagination extends Widget implements PaginationWidgetInterface
 
         $result = '';
 
+        $context = $this->getContext();
+
         if ($this->containerTag !== null) {
-            $result .= Html::openTag($this->containerTag, $this->containerAttributes) . "\n";
+            $containerAttributes = $this->containerAttributes;
+            if (
+                $context->enableAccessibility
+                && $this->ariaLabelNav !== null
+                && !array_key_exists('aria-label', $containerAttributes)
+            ) {
+                $containerAttributes['aria-label'] = $context->translate($this->ariaLabelNav);
+            }
+            $result .= Html::openTag($this->containerTag, $containerAttributes) . "\n";
         }
         if ($this->listTag !== null) {
             $result .= Html::openTag($this->listTag, $this->listAttributes) . "\n";
         }
 
-        $context = $this->getContext();
         $paginator = $this->getPaginator();
         $previousToken = $paginator->getPreviousToken();
         $nextToken = $paginator->getNextToken();
@@ -336,12 +414,14 @@ final class KeysetPagination extends Widget implements PaginationWidgetInterface
             $this->labelPrevious,
             $previousToken === null ? null : $context->createUrl($previousToken),
             $previousToken === null,
+            $this->ariaLabelPrevious,
         )
             . "\n"
             . $this->renderItem(
                 $this->labelNext,
                 $nextToken === null ? null : $context->createUrl($nextToken),
                 $nextToken === null,
+                $this->ariaLabelNext,
             );
 
         if ($this->listTag !== null) {
@@ -360,14 +440,28 @@ final class KeysetPagination extends Widget implements PaginationWidgetInterface
      * @param string|Stringable $label The item label.
      * @param string|null $url The item URL, or null if disabled.
      * @param bool $isDisabled Whether the item should be rendered as disabled.
+     * @param string|null $ariaLabel The untranslated `aria-label` for the item link, or null to omit it.
      *
      * @return Stringable The rendered HTML for the pagination item.
      */
-    private function renderItem(string|Stringable $label, ?string $url, bool $isDisabled): Stringable
-    {
+    private function renderItem(
+        string|Stringable $label,
+        ?string $url,
+        bool $isDisabled,
+        ?string $ariaLabel = null,
+    ): Stringable {
+        $context = $this->getContext();
+        $enableAccessibility = $context->enableAccessibility;
         $linkAttributes = $this->linkAttributes;
+        if (
+            $enableAccessibility
+            && $ariaLabel !== null
+            && !array_key_exists('aria-label', $linkAttributes)
+        ) {
+            $linkAttributes['aria-label'] = $context->translate($ariaLabel);
+        }
         if ($isDisabled) {
-            if ($this->getContext()->enableAccessibility && !array_key_exists('aria-disabled', $linkAttributes)) {
+            if ($enableAccessibility && !array_key_exists('aria-disabled', $linkAttributes)) {
                 $linkAttributes['aria-disabled'] = 'true';
             }
             Html::addCssClass($linkAttributes, $this->disabledLinkClass);
