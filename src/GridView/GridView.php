@@ -1039,20 +1039,17 @@ final class GridView extends BaseListView
         }
 
         if ($this->isHeaderEnabled) {
+            $scopeColAttributes = $this->accessibility ? ['scope' => 'col'] : [];
             $tags = [];
             foreach ($columns as $i => $column) {
                 $cell = $renderers[$i]->renderHeader(
                     $column,
-                    new Cell(
-                        $this->accessibility
-                            ? array_merge(['scope' => 'col'], $this->headerCellAttributes)
-                            : $this->headerCellAttributes,
-                    ),
+                    new Cell($this->headerCellAttributes),
                     $globalContext,
                 );
                 $tags[] = $cell === null
-                    ? Html::th('&nbsp;', $this->accessibility ? ['scope' => 'col'] : [])->encode(false)
-                    : Html::th(attributes: $cell->getAttributes())
+                    ? Html::th('&nbsp;', $scopeColAttributes)->encode(false)
+                    : Html::th(attributes: array_merge($scopeColAttributes, $cell->getAttributes()))
                         ->content(...$cell->getContent())
                         ->encode($cell->shouldEncode())
                         ->doubleEncode($cell->shouldDoubleEncode());
@@ -1102,13 +1099,13 @@ final class GridView extends BaseListView
                 $cell = $renderers[$i]->renderBody($column, new Cell($this->bodyCellAttributes), $context);
                 if ($cell->isEmptyContent()) {
                     $cellAttributes = $this->prepareEmptyBodyCellAttributes($cell->getAttributes(), $context);
-                    $tag = $cell->isHeader()
+                    $tag = $cell->isRowHeader()
                         ? Html::th($this->emptyCell, $cellAttributes)
                         : Html::td($this->emptyCell, $cellAttributes);
                     $tags[] = $tag->encode(false);
                 } else {
                     $cellAttributes = $this->prepareBodyCellAttributes($cell->getAttributes(), $context);
-                    $tag = $cell->isHeader()
+                    $tag = $cell->isRowHeader()
                         ? Html::th(attributes: array_merge($scopeRowAttributes, $cellAttributes))
                         : Html::td(attributes: $cellAttributes);
                     $tags[] = $tag

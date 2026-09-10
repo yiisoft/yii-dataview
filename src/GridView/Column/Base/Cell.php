@@ -19,9 +19,9 @@ final class Cell
     private bool $doubleEncode = true;
 
     /**
-     * @var bool Whether to render the cell as a header cell (`th` tag instead of `td`).
+     * @var bool Whether to render the body cell as a row header (`th` tag instead of `td`).
      */
-    private bool $header = false;
+    private bool $rowHeader = false;
 
     /**
      * @psalm-var array<array-key,string|Stringable>
@@ -84,20 +84,20 @@ final class Cell
     }
 
     /**
-     * Set whether the cell is a header cell.
+     * Set whether the body cell is a row header.
      *
-     * When enabled, the cell is rendered with the `th` tag instead of `td`. This is used for row header cells
-     * that identify a row for assistive technologies (`GridView` adds `scope="row"` to them when accessibility
-     * attributes are enabled).
+     * When enabled, the cell is rendered with the `th` tag instead of `td`. This identifies a row for assistive
+     * technologies (`GridView` adds `scope="row"` to it when accessibility attributes are enabled). The flag is
+     * honored only for body cells; header, filter, and footer cells ignore it.
      *
-     * @param bool $enabled Whether the cell is a header cell.
+     * @param bool $enabled Whether the body cell is a row header.
      *
-     * @return self New instance with the updated header setting.
+     * @return self New instance with the updated row header setting.
      */
-    public function header(bool $enabled = true): self
+    public function rowHeader(bool $enabled = true): self
     {
         $new = clone $this;
-        $new->header = $enabled;
+        $new->rowHeader = $enabled;
         return $new;
     }
 
@@ -221,13 +221,13 @@ final class Cell
     }
 
     /**
-     * Check whether the cell is a header cell.
+     * Check whether the body cell is a row header.
      *
-     * @return bool Whether the cell is rendered with the `th` tag instead of `td`.
+     * @return bool Whether the body cell is rendered with the `th` tag instead of `td`.
      */
-    public function isHeader(): bool
+    public function isRowHeader(): bool
     {
-        return $this->header;
+        return $this->rowHeader;
     }
 
     /**

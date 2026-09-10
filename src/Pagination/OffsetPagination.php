@@ -386,14 +386,16 @@ final class OffsetPagination extends Widget implements PaginationWidgetInterface
 
         $result = '';
 
+        $context = $this->getContext();
+
         if ($this->containerTag !== null) {
             $containerAttributes = $this->containerAttributes;
             if (
-                $this->getContext()->accessibility
+                $context->accessibility
                 && $this->ariaLabelNav !== null
                 && !array_key_exists('aria-label', $containerAttributes)
             ) {
-                $containerAttributes['aria-label'] = $this->getContext()->translate($this->ariaLabelNav);
+                $containerAttributes['aria-label'] = $context->translate($this->ariaLabelNav);
             }
             $result .= Html::openTag($this->containerTag, $containerAttributes) . "\n";
         }

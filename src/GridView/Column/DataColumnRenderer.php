@@ -220,7 +220,7 @@ final class DataColumnRenderer implements FilterableColumnRendererInterface, Sor
             : $column->bodyClass;
 
         if ($column->rowHeader) {
-            $cell = $cell->header();
+            $cell = $cell->rowHeader();
         }
 
         return $cell
