@@ -503,7 +503,7 @@ final class OffsetPagination extends Widget implements PaginationWidgetInterface
         string|Stringable $label,
         ?string $url,
         bool $isCurrent,
-        ?string $ariaLabel = null,
+        ?string $ariaLabel,
         array $ariaLabelParameters = [],
     ): Stringable {
         $isDisabled = $url === null;

@@ -451,7 +451,7 @@ final class KeysetPagination extends Widget implements PaginationWidgetInterface
     private function renderItem(
         string|Stringable $label,
         ?string $url,
-        ?string $ariaLabel = null,
+        ?string $ariaLabel,
     ): Stringable {
         $isDisabled = $url === null;
         $context = $this->getContext();
