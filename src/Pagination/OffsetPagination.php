@@ -215,6 +215,9 @@ final class OffsetPagination extends Widget implements PaginationWidgetInterface
     /**
      * Set new link classes.
      *
+     * The classes are applied to each link (the `a` element, or the `span` element that replaces it when
+     * a first/previous/next/last control is disabled).
+     *
      * Multiple classes can be set by passing them as separate arguments. `null` values are filtered out
      * automatically.
      *
@@ -230,7 +233,8 @@ final class OffsetPagination extends Widget implements PaginationWidgetInterface
     }
 
     /**
-     * Adds one or more CSS classes to the existing link classes.
+     * Adds one or more CSS classes to the existing classes of each link (the `a` element, or the `span` element
+     * that replaces it when a first/previous/next/last control is disabled).
      *
      * Multiple classes can be added by passing them as separate arguments. `null` values are filtered out
      * automatically.
@@ -252,6 +256,11 @@ final class OffsetPagination extends Widget implements PaginationWidgetInterface
         return $new;
     }
 
+    /**
+     * Sets the CSS class for a disabled control.
+     *
+     * @param string|null $class The CSS class for the `span` element of a disabled control.
+     */
     public function disabledLinkClass(?string $class): self
     {
         $new = clone $this;
@@ -432,9 +441,8 @@ final class OffsetPagination extends Widget implements PaginationWidgetInterface
         if ($this->labelFirst !== null) {
             $items[] = $this->renderItem(
                 label: $this->labelFirst,
-                url: $this->createUrl(PageToken::next('1')),
+                url: $currentPage === 1 ? null : $this->createUrl(PageToken::next('1')),
                 isCurrent: false,
-                isDisabled: $currentPage === 1,
                 ariaLabel: $this->ariaLabelFirst,
             );
         }
@@ -442,9 +450,10 @@ final class OffsetPagination extends Widget implements PaginationWidgetInterface
         if ($this->labelPrevious !== null) {
             $items[] = $this->renderItem(
                 label: $this->labelPrevious,
-                url: $this->createUrl(PageToken::next((string) max($currentPage - 1, 1))),
+                url: $currentPage === 1
+                    ? null
+                    : $this->createUrl(PageToken::next((string) max($currentPage - 1, 1))),
                 isCurrent: false,
-                isDisabled: $currentPage === 1,
                 ariaLabel: $this->ariaLabelPrevious,
             );
         }
@@ -455,7 +464,6 @@ final class OffsetPagination extends Widget implements PaginationWidgetInterface
                 label: (string) $page,
                 url: $this->createUrl(PageToken::next((string) $page)),
                 isCurrent: $page === $currentPage,
-                isDisabled: false,
                 ariaLabel: $this->ariaLabelPage,
                 ariaLabelParameters: ['page' => (string) $page],
             );
@@ -464,9 +472,10 @@ final class OffsetPagination extends Widget implements PaginationWidgetInterface
         if ($this->labelNext !== null) {
             $items[] = $this->renderItem(
                 label: $this->labelNext,
-                url: $this->createUrl(PageToken::next((string) min($currentPage + 1, $totalPages))),
+                url: $currentPage === $totalPages
+                    ? null
+                    : $this->createUrl(PageToken::next((string) min($currentPage + 1, $totalPages))),
                 isCurrent: false,
-                isDisabled: $currentPage === $totalPages,
                 ariaLabel: $this->ariaLabelNext,
             );
         }
@@ -474,9 +483,8 @@ final class OffsetPagination extends Widget implements PaginationWidgetInterface
         if ($this->labelLast !== null) {
             $items[] = $this->renderItem(
                 label: $this->labelLast,
-                url: $this->createUrl(PageToken::next((string) $totalPages)),
+                url: $currentPage === $totalPages ? null : $this->createUrl(PageToken::next((string) $totalPages)),
                 isCurrent: false,
-                isDisabled: $currentPage === $totalPages,
                 ariaLabel: $this->ariaLabelLast,
             );
         }
@@ -485,16 +493,17 @@ final class OffsetPagination extends Widget implements PaginationWidgetInterface
     }
 
     /**
-     * @param array<string, string> $ariaLabelParameters Parameters for the `aria-label` translation.
+    @param string|null $url The item URL, or `null` when the control is disabled. A disabled control is rendered as
+    a `span` instead of an `a` element.
      */
     private function renderItem(
         string|Stringable $label,
         string $url,
         bool $isCurrent,
-        bool $isDisabled,
         ?string $ariaLabel = null,
         array $ariaLabelParameters = [],
     ): Stringable {
+        $isDisabled = $url === null;
         $context = $this->getContext();
         $accessibility = $context->accessibility;
         $linkAttributes = $this->linkAttributes;
@@ -517,10 +526,12 @@ final class OffsetPagination extends Widget implements PaginationWidgetInterface
             }
             Html::addCssClass($linkAttributes, $this->currentLinkClass);
         }
-        $link = Html::a($label, $url, $linkAttributes);
+        $element = $isDisabled
+            ? Html::span($label, $linkAttributes)
+            : Html::a($label, $url, $linkAttributes);
 
         if ($this->itemTag === null) {
-            return $link;
+            return $element;
         }
 
         $attributes = $this->itemAttributes;
@@ -530,7 +541,7 @@ final class OffsetPagination extends Widget implements PaginationWidgetInterface
         if ($isCurrent) {
             Html::addCssClass($attributes, $this->currentItemClass);
         }
-        return Html::tag($this->itemTag, $link, $attributes);
+        return Html::tag($this->itemTag, $element, $attributes);
     }
 
     /**

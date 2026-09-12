@@ -188,7 +188,7 @@ final class KeysetPagination extends Widget implements PaginationWidgetInterface
     }
 
     /**
-     * Sets the item tag name.
+     * Sets the item tag name that wraps the "previous"/"next" control.
      *
      * @param string|null $tag The tag name for the item elements.
      * Common values: 'li', 'div'. Use `null` to omit item containers.
@@ -239,7 +239,7 @@ final class KeysetPagination extends Widget implements PaginationWidgetInterface
     /**
      * Sets the link attributes.
      *
-     * @param array $attributes HTML attributes for the link elements.
+     * @param array $attributes HTML attributes for the "previous"/"next" control.
      *
      * @return self New instance with the specified link attributes.
      */
@@ -252,6 +252,9 @@ final class KeysetPagination extends Widget implements PaginationWidgetInterface
 
     /**
      * Set new link classes.
+     *
+     * The classes are applied to the "previous"/"next" control — the `a` element, or the `span` element that
+     * replaces it when the control is disabled.
      *
      * Multiple classes can be set by passing them as separate arguments. `null` values are filtered out
      * automatically.
@@ -268,7 +271,7 @@ final class KeysetPagination extends Widget implements PaginationWidgetInterface
     }
 
     /**
-     * Adds one or more CSS classes to the existing link classes.
+     * Adds one or more CSS classes to the existing classes of the "previous"/"next" control.
      *
      * Multiple classes can be added by passing them as separate arguments. `null` values are filtered out
      * automatically.
@@ -284,9 +287,11 @@ final class KeysetPagination extends Widget implements PaginationWidgetInterface
     }
 
     /**
-     * Sets the CSS class for disabled link elements.
+     * Sets the CSS class for a disabled "previous"/"next" control.
      *
-     * @param string|null $class The CSS class for disabled links.
+     * A disabled control ("previous" on the first page, "next" on the last page) is rendered as a `span` element.
+     *
+     * @param string|null $class The CSS class for the `span` element of a disabled control.
      *
      * @return self New instance with the specified disabled link class.
      */
@@ -413,14 +418,12 @@ final class KeysetPagination extends Widget implements PaginationWidgetInterface
         $result .= $this->renderItem(
             $this->labelPrevious,
             $previousToken === null ? null : $context->createUrl($previousToken),
-            $previousToken === null,
             $this->ariaLabelPrevious,
         )
             . "\n"
             . $this->renderItem(
                 $this->labelNext,
                 $nextToken === null ? null : $context->createUrl($nextToken),
-                $nextToken === null,
                 $this->ariaLabelNext,
             );
 
@@ -438,8 +441,8 @@ final class KeysetPagination extends Widget implements PaginationWidgetInterface
      * Renders a single pagination item (previous or next).
      *
      * @param string|Stringable $label The item label.
-     * @param string|null $url The item URL, or null if disabled.
-     * @param bool $isDisabled Whether the item should be rendered as disabled.
+     * @param string|null $url The item URL, or `null` when the item is disabled. A disabled item is rendered as
+     * a `span` instead of an `a` element.
      * @param string|null $ariaLabel The untranslated `aria-label` for the item link, or null to omit it.
      *
      * @return Stringable The rendered HTML for the pagination item.
@@ -447,9 +450,9 @@ final class KeysetPagination extends Widget implements PaginationWidgetInterface
     private function renderItem(
         string|Stringable $label,
         ?string $url,
-        bool $isDisabled,
         ?string $ariaLabel = null,
     ): Stringable {
+        $isDisabled = $url === null;
         $context = $this->getContext();
         $accessibility = $context->accessibility;
         $linkAttributes = $this->linkAttributes;
@@ -466,17 +469,19 @@ final class KeysetPagination extends Widget implements PaginationWidgetInterface
             }
             Html::addCssClass($linkAttributes, $this->disabledLinkClass);
         }
-        $link = Html::a($label, $url, $linkAttributes);
+        $element = $isDisabled
+            ? Html::span($label, $linkAttributes)
+            : Html::a($label, $url, $linkAttributes);
 
         if ($this->itemTag === null) {
-            return $link;
+            return $element;
         }
 
         $attributes = $this->itemAttributes;
         if ($isDisabled) {
             Html::addCssClass($attributes, $this->disabledItemClass);
         }
-        return Html::tag($this->itemTag, $link, $attributes);
+        return Html::tag($this->itemTag, $element, $attributes);
     }
 
     /**

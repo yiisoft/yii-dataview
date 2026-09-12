@@ -28,7 +28,7 @@ final class KeysetPaginationTest extends TestCase
         $this->assertSame(
             <<<HTML
             <nav>
-            <a>⟨</a>
+            <span>⟨</span>
             <a href="/next/id1">⟩</a>
             </nav>
             HTML,
@@ -49,8 +49,8 @@ final class KeysetPaginationTest extends TestCase
     #[TestWith([
         <<<HTML
         <nav>
-        <a>⟨</a>
-        <a>⟩</a>
+        <span>⟨</span>
+        <span>⟩</span>
         </nav>
         HTML,
         true,
@@ -76,7 +76,7 @@ final class KeysetPaginationTest extends TestCase
         $this->assertSame(
             <<<HTML
             <main>
-            <a>⟨</a>
+            <span>⟨</span>
             <a href="/next/id1">⟩</a>
             </main>
             HTML,
@@ -93,7 +93,7 @@ final class KeysetPaginationTest extends TestCase
 
         $this->assertSame(
             <<<HTML
-            <a>⟨</a>
+            <span>⟨</span>
             <a href="/next/id1">⟩</a>
             HTML,
             $html,
@@ -119,7 +119,7 @@ final class KeysetPaginationTest extends TestCase
         $this->assertSame(
             <<<HTML
             <nav class="pagination-nav" id="main-nav">
-            <a>⟨</a>
+            <span>⟨</span>
             <a href="/next/id1">⟩</a>
             </nav>
             HTML,
@@ -138,7 +138,7 @@ final class KeysetPaginationTest extends TestCase
             <<<HTML
             <nav>
             <ul>
-            <a>⟨</a>
+            <span>⟨</span>
             <a href="/next/id1">⟩</a>
             </ul>
             </nav>
@@ -157,7 +157,7 @@ final class KeysetPaginationTest extends TestCase
         $this->assertSame(
             <<<HTML
             <nav>
-            <a>⟨</a>
+            <span>⟨</span>
             <a href="/next/id1">⟩</a>
             </nav>
             HTML,
@@ -186,7 +186,7 @@ final class KeysetPaginationTest extends TestCase
             <<<HTML
             <nav>
             <ul class="pagination-list" data-role="navigation">
-            <a>⟨</a>
+            <span>⟨</span>
             <a href="/next/id1">⟩</a>
             </ul>
             </nav>
@@ -205,7 +205,7 @@ final class KeysetPaginationTest extends TestCase
         $this->assertSame(
             <<<HTML
             <nav>
-            <li><a>⟨</a></li>
+            <li><span>⟨</span></li>
             <li><a href="/next/id1">⟩</a></li>
             </nav>
             HTML,
@@ -223,7 +223,7 @@ final class KeysetPaginationTest extends TestCase
         $this->assertSame(
             <<<HTML
             <nav>
-            <a>⟨</a>
+            <span>⟨</span>
             <a href="/next/id1">⟩</a>
             </nav>
             HTML,
@@ -251,7 +251,7 @@ final class KeysetPaginationTest extends TestCase
         $this->assertSame(
             <<<HTML
             <nav>
-            <li class="pagination-item" data-type="nav-button"><a>⟨</a></li>
+            <li class="pagination-item" data-type="nav-button"><span>⟨</span></li>
             <li class="pagination-item" data-type="nav-button"><a href="/next/id1">⟩</a></li>
             </nav>
             HTML,
@@ -270,7 +270,7 @@ final class KeysetPaginationTest extends TestCase
         $this->assertSame(
             <<<HTML
             <nav>
-            <li class="disabled"><a>⟨</a></li>
+            <li class="disabled"><span>⟨</span></li>
             <li><a href="/next/id1">⟩</a></li>
             </nav>
             HTML,
@@ -288,7 +288,7 @@ final class KeysetPaginationTest extends TestCase
         $this->assertSame(
             <<<HTML
             <nav>
-            <a class="pagination-link" data-action="navigate">⟨</a>
+            <span class="pagination-link" data-action="navigate">⟨</span>
             <a class="pagination-link" data-action="navigate" href="/next/id1">⟩</a>
             </nav>
             HTML,
@@ -306,7 +306,7 @@ final class KeysetPaginationTest extends TestCase
         $this->assertSame(
             <<<HTML
             <nav>
-            <a class="btn btn-primary">⟨</a>
+            <span class="btn btn-primary">⟨</span>
             <a class="btn btn-primary" href="/next/id1">⟩</a>
             </nav>
             HTML,
@@ -325,7 +325,7 @@ final class KeysetPaginationTest extends TestCase
         $this->assertSame(
             <<<HTML
             <nav>
-            <a class="btn btn-primary active">⟨</a>
+            <span class="btn btn-primary active">⟨</span>
             <a class="btn btn-primary active" href="/next/id1">⟩</a>
             </nav>
             HTML,
@@ -344,7 +344,7 @@ final class KeysetPaginationTest extends TestCase
         $this->assertSame(
             <<<HTML
             <nav>
-            <a class="btn btn-primary disabled">⟨</a>
+            <span class="btn btn-primary disabled">⟨</span>
             <a class="btn btn-primary" href="/next/id1">⟩</a>
             </nav>
             HTML,
@@ -362,7 +362,7 @@ final class KeysetPaginationTest extends TestCase
         $this->assertSame(
             <<<HTML
             <nav>
-            <a>Prev</a>
+            <span>Prev</span>
             <a href="/next/id1">⟩</a>
             </nav>
             HTML,
@@ -380,7 +380,7 @@ final class KeysetPaginationTest extends TestCase
         $this->assertSame(
             <<<HTML
             <nav>
-            <a>⟨</a>
+            <span>⟨</span>
             <a href="/next/id1">Next</a>
             </nav>
             HTML,
