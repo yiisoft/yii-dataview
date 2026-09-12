@@ -904,6 +904,39 @@ final class GridViewTest extends TestCase
         );
     }
 
+    public function testAccessibilityCanBeDisabled(): void
+    {
+        $dataReader = (new IterableDataReader([['id' => 1, 'name' => 'John']]))
+            ->withSort(Sort::any(['id', 'name'])->withOrderString('id'));
+
+        $html = $this->createGridView($dataReader)
+            ->accessibility()
+            ->accessibility(false)
+            ->columns(
+                new DataColumn('name', rowHeader: true),
+                new DataColumn('id'),
+            )
+            ->render();
+
+        $this->assertStringContainsString(
+            <<<HTML
+            <thead>
+            <tr>
+            <th><a href="#">Name</a></th>
+            <th><a href="#">Id</a></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+            <th>John</th>
+            <td>1</td>
+            </tr>
+            </tbody>
+            HTML,
+            $html,
+        );
+    }
+
     public function testAriaSortDescending(): void
     {
         $dataReader = (new IterableDataReader([['id' => 1, 'name' => 'John']]))

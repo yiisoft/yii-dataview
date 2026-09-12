@@ -553,6 +553,63 @@ final class KeysetPaginationTest extends TestCase
         );
     }
 
+    public function testAriaLabelIsNotOverriddenWhenPresentInContainerAttributes(): void
+    {
+        $dataReader = (new IterableDataReader([['id' => 'id1'], ['id' => 'id2'], ['id' => 'id3']]))
+            ->withSort(Sort::any(['id']));
+        $paginator = (new KeysetPaginator($dataReader))->withPageSize(1);
+
+        $html = KeysetPagination::create(
+            $paginator,
+            '/next/' . PaginationContext::URL_PLACEHOLDER,
+            '/prev/' . PaginationContext::URL_PLACEHOLDER,
+            accessibility: true,
+        )
+            ->containerAttributes(['aria-label' => 'Custom'])
+            ->render();
+
+        $this->assertStringContainsString('<nav aria-label="Custom">', $html);
+        $this->assertStringNotContainsString('aria-label="Pagination"', $html);
+    }
+
+    public function testAriaDisabledCanBeDisabledWithLinkAttributes(): void
+    {
+        $dataReader = (new IterableDataReader([['id' => 'id1'], ['id' => 'id2'], ['id' => 'id3']]))
+            ->withSort(Sort::any(['id']));
+        $paginator = (new KeysetPaginator($dataReader))->withPageSize(1);
+
+        $html = KeysetPagination::create(
+            $paginator,
+            '/next/' . PaginationContext::URL_PLACEHOLDER,
+            '/prev/' . PaginationContext::URL_PLACEHOLDER,
+            accessibility: true,
+        )
+            ->linkAttributes(['aria-disabled' => false])
+            ->render();
+
+        $this->assertStringNotContainsString('aria-disabled', $html);
+        $this->assertStringContainsString('role="link"', $html);
+    }
+
+    public function testRoleIsNotOverriddenWhenPresentInLinkAttributes(): void
+    {
+        $dataReader = (new IterableDataReader([['id' => 'id1'], ['id' => 'id2'], ['id' => 'id3']]))
+            ->withSort(Sort::any(['id']));
+        $paginator = (new KeysetPaginator($dataReader))->withPageSize(1);
+
+        $html = KeysetPagination::create(
+            $paginator,
+            '/next/' . PaginationContext::URL_PLACEHOLDER,
+            '/prev/' . PaginationContext::URL_PLACEHOLDER,
+            accessibility: true,
+        )
+            ->linkAttributes(['role' => 'button'])
+            ->render();
+
+        $this->assertStringContainsString('role="button"', $html);
+        $this->assertStringNotContainsString('role="link"', $html);
+    }
+
     private function createPagination(int $pageCount): KeysetPagination
     {
         $data = [];

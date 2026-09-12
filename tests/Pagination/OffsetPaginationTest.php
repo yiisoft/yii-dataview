@@ -885,6 +885,25 @@ final class OffsetPaginationTest extends TestCase
         $this->assertStringNotContainsString('aria-label="Page 1"', $html);
     }
 
+    public function testAriaLabelIsNotOverriddenWhenPresentInContainerAttributes(): void
+    {
+        $paginator = (new OffsetPaginator(new IterableDataReader(array_fill(0, 2, ['id' => 'uuid']))))
+            ->withPageSize(1)
+            ->withCurrentPage(1);
+
+        $html = OffsetPagination::create(
+            $paginator,
+            '/page/' . PaginationContext::URL_PLACEHOLDER,
+            '/',
+            accessibility: true,
+        )
+            ->containerAttributes(['aria-label' => 'Custom'])
+            ->render();
+
+        $this->assertStringContainsString('<nav aria-label="Custom">', $html);
+        $this->assertStringNotContainsString('aria-label="Pagination"', $html);
+    }
+
     public function testAriaDisabledCanBeDisabledWithLinkAttributes(): void
     {
         $paginator = (new OffsetPaginator(new IterableDataReader(array_fill(0, 2, ['id' => 'uuid']))))

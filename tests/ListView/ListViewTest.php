@@ -523,6 +523,36 @@ final class ListViewTest extends TestCase
         );
     }
 
+    public function testAccessibilityCanBeDisabled(): void
+    {
+        $paginator = (new OffsetPaginator(new IterableDataReader([['id' => 1], ['id' => 2]])))
+            ->withPageSize(1)
+            ->withCurrentPage(1);
+
+        $html = $this->createListView($paginator)
+            ->layout('{items}\n{pager}')
+            ->containerTag(null)
+            ->urlCreator(new SimplePaginationUrlCreator())
+            ->accessibility()
+            ->accessibility(false)
+            ->itemView(static fn(array $data): string => (string) $data['id'])
+            ->render();
+
+        $this->assertStringContainsString(
+            <<<HTML
+            <nav>
+            <span>⟪</span>
+            <span>⟨</span>
+            <a href="/route?">1</a>
+            <a href="/route?page=2">2</a>
+            <a href="/route?page=2">⟩</a>
+            <a href="/route?page=2">⟫</a>
+            </nav>
+            HTML,
+            $html,
+        );
+    }
+
     public function testImmutability(): void
     {
         $listView = $this->createListView();
