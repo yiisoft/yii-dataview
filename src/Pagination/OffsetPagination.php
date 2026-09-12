@@ -301,6 +301,10 @@ final class OffsetPagination extends Widget implements PaginationWidgetInterface
      *
      * The value is applied only when accessibility is enabled and only when `aria-label` is not already present
      * in {@see containerAttributes()}. When rendered via `GridView`/`ListView`, it is translated.
+     *
+     * @param string|null $label The `aria-label` for the `nav` container.
+     *
+     * @return self New instance with the specified `nav` `aria-label`.
      */
     public function ariaLabelNav(?string $label): self
     {
@@ -314,6 +318,10 @@ final class OffsetPagination extends Widget implements PaginationWidgetInterface
      *
      * The value is applied only when accessibility is enabled and only when `aria-label` is not already present
      * in {@see linkAttributes()}. When rendered via `GridView`/`ListView`, it is translated.
+     *
+     * @param string|null $label The `aria-label` for the "first page" link.
+     *
+     * @return self New instance with the specified first link `aria-label`.
      */
     public function ariaLabelFirst(?string $label): self
     {
@@ -327,6 +335,10 @@ final class OffsetPagination extends Widget implements PaginationWidgetInterface
      *
      * The value is applied only when accessibility is enabled and only when `aria-label` is not already present
      * in {@see linkAttributes()}. When rendered via `GridView`/`ListView`, it is translated.
+     *
+     * @param string|null $label The `aria-label` for the "previous page" link.
+     *
+     * @return self New instance with the specified previous link `aria-label`.
      */
     public function ariaLabelPrevious(?string $label): self
     {
@@ -340,6 +352,10 @@ final class OffsetPagination extends Widget implements PaginationWidgetInterface
      *
      * The value is applied only when accessibility is enabled and only when `aria-label` is not already present
      * in {@see linkAttributes()}. When rendered via `GridView`/`ListView`, it is translated.
+     *
+     * @param string|null $label The `aria-label` for the "next page" link.
+     *
+     * @return self New instance with the specified next link `aria-label`.
      */
     public function ariaLabelNext(?string $label): self
     {
@@ -353,6 +369,10 @@ final class OffsetPagination extends Widget implements PaginationWidgetInterface
      *
      * The value is applied only when accessibility is enabled and only when `aria-label` is not already present
      * in {@see linkAttributes()}. When rendered via `GridView`/`ListView`, it is translated.
+     *
+     * @param string|null $label The `aria-label` for the "last page" link.
+     *
+     * @return self New instance with the specified last link `aria-label`.
      */
     public function ariaLabelLast(?string $label): self
     {
@@ -367,6 +387,10 @@ final class OffsetPagination extends Widget implements PaginationWidgetInterface
      * The `{page}` placeholder is replaced with the page number. The value is applied only when accessibility is
      * enabled and only when `aria-label` is not already present in {@see linkAttributes()}. When rendered via
      * `GridView`/`ListView`, it is translated.
+     *
+     * @param string|null $label The `aria-label` for the numbered page links.
+     *
+     * @return self New instance with the specified page link `aria-label`.
      */
     public function ariaLabelPage(?string $label): self
     {

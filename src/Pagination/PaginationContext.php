@@ -29,7 +29,7 @@ final class PaginationContext
      * @param bool $accessibility Whether pagination widgets should add accessibility attributes `aria-*`
      * automatically.
      * @param TranslatorInterface|null $translator Translator used for pagination messages. When `null`, a default
-     * one is created by {@see DefaultTranslatorFactory}.
+     * translator is created: it leaves message IDs as is and only substitutes their parameters.
      * @param string $translationCategory Category used with the translator.
      */
     public function __construct(
