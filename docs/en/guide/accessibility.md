@@ -28,8 +28,6 @@ users navigate it by row and column.
 
 ### What `GridView` adds with `accessibility()` enabled
 
-- The table is always split into `<thead>`, `<tbody>`, and (when enabled) `<tfoot>` sections, regardless of the
-  option.
 - Every header cell is a `<th>` element carrying `scope="col"`, so screen readers announce the corresponding column
   header when the user moves through the body cells.
 - Every sortable header cell carries an `aria-sort` attribute reflecting the current sort state: `ascending` or
@@ -121,8 +119,8 @@ echo GridView::widget()
   several tables on a page apart.
 - Provide meaningful header text for every column. When a `DataColumn` has no `header`, the property name is used as
   a fallback, which is rarely a good label.
-- For sortable columns you can give the sort links a clearer action label with
-  `sortableLinkAttributes(['aria-label' => 'Sort by name'])`.
+- You can give the sort links a clearer action label with `sortableLinkAttributes(['aria-label' => 'Sort'])`.
+  Mind that it applies to the sort links of every sortable column, so the text has to stay column-agnostic.
 
 ## Pagination
 
@@ -137,9 +135,9 @@ directly, they take the flag from `PaginationContext` (also exposed as the `$acc
 
 - `OffsetPagination` adds `aria-current="page"` to the `<a>` element of the current page, so screen
   readers announce which page is active.
-- Both widgets add `aria-disabled="true"` to links that are currently not actionable: the "first" and
-  "previous" links on the first page, and the "next" and "last" links on the last page (`KeysetPagination`
-  renders these without an `href`).
+- Both widgets add `aria-disabled="true"` to links that are currently not actionable: the "previous" link on
+  the first page and the "next" link on the last page, and — in `OffsetPagination`, the only widget that has
+  them — the "first" link on the first page and the "last" link on the last page.
 - Such a non-actionable control is rendered as a `span` rather than an `a`, so both widgets also give it
   `role="link"`. Without the role it would be announced as plain text, and the `aria-disabled` state would have
   nothing to apply to; with it, assistive technologies announce a disabled link.
