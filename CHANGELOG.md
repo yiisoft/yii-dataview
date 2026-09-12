@@ -15,6 +15,7 @@
   `span` elements instead of `a` elements without an `href` (@vjik)
 - Bug #364: Render disabled `OffsetPagination` controls ("first"/"previous" on the first page, "next"/"last" on the
   last page) as `span` elements instead of clickable `a` elements (@vjik)
+- Bug #365: Keep `GridView` and column header cell attributes when a column renders no header (@vjik)
 
 ## 1.2.0 September 02, 2026
 

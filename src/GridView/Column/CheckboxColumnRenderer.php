@@ -23,19 +23,19 @@ final class CheckboxColumnRenderer implements ColumnRendererInterface
         return $cell->addAttributes($column->columnAttributes);
     }
 
-    public function renderHeader(ColumnInterface $column, Cell $cell, GlobalContext $context): ?Cell
+    public function renderHeader(ColumnInterface $column, Cell $cell, GlobalContext $context): Cell
     {
+        $cell = $cell->addAttributes($column->headerAttributes);
+
         $header = $column->header;
         if ($header === null) {
             if (!$column->multiple) {
-                return null;
+                return $cell;
             }
             $header = Html::checkbox('checkbox-selection-all', 1);
         }
 
-        return $cell
-            ->addAttributes($column->headerAttributes)
-            ->content($header);
+        return $cell->content($header);
     }
 
     public function renderBody(ColumnInterface $column, Cell $cell, DataContext $context): Cell

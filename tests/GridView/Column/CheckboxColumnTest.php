@@ -157,6 +157,24 @@ final class CheckboxColumnTest extends TestCase
         );
     }
 
+    public function testHeaderAttributesWithoutHeader(): void
+    {
+        $html = $this->createGridView([['id' => 1]])
+            ->headerCellAttributes(['class' => 'header-cell-class'])
+            ->columns(new CheckboxColumn(
+                headerAttributes: ['style' => 'width: 1%'],
+                multiple: false,
+            ))
+            ->render();
+
+        $this->assertStringContainsString(
+            <<<HTML
+            <th class="header-cell-class" style="width: 1%">&nbsp;</th>
+            HTML,
+            $html,
+        );
+    }
+
     public function testBodyAttributes(): void
     {
         $html = $this->createGridView([['id' => 1]])
