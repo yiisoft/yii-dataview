@@ -39,7 +39,7 @@ final class DataColumnTest extends TestCase
             <table>
             <thead>
             <tr>
-            <th></th>
+            <th>&nbsp;</th>
             </tr>
             </thead>
             <tbody>

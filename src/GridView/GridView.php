@@ -1042,12 +1042,17 @@ final class GridView extends BaseListView
             $scopeColAttributes = $this->accessibility ? ['scope' => 'col'] : [];
             $tags = [];
             foreach ($columns as $i => $column) {
+                $headerCell = new Cell($this->headerCellAttributes);
+                /**
+                 * @psalm-suppress PossiblyNullReference The `??` operator puts its left operand into isset context,
+                 * so Psalm treats `$renderers[$i]` as possibly null.
+                 */
                 $cell = $renderers[$i]->renderHeader(
                     $column,
                     new Cell($this->headerCellAttributes),
                     $globalContext,
-                );
-                $tags[] = $cell === null
+                ) ?? $headerCell;;
+                $tags[] = $cell->isEmptyContent()
                     ? Html::th('&nbsp;', $scopeColAttributes)->encode(false)
                     : Html::th(attributes: array_merge($scopeColAttributes, $cell->getAttributes()))
                         ->content(...$cell->getContent())

@@ -73,12 +73,16 @@ interface ColumnRendererInterface
     /**
      * Configures the column header cell.
      *
+     * When the column has no header to show, return the cell with empty content: the grid renders a placeholder
+     * in it, keeping the cell attributes.
+     *
      * @param ColumnInterface $column The column definition to render.
      * @psalm-param TColumn $column
      * @param Cell $cell The header cell to configure.
      * @param GlobalContext $context Global grid rendering context.
      *
-     * @return Cell|null The configured header cell, or `null` if no header should be shown.
+     * @return Cell|null The configured header cell. `null` is treated the same way as a cell with empty content,
+     * and is supported for backward compatibility only: it will not be allowed in the next major version.
      */
     public function renderHeader(ColumnInterface $column, Cell $cell, GlobalContext $context): ?Cell;
 

@@ -33,6 +33,7 @@ use Yiisoft\Yii\DataView\Filter\Factory\IncorrectValueException;
 use Yiisoft\Yii\DataView\Filter\Widget\DropdownFilter;
 use Yiisoft\Yii\DataView\GridView\BodyRowContext;
 use Yiisoft\Yii\DataView\GridView\Column\Base\DataContext;
+use Yiisoft\Yii\DataView\GridView\Column\CheckboxColumn;
 use Yiisoft\Yii\DataView\GridView\Column\DataColumn;
 use Yiisoft\Yii\DataView\GridView\GridView;
 use Yiisoft\Yii\DataView\PageSize\SelectPageSize;
@@ -781,6 +782,29 @@ final class GridViewTest extends TestCase
             <tr>
             <th class="header-cell" data-sort="enabled">Id</th>
             <th class="header-cell" data-sort="enabled">Name</th>
+            </tr>
+            </thead>
+            HTML,
+            $html,
+        );
+    }
+
+    public function testHeaderCellAttributesWithoutColumnHeader(): void
+    {
+        $html = $this->createGridView([['id' => 1, 'name' => 'John']])
+            ->headerCellAttributes(['class' => 'text-center'])
+            ->columns(
+                new CheckboxColumn(headerAttributes: ['style' => 'width: 1%'], multiple: false),
+                new DataColumn('name'),
+            )
+            ->render();
+
+        $this->assertStringContainsString(
+            <<<HTML
+            <thead>
+            <tr>
+            <th class="text-center" style="width: 1%">&nbsp;</th>
+            <th class="text-center">Name</th>
             </tr>
             </thead>
             HTML,
