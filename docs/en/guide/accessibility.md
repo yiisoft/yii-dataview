@@ -205,3 +205,22 @@ links) is kept as is and takes precedence over these methods.
           'ariaLabelNav()' => ['Orders pagination'],
       ]);
   ```
+
+- Keep the `aria-label` texts consistent with the visible labels. The default labels are bare glyphs, so the
+  `aria-label` is the only name a control has. Once `labelFirst()`, `labelPrevious()`, `labelNext()` or
+  `labelLast()` is changed to visible text, that text must also appear in the `aria-label` — otherwise speech
+  input users cannot activate the control by saying what they see, which violates WCAG 2.5.3 "Label in Name".
+  A visible `Forward` combined with the default `Next page` label is exactly such a mismatch, so change the
+  matching `ariaLabel*()` method along with the label:
+
+  ```php
+  use Yiisoft\Yii\DataView\GridView\GridView;
+
+  echo GridView::widget()
+      ->dataReader($paginator)
+      ->accessibility()
+      ->offsetPaginationConfig([
+          'labelNext()' => ['Forward'],
+          'ariaLabelNext()' => ['Forward to the next page'],
+      ]);
+  ```
