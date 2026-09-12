@@ -100,6 +100,25 @@ This is independent of `keepColumnAttributesInEmptyCell()` — that method contr
 cell attributes are kept on the placeholder cell, and a `scope` you set explicitly through `bodyAttributes`
 overrides the generated one there too when it is enabled.
 
+To change or remove `scope` on the placeholder cell without enabling `keepColumnAttributesInEmptyCell()`, set it
+through `GridView::emptyCellAttributes()` instead — it applies to the placeholder regardless of that flag:
+
+```php
+use Yiisoft\Yii\DataView\GridView\GridView;
+use Yiisoft\Yii\DataView\GridView\Column\DataColumn;
+
+echo GridView::widget()
+    ->dataReader($dataReader)
+    ->accessibility()
+    ->emptyCellAttributes(['scope' => null])
+    ->columns(
+        new DataColumn(property: 'name', rowHeader: true),
+    );
+```
+
+Mind that `emptyCellAttributes()` is grid-wide: it applies to the empty placeholder of every column, not just the
+row header one, so this is not an option when different columns need a different `scope` on their empty cells.
+
 ### Overriding `aria-sort`
 
 The automatically added `aria-sort` value is only used when the header cell does not already have the attribute. To
