@@ -885,6 +885,63 @@ final class OffsetPaginationTest extends TestCase
         $this->assertStringNotContainsString('aria-label="Page 1"', $html);
     }
 
+    public function testAriaDisabledCanBeDisabledWithLinkAttributes(): void
+    {
+        $paginator = (new OffsetPaginator(new IterableDataReader(array_fill(0, 2, ['id' => 'uuid']))))
+            ->withPageSize(1)
+            ->withCurrentPage(1);
+
+        $html = OffsetPagination::create(
+            $paginator,
+            '/page/' . PaginationContext::URL_PLACEHOLDER,
+            '/',
+            accessibility: true,
+        )
+            ->linkAttributes(['aria-disabled' => false])
+            ->render();
+
+        $this->assertStringNotContainsString('aria-disabled', $html);
+        $this->assertStringContainsString('role="link"', $html);
+    }
+
+    public function testRoleIsNotOverriddenWhenPresentInLinkAttributes(): void
+    {
+        $paginator = (new OffsetPaginator(new IterableDataReader(array_fill(0, 2, ['id' => 'uuid']))))
+            ->withPageSize(1)
+            ->withCurrentPage(1);
+
+        $html = OffsetPagination::create(
+            $paginator,
+            '/page/' . PaginationContext::URL_PLACEHOLDER,
+            '/',
+            accessibility: true,
+        )
+            ->linkAttributes(['role' => 'button'])
+            ->render();
+
+        $this->assertStringContainsString('role="button"', $html);
+        $this->assertStringNotContainsString('role="link"', $html);
+    }
+
+    public function testAriaCurrentIsNotOverriddenWhenPresentInLinkAttributes(): void
+    {
+        $paginator = (new OffsetPaginator(new IterableDataReader(array_fill(0, 2, ['id' => 'uuid']))))
+            ->withPageSize(1)
+            ->withCurrentPage(1);
+
+        $html = OffsetPagination::create(
+            $paginator,
+            '/page/' . PaginationContext::URL_PLACEHOLDER,
+            '/',
+            accessibility: true,
+        )
+            ->linkAttributes(['aria-current' => 'step'])
+            ->render();
+
+        $this->assertStringContainsString('aria-current="step"', $html);
+        $this->assertStringNotContainsString('aria-current="page"', $html);
+    }
+
     public function testAriaLabelsAreTranslated(): void
     {
         $paginator = (new OffsetPaginator(new IterableDataReader(array_fill(0, 2, ['id' => 'uuid']))))

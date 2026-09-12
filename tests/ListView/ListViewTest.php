@@ -14,6 +14,7 @@ use Yiisoft\Data\Reader\Sort;
 use Yiisoft\Yii\DataView\ListView\ListItemContext;
 use Yiisoft\Yii\DataView\ListView\ListView;
 use Yiisoft\Yii\DataView\PageSize\SelectPageSize;
+use Yiisoft\Yii\DataView\Tests\Support\SimplePaginationUrlCreator;
 use Yiisoft\Yii\DataView\Tests\Support\SimpleReadable;
 use InvalidArgumentException;
 use Yiisoft\Yii\DataView\Tests\Support\SimpleUrlParameterProvider;
@@ -465,6 +466,63 @@ final class ListViewTest extends TestCase
         $this->assertStringNotContainsString('onchange=', $html);
     }
 
+    public function testAccessibilityDisabledByDefault(): void
+    {
+        $paginator = (new OffsetPaginator(new IterableDataReader([['id' => 1], ['id' => 2]])))
+            ->withPageSize(1)
+            ->withCurrentPage(1);
+
+        $html = $this->createListView($paginator)
+            ->layout('{items}\n{pager}')
+            ->containerTag(null)
+            ->urlCreator(new SimplePaginationUrlCreator())
+            ->itemView(static fn(array $data): string => (string) $data['id'])
+            ->render();
+
+        $this->assertStringContainsString(
+            <<<HTML
+            <nav>
+            <span>⟪</span>
+            <span>⟨</span>
+            <a href="/route?">1</a>
+            <a href="/route?page=2">2</a>
+            <a href="/route?page=2">⟩</a>
+            <a href="/route?page=2">⟫</a>
+            </nav>
+            HTML,
+            $html,
+        );
+    }
+
+    public function testAccessibilityEnabled(): void
+    {
+        $paginator = (new OffsetPaginator(new IterableDataReader([['id' => 1], ['id' => 2]])))
+            ->withPageSize(1)
+            ->withCurrentPage(1);
+
+        $html = $this->createListView($paginator)
+            ->layout('{items}\n{pager}')
+            ->containerTag(null)
+            ->urlCreator(new SimplePaginationUrlCreator())
+            ->accessibility()
+            ->itemView(static fn(array $data): string => (string) $data['id'])
+            ->render();
+
+        $this->assertStringContainsString(
+            <<<HTML
+            <nav aria-label="Pagination">
+            <span aria-label="First page" role="link" aria-disabled="true">⟪</span>
+            <span aria-label="Previous page" role="link" aria-disabled="true">⟨</span>
+            <a aria-label="Page 1" aria-current="page" href="/route?">1</a>
+            <a aria-label="Page 2" href="/route?page=2">2</a>
+            <a aria-label="Next page" href="/route?page=2">⟩</a>
+            <a aria-label="Last page" href="/route?page=2">⟫</a>
+            </nav>
+            HTML,
+            $html,
+        );
+    }
+
     public function testImmutability(): void
     {
         $listView = $this->createListView();
@@ -490,6 +548,7 @@ final class ListViewTest extends TestCase
         $this->assertNotSame($listView, $listView->noResultsAttributes([]));
         $this->assertNotSame($listView, $listView->separator(' | '));
         $this->assertNotSame($listView, $listView->useInlineJs(false));
+        $this->assertNotSame($listView, $listView->accessibility());
     }
 
     private function createListView(ReadableDataInterface|array $data = []): ListView

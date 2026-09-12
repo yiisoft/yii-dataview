@@ -292,6 +292,7 @@ final class DataColumnTest extends TestCase
     public function testRowHeaderScopeOverride(): void
     {
         $html = $this->createGridView([['name' => 'John']])
+            ->accessibility()
             ->columns(
                 new DataColumn(property: 'name', bodyAttributes: ['scope' => 'rowgroup'], rowHeader: true),
             )
@@ -303,6 +304,7 @@ final class DataColumnTest extends TestCase
     public function testRowHeaderScopeRemove(): void
     {
         $html = $this->createGridView([['name' => 'John']])
+            ->accessibility()
             ->columns(
                 new DataColumn(property: 'name', bodyAttributes: ['scope' => null], rowHeader: true),
             )
@@ -314,6 +316,7 @@ final class DataColumnTest extends TestCase
     public function testRowHeaderEmptyContent(): void
     {
         $html = $this->createGridView([['name' => '']])
+            ->accessibility()
             ->columns(
                 new DataColumn(property: 'name', rowHeader: true),
             )
@@ -331,6 +334,63 @@ final class DataColumnTest extends TestCase
             HTML,
             $html,
         );
+    }
+
+    public function testHeaderScopeOverride(): void
+    {
+        $html = $this->createGridView([['name' => 'John']])
+            ->accessibility()
+            ->columns(
+                new DataColumn(property: 'name', headerAttributes: ['scope' => 'colgroup']),
+            )
+            ->render();
+
+        $this->assertStringContainsString('<th scope="colgroup">', $html);
+    }
+
+    public function testHeaderScopeRemove(): void
+    {
+        $html = $this->createGridView([['name' => 'John']])
+            ->accessibility()
+            ->columns(
+                new DataColumn(property: 'name', headerAttributes: ['scope' => null]),
+            )
+            ->render();
+
+        $this->assertStringContainsString('<th>Name</th>', $html);
+    }
+
+    public function testAriaSortOverride(): void
+    {
+        $dataReader = (new IterableDataReader([['name' => 'John']]))
+            ->withSort(Sort::any(['name'])->withOrderString('name'));
+
+        $html = $this->createGridView()
+            ->dataReader($dataReader)
+            ->accessibility()
+            ->columns(
+                new DataColumn(property: 'name', headerAttributes: ['aria-sort' => 'other']),
+            )
+            ->render();
+
+        $this->assertStringContainsString('aria-sort="other"', $html);
+        $this->assertStringNotContainsString('aria-sort="ascending"', $html);
+    }
+
+    public function testAriaSortRemove(): void
+    {
+        $dataReader = (new IterableDataReader([['name' => 'John']]))
+            ->withSort(Sort::any(['name'])->withOrderString('name'));
+
+        $html = $this->createGridView()
+            ->dataReader($dataReader)
+            ->accessibility()
+            ->columns(
+                new DataColumn(property: 'name', headerAttributes: ['aria-sort' => null]),
+            )
+            ->render();
+
+        $this->assertStringNotContainsString('aria-sort', $html);
     }
 
     public function testRowHeaderEmptyContentKeepsExplicitScope(): void

@@ -880,6 +880,33 @@ final class GridViewTest extends TestCase
         );
     }
 
+    public function testHeaderCellScopeOverride(): void
+    {
+        $html = $this->createGridView([['id' => 1, 'name' => 'John']])
+            ->accessibility()
+            ->headerCellAttributes(['scope' => 'colgroup'])
+            ->columns(
+                new DataColumn('name', withSorting: false),
+            )
+            ->render();
+
+        $this->assertStringContainsString('<th scope="colgroup">Name</th>', $html);
+    }
+
+    public function testHeaderCellScopeRemove(): void
+    {
+        $html = $this->createGridView([['id' => 1, 'name' => 'John']])
+            ->accessibility()
+            ->headerCellAttributes(['scope' => null])
+            ->columns(
+                new DataColumn('name', withSorting: false),
+            )
+            ->render();
+
+        $this->assertStringContainsString('<th>Name</th>', $html);
+        $this->assertStringNotContainsString('scope="col"', $html);
+    }
+
     public function testAccessibilityDisabledByDefaultForPagination(): void
     {
         $paginator = (new OffsetPaginator(new IterableDataReader([['id' => 1], ['id' => 2]])))
