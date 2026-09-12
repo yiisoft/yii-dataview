@@ -8,6 +8,7 @@ use Stringable;
 use Yiisoft\Data\Paginator\PageToken;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\Yii\DataView\BaseListView;
+use Yiisoft\Yii\DataView\DefaultTranslatorFactory;
 
 /**
  * Context class for pagination widgets that provides URL generation and configuration.
@@ -19,13 +20,16 @@ final class PaginationContext
      */
     public const URL_PLACEHOLDER = 'YII-DATAVIEW-PAGE-PLACEHOLDER';
 
+    private readonly TranslatorInterface $translator;
+
     /**
      * @param string $nextUrlPattern URL pattern for next page links. Must contain {@see URL_PLACEHOLDER}.
      * @param string $previousUrlPattern URL pattern for previous page links. Must contain {@see URL_PLACEHOLDER}.
      * @param string $firstPageUrl URL used on the first page.
      * @param bool $accessibility Whether pagination widgets should add accessibility attributes `aria-*`
      * automatically.
-     * @param TranslatorInterface|null $translator Translator used for pagination messages.
+     * @param TranslatorInterface|null $translator Translator used for pagination messages. When `null`, a default
+     * one is created by {@see DefaultTranslatorFactory}.
      * @param string $translationCategory Category used with the translator.
      */
     public function __construct(
@@ -33,9 +37,11 @@ final class PaginationContext
         public readonly string $previousUrlPattern,
         public readonly string $firstPageUrl,
         public readonly bool $accessibility = false,
-        private readonly ?TranslatorInterface $translator = null,
+        ?TranslatorInterface $translator = null,
         private readonly string $translationCategory = BaseListView::DEFAULT_TRANSLATION_CATEGORY,
-    ) {}
+    ) {
+        $this->translator = $translator ?? DefaultTranslatorFactory::create($translationCategory);
+    }
 
     /**
      * Translate a message using the pagination translation category.
@@ -44,20 +50,11 @@ final class PaginationContext
      * @param array $parameters Parameters for the message.
      * @psalm-param array<string, string|Stringable> $parameters
      *
-     * @return string Translated message. When no translator is set, the message ID is returned with `{name}`
-     * placeholders replaced by the given parameters.
+     * @return string Translated message.
      */
     public function translate(string|Stringable $id, array $parameters = []): string
     {
-        if ($this->translator !== null) {
-            return $this->translator->translate($id, $parameters, $this->translationCategory);
-        }
-
-        $replacements = [];
-        foreach ($parameters as $name => $value) {
-            $replacements['{' . $name . '}'] = (string) $value;
-        }
-        return strtr((string) $id, $replacements);
+        return $this->translator->translate($id, $parameters, $this->translationCategory);
     }
 
     /**

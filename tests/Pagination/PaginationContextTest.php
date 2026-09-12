@@ -22,6 +22,13 @@ final class PaginationContextTest extends TestCase
         $this->assertSame('Next page', $context->translate(new StringableObject('Next page')));
     }
 
+    public function testTranslateWithoutTranslatorSubstitutesParameters(): void
+    {
+        $context = new PaginationContext('/next', '/previous', '/');
+
+        $this->assertSame('Page 2', $context->translate('Page {page}', ['page' => '2']));
+    }
+
     public function testTranslateUsesTranslatorWithConfiguredCategory(): void
     {
         $messageSource = new InMemoryMessageSource();
