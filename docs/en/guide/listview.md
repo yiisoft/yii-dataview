@@ -285,8 +285,25 @@ You can rearrange or remove sections:
 
 As for every data widget that renders a set of data, you can additionally customize it with:
 
+- [Accessibility](accessibility.md)
 - [CSP and inline JavaScript](csp.md)
 - [Pagination](pagination.md)
 - [URLs](urls.md)
 - [Translation](translation.md)
 - [Themes](themes.md)
+
+## Accessibility
+
+`ListView` does not add accessibility attributes by default. Call `accessibility()` to opt in — the pagination
+widget it renders then gets `aria-current`, `aria-disabled`, `aria-label` and `role="link"`:
+
+```php
+<?= ListView::widget()
+    ->itemView('myitem.php')
+    ->dataReader($dataReader)
+    ->accessibility()
+?>
+```
+
+See the [Accessibility](accessibility.md#pagination) guide for the full list and for how to translate, override
+or remove each attribute.
