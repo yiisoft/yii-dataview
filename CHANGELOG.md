@@ -10,17 +10,17 @@
   to set HTML attributes and a CSS class for filter cells (@vjik)
 - New #362: Add `GridView::captionAttributes()` method and `$attributes` parameter to `GridView::caption()` to set
   HTML attributes for the `caption` tag (@vjik)
-- New #363: Add `rowHeader` parameter to `DataColumn` to render body cells as `<th>` row headers (@vjik)
-- New #363: Add `BaseListView::accessibility()` that opts into automatically added accessibility attributes:
+- New #365: Add `rowHeader` parameter to `DataColumn` to render body cells as `<th>` row headers (@vjik)
+- New #365: Add `BaseListView::accessibility()` that opts into automatically added accessibility attributes:
   `scope="col"` and `aria-sort` on `GridView` header cells, `scope="row"` on row header cells, and
   `aria-current`/`aria-disabled`/`role="link"` on pagination links (@vjik)
-- New #363: Add `$accessibility` parameter to the `PaginationContext` constructor and to
+- New #365: Add `$accessibility` parameter to the `PaginationContext` constructor and to
   `OffsetPagination::create()` and `KeysetPagination::create()` (@vjik)
-- New #363: Add `ariaLabelNav()`, `ariaLabelFirst()`, `ariaLabelPrevious()`, `ariaLabelNext()`, `ariaLabelLast()`
+- New #365: Add `ariaLabelNav()`, `ariaLabelFirst()`, `ariaLabelPrevious()`, `ariaLabelNext()`, `ariaLabelLast()`
   and `ariaLabelPage()` methods to `OffsetPagination` (subset `ariaLabelNav()`, `ariaLabelPrevious()`,
   `ariaLabelNext()` in `KeysetPagination`) to set `aria-label` on the `nav` container and page links when
   accessibility is enabled (@vjik)
-- New #363: Add `PaginationContext::translate()` method and `$translator` and `$translationCategory` parameters
+- New #365: Add `PaginationContext::translate()` method and `$translator` and `$translationCategory` parameters
   to the `PaginationContext` constructor and to `OffsetPagination::create()` and `KeysetPagination::create()` (@vjik)
 - Enh #358: Make dependency container in `GridView` constructor optional (@vjik)
 - Bug #363: Render disabled `KeysetPagination` controls ("previous" on the first page, "next" on the last page) as
