@@ -10,14 +10,14 @@
   to set HTML attributes and a CSS class for filter cells (@vjik)
 - New #362: Add `GridView::captionAttributes()` method and `$attributes` parameter to `GridView::caption()` to set
   HTML attributes for the `caption` tag (@vjik)
-- New #366: Add `BaseListView::accessibility()` that opts into automatically added accessibility attributes:
+- New #367: Add `BaseListView::accessibility()` that opts into automatically added accessibility attributes:
   `scope="col"` and `aria-sort` on `GridView` header cells, `scope="row"` on row header cells, and `aria-current`,
   `aria-disabled`, `aria-label` and `role="link"` on pagination links — and a `rowHeader` parameter to `DataColumn`
   that renders the column's body cells as `<th>` row headers (@vjik)
-- New #366: Add `ariaLabelNav()`, `ariaLabelFirst()`, `ariaLabelPrevious()`, `ariaLabelNext()`, `ariaLabelLast()` and
+- New #367: Add `ariaLabelNav()`, `ariaLabelFirst()`, `ariaLabelPrevious()`, `ariaLabelNext()`, `ariaLabelLast()` and
   `ariaLabelPage()` methods to `OffsetPagination`, and `ariaLabelNav()`, `ariaLabelPrevious()` and `ariaLabelNext()`
   to `KeysetPagination`, to set `aria-label` on the `nav` container and page links (@vjik)
-- New #366: Add `$accessibility`, `$translator` and `$translationCategory` parameters to the `PaginationContext`
+- New #367: Add `$accessibility`, `$translator` and `$translationCategory` parameters to the `PaginationContext`
   constructor and to `OffsetPagination::create()` and `KeysetPagination::create()`, and a
   `PaginationContext::translate()` method (@vjik)
 - Enh #358: Make dependency container in `GridView` constructor optional (@vjik)
