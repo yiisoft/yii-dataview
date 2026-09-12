@@ -44,6 +44,7 @@ use Yiisoft\Yii\DataView\GridView\Column\DataColumn;
 
 echo GridView::widget()
     ->dataReader($dataReader)
+    ->accessibility()
     // For all header cells:
     ->headerCellAttributes(['scope' => null])
     ->columns(
@@ -63,6 +64,7 @@ use Yiisoft\Yii\DataView\GridView\Column\CheckboxColumn;
 
 echo GridView::widget()
     ->dataReader($dataReader)
+    ->accessibility()
     ->columns(
         new CheckboxColumn(headerAttributes: ['scope' => null], multiple: false),
     );
@@ -81,6 +83,7 @@ use Yiisoft\Yii\DataView\GridView\Column\DataColumn;
 
 echo GridView::widget()
     ->dataReader($dataReader)
+    ->accessibility()
     ->columns(
         new DataColumn(property: 'name', rowHeader: true),
         new DataColumn(property: 'email'),
@@ -108,6 +111,7 @@ use Yiisoft\Yii\DataView\GridView\Column\DataColumn;
 
 echo GridView::widget()
     ->dataReader($dataReader)
+    ->accessibility()
     ->columns(
         new DataColumn(property: 'name', headerAttributes: ['aria-sort' => 'other']),
     );
@@ -165,6 +169,7 @@ use Yiisoft\Yii\DataView\GridView\GridView;
 
 echo GridView::widget()
     ->dataReader($paginator)
+    ->accessibility()
     ->offsetPaginationConfig([
         'linkAttributes()' => [['aria-disabled' => false]],
     ]);
@@ -180,6 +185,7 @@ use Yiisoft\Yii\DataView\GridView\GridView;
 
 echo GridView::widget()
     ->dataReader($paginator)
+    ->accessibility()
     ->offsetPaginationConfig([
         'ariaLabelPage()' => ['Go to page {page}'],
         'ariaLabelNav()' => [null],
