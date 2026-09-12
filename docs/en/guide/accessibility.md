@@ -141,11 +141,11 @@ directly, they take the flag from `PaginationContext` (also exposed as the `$acc
 - Such a non-actionable control is rendered as a `span` rather than an `a`, so both widgets also give it
   `role="link"`. Without the role it would be announced as plain text, and the `aria-disabled` state would have
   nothing to apply to; with it, assistive technologies announce a disabled link.
-- Both widgets add an `aria-label` to the `nav` container and to every page link, so several navigation
-  landmarks on a page can be told apart and the purpose of each link (whose visible content is a bare glyph
-  or a bare number) is announced. The default texts are: `Pagination` on the `nav`; `First page`,
-  `Previous page`, `Next page`, `Last page` on the corresponding links; and `Page {page}` (with the number
-  substituted for `{page}`) on the numbered links of `OffsetPagination`.
+- Both widgets add an `aria-label` to the `nav` container, so the landmark is announced as a pagination
+  control rather than as an unnamed navigation region, and to every page link, so the purpose of a link whose
+  visible content is a bare glyph or a bare number is announced. The default texts are: `Pagination` on the
+  `nav`; `First page`, `Previous page`, `Next page`, `Last page` on the corresponding links; and `Page {page}`
+  (with the number substituted for `{page}`) on the numbered links of `OffsetPagination`.
 
 ### Translating the `aria-label` texts
 
@@ -188,3 +188,20 @@ echo GridView::widget()
 
 An `aria-label` already present in `containerAttributes()` (for the `nav`) or `linkAttributes()` (for the
 links) is kept as is and takes precedence over these methods.
+
+### Recommendations
+
+- Give every pagination on a page its own `nav` label. The default `Pagination` is the same for every widget,
+  so two data views on one page produce two identically named navigation landmarks, which assistive
+  technologies cannot tell apart. Set a distinct `ariaLabelNav()` for each of them:
+
+  ```php
+  use Yiisoft\Yii\DataView\GridView\GridView;
+
+  echo GridView::widget()
+      ->dataReader($paginator)
+      ->accessibility()
+      ->offsetPaginationConfig([
+          'ariaLabelNav()' => ['Orders pagination'],
+      ]);
+  ```
