@@ -8,7 +8,7 @@ to provide yourself.
 
 `GridView` and `ListView` do not add accessibility attributes by default. Call `accessibility()` to opt in —
 rendering then adds `scope="col"` and `aria-sort` on header cells, `scope="row"` on row header cells, and
-`aria-current`/`aria-disabled` on pagination links:
+`aria-current`, `aria-disabled`, `aria-label` and `role="link"` on pagination links:
 
 ```php
 use Yiisoft\Yii\DataView\GridView\GridView;
@@ -124,6 +124,9 @@ directly, they take the flag from `PaginationContext` (also exposed as the `$acc
 - Both widgets add `aria-disabled="true"` to links that are currently not actionable: the "first" and
   "previous" links on the first page, and the "next" and "last" links on the last page (`KeysetPagination`
   renders these without an `href`).
+- Such a non-actionable control is rendered as a `span` rather than an `a`, so both widgets also give it
+  `role="link"`. Without the role it would be announced as plain text, and the `aria-disabled` state would have
+  nothing to apply to; with it, assistive technologies announce a disabled link.
 - Both widgets add an `aria-label` to the `nav` container and to every page link, so several navigation
   landmarks on a page can be told apart and the purpose of each link (whose visible content is a bare glyph
   or a bare number) is announced. The default texts are: `Pagination` on the `nav`; `First page`,
@@ -140,7 +143,7 @@ the widgets emit the English defaults unless a translator is passed — either a
 
 ### Overriding or removing the attributes
 
-`aria-current` and `aria-disabled` are default values applied only when the key is not already present
+`aria-current`, `aria-disabled` and `role` are default values applied only when the key is not already present
 in `linkAttributes()`. Set the key there to change the value, or pass `false` / `null` to drop it:
 
 ```php
