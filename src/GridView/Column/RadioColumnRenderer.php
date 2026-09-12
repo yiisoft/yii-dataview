@@ -24,16 +24,16 @@ final class RadioColumnRenderer implements ColumnRendererInterface
         return $cell->addAttributes($column->columnAttributes);
     }
 
-    public function renderHeader(ColumnInterface $column, Cell $cell, GlobalContext $context): ?Cell
+    public function renderHeader(ColumnInterface $column, Cell $cell, GlobalContext $context): Cell
     {
+        $cell = $cell->addAttributes($column->headerAttributes);
+
         $header = $column->header;
         if ($header === null) {
-            return null;
+            return $cell;
         }
 
-        return $cell
-            ->addAttributes($column->headerAttributes)
-            ->content($header);
+        return $cell->content($header);
     }
 
     public function renderBody(ColumnInterface $column, Cell $cell, DataContext $context): Cell

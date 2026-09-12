@@ -1037,9 +1037,14 @@ final class GridView extends BaseListView
         if ($this->isHeaderEnabled) {
             $tags = [];
             foreach ($columns as $i => $column) {
-                $cell = $renderers[$i]->renderHeader($column, new Cell($this->headerCellAttributes), $globalContext);
-                $tags[] = $cell === null
-                    ? Html::th('&nbsp;')->encode(false)
+                $headerCell = new Cell($this->headerCellAttributes);
+                /**
+                 * @psalm-suppress PossiblyNullReference The `??` operator puts its left operand into isset context,
+                 * so Psalm treats `$renderers[$i]` as possibly null.
+                 */
+                $cell = $renderers[$i]->renderHeader($column, $headerCell, $globalContext) ?? $headerCell;
+                $tags[] = $cell->isEmptyContent()
+                    ? Html::th('&nbsp;', $cell->getAttributes())->encode(false)
                     : Html::th(attributes: $cell->getAttributes())
                         ->content(...$cell->getContent())
                         ->encode($cell->shouldEncode())
