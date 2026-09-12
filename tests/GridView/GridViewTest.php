@@ -931,6 +931,44 @@ final class GridViewTest extends TestCase
         $this->assertStringNotContainsString('scope="col"', $html);
     }
 
+    public function testHeaderCellScopeWithoutColumnHeader(): void
+    {
+        $html = $this->createGridView([['id' => 1, 'name' => 'John']])
+            ->accessibility()
+            ->headerCellAttributes(['class' => 'text-center'])
+            ->columns(
+                new CheckboxColumn(headerAttributes: ['style' => 'width: 1%'], multiple: false),
+                new DataColumn('name', withSorting: false),
+            )
+            ->render();
+
+        $this->assertStringContainsString(
+            <<<HTML
+            <thead>
+            <tr>
+            <th scope="col" class="text-center" style="width: 1%">&nbsp;</th>
+            <th scope="col" class="text-center">Name</th>
+            </tr>
+            </thead>
+            HTML,
+            $html,
+        );
+    }
+
+    public function testHeaderCellScopeRemoveWithoutColumnHeader(): void
+    {
+        $html = $this->createGridView([['id' => 1, 'name' => 'John']])
+            ->accessibility()
+            ->headerCellAttributes(['scope' => null])
+            ->columns(
+                new CheckboxColumn(multiple: false),
+            )
+            ->render();
+
+        $this->assertStringContainsString('<th>&nbsp;</th>', $html);
+        $this->assertStringNotContainsString('scope="col"', $html);
+    }
+
     public function testAccessibilityDisabledByDefaultForPagination(): void
     {
         $paginator = (new OffsetPaginator(new IterableDataReader([['id' => 1], ['id' => 2]])))

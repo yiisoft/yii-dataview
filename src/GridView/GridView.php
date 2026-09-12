@@ -1047,14 +1047,11 @@ final class GridView extends BaseListView
                  * @psalm-suppress PossiblyNullReference The `??` operator puts its left operand into isset context,
                  * so Psalm treats `$renderers[$i]` as possibly null.
                  */
-                $cell = $renderers[$i]->renderHeader(
-                    $column,
-                    new Cell($this->headerCellAttributes),
-                    $globalContext,
-                ) ?? $headerCell;;
+                $cell = $renderers[$i]->renderHeader($column, $headerCell, $globalContext) ?? $headerCell;
+                $cellAttributes = array_merge($scopeColAttributes, $cell->getAttributes());
                 $tags[] = $cell->isEmptyContent()
-                    ? Html::th('&nbsp;', $scopeColAttributes)->encode(false)
-                    : Html::th(attributes: array_merge($scopeColAttributes, $cell->getAttributes()))
+                    ? Html::th('&nbsp;', $cellAttributes)->encode(false)
+                    : Html::th(attributes: $cellAttributes)
                         ->content(...$cell->getContent())
                         ->encode($cell->shouldEncode())
                         ->doubleEncode($cell->shouldDoubleEncode());

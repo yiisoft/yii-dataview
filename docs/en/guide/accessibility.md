@@ -54,6 +54,22 @@ echo GridView::widget()
     );
 ```
 
+A column that renders no header content is no exception: it renders as `<th scope="col">` around a `&nbsp;`
+placeholder, so the header row stays structurally uniform and assistive technologies do not have to guess the scope
+of a `<th>` that carries none. Such a cell keeps the header cell attributes of both the grid and the column, so
+`scope` is overridden or removed there the same way:
+
+```php
+use Yiisoft\Yii\DataView\GridView\GridView;
+use Yiisoft\Yii\DataView\GridView\Column\CheckboxColumn;
+
+echo GridView::widget()
+    ->dataReader($dataReader)
+    ->columns(
+        new CheckboxColumn(headerAttributes: ['scope' => null], multiple: false),
+    );
+```
+
 ### Row headers
 
 When one column identifies each row (a name, a title, an ID), mark it as a row header with the `DataColumn`
