@@ -893,8 +893,8 @@ final class GridViewTest extends TestCase
         $this->assertStringContainsString(
             <<<HTML
             <nav>
-            <a href="/route?">⟪</a>
-            <a href="/route?">⟨</a>
+            <span>⟪</span>
+            <span>⟨</span>
             <a href="/route?">1</a>
             <a href="/route?page=2">2</a>
             <a href="/route?page=2">⟩</a>
@@ -919,8 +919,8 @@ final class GridViewTest extends TestCase
         $this->assertStringContainsString(
             <<<HTML
             <nav aria-label="Pagination">
-            <a aria-label="First page" aria-disabled="true" href="/route?">⟪</a>
-            <a aria-label="Previous page" aria-disabled="true" href="/route?">⟨</a>
+            <span aria-label="First page" aria-disabled="true">⟪</span>
+            <span aria-label="Previous page" aria-disabled="true">⟨</span>
             <a aria-label="Page 1" aria-current="page" href="/route?">1</a>
             <a aria-label="Page 2" href="/route?page=2">2</a>
             <a aria-label="Next page" href="/route?page=2">⟩</a>

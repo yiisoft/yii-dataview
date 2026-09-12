@@ -493,12 +493,15 @@ final class OffsetPagination extends Widget implements PaginationWidgetInterface
     }
 
     /**
-    @param string|null $url The item URL, or `null` when the control is disabled. A disabled control is rendered as
-    a `span` instead of an `a` element.
+     * @param string|null $url The item URL, or `null` when the control is disabled. A disabled control is rendered as
+     * a `span` instead of an `a` element.
+     * @param array $ariaLabelParameters Parameters for the aria-label translation.
+     *
+     * @psalm-param array<string, string|Stringable> $ariaLabelParameters
      */
     private function renderItem(
         string|Stringable $label,
-        string $url,
+        ?string $url,
         bool $isCurrent,
         ?string $ariaLabel = null,
         array $ariaLabelParameters = [],

@@ -462,7 +462,7 @@ final class KeysetPaginationTest extends TestCase
         $this->assertSame(
             <<<HTML
             <nav aria-label="Pagination">
-            <a aria-label="Previous page" aria-disabled="true">⟨</a>
+            <span aria-label="Previous page" aria-disabled="true">⟨</span>
             <a aria-label="Next page" href="/next/id1">⟩</a>
             </nav>
             HTML,
@@ -505,7 +505,7 @@ final class KeysetPaginationTest extends TestCase
         $this->assertSame(
             <<<HTML
             <nav>
-            <a aria-label="To previous" aria-disabled="true">⟨</a>
+            <span aria-label="To previous" aria-disabled="true">⟨</span>
             <a aria-label="To next" href="/next/id1">⟩</a>
             </nav>
             HTML,
@@ -545,7 +545,7 @@ final class KeysetPaginationTest extends TestCase
         $this->assertSame(
             <<<HTML
             <nav aria-label="Seitennavigation">
-            <a aria-label="Vorherige Seite" aria-disabled="true">⟨</a>
+            <span aria-label="Vorherige Seite" aria-disabled="true">⟨</span>
             <a aria-label="Nächste Seite" href="/next/id1">⟩</a>
             </nav>
             HTML,
