@@ -1039,7 +1039,6 @@ final class GridView extends BaseListView
         }
 
         if ($this->isHeaderEnabled) {
-            $scopeColAttributes = $this->accessibility ? ['scope' => 'col'] : [];
             $tags = [];
             foreach ($columns as $i => $column) {
                 $headerCell = new Cell($this->headerCellAttributes);
@@ -1048,7 +1047,7 @@ final class GridView extends BaseListView
                  * so Psalm treats `$renderers[$i]` as possibly null.
                  */
                 $cell = $renderers[$i]->renderHeader($column, $headerCell, $globalContext) ?? $headerCell;
-                $cellAttributes = array_merge($scopeColAttributes, $cell->getAttributes());
+                $cellAttributes = $this->addScopeAttribute($cell->getAttributes(), 'col');
                 $tags[] = $cell->isEmptyContent()
                     ? Html::th('&nbsp;', $cellAttributes)->encode(false)
                     : Html::th(attributes: $cellAttributes)
@@ -1081,7 +1080,6 @@ final class GridView extends BaseListView
             $blocks[] = Html::tfoot()->rows($footerRow)->render();
         }
 
-        $scopeRowAttributes = $this->accessibility ? ['scope' => 'row'] : [];
         $rows = [];
         $index = 0;
         foreach ($items as $key => $value) {
@@ -1102,13 +1100,13 @@ final class GridView extends BaseListView
                 if ($cell->isEmptyContent()) {
                     $cellAttributes = $this->prepareEmptyBodyCellAttributes($cell->getAttributes(), $context);
                     $tag = $cell->isRowHeader()
-                        ? Html::th($this->emptyCell, array_merge($scopeRowAttributes, $cellAttributes))
+                        ? Html::th($this->emptyCell, $this->addScopeAttribute($cellAttributes, 'row'))
                         : Html::td($this->emptyCell, $cellAttributes);
                     $tags[] = $tag->encode(false);
                 } else {
                     $cellAttributes = $this->prepareBodyCellAttributes($cell->getAttributes(), $context);
                     $tag = $cell->isRowHeader()
-                        ? Html::th(attributes: array_merge($scopeRowAttributes, $cellAttributes))
+                        ? Html::th(attributes: $this->addScopeAttribute($cellAttributes, 'row'))
                         : Html::td(attributes: $cellAttributes);
                     $tags[] = $tag
                         ->content(...$cell->getContent())
@@ -1297,6 +1295,20 @@ final class GridView extends BaseListView
         }
 
         return array_merge($attributes, $emptyCellAttributes);
+    }
+
+    /**
+     * Adds the generated `scope` attribute to a header or row header cell when accessibility attributes are
+     * enabled via {@see accessibility()}.
+     *
+     * @param array $attributes The prepared cell attributes.
+     * @param string $scope The `scope` value to generate.
+     *
+     * @return array The cell attributes with the generated `scope`.
+     */
+    private function addScopeAttribute(array $attributes, string $scope): array
+    {
+        return $this->accessibility ? array_merge(['scope' => $scope], $attributes) : $attributes;
     }
 
     /**
