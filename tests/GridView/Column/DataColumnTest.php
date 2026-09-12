@@ -322,13 +322,11 @@ final class DataColumnTest extends TestCase
             )
             ->render();
 
-        // An empty cell renders as `th` for structural consistency, but intentionally without the generated
-        // `scope="row"` as it labels nothing.
         $this->assertStringContainsString(
             <<<HTML
             <tbody>
             <tr>
-            <th>&nbsp;</th>
+            <th scope="row">&nbsp;</th>
             </tr>
             </tbody>
             HTML,
@@ -403,8 +401,8 @@ final class DataColumnTest extends TestCase
             )
             ->render();
 
-        // A `scope` set explicitly through `bodyAttributes` still applies to an empty cell when column attributes
-        // are kept.
+        // A `scope` set explicitly through `bodyAttributes` overrides the generated `scope="row"` on an empty cell
+        // when column attributes are kept.
         $this->assertStringContainsString('<th scope="rowgroup">&nbsp;</th>', $html);
     }
 

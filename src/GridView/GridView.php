@@ -1100,7 +1100,7 @@ final class GridView extends BaseListView
                 if ($cell->isEmptyContent()) {
                     $cellAttributes = $this->prepareEmptyBodyCellAttributes($cell->getAttributes(), $context);
                     $tag = $cell->isRowHeader()
-                        ? Html::th($this->emptyCell, $cellAttributes)
+                        ? Html::th($this->emptyCell, array_merge($scopeRowAttributes, $cellAttributes))
                         : Html::td($this->emptyCell, $cellAttributes);
                     $tags[] = $tag->encode(false);
                 } else {

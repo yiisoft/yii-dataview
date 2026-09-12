@@ -77,11 +77,11 @@ echo GridView::widget()
 The `scope="row"` attribute is a default value. Change or remove it through the column's `bodyAttributes`, for
 example `bodyAttributes: ['scope' => 'rowgroup']` or `bodyAttributes: ['scope' => null]`.
 
-An empty cell renders as a plain `<th>` without the generated `scope="row"`: there is no value to label the row
-with, so pointing assistive technology at it would only add noise. This is intentional and independent of
-`keepColumnAttributesInEmptyCell()` — that method controls whether the column's own body cell attributes are kept
-on the placeholder cell, and a `scope` you set explicitly through `bodyAttributes` is still applied to empty cells
-when it is enabled.
+An empty cell is no exception: it renders as `<th scope="row">` around the `emptyCell()` placeholder, so a row
+stays structurally uniform and assistive technologies do not have to guess the scope of a `<th>` that carries none.
+This is independent of `keepColumnAttributesInEmptyCell()` — that method controls whether the column's own body
+cell attributes are kept on the placeholder cell, and a `scope` you set explicitly through `bodyAttributes`
+overrides the generated one there too when it is enabled.
 
 ### Overriding `aria-sort`
 
