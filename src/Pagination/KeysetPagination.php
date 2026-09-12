@@ -64,7 +64,8 @@ final class KeysetPagination extends Widget implements PaginationWidgetInterface
      * @param KeysetPaginator $paginator The paginator to use.
      * @param string $nextUrlPattern URL pattern for next page links. Must contain {@see PaginationContext::URL_PLACEHOLDER}.
      * @param string $previousUrlPattern URL pattern for previous page links. Must contain {@see PaginationContext::URL_PLACEHOLDER}.
-     * @param bool $accessibility Whether to add the `aria-disabled` and `aria-label` attributes automatically.
+     * @param bool $accessibility Whether to add the `aria-disabled`, `aria-label` and, on disabled items,
+     * `role="link"` attributes automatically.
      * @param TranslatorInterface|null $translator Translator used for the `aria-label` texts. When `null`, the
      * English defaults are emitted as is.
      * @param string $translationCategory Category used with the translator.
@@ -464,8 +465,13 @@ final class KeysetPagination extends Widget implements PaginationWidgetInterface
             $linkAttributes['aria-label'] = $context->translate($ariaLabel);
         }
         if ($isDisabled) {
-            if ($accessibility && !array_key_exists('aria-disabled', $linkAttributes)) {
-                $linkAttributes['aria-disabled'] = 'true';
+            if ($accessibility) {
+                if (!array_key_exists('role', $linkAttributes)) {
+                    $linkAttributes['role'] = 'link';
+                }
+                if (!array_key_exists('aria-disabled', $linkAttributes)) {
+                    $linkAttributes['aria-disabled'] = 'true';
+                }
             }
             Html::addCssClass($linkAttributes, $this->disabledLinkClass);
         }

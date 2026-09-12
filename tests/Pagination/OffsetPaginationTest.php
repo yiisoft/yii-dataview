@@ -787,8 +787,8 @@ final class OffsetPaginationTest extends TestCase
         $this->assertSame(
             <<<HTML
             <nav aria-label="Pagination">
-            <span aria-label="First page" aria-disabled="true">⟪</span>
-            <span aria-label="Previous page" aria-disabled="true">⟨</span>
+            <span aria-label="First page" role="link" aria-disabled="true">⟪</span>
+            <span aria-label="Previous page" role="link" aria-disabled="true">⟨</span>
             <a aria-label="Page 1" aria-current="page" href="/">1</a>
             <a aria-label="Page 2" href="/page/2">2</a>
             <a aria-label="Page 3" href="/page/3">3</a>
@@ -903,8 +903,8 @@ final class OffsetPaginationTest extends TestCase
         $this->assertSame(
             <<<HTML
             <nav aria-label="Seitennavigation">
-            <span aria-label="Erste Seite" aria-disabled="true">⟪</span>
-            <span aria-label="Vorherige Seite" aria-disabled="true">⟨</span>
+            <span aria-label="Erste Seite" role="link" aria-disabled="true">⟪</span>
+            <span aria-label="Vorherige Seite" role="link" aria-disabled="true">⟨</span>
             <a aria-label="Seite 1" aria-current="page" href="/">1</a>
             <a aria-label="Seite 2" href="/page/2">2</a>
             <a aria-label="Nächste Seite" href="/page/2">⟩</a>
@@ -930,7 +930,7 @@ final class OffsetPaginationTest extends TestCase
         )->render();
 
         $this->assertStringContainsString('<nav aria-label="Seitennavigation">', $html);
-        $this->assertStringContainsString('<span aria-label="Erste Seite" aria-disabled="true">⟪</span>', $html);
+        $this->assertStringContainsString('<span aria-label="Erste Seite" role="link" aria-disabled="true">⟪</span>', $html);
         $this->assertStringContainsString('<a aria-label="Seite 2" href="/page/2">2</a>', $html);
     }
 

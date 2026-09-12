@@ -76,8 +76,8 @@ final class OffsetPagination extends Widget implements PaginationWidgetInterface
      * @param OffsetPaginator $paginator The paginator to use.
      * @param string $urlPattern URL pattern for page links. Must contain {@see PaginationContext::URL_PLACEHOLDER}.
      * @param string $firstPageUrl URL used on the first page.
-     * @param bool $accessibility Whether to add `aria-current`, `aria-disabled` and `aria-label` attributes
-     * automatically.
+     * @param bool $accessibility Whether to add `aria-current`, `aria-disabled`, `aria-label` and, on disabled
+     * items, `role="link"` attributes automatically.
      * @param TranslatorInterface|null $translator Translator used for the `aria-label` texts. When `null`, the
      * English defaults are emitted as is.
      * @param string $translationCategory Category used with the translator.
@@ -518,8 +518,13 @@ final class OffsetPagination extends Widget implements PaginationWidgetInterface
             $linkAttributes['aria-label'] = $context->translate($ariaLabel, $ariaLabelParameters);
         }
         if ($isDisabled) {
-            if ($accessibility && !array_key_exists('aria-disabled', $linkAttributes)) {
-                $linkAttributes['aria-disabled'] = 'true';
+            if ($accessibility) {
+                if (!array_key_exists('role', $linkAttributes)) {
+                    $linkAttributes['role'] = 'link';
+                }
+                if (!array_key_exists('aria-disabled', $linkAttributes)) {
+                    $linkAttributes['aria-disabled'] = 'true';
+                }
             }
             Html::addCssClass($linkAttributes, $this->disabledLinkClass);
         }

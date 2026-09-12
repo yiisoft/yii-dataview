@@ -13,7 +13,7 @@
 - New #363: Add `rowHeader` parameter to `DataColumn` to render body cells as `<th>` row headers (@vjik)
 - New #363: Add `BaseListView::accessibility()` that opts into automatically added accessibility attributes:
   `scope="col"` and `aria-sort` on `GridView` header cells, `scope="row"` on row header cells, and
-  `aria-current`/`aria-disabled` on pagination links (@vjik)
+  `aria-current`/`aria-disabled`/`role="link"` on pagination links (@vjik)
 - New #363: Add `$accessibility` parameter to the `PaginationContext` constructor and to
   `OffsetPagination::create()` and `KeysetPagination::create()` (@vjik)
 - New #363: Add `ariaLabelNav()`, `ariaLabelFirst()`, `ariaLabelPrevious()`, `ariaLabelNext()`, `ariaLabelLast()`
