@@ -473,7 +473,7 @@ final class ListViewTest extends TestCase
             ->withCurrentPage(1);
 
         $html = $this->createListView($paginator)
-            ->layout('{items}\n{pager}')
+            ->layout("{items}\n{pager}")
             ->containerTag(null)
             ->urlCreator(new SimplePaginationUrlCreator())
             ->itemView(static fn(array $data): string => (string) $data['id'])
@@ -501,7 +501,7 @@ final class ListViewTest extends TestCase
             ->withCurrentPage(1);
 
         $html = $this->createListView($paginator)
-            ->layout('{items}\n{pager}')
+            ->layout("{items}\n{pager}")
             ->containerTag(null)
             ->urlCreator(new SimplePaginationUrlCreator())
             ->accessibility()
@@ -530,7 +530,7 @@ final class ListViewTest extends TestCase
             ->withCurrentPage(1);
 
         $html = $this->createListView($paginator)
-            ->layout('{items}\n{pager}')
+            ->layout("{items}\n{pager}")
             ->containerTag(null)
             ->urlCreator(new SimplePaginationUrlCreator())
             ->accessibility()

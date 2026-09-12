@@ -32,8 +32,8 @@ final class PaginationContextTest extends TestCase
     public function testTranslateUsesTranslatorWithConfiguredCategory(): void
     {
         $messageSource = new InMemoryMessageSource();
-        $messageSource->write('pager', 'en', ['Next page' => 'Nächste Seite']);
-        $translator = (new Translator('en'))->addCategorySources(
+        $messageSource->write('pager', 'de', ['Next page' => 'Nächste Seite']);
+        $translator = (new Translator('de'))->addCategorySources(
             new CategorySource('pager', $messageSource),
         );
 
@@ -47,10 +47,10 @@ final class PaginationContextTest extends TestCase
         $messageSource = new InMemoryMessageSource();
         $messageSource->write(
             BaseListView::DEFAULT_TRANSLATION_CATEGORY,
-            'en',
+            'de',
             ['Next page' => 'Nächste Seite'],
         );
-        $translator = (new Translator('en'))->addCategorySources(
+        $translator = (new Translator('de'))->addCategorySources(
             new CategorySource(BaseListView::DEFAULT_TRANSLATION_CATEGORY, $messageSource),
         );
 
