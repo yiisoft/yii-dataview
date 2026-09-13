@@ -963,6 +963,32 @@ final class GridViewTest extends TestCase
         );
     }
 
+    public function testAriaSortIsNotAddedToNonSortableColumn(): void
+    {
+        $dataReader = (new IterableDataReader([['id' => 1, 'name' => 'John']]))
+            ->withSort(Sort::any(['id'])->withOrderString('id'));
+
+        $html = $this->createGridView($dataReader)
+            ->accessibility()
+            ->columns(
+                new DataColumn('name'),
+                new DataColumn('id'),
+            )
+            ->render();
+
+        $this->assertStringContainsString(
+            <<<HTML
+            <thead>
+            <tr>
+            <th scope="col">Name</th>
+            <th scope="col" aria-sort="ascending"><a href="#">Id</a></th>
+            </tr>
+            </thead>
+            HTML,
+            $html,
+        );
+    }
+
     public function testHeaderCellScopeOverride(): void
     {
         $html = $this->createGridView([['id' => 1, 'name' => 'John']])
