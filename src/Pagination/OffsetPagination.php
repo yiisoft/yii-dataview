@@ -12,6 +12,7 @@ use Yiisoft\Data\Paginator\OffsetPaginator;
 use Yiisoft\Data\Paginator\PaginatorInterface;
 use Yiisoft\Html\Html;
 use Yiisoft\Widget\Widget;
+use Yiisoft\Yii\DataView\HtmlHelper;
 
 use function max;
 use function min;
@@ -50,8 +51,8 @@ final class OffsetPagination extends Widget implements PaginationWidgetInterface
     private ?string $disabledItemClass = null;
 
     private array $linkAttributes = [];
-    private ?string $currentLinkClass = null;
-    private ?string $disabledLinkClass = null;
+    private array $currentLinkAttributes = [];
+    private array $disabledLinkAttributes = [];
 
     private string|Stringable|null $labelPrevious = '⟨';
     private string|Stringable|null $labelNext = '⟩';
@@ -221,10 +222,35 @@ final class OffsetPagination extends Widget implements PaginationWidgetInterface
         return $new;
     }
 
+    /**
+     * Sets HTML attributes for the current page link, layered on top of {@see linkAttributes()}.
+     *
+     * @param array $attributes HTML attributes for the current page link.
+     */
+    public function currentLinkAttributes(array $attributes): self
+    {
+        $new = clone $this;
+        $new->currentLinkAttributes = $attributes;
+        return $new;
+    }
+
     public function currentLinkClass(?string $class): self
     {
         $new = clone $this;
-        $new->currentLinkClass = $class;
+        $new->currentLinkAttributes['class'] = [];
+        Html::addCssClass($new->currentLinkAttributes, $class);
+        return $new;
+    }
+
+    /**
+     * Sets HTML attributes for a disabled control, layered on top of {@see linkAttributes()}.
+     *
+     * @param array $attributes HTML attributes for the `span` element of a disabled control.
+     */
+    public function disabledLinkAttributes(array $attributes): self
+    {
+        $new = clone $this;
+        $new->disabledLinkAttributes = $attributes;
         return $new;
     }
 
@@ -236,7 +262,8 @@ final class OffsetPagination extends Widget implements PaginationWidgetInterface
     public function disabledLinkClass(?string $class): self
     {
         $new = clone $this;
-        $new->disabledLinkClass = $class;
+        $new->disabledLinkAttributes['class'] = [];
+        Html::addCssClass($new->disabledLinkAttributes, $class);
         return $new;
     }
 
@@ -379,10 +406,10 @@ final class OffsetPagination extends Widget implements PaginationWidgetInterface
 
         $linkAttributes = $this->linkAttributes;
         if ($isDisabled) {
-            Html::addCssClass($linkAttributes, $this->disabledLinkClass);
+            $linkAttributes = HtmlHelper::mergeAttributes($linkAttributes, $this->disabledLinkAttributes);
         }
         if ($isCurrent) {
-            Html::addCssClass($linkAttributes, $this->currentLinkClass);
+            $linkAttributes = HtmlHelper::mergeAttributes($linkAttributes, $this->currentLinkAttributes);
         }
         $element = $isDisabled
             ? Html::span($label, $linkAttributes)
