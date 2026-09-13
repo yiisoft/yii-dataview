@@ -348,6 +348,25 @@ final class KeysetPaginationTest extends TestCase
         );
     }
 
+    public function testDisabledLinkAttributes(): void
+    {
+        $html = $this
+            ->createPagination(3)
+            ->linkAttributes(['class' => 'btn', 'data-action' => 'navigate'])
+            ->disabledLinkAttributes(['class' => 'disabled', 'aria-disabled' => 'true'])
+            ->render();
+
+        $this->assertSame(
+            <<<HTML
+            <nav>
+            <span class="btn disabled" data-action="navigate" aria-disabled="true">⟨</span>
+            <a class="btn" data-action="navigate" href="/next/id1">⟩</a>
+            </nav>
+            HTML,
+            $html,
+        );
+    }
+
     public function testLabelPrevious(): void
     {
         $html = $this
@@ -434,6 +453,7 @@ final class KeysetPaginationTest extends TestCase
         $this->assertNotSame($widget, $widget->linkAttributes([]));
         $this->assertNotSame($widget, $widget->linkClass('btn'));
         $this->assertNotSame($widget, $widget->addLinkClass('btn-primary'));
+        $this->assertNotSame($widget, $widget->disabledLinkAttributes([]));
         $this->assertNotSame($widget, $widget->disabledLinkClass('disabled'));
         $this->assertNotSame($widget, $widget->labelPrevious('Prev'));
         $this->assertNotSame($widget, $widget->labelNext('Next'));

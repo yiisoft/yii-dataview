@@ -477,6 +477,29 @@ final class OffsetPaginationTest extends TestCase
         );
     }
 
+    public function testCurrentLinkAttributes(): void
+    {
+        $html = $this
+            ->createPagination(2)
+            ->linkAttributes(['class' => 'btn', 'data-action' => 'navigate'])
+            ->currentLinkAttributes(['class' => 'current', 'aria-current' => 'page'])
+            ->render();
+
+        $this->assertSame(
+            <<<HTML
+            <nav>
+            <span class="btn" data-action="navigate">⟪</span>
+            <span class="btn" data-action="navigate">⟨</span>
+            <a class="btn current" data-action="navigate" aria-current="page" href="/">1</a>
+            <a class="btn" data-action="navigate" href="/page/2">2</a>
+            <a class="btn" data-action="navigate" href="/page/2">⟩</a>
+            <a class="btn" data-action="navigate" href="/page/2">⟫</a>
+            </nav>
+            HTML,
+            $html,
+        );
+    }
+
     public function testDisabledLinkClass(): void
     {
         $html = $this
@@ -497,6 +520,32 @@ final class OffsetPaginationTest extends TestCase
             <a class="btn btn-primary" href="/page/5">5</a>
             <a class="btn btn-primary" href="/page/2">⟩</a>
             <a class="btn btn-primary" href="/page/5">⟫</a>
+            </nav>
+            HTML,
+            $html,
+        );
+    }
+
+    public function testDisabledLinkAttributes(): void
+    {
+        $html = $this
+            ->createPagination(5)
+            ->linkAttributes(['class' => 'btn', 'data-action' => 'navigate'])
+            ->disabledLinkAttributes(['class' => 'disabled', 'aria-disabled' => 'true'])
+            ->render();
+
+        $this->assertSame(
+            <<<HTML
+            <nav>
+            <span class="btn disabled" data-action="navigate" aria-disabled="true">⟪</span>
+            <span class="btn disabled" data-action="navigate" aria-disabled="true">⟨</span>
+            <a class="btn" data-action="navigate" href="/">1</a>
+            <a class="btn" data-action="navigate" href="/page/2">2</a>
+            <a class="btn" data-action="navigate" href="/page/3">3</a>
+            <a class="btn" data-action="navigate" href="/page/4">4</a>
+            <a class="btn" data-action="navigate" href="/page/5">5</a>
+            <a class="btn" data-action="navigate" href="/page/2">⟩</a>
+            <a class="btn" data-action="navigate" href="/page/5">⟫</a>
             </nav>
             HTML,
             $html,
@@ -641,7 +690,9 @@ final class OffsetPaginationTest extends TestCase
         $this->assertNotSame($widget, $widget->addLinkAttributes([]));
         $this->assertNotSame($widget, $widget->linkClass('btn'));
         $this->assertNotSame($widget, $widget->addLinkClass('btn-primary'));
+        $this->assertNotSame($widget, $widget->currentLinkAttributes([]));
         $this->assertNotSame($widget, $widget->currentLinkClass('current'));
+        $this->assertNotSame($widget, $widget->disabledLinkAttributes([]));
         $this->assertNotSame($widget, $widget->disabledLinkClass('disabled'));
         $this->assertNotSame($widget, $widget->labelPrevious('Prev'));
         $this->assertNotSame($widget, $widget->labelNext('Next'));
