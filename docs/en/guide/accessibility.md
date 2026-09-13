@@ -214,8 +214,23 @@ echo GridView::widget()
     ]);
 ```
 
-An `aria-label` already present in `containerAttributes()` (for the `nav`) or `linkAttributes()` (for the
-links) is kept as is and takes precedence over these methods.
+An `aria-label` set through an attribute bag always takes precedence over these methods: `containerAttributes()`
+for the `nav`, and `linkAttributes()` for the links. Because `disabledLinkAttributes()` and (in
+`OffsetPagination`) `currentLinkAttributes()` are layered on top of `linkAttributes()`, an `aria-label` set there
+wins as well — but only for the disabled controls and the current page link respectively, which makes it the way
+to give those a text of their own:
+
+```php
+use Yiisoft\Yii\DataView\GridView\GridView;
+
+echo GridView::widget()
+    ->dataReader($paginator)
+    ->accessibility()
+    ->offsetPaginationConfig([
+        'currentLinkAttributes()' => [['aria-label' => 'Current page']],
+        'disabledLinkAttributes()' => [['aria-label' => null]],
+    ]);
+```
 
 ### Recommendations
 
