@@ -13,6 +13,7 @@ use Yiisoft\Html\Html;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\Widget\Widget;
 use Yiisoft\Yii\DataView\BaseListView;
+use Yiisoft\Yii\DataView\HtmlHelper;
 
 use function array_key_exists;
 
@@ -49,7 +50,7 @@ final class KeysetPagination extends Widget implements PaginationWidgetInterface
     private ?string $disabledItemClass = null;
 
     private array $linkAttributes = [];
-    private ?string $disabledLinkClass = null;
+    private array $disabledLinkAttributes = [];
 
     private string|Stringable $labelPrevious = '⟨';
     private string|Stringable $labelNext = '⟩';
@@ -288,6 +289,20 @@ final class KeysetPagination extends Widget implements PaginationWidgetInterface
     }
 
     /**
+     * Sets HTML attributes for a disabled "previous"/"next" control, layered on top of {@see linkAttributes()}.
+     *
+     * @param array $attributes HTML attributes for the `span` element of a disabled control.
+     *
+     * @return self New instance with the specified disabled link attributes.
+     */
+    public function disabledLinkAttributes(array $attributes): self
+    {
+        $new = clone $this;
+        $new->disabledLinkAttributes = $attributes;
+        return $new;
+    }
+
+    /**
      * Sets the CSS class for a disabled "previous"/"next" control.
      *
      * A disabled control ("previous" on the first page, "next" on the last page) is rendered as a `span` element.
@@ -299,7 +314,8 @@ final class KeysetPagination extends Widget implements PaginationWidgetInterface
     public function disabledLinkClass(?string $class): self
     {
         $new = clone $this;
-        $new->disabledLinkClass = $class;
+        $new->disabledLinkAttributes['class'] = [];
+        Html::addCssClass($new->disabledLinkAttributes, $class);
         return $new;
     }
 
@@ -465,6 +481,7 @@ final class KeysetPagination extends Widget implements PaginationWidgetInterface
             $linkAttributes['aria-label'] = $context->translate($ariaLabel);
         }
         if ($isDisabled) {
+            $linkAttributes = HtmlHelper::mergeAttributes($linkAttributes, $this->disabledLinkAttributes);
             if ($accessibility) {
                 if (!array_key_exists('role', $linkAttributes)) {
                     $linkAttributes['role'] = 'link';
@@ -473,7 +490,6 @@ final class KeysetPagination extends Widget implements PaginationWidgetInterface
                     $linkAttributes['aria-disabled'] = 'true';
                 }
             }
-            Html::addCssClass($linkAttributes, $this->disabledLinkClass);
         }
         $element = $isDisabled
             ? Html::span($label, $linkAttributes)

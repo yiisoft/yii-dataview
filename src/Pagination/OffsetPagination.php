@@ -14,6 +14,7 @@ use Yiisoft\Html\Html;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\Widget\Widget;
 use Yiisoft\Yii\DataView\BaseListView;
+use Yiisoft\Yii\DataView\HtmlHelper;
 
 use function array_key_exists;
 use function max;
@@ -53,8 +54,8 @@ final class OffsetPagination extends Widget implements PaginationWidgetInterface
     private ?string $disabledItemClass = null;
 
     private array $linkAttributes = [];
-    private ?string $currentLinkClass = null;
-    private ?string $disabledLinkClass = null;
+    private array $currentLinkAttributes = [];
+    private array $disabledLinkAttributes = [];
 
     private string|Stringable|null $labelPrevious = '⟨';
     private string|Stringable|null $labelNext = '⟩';
@@ -249,10 +250,35 @@ final class OffsetPagination extends Widget implements PaginationWidgetInterface
         return $new;
     }
 
+    /**
+     * Sets HTML attributes for the current page link, layered on top of {@see linkAttributes()}.
+     *
+     * @param array $attributes HTML attributes for the current page link.
+     */
+    public function currentLinkAttributes(array $attributes): self
+    {
+        $new = clone $this;
+        $new->currentLinkAttributes = $attributes;
+        return $new;
+    }
+
     public function currentLinkClass(?string $class): self
     {
         $new = clone $this;
-        $new->currentLinkClass = $class;
+        $new->currentLinkAttributes['class'] = [];
+        Html::addCssClass($new->currentLinkAttributes, $class);
+        return $new;
+    }
+
+    /**
+     * Sets HTML attributes for a disabled control, layered on top of {@see linkAttributes()}.
+     *
+     * @param array $attributes HTML attributes for the `span` element of a disabled control.
+     */
+    public function disabledLinkAttributes(array $attributes): self
+    {
+        $new = clone $this;
+        $new->disabledLinkAttributes = $attributes;
         return $new;
     }
 
@@ -264,7 +290,8 @@ final class OffsetPagination extends Widget implements PaginationWidgetInterface
     public function disabledLinkClass(?string $class): self
     {
         $new = clone $this;
-        $new->disabledLinkClass = $class;
+        $new->disabledLinkAttributes['class'] = [];
+        Html::addCssClass($new->disabledLinkAttributes, $class);
         return $new;
     }
 
@@ -542,6 +569,7 @@ final class OffsetPagination extends Widget implements PaginationWidgetInterface
             $linkAttributes['aria-label'] = $context->translate($ariaLabel, $ariaLabelParameters);
         }
         if ($isDisabled) {
+            $linkAttributes = HtmlHelper::mergeAttributes($linkAttributes, $this->disabledLinkAttributes);
             if ($accessibility) {
                 if (!array_key_exists('role', $linkAttributes)) {
                     $linkAttributes['role'] = 'link';
@@ -550,13 +578,12 @@ final class OffsetPagination extends Widget implements PaginationWidgetInterface
                     $linkAttributes['aria-disabled'] = 'true';
                 }
             }
-            Html::addCssClass($linkAttributes, $this->disabledLinkClass);
         }
         if ($isCurrent) {
+            $linkAttributes = HtmlHelper::mergeAttributes($linkAttributes, $this->currentLinkAttributes);
             if ($accessibility && !array_key_exists('aria-current', $linkAttributes)) {
                 $linkAttributes['aria-current'] = 'page';
             }
-            Html::addCssClass($linkAttributes, $this->currentLinkClass);
         }
         $element = $isDisabled
             ? Html::span($label, $linkAttributes)
