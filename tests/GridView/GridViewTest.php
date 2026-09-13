@@ -963,6 +963,35 @@ final class GridViewTest extends TestCase
         );
     }
 
+    public function testAriaSortReportsDirectionOnlyForPrimaryPropertyOfMultiSort(): void
+    {
+        $dataReader = (new IterableDataReader([['id' => 1, 'name' => 'John', 'age' => 20]]))
+            ->withSort(Sort::any(['id', 'name', 'age'])->withOrderString('id,-name'));
+
+        $html = $this->createGridView($dataReader)
+            ->accessibility()
+            ->multiSort()
+            ->columns(
+                new DataColumn('id'),
+                new DataColumn('name'),
+                new DataColumn('age'),
+            )
+            ->render();
+
+        $this->assertStringContainsString(
+            <<<HTML
+            <thead>
+            <tr>
+            <th scope="col" aria-sort="ascending"><a href="#">Id</a></th>
+            <th scope="col" aria-sort="none"><a href="#">Name</a></th>
+            <th scope="col" aria-sort="none"><a href="#">Age</a></th>
+            </tr>
+            </thead>
+            HTML,
+            $html,
+        );
+    }
+
     public function testAriaSortIsNotAddedToNonSortableColumn(): void
     {
         $dataReader = (new IterableDataReader([['id' => 1, 'name' => 'John']]))

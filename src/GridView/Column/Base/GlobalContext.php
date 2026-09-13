@@ -16,6 +16,7 @@ use Yiisoft\Yii\DataView\Url\UrlConfig;
 use Yiisoft\Yii\DataView\Url\UrlParametersFactory;
 
 use function array_key_exists;
+use function array_key_first;
 use function call_user_func_array;
 use function count;
 use function in_array;
@@ -123,7 +124,8 @@ final class GlobalContext
         }
 
         $linkAttributes = $this->sortableLinkAttributes;
-        $propertyOrder = $this->sort->getOrder()[$property] ?? null;
+        $order = $this->sort->getOrder();
+        $propertyOrder = $order[$property] ?? null;
         if ($propertyOrder === null) {
             $cell = $cell->addClass($this->sortableHeaderClass);
             $prepend = $this->sortableHeaderPrepend;
@@ -139,7 +141,11 @@ final class GlobalContext
                 $linkAttributes,
                 $propertyOrder === 'asc' ? $this->sortableLinkAscClass : $this->sortableLinkDescClass,
             );
-            $ariaSort = $propertyOrder === 'asc' ? 'ascending' : 'descending';
+            // ARIA asks for `aria-sort` on only one header at a time, so under multi-sorting only the primary sort
+            // property reports a direction; the secondary ones are reported as `none`.
+            $ariaSort = array_key_first($order) === $property
+                ? ($propertyOrder === 'asc' ? 'ascending' : 'descending')
+                : 'none';
         }
 
         if ($this->accessibility && !array_key_exists('aria-sort', $cell->getAttributes())) {

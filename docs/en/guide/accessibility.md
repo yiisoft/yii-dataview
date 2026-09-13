@@ -31,7 +31,9 @@ users navigate it by row and column.
 - Every header cell is a `<th>` element carrying `scope="col"`, so screen readers announce the corresponding column
   header when the user moves through the body cells.
 - Every sortable header cell carries an `aria-sort` attribute reflecting the current sort state: `ascending` or
-  `descending` on the column that is sorted, and `none` on the other sortable columns.
+  `descending` on the column that is sorted, and `none` on the other sortable columns. ARIA asks for `aria-sort`
+  on only one header at a time, so under [multi-sorting](gridview.md#sorting) only the primary sort property
+  reports a direction — the secondary ones are reported as `none` like any unsorted column.
 
 ### Overriding or removing `scope="col"`
 
