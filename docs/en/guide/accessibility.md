@@ -181,7 +181,10 @@ the widgets emit the English defaults unless a translator is passed — either a
 ### Overriding or removing the attributes
 
 `aria-current`, `aria-disabled` and `role` are default values applied only when the key is not already present
-in `linkAttributes()`. Set the key there to change the value, or pass `false` / `null` to drop it:
+in the matching attribute bag: `currentLinkAttributes()` for `aria-current` (`OffsetPagination` only), and
+`disabledLinkAttributes()` for `aria-disabled` and `role`. Both bags are layered on top of `linkAttributes()`,
+so setting the key there instead would apply it to every link rather than just the current or disabled one.
+Set the key in the matching bag to change the value, or pass `false` / `null` to drop it:
 
 ```php
 use Yiisoft\Yii\DataView\GridView\GridView;
@@ -190,7 +193,7 @@ echo GridView::widget()
     ->dataReader($paginator)
     ->accessibility()
     ->offsetPaginationConfig([
-        'linkAttributes()' => [['aria-disabled' => false]],
+        'disabledLinkAttributes()' => [['aria-disabled' => false]],
     ]);
 ```
 
