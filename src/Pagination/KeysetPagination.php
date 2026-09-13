@@ -471,25 +471,20 @@ final class KeysetPagination extends Widget implements PaginationWidgetInterface
     ): Stringable {
         $isDisabled = $url === null;
         $context = $this->getContext();
-        $accessibility = $context->accessibility;
         $linkAttributes = $this->linkAttributes;
-        if (
-            $accessibility
-            && $ariaLabel !== null
-            && !array_key_exists('aria-label', $linkAttributes)
-        ) {
-            $linkAttributes['aria-label'] = $context->translate($ariaLabel);
-        }
         if ($isDisabled) {
             $linkAttributes = HtmlHelper::mergeAttributes($linkAttributes, $this->disabledLinkAttributes);
-            if ($accessibility) {
-                if (!array_key_exists('role', $linkAttributes)) {
-                    $linkAttributes['role'] = 'link';
-                }
-                if (!array_key_exists('aria-disabled', $linkAttributes)) {
-                    $linkAttributes['aria-disabled'] = 'true';
-                }
+        }
+        if ($context->accessibility) {
+            $defaults = [];
+            if ($ariaLabel !== null && !array_key_exists('aria-label', $linkAttributes)) {
+                $defaults['aria-label'] = $context->translate($ariaLabel);
             }
+            if ($isDisabled) {
+                $defaults['role'] = 'link';
+                $defaults['aria-disabled'] = 'true';
+            }
+            $linkAttributes = array_merge($defaults, $linkAttributes);
         }
         $element = $isDisabled
             ? Html::span($label, $linkAttributes)
