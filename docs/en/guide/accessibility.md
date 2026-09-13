@@ -30,10 +30,10 @@ users navigate it by row and column.
 
 - Every header cell is a `<th>` element carrying `scope="col"`, so screen readers announce the corresponding column
   header when the user moves through the body cells.
-- Every sortable header cell carries an `aria-sort` attribute reflecting the current sort state: `ascending` or
-  `descending` on the column that is sorted, and `none` on the other sortable columns. ARIA asks for `aria-sort`
-  on only one header at a time, so under [multi-sorting](gridview.md#sorting) only the primary sort property
-  reports a direction — the secondary ones are reported as `none` like any unsorted column.
+- The header cell of the sorted column carries an `aria-sort` attribute of `ascending` or `descending`. ARIA asks
+  for it on only one header at a time, so no other header gets it — neither an unsorted column nor, under
+  [multi-sorting](gridview.md#sorting), a secondary sort property. That a column can be sorted at all is conveyed
+  by the link inside its header, not by `aria-sort`.
 
 ### Overriding or removing `scope="col"`
 
@@ -123,8 +123,9 @@ row header one, so this is not an option when different columns need a different
 
 ### Overriding `aria-sort`
 
-The automatically added `aria-sort` value is only used when the header cell does not already have the attribute. To
-change or remove it for a column, set `aria-sort` in the column's `headerAttributes`:
+The automatically added `aria-sort` value is only used when the header cell does not already have the attribute.
+Set `aria-sort` in the column's `headerAttributes` to change it, to remove it with `null`, or to put it on a
+header that would not get it on its own:
 
 ```php
 use Yiisoft\Yii\DataView\GridView\GridView;

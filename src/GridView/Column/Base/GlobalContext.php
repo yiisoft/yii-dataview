@@ -53,7 +53,7 @@ final class GlobalContext
      * @param UrlCreator|null $urlCreator Callback for creating sort URLs.
      * @param TranslatorInterface $translator Translator service for header content.
      * @param string $translationCategory Category for header translations.
-     * @param bool $accessibility Whether to add the `aria-sort` accessibility attribute to sortable header cells.
+     * @param bool $accessibility Whether to add the `aria-sort` accessibility attribute to the sorted header cell.
      *
      * @internal
      *
@@ -130,7 +130,7 @@ final class GlobalContext
             $cell = $cell->addClass($this->sortableHeaderClass);
             $prepend = $this->sortableHeaderPrepend;
             $append = $this->sortableHeaderAppend;
-            $ariaSort = 'none';
+            $ariaSort = null;
         } else {
             $cell = $cell->addClass(
                 $propertyOrder === 'asc' ? $this->sortableHeaderAscClass : $this->sortableHeaderDescClass,
@@ -142,13 +142,13 @@ final class GlobalContext
                 $propertyOrder === 'asc' ? $this->sortableLinkAscClass : $this->sortableLinkDescClass,
             );
             // ARIA asks for `aria-sort` on only one header at a time, so under multi-sorting only the primary sort
-            // property reports a direction; the secondary ones are reported as `none`.
+            // property carries it; the secondary ones are left without the attribute.
             $ariaSort = array_key_first($order) === $property
                 ? ($propertyOrder === 'asc' ? 'ascending' : 'descending')
-                : 'none';
+                : null;
         }
 
-        if ($this->accessibility && !array_key_exists('aria-sort', $cell->getAttributes())) {
+        if ($this->accessibility && $ariaSort !== null && !array_key_exists('aria-sort', $cell->getAttributes())) {
             $cell = $cell->attribute('aria-sort', $ariaSort);
         }
         $url = $this->urlCreator === null ? '#' : call_user_func_array(

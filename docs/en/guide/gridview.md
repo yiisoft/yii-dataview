@@ -704,7 +704,7 @@ echo GridView::widget()
 ## Accessibility
 
 `GridView` renders semantic table markup always, and — when `accessibility()` is enabled — adds `scope="col"` /
-`scope="row"` attributes and sets `aria-sort` on sortable header cells. See the
+`scope="row"` attributes and sets `aria-sort` on the sorted column's header cell. See the
 [Accessibility](accessibility.md#gridview) guide for the full list and for how to override or remove each attribute.
 
 ## Row Customization

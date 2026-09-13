@@ -889,7 +889,7 @@ final class GridViewTest extends TestCase
             <<<HTML
             <thead>
             <tr>
-            <th scope="col" aria-sort="none"><a href="#">Name</a></th>
+            <th scope="col"><a href="#">Name</a></th>
             <th scope="col" aria-sort="ascending"><a href="#">Id</a></th>
             </tr>
             </thead>
@@ -954,7 +954,7 @@ final class GridViewTest extends TestCase
             <<<HTML
             <thead>
             <tr>
-            <th scope="col" aria-sort="none"><a href="#">Name</a></th>
+            <th scope="col"><a href="#">Name</a></th>
             <th scope="col" aria-sort="descending"><a href="#">Id</a></th>
             </tr>
             </thead>
@@ -983,8 +983,8 @@ final class GridViewTest extends TestCase
             <thead>
             <tr>
             <th scope="col" aria-sort="ascending"><a href="#">Id</a></th>
-            <th scope="col" aria-sort="none"><a href="#">Name</a></th>
-            <th scope="col" aria-sort="none"><a href="#">Age</a></th>
+            <th scope="col"><a href="#">Name</a></th>
+            <th scope="col"><a href="#">Age</a></th>
             </tr>
             </thead>
             HTML,
