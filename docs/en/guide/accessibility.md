@@ -144,8 +144,9 @@ echo GridView::widget()
   several tables on a page apart.
 - Provide meaningful header text for every column. When a `DataColumn` has no `header`, the property name is used as
   a fallback, which is rarely a good label.
-- You can give the sort links a clearer action label with `sortableLinkAttributes(['aria-label' => 'Sort'])`.
-  Mind that it applies to the sort links of every sortable column, so the text has to stay column-agnostic.
+- Leave the sort links' accessible name to the column header they wrap. An `aria-label` set through
+  `sortableLinkAttributes()` replaces the name of every sort link with the same text, making them
+  indistinguishable. To mark a column as sortable, use `sortableHeaderPrepend()` or `sortableHeaderAppend()`.
 
 ## Pagination
 
