@@ -149,8 +149,8 @@ echo GridView::widget()
 
 ## Pagination
 
-Both pagination widgets (`OffsetPagination` and `KeysetPagination`) render an HTML `nav` landmark with a list of
-links, so assistive technologies can announce and navigate the control.
+Both pagination widgets (`OffsetPagination` and `KeysetPagination`) render their controls inside an HTML `nav`
+landmark, so assistive technologies can announce and navigate it.
 
 ### What the widgets add with `accessibility()` enabled
 
@@ -236,6 +236,9 @@ echo GridView::widget()
 
 ### Recommendations
 
+- Consider wrapping the controls in list markup with `listTag('ul')` and `itemTag('li')`. Neither is set by
+  default, so the links sit directly inside the `nav`; a list lets assistive technologies announce how many
+  controls the pagination has and which one the user is on.
 - Give every pagination on a page its own `nav` label. The default `Pagination` is the same for every widget,
   so two data views on one page produce two identically named navigation landmarks, which assistive
   technologies cannot tell apart. Set a distinct `ariaLabelNav()` for each of them:
