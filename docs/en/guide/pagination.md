@@ -70,6 +70,10 @@ Link attributes:
   existing classes.
 - `addLinkClass(BackedEnum|string|null ...$class)` - Add CSS classes to each link (or the disabled `<span>`) without
   removing existing ones.
+- `currentLinkAttributes(array $attributes)` - Set HTML attributes for the current page link, layered on top of
+  `linkAttributes()`.
+- `disabledLinkAttributes(array $attributes)` - Set HTML attributes for the `<span>` tag of a disabled control,
+  layered on top of `linkAttributes()`.
 
 HTML structure:
 
@@ -163,6 +167,8 @@ Link attributes:
   existing classes.
 - `addLinkClass(BackedEnum|string|null ...$class)` - Add CSS classes to each link (or the disabled `<span>`) without
   removing existing ones.
+- `disabledLinkAttributes(array $attributes)` - Set HTML attributes for the `<span>` tag of a disabled control,
+  layered on top of `linkAttributes()`.
 
 HTML structure:
 
