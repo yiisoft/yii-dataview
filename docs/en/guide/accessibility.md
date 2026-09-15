@@ -1,0 +1,276 @@
+# Accessibility
+
+This guide collects the accessibility behavior of the data view widgets: what they can add for assistive
+technologies (screen readers, braille displays, voice control), how to override it, and what you still need
+to provide yourself.
+
+## Enabling the automatic attributes
+
+`GridView` and `ListView` do not add accessibility attributes by default. Call `accessibility()` to opt in —
+rendering then adds `scope="col"` and `aria-sort` on header cells, `scope="row"` on row header cells, and
+`aria-current`, `aria-disabled`, `aria-label` and `role="link"` on pagination links:
+
+```php
+use Yiisoft\Yii\DataView\GridView\GridView;
+
+echo GridView::widget()
+    ->dataReader($dataReader)
+    ->accessibility();
+```
+
+Pass `accessibility(false)` to turn it back off. The rest of this guide describes what the option adds and
+how to fine-tune the individual attributes; all of it applies only when `accessibility()` is enabled.
+
+## GridView
+
+`GridView` renders a semantic HTML table so assistive technologies can announce it as a table and let
+users navigate it by row and column.
+
+### What `GridView` adds with `accessibility()` enabled
+
+- Every header cell is a `<th>` element carrying `scope="col"`, so screen readers announce the corresponding column
+  header when the user moves through the body cells.
+- The header cell of the sorted column carries an `aria-sort` attribute of `ascending` or `descending`. ARIA asks
+  for it on only one header at a time, so no other header gets it — neither an unsorted column nor, under
+  [multi-sorting](gridview.md#sorting), a secondary sort property. That a column can be sorted at all is conveyed
+  by the link inside its header, not by `aria-sort`.
+
+### Overriding or removing `scope="col"`
+
+The `scope="col"` attribute is a default value that can be overridden or removed through the regular header cell
+attribute methods. Pass `['scope' => null]` to drop it, or another value (for example `'colgroup'`) to change it:
+
+```php
+use Yiisoft\Yii\DataView\GridView\GridView;
+use Yiisoft\Yii\DataView\GridView\Column\DataColumn;
+
+echo GridView::widget()
+    ->dataReader($dataReader)
+    ->accessibility()
+    // For all header cells:
+    ->headerCellAttributes(['scope' => null])
+    ->columns(
+        // ...or for a single column:
+        new DataColumn(property: 'name', headerAttributes: ['scope' => 'colgroup']),
+    );
+```
+
+A column that renders no header content is no exception: it renders as `<th scope="col">` around a `&nbsp;`
+placeholder, so the header row stays structurally uniform and assistive technologies do not have to guess the scope
+of a `<th>` that carries none. Such a cell keeps the header cell attributes of both the grid and the column, so
+`scope` is overridden or removed there the same way:
+
+```php
+use Yiisoft\Yii\DataView\GridView\GridView;
+use Yiisoft\Yii\DataView\GridView\Column\CheckboxColumn;
+
+echo GridView::widget()
+    ->dataReader($dataReader)
+    ->accessibility()
+    ->columns(
+        new CheckboxColumn(headerAttributes: ['scope' => null], multiple: false),
+    );
+```
+
+### Row headers
+
+When one column identifies each row (a name, a title, an ID), mark it as a row header with the `DataColumn`
+`rowHeader` parameter. Its body cells are then rendered as `<th>` instead of `<td>`, and with `accessibility()`
+enabled they also carry `scope="row"`, so screen readers announce that value together with the column header when
+the user moves across the row.
+
+```php
+use Yiisoft\Yii\DataView\GridView\GridView;
+use Yiisoft\Yii\DataView\GridView\Column\DataColumn;
+
+echo GridView::widget()
+    ->dataReader($dataReader)
+    ->accessibility()
+    ->columns(
+        new DataColumn(property: 'name', rowHeader: true),
+        new DataColumn(property: 'email'),
+        new DataColumn(property: 'createdAt'),
+    );
+```
+
+The `scope="row"` attribute is a default value. Change or remove it through the column's `bodyAttributes`, for
+example `bodyAttributes: ['scope' => 'rowgroup']` or `bodyAttributes: ['scope' => null]`.
+
+An empty cell is no exception: it renders as `<th scope="row">` around the `emptyCell()` placeholder, so a row
+stays structurally uniform and assistive technologies do not have to guess the scope of a `<th>` that carries none.
+This is independent of `keepColumnAttributesInEmptyCell()` — that method controls whether the column's own body
+cell attributes are kept on the placeholder cell, and a `scope` you set explicitly through `bodyAttributes`
+overrides the generated one there too when it is enabled.
+
+To change or remove `scope` on the placeholder cell without enabling `keepColumnAttributesInEmptyCell()`, set it
+through `GridView::emptyCellAttributes()` instead — it applies to the placeholder regardless of that flag:
+
+```php
+use Yiisoft\Yii\DataView\GridView\GridView;
+use Yiisoft\Yii\DataView\GridView\Column\DataColumn;
+
+echo GridView::widget()
+    ->dataReader($dataReader)
+    ->accessibility()
+    ->emptyCellAttributes(['scope' => null])
+    ->columns(
+        new DataColumn(property: 'name', rowHeader: true),
+    );
+```
+
+Mind that `emptyCellAttributes()` is grid-wide: it applies to the empty placeholder of every column, not just the
+row header one, so this is not an option when different columns need a different `scope` on their empty cells.
+
+### Overriding `aria-sort`
+
+The automatically added `aria-sort` value is only used when the header cell does not already have the attribute.
+Set `aria-sort` in the column's `headerAttributes` to change it, to remove it with `null`, or to put it on a
+header that would not get it on its own:
+
+```php
+use Yiisoft\Yii\DataView\GridView\GridView;
+use Yiisoft\Yii\DataView\GridView\Column\DataColumn;
+
+echo GridView::widget()
+    ->dataReader($dataReader)
+    ->accessibility()
+    ->columns(
+        new DataColumn(property: 'name', headerAttributes: ['aria-sort' => 'other']),
+    );
+```
+
+### Recommendations
+
+- Give the table an accessible name with `caption()`. It is exposed to assistive technologies and helps users tell
+  several tables on a page apart.
+- Provide meaningful header text for every column. When a `DataColumn` has no `header`, the property name is used as
+  a fallback, which is rarely a good label.
+- Leave the sort links' accessible name to the column header they wrap. An `aria-label` set through
+  `sortableLinkAttributes()` replaces the name of every sort link with the same text, making them
+  indistinguishable. To mark a column as sortable, use `sortableHeaderPrepend()` or `sortableHeaderAppend()`.
+
+## Pagination
+
+Both pagination widgets (`OffsetPagination` and `KeysetPagination`) render their controls inside an HTML `nav`
+landmark, so assistive technologies can announce and navigate it.
+
+### What the widgets add with `accessibility()` enabled
+
+When driven by `GridView`/`ListView`, the pagination widgets follow the view's `accessibility()` setting. Used
+directly, they take the flag from `PaginationContext` (also exposed as the `$accessibility` argument of
+`OffsetPagination::create()` and `KeysetPagination::create()`).
+
+- `OffsetPagination` adds `aria-current="page"` to the `<a>` element of the current page, so screen
+  readers announce which page is active.
+- Both widgets add `aria-disabled="true"` to links that are currently not actionable: the "previous" link on
+  the first page and the "next" link on the last page, and — in `OffsetPagination`, the only widget that has
+  them — the "first" link on the first page and the "last" link on the last page.
+- Such a non-actionable control is rendered as a `span` rather than an `a`, so both widgets also give it
+  `role="link"`. Without the role it would be announced as plain text, and the `aria-disabled` state would have
+  nothing to apply to; with it, assistive technologies announce a disabled link.
+- Both widgets add an `aria-label` to the `nav` container, so the landmark is announced as a pagination
+  control rather than as an unnamed navigation region, and to every page link, so the purpose of a link whose
+  visible content is a bare glyph or a bare number is announced. The default texts are: `Pagination` on the
+  `nav`; `First page`, `Previous page`, `Next page`, `Last page` on the corresponding links; and `Page {page}`
+  (with the number substituted for `{page}`) on the numbered links of `OffsetPagination`.
+
+### Translating the `aria-label` texts
+
+When the pagination is rendered through `GridView`/`ListView`, the `aria-label` texts are passed through the
+view's translator using the `yii-dataview` category, so a translation supplied for `First page`,
+`Previous page`, `Next page`, `Last page`, `Page {page}` or `Pagination` is used automatically. Used directly,
+the widgets emit the English defaults unless a translator is passed — either as the `$translator` argument of
+`OffsetPagination::create()` / `KeysetPagination::create()`, or through a custom `PaginationContext`.
+
+### Overriding or removing the attributes
+
+`aria-current`, `aria-disabled` and `role` are default values applied only when the key is not already present
+in the matching attribute bag: `currentLinkAttributes()` for `aria-current` (`OffsetPagination` only), and
+`disabledLinkAttributes()` for `aria-disabled` and `role`. Both bags are layered on top of `linkAttributes()`,
+so setting the key there instead would apply it to every link rather than just the current or disabled one.
+Set the key in the matching bag to change the value, or pass `false` / `null` to drop it:
+
+```php
+use Yiisoft\Yii\DataView\GridView\GridView;
+
+echo GridView::widget()
+    ->dataReader($paginator)
+    ->accessibility()
+    ->offsetPaginationConfig([
+        'disabledLinkAttributes()' => [['aria-disabled' => false]],
+    ]);
+```
+
+The `nav` and link `aria-label` texts are configured with dedicated methods — `ariaLabelNav()`,
+`ariaLabelFirst()`, `ariaLabelPrevious()`, `ariaLabelNext()`, `ariaLabelLast()` and `ariaLabelPage()` on
+`OffsetPagination` (`KeysetPagination` has `ariaLabelNav()`, `ariaLabelPrevious()` and `ariaLabelNext()`).
+Pass a string to change the text, or `null` to omit that `aria-label`:
+
+```php
+use Yiisoft\Yii\DataView\GridView\GridView;
+
+echo GridView::widget()
+    ->dataReader($paginator)
+    ->accessibility()
+    ->offsetPaginationConfig([
+        'ariaLabelPage()' => ['Go to page {page}'],
+        'ariaLabelNav()' => [null],
+    ]);
+```
+
+An `aria-label` set through an attribute bag always takes precedence over these methods: `containerAttributes()`
+for the `nav`, and `linkAttributes()` for the links. Because `disabledLinkAttributes()` and (in
+`OffsetPagination`) `currentLinkAttributes()` are layered on top of `linkAttributes()`, an `aria-label` set there
+wins as well — but only for the disabled controls and the current page link respectively, which makes it the way
+to give those a text of their own:
+
+```php
+use Yiisoft\Yii\DataView\GridView\GridView;
+
+echo GridView::widget()
+    ->dataReader($paginator)
+    ->accessibility()
+    ->offsetPaginationConfig([
+        'currentLinkAttributes()' => [['aria-label' => 'Current page']],
+        'disabledLinkAttributes()' => [['aria-label' => null]],
+    ]);
+```
+
+### Recommendations
+
+- Consider wrapping the controls in list markup with `listTag('ul')` and `itemTag('li')`. Neither is set by
+  default, so the links sit directly inside the `nav`; a list lets assistive technologies announce how many
+  controls the pagination has and which one the user is on.
+- Give every pagination on a page its own `nav` label. The default `Pagination` is the same for every widget,
+  so two data views on one page produce two identically named navigation landmarks, which assistive
+  technologies cannot tell apart. Set a distinct `ariaLabelNav()` for each of them:
+
+  ```php
+  use Yiisoft\Yii\DataView\GridView\GridView;
+
+  echo GridView::widget()
+      ->dataReader($paginator)
+      ->accessibility()
+      ->offsetPaginationConfig([
+          'ariaLabelNav()' => ['Orders pagination'],
+      ]);
+  ```
+
+- Keep the `aria-label` texts consistent with the visible labels. The default labels are bare glyphs, so the
+  `aria-label` is the only name a control has. Once `labelFirst()`, `labelPrevious()`, `labelNext()` or
+  `labelLast()` is changed to visible text, that text must also appear in the `aria-label` — otherwise speech
+  input users cannot activate the control by saying what they see, which violates WCAG 2.5.3 "Label in Name".
+  A visible `Forward` combined with the default `Next page` label is exactly such a mismatch, so change the
+  matching `ariaLabel*()` method along with the label:
+
+  ```php
+  use Yiisoft\Yii\DataView\GridView\GridView;
+
+  echo GridView::widget()
+      ->dataReader($paginator)
+      ->accessibility()
+      ->offsetPaginationConfig([
+          'labelNext()' => ['Forward'],
+          'ariaLabelNext()' => ['Forward to the next page'],
+      ]);
+  ```

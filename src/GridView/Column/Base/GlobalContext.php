@@ -15,6 +15,8 @@ use Yiisoft\Yii\DataView\BaseListView;
 use Yiisoft\Yii\DataView\Url\UrlConfig;
 use Yiisoft\Yii\DataView\Url\UrlParametersFactory;
 
+use function array_key_exists;
+use function array_key_first;
 use function call_user_func_array;
 use function count;
 use function in_array;
@@ -51,6 +53,7 @@ final class GlobalContext
      * @param UrlCreator|null $urlCreator Callback for creating sort URLs.
      * @param TranslatorInterface $translator Translator service for header content.
      * @param string $translationCategory Category for header translations.
+     * @param bool $accessibility Whether to add the `aria-sort` accessibility attribute to the sorted header cell.
      *
      * @internal
      *
@@ -80,6 +83,7 @@ final class GlobalContext
         private $urlCreator,
         private readonly TranslatorInterface $translator,
         private readonly string $translationCategory,
+        private readonly bool $accessibility = false,
     ) {}
 
     /**
@@ -95,7 +99,7 @@ final class GlobalContext
     }
 
     /**
-     * Prepare a sortable header cell with appropriate styling and links.
+     * Prepare a sortable header cell with appropriate styling, links and the `aria-sort` accessibility attribute.
      *
      * @param Cell $cell The header cell to prepare.
      * @param string $property The property name for sorting.
@@ -120,11 +124,13 @@ final class GlobalContext
         }
 
         $linkAttributes = $this->sortableLinkAttributes;
-        $propertyOrder = $this->sort->getOrder()[$property] ?? null;
+        $order = $this->sort->getOrder();
+        $propertyOrder = $order[$property] ?? null;
         if ($propertyOrder === null) {
             $cell = $cell->addClass($this->sortableHeaderClass);
             $prepend = $this->sortableHeaderPrepend;
             $append = $this->sortableHeaderAppend;
+            $ariaSort = null;
         } else {
             $cell = $cell->addClass(
                 $propertyOrder === 'asc' ? $this->sortableHeaderAscClass : $this->sortableHeaderDescClass,
@@ -135,6 +141,15 @@ final class GlobalContext
                 $linkAttributes,
                 $propertyOrder === 'asc' ? $this->sortableLinkAscClass : $this->sortableLinkDescClass,
             );
+            // ARIA asks for `aria-sort` on only one header at a time, so under multi-sorting only the primary sort
+            // property carries it; the secondary ones are left without the attribute.
+            $ariaSort = array_key_first($order) === $property
+                ? ($propertyOrder === 'asc' ? 'ascending' : 'descending')
+                : null;
+        }
+
+        if ($this->accessibility && $ariaSort !== null && !array_key_exists('aria-sort', $cell->getAttributes())) {
+            $cell = $cell->attribute('aria-sort', $ariaSort);
         }
         $url = $this->urlCreator === null ? '#' : call_user_func_array(
             $this->urlCreator,

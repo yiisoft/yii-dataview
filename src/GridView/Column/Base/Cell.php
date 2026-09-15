@@ -19,6 +19,11 @@ final class Cell
     private bool $doubleEncode = true;
 
     /**
+     * @var bool Whether to render the body cell as a row header (`th` tag instead of `td`).
+     */
+    private bool $rowHeader = false;
+
+    /**
      * @psalm-var array<array-key,string|Stringable>
      */
     private array $content;
@@ -75,6 +80,24 @@ final class Cell
     {
         $new = clone $this;
         $new->doubleEncode = $enabled;
+        return $new;
+    }
+
+    /**
+     * Set whether the body cell is a row header.
+     *
+     * When enabled, the cell is rendered with the `th` tag instead of `td`. This identifies a row for assistive
+     * technologies (`GridView` adds `scope="row"` to it when accessibility attributes are enabled). The flag is
+     * honored only for body cells; header, filter, and footer cells ignore it.
+     *
+     * @param bool $enabled Whether the body cell is a row header.
+     *
+     * @return self New instance with the updated row header setting.
+     */
+    public function rowHeader(bool $enabled = true): self
+    {
+        $new = clone $this;
+        $new->rowHeader = $enabled;
         return $new;
     }
 
@@ -195,6 +218,16 @@ final class Cell
     public function shouldDoubleEncode(): bool
     {
         return $this->doubleEncode;
+    }
+
+    /**
+     * Check whether the body cell is a row header.
+     *
+     * @return bool Whether the body cell is rendered with the `th` tag instead of `td`.
+     */
+    public function isRowHeader(): bool
+    {
+        return $this->rowHeader;
     }
 
     /**

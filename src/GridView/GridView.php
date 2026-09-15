@@ -720,6 +720,9 @@ final class GridView extends BaseListView
     /**
      * Return new instance with the HTML attributes for the `th` tag.
      *
+     * When accessibility attributes are enabled via {@see accessibility()}, header cells are rendered with
+     * `scope="col"`. Pass `['scope' => null]` to remove it, or another value to override it.
+     *
      * @param array $attributes The tag attributes in terms of name-value pairs.
      *
      * @return self New instance with the header cell attributes.
@@ -967,6 +970,7 @@ final class GridView extends BaseListView
             $this->urlCreator,
             $this->translator,
             $this->translationCategory,
+            $this->accessibility,
         );
 
         $tags = [];
@@ -1043,9 +1047,10 @@ final class GridView extends BaseListView
                  * so Psalm treats `$renderers[$i]` as possibly null.
                  */
                 $cell = $renderers[$i]->renderHeader($column, $headerCell, $globalContext) ?? $headerCell;
+                $cellAttributes = $this->addScopeAttribute($cell->getAttributes(), 'col');
                 $tags[] = $cell->isEmptyContent()
-                    ? Html::th('&nbsp;', $cell->getAttributes())->encode(false)
-                    : Html::th(attributes: $cell->getAttributes())
+                    ? Html::th('&nbsp;', $cellAttributes)->encode(false)
+                    : Html::th(attributes: $cellAttributes)
                         ->content(...$cell->getContent())
                         ->encode($cell->shouldEncode())
                         ->doubleEncode($cell->shouldDoubleEncode());
@@ -1092,15 +1097,22 @@ final class GridView extends BaseListView
             foreach ($columns as $i => $column) {
                 $context = new DataContext($preparedDataReader, $column, $value, $key, $index);
                 $cell = $renderers[$i]->renderBody($column, new Cell($this->bodyCellAttributes), $context);
-                $tags[] = $cell->isEmptyContent()
-                    ? Html::td(
-                        $this->emptyCell,
-                        $this->prepareEmptyBodyCellAttributes($cell->getAttributes(), $context),
-                    )->encode(false)
-                    : Html::td(attributes: $this->prepareBodyCellAttributes($cell->getAttributes(), $context))
+                if ($cell->isEmptyContent()) {
+                    $cellAttributes = $this->prepareEmptyBodyCellAttributes($cell->getAttributes(), $context);
+                    $tag = $cell->isRowHeader()
+                        ? Html::th($this->emptyCell, $this->addScopeAttribute($cellAttributes, 'row'))
+                        : Html::td($this->emptyCell, $cellAttributes);
+                    $tags[] = $tag->encode(false);
+                } else {
+                    $cellAttributes = $this->prepareBodyCellAttributes($cell->getAttributes(), $context);
+                    $tag = $cell->isRowHeader()
+                        ? Html::th(attributes: $this->addScopeAttribute($cellAttributes, 'row'))
+                        : Html::td(attributes: $cellAttributes);
+                    $tags[] = $tag
                         ->content(...$cell->getContent())
                         ->encode($cell->shouldEncode())
                         ->doubleEncode($cell->shouldDoubleEncode());
+                }
             }
             $bodyRowAttributes = $this->prepareBodyRowAttributes(
                 $this->bodyRowAttributes,
@@ -1283,6 +1295,20 @@ final class GridView extends BaseListView
         }
 
         return array_merge($attributes, $emptyCellAttributes);
+    }
+
+    /**
+     * Adds the generated `scope` attribute to a header or row header cell when accessibility attributes are
+     * enabled via {@see accessibility()}.
+     *
+     * @param array $attributes The prepared cell attributes.
+     * @param string $scope The `scope` value to generate.
+     *
+     * @return array The cell attributes with the generated `scope`.
+     */
+    private function addScopeAttribute(array $attributes, string $scope): array
+    {
+        return $this->accessibility ? array_merge(['scope' => $scope], $attributes) : $attributes;
     }
 
     /**

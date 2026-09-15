@@ -179,6 +179,14 @@ HTML structure:
 - `itemTag(?string $tag)` - Tag wrapping each link (or the disabled `<span>`). Default: `null`. Common value: `'li'`.
 - `itemAttributes(array $attributes)` - HTML attributes for item tags.
 
+## Accessibility
+
+Both pagination widgets render an HTML `nav` landmark, and — when accessibility is enabled (via the view's
+`accessibility()` method or the `$accessibility` argument of `create()`) — set `aria-current` /
+`aria-disabled` on the page links and an `aria-label` on the `nav` container and every link. See the
+[Accessibility](accessibility.md#pagination) guide for details, for how to translate or override those
+attributes, and for what you should still provide yourself.
+
 ## Page sizes
 
 By default, page size is fixed, but you can configure it to be dynamic.

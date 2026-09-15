@@ -20,6 +20,7 @@ final class CellTest extends TestCase
         $this->assertTrue($cell->shouldDoubleEncode());
         $this->assertSame([], $cell->getContent());
         $this->assertTrue($cell->isEmptyContent());
+        $this->assertFalse($cell->isRowHeader());
     }
 
     public function testEncode(): void
@@ -32,6 +33,15 @@ final class CellTest extends TestCase
     {
         $cell = (new Cell())->doubleEncode(true);
         $this->assertTrue($cell->shouldDoubleEncode());
+    }
+
+    public function testRowHeader(): void
+    {
+        $cell = (new Cell())->rowHeader();
+        $this->assertTrue($cell->isRowHeader());
+
+        $cell = $cell->rowHeader(false);
+        $this->assertFalse($cell->isRowHeader());
     }
 
     public function testContent(): void
@@ -84,6 +94,7 @@ final class CellTest extends TestCase
         $cell = new Cell();
         $this->assertNotSame($cell, $cell->encode(true));
         $this->assertNotSame($cell, $cell->doubleEncode(false));
+        $this->assertNotSame($cell, $cell->rowHeader());
         $this->assertNotSame($cell, $cell->content('test'));
         $this->assertNotSame($cell, $cell->addAttributes([]));
         $this->assertNotSame($cell, $cell->attributes([]));

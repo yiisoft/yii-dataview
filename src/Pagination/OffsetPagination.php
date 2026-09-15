@@ -11,9 +11,12 @@ use Yiisoft\Data\Paginator\PageToken;
 use Yiisoft\Data\Paginator\OffsetPaginator;
 use Yiisoft\Data\Paginator\PaginatorInterface;
 use Yiisoft\Html\Html;
+use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\Widget\Widget;
+use Yiisoft\Yii\DataView\BaseListView;
 use Yiisoft\Yii\DataView\HtmlHelper;
 
+use function array_key_exists;
 use function max;
 use function min;
 
@@ -59,6 +62,13 @@ final class OffsetPagination extends Widget implements PaginationWidgetInterface
     private string|Stringable|null $labelFirst = '⟪';
     private string|Stringable|null $labelLast = '⟫';
 
+    private ?string $ariaLabelNav = 'Pagination';
+    private ?string $ariaLabelFirst = 'First page';
+    private ?string $ariaLabelPrevious = 'Previous page';
+    private ?string $ariaLabelNext = 'Next page';
+    private ?string $ariaLabelLast = 'Last page';
+    private ?string $ariaLabelPage = 'Page {page}';
+
     private int $maxNavLinkCount = 10;
 
     /**
@@ -67,15 +77,33 @@ final class OffsetPagination extends Widget implements PaginationWidgetInterface
      * @param OffsetPaginator $paginator The paginator to use.
      * @param string $urlPattern URL pattern for page links. Must contain {@see PaginationContext::URL_PLACEHOLDER}.
      * @param string $firstPageUrl URL used on the first page.
+     * @param bool $accessibility Whether to add `aria-current`, `aria-disabled`, `aria-label` and, on disabled
+     * items, `role="link"` attributes automatically.
+     * @param TranslatorInterface|null $translator Translator used for the `aria-label` texts. When `null`, the
+     * English defaults are emitted as is.
+     * @param string $translationCategory Category used with the translator.
      *
      * @return self New instance with the specified paginator and context.
      */
-    public static function create(OffsetPaginator $paginator, string $urlPattern, string $firstPageUrl): self
-    {
+    public static function create(
+        OffsetPaginator $paginator,
+        string $urlPattern,
+        string $firstPageUrl,
+        bool $accessibility = false,
+        ?TranslatorInterface $translator = null,
+        string $translationCategory = BaseListView::DEFAULT_TRANSLATION_CATEGORY,
+    ): self {
         return self::widget()
             ->paginator($paginator)
             ->context(
-                new PaginationContext($urlPattern, $urlPattern, $firstPageUrl),
+                new PaginationContext(
+                    $urlPattern,
+                    $urlPattern,
+                    $firstPageUrl,
+                    $accessibility,
+                    $translator,
+                    $translationCategory,
+                ),
             );
     }
 
@@ -296,6 +324,109 @@ final class OffsetPagination extends Widget implements PaginationWidgetInterface
     }
 
     /**
+     * Sets the `aria-label` of the `nav` container. Pass `null` to omit it.
+     *
+     * The value is applied only when accessibility is enabled and only when `aria-label` is not already present
+     * in {@see containerAttributes()}. When rendered via `GridView`/`ListView`, it is translated.
+     *
+     * @param string|null $label The `aria-label` for the `nav` container.
+     *
+     * @return self New instance with the specified `nav` `aria-label`.
+     */
+    public function ariaLabelNav(?string $label): self
+    {
+        $new = clone $this;
+        $new->ariaLabelNav = $label;
+        return $new;
+    }
+
+    /**
+     * Sets the `aria-label` of the "first page" link. Pass `null` to omit it.
+     *
+     * The value is applied only when accessibility is enabled and only when `aria-label` is not already present
+     * in {@see linkAttributes()}. When rendered via `GridView`/`ListView`, it is translated.
+     *
+     * @param string|null $label The `aria-label` for the "first page" link.
+     *
+     * @return self New instance with the specified first link `aria-label`.
+     */
+    public function ariaLabelFirst(?string $label): self
+    {
+        $new = clone $this;
+        $new->ariaLabelFirst = $label;
+        return $new;
+    }
+
+    /**
+     * Sets the `aria-label` of the "previous page" link. Pass `null` to omit it.
+     *
+     * The value is applied only when accessibility is enabled and only when `aria-label` is not already present
+     * in {@see linkAttributes()}. When rendered via `GridView`/`ListView`, it is translated.
+     *
+     * @param string|null $label The `aria-label` for the "previous page" link.
+     *
+     * @return self New instance with the specified previous link `aria-label`.
+     */
+    public function ariaLabelPrevious(?string $label): self
+    {
+        $new = clone $this;
+        $new->ariaLabelPrevious = $label;
+        return $new;
+    }
+
+    /**
+     * Sets the `aria-label` of the "next page" link. Pass `null` to omit it.
+     *
+     * The value is applied only when accessibility is enabled and only when `aria-label` is not already present
+     * in {@see linkAttributes()}. When rendered via `GridView`/`ListView`, it is translated.
+     *
+     * @param string|null $label The `aria-label` for the "next page" link.
+     *
+     * @return self New instance with the specified next link `aria-label`.
+     */
+    public function ariaLabelNext(?string $label): self
+    {
+        $new = clone $this;
+        $new->ariaLabelNext = $label;
+        return $new;
+    }
+
+    /**
+     * Sets the `aria-label` of the "last page" link. Pass `null` to omit it.
+     *
+     * The value is applied only when accessibility is enabled and only when `aria-label` is not already present
+     * in {@see linkAttributes()}. When rendered via `GridView`/`ListView`, it is translated.
+     *
+     * @param string|null $label The `aria-label` for the "last page" link.
+     *
+     * @return self New instance with the specified last link `aria-label`.
+     */
+    public function ariaLabelLast(?string $label): self
+    {
+        $new = clone $this;
+        $new->ariaLabelLast = $label;
+        return $new;
+    }
+
+    /**
+     * Sets the `aria-label` of the numbered page links. Pass `null` to omit it.
+     *
+     * The `{page}` placeholder is replaced with the page number. The value is applied only when accessibility is
+     * enabled and only when `aria-label` is not already present in {@see linkAttributes()}. When rendered via
+     * `GridView`/`ListView`, it is translated.
+     *
+     * @param string|null $label The `aria-label` for the numbered page links.
+     *
+     * @return self New instance with the specified page link `aria-label`.
+     */
+    public function ariaLabelPage(?string $label): self
+    {
+        $new = clone $this;
+        $new->ariaLabelPage = $label;
+        return $new;
+    }
+
+    /**
      * Return a new instance with a max nav link count.
      *
      * @param int $value Max nav link count.
@@ -315,8 +446,18 @@ final class OffsetPagination extends Widget implements PaginationWidgetInterface
 
         $result = '';
 
+        $context = $this->getContext();
+
         if ($this->containerTag !== null) {
-            $result .= Html::openTag($this->containerTag, $this->containerAttributes) . "\n";
+            $containerAttributes = $this->containerAttributes;
+            if (
+                $context->accessibility
+                && $this->ariaLabelNav !== null
+                && !array_key_exists('aria-label', $containerAttributes)
+            ) {
+                $containerAttributes['aria-label'] = $context->translate($this->ariaLabelNav);
+            }
+            $result .= Html::openTag($this->containerTag, $containerAttributes) . "\n";
         }
         if ($this->listTag !== null) {
             $result .= Html::openTag($this->listTag, $this->listAttributes) . "\n";
@@ -353,6 +494,7 @@ final class OffsetPagination extends Widget implements PaginationWidgetInterface
                 label: $this->labelFirst,
                 url: $currentPage === 1 ? null : $this->createUrl(PageToken::next('1')),
                 isCurrent: false,
+                ariaLabel: $this->ariaLabelFirst,
             );
         }
 
@@ -363,6 +505,7 @@ final class OffsetPagination extends Widget implements PaginationWidgetInterface
                     ? null
                     : $this->createUrl(PageToken::next((string) max($currentPage - 1, 1))),
                 isCurrent: false,
+                ariaLabel: $this->ariaLabelPrevious,
             );
         }
 
@@ -372,6 +515,8 @@ final class OffsetPagination extends Widget implements PaginationWidgetInterface
                 label: (string) $page,
                 url: $this->createUrl(PageToken::next((string) $page)),
                 isCurrent: $page === $currentPage,
+                ariaLabel: $this->ariaLabelPage,
+                ariaLabelParameters: ['page' => (string) $page],
             );
         } while (++$page <= $endPage);
 
@@ -382,6 +527,7 @@ final class OffsetPagination extends Widget implements PaginationWidgetInterface
                     ? null
                     : $this->createUrl(PageToken::next((string) min($currentPage + 1, $totalPages))),
                 isCurrent: false,
+                ariaLabel: $this->ariaLabelNext,
             );
         }
 
@@ -390,6 +536,7 @@ final class OffsetPagination extends Widget implements PaginationWidgetInterface
                 label: $this->labelLast,
                 url: $currentPage === $totalPages ? null : $this->createUrl(PageToken::next((string) $totalPages)),
                 isCurrent: false,
+                ariaLabel: $this->ariaLabelLast,
             );
         }
 
@@ -399,17 +546,39 @@ final class OffsetPagination extends Widget implements PaginationWidgetInterface
     /**
      * @param string|null $url The item URL, or `null` when the control is disabled. A disabled control is rendered as
      * a `span` instead of an `a` element.
+     * @param array $ariaLabelParameters Parameters for the aria-label translation.
+     *
+     * @psalm-param array<string, string|Stringable> $ariaLabelParameters
      */
-    private function renderItem(string|Stringable $label, ?string $url, bool $isCurrent): Stringable
-    {
+    private function renderItem(
+        string|Stringable $label,
+        ?string $url,
+        bool $isCurrent,
+        ?string $ariaLabel,
+        array $ariaLabelParameters = [],
+    ): Stringable {
         $isDisabled = $url === null;
-
+        $context = $this->getContext();
         $linkAttributes = $this->linkAttributes;
         if ($isDisabled) {
             $linkAttributes = HtmlHelper::mergeAttributes($linkAttributes, $this->disabledLinkAttributes);
         }
         if ($isCurrent) {
             $linkAttributes = HtmlHelper::mergeAttributes($linkAttributes, $this->currentLinkAttributes);
+        }
+        if ($context->accessibility) {
+            $defaults = [];
+            if ($ariaLabel !== null && !array_key_exists('aria-label', $linkAttributes)) {
+                $defaults['aria-label'] = $context->translate($ariaLabel, $ariaLabelParameters);
+            }
+            if ($isDisabled) {
+                $defaults['role'] = 'link';
+                $defaults['aria-disabled'] = 'true';
+            }
+            if ($isCurrent) {
+                $defaults['aria-current'] = 'page';
+            }
+            $linkAttributes = array_merge($defaults, $linkAttributes);
         }
         $element = $isDisabled
             ? Html::span($label, $linkAttributes)

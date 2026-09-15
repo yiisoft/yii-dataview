@@ -11,6 +11,10 @@ use Yiisoft\Data\Paginator\KeysetPaginator;
 use Yiisoft\Data\Paginator\OffsetPaginator;
 use Yiisoft\Data\Reader\Iterable\IterableDataReader;
 use Yiisoft\Data\Reader\Sort;
+use Yiisoft\Translator\CategorySource;
+use Yiisoft\Translator\InMemoryMessageSource;
+use Yiisoft\Translator\Translator;
+use Yiisoft\Yii\DataView\BaseListView;
 use Yiisoft\Yii\DataView\Pagination\KeysetPagination;
 use Yiisoft\Yii\DataView\Pagination\PaginationContext;
 use Yiisoft\Yii\DataView\Pagination\PaginatorNotSupportedException;
@@ -457,6 +461,173 @@ final class KeysetPaginationTest extends TestCase
         $this->assertNotSame($widget, $widget->disabledLinkClass('disabled'));
         $this->assertNotSame($widget, $widget->labelPrevious('Prev'));
         $this->assertNotSame($widget, $widget->labelNext('Next'));
+        $this->assertNotSame($widget, $widget->ariaLabelNav('Pagination'));
+        $this->assertNotSame($widget, $widget->ariaLabelPrevious('Previous page'));
+        $this->assertNotSame($widget, $widget->ariaLabelNext('Next page'));
+    }
+
+    public function testEnableAccessibility(): void
+    {
+        $dataReader = (new IterableDataReader([['id' => 'id1'], ['id' => 'id2'], ['id' => 'id3']]))
+            ->withSort(Sort::any(['id']));
+        $paginator = (new KeysetPaginator($dataReader))->withPageSize(1);
+
+        $html = KeysetPagination::create(
+            $paginator,
+            '/next/' . PaginationContext::URL_PLACEHOLDER,
+            '/prev/' . PaginationContext::URL_PLACEHOLDER,
+            accessibility: true,
+        )->render();
+
+        $this->assertSame(
+            <<<HTML
+            <nav aria-label="Pagination">
+            <span aria-label="Previous page" role="link" aria-disabled="true">⟨</span>
+            <a aria-label="Next page" href="/next/id1">⟩</a>
+            </nav>
+            HTML,
+            $html,
+        );
+    }
+
+    public function testAriaLabelsAreNotRenderedWhenAccessibilityDisabled(): void
+    {
+        $dataReader = (new IterableDataReader([['id' => 'id1'], ['id' => 'id2'], ['id' => 'id3']]))
+            ->withSort(Sort::any(['id']));
+        $paginator = (new KeysetPaginator($dataReader))->withPageSize(1);
+
+        $html = KeysetPagination::create(
+            $paginator,
+            '/next/' . PaginationContext::URL_PLACEHOLDER,
+            '/prev/' . PaginationContext::URL_PLACEHOLDER,
+        )->render();
+
+        $this->assertStringNotContainsString('aria-label', $html);
+    }
+
+    public function testAriaLabelsCanBeCustomizedAndDisabled(): void
+    {
+        $dataReader = (new IterableDataReader([['id' => 'id1'], ['id' => 'id2'], ['id' => 'id3']]))
+            ->withSort(Sort::any(['id']));
+        $paginator = (new KeysetPaginator($dataReader))->withPageSize(1);
+
+        $html = KeysetPagination::create(
+            $paginator,
+            '/next/' . PaginationContext::URL_PLACEHOLDER,
+            '/prev/' . PaginationContext::URL_PLACEHOLDER,
+            accessibility: true,
+        )
+            ->ariaLabelNav(null)
+            ->ariaLabelPrevious('To previous')
+            ->ariaLabelNext('To next')
+            ->render();
+
+        $this->assertSame(
+            <<<HTML
+            <nav>
+            <span aria-label="To previous" role="link" aria-disabled="true">⟨</span>
+            <a aria-label="To next" href="/next/id1">⟩</a>
+            </nav>
+            HTML,
+            $html,
+        );
+    }
+
+    public function testAriaLabelsAreTranslated(): void
+    {
+        $messageSource = new InMemoryMessageSource();
+        $messageSource->write(
+            BaseListView::DEFAULT_TRANSLATION_CATEGORY,
+            'en',
+            [
+                'Pagination' => 'Seitennavigation',
+                'Previous page' => 'Vorherige Seite',
+                'Next page' => 'Nächste Seite',
+            ],
+        );
+        $translator = (new Translator('en'))->addCategorySources(
+            new CategorySource(BaseListView::DEFAULT_TRANSLATION_CATEGORY, $messageSource),
+        );
+
+        $dataReader = (new IterableDataReader([['id' => 'id1'], ['id' => 'id2'], ['id' => 'id3']]))
+            ->withSort(Sort::any(['id']));
+        $paginator = (new KeysetPaginator($dataReader))->withPageSize(1);
+        $context = new PaginationContext(
+            '/next/' . PaginationContext::URL_PLACEHOLDER,
+            '/prev/' . PaginationContext::URL_PLACEHOLDER,
+            '/',
+            true,
+            $translator,
+        );
+
+        $html = KeysetPagination::widget()->paginator($paginator)->context($context)->render();
+
+        $this->assertSame(
+            <<<HTML
+            <nav aria-label="Seitennavigation">
+            <span aria-label="Vorherige Seite" role="link" aria-disabled="true">⟨</span>
+            <a aria-label="Nächste Seite" href="/next/id1">⟩</a>
+            </nav>
+            HTML,
+            $html,
+        );
+    }
+
+    public function testAriaLabelIsNotOverriddenWhenPresentInContainerAttributes(): void
+    {
+        $dataReader = (new IterableDataReader([['id' => 'id1'], ['id' => 'id2'], ['id' => 'id3']]))
+            ->withSort(Sort::any(['id']));
+        $paginator = (new KeysetPaginator($dataReader))->withPageSize(1);
+
+        $html = KeysetPagination::create(
+            $paginator,
+            '/next/' . PaginationContext::URL_PLACEHOLDER,
+            '/prev/' . PaginationContext::URL_PLACEHOLDER,
+            accessibility: true,
+        )
+            ->containerAttributes(['aria-label' => 'Custom'])
+            ->render();
+
+        $this->assertStringContainsString('<nav aria-label="Custom">', $html);
+        $this->assertStringNotContainsString('aria-label="Pagination"', $html);
+    }
+
+    public function testAriaDisabledCanBeDisabledWithLinkAttributes(): void
+    {
+        $dataReader = (new IterableDataReader([['id' => 'id1'], ['id' => 'id2'], ['id' => 'id3']]))
+            ->withSort(Sort::any(['id']));
+        $paginator = (new KeysetPaginator($dataReader))->withPageSize(1);
+
+        $html = KeysetPagination::create(
+            $paginator,
+            '/next/' . PaginationContext::URL_PLACEHOLDER,
+            '/prev/' . PaginationContext::URL_PLACEHOLDER,
+            accessibility: true,
+        )
+            ->linkAttributes(['aria-disabled' => false])
+            ->render();
+
+        $this->assertStringNotContainsString('aria-disabled', $html);
+        $this->assertStringContainsString('role="link"', $html);
+    }
+
+    public function testRoleIsNotOverriddenWhenPresentInLinkAttributes(): void
+    {
+        $dataReader = (new IterableDataReader([['id' => 'id1'], ['id' => 'id2'], ['id' => 'id3']]))
+            ->withSort(Sort::any(['id']));
+        $paginator = (new KeysetPaginator($dataReader))->withPageSize(1);
+
+        $html = KeysetPagination::create(
+            $paginator,
+            '/next/' . PaginationContext::URL_PLACEHOLDER,
+            '/prev/' . PaginationContext::URL_PLACEHOLDER,
+            accessibility: true,
+        )
+            ->linkAttributes(['role' => 'button'])
+            ->render();
+
+        $this->assertStringContainsString('role="button"', $html);
+        $this->assertStringNotContainsString('role="link"', $html);
     }
 
     private function createPagination(int $pageCount): KeysetPagination

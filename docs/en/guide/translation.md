@@ -29,5 +29,15 @@ return [
     'No results found.' => '...',
     'Page <b>{currentPage}</b> of <b>{totalPages}</b>' => '...',
     'Actions' => '...',
+    'Pagination' => '...',
+    'First page' => '...',
+    'Previous page' => '...',
+    'Next page' => '...',
+    'Last page' => '...',
+    'Page {page}' => '...',
 ];
 ```
+
+The last six messages are the `aria-label` texts of the pagination widgets. They are used only when
+accessibility attributes are enabled, see the [Accessibility](accessibility.md#translating-the-aria-label-texts)
+guide.

@@ -67,6 +67,7 @@ GridView has several built-in column types.
 | `columnClass` | `?string` | `null` | CSS class for all column cells |
 | `headerClass` | `?string` | `null` | CSS class for the header cell |
 | `bodyClass` | `string\|array\|callable\|null` | `null` | CSS class for body cells. Can be a callable: `fn(array\|object $data, DataContext $context): string\|array\|null` |
+| `rowHeader` | `bool` | `false` | Render body cells of this column as row headers (`<th>`; `scope="row"` is added when `accessibility()` is enabled). See [Accessibility](accessibility.md#row-headers) |
 
 Basic example:
 
@@ -699,6 +700,12 @@ echo GridView::widget()
         new DataColumn(property: 'email', columnAttributes: ['style' => 'width: 300px']),
     );
 ```
+
+## Accessibility
+
+`GridView` renders semantic table markup always, and — when `accessibility()` is enabled — adds `scope="col"` /
+`scope="row"` attributes and sets `aria-sort` on the sorted column's header cell. See the
+[Accessibility](accessibility.md#gridview) guide for the full list and for how to override or remove each attribute.
 
 ## Row Customization
 

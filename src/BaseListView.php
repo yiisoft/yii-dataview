@@ -26,10 +26,6 @@ use Yiisoft\Data\Reader\Sort;
 use Yiisoft\Data\Reader\SortableDataInterface;
 use Yiisoft\Html\Html;
 use Yiisoft\Translator\CategorySource;
-use Yiisoft\Translator\IdMessageReader;
-use Yiisoft\Translator\IntlMessageFormatter;
-use Yiisoft\Translator\SimpleMessageFormatter;
-use Yiisoft\Translator\Translator;
 use Yiisoft\Translator\TranslatorInterface;
 use Yiisoft\Validator\Result as ValidationResult;
 use Yiisoft\Widget\Widget;
@@ -51,7 +47,6 @@ use Yiisoft\Yii\DataView\Url\UrlParameterType;
 
 use function array_slice;
 use function call_user_func_array;
-use function extension_loaded;
 use function in_array;
 use function is_array;
 use function is_int;
@@ -83,8 +78,13 @@ abstract class BaseListView extends Widget
     protected bool $multiSort = false;
 
     /**
+     * @var bool Whether to add accessibility attributes (such as `scope` and `aria-*`) automatically during rendering.
+     */
+    protected bool $accessibility = false;
+
+    /**
      * @var TranslatorInterface A translator instance used for translations of messages. If it wasn't set
-     * explicitly in the constructor, a default one created automatically in {@see createDefaultTranslator()}.
+     * explicitly in the constructor, a default one created automatically.
      */
     protected readonly TranslatorInterface $translator;
 
@@ -155,7 +155,7 @@ abstract class BaseListView extends Widget
         ?TranslatorInterface $translator = null,
         protected readonly string $translationCategory = self::DEFAULT_TRANSLATION_CATEGORY,
     ) {
-        $this->translator = $translator ?? $this->createDefaultTranslator();
+        $this->translator = $translator ?? DefaultTranslatorFactory::create($this->translationCategory);
         $this->urlConfig = new UrlConfig();
         $this->urlParameterProvider = new NullUrlParameterProvider();
     }
@@ -414,6 +414,23 @@ abstract class BaseListView extends Widget
     {
         $new = clone $this;
         $new->multiSort = $enable;
+        return $new;
+    }
+
+    /**
+     * Return a new instance that toggles automatically added accessibility attributes.
+     *
+     * When enabled, rendering adds machine-readable accessibility attributes: `scope="col"` and `aria-sort` on
+     * `GridView` header cells, `scope="row"` on row header cells, and `aria-current`, `aria-disabled` and
+     * `aria-label` on pagination links (`role="link"` is also added to disabled pagination items, and `aria-label`
+     * to the pagination `nav` container). Disabled by default.
+     *
+     * @param bool $enabled Whether to add accessibility attributes automatically.
+     */
+    final public function accessibility(bool $enabled = true): static
+    {
+        $new = clone $this;
+        $new->accessibility = $enabled;
         return $new;
     }
 
@@ -1187,6 +1204,9 @@ abstract class BaseListView extends Widget
             $nextUrlPattern,
             $previousUrlPattern,
             $defaultUrl,
+            $this->accessibility,
+            $this->translator,
+            $this->translationCategory,
         );
 
         return $widget->context($context)->render();
@@ -1288,24 +1308,5 @@ abstract class BaseListView extends Widget
         }
 
         return null;
-    }
-
-    /**
-     * Creates default translator to use if {@see $translator} wasn't set explicitly in the constructor. Depending on
-     * "intl" extension availability, either {@see IntlMessageFormatter} or {@see SimpleMessageFormatter} is used as
-     * formatter.
-     *
-     * @return Translator Translator instance used for translations of messages.
-     */
-    private function createDefaultTranslator(): Translator
-    {
-        $categorySource = new CategorySource(
-            $this->translationCategory,
-            new IdMessageReader(),
-            extension_loaded('intl') ? new IntlMessageFormatter() : new SimpleMessageFormatter(),
-        );
-        $translator = new Translator();
-        $translator->addCategorySources($categorySource);
-        return $translator;
     }
 }

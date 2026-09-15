@@ -812,6 +812,328 @@ final class GridViewTest extends TestCase
         );
     }
 
+    public function testRowHeaderColumn(): void
+    {
+        $html = $this->createGridView([['id' => 1, 'name' => 'John']])
+            ->accessibility()
+            ->columns(
+                new DataColumn('name', withSorting: false, rowHeader: true),
+                new DataColumn('id', withSorting: false),
+            )
+            ->render();
+
+        $this->assertStringContainsString(
+            <<<HTML
+            <thead>
+            <tr>
+            <th scope="col">Name</th>
+            <th scope="col">Id</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+            <th scope="row">John</th>
+            <td>1</td>
+            </tr>
+            </tbody>
+            HTML,
+            $html,
+        );
+    }
+
+    public function testAccessibilityDisabledByDefault(): void
+    {
+        $dataReader = (new IterableDataReader([['id' => 1, 'name' => 'John']]))
+            ->withSort(Sort::any(['id', 'name'])->withOrderString('id'));
+
+        $html = $this->createGridView($dataReader)
+            ->columns(
+                new DataColumn('name', rowHeader: true),
+                new DataColumn('id'),
+            )
+            ->render();
+
+        $this->assertStringContainsString(
+            <<<HTML
+            <thead>
+            <tr>
+            <th><a href="#">Name</a></th>
+            <th><a href="#">Id</a></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+            <th>John</th>
+            <td>1</td>
+            </tr>
+            </tbody>
+            HTML,
+            $html,
+        );
+    }
+
+    public function testAccessibilityEnabled(): void
+    {
+        $dataReader = (new IterableDataReader([['id' => 1, 'name' => 'John']]))
+            ->withSort(Sort::any(['id', 'name'])->withOrderString('id'));
+
+        $html = $this->createGridView($dataReader)
+            ->accessibility()
+            ->columns(
+                new DataColumn('name', rowHeader: true),
+                new DataColumn('id'),
+            )
+            ->render();
+
+        $this->assertStringContainsString(
+            <<<HTML
+            <thead>
+            <tr>
+            <th scope="col"><a href="#">Name</a></th>
+            <th scope="col" aria-sort="ascending"><a href="#">Id</a></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+            <th scope="row">John</th>
+            <td>1</td>
+            </tr>
+            </tbody>
+            HTML,
+            $html,
+        );
+    }
+
+    public function testAccessibilityCanBeDisabled(): void
+    {
+        $dataReader = (new IterableDataReader([['id' => 1, 'name' => 'John']]))
+            ->withSort(Sort::any(['id', 'name'])->withOrderString('id'));
+
+        $html = $this->createGridView($dataReader)
+            ->accessibility()
+            ->accessibility(false)
+            ->columns(
+                new DataColumn('name', rowHeader: true),
+                new DataColumn('id'),
+            )
+            ->render();
+
+        $this->assertStringContainsString(
+            <<<HTML
+            <thead>
+            <tr>
+            <th><a href="#">Name</a></th>
+            <th><a href="#">Id</a></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+            <th>John</th>
+            <td>1</td>
+            </tr>
+            </tbody>
+            HTML,
+            $html,
+        );
+    }
+
+    public function testAriaSortDescending(): void
+    {
+        $dataReader = (new IterableDataReader([['id' => 1, 'name' => 'John']]))
+            ->withSort(Sort::any(['id', 'name'])->withOrderString('-id'));
+
+        $html = $this->createGridView($dataReader)
+            ->accessibility()
+            ->columns(
+                new DataColumn('name'),
+                new DataColumn('id'),
+            )
+            ->render();
+
+        $this->assertStringContainsString(
+            <<<HTML
+            <thead>
+            <tr>
+            <th scope="col"><a href="#">Name</a></th>
+            <th scope="col" aria-sort="descending"><a href="#">Id</a></th>
+            </tr>
+            </thead>
+            HTML,
+            $html,
+        );
+    }
+
+    public function testAriaSortReportsDirectionOnlyForPrimaryPropertyOfMultiSort(): void
+    {
+        $dataReader = (new IterableDataReader([['id' => 1, 'name' => 'John', 'age' => 20]]))
+            ->withSort(Sort::any(['id', 'name', 'age'])->withOrderString('id,-name'));
+
+        $html = $this->createGridView($dataReader)
+            ->accessibility()
+            ->multiSort()
+            ->columns(
+                new DataColumn('id'),
+                new DataColumn('name'),
+                new DataColumn('age'),
+            )
+            ->render();
+
+        $this->assertStringContainsString(
+            <<<HTML
+            <thead>
+            <tr>
+            <th scope="col" aria-sort="ascending"><a href="#">Id</a></th>
+            <th scope="col"><a href="#">Name</a></th>
+            <th scope="col"><a href="#">Age</a></th>
+            </tr>
+            </thead>
+            HTML,
+            $html,
+        );
+    }
+
+    public function testAriaSortIsNotAddedToNonSortableColumn(): void
+    {
+        $dataReader = (new IterableDataReader([['id' => 1, 'name' => 'John']]))
+            ->withSort(Sort::any(['id'])->withOrderString('id'));
+
+        $html = $this->createGridView($dataReader)
+            ->accessibility()
+            ->columns(
+                new DataColumn('name'),
+                new DataColumn('id'),
+            )
+            ->render();
+
+        $this->assertStringContainsString(
+            <<<HTML
+            <thead>
+            <tr>
+            <th scope="col">Name</th>
+            <th scope="col" aria-sort="ascending"><a href="#">Id</a></th>
+            </tr>
+            </thead>
+            HTML,
+            $html,
+        );
+    }
+
+    public function testHeaderCellScopeOverride(): void
+    {
+        $html = $this->createGridView([['id' => 1, 'name' => 'John']])
+            ->accessibility()
+            ->headerCellAttributes(['scope' => 'colgroup'])
+            ->columns(
+                new DataColumn('name', withSorting: false),
+            )
+            ->render();
+
+        $this->assertStringContainsString('<th scope="colgroup">Name</th>', $html);
+    }
+
+    public function testHeaderCellScopeRemove(): void
+    {
+        $html = $this->createGridView([['id' => 1, 'name' => 'John']])
+            ->accessibility()
+            ->headerCellAttributes(['scope' => null])
+            ->columns(
+                new DataColumn('name', withSorting: false),
+            )
+            ->render();
+
+        $this->assertStringContainsString('<th>Name</th>', $html);
+        $this->assertStringNotContainsString('scope="col"', $html);
+    }
+
+    public function testHeaderCellScopeWithoutColumnHeader(): void
+    {
+        $html = $this->createGridView([['id' => 1, 'name' => 'John']])
+            ->accessibility()
+            ->headerCellAttributes(['class' => 'text-center'])
+            ->columns(
+                new CheckboxColumn(headerAttributes: ['style' => 'width: 1%'], multiple: false),
+                new DataColumn('name', withSorting: false),
+            )
+            ->render();
+
+        $this->assertStringContainsString(
+            <<<HTML
+            <thead>
+            <tr>
+            <th scope="col" class="text-center" style="width: 1%">&nbsp;</th>
+            <th scope="col" class="text-center">Name</th>
+            </tr>
+            </thead>
+            HTML,
+            $html,
+        );
+    }
+
+    public function testHeaderCellScopeRemoveWithoutColumnHeader(): void
+    {
+        $html = $this->createGridView([['id' => 1, 'name' => 'John']])
+            ->accessibility()
+            ->headerCellAttributes(['scope' => null])
+            ->columns(
+                new CheckboxColumn(multiple: false),
+            )
+            ->render();
+
+        $this->assertStringContainsString('<th>&nbsp;</th>', $html);
+        $this->assertStringNotContainsString('scope="col"', $html);
+    }
+
+    public function testAccessibilityDisabledByDefaultForPagination(): void
+    {
+        $paginator = (new OffsetPaginator(new IterableDataReader([['id' => 1], ['id' => 2]])))
+            ->withPageSize(1)
+            ->withCurrentPage(1);
+
+        $html = $this->createGridView($paginator)
+            ->urlCreator(new SimplePaginationUrlCreator())
+            ->render();
+
+        $this->assertStringContainsString(
+            <<<HTML
+            <nav>
+            <span>⟪</span>
+            <span>⟨</span>
+            <a href="/route?">1</a>
+            <a href="/route?page=2">2</a>
+            <a href="/route?page=2">⟩</a>
+            <a href="/route?page=2">⟫</a>
+            </nav>
+            HTML,
+            $html,
+        );
+    }
+
+    public function testAccessibilityEnabledForPagination(): void
+    {
+        $paginator = (new OffsetPaginator(new IterableDataReader([['id' => 1], ['id' => 2]])))
+            ->withPageSize(1)
+            ->withCurrentPage(1);
+
+        $html = $this->createGridView($paginator)
+            ->urlCreator(new SimplePaginationUrlCreator())
+            ->accessibility()
+            ->render();
+
+        $this->assertStringContainsString(
+            <<<HTML
+            <nav aria-label="Pagination">
+            <span aria-label="First page" role="link" aria-disabled="true">⟪</span>
+            <span aria-label="Previous page" role="link" aria-disabled="true">⟨</span>
+            <a aria-label="Page 1" aria-current="page" href="/route?">1</a>
+            <a aria-label="Page 2" href="/route?page=2">2</a>
+            <a aria-label="Next page" href="/route?page=2">⟩</a>
+            <a aria-label="Last page" href="/route?page=2">⟫</a>
+            </nav>
+            HTML,
+            $html,
+        );
+    }
+
     public static function dataBodyCellAttributes(): iterable
     {
         yield 'array' => [
@@ -3111,6 +3433,7 @@ final class GridViewTest extends TestCase
         $this->assertNotSame($gridView, $gridView->urlArguments(['id' => 1]));
         $this->assertNotSame($gridView, $gridView->urlQueryParameters(['filter' => 'active']));
         $this->assertNotSame($gridView, $gridView->multiSort());
+        $this->assertNotSame($gridView, $gridView->accessibility());
         $this->assertNotSame($gridView, $gridView->ignoreMissingPage(false));
         $this->assertNotSame($gridView, $gridView->pageNotFoundExceptionCallback(fn() => null));
         $this->assertNotSame($gridView, $gridView->containerAttributes([]));

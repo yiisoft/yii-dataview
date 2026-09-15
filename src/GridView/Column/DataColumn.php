@@ -125,6 +125,7 @@ final class DataColumn implements ColumnInterface
      * @param callable|string|string[]|null $bodyClass Additional CSS class for the body cells.
      * @param array $filterAttributes HTML attributes for the filter cell.
      * @param string|null $filterClass Additional CSS class for the filter cell.
+     * @param bool $rowHeader Whether the body cells of this column are row headers.
      *
      * @psalm-param array|(callable(TData, DataContext): array) $bodyAttributes
      * @psalm-param string|Stringable|int|float|(callable(TData, DataContext): (string|Stringable|int|float))|ValuePresenterInterface|null $content
@@ -154,6 +155,7 @@ final class DataColumn implements ColumnInterface
         string|array|callable|null $bodyClass = null,
         public readonly array $filterAttributes = [],
         public readonly ?string $filterClass = null,
+        public readonly bool $rowHeader = false,
     ) {
         $this->content = $content;
         $this->filterEmpty = $filterEmpty;
