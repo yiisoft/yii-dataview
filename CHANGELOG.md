@@ -1,13 +1,13 @@
 # Yii DataView Change Log
 
-## 1.2.1 under development
+## 1.3.0 September 15, 2026
 
 - New #359: Add `GridView::keepColumnAttributesInEmptyCell()` to keep column body cell attributes on empty cells (@vjik)
+- New #360: Add `GridView::filterRowAttributes()`, and `filterAttributes` and `filterClass` parameters to `DataColumn`
+  to set HTML attributes and a CSS class for filter cells (@vjik)
 - New #361: Add `GridView` methods `sortableHeaderClass()`, `sortableHeaderAscClass()`, `sortableHeaderDescClass()`,
   `sortableLinkAscClass()` and `sortableLinkDescClass()` to configure CSS classes for sortable column headers and 
   links (@vjik)
-- New #360: Add `GridView::filterRowAttributes()`, and `filterAttributes` and `filterClass` parameters to `DataColumn`
-  to set HTML attributes and a CSS class for filter cells (@vjik)
 - New #362: Add `GridView::captionAttributes()` method and `$attributes` parameter to `GridView::caption()` to set
   HTML attributes for the `caption` tag (@vjik)
 - New #367: Add `OffsetPagination::currentLinkAttributes()` and `disabledLinkAttributes()`, and
