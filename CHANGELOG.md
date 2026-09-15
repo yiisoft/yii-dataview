@@ -1,5 +1,9 @@
 # Yii DataView Change Log
 
+## 1.3.1 under development
+
+- no changes in this release.
+
 ## 1.3.0 September 15, 2026
 
 - New #359: Add `GridView::keepColumnAttributesInEmptyCell()` to keep column body cell attributes on empty cells (@vjik)
