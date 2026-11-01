@@ -24,7 +24,7 @@ concurrency:
 
 jobs:
   mutation:
-    uses: yiisoft/actions/.github/workflows/roave-infection.yml@master
+    uses: yiisoft/actions/.github/workflows/infection.yml@master
     with:
       os: >-
         ['ubuntu-latest']
@@ -32,5 +32,6 @@ jobs:
         ['8.5']
       required-packages: >-
         ['data']
+      infection-args: --ignore-msi-with-no-mutations
     secrets:
       STRYKER_DASHBOARD_API_KEY: ${{ secrets.STRYKER_DASHBOARD_API_KEY }}

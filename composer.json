@@ -46,9 +46,9 @@
     },
     "require-dev": {
         "friendsofphp/php-cs-fixer": "^3.91",
+        "infection/infection": "^0.29.8 || ^0.35.8",
         "phpunit/phpunit": "^10.5.58",
         "rector/rector": "^2.1.7",
-        "roave/infection-static-analysis-plugin": "^1.35",
         "shipmonk/composer-dependency-analyser": "^1.8",
         "spatie/phpunit-watcher": "^1.24",
         "vimeo/psalm": "^5.26.1 || ^6.12",
